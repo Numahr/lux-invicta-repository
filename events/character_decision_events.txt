@@ -1,0 +1,736 @@
+### might need revision in the future - for now, it's very close to CK2+ 1.34.15 - by Ash
+
+
+character_event = {
+	id = 220000
+	picture = GFX_evt_emissary
+	
+	is_triggered_only = yes
+		
+	desc = "EVTDESC220000"
+	
+	option = {
+		name = "EVTOPTA220000"	
+		piety = -10
+		FROM = {
+			if = {
+				limit = {
+					NOT = { culture = ROOT }
+				}
+				culture = ROOT
+			}
+			if = {
+				limit = {
+					NOT = { dynasty = ROOT }
+				}
+				dynasty = ROOT
+			}	
+			if = {
+				limit = {
+					NOT = { religion = ROOT }
+				}
+				religion = ROOT
+			}			
+# Lux Invicta doesn't currently have a divine_blood trait, so I'm commenting this section out. - Rich VH
+#			hidden_tooltip = {
+#				if = {
+#					limit = { 
+#						ROOT = {
+#							trait = divine_blood
+#						}
+#					}
+#					add_trait = divine_blood
+#				}
+#				if = {
+#					limit = { 
+#						ROOT = {
+#							NOT = { trait = divine_blood }
+#						}
+#					}
+#					remove_trait = divine_blood
+#				}
+#			}
+			hidden_tooltip = { remove_trait = bastard }
+			add_trait = legit_bastard
+
+			opinion = {
+				who = ROOT
+				modifier = legitimized_me
+				years = 10
+			}
+			mother = {
+				opinion = {
+					who = ROOT
+					modifier = legitimized_child
+					years = 10
+				}
+			}
+		}
+		spouse = {
+			if = {
+				limit = {
+					NOT = {
+						any_child = {
+							character = FROM
+						}	
+					}
+				}
+				opinion = {
+					who = ROOT
+					modifier = legitimized_bastard
+					years = 20
+				}
+			}
+		}
+		any_child = {
+			limit = {
+				NOT = { character = FROM }
+				NOT = { FROM = { mother = { character = PREVPREV } } }
+				dynasty = ROOT
+				NOT = { trait = bastard }
+				NOT = { trait = legit_bastard }
+			}
+			opinion = {
+				who = ROOT
+				modifier = legitimized_bastard
+				months = 12
+			}
+		}
+		recalc_succession = yes
+		hidden_tooltip = {
+			FROM = {
+				remove_title = legitimize_bastard
+			}
+		}
+	}
+	option = {
+		name = "EVTOPTB220000"	
+		hidden_tooltip = {
+			FROM = {
+				remove_title = legitimize_bastard
+			}
+		}
+	}
+}
+
+character_event = {
+	id = 220001
+	picture = GFX_evt_emissary
+	
+	is_triggered_only = yes
+		
+	desc = "EVTDESC220001"
+	
+	option = {
+		name = "EVTOPTA220001"	
+		trigger = {
+			wealth = 50
+			FROM = {
+				NOT = { has_character_modifier = estates_5 }
+			}
+		}
+		wealth = -50
+		reverse_opinion = {
+			modifier = opinion_granted_minor_estate
+			who = FROM
+			years = 100
+		}		
+		FROM = {
+			if = {
+				limit = {
+					has_character_modifier = estates_4
+				}
+				remove_character_modifier = estates_4
+				add_character_modifier = {
+					name = "estates_5"
+					duration = -1
+				}
+			}			
+			if = {
+				limit = {
+					has_character_modifier = estates_3
+				}
+				remove_character_modifier = estates_3
+				add_character_modifier = {
+					name = "estates_4"
+					duration = -1
+				}
+			}			
+			if = {
+				limit = {
+					has_character_modifier = estates_2
+				}
+				remove_character_modifier = estates_2
+				add_character_modifier = {
+					name = "estates_3"
+					duration = -1
+				}
+			}			
+			if = {
+				limit = {
+					has_character_modifier = estates_1
+				}
+				remove_character_modifier = estates_1
+				add_character_modifier = {
+					name = "estates_2"
+					duration = -1
+				}
+			}			
+			if = {
+				limit = {
+					NOT = {
+						has_character_modifier = estates_1
+						has_character_modifier = estates_2
+						has_character_modifier = estates_3
+						has_character_modifier = estates_4
+						has_character_modifier = estates_5					
+					}
+				}
+				add_character_modifier = {
+					name = "estates_1"
+					duration = -1
+				}
+				hidden_tooltip = {
+					give_minor_title = title_lord
+				}				
+			}
+		}				
+		hidden_tooltip = {
+			FROM = {
+				remove_title = grant_estate
+			}
+		}
+	}
+	option = {
+		name = "EVTOPTB220001"	
+		trigger = {
+			wealth = 150
+			FROM = {
+				NOT = { 
+					has_character_modifier = estates_3 
+					has_character_modifier = estates_4
+					has_character_modifier = estates_5
+				}
+			}
+		}
+		wealth = -150
+		reverse_opinion = {
+			modifier = opinion_granted_minor_estate
+			who = FROM
+			years = 100
+			multiplier = 3
+		}		
+		FROM = {			
+			if = {
+				limit = {
+					has_character_modifier = estates_2
+				}
+				remove_character_modifier = estates_2
+				add_character_modifier = {
+					name = "estates_5"
+					duration = -1
+				}
+			}			
+			if = {
+				limit = {
+					has_character_modifier = estates_1
+				}
+				remove_character_modifier = estates_1
+				add_character_modifier = {
+					name = "estates_4"
+					duration = -1
+				}
+			}			
+			if = {
+				limit = {
+					NOT = {
+						has_character_modifier = estates_1
+						has_character_modifier = estates_2
+						has_character_modifier = estates_3
+						has_character_modifier = estates_4
+						has_character_modifier = estates_5					
+					}
+				}
+				add_character_modifier = {
+					name = "estates_3"
+					duration = -1
+				}
+				hidden_tooltip = {
+					give_minor_title = title_lord
+				}				
+			}
+		}				
+		hidden_tooltip = {
+			FROM = {
+				remove_title = grant_estate
+			}
+		}
+	}
+	option = {
+		name = "EVTOPTC220001"	
+		trigger = {
+			wealth = 250
+			FROM = {
+				NOT = { 
+					has_character_modifier = estates_1 
+					has_character_modifier = estates_2 
+					has_character_modifier = estates_3 
+					has_character_modifier = estates_4
+					has_character_modifier = estates_5
+				}
+			}
+		}
+		wealth = -250
+		reverse_opinion = {
+			modifier = opinion_granted_minor_estate
+			who = FROM
+			years = 100
+			multiplier = 5
+		}		
+		FROM = {			
+			add_character_modifier = {
+				name = "estates_5"
+				duration = -1
+			}
+			hidden_tooltip = {
+				give_minor_title = title_lord
+			}
+		}				
+		hidden_tooltip = {
+			FROM = {
+				remove_title = grant_estate
+			}
+		}
+	}	
+	option = {
+		name = "EVTOPTD220001"	
+		hidden_tooltip = {
+			FROM = {
+				remove_title = grant_estate
+			}
+		}
+	}
+}
+
+#character_event = {
+#	id = 220003
+#	picture = GFX_evt_emissary
+#	
+#	is_triggered_only = yes
+#		
+#	desc = "EVTDESC220003"
+#	
+#	option = {
+#		name = "EVTOPTA220003"
+#		FROM = {	
+#			if = {
+#				limit = {
+#					NOT = { 
+#						has_minor_title = title_food_taster 
+#						has_minor_title = title_court_jester
+#					}
+#				}
+#				hidden_tooltip = {
+#					remove_opinion = {
+#						modifier = opinion_fired_from_office
+#						who = ROOT		
+#					}		
+#				}
+#				opinion = {
+#					modifier = opinion_fired_from_office
+#					who = ROOT
+#					years = 10
+#				}				
+#			}					
+#			if = {
+#				limit = {
+#					has_minor_title = title_food_taster
+#				}
+#				remove_title = title_food_taster
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_court_jester
+#				}
+#				remove_title = title_court_jester
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_high_almoner
+#				}
+#				remove_title = title_high_almoner
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_master_of_the_horse
+#				}
+#				remove_title = title_master_of_the_horse
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_master_of_the_hunt
+#				}
+#				remove_title = title_master_of_the_hunt
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_cupbearer
+#				}
+#				remove_title = title_cupbearer
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_seneschal
+#				}
+#				remove_title = title_seneschal
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_despot
+#				}
+#				remove_title = title_despot
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_sebastokrator
+#				}
+#				remove_title = title_sebastokrator
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_kouropalates
+#				}
+#				remove_title = title_kouropalates
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_caesar
+#				}
+#				remove_title = title_caesar
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_anthypatos
+#				}
+#				remove_title = title_anthypatos
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_keeper_of_swans
+#				}
+#				remove_title = title_keeper_of_swans
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_court_dwarf
+#				}
+#				remove_title = title_court_dwarf
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_court_calligrapher
+#				}
+#				remove_title = title_court_calligrapher
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_court_musician
+#				}
+#				remove_title = title_court_musician
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_court_poet
+#				}
+#				remove_title = title_court_poet
+#			}
+#			if = {
+#				limit = {
+#					has_minor_title = title_chief_architect
+#				}
+#				remove_title = title_chief_architect
+#			}	
+#			if = {
+#				limit = {
+#					has_minor_title = title_patrician_heir
+#				}
+#				remove_title = title_patrician_heir
+#			}	
+#			if = {
+#				limit = {
+#					has_minor_title = title_high_judge
+#				}
+#				remove_title = title_high_judge
+#			}	
+#			if = {
+#				limit = {
+#					has_minor_title = title_high_admiral
+#				}
+#				remove_title = title_high_admiral
+#			}	
+#			if = {
+#				limit = {
+#					has_minor_title = title_state_inquisitor
+#				}
+#				remove_title = title_state_inquisitor
+#			}		
+#			if = {									### added by Ash
+#				limit = {
+#					has_minor_title = title_keeper_of_the_great_seal
+#				}
+#				remove_title = title_keeper_of_the_great_seal
+#			}	
+#			if = {									### added by Ash
+#				limit = {
+#					has_minor_title = title_master_falconer
+#				}
+#				remove_title = title_master_falconer
+#			}
+#			if = {									### added by Ash
+#				limit = {
+#					has_minor_title = title_monsignor
+#				}
+#				remove_title = title_monsignor
+#			}
+#			if = {									### added by Ash
+#				limit = {
+#					has_minor_title =  title_guard
+#				}
+#				remove_title =  title_guard
+#			}
+#			if = {									### added by Ash
+#				limit = {
+#					has_minor_title =  title_standard_bearer
+#				}
+#				remove_title =  title_standard_bearer
+#			}
+#			if = {									### added by Ash
+#				limit = {
+#					has_minor_title =  title_armour_bearer
+#				}
+#				remove_title =  title_armour_bearer
+#			}
+#			if = {									### added by Ash
+#				limit = {
+#					has_minor_title =  title_confidant
+#				}
+#				remove_title =  title_confidant
+#			}
+#		}
+#		hidden_tooltip = {
+#			FROM = {
+#				remove_title = revoke_minor_title
+#			}
+#		}
+#	}
+#	option = {
+#		name = "EVTOPTB220003"	
+#		hidden_tooltip = {
+#			FROM = {
+#				remove_title = revoke_minor_title
+#			}
+#		}
+#	}
+#}
+
+character_event = {
+	id = 220004
+	picture = GFX_evt_emissary
+	
+	is_triggered_only = yes
+		
+	desc = "EVTDESC220004"
+	
+	option = {
+		name = "EVTOPTA220004"
+		if = {
+			limit = {
+				FROM = {
+					prisoner = no
+					liege = {
+						character = ROOT
+					}
+					OR = {
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = opinion_traitor
+						}					
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = declared_war
+						}
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = opinion_dishonorable
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_murder_of_spouse
+						}
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_murder_of_vassal
+						}
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_murder
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_murder_of_child
+						}
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = opinion_spouse_slayer
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = opinion_murder_attempt
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = opinion_killed_close_kin
+						}
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = opinion_fatwa_target
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_murder_of_close_kin
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = killed_vassal
+						}
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = opinion_civil_war_loser
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = mad_heretic
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = devious_plotter
+						}
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_kidnapping
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_kidnapping_of_kin
+						}	
+						reverse_has_opinion_modifier = {
+							who = liege
+							modifier = attempted_kidnapping_of_vassal
+						}				
+					}	
+				}
+			}
+			FROM = {	
+				custom_tooltip = {
+					text = CUSTOMTOOLTIP37
+					opinion = {
+						who = ROOT
+						modifier = opinion_relieved
+						years = 5
+					}
+					hidden_tooltip = {
+						reverse_remove_opinion = {
+							who = liege
+							modifier = opinion_traitor
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = declared_war
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = opinion_dishonorable
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_murder_of_spouse
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_murder_of_vassal
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_murder
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_murder_of_child
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = opinion_spouse_slayer
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = opinion_murder_attempt
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = opinion_killed_close_kin
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = opinion_fatwa_target
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_murder_of_close_kin
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = killed_vassal
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = opinion_civil_war_loser
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = mad_heretic
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = devious_plotter
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_kidnapping
+						}
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_kidnapping_of_kin
+						}	
+						reverse_remove_opinion = {
+							who = liege
+							modifier = attempted_kidnapping_of_vassal
+						}
+					}
+				}
+			}
+		}
+		hidden_tooltip = {
+			FROM = {
+				remove_title = pardon
+			}
+		}
+	}
+	option = {
+		name = "EVTOPTB220004"	
+		hidden_tooltip = {
+			FROM = {
+				remove_title = pardon
+			}
+		}
+	}
+}

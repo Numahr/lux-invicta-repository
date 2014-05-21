@@ -1,0 +1,39 @@
+(Validator CbTypes) = {
+	Type = Default
+	FriendlyName = "CB types"
+	(FileGroup "common\cb_types" "*.txt")
+	ValidatorName = CbFile
+}
+
+(Type CbFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = CbDef }
+}
+
+(Type CbDef) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+	(CheckKey "*_desc" Left IfNot = NoCheckKey)
+	
+	Optional = { Left = "is_triggered_only" Right = Bool }
+	Optional = { Left = "no_opinion_hit" Right = Bool }
+	Optional = { Left = "exclusive" Right = Bool }
+	Optional = { Left = "independence" Right = Bool }
+	Optional = { Left = "months" Right = Int }
+	Optional = { Left = "prerequisites" Right = CbPrereqTrigger }
+	Optional = { Left = "allowed_provinces" Right = ProvinceTrigger }
+
+	Required = { Left = "war_goal" Right = WarGoalType }
+}
+
+(Type CbPrereqTrigger) = { ContextValidator = CbPrereqTrigger }
+
+(ContextValidator CbPrereqTrigger) = {
+	Inherits = CountryTrigger
+	FromTarget = Country
+}
+
+
+
+
+
+
+

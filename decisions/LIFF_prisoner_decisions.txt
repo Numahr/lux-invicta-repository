@@ -1,0 +1,129 @@
+# Vassal decisions are listed for each courtier and direct vassal. The ruler is in the FROM scope.
+decisions = {
+
+	force_marriage_decision = {
+		potential = {
+			is_female = no
+			is_adult = yes
+			NOT = {
+				trait = incapable
+				trait = eunuch
+			}
+			any_courtier = {
+				is_female = yes
+				prisoner = yes
+				host = {
+					character = ROOT
+				}
+				is_adult = yes
+				NOT = { age = 45 }
+				is_married = no
+			}
+		}
+		allow = {
+			OR = {
+				is_married = no
+				AND = {
+					OR = {
+						religion_group = muslim
+						religion = muslim_sufi_reformed
+					}
+					NOT = {
+						any_spouse = {
+							is_alive = yes
+							count = 3
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			any_courtier = {
+				limit = {
+					is_female = yes
+					prisoner = yes
+					is_adult = yes
+					NOT = { age = 45 }
+					is_married = no
+				}
+				letter_event = { id = prisoners.1 }
+			}
+		#}
+				
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	indoctrinate_prisoners_decision = {
+		potential = {
+			is_adult = yes
+			NOT = {
+				trait = incapable
+			}
+			any_courtier = {
+				prisoner = yes
+				age = 6
+				is_adult = no
+				host = {
+					character = ROOT
+				}
+				NOT = {
+					has_character_flag = refused_wardship
+				}
+				OR = {
+					has_guardian = no
+					guardian = {
+						NOT = {
+							character = ROOT
+						}
+					}
+				}
+			}
+		}
+		allow = {
+			NOT = {
+				any_ward = {
+					count = 2
+				}
+			}
+		}
+		effect = {		
+		
+			any_courtier = {
+				limit ={				
+				prisoner = yes
+				age = 6
+				is_adult = no
+				host = {
+					character = ROOT
+				}
+				NOT = {
+					has_character_flag = refused_wardship
+				}
+				OR = {
+					has_guardian = no
+					guardian = {
+						NOT = {
+							character = ROOT
+							}
+						}
+					}
+				}
+				letter_event = { id = prisoners.10 }	
+			}
+			
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+}

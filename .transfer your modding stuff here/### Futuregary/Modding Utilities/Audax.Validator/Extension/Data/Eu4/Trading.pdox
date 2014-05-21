@@ -1,0 +1,73 @@
+(Validator Trading) = {
+	Type = GroupValidator
+	FriendlyName = "Trading"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\region_colors" "*.txt")
+		ValidatorName = CotColorFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\tradegoods" "*.txt")
+		ValidatorName = TradeGoodFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\prices" "*.txt")
+		ValidatorName = PriceFile
+	}
+}
+
+(Type CotColorFile) = {
+	Child = { Left = "color" Right = Color }
+}
+
+(Type TradeGoodFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = TradeGoodDef (CheckKey "*" Left IfNot = NoCheckKey) (CheckKey "*DESC" Left IfNot = NoCheckKey) }
+}
+
+(Type TradeGoodDef) = {
+	Single = { Left = "color" Right = FloatColor }
+	Optional = { Left = "modifier" Right = CountryModifierDef }
+}
+
+(Type PriceFile) = {
+	RequiredList = { Left = { Type = TradeGood } Right = PriceDef }
+}
+
+(Type PriceDef) = {
+	Single = { Left = "base_price" Right = Double }
+	Optional = { Left = "min_demand" Right = Double }
+	Optional = { Left = "max_demand" Right = Double }
+	Optional = { Left = "supply" Right = Double }
+	Optional = { Left = "goldtype" Right = Bool }
+	Optional = { Left = "demand" Right = DemandClause }
+}
+
+(Type DemandClause) = {
+	Optional = { Left = "factor" Right = NnDbl }
+	(Ch N Y) = { Left = "modifier" Right = Modifier }
+}
+
+(Type Modifier) = {
+	Inherits = FactorModifier
+	Optional = { Left = "factor" Right = NnDbl }
+	
+	Inherits = ProvinceTrigger
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+

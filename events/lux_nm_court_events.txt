@@ -1,0 +1,869 @@
+namespace = lux_nm_court
+
+character_event = {
+	id = lux_nm_court.1
+	desc = "EVTDESClux_nm_court.1"
+	picture = GFX_evt_monk
+	
+	only_rulers = yes
+	
+	trigger = {
+		OR = {
+			religion = norse_pagan
+			religion = ragnarok
+			religion = norse_war
+			religion = sowilo
+		}
+		any_demesne_title = {
+			is_theocracy = yes
+			holder_scope = {
+				is_female = no
+				OR = {
+					religion = norse_pagan
+					religion = ragnarok
+					religion = norse_war
+					religion = sowilo
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		days = 1
+	}
+	
+	option = {
+		name = EVTOPTAlux_nm_court.1
+		random_demesne_title = {
+			limit = {
+				is_theocracy = yes
+			}
+			if = {
+				limit = {
+					holder_scope = {
+						NOT = {
+							any_courtier = {
+								prisoner = no
+								NOT = {
+									trait = incapable
+								}
+								is_female = yes
+								age = 16
+								is_ruler = no
+							}
+						}
+					}
+				}
+				create_random_priest = {
+					random_traits = yes
+					age = 16
+					dynasty = random
+					female = yes
+					culture = PREV
+				}
+			}
+			holder_scope = {
+				random_courtier = {
+					limit = {
+						prisoner = no
+						NOT = {
+							trait = incapable
+						}
+						is_female = yes
+						age = 16
+						is_ruler = no
+					}
+					grant_title = PREVPREV
+				}
+			}
+		}
+	}
+}
+
+#####################################
+# Ask for a job if I am good!
+#####################################
+
+#Marshal
+character_event = {
+	id = lux_nm_court.2
+	desc = "EVTDESClux_nm_court.2"
+	picture = GFX_evt_spymaster
+	
+	only_men = yes
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		is_councillor = no
+		independent = no
+		NOT = {
+			liege = {
+				has_character_flag = asked_marshal_petition
+			}
+		}
+		NOT = {
+			has_character_flag = asked_for_job
+		}
+		NOT = {
+			liege = {
+				any_courtier = {
+					has_job_title = job_marshal
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		months = 12
+		modifier = {
+			factor = 0.25
+			trait = ambitious
+		}
+		modifier = {
+			factor = 2.0
+			trait = content
+		}
+		modifier = {
+			factor = 4.0
+			trait = slothful
+		}
+		modifier = {
+			factor = 2.5
+			trait = procrastinator
+		}
+		modifier = {
+			factor = 2.0
+			trait = humble
+		}
+		modifier = {
+			factor = 0.5
+			trait = proud
+		}
+		modifier = {
+			factor = 1.1
+			NOT = {
+				martial = 5
+			}
+		}
+		modifier = {
+			factor = 0.9
+			martial = 13
+		}
+		modifier = {
+			factor = 0.75
+			martial = 20
+		}
+		modifier = {
+			factor = 0.1
+			trait = lunatic
+		}
+	}
+	
+	immediate = {
+		set_character_flag = asked_for_job
+		liege = {
+			set_character_flag = asked_marshal_petition
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.2"
+		liege = {
+			letter_event = {
+				id = lux_nm_court.3
+				tooltip = EVTTOOLTIPlux_nm_court.3
+			}
+		}
+	}
+}
+
+#Someone wants to be my marshal
+letter_event = {
+	id = lux_nm_court.3
+	desc = "EVTDESClux_nm_court.3"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAlux_nm_court.3"
+		trigger = {
+			any_courtier = {
+				has_job_title = job_marshal
+			}
+		}
+		FROM = {
+			letter_event = {
+				id = lux_nm_court.4
+				days = 3
+			}
+			clr_character_flag = asked_for_job
+		}
+		clr_character_flag = asked_marshal_petition		
+	}
+	option = {
+		name = "EVTOPTBlux_nm_court.3" 
+		trigger = {
+			NOT = {
+				any_courtier = {
+					has_job_title = job_marshal
+				}
+			}
+		}
+		FROM = {
+			clr_character_flag = asked_for_job
+			give_job_title = job_marshal
+		}
+	}
+	option = {
+		name = "EVTOPTClux_nm_court.3" 
+		trigger = {
+			NOT = {
+				any_courtier = {
+					has_job_title = job_marshal
+				}
+			}
+		}
+		FROM = {
+			prestige = -10
+		}
+		FROM = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_refused_council
+			}
+		}
+		clr_character_flag = asked_marshal_petition
+	}
+}
+
+# Position has been filled
+letter_event = {
+	id = lux_nm_court.4
+	desc = "EVTDESClux_nm_court.4"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.4"
+	}
+}
+
+#Chancellor
+character_event = {
+	id = lux_nm_court.5
+	desc = "EVTDESClux_nm_court.5"
+	picture = GFX_evt_spymaster
+	
+	only_men = yes
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		is_councillor = no
+		independent = no
+		NOT = {
+			liege = {
+				has_character_flag = asked_chancellor_petition
+			}
+		}
+		NOT = {
+			has_character_flag = asked_for_job
+		}
+		NOT = {
+			liege = {
+				any_courtier = {
+					has_job_title = job_chancellor
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		months = 12
+		modifier = {
+			factor = 0.25
+			trait = ambitious
+		}
+		modifier = {
+			factor = 2.0
+			trait = content
+		}
+		modifier = {
+			factor = 4.0
+			trait = slothful
+		}
+		modifier = {
+			factor = 2.5
+			trait = procrastinator
+		}
+		modifier = {
+			factor = 2.0
+			trait = humble
+		}
+		modifier = {
+			factor = 0.5
+			trait = proud
+		}
+		modifier = {
+			factor = 1.1
+			NOT = {
+				diplomacy = 5
+			}
+		}
+		modifier = {
+			factor = 0.9
+			diplomacy = 13
+		}
+		modifier = {
+			factor = 0.75
+			diplomacy = 20
+		}
+		modifier = {
+			factor = 0.1
+			trait = lunatic
+		}
+	}
+	
+	immediate = {
+		set_character_flag = asked_for_job
+		liege = {
+			set_character_flag = asked_chancellor_petition
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.5"
+		liege = {
+			letter_event = {
+				id = lux_nm_court.6
+				tooltip = EVTTOOLTIPlux_nm_court.6
+			}
+		}
+	}
+}
+
+#Someone wants to be my chancellor
+letter_event = {
+	id = lux_nm_court.6
+	desc = "EVTDESClux_nm_court.6"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAlux_nm_court.6"
+		trigger = {
+			any_courtier = {
+				has_job_title = job_chancellor
+			}
+		}
+		FROM = {
+			letter_event = {
+				id = lux_nm_court.7
+				days = 3
+			}
+			clr_character_flag = asked_for_job
+		}
+		clr_character_flag = asked_chancellor_petition		
+	}
+	option = {
+		name = "EVTOPTBlux_nm_court.6" 
+		FROM = {
+			clr_character_flag = asked_for_job
+			give_job_title = job_chancellor
+		}
+	}
+	option = {
+		name = "EVTOPTClux_nm_court.6" 
+		FROM = {
+			prestige = -10
+		}
+		FROM = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_refused_council
+			}
+		}
+		clr_character_flag = asked_chancellor_petition
+	}
+}
+
+# Position has been filled
+letter_event = {
+	id = lux_nm_court.7
+	desc = "EVTDESClux_nm_court.7"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.7"
+	}
+}
+
+#Steward
+character_event = {
+	id = lux_nm_court.8
+	desc = "EVTDESClux_nm_court.8"
+	picture = GFX_evt_spymaster
+	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		is_councillor = no
+		independent = no
+		NOT = {
+			liege = {
+				has_character_flag = asked_treasurer_petition
+			}
+		}
+		NOT = {
+			has_character_flag = asked_for_job
+		}
+		NOT = {
+			liege = {
+				any_courtier = {
+					has_job_title = job_treasurer
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		months = 12
+		modifier = {
+			factor = 0.25
+			trait = ambitious
+		}
+		modifier = {
+			factor = 2.0
+			trait = content
+		}
+		modifier = {
+			factor = 4.0
+			trait = slothful
+		}
+		modifier = {
+			factor = 2.5
+			trait = procrastinator
+		}
+		modifier = {
+			factor = 2.0
+			trait = humble
+		}
+		modifier = {
+			factor = 0.5
+			trait = proud
+		}
+		modifier = {
+			factor = 1.1
+			NOT = {
+				stewardship = 5
+			}
+		}
+		modifier = {
+			factor = 0.9
+			stewardship = 13
+		}
+		modifier = {
+			factor = 0.75
+			stewardship = 20
+		}
+		modifier = {
+			factor = 0.1
+			trait = lunatic
+		}
+	}
+	
+	immediate = {
+		set_character_flag = asked_for_job
+		liege = {
+			set_character_flag = asked_treasurer_petition
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.8"
+		liege = {
+			letter_event = {
+				id = lux_nm_court.9
+				tooltip = EVTTOOLTIPlux_nm_court.9
+			}
+		}
+	}
+}
+
+#Someone wants to be my steward
+letter_event = {
+	id = lux_nm_court.9
+	desc = "EVTDESClux_nm_court.9"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAlux_nm_court.9"
+		trigger = {
+			any_courtier = {
+				has_job_title = job_treasurer
+			}
+		}
+		FROM = {
+			letter_event = {
+				id = lux_nm_court.10
+				days = 3
+			}
+			clr_character_flag = asked_for_job
+		}
+		clr_character_flag = asked_treasurer_petition		
+	}
+	option = {
+		name = "EVTOPTBlux_nm_court.9" 
+		FROM = {
+			clr_character_flag = asked_for_job
+			give_job_title = job_treasurer
+		}
+	}
+	option = {
+		name = "EVTOPTClux_nm_court.9" 
+		FROM = {
+			prestige = -10
+		}
+		FROM = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_refused_council
+			}
+		}
+		clr_character_flag = asked_treasurer_petition
+	}
+}
+
+# Position has been filled
+letter_event = {
+	id = lux_nm_court.10
+	desc = "EVTDESClux_nm_court.10"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.10"
+	}
+}
+
+#Spymaster
+character_event = {
+	id = lux_nm_court.11
+	desc = "EVTDESClux_nm_court.11"
+	picture = GFX_evt_spymaster
+	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		is_councillor = no
+		independent = no
+		NOT = {
+			liege = {
+				has_character_flag = asked_spymaster_petition
+			}
+		}
+		NOT = {
+			has_character_flag = asked_for_job
+		}
+		NOT = {
+			liege = {
+				any_courtier = {
+					has_job_title = job_spymaster
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		months = 12
+		modifier = {
+			factor = 0.25
+			trait = ambitious
+		}
+		modifier = {
+			factor = 2.0
+			trait = content
+		}
+		modifier = {
+			factor = 4.0
+			trait = slothful
+		}
+		modifier = {
+			factor = 2.5
+			trait = procrastinator
+		}
+		modifier = {
+			factor = 2.0
+			trait = humble
+		}
+		modifier = {
+			factor = 0.5
+			trait = proud
+		}
+		modifier = {
+			factor = 1.1
+			NOT = {
+				intrigue = 5
+			}
+		}
+		modifier = {
+			factor = 0.9
+			intrigue = 13
+		}
+		modifier = {
+			factor = 0.75
+			intrigue = 20
+		}
+		modifier = {
+			factor = 0.1
+			trait = lunatic
+		}
+	}
+	
+	immediate = {
+		set_character_flag = asked_for_job
+		liege = {
+			set_character_flag = asked_spymaster_petition
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.11"
+		liege = {
+			letter_event = {
+				id = lux_nm_court.12
+				tooltip = EVTTOOLTIPlux_nm_court.12
+			}
+		}
+	}
+}
+
+#Someone wants to be my spymaster
+letter_event = {
+	id = lux_nm_court.12
+	desc = "EVTDESClux_nm_court.12"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAlux_nm_court.12"
+		trigger = {
+			any_courtier = {
+				has_job_title = job_spymaster
+			}
+		}
+		FROM = {
+			letter_event = {
+				id = lux_nm_court.13
+				days = 3
+			}
+			clr_character_flag = asked_for_job
+		}
+		clr_character_flag = asked_spymaster_petition		
+	}
+	option = {
+		name = "EVTOPTBlux_nm_court.12" 
+		FROM = {
+			clr_character_flag = asked_for_job
+			give_job_title = job_spymaster
+		}
+	}
+	option = {
+		name = "EVTOPTClux_nm_court.12" 
+		FROM = {
+			prestige = -10
+		}
+		FROM = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_refused_council
+			}
+		}
+		clr_character_flag = asked_spymaster_petition
+	}
+}
+
+# Position has been filled
+letter_event = {
+	id = lux_nm_court.13
+	desc = "EVTDESClux_nm_court.13"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.13"
+	}
+}
+
+#Lord Spiritual
+character_event = {
+	id = lux_nm_court.14
+	desc = "EVTDESClux_nm_court.14"
+	picture = GFX_evt_spymaster
+	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		NOT = {
+			religion_group = muslim
+		}
+		is_councillor = no
+		independent = no
+		NOT = {
+			liege = {
+				has_character_flag = asked_lord_spiritual_petition
+			}
+		}
+		NOT = {
+			has_character_flag = asked_for_job
+		}
+		NOT = {
+			liege = {
+				any_courtier = {
+					has_job_title = job_spiritual
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		months = 12
+		modifier = {
+			factor = 0.25
+			trait = ambitious
+		}
+		modifier = {
+			factor = 2.0
+			trait = content
+		}
+		modifier = {
+			factor = 4.0
+			trait = slothful
+		}
+		modifier = {
+			factor = 2.5
+			trait = procrastinator
+		}
+		modifier = {
+			factor = 2.0
+			trait = humble
+		}
+		modifier = {
+			factor = 0.5
+			trait = proud
+		}
+		modifier = {
+			factor = 1.1
+			NOT = {
+				learning = 5
+			}
+		}
+		modifier = {
+			factor = 0.9
+			learning = 13
+		}
+		modifier = {
+			factor = 0.75
+			learning = 20
+		}
+		modifier = {
+			factor = 0.1
+			trait = lunatic
+		}
+	}
+	
+	immediate = {
+		set_character_flag = asked_for_job
+		liege = {
+			set_character_flag = asked_lord_spiritual_petition
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.14"
+		liege = {
+			letter_event = {
+				id = lux_nm_court.15
+				tooltip = EVTTOOLTIPlux_nm_court.15
+			}
+		}
+	}
+}
+
+#Someone wants to be my court chaplain
+letter_event = {
+	id = lux_nm_court.15
+	desc = "EVTDESClux_nm_court.15"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAlux_nm_court.15"
+		trigger = {
+			any_courtier = {
+				has_job_title = job_spiritual
+			}
+		}
+		FROM = {
+			letter_event = {
+				id = lux_nm_court.16
+				days = 3
+			}
+			clr_character_flag = asked_for_job
+		}
+		clr_character_flag = asked_lord_spiritual_petition		
+	}
+	option = {
+		name = "EVTOPTBlux_nm_court.15" 
+		FROM = {
+			clr_character_flag = asked_for_job
+			give_job_title = job_spiritual
+		}
+	}
+	option = {
+		name = "EVTOPTClux_nm_court.15" 
+		FROM = {
+			prestige = -10
+		}
+		FROM = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_refused_council
+			}
+		}
+		clr_character_flag = asked_lord_spiritual_petition
+	}
+}
+
+# Position has been filled
+letter_event = {
+	id = lux_nm_court.16
+	desc = "EVTDESClux_nm_court.16"
+	picture = GFX_evt_spymaster
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlux_nm_court.16"
+	}
+}

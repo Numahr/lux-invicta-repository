@@ -1,0 +1,116 @@
+#A child is born
+character_event = {
+	id = 1000109005
+	picture = "GFX_evt_pregnancy"
+	
+	hide_from = yes
+	
+	trigger = {	
+		ai = yes
+		NOT = { trait = twin }
+		mother = { is_alive = yes }
+        NOT = { age = 1 }
+        NOT = { has_character_flag = born }
+		NOT = { has_global_flag = childbirth_mortality_off }
+	}
+		
+	desc = "EVTDESC1000109005"
+
+	option = {
+		name = "EVTOPTA1000109005"
+		#check if mother dies
+		if = {
+			limit = {
+				mother = {
+					health = 6
+				}
+			}
+			random_list = {
+				1 = { set_character_flag = mother_died set_character_flag = child_died } #both die
+				3 = { set_character_flag = mother_died } #mother dies
+				16 = { set_character_flag = child_died } #child dies
+				80 = { } #nobody dies
+			}
+		}
+		if = {
+			limit = {
+				mother = {
+					NOT = { health = 6 }
+					health = 3
+				}
+			}
+			random_list = {
+				1 = { set_character_flag = mother_died set_character_flag = child_died } #both die
+				4 = { set_character_flag = mother_died } #mother dies
+				25 = { set_character_flag = child_died } #child dies
+				70 = { } #nobody dies
+			}
+		}
+		if = {
+			limit = {
+				mother = {
+					NOT = { health = 3 }
+				}
+			}
+			random_list = {
+				2 = { set_character_flag = mother_died set_character_flag = child_died } #both die
+				8 = { set_character_flag = mother_died } #mother dies
+				30 = { set_character_flag = child_died } #child dies
+				60 = { } #nobody dies
+			}
+		}
+		#handle deaths
+		if = {
+			limit = {
+				has_character_flag = child_died
+			}
+			character_event = { id = 1000109007 }
+		}		
+		if = {
+			limit = {
+				has_character_flag = mother_died
+			}
+			mother = { character_event = { id = 1000109006 } }
+		}
+		clr_character_flag = mother_died
+		clr_character_flag = child_died
+        set_character_flag = born
+	}
+}
+
+#Mother dies in childbirth
+character_event = {
+	id = 1000109006
+	picture = "GFX_evt_illness"
+	
+	is_triggered_only = yes
+		
+	desc = "EVTDESC1000109006"
+	
+	immediate = {
+		death = { death_reason = death_childbirth } #actually childbirth
+	}
+
+	option = {
+		name = "EVTOPTA1000109006"
+	}
+}
+
+#Child is stillborn
+character_event = {
+	id = 1000109007
+	picture = "GFX_evt_illness"
+	
+	is_triggered_only = yes
+		
+	desc = "EVTDESC1000109007"
+	
+	immediate = {
+		add_trait = sickly
+		death = { death_reason = death_trait } #actually childbirth
+	}
+
+	option = {
+		name = "EVTOPTA1000109007"
+	}
+}

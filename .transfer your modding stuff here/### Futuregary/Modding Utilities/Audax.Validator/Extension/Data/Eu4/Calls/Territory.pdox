@@ -1,0 +1,62 @@
+(ContextValidator Trigger) = { Members = {
+
+} }
+
+(ContextValidator ProvinceTrigger) = { Members = {
+	(N Y) = { Left = "is_core" Right = { Tag Owner ThisProvince ThisCountry Yes Emperor Controller } } # UNTESTED: NOT is_core=owner UNTESTED: yes UNTESTED controller
+	(Y  ) = { Left = "is_overseas" Right = Bool }
+	(Y  ) = { Left = "is_colony" Right = Bool } # UNTESTED: is_colony = yes
+	(Y  IfNot = Debug) = { Left = "has_empty_adjacent_province" Right = Yes }
+	(Y  If = Debug) = { Left = "has_empty_adjacent_province" Right = Bool } # BROKEN for no it seems
+	(Y  ) = { Left = "is_empty" Right = Bool }
+	(A Y) = { Left = "owned_by" Right = { Tag } }
+	(N Y) = { Left = "owned_by" Right = { ThisProvince ThisCountry Emperor Controller } }
+	(A Y) = { Left = "controlled_by" Right = { Tag } }
+	(N Y) = { Left = "controlled_by" Right = { Owner ThisProvince ThisCountry } } # UNTESTED: NOT = { controlled_by = owner }
+	(N Y) = { Left = "is_claim" Right = { Tag ThisCountry ThisProvince } } # UNTESTED ThisCountry, ThisProvince
+	#(N Y If = Debug) = { Left = "is_claim" Right = { ThisProvince ThisCountry } } # BROKEN possibly
+	
+} }
+
+(ContextValidator CountryTrigger) = { Members = {
+	(N Y) = { Left = "owns" Right = LandProvince }
+	(N Y) = { Left = "is_core" Right = LandProvince }
+
+	(N Y) = { Left = "num_of_owned_provinces_with" Right = {
+		Single = { Left = "value" Right = PInt }
+		Inherits = ProvinceTrigger
+	} }
+	
+	(N Y If = Debug) = { Left = "is_claim" Right = LandProvince } # BROKEN possibly
+} }
+
+(ContextValidator Command) = { Members = {
+
+} }
+
+(ContextValidator ProvinceCommand) = { Members = {
+	(N Y) = { Left = "add_core" Right = { Tag ThisCountry Emperor } }
+	(N Y) = { Left = "remove_core" Right = { Tag ThisCountry Emperor } }
+
+} }
+
+(ContextValidator CountryCommand) = { Members = {
+	(N Y) = { Left = "add_core" Right = { LandProvince ThisProvince } }
+	(N Y) = { Left = "remove_core" Right = { LandProvince ThisProvince } }
+
+} }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+(Validator ReligionValidator) = {
+	Type = Default
+	FriendlyName = "Religions"
+	ValidatorName = ReligionFile
+	(FileGroup "common\religions" "*.txt")
+}
+
+(Type ReligionFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = ReligionGroupDef (CheckKey "*" Left IfNot = NoCheckKey) }
+}
+
+(Type ReligionGroupDef) = {
+	Optional = { Left = "defender_of_faith" Right = Bool }
+	Optional = { Left = "crusade_name" Right = Key }
+
+	(Ch N N) = { Left = { Type = String } Right = ReligionDef UniqueId = Left (CheckKey "*" Left IfNot = NoCheckKey) }
+
+}
+
+(Type ReligionDef) = {
+	Single = { Left = "color" Right = FloatColor }
+	Optional = { Left = "allowed_conversion" Right = { (PdoList Y) = { Type = Religion } } }
+	Optional = { Left = "papacy" Right = Bool }
+	Optional = { Left = "annex" Right = Bool }
+	Optional = { Left = "uses_piety" Right = Bool }
+	Optional = { Left = "has_patriarchs" Right = Bool }
+	Optional = { Left = "misguided_heretic" Right = Bool }
+	Optional = { Left = "heretic" Right = { (PdoList Y) = { Type = Key } } }
+	Optional = { Left = "on_convert" Right = CountryCommand }
+	Optional = { Left = "country" Right = CountryModifierDef }
+	Optional = { Left = "province" Right = ProvinceModifierDef }
+	Optional = { Left = "date" Right = Date }
+
+}
+

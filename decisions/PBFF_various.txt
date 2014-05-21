@@ -1,0 +1,209 @@
+decisions = {
+	#Request the transfer of a dejure vassal
+	request_dejure_vassal_transfer = {
+		potential = {
+			independent = no
+			NOT = { has_character_flag = requested_vassal_transfer }
+			liege = {
+				NOT = { character = ROOT }
+				war = no
+				any_vassal = {
+					NOT = { character = ROOT }
+					de_jure_liege = ROOT
+					war = no
+				}
+			}
+		}
+		allow = {
+			war = no
+			OR = {
+				trait = greedy
+				trait = envious
+				trait = ambitious
+				ai = no
+			}
+		}
+		effect = {
+			set_character_flag = requested_vassal_transfer
+			liege = { character_event = { id = 63001 days = 4 tooltip = "EVTTOOLTIP63001" } }
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				trait = content
+			}
+		}
+	}
+	
+	ransom_all = {
+		potential = {
+			ai = no
+			any_courtier = {
+				NOT = { same_realm = ROOT }
+				prisoner = yes
+			}
+		}
+		
+		allow = {
+			NOT = { has_character_modifier = ransom_timer }
+			prestige = 25
+		}
+		
+		effect = {
+			prestige = -25 
+			any_courtier = {
+				limit = {
+					NOT = { same_realm = ROOT }
+					prisoner = yes
+
+				}
+				character_event = { id = ransomall.0 days = 5 random = 12 tooltip = ransom_all_tooltip }
+			}
+			
+			add_character_modifier = {
+				name = ransom_timer
+				duration = 25
+				hidden = yes
+			}
+		}
+	}
+	release_prisoners = {
+		potential = {
+			ai = no
+			any_courtier = {
+				NOT = { same_realm = ROOT }
+				prisoner = yes
+			}
+		}
+		effect = {
+			piety = 10
+			prestige = 5
+			any_courtier = {
+				limit = {
+					NOT = { same_realm = ROOT }
+					prisoner = yes
+				}
+				hidden_tooltip = {
+					opinion = {
+						who = ROOT
+						modifier = opinion_merciful
+						months = 60
+					}
+					if = {
+						limit = {
+							liege = { character = ROOT }
+							is_landed = yes
+						}
+						ROOT = {
+							any_vassal = {
+								limit = {
+									NOT = {
+										has_opinion_modifier = { who = ROOT modifier = opinion_released_prisoner }
+									}
+								}
+								opinion = {
+									modifier = opinion_released_prisoner
+									who = ROOT
+									months = 30
+								}
+							}
+						}
+					}
+				}
+				imprison = no
+			}
+		}
+	}
+	execute_prisoners = {
+		potential = {
+			ai = no
+			any_courtier = {
+				NOT = { same_realm = ROOT }
+				prisoner = yes
+			}
+		}
+		allow = {
+		prestige = 100
+		}
+		effect = {
+			prestige = -100
+			if = {
+				limit = {
+					any_courtier = {
+						NOT = { same_realm = ROOT }
+						prisoner = yes
+						dynasty = ROOT
+					}
+					NOT = { religion_group = muslim }
+				}
+				custom_tooltip = {
+					text = become_kinslayer_tooltip
+					hidden_tooltip = {
+						ROOT = { add_trait = kinslayer }
+					}
+				}
+			}
+			any_courtier = {
+				limit = {
+					NOT = { same_realm = ROOT }
+					prisoner = yes
+
+				}
+				hidden_tooltip = {
+					top_liege = {
+						opinion = {
+							who = ROOT
+							modifier = opinion_tyrant
+							months = 120
+						}
+						any_realm_character = {
+							opinion = {
+								who = ROOT
+								modifier = opinion_tyrant
+								months = 120
+							}
+						}
+					}
+					ROOT = { piety = -20 }
+				}
+				death = {
+					death_reason = death_execution
+					killer = ROOT
+				}
+			}
+		}
+	}
+}
+dynasty_decisions = {
+	#Prisoner exchange
+	exchange_prisoners = {
+		potential = {
+			prisoner = yes
+			host = {
+				NOT = { dynasty = FROM }
+			}
+			is_landed = no
+			NOT = { FROM = { has_character_flag = prisoner_exchange_attempted } }
+			NOT = { has_character_flag = prisoner_exchange_attempted }
+		}
+		allow = {
+			host = {
+				any_dynasty_member = {
+					prisoner = yes
+					host = { character = FROM }
+				}
+			}
+		}
+		effect = {
+			set_character_flag = prisoner_exchange_attempted
+			FROM = { set_character_flag = prisoner_exchange_attempted }
+			host = {
+				character_event = { id = meneth.213 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}

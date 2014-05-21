@@ -1,0 +1,1283 @@
+namespace = better_rebels
+
+###########################################
+#
+# BETTER REBELS - LIBERT3 EDITION
+#
+# changes: now only one modifier - "Imminent Revolt"
+# once this modifier-class revolt is not suppressed, then relevant rebel stacks show up (generic for non-TOG, Heretic/Nationalist/Peasant rebels for TOG [eventually]
+###########################################
+
+###########################################
+# Rebellion
+###########################################
+
+province_event = {
+	id = 1000025000 #better_rebels.0 - doesn`t work for some reason
+	desc = "EVTDESCbetter_rebels.0"
+	picture = "GFX_evt_peasants"
+	
+	is_triggered_only = yes
+		trigger = {
+		NOT = { has_dlc = "The Old Gods" }
+	}
+	option = {
+		name = "EVTOPTAbetter_rebels.0"
+		hidden_tooltip = {
+			
+			if = {
+				limit = {
+					has_province_modifier = brm_serious_revolt
+					NOT = {
+						has_province_modifier = brm_massive_revolt
+					}
+				}
+				remove_province_modifier = brm_minor_revolt
+				remove_province_modifier = brm_serious_revolt
+				add_province_modifier = {
+					name = brm_minor_revolt
+					duration = 1825 #5 years
+				}
+				add_province_modifier = {
+					name = brm_serious_revolt
+					duration = 1095 #3 years
+				}
+				add_province_modifier = {
+					name = brm_massive_revolt
+					duration = 730 #2 years
+				}
+				remove_province_modifier = brm_recent_revolt
+				add_province_modifier = {
+					name = brm_recent_revolt
+					duration = 3650 # 10 years
+				}
+			}
+			if = {
+				limit = {
+					has_province_modifier = brm_minor_revolt
+					NOT = {
+						has_province_modifier = brm_serious_revolt
+					}
+				}
+				remove_province_modifier = brm_minor_revolt
+				add_province_modifier = {
+					name = brm_minor_revolt
+					duration = 1095 #3 years
+				}
+				add_province_modifier = {
+					name = brm_serious_revolt
+					duration = 730 #2 years
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_province_modifier = brm_minor_revolt
+					}
+				}
+				add_province_modifier = {
+					name = brm_minor_revolt
+					duration = 730 #2 years
+				}
+			}
+		
+
+			# Inform barons about the rebels
+			owner = {
+				set_character_flag = informed_about_rebels
+			}
+			any_province_lord = {
+				limit = {
+					NOT = { has_character_flag = informed_about_rebels }
+					ai = no
+				}
+				character_event = { id = better_rebels.1 days = 7 }
+			}
+			owner = {
+				clr_character_flag = informed_about_rebels
+			}
+		}
+	}
+}
+
+# Inform barons about the rebels
+character_event = {
+	id = better_rebels.1
+	desc = "EVTDESCbetter_rebels.1"
+	picture = "GFX_evt_peasants"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.1"
+	}
+}
+
+###########################################
+# Buildings Destroyed
+###########################################
+
+# Rebels Destroy Random Building for Count
+province_event = {
+	id = better_rebels.2
+	desc = "EVTDESCbetter_rebels.2"
+	picture = "GFX_evt_burning_house"
+
+	trigger = {
+		# Revolting province
+		has_province_modifier = brm_minor_revolt
+		
+		any_province_lord = {
+			any_demesne_title = {
+				location = {
+					province_id = ROOT
+				}
+				tier = baron
+				num_of_buildings = 1
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		years = 40
+		
+		modifier = {
+			factor = 1.5
+			NOT = {
+				has_province_modifier = brm_serious_revolt
+			}
+		}
+		modifier = {
+			factor = 0.75
+			has_province_modifier = brm_massive_revolt
+		}
+	}
+	
+	immediate = {
+		hidden_tooltip = {
+			random_province_lord = {
+				limit = {
+					any_demesne_title = {
+						location = {
+							province_id = ROOT
+						}
+						tier = baron
+						num_of_buildings = 1
+					}
+				}
+				set_character_flag = building_is_destroyed
+			}		
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.2"
+		trigger = { owner = { has_character_flag = building_is_destroyed } }
+		owner = {
+			random_demesne_title = {
+				limit = {
+					location = {
+						province_id = ROOT
+					}
+					tier = baron
+					num_of_buildings = 1
+				}
+				destroy_random_building = yes
+			}
+		}
+	}
+	option = {
+		name = "EVTOPTBbetter_rebels.2"
+		trigger = { NOT = { owner = { has_character_flag = building_is_destroyed } } }
+		hidden_tooltip = {
+			random_province_lord = {
+				limit = {
+					any_demesne_title = {
+						location = {
+							province_id = ROOT
+						}
+						tier = baron
+						num_of_buildings = 1
+					}
+					has_character_flag = building_is_destroyed
+				}
+				character_event = { id = better_rebels.3 days = 1 }
+			}
+		}
+	}
+}
+
+# Rebels Destroy Random Building for Baron
+character_event = {
+	id = better_rebels.3
+	desc = "EVTDESCbetter_rebels.3"
+	picture = "GFX_evt_burning_house"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.2"
+		random_demesne_title = {
+			limit = {
+				location = {
+					province_id = FROM
+				}
+				tier = baron
+				num_of_buildings = 1
+			}
+			destroy_random_building = yes
+		}
+	}
+}
+
+
+###########################################
+# Characters Killed / Maimed / Wounded
+###########################################
+# better_rebels.4-better_rebels.10
+
+# Rebels Kill Random Province Lord - Duke or above
+character_event = {
+	id = better_rebels.4
+	desc = "EVTDESCbetter_rebels.4"
+	picture = "GFX_evt_peasants"
+
+	only_rulers = yes
+	min_age = 16
+	prisoner = no
+	
+	trigger = {
+		NOT = { has_global_flag = possible_province_defection }
+		primary_title = { higher_tier_than = COUNT }
+		in_command = no
+		# Revolting province
+		location = {
+			has_province_modifier = brm_minor_revolt
+		}
+	}
+	
+	weight_multiplier = {
+		years = 50
+		
+		modifier = {
+			factor = 1.5
+			NOT = {
+				has_province_modifier = brm_serious_revolt
+			}
+		}
+		modifier = {
+			factor = 0.75
+			has_province_modifier = brm_massive_revolt
+		}
+	}
+	
+	immediate = {
+		hidden_tooltip = {
+			random_list = {
+				50 = { set_character_flag = character_killed_by_rebels }
+				25 = { set_character_flag = character_maimed_by_rebels }
+				25 = { set_character_flag = character_wounded_by_rebels }
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.4"
+		trigger = { has_character_flag = character_killed_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { character_event = { id = better_rebels.8 days = 3 } }
+			}
+		}
+		death = yes
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTBbetter_rebels.4"
+		trigger = { has_character_flag = character_maimed_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { letter_event = { id = better_rebels.9 days = 3 } }
+			}
+		}
+		add_trait = maimed
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTCbetter_rebels.4"
+		trigger = { has_character_flag = character_wounded_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { letter_event = { id = better_rebels.10 days = 3 } }
+			}
+		}
+		add_trait = wounded
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+}
+
+# Rebels Kill Random Province Lord - Count
+character_event = {
+	id = better_rebels.5
+	desc = "EVTDESCbetter_rebels.4"
+	picture = "GFX_evt_peasants"
+
+	only_rulers = yes
+	min_age = 16
+	prisoner = no
+	
+	trigger = {
+		NOT = { has_global_flag = possible_province_defection }
+		primary_title = { tier = COUNT }
+		in_command = no
+		# Revolting province
+		location = {
+			has_province_modifier = brm_minor_revolt
+		}
+	}
+	
+	weight_multiplier = {
+		years = 40
+		
+		modifier = {
+			factor = 1.5
+			NOT = {
+				has_province_modifier = brm_serious_revolt
+			}
+		}
+		modifier = {
+			factor = 0.75
+			has_province_modifier = brm_massive_revolt
+		}
+	}
+	
+	immediate = {
+		hidden_tooltip = {
+			random_list = {
+				50 = { set_character_flag = character_killed_by_rebels	}
+				25 = { set_character_flag = character_maimed_by_rebels }
+				25 = { set_character_flag = character_wounded_by_rebels }
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.4"
+		trigger = { has_character_flag = character_killed_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { character_event = { id = better_rebels.8 days = 3 } }
+			}
+		}
+		death = yes
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTBbetter_rebels.4"
+		trigger = { has_character_flag = character_maimed_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { letter_event = { id = better_rebels.9 days = 3 } }
+			}
+		}
+		add_trait = maimed
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTCbetter_rebels.4"
+		trigger = { has_character_flag = character_wounded_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { letter_event = { id = better_rebels.10 days = 3 } }
+			}
+		}
+		add_trait = wounded
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+}
+
+# Rebels Kill Random Province Lord - Baron
+character_event = {
+	id = better_rebels.6
+	desc = "EVTDESCbetter_rebels.4"
+	picture = "GFX_evt_peasants"
+
+	only_rulers = yes
+	min_age = 16
+	prisoner = no
+	
+	trigger = {
+		# Revolting province
+		location = {
+			has_province_modifier = brm_minor_revolt
+		}
+		primary_title = { tier = BARON }
+		in_command = no
+	}
+	
+	weight_multiplier = {
+		years = 30
+		
+		modifier = {
+			factor = 1.5
+			NOT = {
+				has_province_modifier = brm_serious_revolt
+			}
+		}
+		modifier = {
+			factor = 0.75
+			has_province_modifier = brm_massive_revolt
+		}
+	}
+	
+	immediate = {
+		hidden_tooltip = {
+			random_list = {
+				50 = { set_character_flag = character_killed_by_rebels }
+				25 = { set_character_flag = character_maimed_by_rebels }
+				25 = { set_character_flag = character_wounded_by_rebels }
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.4"
+		trigger = { has_character_flag = character_killed_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { character_event = { id = better_rebels.8 days = 3 } }
+			}
+		}
+		death = yes
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTBbetter_rebels.4"
+		trigger = { has_character_flag = character_maimed_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { letter_event = { id = better_rebels.9 days = 3 } }
+			}
+		}
+		add_trait = maimed
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTCbetter_rebels.4"
+		trigger = { has_character_flag = character_wounded_by_rebels }
+		hidden_tooltip = {
+			if = {
+				limit = { independent = no }
+				liege = { letter_event = { id = better_rebels.10 days = 3 } }
+			}
+		}
+		add_trait = wounded
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+}
+
+# Rebels Kill Random Province Character
+character_event = {
+	id = better_rebels.7
+	desc = "EVTDESCbetter_rebels.4"
+	picture = "GFX_evt_peasants"
+
+	trigger = {
+		is_ruler = no
+		in_command = no
+		prisoner = no
+		# Revolting province
+		location = {
+			has_province_modifier = brm_minor_revolt
+		}
+	}
+	
+	weight_multiplier = {
+		years = 100
+		
+		modifier = {
+			factor = 1.5
+			NOT = {
+				has_province_modifier = brm_serious_revolt
+			}
+		}
+		modifier = {
+			factor = 0.75
+			has_province_modifier = brm_massive_revolt
+		}
+	}
+	
+	immediate = {
+		hidden_tooltip = {
+			random_list = {
+				50 = { set_character_flag = character_killed_by_rebels }
+				25 = { set_character_flag = character_maimed_by_rebels }
+				25 = { set_character_flag = character_wounded_by_rebels }
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.4"
+		trigger = { has_character_flag = character_killed_by_rebels }
+		liege = { character_event = { id = better_rebels.8 days = 3 } }
+		death = yes
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTAbetter_rebels.4"
+		trigger = { has_character_flag = character_maimed_by_rebels }
+		liege = { letter_event = { id = better_rebels.9 days = 3 } }
+		add_trait = maimed
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+	option = {
+		name = "EVTOPTAbetter_rebels.4"
+		trigger = { has_character_flag = character_wounded_by_rebels }
+		liege = { letter_event = { id = better_rebels.10 days = 3 } }
+		add_trait = wounded
+		# Clear flags
+		clr_character_flag = character_killed_by_rebels
+		clr_character_flag = character_maimed_by_rebels
+		clr_character_flag = character_wounded_by_rebels
+	}
+}
+
+# Character killed
+character_event = {
+	id = better_rebels.8
+	desc = "EVTDESCbetter_rebels.8"
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.8"
+	}
+}
+
+# Character maimed
+letter_event = {
+	id = better_rebels.9
+	desc = "EVTDESCbetter_rebels.9"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.9"
+	}
+}
+
+# Character wounded
+letter_event = {
+	id = better_rebels.10
+	desc = "EVTDESCbetter_rebels.10"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.10"
+	}
+}
+
+
+###########################################
+# Province Defection Events
+###########################################
+
+# Province defects
+# Isolated province
+province_event = {
+	id = better_rebels.11
+	desc = "EVTDESCbetter_rebels.11"
+	picture = GFX_evt_peasants
+	
+	trigger = {
+		NOT = { has_global_flag = possible_province_defection }
+		# Massive revolts
+		has_province_modifier = brm_massive_revolt
+		# Not for those in an independence war
+		owner = {
+			top_liege = {
+				independent = yes
+			}
+		}
+		# Not a player's last province
+		owner = {
+			OR = {
+				ai = yes
+				AND = {
+					ai = no
+					any_demesne_province = {
+						NOT = { province_id = ROOT }
+					}
+				}
+			}
+
+		}
+		# No neighbor province from same realm
+		NOT = {
+			any_neighbor_province = {
+				owner = {
+					top_liege = {
+						ROOT = {
+							owner = {
+								top_liege = {
+									character = PREVPREVPREV
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# Not the only province in the realm
+		owner = {
+			top_liege = {
+				any_realm_province = {
+					NOT = { province_id = ROOT }
+				}
+			}
+		}
+		# Not a single-province island
+		any_neighbor_province = {
+			is_land = yes
+		}
+		# Not a coastal province
+		port = no		
+		# Not if part of de jure duchy held by someone in same top realm
+		NOT = {
+			duchy = {
+				holder_scope = {
+					top_liege = {
+						ROOT = {
+							owner = {
+								top_liege = {
+									character = PREVPREVPREV
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		years = 10
+	}
+
+	immediate = {
+		hidden_tooltip = {
+			set_global_flag = possible_province_defection
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.15"
+		hidden_tooltip = {
+			owner = {
+				set_character_flag = defected_from
+			}
+		}
+		county = {
+			rebel_defection = yes
+		}
+		hidden_tooltip = {
+			province_event = { id = better_rebels.12 days = 3 }
+			clear_revolt = yes
+		}
+	}
+}
+
+# Province defects to new ruler
+province_event = {
+	id = better_rebels.12
+	desc = "EVTDESCbetter_rebels.12"
+	picture = GFX_evt_peasants
+	
+	show_from_from = no
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.12"
+		hidden_tooltip = {
+			owner = {
+				any_independent_ruler = {
+					any_realm_character = {
+						limit = { has_character_flag = defected_from }
+						# Liege is topliege
+						if = {
+							limit = {
+								liege = { character = PREVPREV }
+							}
+							liege = { character_event = { id = better_rebels.13 days = 3 } }
+						}
+						# Liege is not topliege
+						if = {
+							limit = {
+								liege = { NOT = { character = PREVPREV } }
+							}
+							liege = { character_event = { id = better_rebels.13 days = 3 } }
+							top_liege = { character_event = { id = better_rebels.13 days = 3 } }
+						}
+						clr_character_flag = defected_from
+					}
+				}
+			}
+			clr_global_flag = possible_province_defection
+		}
+	}
+}
+
+# Liege notified
+character_event = {
+	id = better_rebels.13
+	desc = "EVTDESCbetter_rebels.13"
+	picture = GFX_evt_peasants
+	
+	show_from_from = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.14"
+	}
+}
+
+# Increase revolt risk in isolated provinces
+province_event = {
+	id = better_rebels.20
+	desc = "EVTDESCbetter_rebels.20"
+	picture = "GFX_evt_peasants"
+	
+	trigger = {
+		# Does not have this modifier already
+		NOT = {
+			has_province_modifier = brm_isolated_province
+		}
+		# Not a player's last province
+		owner = {
+			OR = {
+				ai = yes
+				AND = {
+					ai = no
+					any_demesne_province = {
+						NOT = { province_id = ROOT }
+					}
+				}
+			}
+		}
+		# No neighbor province from same realm
+		NOT = {
+			any_neighbor_province = {
+				owner = {
+					top_liege = {
+						ROOT = {
+							owner = {
+								top_liege = {
+									character = PREVPREVPREV
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# Not the only province in the realm
+		owner = {
+			top_liege = {
+				any_realm_province = {
+					NOT = { province_id = ROOT }
+				}
+			}
+		}
+		# Not a single-province island
+		any_neighbor_province = {
+			is_land = yes
+		}
+		# Not a coastal province
+		port = no
+		# Not if part of de jure duchy held by someone in same top realm
+		NOT = {
+			duchy = {
+				holder_scope = {
+					top_liege = {
+						ROOT = {
+							owner = {
+								top_liege = {
+									character = PREVPREVPREV
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	weight_multiplier = {
+		months = 1
+	}
+
+	option = {
+		name = "EVTOPTAbetter_rebels.20"
+		add_province_modifier = {
+			name = brm_isolated_province
+			duration = -1
+		}
+	}
+}
+
+# Province is no longer isolated
+province_event = {
+	id = better_rebels.21
+	desc = "EVTDESCbetter_rebels.21"
+	picture = "GFX_evt_peasants"
+	
+	trigger = {
+		has_province_modifier = brm_isolated_province
+		
+		OR = {
+			NOT = {
+				# Not a player's last province
+				owner = {
+					OR = {
+						ai = yes
+						AND = {
+							ai = no
+							any_demesne_province = {
+								NOT = { province_id = ROOT }
+							}
+						}
+					}
+				}
+			}
+			NOT = {
+				# No neighbor province from same realm
+				NOT = {
+					any_neighbor_province = {
+						owner = {
+							top_liege = {
+								ROOT = {
+									owner = {
+										top_liege = {
+											character = PREVPREVPREV
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			NOT = {
+				# Not the only province in the realm
+				owner = {
+					top_liege = {
+						any_realm_province = {
+							NOT = { province_id = ROOT }
+						}
+					}
+				}
+			}
+			NOT = {
+				# Not if part of de jure duchy held by someone in same top realm
+				NOT = {
+					duchy = {
+						holder_scope = {
+							top_liege = {
+								ROOT = {
+									owner = {
+										top_liege = {
+											character = PREVPREVPREV
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		months = 1
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.21"
+		remove_province_modifier = brm_isolated_province
+	}
+}
+
+# Revolters negotiation
+province_event = {
+	id = better_rebels.30
+	desc = "EVTDESCbetter_rebels.30"
+	picture = "GFX_evt_emissary"
+	
+	trigger = {
+		has_province_modifier = brm_minor_revolt
+		NOT = {
+			has_province_modifier = brm_rebel_offer_rejected
+		}
+	}
+	
+	weight_multiplier = {
+		months = 18
+		
+		modifier = {
+			factor = 0.95
+			owner = {
+				realm_diplomacy = 35
+			}
+		}
+		modifier = {
+			factor = 0.95
+			owner = {
+				realm_diplomacy = 30
+			}
+		}
+		modifier = {
+			factor = 0.95
+			owner = {
+				realm_diplomacy = 25
+			}
+		}
+		modifier = {
+			factor = 1.1
+			NOT = {
+				owner = {
+					realm_diplomacy = 15
+				}
+			}
+		}
+		modifier = {
+			factor = 1.5
+			NOT = {
+				owner = {
+					realm_diplomacy = 10
+				}
+			}
+		}
+		modifier = {
+			factor = 1.5
+			NOT = {
+				owner = {
+					realm_diplomacy = 5
+				}
+			}
+		}
+	}	
+	option = {
+		name = "EVTOPTAbetter_rebels.30"
+		ai_chance = {
+			factor = 20
+			
+			modifier = {
+				factor = 2
+				owner = {
+					trait = kind
+				}
+			}
+			modifier = {
+				factor = 5
+				owner = {
+					trait = craven
+				}
+			}
+			modifier = {
+				factor = 0.75
+				owner = {
+					trait = cruel
+				}
+			}
+			modifier = {
+				factor = 0.5
+				owner = {
+					trait = greedy
+				}
+			}
+		}
+		
+		if = {
+			limit = {
+				has_province_modifier = brm_massive_revolt
+			}
+			owner = {
+				wealth = -30
+				prestige = -30
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_province_modifier = brm_massive_revolt
+				}
+				has_province_modifier = brm_serious_revolt
+			}
+			owner = {
+				wealth = -20
+				prestige = -20
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_province_modifier = brm_serious_revolt
+				}
+			}
+			owner = {
+				wealth = -10
+				prestige = -10
+			}
+		}
+
+		hidden_tooltip = {
+			if = {
+				limit = {
+					NOT = {
+						has_province_modifier = brm_serious_revolt
+					}
+				}
+				remove_province_modifier = brm_minor_revolt
+			}
+			if = {
+				limit = {
+					has_province_modifier = brm_serious_revolt
+				}
+				remove_province_modifier = brm_massive_revolt
+				remove_province_modifier = brm_serious_revolt
+				remove_province_modifier = brm_minor_revolt
+				add_province_modifier = {
+					name = brm_minor_revolt
+					duration = 365 # 1 year
+				}
+			}
+			remove_province_modifier = brm_reduced_tax
+		}
+		add_province_modifier = {
+			name = brm_reduced_tax
+			duration = 3650 # 10 years
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBbetter_rebels.30"
+		ai_chance = {
+			factor = 10
+		}
+		
+		hidden_tooltip = {
+			remove_province_modifier = brm_rebel_offer_rejected
+		}
+		add_province_modifier = {
+			name = brm_rebel_offer_rejected
+			duration = 3650 # 10 years
+		}
+	}
+}
+
+# Marshal suppresses revolt
+character_event = {
+	id = 1000025031 #better_rebels.31 - doesn`t work for some reason
+	title = "EVTNAMEbetter_rebels.31"
+	desc = "EVTDESCbetter_rebels.31"
+	picture = "GFX_evt_large_army"
+	
+	only_men = yes
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		has_job_action = action_assist_arrest
+		location = {
+			has_province_modifier = brm_minor_revolt
+			NOT = {
+				has_province_modifier = brm_revolt_suppressed
+			}
+			owner = {
+				job_marshal = {
+					character = ROOT
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		months = 24
+		
+		modifier = {
+			factor = 1.2
+			location = {
+				has_province_modifier = brm_serious_revolt
+			}
+		}
+		modifier = {
+			factor = 1.2
+			location = {
+				has_province_modifier = brm_massive_revolt
+			}
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { martial = 2 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { martial = 3 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { martial = 4 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { martial = 5 }
+		}
+		modifier = {
+			factor = 0.95
+			martial = 10
+		}
+		modifier = {
+			factor = 0.95
+			martial = 11
+		}
+		modifier = {
+			factor = 0.95
+			martial = 12
+		}
+		modifier = {
+			factor = 0.95
+			martial = 13
+		}
+		modifier = {
+			factor = 0.95
+			martial = 14
+		}
+		modifier = {
+			factor = 0.95
+			martial = 15
+		}
+		modifier = {
+			factor = 0.95
+			martial = 16
+		}
+		modifier = {
+			factor = 0.95
+			martial = 17
+		}
+		modifier = {
+			factor = 0.95
+			martial = 18
+		}
+		modifier = {
+			factor = 0.95
+			martial = 19
+		}
+		modifier = {
+			factor = 0.95
+			martial = 20
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.31"
+		
+		prestige = 5
+		liege = { letter_event = { id = better_rebels.32 days = 7 tooltip = "EVTTOOLTIPbetter_rebels.32" } }
+		hidden_tooltip = {
+			location = {
+				remove_province_modifier = brm_revolt_suppressed
+				add_province_modifier = {
+					name = brm_revolt_suppressed
+					duration = 1825 # 5 years
+				}
+			}
+			if = {
+				limit = {
+					location = {
+						NOT = {
+							has_province_modifier = brm_serious_revolt
+						}
+					}
+				}
+				location = {
+					remove_province_modifier = brm_minor_revolt
+				}
+			}
+			if = {
+				limit = {
+					location = {
+						has_province_modifier = brm_serious_revolt
+					}
+				}
+				location = {
+					remove_province_modifier = brm_massive_revolt
+					remove_province_modifier = brm_serious_revolt
+					remove_province_modifier = brm_minor_revolt
+					add_province_modifier = {
+						name = brm_minor_revolt
+						duration = 365 # 1 year
+					}
+				}
+			}
+		}
+	}
+}
+
+# Liege gets a letter about revolt being suppressed
+letter_event = {
+	id = better_rebels.32
+	desc = "EVTDESCbetter_rebels.32"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAbetter_rebels.32"
+	}
+}

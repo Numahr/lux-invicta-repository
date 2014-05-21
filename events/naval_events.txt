@@ -1,0 +1,165 @@
+#Storm!
+character_event = {
+	id = 1600000
+	desc = "EVTDESC1600000"
+	picture = "GFX_evt_kraken"
+	
+	trigger = {
+		is_ruler = yes
+		OR = { higher_tier_than = baron is_patrician = yes }
+		war = yes
+		OR = {
+			independent = yes
+			ai = no
+		}
+		any_realm_character = {
+			ai = yes
+			any_liege = {
+				character = ROOT
+			}
+			NOT = {
+				any_liege = { 
+					ai = no 
+					NOT = { character = ROOT }
+				}
+			}
+			OR = {
+				ROOT = { ai = no }
+				NOT = { any_liege = { ai = no } }
+			}	
+			in_command = yes
+			location = {
+				NOT = {
+					county = { has_holder = yes }
+				}
+			}	
+		}
+		OR = {
+			NOT = { has_character_flag = recent_storm }
+			had_character_flag = {
+				flag = recent_storm
+				days = 30
+			}
+		}
+	}	
+	
+	weight_multiplier = {
+		months = 36
+	}
+	
+	immediate = {
+		set_character_flag = recent_storm
+		hidden_tooltip = {
+			random_list = {
+				33 = { }
+				33 = { set_global_flag = two_victims }
+				33 = { set_global_flag = three_victims }
+			}		
+			random_realm_character = {
+				limit = {
+					OR = {
+						is_ruler = no
+						tier = baron
+					}
+					ai = yes
+					any_liege = {
+						character = ROOT
+					}
+					OR = {
+						ROOT = { ai = no }
+						NOT = { any_liege = { ai = no } }
+					}				
+					in_command = yes
+					location = {
+						NOT = {
+							county = { has_holder = yes }
+						}
+					}			
+				}
+				location = {
+					ROOT = {
+						if = {
+							limit = {
+								in_command = yes
+								location = {
+									province_id = PREVPREV
+								}
+							}
+							troops = -0.33
+						}				
+						any_realm_character = {
+							limit = {
+								OR = {
+									is_ruler = no
+									tier = baron
+								}							
+								ai = yes
+								any_liege = {
+									character = ROOT
+								}
+								OR = {
+									ROOT = { ai = no }
+									NOT = { any_liege = { ai = no } }
+								}							
+								in_command = yes
+								location = {
+									province_id = PREVPREVPREV
+								}
+							}
+							troops = -0.33
+							set_character_flag = possible_storm_victim
+						}
+					}				
+				}
+				troops = -0.33
+				set_character_flag = storm_victim
+			}
+			if = {
+				limit = {
+					OR = {
+						has_global_flag = two_victims
+						has_global_flag = three_victims
+					}
+				}
+				random_realm_character = {
+					limit = {
+						has_character_flag = possible_storm_victim
+						NOT = { has_character_flag = storm_victim }
+					}	
+					set_character_flag = storm_victim
+				}
+			}
+			if = {
+				limit = {
+					has_global_flag = three_victims
+				}
+				random_realm_character = {
+					limit = {
+						has_character_flag = possible_storm_victim	
+						NOT = { has_character_flag = storm_victim }
+					}	
+					set_character_flag = storm_victim
+				}
+			}
+			any_realm_character = {
+				limit = { has_character_flag = possible_storm_victim }
+				clr_character_flag = possible_storm_victim
+			}			
+			clr_global_flag = two_victims
+			clr_global_flag = three_victims
+		}
+	}
+
+	option = {
+		name = "EVTOPTA1600000"	
+		any_realm_character = {
+			limit = {
+				has_character_flag = storm_victim			
+			}
+			location = {
+				custom_tooltip = { text = CUSTOMTOOLTIP6 }
+			}
+			death = { death_reason = death_accident }
+		}
+	}
+}

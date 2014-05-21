@@ -1,0 +1,962 @@
+###################################
+#
+# Various events
+#
+# Id meneth.201 to meneth.299 is reserved
+#
+#
+###################################
+
+namespace = meneth
+
+#Event to kill off useless courtiers
+character_event = {
+	id = meneth.201
+	desc = meneth.201.desc
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+	
+	trigger = {
+		is_ruler = no
+		is_councillor = no
+		is_married = no
+		is_adult = yes
+		OR = {
+			AND = {
+				age = 40 #5 years of fertility isn't much use
+				is_female = yes
+			}
+			trait = incapable #No reason to keep incapable characters around
+			has_character_modifier = old_age
+			NOT = {
+				OR = {
+					martial = 5
+					diplomacy = 5
+					intrigue = 5
+					stewardship = 5
+					learning = 5
+				}
+			}
+		}
+		NOT = {
+			any_dynasty_member = {
+				higher_tier_than = baron #Don't want the relatives of important people dying
+			}
+		}
+		NOT = {
+			any_child = {
+				higher_tier_than = baron #Don't want the relatives of important people dying
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 1
+	}
+	
+	option = {
+		name = meneth.201.a
+		death = { death_reason = death_accident }
+	}
+}
+#Interest on loans
+character_event = {
+	id = meneth.203
+	desc = meneth.203.desc
+	picture = GFX_evt_council
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		OR = {
+			has_character_modifier = small_loan
+			has_character_modifier = medium_loan
+			has_character_modifier = large_loan
+			has_character_modifier = huge_loan
+		}
+	}
+	
+	#Pay interest
+	option = {
+		name = meneth.203.a
+		ai_chance = {
+			factor = 10 # AI will prefer piecemeal, since the event is yearly and the AI will also
+						# be considering repayment in full via decision fairly regularly. if they have
+						# no wars going on and 40% of their yearly income in reserves and enough cash
+						# to do at least a half-payment (if possible) or otherwise a full and retain a
+						# slight buffer, then the scales will tip significantly toward repayment of
+						# whatever they can, however.
+			
+			modifier = {
+				factor = 10 # AI should pay piecemeal if they don't have enough reserves for 3 months of
+				            # expenses, assuming a worst-case operating net income near zero (maybe would
+							# stretch 6 months if operating quite profitably)
+				NOT = { scaled_wealth = 0.25 }
+			}
+			modifier = {
+				factor = 2
+				scaled_wealth = 0.25
+				NOT = { scaled_wealth = 0.4 } # after 40%, we don't really care compared to other factors.
+			}
+			modifier = {
+				factor = 10 # a demesne war combined with a liege's war having raised our levies, and we
+				war = yes   # are essentially guaranteed to go with the piecemeal payment option.
+			}
+			modifier = {
+				factor = 5
+				# approx. half the maintenance will need to be paid if our liege levy is raised, relative
+				# to funding our own demesne war. same for relative importance of not running out of funds.
+				
+				any_liege = {
+					war = yes
+					has_raised_levies = ROOT
+				}
+			}
+			
+			# can we pay the maximum possible at this time and get away relatively unscathed?
+			modifier = {
+				factor = 0.2 # counteracts our levies being raised (half a personal war, half a severe
+				             # short-term savings deficit-- significantly exceeds all other factors)
+				OR = {
+					AND = {
+						wealth = 150 # buffer above max. cost of half-paid (same minimums as decisions)
+						OR = {
+							has_character_modifier = small_loan
+							AND = {
+								NOT = { has_character_modifier = small_loan } # poorman's XOR at work
+								has_character_modifier = medium_loan
+							}
+						}
+					}
+					AND = {
+						wealth = 300
+						OR = {
+							has_character_modifier = medium_loan
+							AND = {
+								NOT = { has_character_modifier = medium_loan }
+								has_character_modifier = large_loan
+							}
+						}
+					}
+					AND = {
+						wealth = 550
+						OR = {
+							has_character_modifier = large_loan
+							AND = {
+								NOT = { has_character_modifier = large_loan }
+								has_character_modifier = huge_loan
+							}
+						}
+					}
+					AND = {
+						wealth = 1000
+						has_character_modifier = huge_loan
+					}
+				}
+			}
+			
+			# the more our reserves in terms of our time horizon's operating costs (which must include
+			# investments like holding upgrades, though scaled_wealth doesn't), the more likely we are
+			# to prefer to pay as much as possible to minimize future interest (and other loan maluses),
+			# ceteris paribus.
+			modifier = {
+				factor = 0.75
+				scaled_wealth = 1.25
+			}
+			modifier = {
+				factor = 0.75
+				scaled_wealth = 2.5
+			}
+			modifier = {
+				factor = 0.75
+				scaled_wealth = 3.75
+			}
+		}
+		
+		custom_tooltip = {
+			text = pay_interest
+			hidden_tooltip = {
+				if = {
+					limit = { has_character_modifier = small_loan }
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -10
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -9
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -8
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -7
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = medium_loan
+					}
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -20
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -18
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -16
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -14
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = large_loan
+					}
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -40
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -36
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -32
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -28
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = huge_loan
+					}
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -80
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -72
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -64
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -56
+					}
+				}
+			}
+		}
+	}
+	#Repay as much as possible
+	option = {
+		name = meneth.203.b
+		trigger = {
+			wealth = 110 # TODO: needs to be revised to actually cover the
+			             # minimum based upon what loan tiers have been taken.
+						 # otherwise, the char might get to skip yearly interest
+						 # (a relatively rare chance for the AI, though).
+		}
+		ai_chance = {
+			factor = 10
+		}
+		
+		custom_tooltip = {
+			text = repay_loans
+			hidden_tooltip = {		
+				if = {
+					limit = { has_character_modifier = small_loan }
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -10
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -9
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -8
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -7
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = medium_loan
+					}
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -20
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -18
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -16
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -14
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = large_loan
+					}
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -40
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -36
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -32
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -28
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = huge_loan
+					}
+					if = {
+						limit = { NOT = { stewardship = 5 } }
+						wealth = -80
+					}
+					if = {
+						limit = {
+							stewardship = 5
+							NOT = { stewardship = 10 }
+						}
+						wealth = -72
+					}
+					if = {
+						limit = {
+							stewardship = 10
+							NOT = { stewardship = 15 }
+						}
+						wealth = -64
+					}
+					if = {
+						limit = { stewardship = 15 }
+						wealth = -56
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = huge_loan
+						wealth = 800
+					}
+					wealth = -800
+					remove_character_modifier = huge_loan
+				}
+				if = {
+					limit = {
+						has_character_modifier = huge_loan
+						NOT = { has_character_modifier = large_loan }
+						wealth = 400
+					}
+					wealth = -400
+					remove_character_modifier = huge_loan
+					add_character_modifier = {
+						name = large_loan
+						duration = -1
+						inherit = yes
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = large_loan
+						wealth = 400
+					}
+					wealth = -400
+					remove_character_modifier = large_loan
+				}
+				if = {
+					limit = {
+						has_character_modifier = large_loan
+						NOT = { has_character_modifier = medium_loan }
+						wealth = 200
+					}
+					wealth = -200
+					remove_character_modifier = large_loan
+					add_character_modifier = {
+						name = medium_loan
+						duration = -1
+						inherit = yes
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = medium_loan
+						wealth = 200
+					}
+					wealth = -200
+					remove_character_modifier = medium_loan
+				}
+				if = {
+					limit = {
+						has_character_modifier = medium_loan
+						NOT = { has_character_modifier = small_loan }
+						wealth = 100
+					}
+					wealth = -100
+					remove_character_modifier = medium_loan
+					add_character_modifier = {
+						name = small_loan
+						duration = -1
+						inherit = yes
+					}
+				}
+				if = {
+					limit = {
+						has_character_modifier = small_loan
+						wealth = 100
+					}
+					wealth = -100
+					remove_character_modifier = small_loan
+				}
+			}
+		}
+	}
+}
+
+# province_event = {
+	# id = meneth.205
+	# desc = meneth.205.desc
+	# picture = GFX_evt_peasants
+	
+	# trigger = {
+		# NOT = { has_province_modifier = recent_revolt }
+		# owner = {
+			# top_liege = {
+				# independent = yes
+			# }
+		# }
+		# owner = {
+			# OR = {
+				# ai = yes
+				# AND = {
+					# ai = no
+					# any_demesne_province = {
+						# NOT = { province_id = ROOT }
+					# }
+				# }
+			# }
+
+		# }
+		# NOT = {
+			# any_neighbor_province = {
+				# owner = {
+					# top_liege = {
+						# ROOT = {
+							# owner = {
+								# top_liege = {
+									# character = PREVPREVPREV
+								# }
+							# }
+						# }
+					# }
+				# }
+			# }
+		# }
+		# owner = {
+			# top_liege = {
+				# any_realm_province = {
+					# NOT = { province_id = ROOT }
+				# }
+			# }
+		# }
+		# any_neighbor_province = {
+			# is_land = yes
+		# }
+		# port = no		
+		# NOT = {
+			# duchy = {
+				# holder_scope = {
+					# top_liege = {
+						# ROOT = {
+							# owner = {
+								# top_liege = {
+									# character = PREVPREVPREV
+								# }
+							# }
+						# }
+					# }
+				# }
+			# }
+		# }
+	# }
+
+	# mean_time_to_happen = {
+		# months = 3
+	# }
+	
+	# option = {
+		# name = EVTOPTA600
+		# hidden_tooltip = {
+			# random_list = {
+				# 50 = {
+					# create_random_soldier = {
+						# random_traits = yes
+						# dynasty = random
+						# religion = PREV
+						# culture = PREV
+						# female = no
+						# age = 30
+						# employer = e_rebels
+					# }
+					# new_character = {
+						# spawn_unit = {
+							# province = PREV
+							# home = PREV
+							# scaled_by_biggest_garrison = 1.5
+							# troops = {
+								# archers = { 6 6 }
+								# light_cavalry = { 4 4 }
+								# light_infantry = { 10 10 }
+							# }
+						# }
+					# }
+				# }
+				# 25 = {
+					# create_random_soldier = {
+						# random_traits = yes
+						# dynasty = random
+						# religion = PREV
+						# culture = PREV
+						# female = no
+						# age = 30
+						# employer = e_rebels
+					# }
+					# new_character = {
+						# spawn_unit = {
+							# province = PREV
+							# home = PREV
+							# scaled_by_biggest_garrison = 1.5
+							# troops = {
+								# archers = { 6 6 }
+								# light_cavalry = { 3 3 }
+								# light_infantry = { 11 11 }
+							# }
+						# }
+					# }
+				# }
+				# 25 = {
+					# create_random_soldier = {
+						# random_traits = yes
+						# dynasty = random
+						# religion = PREV
+						# culture = PREV
+						# female = no
+						# age = 30
+						# employer = e_rebels
+					# }
+					# new_character = {
+						# spawn_unit = {
+							# province = PREV
+							# home = PREV
+							# scaled_by_biggest_garrison = 1.5
+							# troops = {
+								# archers = { 6 6 }
+								# light_infantry = { 14 14 }
+							# }
+						# }
+					# }
+				# }
+			# }
+			# remove_province_modifier = recent_revolt
+			# add_province_modifier = {
+				# name = recent_revolt
+				# duration = 3650
+			# }
+			# owner = {
+				# set_character_flag = informed_about_rebels
+			# }
+			# any_province_lord = {
+				# limit = {
+					# NOT = { has_character_flag = informed_about_rebels }
+					# ai = no
+				# }
+				# character_event = { id = 601 days = 7 }
+			# }
+			# owner = {
+				# clr_character_flag = informed_about_rebels
+			# }
+		# }
+	# }
+# }
+
+# Reward for converting a province
+letter_event = {
+	id = meneth.206
+	desc = meneth.206.desc
+	border = GFX_event_letter_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = meneth.206.a
+		random_list = {
+			50 = {
+				piety = 25
+			}
+			25 = {
+				change_learning = 1
+			}
+			10 = {
+				add_trait = zealous
+				hidden_tooltip = { character_event = { id = 38269 } }
+			}
+			5 = {
+				add_trait = diligent
+				hidden_tooltip = { character_event = { id = 38256 } }
+			}
+			5 = {
+				add_trait = patient
+				hidden_tooltip = { character_event = { id = 38264 } }
+			}
+			1 = {
+				add_trait = chaste
+				hidden_tooltip = { character_event = { id = 38274 } }
+			}
+			1 = {
+				add_trait = temperate
+				hidden_tooltip = { character_event = { id = 38276 } }
+			}
+			1 = {
+				add_trait = charitable
+				hidden_tooltip = { character_event = { id = 38273 } }
+			}
+			1 = {
+				add_trait = kind
+				hidden_tooltip = { character_event = { id = 38268 } }
+			}
+			1 = {
+				add_trait = humble
+				hidden_tooltip = { character_event = { id = 38260 } }
+			}
+		}
+	}
+}
+
+#Excommunicated for refusing the Pope
+character_event = {
+	id = meneth.209
+	
+	desc = meneth.209.desc
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	
+	trigger = {
+		has_character_flag = pope_we_refuse_law_changed
+		NOT = { had_character_flag = { flag = pope_we_refuse_law_changed days = 730 } }
+		NOT = { trait = excommunicated }
+		rightful_religious_head_scope = {
+			reverse_has_opinion_modifier = { who = ROOT modifier = pope_invest_dislike }
+		}
+	}
+	mean_time_to_happen = {
+		months = 24
+		modifier = {
+			factor = 0.5
+			rightful_religious_head_scope = { trait = diligent }
+		}
+		modifier = {
+			factor = 0.5
+			rightful_religious_head_scope = { trait = zealous }
+		}
+		modifier = {
+			factor = 0.5
+			rightful_religious_head_scope = { trait = wroth }
+		}
+		modifier = {
+			factor = 0.5
+			rightful_religious_head_scope = { trait = cruel }
+		}
+		modifier = {
+			factor = 0.5
+			rightful_religious_head_scope = { trait = arbitrary }
+		}
+		modifier = {
+			factor = 2
+			rightful_religious_head_scope = { trait = slothful }
+		}
+		modifier = {
+			factor = 2
+			rightful_religious_head_scope = { trait = cynical }
+		}
+		modifier = {
+			factor = 2
+			rightful_religious_head_scope = { trait = patient }
+		}
+	}
+	option = {
+		name = meneth.209.a
+		add_trait = excommunicated
+		remove_trait = zealous
+	}
+}
+#Excommunicated for being at war with the pope
+character_event = {
+	id = meneth.210
+	
+	desc = meneth.210.desc
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	
+	trigger = {
+		religion = catholic
+		rightful_religious_head_scope = {
+			any_war = {
+				any_defender = { character = PREV }
+				any_attacker = { character = ROOT }
+			}
+		}
+		NOT = { trait = excommunicated }
+	}
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = meneth.209.a
+		add_trait = excommunicated
+	}
+}
+#Remove tournament flag
+character_event = {
+	id = meneth.212
+	
+	desc = meneth.212.desc
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+	
+	trigger = {
+		always = no #Not needed until fancy tourneys are implemented again, and hopefully not then either
+		had_character_flag = { flag = attending_tournament days = 730 }
+	}
+	
+	option = {
+		name = OK
+		clr_character_flag = attending_tournament
+	}
+}
+
+#Prisoner exchange
+character_event = {
+	id = meneth.213
+	
+	desc = meneth.213.desc
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = OK
+		trigger = {
+			FROMFROM = {
+				any_courtier = {
+					dynasty = ROOT
+					prisoner = yes
+					is_landed = no
+				}
+			}
+		}
+		FROMFROM = { clr_character_flag = prisoner_exchange_attempted }
+		FROM = {
+			prisoner = no
+		}
+		FROMFROM = {
+			random_courtier = {
+				limit = {
+					is_close_relative = ROOT
+					dynasty = ROOT
+					prisoner = yes
+					is_landed = no
+				}
+				prisoner = no
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_courtier = {
+							is_close_relative = ROOT
+							dynasty = ROOT
+							prisoner = yes
+							is_landed = no
+						}
+					}
+				}
+				random_courtier = {
+					limit = {
+						dynasty = ROOT
+						prisoner = yes
+						is_landed = no
+					}
+					prisoner = no
+				}
+			}
+			character_event = { id = meneth.214 }
+		}
+	}
+	option = {
+		name = meneth.400.b
+		trigger = {
+			OR = {
+				ai = no
+				NOT = {
+					FROMFROM = {
+						any_courtier = {
+							dynasty = ROOT
+							prisoner = yes
+							is_landed = no
+						}
+					}
+				}
+			}
+		}
+		FROMFROM = { clr_character_flag = prisoner_exchange_attempted }
+		FROMFROM = { character_event = { id = meneth.215 } }
+	}
+}
+
+#Prisoner exchange succeeds
+character_event = {
+	id = meneth.214
+	
+	desc = meneth.214.desc
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = OK
+	}
+}
+
+#Prisoner exchange fails
+character_event = {
+	id = meneth.215
+	
+	desc = meneth.215.desc
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = OK
+	}
+}
+
+#Retinue block
+#Commenting this out since Lux Invicta retinues are handled completely differently. - Rich VH
+#character_event = {
+#	id = meneth.216
+#	
+#	desc = meneth.215.desc
+#	picture = GFX_evt_battle
+#	border = GFX_event_normal_frame_religion
+#	
+#	only_rulers = yes
+#	
+#	trigger = {
+#		lower_tier_than = duke
+#		NOT = { num_of_count_titles = 2 }
+#		independent = no
+#		NOT = { 
+#			any_demesne_title = {
+#				OR = {
+#					has_building = ca_retinues
+#					has_building = ct_retinues
+#					has_building = tp_retinues
+#				}
+#			}
+#		}
+#		ai = yes
+#	}
+#	mean_time_to_happen = {
+#		days = 1
+#	}
+#	option = {
+#		name = OK
+#		any_demesne_title = {
+#			add_building = ca_retinues
+#			add_building = ct_retinues
+#			add_building = tp_retinues
+#		}
+#	}
+#}
+
+# up to meneth.219 taken

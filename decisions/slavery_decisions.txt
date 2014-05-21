@@ -1,0 +1,1128 @@
+# Become a Slave Trader
+# Leave Slave Trade
+# Buy a Slave
+# Sell Bulk Slaves
+# Buy Bulk Slaves
+# Free Bulk Slaves
+# Open Slave Management Menu (UI, Player-Only)
+# Close Slave Management Menu (UI, Player-Only)
+
+# Enslave Prisoner
+# Sell a Prisoner
+# Sell a Slave
+# Lash Slave
+# Breed Slaves
+# Free Slave
+
+# Escape From Slavery Decision
+
+decisions = {
+	toggle_slavery_decisions = {
+		potential = {
+			ai = no
+			trait = slave_owner
+		}
+		allow = { 
+		}
+		effect = {
+			if = {
+				limit = {
+					NOT = { has_character_flag = flag_slave_management_menu_open }
+				}
+				hidden_tooltip = {
+					set_character_flag = flag_slave_management_menu_open
+					set_character_flag = flag_slave_management_menu_open_temp
+				}
+			}
+			if = {
+				limit = {
+					has_character_flag = flag_slave_management_menu_open
+					NOT = { has_character_flag = flag_slave_management_menu_open_temp }
+				}
+				hidden_tooltip = {
+					clr_character_flag = flag_slave_management_menu_open
+				}
+			}
+			clr_character_flag = flag_slave_management_menu_open_temp
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	# Become a Slave Trader
+	enter_slave_trade = {
+		potential = {
+			is_ruler = yes
+			is_patrician = yes # Only patricians can be slave traders
+			NOT = { trait = slave_trader } # Obviously, can't do this when already a slave trader
+			NOT = { trait = liberator } # Won't do this for obvious reasons
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+			crownlaw_title = { has_law = slavery_2 } 
+		}
+		allow = { 
+		crownlaw_title = { has_law = slavery_2 } 
+		NOT = { trait = slave_trader } # Obviously, can't do this when already a slave trader
+		NOT = { trait = liberator } # Won't do this for obvious reasons
+		} # Slavery must be Legal
+		effect = {
+			add_trait = slave_trader
+			set_dynasty_flag = flag_slaver_tradition
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+#				OR = {
+					trait = kind
+#				}
+				NOT = { trait = cruel }
+#				NOT = {  }
+				NOT = {
+					AND = {
+						has_dynasty_flag = flag_slaver_tradition
+						trait = just
+					}
+				}
+			}
+			
+			modifier = {
+				factor = 0
+				OR = {
+					religion_group = christian
+					religion_group = muslim
+					religion_group = zoroastrian_group
+				}
+				NOT = { trait = cynical }
+				NOT = { trait = arbitrary }
+				NOT = {
+					AND = {
+						has_dynasty_flag = flag_slaver_tradition
+						trait = just
+					}
+				}
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { trait = slave_owner }
+				NOT = { has_dynasty_flag = flag_slaver_tradition }
+			}
+			
+			modifier = {
+				factor = 0
+				trait = former_slave
+				NOT = { trait = arbitrary }
+				NOT = { trait = selfish }
+				NOT = { trait = ruthless }
+				NOT = {
+					AND = {
+						has_dynasty_flag = flag_slaver_tradition
+						trait = just
+					}
+				}
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { trait = greedy }
+				NOT = { trait = ambitious }
+				NOT = { trait = cruel }
+				NOT = { any_demesne_title = { has_building = fp_asoiaf_slavepit_3 } } 
+				NOT = { has_dynasty_flag = flag_slaver_tradition }
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { has_dynasty_flag = flag_slaver_tradition }
+				trait = just
+			}
+		}
+	}
+	# Leave slave trade
+	leave_slave_trade = {
+		potential = { 
+			trait = slave_trader 
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+		}
+		allow = { always = yes }
+		effect = {
+			remove_trait = slave_trader
+			clr_dynasty_flag = flag_slaver_tradition
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { trait = kind }
+				NOT = { trait = liberator }
+				NOT = { trait = honorable }
+				NOT = { trait = former_slave }
+				NOT = {
+					AND = {
+						OR = {
+							religion_group = christian
+							religion_group = muslim
+							religion_group = zoroastrian_group
+						}
+						trait = zealous
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				trait = ruthless
+				NOT = { trait = liberator }
+			}
+			modifier = {
+				factor = 0
+				has_dynasty_flag = flag_slaver_tradition
+				trait = just
+				NOT = { trait = liberator }
+			}
+			modifier = {
+				factor = 0
+				trait = greedy
+				NOT = { trait = liberator }
+			}
+		}
+	}
+	buy_slave = {
+		potential = {
+			is_ruler = yes
+			crownlaw_title = {
+				OR = {
+					has_law = slavery_1
+					has_law = slavery_2
+				}
+			}
+			slave_trader = {
+				NOT = { character = ROOT }
+				OR = {
+					ai = yes
+					NOT = { has_character_flag = slave_trade_cooldown }
+					had_character_flag = { flag = slave_trade_cooldown days = 365 }
+				}
+				slave = {
+					has_opinion_modifier = { who = PREV modifier = opinion_my_owner }
+					NOT = { trait = incapable }
+					NOT = { has_character_flag = flag_not_for_sale }
+				}
+			}
+			OR = {
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+		}
+		allow = { wealth = 40 }
+		effect = {
+			set_character_flag = flag_slave_action
+			if = {
+				limit = { ai = no }
+				character_event = { id = slavery.200 }
+			}
+			if = {
+				limit = { ai = yes }
+				character_event = { id = slavery.2600 }
+			}			
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.01
+			}
+		}
+	}
+	buy_bulk_slaves = {
+		potential = {
+			demesne_size = 1
+			crownlaw_title = { has_law = slavery_2 }		
+			NOT = { trait = liberator }
+			NOT = {
+				capital_holding = {
+					OR = {
+						has_building = ca_asoiaf_slavepit_5
+						has_building = ct_asoiaf_slavepit_5
+						has_building = tp_asoiaf_slavepit_5
+					}
+				}
+				family_palace = { has_building = fp_asoiaf_slavepit_5 }
+			}		
+			OR = {
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+		}
+		allow = {
+			custom_tooltip = {
+				text = TOOLTIPbuy_bulk_slaves
+				hidden_tooltip = {
+					slave_trader = {
+						NOT = { character = ROOT }
+						OR = {
+							capital_holding = {
+								OR = {
+									has_building = ca_asoiaf_slavepit_1
+									has_building = ct_asoiaf_slavepit_1
+									has_building = tp_asoiaf_slavepit_1
+								}
+							}
+							family_palace = { has_building = fp_asoiaf_slavepit_1 }
+						}	
+					}
+				}	
+			}
+			OR = {
+				wealth = 400
+				hidden_tooltip = { #AI may take loan to buy slaves if they can afford it
+					ai = yes
+					monthly_income = 12
+					wealth = 100
+					NOT = { has_character_flag = loan_taken }
+					NOT = { has_character_modifier = loan_timer }
+					NOT = { has_character_flag = offended_moneylenders }
+				}
+			}	
+		}
+		effect = {
+			character_event = { id = slavery.1200 tooltip = "EVTTOOLTIPSLAVERY1200" }
+			set_character_flag = flag_slave_action
+			clr_character_flag = flag_buying_bulk_slaves
+			set_character_flag = flag_buying_bulk_slaves
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				war = yes
+			}
+			modifier = {
+				factor = 0
+				NOT = { trait = cynical }
+				OR = {
+					NOT = { trait = arbitrary }
+					trait = zealous
+				}
+				OR = {
+					religion_group = christian
+					religion_group = muslim
+					religion_group = zoroastrian_group
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { trait = greedy }
+				NOT = { trait = ambitious }
+				NOT = { trait = ruthless }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0
+				capital_scope = { revolt_risk = 0.25 }
+				NOT = { trait = lunatic }
+				NOT = { trait = possessed }
+				NOT = { trait = slow }
+				NOT = { trait = imbecile }
+				NOT = { trait = greedy }
+				NOT = { trait = wroth }
+			}
+			modifier = {
+				factor = 0
+				trait = slave_trader
+				NOT = { trait = humble }
+			}
+			modifier = {
+				factor = 0
+				has_character_flag = flag_buying_bulk_slaves
+				NOT = { had_character_flag = { flag = flag_buying_bulk_slaves days = 1825 } }
+			}
+			modifier = {
+				factor = 0
+				has_character_flag = flag_selling_bulk_slaves
+				NOT = { had_character_flag = { flag = flag_selling_bulk_slaves days = 1825 } }
+				NOT = { trait = lunatic }
+				NOT = { trait = possessed }
+				NOT = { trait = arbitrary }
+			}
+			modifier = {
+				factor = 0
+				has_character_flag = flag_freed_bulk_slaves
+				NOT = { had_character_flag = { flag = flag_freed_bulk_slaves days = 1825 } }
+				NOT = { trait = lunatic }
+				NOT = { trait = possessed }
+				NOT = { trait = arbitrary }
+			}
+		}
+	}
+	sell_bulk_slaves = {
+		potential = {
+			is_ruler = yes
+			OR = {
+				capital_holding = {
+					OR = {
+						has_building = ca_asoiaf_slavepit_1
+						has_building = ct_asoiaf_slavepit_1
+						has_building = tp_asoiaf_slavepit_1				
+					}
+				}
+				family_palace = { has_building = fp_asoiaf_slavepit_1 }
+			}	
+			OR = {
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+		}
+		allow = {
+			custom_tooltip = {
+				text = TOOLTIPsell_bulk_slaves
+				hidden_tooltip = {
+					slave_trader = {
+						NOT = { character = ROOT }
+						NOT = { family_palace = { has_building = fp_asoiaf_slavepit_5 } }
+						OR = {
+							wealth = 400
+							AND = { #AI may take loan to buy slaves if they can afford it
+								ai = yes
+								monthly_income = 12
+								wealth = 100
+								NOT = { has_character_flag = loan_taken }
+								NOT = { has_character_modifier = loan_timer }
+								NOT = { has_character_flag = offended_moneylenders }
+							}
+						}
+						OR = {
+							NOT = { has_character_flag = no_bulk_slave_cooldown }
+							had_character_flag = { flag = no_bulk_slave_cooldown days = 730 }
+						}
+					}
+				}	
+			}
+		}
+		effect = {
+			character_event = { id = slavery.1300 tooltip = "EVENTTOOLTIPSLAVERY1300" }
+			set_character_flag = flag_slave_action
+			clr_character_flag = flag_selling_bulk_slaves
+			set_character_flag = flag_selling_bulk_slaves
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = {
+					AND = {
+						capital_scope = { revolt_risk = 0.25 }
+						NOT = { trait = lunatic }
+						NOT = { trait = possessed }
+						NOT = { trait = imbecile }
+						NOT = { trait = slow }
+					}
+				}
+				wealth = -50
+				OR = {
+					trait = ambitious
+					trait = patient
+					is_patrician = yes
+					NOT = { any_demesne_title = { higher_tier_than = COUNT } }
+				}
+			}
+			modifier = {
+				factor = 0
+				trait = slave_trader
+				NOT = { trait = humble }
+			}
+			modifier = {
+				factor = 0
+				has_character_flag = flag_buying_bulk_slaves
+				NOT = { had_character_flag = { flag = flag_buying_bulk_slaves days = 1825 } }
+				NOT = { trait = lunatic }
+				NOT = { trait = possessed }
+				NOT = { trait = arbitrary }
+			}
+			modifier = {
+				factor = 0
+				has_character_flag = flag_selling_bulk_slaves
+				NOT = { had_character_flag = { flag = flag_selling_bulk_slaves days = 1825 } }
+			}
+		}
+	}
+	free_bulk_slaves = {
+		potential = {
+			any_demesne_title = {
+				OR = {
+					has_building = ca_asoiaf_slavepit_1
+					has_building = ct_asoiaf_slavepit_1
+					has_building = tp_asoiaf_slavepit_1
+					has_building = fp_asoiaf_slavepit_1
+				}
+			}
+			OR = {
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+		}
+		effect = {
+			character_event = { id = slavery.1400 tooltip = "EVTTOOLTIPSLAVERY1400" }
+			if = {
+				limit = { NOT = { trait = liberator } }
+				prestige = -200
+			}
+			if = {
+				limit = {
+					OR = {
+						religion_group = christian
+						religion_group = muslim
+						religion_group = zoroastrian_group
+					}
+				}
+				piety = 250
+			}
+			set_character_flag = flag_slave_action
+			clr_character_flag = flag_freed_bulk_slaves
+			set_character_flag = flag_freed_bulk_slaves
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { trait = liberator }
+				NOT = {
+					AND = {
+							OR = {
+								religion_group = christian
+								religion_group = muslim
+								religion_group = zoroastrian_group
+							}
+						trait = zealous
+					}
+				}
+				NOT = {
+					AND = {
+						capital_scope = { revolt_risk = 0.255 }
+						OR = {
+							trait = slave_trader
+							AND = {
+								has_character_flag = flag_selling_bulk_slaves_rejected
+								NOT = { had_character_flag = { flag = flag_selling_bulk_slaves_rejected days = 1825 } }
+							}
+						}
+						NOT = { trait = lunatic }
+						NOT = { trait = possessed }
+						NOT = { trait = imbecile }
+						NOT = { trait = slow }
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { prestige = 1000 }
+				NOT = { capital_scope = { revolt_risk = 0.3 } }
+				NOT = { trait = liberator }
+				NOT = { trait = humble }
+			}
+			modifier = {
+				factor = 0
+				trait = slave_trader
+				trait = proud
+			}
+			modifier = {
+				factor = 0
+				trait = slave_trader
+				NOT = { trait = humble }
+				NOT = { trait = charitable }
+				NOT = { trait = honorable }
+			}
+			modifier = {
+				factor = 0
+				has_character_flag = flag_buying_bulk_slaves
+				NOT = { had_character_flag = { flag = flag_buying_bulk_slaves days = 1825 } }
+				NOT = { trait = lunatic }
+				NOT = { trait = possessed }
+				NOT = { trait = arbitrary }
+			}
+		}
+	}
+	demand_relatives_freed = {
+		potential = {
+			is_ruler = yes
+			any_realm_lord = {
+				NOT = { reverse_has_opinion_modifier = { who = ROOT modifier = opinion_traitor } }
+#				OR = {
+					#NOT = { has_minor_title = title_triarch }
+					ROOT = { is_merchant_republic = no }
+#				}	
+				any_courtier = {
+					trait = slave
+					reverse_has_opinion_modifier = { who = PREV modifier = opinion_my_slave }
+					OR = {
+						any_spouse = { character = ROOT }
+						dynasty = ROOT
+						is_close_relative = ROOT
+					}
+				}			
+			}
+			NOT = { has_character_flag = demand_relatives_freed }
+		}
+		effect = {
+			random_realm_lord = {
+				limit = {
+					NOT = { reverse_has_opinion_modifier = { who = ROOT modifier = opinion_traitor } }
+					any_courtier = {
+						trait = slave
+						reverse_has_opinion_modifier = { who = PREV modifier = opinion_my_slave }
+						OR = {
+							any_spouse = { character = ROOT }
+							dynasty = ROOT
+							is_close_relative = ROOT
+						}
+					}
+				}	
+				letter_event = { id = slavery.4001 tooltip = "EVTTOOLTIPSLAVERY4001" days = 3 }
+				any_courtier = {
+					limit = {
+						trait = slave
+						reverse_has_opinion_modifier = { who = PREV modifier = opinion_my_slave }
+						OR = {
+							any_spouse = { character = ROOT }
+							dynasty = ROOT
+							is_close_relative = ROOT
+						}
+					}
+					custom_tooltip = { text = TOOLTIPdemand_relatives_freedSLAVE }
+				}
+			}		
+			set_character_flag = demand_relatives_freed
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				war = yes
+			}
+		}
+	}
+}
+
+vassal_decisions = {
+	manage_slave = {
+		from_potential = {
+			is_ruler = yes
+			trait = slave_owner
+			OR = {
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}	
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
+			OR = {
+				FROM = { ai = no }
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 200 }
+			}
+		}
+		allow = {
+		}
+		effect = {
+			FROM = { 
+				set_character_flag = flag_slave_action
+				clr_character_flag = slave_manage_page_2
+				set_character_flag = slave_manage_page_1
+			}
+			set_character_flag = flag_slave_action			
+			hidden_tooltip = { FROM = { character_event = { id = slavery.2 } } }
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.25
+			}
+		}
+	}
+	
+	# Enslave a prisoner
+	enslave_prisoner = {
+		from_potential = {
+			is_ruler = yes
+			NOT = { crownlaw_title = { has_law = slavery_0 } }
+			NOT = { trait = liberator }
+			OR = {
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+				AND = { #making sure it shows for those without the slave owner trait and thralldom slavery.
+					NOT = {trait = slave_owner}
+					crownlaw_title = { has_law = slavery_3 } 
+				}
+			}
+		}
+		potential = {
+			prisoner = yes
+			host = { character = FROM }
+			is_ruler = no # Cannot enslave rulers
+			OR = {
+				NOT = { trait = slave }
+				NOT = { has_opinion_modifier = { who = FROM modifier = opinion_my_owner } }
+			}	
+			NOT = {
+				OR = {
+					any_spouse = { character = FROM }
+					dynasty = FROM
+					is_close_relative = FROM
+				}
+			}	
+		}
+		allow = {
+			OR = {	
+				NOT = { FROM = { crownlaw_title = { has_law = slavery_3 } } } # Thralldom only allows enslaving prisoners of war
+				FROM = { trait = arbitrary }
+				custom_tooltip = {
+					text = TOOLTIPPOW
+					has_character_flag = captured_in_battle
+				}	
+			}
+		}
+		effect = {
+			add_trait = slave
+			opinion = { who = FROM modifier = opinion_enslaved_me }	
+			hidden_tooltip = {	
+				prisoner = no
+				remove_spouse = spouse
+				remove_trait = former_slave
+				give_minor_title = title_slave
+				clr_character_flag = captured_in_battle
+				clr_character_flag = lost_trial_by_combat
+				move_character = FROM
+				opinion = { who = FROM modifier = opinion_my_owner }
+				reverse_opinion = { who = FROM modifier = opinion_my_slave }
+				FROM = { add_trait = slave_owner }
+				father = { opinion = { who = FROM modifier = opinion_enslaved_close_relative } }
+				mother = { opinion = { who = FROM modifier = opinion_enslaved_close_relative } }
+				any_dynasty_member = {
+					limit = {
+						is_close_relative = ROOT
+						NOT = { character = ROOT }
+						NOT = { any_child = { character = ROOT } } 
+					}
+					opinion = { who = FROM modifier = opinion_enslaved_close_relative }
+				}
+				any_spouse = {
+					limit = { opinion = { who = ROOT value = -25 } }
+					opinion = { who = FROM modifier = opinion_enslaved_close_relative }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.05
+			}	
+			modifier = {
+				factor = 0
+				OR = {
+					any_liege = { character = FROM }
+					liege_before_war = { character = FROM }
+					any_liege = { liege_before_war = { character = FROM } }
+				}
+				FROM = {
+					NOT = { trait = arbitrary }
+					NOT = { trait = ruthless }
+					NOT = { trait = cruel }
+				}
+			}
+			
+			modifier = {
+				factor = 0
+				reverse_opinion = { who = FROM value = 0 }
+				FROM = {
+					NOT = { trait = arbitrary }
+					NOT = { trait = ruthless }
+					NOT = { trait = cruel }
+				}
+			}
+			modifier = {
+				factor = 0
+				reverse_opinion = { who = FROM value = 50 }
+				FROM = {
+					NOT = {
+						AND = {
+							OR = {
+								trait = ambitious
+								trait = greedy
+								trait = slave_trader
+							}
+							OR = {
+								trait = arbitrary
+								trait = ruthless
+								trait = cruel
+							}
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					is_close_relative = FROM
+					spouse = { character = FROM }
+					dynasty = FROM
+					FROM = { spouse = { is_close_relative = PREVPREV } }
+					FROM = { spouse = { dynasty = PREV } }
+				}
+				FROM = {
+					OR = {
+						trait = just
+						NOT = { trait = ruthless }
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				any_lover = { character = FROM }
+			}
+			modifier = {
+				factor = 0
+				FROM = { any_current_enemy = { character = ROOT } }
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					any_current_enemy = { primary_title = { current_heir = { character = ROOT } } }
+					NOT = { trait = wroth }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+						OR = {
+							religion_group = christian
+							religion_group = muslim
+							religion_group = zoroastrian_group
+						}
+					NOT = { trait = cynical }
+					NOT = { trait = arbitrary }
+					NOT = { trait = slave_trader }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					OR = {
+						trait = kind
+						trait = honorable
+					}
+					NOT = { trait = slave_trader }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					trait = content
+					NOT = { trait = slave_trader }
+				}
+			}
+			modifier = {
+				factor = 0
+				reverse_opinion = { who = FROM value = 1 }
+				FROM = {
+					NOT = { trait = greedy }
+					NOT = { trait = selfish }
+					NOT = { trait = ruthless }
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { liege = { character = FROM } }
+				FROM = {
+					OR = {
+						NOT = {
+							OR = {
+								trait = ruthless
+								trait = arbitrary
+							}
+						}
+						trait = honorable
+						trait = just
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					NOT = { trait = slave_trader }
+					NOT = { trait = greedy }
+					NOT = { trait = cruel }
+				}
+			}
+		}
+	}
+	
+	# Sell a prisoner into slavery
+	sell_prisoner = {
+		from_potential = {
+			is_ruler = yes
+			NOT = { trait = liberator }
+			OR = {
+				crownlaw_title = { has_law = slavery_2 }
+				trait = greedy
+				trait = cruel
+				NOT = { wealth = 0 }
+			}
+			OR = {
+				crownlaw_title = { has_law = slavery_2 }
+				NOT = { trait = just }
+			}
+			OR = {
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}
+			OR = {
+				ai = yes
+				has_character_flag = flag_slave_management_menu_open
+			}
+		}
+		potential = {
+			prisoner = yes
+			host = { character = FROM }
+			is_ruler = no # Cannot enslave rulers
+			NOT = {
+				OR = {
+					any_spouse = { character = FROM }
+					dynasty = FROM
+					is_close_relative = FROM
+				}
+			}	
+			# There must exist at least one possible slave trader to sell to
+			slave_trader = {
+				wealth = 80
+				NOT = { character = FROM }
+			}
+		}
+		allow = {
+			prisoner = yes
+		}
+		effect = {
+			character_event = { id = slavery.150 tooltip = "EVTTOOLTIPSLAVERY150" }
+			from = { set_character_flag = flag_slave_action }
+			FROM = { set_character_flag = flag_selling_prisoner_into_slavery }
+			if = { #If is my subject this is tyrannical 
+				limit = {
+					OR = {
+						any_liege = { character = FROM }
+						liege_before_war = { character = FROM }
+						any_liege = { liege_before_war = { character = FROM } }
+					}						
+				}	
+				FROM = { 
+					opinion = {
+						who = ROOT
+						modifier = opinion_tyrant
+						months = 120
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.05
+			}			
+			modifier = {
+				factor = 0
+				OR = {
+					any_liege = { character = FROM }
+					liege_before_war = { character = FROM }
+					any_liege = { liege_before_war = { character = FROM } }
+				}
+				FROM = {
+					NOT = { trait = arbitrary }
+					NOT = { trait = ruthless }
+					NOT = { trait = cruel }
+				}
+			}
+			
+			modifier = {
+				factor = 0
+				FROM = {
+					trait = slave_trader
+					OR = {
+						wealth = 0
+						trait = proud
+					}
+				}
+			}
+			
+			modifier = {
+				factor = 0
+				OR = {
+					is_close_relative = FROM
+					spouse = { character = FROM }
+					dynasty = FROM
+					FROM = { spouse = { is_close_relative = PREVPREV } }
+					FROM = { spouse = { dynasty = PREV } }
+				}
+				FROM = {
+					OR = {
+						trait = just
+						NOT = { trait = ruthless }
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				any_lover = { character = FROM }
+			}
+			modifier = {
+				factor = 0
+				FROM = { any_current_enemy = { character = ROOT } }
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					any_current_enemy = { primary_title = { current_heir = { character = ROOT } } }
+					NOT = { trait = wroth }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					NOT = { crownlaw_title = { has_law = slavery_2 } }
+					liege = { FROM = { NOT = { intrigue = PREV } } }
+					OR = {
+						trait = craven
+						trait = patient
+						trait = temperate
+					}
+					NOT = { trait = slow }
+					NOT = { trait = imbecile }
+					NOT = { trait = wroth }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					wealth = -100
+					OR = {
+						trait = kind
+						trait = patient
+						trait = honorable
+						trait = honest
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { liege = { character = FROM } }
+				FROM = {
+					OR = {
+						NOT = {
+							OR = {
+								trait = ruthless
+								trait = arbitrary
+								NOT = { wealth = 0 }
+							}
+						}
+						trait = honorable
+						trait = just
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+						OR = {
+							religion_group = christian
+							religion_group = muslim
+							religion_group = zoroastrian_group
+						}
+					NOT = { trait = cynical }
+					OR = {
+						wealth = -100
+						trait = zealous
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					trait = content
+					wealth = 0
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					NOT = { trait = greedy }
+					NOT = { trait = ambitious }
+					opinion = { who = prev value = -49 }
+					wealth = 0
+				}
+			}
+		}
+	}
+}
+plot_decisions = {
+	escape_slavery_decision = {
+		potential = {
+			has_plot = plot_escape_slavery
+			ai = yes # Players should never be slaves in the first place
+		}
+		allow = { 
+			plot_power = 0.5 
+			NOT = { has_character_flag = escape_slavery_decision }
+		}
+		effect = { 
+			set_character_flag = escape_slavery_decision
+			character_event = { id = slavery.600 days = 1 } 
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.3
+			}
+			modifier = {
+				factor = 0	
+				NOT = { trait = wroth }
+			}
+			modifier = {
+				factor = 0
+				NOT = { plot_power = 1.5 }
+				trait = patient
+			}
+		}
+	}
+}

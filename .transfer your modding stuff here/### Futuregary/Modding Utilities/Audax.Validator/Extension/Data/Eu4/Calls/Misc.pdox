@@ -1,0 +1,632 @@
+(ContextValidator Trigger) = { Members = {
+	(Y  ) = { Left = "papacy_active" Right = Bool }
+	(Y  ) = { Left = "reform_desire" Right = Double }
+	(Y  ) = { Left = "hre_size" Right = PInt }
+	(Y  ) = { Left = "always" Right = Bool }
+	(N Y) = { Left = "has_dlc" Right = {
+		Literal = "Star and Crescent"
+		Literal = "American Dream"
+		Literal = "Purple Phoenix"
+		(Literal If = Add1) = "Conquest of Paradise"
+	} }
+	(Y  ) = { Left = "allows_female_emperor" Right = Bool }
+	(N Y If = Broken) = { Left = "is_emperor" Right = ThisCountry }
+	(Y  ) = { Left = "ironman" Right = Bool }
+	(Y  ) = { Left = "patriarch_authority" Right = Double }
+	
+	(If If = Add1) = {
+		(Y  ) = { Left = "is_tutorial_active" Right = Bool }
+	}
+	
+} }
+
+
+(ContextValidator ProvinceTrigger) = { Members = {
+	(Y  ) = { Left = "revolt_risk" Right = Double }
+	(Y  ) = { Left = "has_owner_culture" Right = Bool }
+	(N Y) = { Left = "has_building" Right = Building }
+	(Y  ) = { Left = "base_tax" Right = Double }
+	(Y  ) = { Left = "manpower" Right = Double }
+	(Y  ) = { Left = "has_siege" Right = Bool }
+	(Y  ) = { Left = "colonysize" Right = Int } # UNTESTED
+	(A Y) = { Left = "continent" Right = Continent }
+	(N Y) = { Left = "continent" Right = Owner }
+	(N Y) = { Left = "has_discovered" Right = { ThisProvince ThisCountry Tag } }
+	(A Y) = { Left = "culture_group" Right = CultureGroup }
+	(N Y) = { Left = "culture_group" Right = { ThisProvince ThisCountry Owner } }
+	(A Y) = { Left = "culture" Right = Culture }
+	(N Y) = { Left = "culture" Right = { Owner ThisCountry ThisProvince Controller Tag } } # UNTESTED Tag
+	(N Y) = { Left = "region" Right = Region } # A province can be in multiple regions
+	(N Y) = { Left = "region" Right = { Capital } }
+	(A Y) = { Left = "trade_goods" Right = TradeGood }
+	(A Y) = { Left = "province_id" Right = Province }
+	(N Y) = { Left = "province_id" Right = { ThisProvince } }
+	(A Y) = { Left = "likely_rebels" Right = RebelType }
+	(N Y) = { Left = "can_spawn_rebels" Right = RebelType }
+	(Y  ) = { Left = "is_capital" Right = Bool }
+	(Y  ) = { Left = "has_port" Right = Bool }
+	(Y  ) = { Left = "is_city" Right = Bool }
+	(Y  ) = { Left = "native_size" Right = Int }
+	(Y  ) = { Left = "native_hostileness" Right = Int }
+	(Y  ) = { Left = "native_ferocity" Right = Int }
+	(Y  ) = { Left = "is_part_of_hre" Right = Bool }
+	(Y  ) = { Left = "units_in_province" Right = PInt }
+	(Y  ) = { Left = "infantry_in_province" Right = PInt }
+	(Y  ) = { Left = "has_missionary" Right = Bool }
+	(Y  ) = { Left = "garrison" Right = Int }
+	(Y  ) = { Left = "war_exhaustion" Right = Double }
+	(Y  ) = { Left = "stability" Right = Int }
+	(Y  ) = { Left = "is_sea" Right = Bool }
+	(N Y) = { Left = "has_trader" Right = { Tag ThisCountry } }
+	(A Y If = Debug) = { Left = "tag" Right = Tag } # BROKEN
+	
+	(If If = Debug) = {
+		(N Y) = { Left = "region" Right = { Owner } } # So far, does NOT work with capital or capitol
+		(Y  ) = { Left = "ADM" Right = Int }
+		(Y  ) = { Left = "DIP" Right = Int }
+		(Y  ) = { Left = "MIL" Right = Int }
+	}
+	
+	(N Y If = Debug) = { Left = "has_spawned_rebels" Right = RebelType } # BROKEN possibly
+	(Y  ) = { Left = "heavy_ships_in_province" Right = PInt }
+	(Y  ) = { Left = "months_since_defection" Right = PInt }
+	(N Y) = { Left = "has_idea" Right = Idea } # UNTESTED
+	(A Y) = { Left = "is_strongest_trade_power" Right = Tag }
+	(N Y) = { Left = "is_strongest_trade_power" Right = { ThisCountry } }
+	(A Y) = { Left = "has_most_province_trade_power" Right = ThisCountry }
+	(Y  ) = { Left = "has_colonist" Right = Bool }
+	(Y   If = Broken) = { Left = "num_of_cities" Right = PInt }
+	(Y  ) = { Left = "is_wasteland" Right = Bool }
+	(Y  ) = { Left = "has_owner_accepted_culture" Right = Bool }
+	
+	# ALL OF THE FOLLOWING ARE UNTESTED
+	(Y  ) = { Left = "is_looted" Right = Bool }
+	(N Y) = { Left = "range" Right = { Tag ThisCountry } }
+	(A Y) = { Left = "has_construction" Right = { Literal = "core" Literal = "culture" Literal = "building" Literal = "merchant" Literal = "diplomat" Literal = "missionary" Literal = "army" Literal = "navy" Literal = "any" } }
+	(N Y) = { Left = "can_build" Right = Building }
+	(Y  ) = { Left = "unit_in_siege" Right = Bool }
+	(Y  ) = { Left = "tolerance_to_this" Right = Double }
+	(Y  ) = { Left = "nationalism" Right = Double }
+	(N Y) = { Left = "sieged_by" Right = Tag }
+	(If If = Add1) = {
+		(A Y) = { Left = "colonial_region" Right = ColonialRegion }
+	}
+	(N Y) = { Left = "country_or_vassal_holds" Right = { Tag ThisCountry } }
+
+} }
+
+(ContextValidator CountryTrigger) = { Members = {
+	(A Y If = Debug) = { Left = "is_strongest_trade_power" Right = Tag } # BROKEN possibly
+	(Y  ) = { Left = "mercantilism" Right = Double }
+	(Y  ) = { Left = "is_at_war" Right = Bool }
+	(Y  ) = { Left = "is_any_heresy_enabled" Right = Bool }
+	(A Y) = { Left = "tag" Right = Tag }
+	(N Y) = { Left = "tag" Right = { ThisCountry ThisProvince } }
+	(Y  ) = { Left = "has_heir" Right = Bool }
+	(A Y) = { Left = "faction_in_power" Right = Faction }
+	(Y  ) = { Left = "gold" Right = Int }
+	(Y  ) = { Left = "inflation" Right = Double }
+	(Y  ) = { Left = { Type = AdvisorType } Right = Int } # UNTESTED: Positive form
+	(Y  ) = { Left = "stability" Right = Int }
+	(Y  ) = { Left = { Type = IdeaGroup } Right = PInt } # UNTESTED: positive form (eg aristocracy_ideas=1)
+	(N Y) = { Left = "has_spawned_rebels" Right = RebelType }
+	(Y  ) = { Left = "manpower_percentage" Right = Double }
+	(Y  ) = { Left = "overseas_provinces_percentage" Right = Double }
+	(Y  ) = { Left = "num_of_royal_marriages" Right = PInt }
+	(Y  ) = { Left = "num_of_allies" Right = PInt }
+	(Y  ) = { Left = "num_of_revolts" Right = PInt }
+	(Y  ) = { Left = "num_of_cities" Right = { PInt ThisCountry } }
+	(Y  ) = { Left = "num_of_loans" Right = PInt }
+	(Y  ) = { Left = "num_of_colonies" Right = PInt }
+	(Y  ) = { Left = "num_of_ports" Right = { PInt ThisCountry } }
+	(Y  ) = { Left = "num_of_diplomats" Right = PInt }
+	(Y  ) = { Left = "revolt_percentage" Right = Double }
+	(Y  ) = { Left = "legitimacy" Right = { Double ThisCountry } }
+	(N Y) = { Left = "is_rival" Right = { Tag Emperor ThisCountry ThisProvince } } # UNTESTED
+	(N Y) = { Left = "war_with" Right = { Tag ThisCountry ThisProvince } }
+	(N Y) = { Left = "defensive_war_with" Right = { Tag ThisCountry ThisProvince } }
+	(N Y) = { Left = "is_enemy" Right = { Tag ThisCountry } } # UNTESTED
+	
+	(A Y) = { Left = "government" Right = { GovernmentType Government ThisCountry } }
+	(Y  ) = { Left = "has_regency" Right = Bool }
+	(Y  ) = { Left = "is_revolution_target" Right = Bool }
+	(N Y) = { Left = "advisor" Right = AdvisorType } # UNTESTED: positive form
+	(A Y) = { Left = "technology_group" Right = TechGroup }
+	(Y  ) = { Left = "is_westernising" Right = Bool }
+	(Y  ) = { Left = "years_of_income" Right = Double }
+	
+	(Y  ) = { Left = "adm_power" Right = Double }
+	(Y  ) = { Left = "dip_power" Right = Double }
+	(Y  ) = { Left = "mil_power" Right = Double }
+	(Y  ) = { Left = "army_tradition" Right = Double }
+	(Y  ) = { Left = "navy_tradition" Right = Double }
+
+	(Y  ) = { Left = { "adm" "ADM" } Right = Int }
+	(Y  ) = { Left = { "dip" "DIP" } Right = Int }
+	(Y  ) = { Left = { "mil" "MIL" } Right = Int }
+	
+	(N Y) = { Left = "has_idea" Right = Idea } # UNTESTED: Positive form
+	(Y  ) = { Left = "prestige" Right = { Double ThisCountry } }
+	(Y  ) = { Left = { Type = TechTable } Right = PInt }
+	(N Y) = { Left = "has_casus_belli_against" Right = { ThisProvince ThisCountry Tag } }
+	
+	(N Y) = { Left = "accepted_culture" Right = { ThisProvince Culture (ThisCountry If = Debug) } } # UNTESTED ThisCountry
+	(N Y If = Debug) = { Left = "culture" Right = { ThisProvince ThisCountry } } # BROKEN it seems
+	(N Y) = { Left = "primary_culture" Right = { ThisProvince ThisCountry Tag } } # UNTESTED Tag
+	(A Y) = { Left = "primary_culture" Right = Culture }
+	(N Y) = { Left = "culture_group" Right = { ThisProvince ThisCountry } }
+	(A Y) = { Left = "culture_group" Right = CultureGroup }
+	
+	(N Y) = { Left = "has_opinion" Right = {
+		Single = { Left = "who" Right = { ThisCountry ThisProvince Tag } }
+		Single = { Left = "value" Right = Int }
+	} }
+	(N Y) = { Left = "reverse_has_opinion" Right = {
+		Single = { Left = "who" Right = { ThisCountry ThisProvince Tag } }
+		Single = { Left = "value" Right = Int }
+	} }
+	
+	(N Y) = { Left = "has_idea_group" Right = IdeaGroup } # UNTESTED: positive form
+	
+	(N Y) = { Left = "trading_part" Right = {
+		Single = { Left = "trade_goods" Right = TradeGood }
+		Single = { Left = "value" Right = Double }
+	} }
+	
+	(N Y) = { Left = "vassal_of" Right = ThisCountry }
+	(A Y) = { Left = "vassal_of" Right = Tag }
+	(N Y) = { Left = "overlord_of" Right = { ThisCountry Tag } }
+	(N Y) = { Left = "is_neighbor_of" Right = { ThisCountry Tag } }
+	(Y  ) = { Left = "is_female" Right = Bool }
+	(Y  ) = { Left = "is_lesser_in_union" Right = Bool }
+	(Y  ) = { Left = "war_exhaustion" Right = Double }
+	(Y  ) = { Left = "heir_age" Right = Int }
+	(Y  ) = { Left = "overextension_percentage" Right = Double }
+	(N Y) = { Left = "marriage_with" Right = { ThisCountry Tag } }
+	(N Y) = { Left = "senior_union_with" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "junior_union_with" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "truce_with" Right = { ThisCountry ThisProvince Tag } }
+	(N Y) = { Left = "dynasty" Right = { ThisCountry String } }
+	(Y  ) = { Left = "treasury" Right = Double }
+	(Y  ) = { Left = "has_wartaxes" Right = Bool }
+	(Y  ) = { Left = "is_in_coalition" Right = Bool }
+	(Y  ) = { Left = "is_subject" Right = Bool }
+	(Y  ) = { Left = "is_emperor" Right = Bool }
+	(Y  ) = { Left = "is_defender_of_faith" Right = Bool }
+	(Y  ) = { Left = "is_monarch_leader" Right = Bool }
+	(Y  ) = { Left = "is_heir_leader" Right = Bool }
+	(Y  ) = { Left = "exists" Right = Bool }
+	(Y  ) = { Left = "ai" Right = Bool }
+	(Y  ) = { Left = "is_part_of_hre" Right = Bool }
+	(Y  ) = { Left = "is_bankrupt" Right = Bool }
+	(Y  ) = { Left = "is_elector" Right = Bool }
+	(Y  ) = { Left = "is_force_converted" Right = Bool }
+	(Y  ) = { Left = "is_tribal" Right = Bool }
+	(Y  ) = { Left = "luck" Right = Bool }
+	(Y  ) = { Left = "has_factions" Right = Bool }
+	(Y  ) = { Left = "has_advisor" Right = { Bool } } # UNTESTED
+	(N Y) = { Left = "has_advisor" Right = { AdvisorType } } # UNTESTED
+	(Y  ) = { Left = "is_nomad" Right = Bool }
+	(Y  IfNot = Debug) = { Left = "has_border_with_religious_enemy" Right = Yes }
+	(Y  If = Debug) = { Left = "has_border_with_religious_enemy" Right = Bool } # BROKEN for no it seems
+	(Y  IfNot = Debug) = { Left = "at_war_with_religious_enemy" Right = Yes }
+	(Y  If = Debug) = { Left = "at_war_with_religious_enemy" Right = Bool } # BROKEN for no it seems
+	(Y  ) = { Left = "heir_claim" Right = Double }
+	(Y  ) = { Left = "trade_efficiency" Right = Double }
+	(N Y) = { Left = "alliance_with" Right = { Tag Emperor ThisCountry } }
+	(N Y) = { Left = "is_subject_of" Right = { Emperor Tag ThisCountry ThisProvince } } # UNTESTED: is_subject_of=emperor is true
+	(A Y) = { Left = "has_ruler" Right = String }
+	(N Y If = Debug) = { Left = "region" Right = Region } # BROKEN it seems. Also a province can be in multiple regions
+	(N Y) = { Left = "has_discovered" Right = Province }
+	(Y  ) = { Left = "manpower" Right = { Double ThisCountry } } # UNTESTED ThisCountry
+	(N Y) = { Left = "has_leader" Right = String }
+	(Y  ) = { Left = "army_size_percentage" Right = Double }
+	(Y  ) = { Left = "navy_size_percentage" Right = Double }
+	(N Y If = Debug) = { Left = "army_size" Right = Tag } # BROKEN possibly
+	(Y  ) = { Left = "num_of_explorers" Right = PInt }
+	(Y  ) = { Left = "num_of_cardinals" Right = PInt }
+	(Y  ) = { Left = "num_of_generals" Right = PInt }
+	(Y  ) = { Left = "num_of_admirals" Right = PInt }
+	(Y  ) = { Left = "num_of_conquistadors" Right = PInt }
+	(Y  ) = { Left = "num_of_vassals" Right = PInt }
+	(Y  ) = { Left = "num_of_merchants" Right = PInt }
+	(Y  ) = { Left = "war_score" Right = Double }
+	(Y  ) = { Left = "republican_tradition" Right = Double }
+	(Y  ) = { Left = { Type = TradeGood } Right = PInt }
+	(Y  ) = { Left = { Type = Religion } Right = Double }
+	(N Y) = { Left = "advisor_exists" Right = PInt }
+	(N Y) = { Left = "is_advisor_employed" Right = PInt } # UNTESTED
+	(Y   If = Broken) = { Left = "continent" Right = Continent }
+	(Y  ) = { Left = "production_efficiency" Right = Double }
+	(Y  ) = { Left = "trade_efficiency" Right = Double }
+	(Y  ) = { Left = "papal_influence" Right = Double }
+	(Y  ) = { Left = { Type = Building } Right = PInt }
+	(Y  ) = { Left = "num_of_unions" Right = PInt }
+	(A Y) = { Left = "capital" Right = LandProvince }
+	(Y  ) = { Left = "num_of_heavy_ship" Right = PInt }
+	(Y  ) = { Left = "num_of_light_ship" Right = PInt }
+	(N Y) = { Left = "num_of_heavy_ship" Right = { (Tag If = Debug) ThisCountry } } # BROKEN tag maybe
+	(N Y) = { Left = "num_of_light_ship" Right = { (Tag If = Broken) ThisCountry } }
+	(Y  ) = { Left = "num_of_mercenaries" Right = PInt }
+	(Y  ) = { Left = "religious_unity" Right = Double }
+	(Y  ) = { Left = "piety" Right = Double }
+	(N Y) = { Left = "controls" Right = LandProvince }
+	(Y  ) = { Left = "naval_forcelimit" Right = PInt }
+	(Y  ) = { Left = "blockade" Right = Double }
+	(Y  ) = { Left = "months_of_ruling" Right = PInt }
+	(Y  ) = { Left = "trade_income_percentage" Right = Double }
+	(Y  ) = { Left = "monthly_income" Right = Double }
+	(Y  ) = { Left = "has_female_heir" Right = Bool }
+	(N Y) = { Left = "knows_country" Right = Tag }
+	(N Y) = { Left = "faction_influence" Right = {
+		Single = { Left = "faction" Right = Faction }
+		Single = { Left = "influence" Right = Double }
+	} }
+	
+	# ALL OF THE FOLLOWING ARE UNTESTED
+	(N Y) = { Left = "has_opinion_modifier" Right = HasOpinionModifier }
+	(N Y) = { Left = "reverse_has_opinion_modifier" Right = HasOpinionModifier }
+	(N Y) = { Left = "navy_size" Right = { Tag ThisCountry PInt } }
+	(N Y) = { Left = "army_size" Right = { Tag ThisCountry PInt } }
+	(Y  ) = { Left = "has_truce" Right = Bool }
+	(Y  ) = { Left = "will_back_next_reform" Right = Bool }
+	(Y  ) = { Left = "num_of_colonists" Right = PInt }
+	(Y  ) = { Left = "num_of_missionaries" Right = PInt }
+	(Y  ) = { Left = "is_excommunicated" Right = Bool }
+	(Y  ) = { Left = "is_papal_controller" Right = Bool }
+	(A Y) = { Left = "personality" Right = AiPersonality }
+	(N Y) = { Left = "threat" Right = AiStatus }
+	(N Y) = { Left = "antagonize" Right = AiStatus }
+	(N Y) = { Left = "protect" Right = AiStatus }
+	(N Y) = { Left = "vassalize" Right = AiStatus }
+	(N Y) = { Left = "alliance" Right = AiStatus }
+	(N Y) = { Left = "befriend" Right = AiStatus }
+	(N Y) = { Left = "protectorate" Right = AiStatus }
+	(N Y) = { Left = "military_strength" Right = {
+		Single = { Left = "who" Right = ThisCountry }
+		Single = { Left = "value" Right = Double }
+	} }
+	(N Y) = { Left = "border_distance" Right = {
+		Single = { Left = "who" Right = ThisCountry }
+		Single = { Left = "distance" Right = Int }
+	} }
+	(N Y) = { Left = "owns_core_province" Right = LandProvince }
+	(N Y) = { Left = "dominant_culture" Right = Capital }
+	(N Y) = { Left = "full_idea_group" Right = IdeaGroup }
+	(Y  ) = { Left = "num_of_total_ports" Right = PInt }
+	(N Y) = { Left = "owns_or_vassal_of" Right = LandProvince }
+	(N Y) = { Left = "num_of_artillery" Right = ThisCountry }
+	(N Y) = { Left = "num_of_cavalry" Right = ThisCountry }
+	(N Y) = { Left = "num_of_infantry" Right = ThisCountry }
+	(N Y) = { Left = "num_of_galley" Right = ThisCountry }
+	(Y  ) = { Left = "num_of_artillery" Right = PInt }
+	(Y  ) = { Left = "num_of_cavalry" Right = PInt }
+	(Y  ) = { Left = "num_of_infantry" Right = PInt }
+	(Y  ) = { Left = "num_of_galley" Right = PInt }
+	(Y  ) = { Left = "tariff_efficiency" Right = Double }
+	(Y  ) = { Left = "max_manpower" Right = Double }
+	(N Y) = { Left = "last_mission" Right = Mission }
+	(N Y) = { Left = "preferred_emperor" Right = ThisCountry }
+	(N Y) = { Left = "is_threat" Right = ThisCountry }
+	(Y  ) = { Left = "num_of_trading_bonuses" Right = PInt }
+	(Y  ) = { Left = "naval_morale" Right = Double }
+	(Y  ) = { Left = "land_morale" Right = Double }
+	(Y  ) = { Left = "land_maintenance" Right = Double }
+	(Y  ) = { Left = "is_colonial" Right = Bool }
+	(Y  ) = { Left = "is_imperial_ban_allowed" Right = Bool }
+	(Y  ) = { Left = "cb_on_religious_enemies" Right = Bool }
+	(Y  ) = { Left = "cb_on_government_enemies" Right = Bool }
+	(Y  ) = { Left = "cb_on_overseas" Right = Bool }
+	(Y  ) = { Left = "cb_on_primitives" Right = Bool }
+	(Y  ) = { Left = "is_crusade_target" Right = Bool }
+	(Y  ) = { Left = "primitives" Right = Bool }
+	(N Y) = { Left = "colony_claim" Right = ThisCountry }
+	(N Y) = { Left = "religion_group_claim" Right = ThisCountry }
+	(N Y) = { Left = "trade_embargo_by" Right = ThisCountry }
+	(N Y) = { Left = "core_claim" Right = ThisCountry }
+	(N Y) = { Left = "culture_group_claim" Right = ThisCountry }
+	(N Y) = { Left = "claim" Right = ThisCountry }
+	(N Y) = { Left = "succession_claim" Right = ThisCountry }
+	(N Y) = { Left = "coalition_target" Right = ThisCountry }
+	(Y  ) = { Left = "is_in_coalition_war" Right = Bool }
+	(Y  ) = { Left = "num_of_coalition_members" Right = PInt }
+	(Y  ) = { Left = "tech_difference" Right = Int }
+	(N Y) = { Left = "has_claim" Right = LandProvince }
+	(Y  ) = { Left = "is_vassal" Right = Bool }
+	(N Y) = { Left = "offensive_war_with" Right = { Tag ThisCountry } }
+	
+	(N Y) = { Left = "light_ship_fraction" Right = Double }
+	(N Y) = { Left = "galley_fraction" Right = Double }
+	(N Y) = { Left = "heavy_ship_fraction" Right = Double }
+	
+	(N Y) = { Left = "historical_friend_with" Right = { Tag ThisCountry ThisProvince } }
+	(N Y) = { Left = "historical_rival_with" Right = { Tag ThisCountry ThisProvince } }
+	
+	(N Y) = { Left = "has_casus_belli" Right = {
+		Single = { Left = "type" Right = CbType }
+		Single = { Left = "target" Right = { Tag ThisCountry ThisProvince } }
+	} }
+	
+	(If If = Add1) = {
+		(Y  ) = { Left = "is_former_colonial_nation" Right = Bool }
+		(A Y) = { Left = "unit_type" Right = TechGroup }
+		(Y  ) = { Left = "num_of_colonial_subjects" Right = PInt }
+		(Y  ) = { Left = "is_colonial_nation" Right = Bool }
+		(Y  ) = { Left = "liberty_desire" Right = Double }
+		(A Y) = { Left = "is_colonial_nation_of" Right = ThisCountry }
+		(Y  ) = { Left = "num_of_protectorates" Right = PInt }
+		(Y  ) = { Left = "tariff_value" Right = Double }
+	}
+	(N Y) = { Left = "capital_distance" Right = { DistanceDef } }
+	(Y  ) = { Left = "total_base_tax" Right = Double }
+	(Y  ) = { Left = "num_of_free_diplomatic_relations" Right = PInt }
+	(Y  ) = { Left = "ruler_age" Right = PInt }
+	
+} }
+
+(Type DistanceDef) = {
+	Optional = { Left = "who" Right = { ThisCountry } }
+	Optional = { Left = "distance" Right = NnDbl }
+}
+
+(ContextValidator Command) = { Members = {
+	(Y  ) = { Left = "set_revolution_target" Right = { Tag ThisCountry Xxx } }
+	(Y  ) = { Left = "set_allow_female_emperor" Right = Bool }
+
+	# ALL OF THE FOLLOWING ARE UNTESTED
+	(Y  ) = { Left = "add_patriarch_authority" Right = Double }
+	(N Y) = { Left = "enable_religion" Right = Religion }
+	(Y  ) = { Left = "hre_inheritable" Right = Bool }
+	(Y  ) = { Left = "internal_hre_cb" Right = Bool }
+	(Y  ) = { Left = "imperial_ban_allowed" Right = Bool }
+	
+} }
+
+(ContextValidator ProvinceCommand) = { Members = {
+	(Y  ) = { Left = "add_province_manpower" Right = Double }
+	(Y  ) = { Left = "add_base_tax" Right = Double }
+	(Y  ) = { Left = "change_trade_goods" Right = TradeGood }
+	(Y  ) = { Left = "add_prestige" Right = Double }
+	(Y  ) = { Left = "change_religion" Right = { Religion ThisProvince ThisCountry Owner Heretic Tag } } # UNTESTED: ThisProvince, owner, ThisCountry, Heretic, Tag
+	(Y  ) = { Left = "change_culture" Right = { Culture Owner Capital ThisCountry ThisProvince } } # UNTESTED: Capital, ThisCountry, ThisProvince
+	(Y  ) = { Left = "add_revolt_risk" Right = Double }
+	(Y  ) = { Left = "change_native_hostileness" Right = Double }
+	(Y  ) = { Left = "change_native_ferocity" Right = Double }
+	(Y  ) = { Left = "change_native_size" Right = Double }
+	(N N) = { Left = "spawn_rebels" Right = SpawnRebels }
+	(Y  ) = { Left = { Type = RebelType } Right = Double }
+	(Y  ) = { Left = "cede_province" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "add_building" Right = Building }
+	(N Y) = { Left = "remove_building" Right = Building }
+	
+	# ALL OF THE FOLLOWING ARE UNTESTED
+	(Y  ) = { Left = "create_revolt" Right = PInt }
+	(Y  ) = { Left = "change_siege" Right = Int }
+	(Y  ) = { Left = "add_colonysize" Right = Int }
+	(Y  ) = { Left = "create_colony" Right = Int }
+	(N N) = { Left = "create_advisor" Right = AdvisorType }
+	(Y  ) = { Left = "change_controller" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "add_claim" Right = { Tag ThisCountry ThisProvince Int } }
+	(N Y) = { Left = "change_province_name" Right = String }
+	(N Y) = { Left = "rename_capital" Right = String }
+	(N Y) = { Left = "remove_claim" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "discover_country" Right = { Tag ThisCountry } }
+	(Y  ) = { Left = "build_to_forcelimit" Right = {
+		OptionList = { Left = { Type = UnitType } Right = Double }
+	} }
+	(N N) = { Left = { Type = UnitType } Right = { ThisProvince ThisCountry Tag } }
+	(Y N) = { Left = "add_trade_node_income" Right = Int }
+	(N N) = { Left = "recall_merchant" Right = ThisCountry }
+	(N N) = { Left = "add_unit_construction" Right = {
+		Single = { Left = "type" Right = UnitType }
+		Single = { Left = "amount" Right = Int }
+		Single = { Left = "speed" Right = Double }
+		Single = { Left = "cost" Right = Double }
+	} }
+	(Y  ) = { Left = "set_in_empire" Right = Bool }
+	(Y  ) = { Left = "multiply_colonysize" Right = NnDbl }
+	(Y  ) = { Left = "add_army_tradition" Right = Int }
+	(Y  ) = { Left = "add_nationalism" Right = Double }
+	(Y  ) = { Left = "add_reform_desire" Right = Double }
+	(Y  ) = { Left = "create_pirate" Right = PInt }
+	(N N) = { Left = { Type = SpecificUnit } Right = ThisCountry }
+	
+} }
+
+(ContextValidator CountryCommand) = { Members = {
+	(Y  ) = { Left = "add_stability" Right = Int }
+	(Y  ) = { Left = "add_adm_power" Right = Double }
+	(Y  ) = { Left = "add_dip_power" Right = Double }
+	(Y  ) = { Left = "add_mil_power" Right = Double }
+	(Y  ) = { Left = "add_manpower" Right = Double }
+	(Y  ) = { Left = "add_prestige" Right = Double }
+	(Y  ) = { Left = "add_papal_influence" Right = Double }
+	(Y  ) = { Left = "add_reform_desire" Right = Double }
+	(Y  ) = { Left = "set_papacy_active" Right = Bool }
+	(Y  ) = { Left = "add_years_of_income" Right = Double }
+	(N Y) = { Left = "add_opinion" Right = AddOpinion }
+	(N Y) = { Left = "reverse_add_opinion" Right = AddOpinion }
+	(N Y) = { Left = "remove_opinion" Right = {
+		Single = { Left = "who" Right = { ThisCountry ThisProvince (Tag) } } # BROKEN for tag possibly
+		Single = { Left = "modifier" Right = OpinionModifier }
+	} }
+	(N Y) = { Left = "reverse_remove_opinion" Right = {
+		Single = { Left = "who" Right = { ThisCountry ThisProvince (Tag) } } # BROKEN for tag possibly
+		Single = { Left = "modifier" Right = OpinionModifier }
+	} }
+	(Y  ) = { Left = "add_legitimacy" Right = Double }
+	(Y  ) = { Left = "add_inflation" Right = Double }
+	(Y  ) = { Left = "add_piety" Right = Double }
+	(Y  ) = { Left = "add_navy_tradition" Right = Double }
+	(Y  ) = { Left = "add_army_tradition" Right = Double }
+	(N Y) = { Left = "add_faction_influence" Right = {
+		Single = { Left = "faction" Right = Faction }
+		Single = { Left = "influence" Right = Double }
+	} }
+	(Y  ) = { Left = "kill_heir" Right = Yes }
+	(Y  ) = { Left = "define_heir" Right = {
+		Single = { Left = "dynasty" Right = { ThisCountry String } }
+		Optional = { Left = "claim" Right = Int }
+		Optional = { Left = "name" Right = String }
+		Optional = { Left = "monarch_name" Right = String }
+		Optional = { Left = "age" Right = Int }
+		Optional = { Left = { "adm" "ADM" } Right = Int }
+		Optional = { Left = { "dip" "DIP" } Right = Int }
+		Optional = { Left = { "mil" "MIL" } Right = Int }
+		Optional = { Left = "birth_date" Right = Date }
+		Optional = { Left = "female" Right = Bool }
+	} }
+	(Y  ) = { Left = "add_treasury" Right = Double }
+	(Y  ) = { Left = "add_mercantilism" Right = Double }
+	(Y  ) = { Left = "change_government" Right = { Government GovernmentType Tag } } # UNTESTED GovernmentType Tag
+	(Y  ) = { Left = "add_republican_tradition" Right = Double }
+	(Y  ) = { Left = "add_war_exhaustion" Right = Double }
+	(Y  ) = { Left = "add_heir_claim" Right = Int }
+	(N Y) = { Left = "discover_province" Right = { Province ThisProvince } }
+	(N Y) = { Left = "undiscover_province" Right = { Province ThisProvince } }
+	(N Y) = { Left = "add_claim" Right = { Province ThisCountry ThisProvince } } # UNTESTED ThisCountry ThisProvince
+	(N Y) = { Left = "remove_claim" Right = Province }
+	(Y  ) = { Left = "change_religion" Right = { Religion ThisProvince ThisCountry Tag } } # UNTESTED ThisProvince ThisCountry Tag
+	(Y  ) = { Left = "change_tag" Right = Tag }
+	(N Y) = { Left = "create_alliance" Right = { Tag ThisCountry ThisProvince } }
+	(N Y If = Broken) = { Left = "break_alliance" Right = Tag }
+	(N Y) = { Left = "add_accepted_culture" Right = Culture }
+	(N Y) = { Left = "remove_accepted_culture" Right = Culture }
+	
+	# ALL OF THE FOLLOWING ARE UNTESTED
+	(N N) = { Left = "kill_advisor" Right = { AdvisorType Random } }
+	(N N) = { Left = "kill_leader" Right = { Random String } }
+	(Y  ) = { Left = "kill_ruler" Right = Yes }
+	(Y  ) = { Left = "set_capital" Right = LandProvince }
+	(Y  ) = { Left = "set_dynasty" Right = Tag }
+	(N Y) = { Left = "remove_faction" Right = Faction }
+	(N N) = { Left = "create_advisor" Right = AdvisorType }
+	(N N) = { Left = "remove_advisor" Right = { AdvisorType PInt Random } } # UNTESTED: PInt, Random
+	(N Y) = { Left = "remove_casus_belli" Right = RemoveCasusBelli }
+	(N Y) = { Left = "add_casus_belli" Right = AddCasusBelli }
+	(N Y) = { Left = "reverse_add_casus_belli" Right = AddCasusBelli }
+	(N N) = { Left = "define_advisor" Right = {
+		Single = { Left = "type" Right = AdvisorType }
+		Single = { Left = "skill" Right = PInt }
+		Optional = { Left = "name" Right = String }
+		Optional = { Left = "location" Right = LandProvince }
+	} }
+	(N Y) = { Left = "create_marriage" Right = { Tag ThisCountry } }
+	(Y  ) = { Left = "define_ruler" Right = {
+		Type = Empty # Need to special case due to stupid rules
+		Type = {
+			Optional = { Left = { "ADM" "adm" } Right = NnInt }
+			Optional = { Left = { "DIP" "dip" } Right = NnInt }
+			Optional = { Left = { "MIL" "mil" } Right = NnInt }
+			Optional = { Left = "rebel" Right = Bool }
+			Optional = { Left = "fixed" Right = Bool }
+			Optional = { Left = "regency" Right = Bool }
+			Optional = { Left = "dynasty" Right = String }
+			Optional = { Left = "attach_leader" Right = String }
+			Optional = { Left = "name" Right = String }
+			Optional = { Left = "female" Right = Bool }
+	} } }
+	(Y  ) = { Left = "change_adm" Right = Int }
+	(Y  ) = { Left = "change_dip" Right = Int }
+	(Y  ) = { Left = "change_mil" Right = Int }
+	(N Y) = { Left = "form_coalition_against" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "create_explorer" Right = Int }
+	(N Y) = { Left = "create_union" Right = Tag }
+	(N Y) = { Left = "inherit" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "release" Right = Tag }
+	(N Y) = { Left = "declare_war_with_cb" Right = {
+		Single = { Left = "who" Right = { Tag ThisCountry } }
+		Single = { Left = "casus_belli" Right = CbType }
+	} }
+	(N Y) = { Left = "declare_war" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "vassalize" Right = { ThisCountry Tag } }
+	(N Y) = { Left = "white_peace" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "loan_size" Right = Int }
+	(N Y) = { Left = "break_union" Right = Tag }
+	(N Y) = { Left = "disband_rebels" Right = RebelType }
+	(N Y) = { Left = "add_base_tax" Right = Int }
+	(N N) = { Left = { Type = LandUnitType } Right = { LandProvince ThisProvince } } # Apparently capital is bugged
+	(N N) = { Left = { Type = SeaUnitType } Right = { Province ThisProvince } }
+	(Y  ) = { Left = "add_scaled_imperial_influence" Right = Int }
+	(Y  ) = { Left = "culture_group_union" Right = CultureGroup }
+	(Y  ) = { Left = "add_imperial_influence" Right = Int }
+	(Y  ) = { Left = "dismantle_hre" Right = Yes }
+	(N N) = { Left = "create_admiral" Right = Int }
+	(N N) = { Left = "create_general" Right = Int }
+	(N N) = { Left = "create_conquistador" Right = Int }
+	(N N) = { Left = "create_explorer" Right = Int }
+	(N N) = { Left = "define_general" Right = DefineCommander }
+	(N N) = { Left = "define_admiral" Right = DefineCommander }
+	(N N) = { Left = "define_explorer" Right = DefineCommander }
+	(N N) = { Left = "define_conquistador" Right = DefineCommander }
+	(Y  ) = { Left = "remove_fow" Right = NnInt }
+	(N N) = { Left = "spawn_rebels" Right = SpawnRebels }
+	(Y  ) = { Left = "change_primary_culture" Right = { Capital Culture ThisCountry } }
+	(Y  ) = { Left = "change_unit_type" Right = TechGroup }
+	(Y  ) = { Left = "change_technology_group" Right = TechGroup }
+	(Y  ) = { Left = "swap_free_idea_group" Right = Yes }
+	(Y  ) = { Left = "add_westernisation" Right = Double }
+	(Y  ) = { Left = "force_converted" Right = Bool }
+	(N Y) = { Left = { "free_vassal" "release_vassal" } Right = { Tag ThisCountry } }
+	(N Y) = { Left = "add_faction" Right = Faction }
+	(If If = Add1) = {
+		(Y  ) = { Left = "add_liberty_desire" Right = Double }
+		(Y  ) = { Left = "add_tariff_value" Right = Double }
+	}
+	(Y  ) = { Left = "add_yearly_manpower" Right = Double }
+	#(Y  ) = { Left = "num_of_free_diplomatic_relations" Right = PInt }
+	
+} }
+
+(Type AddCasusBelli) = {
+	Single = { Left = "target" Right = { Tag ThisCountry ThisProvince } }
+	Single = { Left = "type" Right = CbType }
+	Optional = { Left = "months" Right = PInt }
+}
+(Type RemoveCasusBelli) = {
+	Single = { Left = "target" Right = { Tag ThisCountry ThisProvince } }
+	Single = { Left = "type" Right = CbType }
+}
+
+(Type AddOpinion) = {
+	Single = { Left = "who" Right = { ThisCountry ThisProvince Tag Emperor } }
+	Single = { Left = "modifier" Right = OpinionModifier }
+	Optional = { Left = "years" Right = PInt }
+}
+
+(Type HasOpinionModifier) = {
+	Single = { Left = "who" Right = { ThisCountry Tag } }
+	Single = { Left = "modifier" Right = OpinionModifier }
+	Optional = { Left = "value" Right = Double } # UNTESTED
+}
+
+(Type DefineCommander) = {
+	Single = { Left = "name" Right = String }
+	Single = { Left = "shock" Right = Int }
+	Single = { Left = "fire" Right = Int }
+	Single = { Left = "manuever" Right = Int }
+	Optional = { Left = "siege" Right = Int }
+}
+
+(Type SpawnRebels) = {
+	Single = { Left = "type" Right = RebelType }
+	Single = { Left = "size" Right = Double }
+	Optional = { Left = "friend" Right = { ThisCountry Tag } }
+	Optional = { Left = "leader" Right = String }
+	Optional = { Left = "female" Right = Bool }
+}
+
+(Type AiStatus) = {
+	Single = { Left = "who" Right = ThisCountry }
+	Single = { Left = "value" Right = Int }
+}
+
+
+
+
+
+
+
+
+
+

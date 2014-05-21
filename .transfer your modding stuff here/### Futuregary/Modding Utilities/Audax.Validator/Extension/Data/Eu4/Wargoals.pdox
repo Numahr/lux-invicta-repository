@@ -1,0 +1,83 @@
+(Validator Wargoals) = {
+	Type = Default
+	FriendlyName = "Wargoals"
+	(FileGroup "common\wargoal_types" "*.txt")
+	ValidatorName = WargoalFile
+}
+
+(Type WargoalFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = WargoalDef }
+}
+
+(Type WargoalDef) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+	(CheckKey "*_desc" Left IfNot = NoCheckKey)
+	
+	Inherits = SideInformation
+	
+	Single = { Left = "type" Right = { (Type.Enum) = { Values = { take_colony take_core
+		take_border take_province take_capital defend_capital defend_country
+		naval_superiority superiority take_region } } } }
+		
+	Optional = { Left = "attacker" Right = SideInformation }
+	Optional = { Left = "defender" Right = SideInformation }
+	
+	Optional = { Left = "war_name" Right = Key }
+	
+}
+
+(Type SideInformation) = {
+	Optional = { Left = "badboy_factor" Right = Double }
+	Optional = { Left = "prestige_factor" Right = Double }
+	Optional = { Left = "peace_cost_factor" Right = Double }
+	
+	Optional = { Left = "po_annex" Right = Bool }
+	Optional = { Left = "po_demand_provinces" Right = Bool }
+	Optional = { Left = "po_revoke_cores" Right = Bool }
+	Optional = { Left = "po_release_vassals" Right = Bool }
+	Optional = { Left = "po_release_annexed" Right = Bool }
+	Optional = { Left = "po_change_religion" Right = Bool }
+	Optional = { Left = "po_form_personal_union" Right = Bool }
+	Optional = { Left = "po_gold" Right = Bool }
+	Optional = { Left = "po_become_vassal" Right = Bool }
+	Optional = { Left = "po_concede_defeat" Right = Bool }
+	Optional = { Left = "po_annul_treaties" Right = Bool }
+	Optional = { Left = "po_change_government" Right = Bool }
+	Optional = { Left = "po_revoke_elector" Right = Bool }
+	Optional = { Left = "po_trade_power" Right = Bool }
+	Optional = { Left = "po_return_cores" Right = Bool }
+	Optional = { Left = "po_independence" Right = Bool }
+	Optional = { Left = "po_become_protectorate" Right = Bool }
+	Optional = { Left = "po_humiliate" Right = Bool }
+	Optional = { Left = "allowed_provinces_are_eligible" Right = Bool }
+	Optional = { Left = "deny_annex" Right = Bool }
+	
+	Optional = { Left = "allow_annex" Right = Bool }
+	Optional = { Left = "allow_leader_change" Right = Bool }
+	
+	Optional = { Left = "allowed_provinces" Right = WargoalAllowedProvinceTrigger }
+	Optional = { Left = "prov_desc" Right = Key }
+	Optional = { Left = "allowed_countries" Right = WargoalAllowedCountryTrigger }
+	Optional = { Left = "country_desc" Right = Key }
+	
+}
+
+(Type WargoalAllowedProvinceTrigger) = { ContextValidator = WargoalAllowedProvinceTrigger }
+
+(ContextValidator WargoalAllowedProvinceTrigger) = {
+	Inherits = ProvinceTrigger
+	ThisTarget = Country
+}
+
+(Type WargoalAllowedCountryTrigger) = { ContextValidator = WargoalAllowedCountryTrigger }
+
+(ContextValidator WargoalAllowedCountryTrigger) = {
+	Inherits = CountryTrigger
+	ThisTarget = Country
+}
+
+
+
+
+
+

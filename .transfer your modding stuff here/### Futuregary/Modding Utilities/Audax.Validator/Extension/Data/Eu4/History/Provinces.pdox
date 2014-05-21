@@ -1,0 +1,75 @@
+(Type.Or TagOrEmpty) = {
+	Type = Tag
+	Type.Enum = { Values = { "XXX" } }
+}
+
+(Type.Or OptionalProvinceHistoryTag) = { Type.Enum = NonWastelandProvince Type.Enum = LakeProvince Type.Enum = SeaProvince }
+(AddFlag ProvinceHistory.HaveOptionalProvinces)
+
+Includes = {
+	"..\..\_Common\ProvinceHistory"
+}
+(Type.Or ProvinceHistoryTag) = { Type.Enum = LandProvince Type.Enum = LakeProvince Type.Enum = SeaProvince }
+
+(Type ProvinceHistory) = {
+	Inherits = Common
+	Inherits = ProvinceHistoryBase
+	
+	CheckOwnerControllerValidity
+}
+
+(Type Common) = {
+	OptionList = { Left = { Type = Building } Right = Bool }
+	Optional = { Left = "base_tax" Right = Int }
+	Optional = { Left = "controller" Right = TagOrEmpty }
+	Optional = { Left = "owner" Right = TagOrEmpty }
+	Optional = { Left = "culture" Right = Culture }
+	Optional = { Left = "religion" Right = Religion }
+	(Ch N Y) = { Left = "discovered_by" Right = { TechGroup Tag } }
+	Optional = { Left = "capital" Right = String }
+	(Ch N Y) = { Left = "add_core" Right = Tag }
+	Optional = { Left = "trade_goods" Right = TradeGood }
+	Optional = { Left = "citysize" Right = Int }
+	Optional = { Left = "hre" Right = Bool }
+	Optional = { Left = "manpower" Right = Double }
+
+	Optional = { Left = "native_size" Right = Int }
+	Optional = { Left = "native_ferocity" Right = Double }
+	Optional = { Left = "native_hostileness" Right = Double }
+	Optional = { Left = "revolt_risk" Right = Int }
+	
+	Optional = { Left = "is_city" Right = Bool }
+
+	(If If = Debug) = {
+		Optional = { Left = "colonysize" Right = Int }
+	}
+	
+	Inherits = ProvinceCommand
+
+}
+
+(Type DateClause) = {
+	Inherits = Common
+	(Ch N Y) = { Left = "remove_core" Right = Tag }
+	
+	Child = { Left = "revolt" Right = {
+		Type = Empty
+		Type = {
+			Single = { Left = "type" Right = RebelType }
+			# Is valid to be not set - then will create a rebel-controlled province
+			Optional = { Left = "size" Right = Double }
+			Optional = { Left = "name" Right = String }
+			Optional = { Left = "leader" Right = String }
+			(Optional If = Debug) = { Left = "friend" Right = Tag }
+			(Optional If = Debug) = { Left = "leader_name" Right = String }
+		}
+	} }
+	
+	(Ch N Y) = { Left = "add_permanent_province_modifier" Right = {
+		Single = { Left = "name" Right = Modifier }
+		Single = { Left = "duration" Right = Int }
+	} }
+	
+	(Ch Y N) = { Left = "change_province_name" Right = String }
+}
+

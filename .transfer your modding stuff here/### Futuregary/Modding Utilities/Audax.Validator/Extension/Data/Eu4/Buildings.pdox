@@ -1,0 +1,60 @@
+(Validator Buildings) = {
+	Type = Default
+	FriendlyName = "Buildings"
+	(FileGroup "common\buildings" "*.txt")
+	ValidatorName = BuildingFile
+}
+
+(Type BuildingFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = BuildingDef }
+}
+
+(Type BuildingDef) = {
+	(CheckKey "building_*" Left IfNot = NoCheckKey)
+	
+	Single = { Left = "cost" Right = Int }
+	Single = { Left = "time" Right = Int }
+	Single = { Left = "modifier" Right = ProvinceModifierDef }
+	Optional = { Left = "trigger" Right = BuildingTrigger }
+	
+	Optional = { Left = "destroy_on_conquest" Right = Bool }
+	Optional = { Left = "spare_on_core" Right = Bool }
+	Optional = { Left = "onmap" Right = Bool }
+	Optional = { Left = "one_per_country" Right = Bool }
+	(Optional If = Add1) = { Left = "government_specific" Right = Bool }
+	
+	Optional = { Left = "category" Right = Int }
+	
+	Single = { Left = "monarch_power" Right = Trait }
+	Single = { Left = "ai_will_do" Right = AiWillDo }
+	Optional = { Left = "manufactory" Right = { (PdoList Y) = { Type = TradeGood } } }
+	Optional = { Left = "previous" Right = Building }
+
+}
+
+(Type AiWillDo) = {
+	Optional = { Left = "factor" Right = NnDbl }
+	(Ch N Y) = { Left = "modifier" Right = Modifier }
+}
+
+(Type Modifier) = {
+	Inherits = FactorModifier
+	Optional = { Left = "factor" Right = NnDbl }
+	
+	Inherits = BuildingTrigger
+	
+}
+
+(Type BuildingTrigger) = { ContextValidator = BuildingTrigger }
+
+(ContextValidator BuildingTrigger) = {
+	Inherits = ProvinceTrigger
+	FromTarget = Country
+}
+
+
+
+
+
+
+

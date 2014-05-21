@@ -1,0 +1,140 @@
+# Disband Troops
+character_event = {
+	id = zusk_event.11
+	hide_window = yes
+	
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		disband_event_forces = migration_mark
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Set Migration Flag
+character_event = {
+	id = zusk_event.12
+	hide_window = yes
+	
+	
+	is_triggered_only = yes
+	
+	immediate = {
+        any_realm_province = {
+				limit = { 
+				NOT = { has_province_flag = migration_give_away }
+          				}
+				set_province_flag = migration_give_away
+			                 }
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Give troops
+character_event = {
+	id = zusk_event.13
+	hide_window = yes
+	
+	
+	is_triggered_only = yes
+	
+	immediate = {
+          any_realm_province = {
+			limit = {
+               has_province_flag = migration_give_away
+			} 	
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				religion = ROOT
+				culture = ROOT
+				female = no
+				age = 20
+				attributes = {
+					martial = 8
+				}
+			}
+			new_character = {
+				spawn_unit = {
+					province = PREV
+					owner = ROOT
+					match_character = ROOT
+					match_mult = 0.15
+					earmark = migration_mark
+					attrition = 0.000
+				}
+			}
+			                }
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Give away for migration
+character_event = {
+	id = zusk_event.14
+	hide_window = yes
+	
+	
+	is_triggered_only = yes
+	
+	immediate = {
+          any_realm_province = {
+			limit = {
+                has_province_flag = migration_give_away
+			}
+			county = {
+				create_character = {
+					random_traits = yes
+					dynasty = none
+					religion = PREVPREV
+					culture = PREVPREV
+					female = no
+					age = 25
+					trait = peasant_leader
+				}
+				new_character = {
+					usurp_title_plus_barony_if_unlanded = PREV
+					set_defacto_liege = THIS
+				}
+				clr_province_flag = migration_give_away
+			       }
+		              }
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Remove Migration flag without giving away
+character_event = {
+	id = zusk_event.15
+	hide_window = yes
+	
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		#Remove migration flag
+		any_realm_province = {
+			limit = {
+                has_province_flag = migration_give_away
+			}
+				clr_province_flag = migration_give_away
+			}
+	}
+	
+	option = {
+		name = OK
+	}
+}

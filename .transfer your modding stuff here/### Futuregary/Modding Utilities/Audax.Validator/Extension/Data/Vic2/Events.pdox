@@ -1,0 +1,70 @@
+(Validator Events) = {
+	Type = GroupValidator
+	FriendlyName = "@Events"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "events" "*.txt")
+		ValidatorName = EventFile
+	}
+	
+	Validator = {
+		Type = ResourceUseValidator
+		Description = "Event pictures"
+		SupplyUnique = True
+		
+		# For picture=""
+		Supply = {
+			(DataSource StringList) = { "" }
+			MustBeMatched = False
+		}
+		
+		Supply = {
+			(DataSource Chained) = {
+				(FileGroup "gfx\pictures\events" "*.tga")
+				(StringOp ToUpper)
+				(StringOp Replace "\\" "\")
+				(StringOp Replace ".TGA" "")
+				(StringOp Replace "GFX\PICTURES\EVENTS\" "")
+			}
+			
+			MustBeMatched = True
+		}
+		
+		Demand = {
+			(DataSource Chained) = {
+				Pdo = { (FileGroup "events" "*.txt") }
+				SelectPath = { Path = "*\picture\[R]" }
+				(StringOp ToUpper)
+			}
+			
+			MustBeMatched = True
+		}
+		
+		# The default event image
+		Demand = {
+			(DataSource StringList) = { "GFX_EVENT_NO_IMAGE" }
+			MustBeMatched = True
+		}
+	}
+}
+
+(Type EventFile) = {
+	Child = { Left = "country_event" Right = CountryOrStateEvent }
+	Child = { Left = "province_event" Right = ProvinceEvent }
+}
+
+(Type CountryOrStateEvent) = {
+	NodeSwitcher = {
+		Node = "id"
+		MarkChecked = False
+		Switch = {
+			(CountryEventId Enum) = CountryEvent
+			(RegionEventId Enum) = RegionEvent
+		}
+	}
+}
+
+(Import "CountryEvent" From "EventsHelper" WithFlag "c")
+(Import "ProvinceEvent" From "EventsHelper" WithFlag "p")
+(Import "RegionEvent" From "EventsHelper" WithFlag "s")

@@ -1,0 +1,141 @@
+namespace = execute
+
+###Prisoner Execution Events
+#Written by JoeTheExplorer for the "Death's Row" mod
+
+#Execution Lineup
+
+character_event = {
+	id = execute.1
+	title = EVTNAMEexecute.1
+	desc = EVTDESCexecute.1
+
+	picture = GFX_evt_beheading
+
+	is_triggered_only = yes
+	only_playable = yes
+	only_ruler = yes
+	ai = no
+
+	option = {
+		name = EVTOPTAexecute.1
+			any_courtier = {
+				limit = {
+					prisoner = yes
+					NOT = { has_character_modifier = house_arrest }
+				}
+				death = {
+					death_reason = death_execution
+					killer = FROM
+				}
+			}
+			prestige = -20
+			piety = -15
+			random_realm_character = {
+				opinion = {
+					modifier = opinion_tyrant
+					who = ROOT
+					years = 10
+				}
+			}
+			random_list = {
+				40 = {
+					add_trait = tyrant
+				}
+				30 = {
+					add_trait = cruel
+				}
+			}
+	}
+	option = {
+		name = EVTOPTBexecute.1
+	}
+}
+
+#The Advisor's Plan
+
+character_event = {
+	id = execute.2
+	title = EVTNAMEexecute.2
+	desc = EVTDESCexecute.2
+
+	picture = GFX_evt_council
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTAexecute.2
+		tooltip_info = cruel
+		trigger = {
+			trait = cruel
+		}
+		hidden_tooltip = {
+			character_event = {
+				id = execute.1
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBexecute.2
+
+		any_courtier = {
+			limit = {
+				prisoner = yes
+				host = { character = ROOT }
+				NOT = { has_character_modifier = house_arrest }
+				NOT = { trait = greedy }
+				wealth = 150
+			}	
+			hidden_tooltip = {
+				character_event = {
+					id = execute.3
+					days = 10
+				}
+			}
+		}
+		character_event = {
+			id = execute.1
+			days = 30
+		}
+	}
+	option = {
+		name = EVTOPTCexecute.2
+	}
+}
+
+#Chance to buy freedom
+
+character_event = {
+	id = execute.3
+	title = EVTNAMEexecute.3
+	desc = EVTDESCexecute.3
+
+	picture = GFX_evt_into_the_dungeon
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTAexecute.3
+		trigger = {
+			FROM = {
+				host = yes
+			}
+		}
+		wealth = -100
+		ai_chance = { factor = 99 }
+
+		host = {
+			wealth = 100
+			release = { character = ROOT }
+		}
+	}
+	option = {
+		name = EVTOPTBexecute.3
+		trigger = {
+			FROM = {
+				host = yes
+			}
+		}
+		ai_chance = { factor = 1 }
+	}
+}

@@ -1,0 +1,341 @@
+## present in LI. updated and retained.
+namespace = MyMod
+##### Created by jordarkelf, copy and paste by Ash
+# A female prisoner 'pleads her belly'
+character_event = {
+	id = MyMod.800
+	desc = EVTDESCMyMod.800
+	picture = GFX_evt_into_the_dungeon
+	
+	prisoner = yes
+	capable_only = yes
+	
+	trigger = {
+		age = 16
+		NOT = { age = 45 }
+		is_female = yes
+		is_pregnant = no
+		fertility = 4
+		OR = {
+			is_married = no
+			NOT = { spouse = { opinion = { who = ROOT value = 0 } } }
+		}
+		host = {
+			is_female = no
+			age = 16
+			NOT = { age = 40 }
+			NOT = { trait = celibate }
+			NOT = { trait = chaste }
+			NOT = { trait = eunuch }
+			NOT = { is_close_relative = ROOT }
+			opinion = { who = ROOT value = 0 }
+		}
+		NOT = { trait = ugly }
+		NOT = { trait = celibate }
+		NOT = { trait = chaste }
+	}
+	weight_multiplier = {
+		months = 360
+		modifier = {
+			factor = 0.5
+			trait = fair
+		}
+		modifier = {
+			factor = 0.5
+			trait = lustful
+		}
+		modifier = {	## added By Ash
+			factor = 0.5
+			trait = sensual
+		}
+#		modifier = {	## added By Ash
+#			factor = 0.2
+#			has_ambition = obj_break_out_of_prison
+#		}
+		modifier = {		## added By Ash
+			factor = 0.5
+			intrigue = 15
+		}
+		modifier = {		## added By Ash
+			factor = 0.5
+			intrigue = 18
+		}
+		modifier = {		## added By Ash
+			factor = 0.5
+			trait = cunning
+		}
+		modifier = {		## added By Ash
+			factor = 2.0
+			NOT = { intrigue = 6 }
+		}
+		modifier = {		## added By Ash
+			factor = 2.0
+			trait = unfriendly
+		}
+		modifier = {		## added By Ash
+			factor = 2.0
+			trait = tactless
+		}
+		modifier = {	## By Ash
+			factor = 3.0
+			trait = craven
+		}
+	}
+	
+	option = {
+		name = EVTOPTAMyMod.800 # Try to seduce
+		ai_chance = {
+			factor = 75
+		}
+		host = {
+			character_event = { id = MyMod.801 days = 4 tooltip = EVTTOOLTIPMyMod.801 }
+		}
+	}
+	option = {
+		name = EVTOPTBMyMod.800 # Don't
+		ai_chance = {
+			factor = 25
+			modifier = {
+				factor = 0
+				trait = lustful
+			}
+			modifier = {## added by Ash
+				factor = 0
+				trait = sensual
+			}
+			modifier = {## added by Ash
+				factor = 5
+				trait = spiritual
+			}
+			modifier = {## added by Ash
+				factor = 5
+				trait = noblespirit
+			}
+			modifier = {## added by Ash
+				factor = 5
+				trait = idealistic
+			}
+		}
+		piety = 10
+		if = { 
+			limit = { is_married = yes }
+			add_trait = chaste
+		}
+	}
+}
+
+# The captor hears the plea from the imprisoned character
+character_event = {
+	id = MyMod.801
+	desc = EVTDESCMyMod.801
+	picture = GFX_evt_wench
+	
+	is_friendly = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAMyMod.801 # Accept
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 1.5
+				is_married = no
+			}
+			modifier = {
+				factor = 2
+				trait = lustful
+			}
+			modifier = {## added by Ash
+				factor = 1.5
+				trait = bloodbbile
+			}
+			modifier = {## added by Ash
+				factor = 1.5
+				trait = bloodphlegm
+			}
+			modifier = {## added by Ash
+				factor = 1.5
+				trait = bloodybile
+			}
+			modifier = {
+				factor = 2
+				NOT = { any_child = { is_female = no } }
+			}
+			modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 0
+				trait = homosexual
+			}
+		}
+		FROM = { character_event = { id = MyMod.802 days = 4 tooltip = EVTTOOLTIPMyMod.802 } }
+	}
+	
+	option = {
+		name = EVTOPTBMyMod.801 # Better not
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 1.5
+				is_married = yes
+			}
+			modifier = {
+				factor = 2
+				trait = celibate
+			}
+			modifier = {
+				factor = 2
+				trait = chaste
+			}
+			modifier = {	## added by Ash
+				factor = 2.5
+				trait = idealistic
+			}
+			modifier = {	## added by Ash
+				factor = 2.5
+				trait = stoic
+			}
+			modifier = {	## added by Ash
+				factor = 2.5
+				trait = noblespirit
+			}
+		}
+		FROM = { character_event = { id = MyMod.803 days = 4 tooltip = EVTTOOLTIPMyMod.803 } }
+	}
+}
+
+# The prisoner is released into the bedchamber
+character_event = {
+	id = MyMod.802
+	desc = EVTDESCMyMod.802
+	
+	is_friendly = yes
+	
+	picture = GFX_evt_bed
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		prisoner = no
+	}
+	
+	option = {
+		name = EVTOPTAMyMod.802 # Free at last!
+		FROM = { 
+			FROM = {
+					remove_trait = idealistic
+					remove_trait = noblespirit
+					remove_trait = gullible
+					remove_trait = aloof
+		
+			
+				reverse_opinion = {
+					who = ROOT
+					modifier = opinion_sprung_from_jail
+					months = 240
+				}
+				if = {
+					limit = { 
+						fertility = 1 
+						is_married = yes
+					}
+					
+					random_list = {
+						30 = { add_trait = deceitful }
+						30 = { }
+						40 = { ROOT = { impregnate_cuckoo = prev } }
+					}
+					set_character_flag = love_mistress
+				}
+				if = {
+					limit = { 
+						fertility = 1 
+						is_married = no
+					}
+					
+					random_list = {
+						30 = { add_trait = deceitful }
+						30 = { }
+						40 = { ROOT = { impregnate = PREV } }
+					}
+					set_character_flag = love_mistress
+				}
+				random = {
+					chance = 25
+					add_lover = ROOT
+				}
+			} 
+		}
+	}
+}
+
+# The request is denied
+character_event = {
+	id = MyMod.803
+	desc = EVTDESCMyMod.803
+	picture = GFX_evt_into_the_dungeon
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAMyMod.803 # Such a shame...
+	}
+}
+
+character_event = {
+	id = MyMod.600
+	desc = "EVTDESCMyMod.600"
+	picture = "GFX_evt_recovery"
+	
+	trigger = {
+		base_health = 4
+		trait = maimed
+	}
+	
+	weight_multiplier = {
+		months = 48
+		
+		modifier = {
+			factor = 0.5
+			base_health = 5.1
+		}
+		
+		modifier = {
+			factor = 0.4
+			base_health = 6
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAMyMod.600" #No lasting damage
+		trigger = {
+			base_health = 6
+		}
+		
+		remove_trait = maimed
+		health = -1
+		add_trait = scarred
+	}	
+	
+	option = {
+		name = "EVTOPTCMyMod.600" #Serious lasting damage
+		trigger = {
+			NOT = { base_health = 5 }
+		}
+		
+		remove_trait = maimed
+		health = -1.5
+		add_trait = scarred
+		
+		random_list = {
+			65 = { 
+			}
+			35 = { #Permanent sensory damage
+				add_trait = blinded
+			}
+		}
+	}
+}

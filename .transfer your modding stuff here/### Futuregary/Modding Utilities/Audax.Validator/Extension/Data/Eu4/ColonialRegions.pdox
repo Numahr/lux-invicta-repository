@@ -1,0 +1,37 @@
+(Validator ColonialRegions) = {
+	Type = Default
+	FriendlyName = "Colonial regions"
+	(FileGroup "common\colonial_regions" "*.txt")
+	ValidatorName = ColonialRegions
+}
+
+Global = {
+	(Type.Enum ColonialRegion) = { Import = { (FileGroup "common\colonial_regions" "*.txt") SelectPath = "*\[L]" } }
+}
+
+(Type ColonialRegions) = {
+	(Ch Y N) = { Left = { Type = String } Right = ColonialRegionDef }
+}
+
+(Type ColonialRegionDef) = {
+	Single = { Left = "color" Right = Color }
+	Single = { Left = "tax_income" Right = Double }
+	Single = { Left = "native_size" Right = Double }
+	Single = { Left = "native_ferocity" Right = Double }
+	Single = { Left = "native_hostileness" Right = Double }
+	
+	Single = { Left = "trade_goods" Right = { (Ch Y N) = { Left = { Type = TradeGood } Right = Double } } }
+	Single = { Left = "provinces" Right = { (PdoList Y) = { Type = LandProvince UniqueId = Right } } }
+	(Ch N Y) = { Left = "names" Right = NameClause }
+	Single = { Left = "culture" Right = { (Ch Y N) = { Left = { Type = Culture } Right = Double } } }
+	Single = { Left = "religion" Right = { (Ch Y N) = { Left = { Type = Religion } Right = Double } } }
+	Optional = { Left = "extra_province_names" Right = { (PdoList Y) = { Type = String } } }
+}
+
+(Type NameClause) = {
+	Optional = { Left = "trigger" Right = CountryTrigger }
+	Single = { Left = "name" Right = String (CheckKey "*" Right IfNot = NoCheckKey) (CheckKey "*_ADJ" Right IfNot = NoCheckKey) }
+}
+
+
+

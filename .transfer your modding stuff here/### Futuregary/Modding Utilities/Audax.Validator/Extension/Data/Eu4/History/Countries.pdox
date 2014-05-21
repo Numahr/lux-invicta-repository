@@ -1,0 +1,112 @@
+﻿Includes = {
+	"..\..\_Common\CountryHistory"
+}
+
+(Type.Enum CountryHistorySkip) = { Values = { "reb" "pir" "nat" } } # Needed for CountryHistoryBase
+
+(Type CountryHistory) = {
+	Inherits = CountryHistoryBase
+	Inherits = Common
+	
+	Single = { Left = "government" Right = Government }
+	Single = { Left = "primary_culture" Right = Culture }
+	Single = { Left = "religion" Right = Religion }
+	Single = { Left = "technology_group" Right = TechGroup }
+	Single = { Left = "capital" Right = LandProvince }
+	(Ch N Y) = { Left = { "historical_friend" "historical_rival" } Right = Tag }
+	Optional = { Left = "unit_type" Right = TechGroup }
+	Optional = { Left = "culture_group_union" Right = CultureGroup }
+
+}
+
+(Type DateClause) = {
+	Inherits = Common
+	
+	(Ch N Y) = { Left = "leader" Right = Leader }
+
+	Optional = { Left = "government" Right = Government }
+	Optional = { Left = "primary_culture" Right = Culture }
+	Optional = { Left = "religion" Right = Religion }
+	
+	Optional = { Left = "monarch" Right = Monarch }
+	Optional = { Left = "heir" Right = Heir }
+	
+	(Ch N Y) = { Left = "remove_accepted_culture" Right = Culture }
+	Optional = { Left = "capital" Right = LandProvince }
+	
+	(Ch N Y) = { Left = "set_country_flag" Right = String (LocalOp "set" "[R]" AddSetter CountryFlag) }
+	(Ch N Y) = { Left = "clr_country_flag" Right = String (LocalOp "clr" "[R]" AddSetter CountryFlag) }
+	(Ch N Y) = { Left = "decision" Right = { CountryDecision ReligionDecision } }
+	
+	Optional = { Left = "add_piety" Right = Double }
+	Optional = { Left = "technology_group" Right = TechGroup }
+	Optional = { Left = "revolution_target" Right = Bool }
+	Optional = { Left = "changed_tag_from" Right = Tag }
+	Optional = { Left = "change_unit_type" Right = TechGroup }
+	
+	(Ch N Y) = { Left = "set_global_flag" Right = String (LocalOp "set" "[R]" AddSetter GlobalFlag) }
+	(Ch N Y) = { Left = "clr_global_flag" Right = String (LocalOp "clr" "[R]" AddSetter GlobalFlag) }
+	(Ch N Y) = { Left = "remove_faction" Right = Faction }
+
+}
+
+(Type Common) = {
+	Inherits = CountryCommand
+
+	Optional = { Left = "elector" Right = Bool }
+	Optional = { Left = "emperor" Right = Bool }
+	(Ch N Y) = { Left = "add_accepted_culture" Right = Culture }
+	Optional = { Left = "mercantilism" Right = Double }
+	(Ch N Y) = { Left = "add_faction" Right = Faction }
+	
+	(Ch N Y) = { Left = "add_country_modifier" Right = Modifier }
+	(Ch N Y) = { Left = "remove_country_modifier" Right = EModifier }
+	(Ch Y N) = { Left = { Type = Faction } Right = PInt }
+	(Ch N Y) = { Left = "faction" Right = Faction }
+}
+
+(Type Modifier) = {
+	Single = { Left = "name" Right = EModifier }
+	Optional = { Left = "duration" Right = Int }
+	Optional = { Left = "hidden" Right = Bool }
+	Optional = { Left = "desc" Right = Key }
+}
+
+(Type MonarchBase) = {
+	Single = { Left = "name" Right = String }
+	Single = { Left = { "adm" "ADM" } Right = TraitNumber }
+	Single = { Left = { "dip" "DIP" } Right = TraitNumber }
+	Single = { Left = { "mil" "MIL" } Right = TraitNumber }
+	Optional = { Left = "female" Right = Bool }
+	Optional = { Left = "dynasty" Right = String }
+	Optional = { Left = "leader" Right = Leader }
+}
+		
+(Type Monarch) = {
+	Inherits = MonarchBase
+	Optional = { Left = "regent" Right = Bool }
+	Optional = { Left = "attach_leader" Right = String }
+	Optional = { Left = { "birth_date" } Right = Date }
+}
+
+(Type Heir) = {
+	CheckLifeDates
+
+	Inherits = MonarchBase
+	Single = { Left = "monarch_name" Right = String }
+	Single = { Left = { "birth_date" "birth_Date" } Right = Date }
+	Single = { Left = { "death_date" "death_Date" } Right = Date }
+	Single = { Left = "claim" Right = Int }
+}
+		
+(Type Leader) = {
+	Single = { Left = "name" Right = String }
+	Single = { Left = "type" Right = { Literal = "general" Literal = "admiral" Literal = "conquistador" Literal = "explorer" } }
+	Optional = { Left = "rank" Right = String } #BAD BAD BAD THIS IS OUTDATED
+	Optional = { Left = "death_date" Right = Date }
+	Optional = { Left = "female" Right = Bool }
+	Single = { Left = "fire" Right = Int }
+	Single = { Left = "shock" Right = Int }
+	Single = { Left = "manuever" Right = Int }
+	Single = { Left = "siege" Right = Int }
+}

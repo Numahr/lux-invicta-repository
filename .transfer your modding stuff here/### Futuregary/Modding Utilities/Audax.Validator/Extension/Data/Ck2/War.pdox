@@ -1,0 +1,88 @@
+(Validator Units) = {
+	Type = GroupValidator
+	FriendlyName = "Units"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\special_troops" "*.txt")
+		ValidatorName = SpecialTroops
+	}
+	Validator = {
+		Type = Default
+		FriendlyName = "Retinue subunits"
+		(FileGroup "common\retinue_subunits" "*.txt")
+		ValidatorName = RetinueSubunits
+	}
+	Validator = {
+		Type = Default
+		(FileGroup "common\mercenaries" "*.txt")
+		ValidatorName = MercenaryFile
+	}
+}
+
+(Type SpecialTroops) = {
+	(Ch Y N) = {
+		Left = { Type = String }
+		Right = SpecialTroop
+		(CheckKey "*" Left IfNot = NoCheckKey)
+		(CheckKey "*_offensive" Left IfNot = NoCheckKey)
+		(CheckKey "*_defensive" Left IfNot = NoCheckKey)
+		(CheckKey "*_morale" Left IfNot = NoCheckKey)
+		(CheckKey "*_modifier" Left IfNot = NoCheckKey)
+	}
+}
+
+(Type SpecialTroop) = {
+	Single = { Left = "morale" Right = Double }
+	Single = { Left = "maintenance" Right = Double }
+	Single = { Left = "phase_skirmish_attack" Right = Double }
+	Single = { Left = "phase_melee_attack" Right = Double }
+	Single = { Left = "phase_pursue_attack" Right = Double }
+	Single = { Left = "phase_skirmish_defense" Right = Double }
+	Single = { Left = "phase_melee_defense" Right = Double }
+	Single = { Left = "phase_pursue_defense" Right = Double }
+	Single = { Left = "base_type" Right = Unit }
+}
+
+
+
+
+(Type RetinueSubunits) = {
+	(Ch Y N) = { Left = { Type = String } Right = Subunit }
+}
+
+(Type.Enum SubunitType) = { Values = { 0 1 2 3 4 5 6 } }
+
+(Type Subunit) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+	Single = { Left = "first_type" Right = SubunitType }
+	Single = { Left = "first_amount" Right = PInt }
+	Optional = { Left = "second_type" Right = SubunitType }
+	Optional = { Left = "second_amount" Right = PInt }
+	AllOrNone = { "second_type" "second_amount" }
+	Optional = { Left = "special_troops" Right = SpecialUnit }
+	
+	(Ch N Y) = { Left = "culture_group" Right = CultureGroup }
+	(Ch N Y) = { Left = "culture" Right = Culture }
+	
+	Optional = { Left = "modifier" Right = UnitStatsModifier }
+	Optional = { Left = "potential" Right = ProvTrigger }
+	
+	(If If = Add1) = {
+		Optional = { Left = "religion_group" Right = ReligionGroup }
+	}
+}
+
+(Type MercenaryFile) = {
+	(Ch Y N) = {
+		Left = { Type = String }
+		Right = MercenaryDef
+	}
+}
+
+(Type MercenaryDef) = {
+	Single = { Left = "levy_size" Right = Double }
+	(Ch Y N) = { Left = { Type = Unit Type = SpecialUnit } Right = PInt }
+}
+
+

@@ -1,0 +1,86 @@
+decisions = {	
+	ai_raise_mercs = {
+		potential = {
+			always = no
+			ai = yes
+			is_ruler = yes
+			OR = { higher_tier_than = baron is_patrician = yes }
+			war = yes
+			#not crusade caller
+			NOT = {
+				any_war = {
+					using_cb = crusade
+					attacker = { character = ROOT }
+				}
+			}
+			#attacker, defender, or participant in civil war
+			any_war = {
+				OR = {
+					defender = { character = ROOT }
+					attacker = { character = ROOT }
+				}
+			}
+			#at least 200 wealth for 500 mercs
+			wealth = 200
+			#maintain a buffer to pay troops
+			NOT = {
+				AND = {
+					monthly_income = 5
+					NOT = { wealth = 300 }			
+				}
+				AND = {
+					monthly_income = 10
+					NOT = { wealth = 400 }			
+				}			
+				AND = {
+					monthly_income = 15
+					NOT = { wealth = 500 }			
+				}			
+				AND = {
+					monthly_income = 20
+					NOT = { wealth = 600 }			
+				}			
+				AND = {
+					monthly_income = 25
+					NOT = { wealth = 700 }			
+				}			
+			}
+		}
+		allow = { }
+		effect = {
+			clr_character_flag = mercenaries_dismissed
+			character_event = { id = 110034 }
+		}
+		ai_will_do = {
+			factor = 100
+		}		
+	}
+	ai_dismiss_mercs = {
+		potential = {
+			always = no
+			ai = yes
+			is_ruler = yes		
+			OR = {
+				NOT = { wealth = 0 }
+				war = no
+			}
+			OR = {
+				NOT = { has_character_flag = mercenaries_dismissed }
+				had_character_flag = {
+					flag = mercenaries_dismissed
+					days = 730
+				}
+				check_variable = { which = "mercenaries_raised" value = 0.1 }
+			}
+		}
+		allow = { }
+		effect = {
+			set_variable = { which = "mercenaries_raised" value = 0 }
+			disband_event_forces = yes
+			set_character_flag = mercenaries_dismissed
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+}

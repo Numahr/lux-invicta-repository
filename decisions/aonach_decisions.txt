@@ -1,0 +1,76 @@
+decisions = {
+	hold_an_aonach_tailteann  = {
+		is_high_prio = yes
+		potential = {
+			NOT = {
+				has_character_flag = aonach_tailteann
+			}
+#			OR = {
+				religion_group = celtic_group
+#			}
+			OR = {
+				culture = irish
+				culture = scottish
+				culture = pictish
+				culture = brython
+				culture = welsh
+			}
+			independent = yes
+			OR = {
+				tier = duke
+				tier = king
+				tier = emperor 
+			}
+			location = {
+				owner = { character = ROOT }
+			}
+		}
+		allow = {
+			war = no
+			prisoner = no
+			in_command = no
+			age = 16
+			prestige = 500
+			wealth = 200
+			OR = {
+				any_vassal = {
+					has_minor_title = title_court_bard
+				}
+				any_courtier = {
+					has_minor_title = title_court_bard
+				}
+			}
+		}
+		effect = {
+			set_character_flag = aonach_tailteann
+			clr_character_flag = tailteann_has_ended
+			wealth = -200
+			prestige = 100
+			character_event = { id = ancrel.1193 tooltip = "tailteann_invite" }
+			hidden_tooltip = {
+				character_event = { id = ancrel.1191 days = 60 } # Aonach starts
+				clr_character_flag = tailteann_has_ended
+				any_realm_character = {
+					limit = {
+						NOT = { trait = incapable }
+						prisoner = no
+					}
+					clr_character_flag = tailteann_has_ended
+					character_event = { id = ancrel.1190 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = {
+					OR = {
+						wealth = 1000
+						scaled_wealth = 3.0
+					}
+				}
+			}
+		}
+	}
+}

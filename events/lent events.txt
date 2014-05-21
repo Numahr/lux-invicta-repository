@@ -1,0 +1,619 @@
+namespace = lent
+
+# The Fast Begins
+character_event = {
+	id = lent.0 #1000100010 #lent.0
+	title = "LENTTITLE"
+	desc = "EVTDESClent.0"
+	picture = "GFX_evt_bishop"
+	border =  "GFX_event_normal_frame_religion"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlent.0"
+		hidden_tooltip = {
+			character_event = { id = lent.10 days = 36 }
+			character_event = { id = lent.15 days = 41 }
+			character_event = { id = lent.22 days = 45 }
+		}
+	}
+}
+
+# Release prisoners
+character_event = {
+	id = lent.1
+	title = "LENTTITLE"
+	desc = "EVTDESClent.1"
+	picture = "GFX_evt_into_the_dungeon"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = { 
+		num_of_prisoners = 1
+		has_character_flag = lent
+		NOT = { has_character_flag = lent_prisoners }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+	
+	option = {
+		name = "EVTOPTAlent.1"
+		set_character_flag = lent_prisoners
+		any_courtier = {
+			limit = { prisoner = yes }
+			prisoner = no
+		}
+		piety = 15
+	}
+	option = {
+		name = "EVTOPTBlent.1"
+		set_character_flag = lent_prisoners
+		piety = -15
+	}
+}
+
+# Charity for the People
+character_event = {
+	id = lent.16 # lent.2 causes program crash
+	title = "LENTTITLE"
+	desc = "EVTDESClent.2"
+	picture = "GFX_evt_market"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		scaled_wealth = 0.20
+		NOT = { has_character_flag = lent_charity }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+
+	immediate = {
+		set_character_flag = lent_charity
+	}
+	
+	option = {
+		name = "EVTOPTAlent.2"
+		scaled_wealth = -0.25
+		piety = 15
+	}
+	option = {
+		name = "EVTOPTBlent.2"
+		piety = -15
+	}
+}
+
+# Prayers
+character_event = {
+	id = lent.3
+	title = "LENTTITLE"
+	desc = "EVTDESClent.3"
+	picture = "GFX_evt_monk"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		NOT = { has_character_flag = lent_prayers }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+
+	option = {
+		name = "EVTOPTAlent.3"
+		set_character_flag = lent_prayers
+		piety = 15
+	}
+	option = {
+		name = "EVTOPTBlent.3"
+		set_character_flag = lent_prayers
+		piety = -15
+	}
+}
+
+# Ill due to Fast
+character_event = {
+	id = lent.4
+	title = "LENTTITLE"
+	desc = "EVTDESClent.4"
+	picture = "GFX_evt_illness"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		OR = {
+			age = 50
+			trait = weak
+		}
+		NOT = { has_character_flag = lent_ill }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+	
+	option = {
+		name = "EVTOPTAlent.4"
+		add_trait = ill
+		character_event = { id = lent.22 days = 1 tooltip = "EVTTOOLTIPlent.22" }
+	}
+	option = {
+		name = "EVTOPTBlent.4"
+		add_trait = ill
+		piety = 15
+		set_character_flag = lent_ill
+	}
+}
+
+# Infirm due to Fast
+character_event = {
+	id = lent.5
+	title = "LENTTITLE"
+	desc = "EVTDESClent.5"
+	picture = "GFX_evt_illness"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		has_character_flag = lent_ill
+		trait = ill
+	}
+	
+	weight_multiplier = {
+		days = 8
+	}
+	
+	option = {
+		name = "EVTOPTAlent.5"
+		add_trait = infirm
+		character_event = { id = lent.22 days = 1 tooltip = "EVTTOOLTIPlent.22" }
+	}
+}
+
+# Gain Temperate
+character_event = {
+	id = lent.6
+	desc = "EVTDESClent.6"
+	picture = "GFX_evt_monk"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		NOT = { 
+			trait = gluttonous
+			trait = temperate
+		}
+	}
+	
+	weight_multiplier = {
+		days = 100
+	}
+	
+	option = {
+		name = "EVTOPTAlent.6"
+		add_trait = temperate
+		piety = 15
+	}
+}
+
+# Gain Charitable
+character_event = {
+	id = lent.7
+	title = "LENTTITLE"
+	desc = "EVTDESClent.7"
+	picture = "GFX_evt_monk"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		NOT = { 
+			trait = greedy
+			trait = charitable
+		}
+	}
+	
+	weight_multiplier = {
+		days = 100
+	}
+	
+	option = {
+		name = "EVTOPTAlent.7"
+		add_trait = charitable
+		piety = 15
+	}
+}
+
+# War interrupts Fast
+character_event = {
+	id = lent.8
+	title = "LENTTITLE"
+	desc = "EVTDESClent.8"
+	picture = "GFX_evt_battle"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		war = yes
+	}
+	
+	option = {
+		name = "EVTOPTAlent.8"
+		character_event = { id = lent.16 days = 1 }
+	}
+}
+
+# Illness interrupts Fast
+character_event = {
+	id = lent.9
+	title = "LENTTITLE"
+	desc = "EVTDESClent.9"
+	picture = "GFX_evt_illness"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		trait = ill
+		has_character_flag = lent
+		NOT = { has_character_flag = lent_ill }
+	}
+	
+	option = {
+		name = "EVTOPTAlent.9"
+		character_event = { id = lent.22 days = 1 }
+	}
+}
+
+# Hold Feast
+character_event = {
+	id = lent.10
+	title = "LENTTITLE"
+	desc = "EVTDESClent.10"
+	picture = "GFX_evt_feast"
+	border =  "GFX_event_normal_frame_religion"
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		num_of_vassals = 1
+		has_character_flag = lent
+	}
+	
+	option = {
+		name = "EVTOPTAlent.10"
+		scaled_wealth = -0.3
+		any_vassal = {
+			limit = {
+				prisoner = no
+				war = no
+			}
+			letter_event = {
+				id = lent.11
+				tooltip = "EVTTOOLTIP72011"
+			}
+		}
+		character_event = { id = lent.13 days = 3 tooltip = "EVTTOOLTIPlent.13" }
+	}
+	option = {
+		name = "EVTOPTBlent.10"
+	}
+}
+
+# Vassal Invited
+letter_event = {
+	id = lent.11
+	desc = "EVTDESClent.11"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlent.11"
+		ai_chance = { factor = 70 }
+		character_event = { id = lent.14 days = 4 tooltip = "EVTTOOLTIPlent.14" }
+		set_character_flag = attending_lenten_feast
+	}
+	option = {
+		name = "EVTOPTBlent.11"
+		ai_chance = { factor = 30 }
+		FROM = {
+			letter_event = { id = lent.12 days = 1 tooltip = "EVTTOOLTIPlent.12" }
+			opinion = {
+				modifier = opinion_disappointed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+
+# Vassal Refuses Invitation
+letter_event = {
+	id = lent.12
+	desc = "EVTDESClent.12"
+
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlent.12"
+	}
+}
+
+# Host is told about Feast
+character_event = {
+	id = lent.13
+	title = "LENTTITLE"
+	desc = "EVTDESClent.13"
+	picture = "GFX_evt_feast"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlent.13"
+		any_vassal = {
+			limit = { has_character_flag = attending_lenten_feast }
+			opinion = {
+				modifier = opinion_impressed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+
+# Vassal is told about Feast
+character_event = {
+	id = lent.14
+	title = "LENTTITLE"
+	desc = "EVTDESClent.14"
+	picture = "GFX_evt_feast"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAlent.14"
+		clr_character_flag = attending_lenten_feast
+	}
+}
+
+# Gift for Wife
+character_event = {
+	id = lent.15
+	title = "LENTTITLE"
+	desc = "EVTDESClent.15"
+	picture = "GFX_evt_marriage"
+	border =  "GFX_event_normal_frame_religion"
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		is_married = yes
+		has_character_flag = lent
+	}
+	
+	option = {
+		name = "EVTOPTAlent.15"
+		scaled_wealth = -0.25
+		spouse = {
+			opinion = {
+				modifier = opinion_happy
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+	option = {
+		name = "EVTOPTBlent.15"
+		spouse = {
+			opinion = {
+				modifier = spouse_ignores_me
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+
+# Gluttonous Sin
+character_event = {
+	id = lent.17
+	title = "LENTTITLE"
+	desc = "EVTDESClent.17"
+	picture = "GFX_evt_lunatic"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		trait = gluttonous
+		NOT = { has_character_flag = lent_gluttonous }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+	
+	option = {
+		name = "EVTOPTAlent.17"
+		set_character_flag = lent_gluttonous
+		piety = -15
+	}
+}
+
+# Lustful/Hedonist Sin
+character_event = {
+	id = lent.18
+	title = "LENTTITLE"
+	desc = "EVTDESClent.18"
+	picture = "GFX_evt_jugglers"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		OR = {
+			trait = lustful
+			trait = hedonist
+		}
+		NOT = { has_character_flag = lent_lustful_hedonist }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+	
+	option = {
+		name = "EVTOPTAlent.18"
+		set_character_flag = lent_lustful_hedonist
+		piety = -15
+	}
+}
+
+# Drunkard Sin
+character_event = {
+	id = lent.19
+	title = "LENTTITLE"
+	desc = "EVTDESClent.19"
+	picture = "GFX_evt_drunk"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		trait = drunkard
+		NOT = { has_character_flag = lent_drunkard }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+	
+	option = {
+		name = "EVTOPTAlent.19"
+		piety = -15
+		set_character_flag = lent_drunkard
+	}
+}
+
+# Greedy Sin
+character_event = {
+	id = lent.20
+	title = "LENTTITLE"
+	desc = "EVTDESClent.20"
+	picture = "GFX_evt_lunatic"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		trait = greedy
+		NOT = { 
+			has_character_flag = lent_greedy 
+			trait = just
+		}
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+	
+	option = {
+		name = "EVTOPTAlent.20"
+		piety = -15
+		set_character_flag = lent_greedy
+	}
+}
+
+# Cynical Sin
+character_event = {
+	id = lent.21
+	title = "LENTTITLE"
+	desc = "EVTDESClent.21"
+	picture = "GFX_evt_lunatic"
+	border =  "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+		trait = cynical
+		NOT = { has_character_flag = lent_cynical }
+	}
+	
+	weight_multiplier = {
+		days = 30
+	}
+	
+	option = {
+		name = "EVTOPTAlent.21"
+		piety = -15
+		set_character_flag = lent_cynical
+	}
+}
+
+# Lent Ends
+character_event = {
+	id = lent.22
+	title = "LENTTITLE"
+	desc = "EVTDESClent.22"
+	picture = "GFX_evt_bishop"
+	border =  "GFX_event_normal_frame_religion"
+	
+	is_triggered_only = yes
+	
+	trigger = { has_character_flag = lent }
+	
+	option = {
+		name = "EVTOPTAlent.22"
+		clr_character_flag = lent
+		clr_character_flag = lent_ill
+		clr_character_flag = lent_cynical
+		clr_character_flag = lent_greedy
+		clr_character_flag = lent_gluttonous
+		clr_character_flag = lent_drunkard
+		clr_character_flag = lent_lustful_hedonist
+		clr_character_flag = lent_prayers
+		clr_character_flag = lent_charity
+		clr_character_flag = lent_prisoners
+	}
+}
+
+#Barnacle Goose
+character_event = {
+	id = lent.23
+	title = "LENTTITLE"
+	desc = "EVTDESClent.23"
+	picture = "GFX_evt_feast"
+	border = "GFX_event_normal_frame_religion"
+	
+	trigger = {
+		has_character_flag = lent
+	}
+	
+	weight_multiplier = {
+		days = 180
+		modifier = {
+			factor = 0.6
+			trait = gluttonous
+		}
+		modifier = {
+			factor = 0.75
+			trait = cynical
+		}
+		modifier = {
+			factor = 1.5
+			trait = temperate
+		}
+		modifier = {
+			factor = 1.25
+			trait = zealous
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAlent.23"
+		piety = 15
+	}
+	option = {
+		name = "EVTOPTBlent.23"
+		piety = -15
+		health = 1
+		clr_character_flag = lent_ill
+	}
+}

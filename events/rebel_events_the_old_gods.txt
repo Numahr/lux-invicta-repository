@@ -1,0 +1,3732 @@
+#########################################################
+#
+# Rebel Events for The Old Gods DLC
+# ( TOG.1000 to TOG.1199)
+#
+# NOTE: The Old Gods DLC disables the old rebel system
+#
+#########################################################
+
+# Written by Henrik Fåhraeus
+
+namespace = TOG
+
+# Peasant Rebels rise up (temporary rebel title created, with a leader and a war)
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1000
+	desc = EVTDESC_TOG_1000
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		# Heretic revolts have prio
+		OR = {
+			is_heretic = no
+			owner = {
+				top_liege = {
+					NOT = { is_parent_religion = ROOT }
+				}
+			}
+		}
+		
+		# Religious revolts have prio
+		owner = {
+			top_liege = {
+				religion_group = ROOT
+			}
+		}
+		
+		# Nationalist revolts have prio
+		OR = {
+			owner = {
+				top_liege = {
+					culture = ROOT
+				}
+			}
+			kingdom = {
+				OR = {
+					has_holder = yes
+					NOT = { culture = ROOT }
+				}
+			}
+		}
+		
+		# Slave revolts have prio
+		NOT = {
+			AND = {
+				OR = {
+					has_province_modifier = slave_modifier_1
+					has_province_modifier = slave_modifier_2
+					has_province_modifier = slave_modifier_3
+					has_province_modifier = slave_modifier_4
+					has_province_modifier = slave_modifier_5
+				}
+				kingdom = {
+					OR = {
+						has_holder = no
+						holder_scope = { any_realm_province = { province_id = ROOT } }
+					}
+				}
+			}
+		}
+		
+		NOT = { # Not if there is already an ongoing peasant revolt for this province
+			owner = {
+				top_liege = {
+					war = yes
+					
+					any_war = {
+						defender = { character = PREV }
+						OR = {
+							AND = {
+								using_cb = peasant_revolt
+								war_title = ROOT # The county
+							}
+							AND = {
+								using_cb = heretic_revolt
+								attacker = { religion = ROOT }
+							}
+							AND = {
+								using_cb = religious_revolt
+								attacker = { religion = ROOT }
+							}
+							AND = {
+								using_cb = liberation_revolt
+								thirdparty_title_scope = {
+									ROOT = {
+										kingdom = {
+											title = PREVPREV
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			religion = ROOT
+			culture = ROOT
+			female = no
+			#age =25
+			attributes = {
+				martial = 5
+			}
+			trait = peasant_leader
+			trait = tough_soldier
+		}
+		
+		new_character = {
+			create_title = {
+				tier = DUKE
+				landless = yes
+				temporary = yes
+				rebel = yes
+				culture = ROOT
+				name = "PEASANT_REVOLT"
+				holder = THIS
+			}
+			
+			random_list = {
+				17 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 0.75
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 4 4 }
+							light_infantry = { 10 10 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.75
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =31
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.75
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				17 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 0.5
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 4 4 }
+							light_infantry = { 10 10 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.5
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =31
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.5
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				16 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 0.75
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 3 3 }
+							light_infantry = { 11 11 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.75
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 3 3 }
+								light_infantry = { 11 11 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =31
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.75
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 3 3 }
+								light_infantry = { 11 11 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				17 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 0.5
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 3 3 }
+							light_infantry = { 11 11 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.5
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 3 3 }
+								light_infantry = { 11 11 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =31
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.5
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 3 3 }
+								light_infantry = { 11 11 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				16 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 0.75
+						troops = {
+							archers = { 6 6 }
+							light_infantry = { 14 14 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.75
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =31
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.75
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				17 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 0.5
+						troops = {
+							archers = { 6 6 }
+							light_infantry = { 14 14 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.5
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =31
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 0.5
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+			}
+			
+			# DoW on the province top liege
+			ROOT = {
+				county = {
+					holder_scope = {
+						top_liege = {
+#						set_defacto_vassal = PREVPREVPREV
+							reverse_war = {
+								target = PREVPREVPREVPREV
+								casus_belli = peasant_revolt
+								thirdparty_title = PREVPREV # The county
+							}
+							reverse_opinion = {
+								who = PREVPREVPREVPREV
+								modifier = opinion_evil_tyrant
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1001
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_1000"
+	}
+}
+
+character_event = {
+	id = TOG.1001
+	desc = EVTDESC_TOG_1001
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_1000"
+	}
+}
+
+# Peasants seize a holding. Fired from 'on_siege_won_leader'.
+character_event = {
+	id = TOG.1005
+	picture = GFX_evt_siege
+	
+	hide_window = yes
+	is_triggered_only = yes
+	
+	desc = OK
+	
+	trigger = {
+		trait = peasant_leader
+		rebel = yes
+		FROM = { 
+			is_capital = yes # The capital holding
+		}
+	}
+	
+	immediate = {
+		FROM = {
+			location = {
+				if = {
+					limit = {
+						NOT = { has_province_modifier = peasant_unrest }
+					}
+					add_province_modifier = {
+						name = peasant_unrest
+						duration = 730
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Peasant Rebels rise up to reinforce an ongoing provincial peasant revolt
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1010
+	desc = EVTDESC_TOG_1010
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		# There is already an ongoing peasant revolt for this province
+		owner = {
+			top_liege = {
+				war = yes
+				any_war = {
+					defender = { character = PREV }
+					using_cb = peasant_revolt
+					war_title = ROOT # The county
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		
+		owner = {
+			top_liege = {
+				any_war = {
+					limit = {
+						defender = { character = PREV }
+						using_cb = peasant_revolt
+						war_title = ROOT # The county
+					}
+					attacker = {
+						random_list = {
+							17 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =31
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							17 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =31
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							16 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 3 3 }
+											light_infantry = { 11 11 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 3 3 }
+											light_infantry = { 11 11 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =31
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 3 3 }
+											light_infantry = { 11 11 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							17 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 3 3 }
+											light_infantry = { 11 11 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 3 3 }
+											light_infantry = { 11 11 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =31
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 3 3 }
+											light_infantry = { 11 11 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							16 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =31
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.75
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							17 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =31
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 0.5
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1011
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_1010"
+	}
+}
+
+character_event = {
+	id = TOG.1011
+	desc = EVTDESC_TOG_1011
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_1010"
+	}
+}
+
+# Heretic Rebels rise up (temporary rebel title created, with a leader and a war)
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1020
+	desc = EVTDESC_TOG_1020
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		is_heretic = yes
+		
+		owner = {
+			top_liege = {
+				is_parent_religion = ROOT
+			}
+		}
+		
+		NOT = { # Not if there is already an ongoing revolt
+			owner = {
+				top_liege = {
+					war = yes
+					any_war = {
+						defender = { character = PREV }
+						OR = {
+							AND = {
+								using_cb = peasant_revolt
+								war_title = ROOT # The county
+							}
+							AND = {
+								using_cb = heretic_revolt
+								attacker = { religion = ROOT }
+							}
+							AND = {
+								using_cb = religious_revolt
+								attacker = { religion = ROOT }
+							}
+							AND = {
+								using_cb = liberation_revolt
+								thirdparty_title_scope = {
+									ROOT = {
+										kingdom = {
+											title = PREVPREV
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			religion = ROOT
+			culture = ROOT
+			female = no
+			#age =32
+			attributes = {
+				martial = 7
+				learning = 7
+			}
+			trait = heresiarch
+			trait = zealous
+			trait = scholar
+			trait = skilled_tactician
+		}
+		
+		new_character = {
+			set_character_flag = heretic_revolter
+			
+			create_title = {
+				tier = DUKE
+				landless = yes
+				temporary = yes
+				rebel = yes
+				culture = ROOT
+				name = "HERETIC_REVOLT"
+				holder = THIS
+			}
+			
+			random_list = {
+				34 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 1.0
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 4 4 }
+							light_infantry = { 10 10 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =23
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				33 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 1.0
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 2 2 }
+							light_infantry = { 12 12 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 2 2 }
+								light_infantry = { 12 12 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =23
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 2 2 }
+								light_infantry = { 12 12 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				33 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 1.0
+						troops = {
+							archers = { 6 6 }
+							light_infantry = { 14 14 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =23
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+			}
+			
+			# DoW on the province top liege
+			ROOT = {
+				owner = {
+					top_liege = {
+						reverse_war = {
+							target = PREVPREVPREV
+							casus_belli = heretic_revolt
+						}
+						reverse_opinion = {
+							who = PREVPREVPREV
+							modifier = opinion_evil_tyrant
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1021
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_1020"
+	}
+}
+
+character_event = {
+	id = TOG.1021
+	desc = EVTDESC_TOG_1021
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_1020
+	}
+}
+
+# Heretics seize a holding. Fired from 'on_siege_won_leader'.
+character_event = {
+	id = TOG.1025
+	picture = GFX_evt_siege
+	
+	hide_window = yes
+	is_triggered_only = yes
+	
+	desc = OK
+	
+	trigger = {
+		trait = heresiarch
+		rebel = yes
+		FROM = { 
+			is_capital = yes # The capital holding
+		}
+	}
+	
+	immediate = {
+		FROM = {
+			location = {
+				if = {
+					limit = {
+						NOT = { religion = ROOT }
+					}
+					random = {
+						chance = 50
+						religion = ROOT
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_province_modifier = religious_unrest }
+					}
+					add_province_modifier = {
+						name = religious_unrest
+						duration = 730
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Heretic Rebels rise up to reinforce an ongoing heretic uprising
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1030
+	desc = EVTDESC_TOG_1030
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		is_heretic = yes
+		
+		owner = {
+			top_liege = {
+				is_parent_religion = ROOT
+				war = yes
+				any_war = {
+					defender = { character = PREV }
+					using_cb = heretic_revolt
+					attacker = { religion = ROOT }
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		owner = {
+			top_liege = {
+				any_war = {
+					limit = {
+						defender = { character = PREV }
+						using_cb = heretic_revolt
+						attacker = { religion = ROOT }
+					}
+					attacker = {
+						random_list = {
+							34 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =23
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							33 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 2 2 }
+											light_infantry = { 12 12 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 2 2 }
+											light_infantry = { 12 12 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =23
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 2 2 }
+											light_infantry = { 12 12 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							33 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =23
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1031
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_1030"
+	}
+}
+
+character_event = {
+	id = TOG.1031
+	desc = EVTDESC_TOG_1031
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_1030"
+	}
+}
+
+# Royalist Nationalist Rebels rise up to create a kingdom (temporary rebel title created, with a leader and a war)
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1040
+	desc = EVTDESC_TOG_1040
+	picture = GFX_evt_siege
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		owner = {
+			top_liege = {
+				NOT = { culture = ROOT }
+			}
+		}
+		
+		kingdom = {
+			has_holder = no
+			culture = ROOT
+			any_previous_holder = {
+				always = yes # Must have had a holder in the past
+			}
+		}
+		
+		# Heretic revolts have prio
+		OR = { 
+			is_heretic = no
+			owner = {
+				top_liege = {
+					NOT = { is_parent_religion = ROOT }
+				}
+			}
+		}
+		
+		NOT = { # Not if there is already an ongoing revolt
+			owner = {
+				top_liege = {
+					war = yes
+					any_war = {
+						defender = { character = PREV }
+						OR = {
+							AND = {
+								using_cb = heretic_revolt
+								attacker = { religion = ROOT }
+							}
+							AND = {
+								using_cb = liberation_revolt
+								thirdparty_title_scope = {
+									ROOT = {
+										kingdom = {
+											title = PREVPREV
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		create_character = {
+			random_traits = yes
+			dynasty = random
+			religion = ROOT
+			culture = ROOT
+			female = no
+			#age =20
+			health = 7
+			fertility = 0.7
+			attributes = {
+				martial = 8
+				diplomacy = 9
+			}
+			trait = just
+			trait = brave
+			trait = gregarious
+			trait = ambitious
+			trait = brilliant_strategist
+			trait = inspiring_leader
+		}
+		
+		new_character = {
+			set_character_flag = nationalist_rebel
+			
+			create_title = {
+				tier = DUKE
+				landless = yes
+				temporary = yes
+				rebel = yes
+				culture = ROOT
+				name = "NATIONALIST_REVOLT"
+				holder = THIS
+			}
+			
+			spawn_unit = {
+				province = ROOT
+				home = ROOT
+				owner = THIS
+				leader = THIS
+				scaled_by_biggest_garrison = 1.75
+				troops = {
+					archers = { 6 6 }
+					light_cavalry = { 3 3 }
+					knights = { 1 1 }
+					light_infantry = { 7 7 }
+					heavy_infantry = { 3 3 }
+				}
+				attrition = 1.0
+			}
+			
+			create_character = {
+				random_traits = yes
+				dynasty = none
+				religion = ROOT
+				culture = ROOT
+				female = no
+				#age =34
+				attributes = {
+					martial = 7
+				}
+				trait = skilled_tactician
+			}
+			new_character = {
+				spawn_unit = {
+					province = ROOT
+					home = ROOT
+					owner = PREV
+					leader = THIS
+					scaled_by_biggest_garrison = 1.75
+					troops = {
+						archers = { 6 6 }
+						light_cavalry = { 3 3 }
+						knights = { 1 1 }
+						light_infantry = { 7 7 }
+						heavy_infantry = { 3 3 }
+					}
+				}
+			}
+			
+			create_character = {
+				random_traits = yes
+				dynasty = none
+				religion = ROOT
+				culture = ROOT
+				female = no
+				#age =23
+				attributes = {
+					martial = 7
+				}
+				trait = skilled_tactician
+			}
+			new_character = {
+				spawn_unit = {
+					province = ROOT
+					home = ROOT
+					owner = PREV
+					leader = THIS
+					scaled_by_biggest_garrison = 1.75
+					troops = {
+						archers = { 6 6 }
+						light_cavalry = { 3 3 }
+						knights = { 1 1 }
+						light_infantry = { 7 7 }
+						heavy_infantry = { 3 3 }
+					}
+				}
+			}
+			
+			# DoW on the province top liege
+			ROOT = {
+				county = {
+					holder_scope = {
+						top_liege = {
+							reverse_war = {
+								target = PREVPREVPREVPREV
+								casus_belli = liberation_revolt
+								thirdparty_title = PREVPREV # The county...
+								tier = KING # ... but really the de jure kingdom
+							}
+							reverse_opinion = {
+								who = PREVPREVPREVPREV
+								modifier = opinion_evil_tyrant
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1041
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_1040"
+	}
+}
+
+character_event = {
+	id = TOG.1041
+	desc = EVTDESC_TOG_1041
+	picture = GFX_evt_siege
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_1040
+	}
+}
+
+# Nationalists seize a holding. Fired from 'on_siege_won_leader'.
+character_event = {
+	id = TOG.1045
+	picture = GFX_evt_siege
+	
+	hide_window = yes
+	is_triggered_only = yes
+	
+	desc = OK
+	
+	trigger = {
+		rebel = yes
+		FROM = { 
+			is_capital = yes # The capital holding
+		}
+		any_war = {
+			attacker = { character = ROOT }
+			using_cb = liberation_revolt
+		}
+	}
+	
+	immediate = {
+		FROM = {
+			location = {
+				if = {
+					limit = {
+						NOT = { culture = ROOT }
+						kingdom = { culture = ROOT }
+					}
+					random = {
+						chance = 20
+						culture = ROOT
+					}
+				}
+				if = {
+					limit = {
+						culture = ROOT
+						NOT = { has_province_modifier = cultural_unrest }
+					}
+					add_province_modifier = {
+						name = cultural_unrest
+						duration = 730
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Nationalist Rebels rise up to reinforce an ongoing revolt
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1050
+	desc = EVTDESC_TOG_1050
+	picture = GFX_evt_siege
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		# There is already an ongoing nationalist revolt for the same kingdom
+		owner = {
+			top_liege = {
+				war = yes
+				any_war = {
+					defender = { character = PREV }
+					using_cb = liberation_revolt
+					thirdparty_title_scope = {
+						ROOT = {
+							kingdom = {
+								title = PREVPREV
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		owner = {
+			top_liege = {
+				any_war = {
+					limit = {
+						defender = { character = PREV }
+						using_cb = liberation_revolt
+						thirdparty_title_scope = {
+							ROOT = {
+								kingdom = {
+									title = PREVPREV
+								}
+							}
+						}
+					}
+					attacker = {
+						create_character = {
+							random_traits = yes
+							dynasty = none
+							religion = ROOT
+							culture = ROOT
+							female = no
+							#age =24
+							attributes = {
+								martial = 7
+							}
+							trait = skilled_tactician
+						}
+						new_character = {
+							spawn_unit = {
+								province = ROOT
+								home = ROOT
+								owner = PREV
+								leader = THIS
+								scaled_by_biggest_garrison = 1.75
+								troops = {
+									archers = { 6 6 }
+									light_cavalry = { 3 3 }
+									knights = { 1 1 }
+									light_infantry = { 7 7 }
+									heavy_infantry = { 3 3 }
+								}
+							}
+						}
+						create_character = {
+							random_traits = yes
+							dynasty = none
+							religion = ROOT
+							culture = ROOT
+							female = no
+							#age =27
+							attributes = {
+								martial = 7
+							}
+							trait = skilled_tactician
+						}
+						new_character = {
+							spawn_unit = {
+								province = ROOT
+								home = ROOT
+								owner = PREV
+								leader = THIS
+								scaled_by_biggest_garrison = 1.75
+								troops = {
+									archers = { 6 6 }
+									light_cavalry = { 3 3 }
+									knights = { 1 1 }
+									light_infantry = { 7 7 }
+									heavy_infantry = { 3 3 }
+								}
+							}
+						}
+						create_character = {
+							random_traits = yes
+							dynasty = none
+							religion = ROOT
+							culture = ROOT
+							female = no
+							#age =30
+							attributes = {
+								martial = 7
+							}
+							trait = skilled_tactician
+						}
+						new_character = {
+							spawn_unit = {
+								province = ROOT
+								home = ROOT
+								owner = PREV
+								leader = THIS
+								scaled_by_biggest_garrison = 1.75
+								troops = {
+									archers = { 6 6 }
+									light_cavalry = { 3 3 }
+									knights = { 1 1 }
+									light_infantry = { 7 7 }
+									heavy_infantry = { 3 3 }
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1051
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_1000"
+	}
+}
+character_event = {
+	id = TOG.1051
+	desc = EVTDESC_TOG_1051
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_1051
+		trigger = {
+			ROOT = { culture_group = FROM }
+		}
+	}
+	option = {
+		name = EVTOPTB_TOG_1051
+		trigger = {
+			ROOT = { NOT = { culture_group = FROM	} }
+		}
+	}
+}
+
+# Religious Rebels rise up (temporary rebel title created, with a leader and a war)
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1060
+	desc = EVTDESC_TOG_1060
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		is_heretic = no
+		
+		owner = {
+			top_liege = {
+				NOT = { religion_group = ROOT }
+			}
+		}
+		
+		# Nationalist revolts have prio
+		OR = {
+			owner = {
+				top_liege = {
+					culture = ROOT
+				}
+			}
+			kingdom = {
+				OR = {
+					has_holder = yes
+					NOT = { culture = ROOT }
+				}
+			}
+		}
+		
+		NOT = { # Not if there is already an ongoing revolt
+			owner = {
+				top_liege = {
+					war = yes
+					any_war = {
+						defender = { character = PREV }
+						OR = {
+							AND = {
+								using_cb = peasant_revolt
+								war_title = ROOT # The county
+							}
+							AND = {
+								using_cb = heretic_revolt
+								attacker = { religion = ROOT }
+							}
+							AND = {
+								using_cb = religious_revolt
+								attacker = { religion = ROOT }
+							}
+							AND = {
+								using_cb = liberation_revolt
+								thirdparty_title_scope = {
+									ROOT = {
+										kingdom = {
+											title = PREVPREV
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			religion = ROOT
+			culture = ROOT
+			female = no
+			#age =32
+			attributes = {
+				martial = 7
+				learning = 7
+			}
+			trait = zealous
+			trait = scholar
+			trait = skilled_tactician
+		}
+		
+		new_character = {
+			set_character_flag = religious_revolter
+			
+			create_title = {
+				tier = DUKE
+				landless = yes
+				temporary = yes
+				rebel = yes
+				culture = ROOT
+				name = "HERETIC_REVOLT"
+				holder = THIS
+			}
+			
+			random_list = {
+				34 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 1.0
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 4 4 }
+							light_infantry = { 10 10 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =23
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 4 4 }
+								light_infantry = { 10 10 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				33 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 1.0
+						troops = {
+							archers = { 6 6 }
+							light_cavalry = { 2 2 }
+							light_infantry = { 12 12 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 2 2 }
+								light_infantry = { 12 12 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =23
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_cavalry = { 2 2 }
+								light_infantry = { 12 12 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+				33 = {
+					spawn_unit = {
+						province = ROOT
+						home = ROOT
+						owner = THIS
+						leader = THIS
+						scaled_by_biggest_garrison = 1.0
+						troops = {
+							archers = { 6 6 }
+							light_infantry = { 14 14 }
+						}
+						attrition = 1.0
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =30
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+					create_character = {
+						random_traits = yes
+						dynasty = none
+						religion = THIS
+						culture = THIS
+						female = no
+						#age =23
+						trait = peasant_leader
+						trait = tough_soldier
+					}
+					new_character = {
+						spawn_unit = {
+							province = ROOT
+							home = ROOT
+							owner = PREV
+							scaled_by_biggest_garrison = 1.0
+							troops = {
+								archers = { 6 6 }
+								light_infantry = { 14 14 }
+							}
+							attrition = 1.0
+							disband_on_peace = yes
+						}
+					}
+				}
+			}
+			
+			# DoW on the province top liege
+			ROOT = {
+				owner = {
+					top_liege = {
+						reverse_war = {
+							target = PREVPREVPREV
+							casus_belli = religious_revolt
+						}
+						reverse_opinion = {
+							who = PREVPREVPREV
+							modifier = opinion_evil_tyrant
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1061
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = EVTOPTA_TOG_1060
+		trigger = {
+			owner = { religion_group = ROOT }
+		}
+	}
+	option = {
+		name = EVTOPTB_TOG_1060
+		trigger = {
+			owner = { NOT = { religion_group = ROOT	} }
+		}
+	}
+}
+
+character_event = {
+	id = TOG.1061
+	desc = EVTDESC_TOG_1061
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_1060
+		trigger = {
+			ROOT = { religion_group = FROM }
+		}
+	}
+	option = {
+		name = EVTOPTB_TOG_1060
+		trigger = {
+			ROOT = { NOT = { religion_group = FROM	} }
+		}
+	}
+}
+
+# Religious Rebels seize a holding. Fired from 'on_siege_over_winner'. Owner of the winning unit is ROOT. The taken Holding title is in FROM.
+character_event = {
+	id = TOG.1065
+	picture = GFX_evt_siege
+	
+	hide_window = yes
+	is_triggered_only = yes
+	
+	desc = OK
+	
+	trigger = {
+		has_character_flag = religious_revolter
+		rebel = yes
+		FROM = { 
+			is_capital = yes # The capital holding
+		}
+	}
+	
+	immediate = {
+		FROM = {
+			location = {
+				if = {
+					limit = {
+						NOT = { religion = ROOT }
+					}
+					random = {
+						chance = 5
+						religion = ROOT
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_province_modifier = religious_unrest }
+					}
+					add_province_modifier = {
+						name = religious_unrest
+						duration = 730
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Religious Rebels rise up to reinforce an ongoing heretic uprising
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.1070
+	desc = EVTDESC_TOG_1070
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "The Old Gods"
+		
+		is_heretic = no
+		
+		owner = {
+			top_liege = {
+				NOT = { religion_group = ROOT }
+			}
+		}
+		
+		owner = {
+			top_liege = {
+				war = yes
+				any_war = {
+					defender = { character = PREV }
+					using_cb = religious_revolt
+					attacker = { religion = ROOT }
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		owner = {
+			top_liege = {
+				any_war = {
+					limit = {
+						defender = { character = PREV }
+						using_cb = religious_revolt
+						attacker = { religion = ROOT }
+					}
+					attacker = {
+						random_list = {
+							34 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =23
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 4 4 }
+											light_infantry = { 10 10 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							33 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 2 2 }
+											light_infantry = { 12 12 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 2 2 }
+											light_infantry = { 12 12 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =23
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_cavalry = { 2 2 }
+											light_infantry = { 12 12 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+							33 = {
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =25
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =30
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+								create_character = {
+									random_traits = yes
+									dynasty = none
+									religion = THIS
+									culture = THIS
+									female = no
+									#age =23
+									trait = peasant_leader
+									trait = tough_soldier
+								}
+								new_character = {
+									spawn_unit = {
+										province = ROOT
+										home = ROOT
+										owner = PREV
+										scaled_by_biggest_garrison = 1.0
+										troops = {
+											archers = { 6 6 }
+											light_infantry = { 14 14 }
+										}
+										attrition = 1.0
+										disband_on_peace = yes
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		owner = {
+			any_liege = { # Inform the lieges
+				character_event = {
+					id = TOG.1071
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_1070"
+	}
+}
+
+character_event = {
+	id = TOG.1071
+	desc = EVTDESC_TOG_1071
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_1070"
+	}
+}
+
+# Rebels kill a local character. Fired from 'on_siege_over_loc_chars'.
+# Siege winner unit owner in the 'new_character' scope, lost holding title in FROM, local character in ROOT.
+character_event = {
+	id = TOG.1190
+	desc = EVTDESC_TOG_1190
+	picture = GFX_evt_beheading
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		new_character = {
+			rebel = yes
+			
+			OR = {
+				NOT = { religion = ROOT }
+				AND = {
+					NOT = { has_character_flag = heretic_revolter }
+					NOT = { has_character_flag = religious_revolter }
+					NOT = { has_character_flag = shepherds_crusade_leader }
+				}
+			}
+		}
+	}
+	
+	weight_multiplier = {
+		days = 1
+		modifier = {
+			factor = 0.5
+			is_female = yes
+		}
+		modifier = {
+			factor = 0.5
+			is_adult = no
+		}
+	}
+	
+	immediate = {
+		any_liege = { # Inform the victim's lieges
+			character_event = {
+				id = TOG.1191
+			}
+		}
+		new_character = {
+			ROOT = {
+				death = {
+					death_reason = death_rabble
+					killer = PREV
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = EVTOPTA_TOG_1190
+	}
+}
+
+
+# Lieges informed
+character_event = {
+	id = TOG.1191
+	picture = GFX_evt_beheading
+	desc = EVTDESC_TOG_1191
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	notification = yes
+	
+	ai = no
+	
+	option = {
+		name = EVTOPTA_TOG_1191
+	}
+}
+
+namespace = luxrevolt
+# Messianic revolt "theocratizer" event.
+character_event = {
+	id = luxrevolt.1064
+	desc = EVTDESCluxrevolt.1064
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	trigger = {
+		any_vassal = {
+			is_theocracy = yes
+			tier = baron
+		}
+		FROM = {
+			is_capital = yes
+		}
+	}
+	
+	option = {
+	name = JACKALS
+		random_vassal = {
+			limit = {
+				is_theocracy = yes
+				tier = baron
+			}
+			capital_holding = {
+				ROOT = {
+					primary_title = {
+						usurp_title = PREVPREVPREV
+					}
+				}
+				location = {
+					PREVPREV = {
+						capital = PREV
+					}
+				}
+			}
+		}	
+	}
+}
+namespace = lirevolt
+character_event = {
+	id = luxrevolt.1083
+	desc = EVTDESCluxrevolt.1083
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = JACKALS
+	}
+}
+# Populist revolt "democratizer" event.
+character_event = {
+	id = luxrevolt.1084
+	desc = EVTDESCluxrevolt.1084
+	picture = GFX_evt_heretic
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	trigger = {
+		any_vassal = {
+			is_republic = yes
+			tier = baron
+		}
+		FROM = {
+			is_capital = yes
+		}
+	}
+	
+	option = {
+		name = JACKALS
+		random_vassal = {
+			limit = {
+				is_republic = yes
+				tier = baron
+			}
+			capital_holding = {
+				ROOT = {
+					primary_title = {
+						usurp_title = PREVPREVPREV
+					}
+				}
+				location = {
+					PREVPREV = {
+						capital = PREV
+					}
+				}
+			}
+		}	
+	}
+}
+
+
+#Slaves rise up (temporary rebel title created, with a leader and a war)
+#Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.106099
+	desc = EVTDESC_TOG_106099
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+
+		# Requires there to be slaves in the province
+		OR = {
+			has_province_modifier = slave_modifier_1
+			has_province_modifier = slave_modifier_2
+			has_province_modifier = slave_modifier_3
+			has_province_modifier = slave_modifier_4
+			has_province_modifier = slave_modifier_5
+		}
+		kingdom = {
+			OR = {
+				has_holder = no
+				holder_scope = { any_realm_province = { province_id = ROOT } }
+			}
+		}
+		
+		NOT = {
+			owner = {
+				top_liege = {
+					war = yes
+					any_war = {
+						defender = { character = PREV }
+						OR = {
+							using_cb = slave_revolt
+							using_cb = war_of_liberation
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		set_province_flag = slave_revolt
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			religion = ROOT
+#			culture = random
+			female = no
+			age = 25
+			attributes = {
+				martial = 5
+			}
+			trait = liberator
+			trait = former_slave
+			trait = tough_soldier			
+		}		
+		new_character = {
+			create_title = {
+				tier = DUKE
+				landless = yes
+				temporary = yes
+				rebel = yes
+				culture = PREV
+				name = "SLAVE_REVOLT"
+				holder = THIS
+			}
+			set_character_flag = slave_rebel
+			spawn_unit = {
+				province = ROOT
+				home = ROOT
+				owner = THIS
+				leader = THIS
+				scaled_by_biggest_garrison = 0.15
+				troops = { light_infantry = { 1 1 } }
+				attrition = 1.0
+			}
+			create_character = {
+				random_traits = yes
+				dynasty = none
+				religion = ROOT
+#				culture = random
+				female = no
+				age = 30
+				trait = liberator
+				trait = former_slave
+				trait = tough_soldier
+			}
+			new_character = {
+				spawn_unit = {
+					province = ROOT
+					home = ROOT
+					owner = PREV
+					leader = THIS
+					scaled_by_biggest_garrison = 0.06
+					troops = { light_infantry = { 1 1 } }
+					attrition = 1.0
+				}
+			}
+			create_character = {
+				random_traits = yes
+				dynasty = none
+				religion = ROOT
+#				culture = random
+				female = no
+				age = 31
+				trait = liberator
+				trait = former_slave
+				trait = tough_soldier
+			}
+			new_character = {
+				spawn_unit = {
+					province = ROOT
+					home = ROOT
+					owner = PREV
+					leader = THIS
+					scaled_by_biggest_garrison = 0.06
+					troops = { light_infantry = { 1 1 } }
+					attrition = 1.0
+				}
+			}
+			# DoW on the province top liege
+			ROOT = {
+				county = {
+					holder_scope = {
+						top_liege = {
+							reverse_war = {
+								target = PREVPREVPREVPREV
+								casus_belli = slave_revolt
+								thirdparty_title = PREVPREV # The county...
+								tier = KING # ... but really the de jure kingdom
+							}
+						}
+					}
+				}
+				owner = {
+					top_liege = {
+						reverse_opinion = {
+							who = PREVPREVPREV
+							modifier = opinion_evil_tyrant
+						}
+						any_realm_province = {
+							limit = {
+								OR = {
+									has_province_modifier = slave_modifier_1
+									has_province_modifier = slave_modifier_2
+									has_province_modifier = slave_modifier_3
+									has_province_modifier = slave_modifier_4
+									has_province_modifier = slave_modifier_5
+								}
+							}
+							add_province_modifier = {
+								name = slave_revolt_modifier
+								duration = 3650
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		any_province_lord = { # Inform the lieges
+			character_event = {
+				id = TOG.106199
+			}
+			if = {
+				limit = {
+					capital_scope = { province_id = ROOT }
+					is_merchant_republic = yes
+				}
+				any_vassal = {
+					limit = { 
+						is_patrician = yes
+						family_palace = { has_building = fp_asoiaf_slavepit_1 } 	
+					}
+					character_event = { id = TOG.106299 tooltip = "EVTTOOLTIPSLAVERY1001" }
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_106099"
+	}
+}
+
+character_event = {
+	id = TOG.106199
+	desc = EVTDESC_TOG_106199
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_106099"
+		# If relevant, remove a slave camp level
+		if = {
+			limit = {
+				capital_scope = { province_id = FROM }
+				any_demesne_title = {
+					OR = {
+						has_building = ca_asoiaf_slavepit_1
+						has_building = ct_asoiaf_slavepit_1
+						has_building = tp_asoiaf_slavepit_1
+						has_building = fp_asoiaf_slavepit_1
+					}
+				}
+			}
+			character_event = { id = slavery.1001 tooltip = "EVTTOOLTIPSLAVERY1001" }
+		}
+	}
+}
+
+character_event = {
+	id = TOG.106299
+	desc = EVTDESC_TOG_106199
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_106099"
+		character_event = { id = slavery.1001 tooltip = "EVTTOOLTIPSLAVERY1001" }
+	}
+}
+
+# A liberator seizes a holding containing a slave camp. Fired from 'on_siege_won_leader'.
+character_event = {
+	id = TOG.106599
+	desc = "EVTDESCTOG106599"
+	picture = GFX_evt_siege
+	is_triggered_only = yes
+	
+	trigger = {
+		trait = liberator
+		FROM = {
+			location = {
+				OR = {
+					has_province_modifier = slave_modifier_1
+					has_province_modifier = slave_modifier_2
+					has_province_modifier = slave_modifier_3
+					has_province_modifier = slave_modifier_4
+					has_province_modifier = slave_modifier_5
+				}
+			}
+			OR = {
+				has_building = ca_asoiaf_slavepit_1
+				has_building = ct_asoiaf_slavepit_1
+				has_building = tp_asoiaf_slavepit_1
+				holder_scope = {
+					is_merchant_republic = yes
+					capital_holding = { title = FROM }
+					OR = {
+						family_palace = { has_building = fp_asoiaf_slavepit_1 }
+						any_vassal = { family_palace = { has_building = fp_asoiaf_slavepit_1 } }
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = OK
+		# Free as many slaves as you can!
+		FROM = { 
+			location = { set_province_flag = slave_revolt }
+			holder_scope = { 
+				character_event = { id = TOG.106699 tooltip = "EVTTOOLTIPTOG106699" } 
+				if = {
+					limit = {
+						capital_holding = { title = FROM }
+						is_merchant_republic = yes
+					}
+					any_vassal = {
+						limit = { 
+							is_patrician = yes
+							family_palace = { has_building = fp_asoiaf_slavepit_1 } 						
+						}
+						hidden_tooltip = { character_event = { id = TOG.106799 } }
+					}
+				}
+			} 
+		}
+		random = {
+			chance = 30
+			FROM = { location = { province_event = { id = TOG.106899 tooltip = "EVTTOOLTIPTOG106899" } } }
+		}
+	}
+}
+
+character_event = {
+	id = TOG.106699
+	desc = "EVTDESC_TOG_106699"
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTATOG106699
+		if = {
+			limit = {
+				capital_holding = {
+					title = FROMFROM
+					OR = {
+						has_building = ca_asoiaf_slavepit_1
+						has_building = ct_asoiaf_slavepit_1
+						has_building = tp_asoiaf_slavepit_1
+					}
+				}
+			}
+			custom_tooltip = { text = LOSEALLSLAVES }
+			hidden_tooltip = {
+				capital_holding = {
+					remove_building = ca_asoiaf_slavepit_5
+					remove_building = ca_asoiaf_slavepit_4
+					remove_building = ca_asoiaf_slavepit_3
+					remove_building = ca_asoiaf_slavepit_2
+					remove_building = ca_asoiaf_slavepit_1
+					remove_building = ct_asoiaf_slavepit_5
+					remove_building = ct_asoiaf_slavepit_4
+					remove_building = ct_asoiaf_slavepit_3
+					remove_building = ct_asoiaf_slavepit_2
+					remove_building = ct_asoiaf_slavepit_1
+					remove_building = tp_asoiaf_slavepit_5
+					remove_building = tp_asoiaf_slavepit_4
+					remove_building = tp_asoiaf_slavepit_3
+					remove_building = tp_asoiaf_slavepit_2
+					remove_building = tp_asoiaf_slavepit_1
+				}
+			}
+		}
+		if = {
+			limit = {
+				capital_holding = { title = FROMFROM }
+				is_merchant_republic = yes
+				family_palace = { has_building = fp_asoiaf_slavepit_1 }
+			}
+			custom_tooltip = { text = LOSEALLSLAVES }
+			hidden_tooltip = {
+				family_palace = {
+					remove_building = fp_asoiaf_slavepit_1
+					remove_building = fp_asoiaf_slavepit_2
+					remove_building = fp_asoiaf_slavepit_3
+					remove_building = fp_asoiaf_slavepit_4
+					remove_building = fp_asoiaf_slavepit_5
+				}
+			}
+		}
+	}
+}
+
+character_event = {
+	id = TOG.106799
+	desc = "EVTDESC_TOG_106699"
+	picture = GFX_evt_peasants
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTATOG106699"
+		custom_tooltip = { text = LOSEALLSLAVES }
+		hidden_tooltip = {
+			family_palace = {
+				remove_building = fp_asoiaf_slavepit_1
+				remove_building = fp_asoiaf_slavepit_2
+				remove_building = fp_asoiaf_slavepit_3
+				remove_building = fp_asoiaf_slavepit_4
+				remove_building = fp_asoiaf_slavepit_5
+			}
+		}
+	}
+}
+
+# Liberated slaves rally to join their liberator
+province_event = {
+	id = TOG.106899
+	hide_window = yes
+	is_triggered_only = yes
+	
+	immediate = { FROM = { character_event = { id = TOG.107199 } } }
+	
+	option = { name = OK }
+}
+
+# Slave rebels rise up to reinforce an ongoing provincial peasant revolt
+# Triggered from "on_rebel_revolt"
+province_event = {
+	id = TOG.107099
+	desc = EVTDESC_TOG_107099
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		
+		# There are slaves in the province
+		OR = {
+			has_province_modifier = slave_modifier_1
+			has_province_modifier = slave_modifier_2
+			has_province_modifier = slave_modifier_3
+			has_province_modifier = slave_modifier_4
+			has_province_modifier = slave_modifier_5
+		}
+		
+		# There is already an ongoing slave revolt or war of liberation
+		owner = {
+			top_liege = {
+				war = yes
+				any_war = {
+					defender = { character = PREV }
+					OR = {
+						using_cb = slave_revolt
+						using_cb = war_of_liberation
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		set_province_flag = slave_revolt
+		owner = {
+			top_liege = {
+				any_war = {
+					limit = {
+						defender = { character = PREV }
+						OR = {
+							using_cb = slave_revolt
+							using_cb = war_of_liberation
+						}
+					}
+					attacker = { character_event = { id = TOG.107199 } }
+				}
+				any_realm_province = {
+					limit = {					
+						OR = {
+							has_province_modifier = slave_modifier_1
+							has_province_modifier = slave_modifier_2
+							has_province_modifier = slave_modifier_3
+							has_province_modifier = slave_modifier_4
+							has_province_modifier = slave_modifier_5
+						}
+						NOT = { has_province_modifier = slave_revolt_modifier }
+					}
+					add_province_modifier = {
+						name = slave_revolt_modifier
+						duration = 3650
+					}
+				}
+			}
+		}
+		
+		any_province_lord = { # Inform the lieges
+			character_event = {
+				id = TOG.107299
+			}
+			if = {
+				limit = {
+					capital_scope = { province_id = ROOT }
+					is_merchant_republic = yes
+				}
+				any_vassal = {
+					limit = { family_palace = { has_building = fp_asoiaf_slavepit_1 } }
+					character_event = { id = TOG.107399 tooltip = "EVTTOOLTIPSLAVERY1001" }
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_TOG_107099"
+	}
+}
+
+character_event = {
+	id = TOG.107199
+	desc = "EVTDESCTOG107199"
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	is_triggered_only = yes
+	
+	option = {
+		name = OK
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			religion = FROM
+#			culture = random
+			female = no
+			age = 25
+			trait = liberator
+			trait = former_slave
+			trait = tough_soldier
+		}
+		new_character = {
+			spawn_unit = {
+				province = FROM
+				home = FROM
+				owner = ROOT
+				scaled_by_biggest_garrison = 0.1
+				troops = { light_infantry = { 1 1 } }
+				attrition = 1.0
+			}
+		}
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			religion = FROM
+#			culture = random
+			female = no
+			age = 30
+			trait = liberator
+			trait = former_slave
+			trait = tough_soldier
+		}
+		new_character = {
+			spawn_unit = {
+				province = FROM
+				home = FROM
+				owner = ROOT
+				scaled_by_biggest_garrison = 0.1
+				troops = { light_infantry = { 1 1 } }
+				attrition = 1.0
+			}
+		}
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			religion = FROM
+#			culture = random
+			female = no
+			age = 31
+			trait = liberator
+			trait = former_slave
+			trait = tough_soldier
+		}
+		new_character = {
+			spawn_unit = {
+				province = FROM
+				home = FROM
+				owner = ROOT
+				scaled_by_biggest_garrison = 0.1
+				troops = { light_infantry = { 1 1 } }
+				attrition = 1.0
+			}
+		}
+	}
+}
+
+character_event = {
+	id = TOG.107299
+	desc = EVTDESC_TOG_107299
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_107099"
+		# If relevant, remove a slave camp level
+		if = {
+			limit = {
+				capital_scope = { province_id = FROM }
+				any_demesne_title = {
+					OR = {
+						has_building = ca_asoiaf_slavepit_1
+						has_building = ct_asoiaf_slavepit_1
+						has_building = tp_asoiaf_slavepit_1
+						has_building = fp_asoiaf_slavepit_1
+					}
+				}
+			}
+			character_event = { id = slavery.1001 tooltip = "EVTTOOLTIPSLAVERY1001" }
+		}				
+	}
+}
+
+character_event = {
+	id = TOG.107399
+	desc = EVTDESC_TOG_107299
+	picture = GFX_evt_peasants
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_TOG_107099"
+		character_event = { id = slavery.1001 tooltip = "EVTTOOLTIPSLAVERY1001" }
+	}
+}

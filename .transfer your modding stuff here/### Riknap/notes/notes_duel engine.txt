@@ -1,0 +1,19 @@
+
+Restrictions for Battlefield duels should be put in duel_battle_events.txt event 5556000 and 5556001 --anything in the "duel" namespace is the Duel Engine itself and should be kept as generic as possible as the same code is used by all duels.
+
+Basically the chain is this:
+
+Calling event: sets the flags on the combatants, then calls the duel engine with [B]hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }[/B]
+For battlefield duels this is event 5556002 (5556000 and 5556001 allow attacker and defender to fight or run).
+
+Once the duel is over, it outputs to [B]duel_engine_events.txt[/B] where you should clear up the flags, and call the follow-up event. For example with battlefield duels, the output event for a kill is [B]duel_battle_events.txt[/B] event 5556100, and for spared opponent it is 5556101.
+Since the DE tracks four different flags you can potentially have a different outcome for all of these:
+
+-opponent killed
+-opponent wounded
+-opponent maimed
+-opponent spared
+
+Plus of course you can use any flags set by the calling or receiving events based on winner (FROM in output event) and loser (FROMFROM in output event).
+
+(put this in the second post as it is generally useful, probably).
