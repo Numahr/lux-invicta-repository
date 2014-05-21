@@ -1,0 +1,55 @@
+﻿(Validator WarFile) = {
+	Type = Default
+	FriendlyName = "War History"
+	(FileGroup "history\wars" "*.txt")
+	ValidatorName = WarFile
+}
+	
+(Type WarFile) = {
+	(If IfNot = WarHistory.NoComplexDateChecks) = {
+		CheckDatesOrdered
+		CheckDupsInDates
+	}
+
+	(SkipIfEmpty If = WarHistory.NoWarnOnEmptyFile)
+
+	Single = { Left = "name" Right = String }
+	Single = { Left = "war_goal" Right = WarGoalClause }
+	Optional = { Left = "succession" Right = Tag }
+	Child = { Left = { Type = Date } Right = WarEvents }
+	
+	WarChecker
+}
+
+(Type WarGoalClause) = {
+	Single = { Left = "type" Right = WarGoalType }
+	Single = { Left = "casus_belli" Right = CbType }
+	
+	#OneOf = { province tag }
+	AtMostOne = { province tag }
+	Optional = { Left = "tag" Right = Tag }
+	Optional = { Left = "province" Right = LandProvince }
+}
+
+(Type WarEvents) = {
+	Child = { Left = "add_attacker" Right = Tag }
+	Child = { Left = "add_defender" Right = Tag }
+	Child = { Left = "rem_attacker" Right = Tag }
+	Child = { Left = "rem_defender" Right = Tag }
+	Child = { Left = "battle" Right = Battle }
+}
+		
+(Type Battle) = {
+	Single = { Left = "name" Right = String }
+	Single = { Left = "location" Right = Province }
+	Single = { Left = "attacker" Right = Side }
+	Single = { Left = "defender" Right = Side }
+	Single = { Left = "result" Right = { Literal = "win" Literal = "loss" } }
+}
+		
+(Type Side) = {
+	OptionList = { Left = { Type = UnitType } Right = Int }
+	Single = { Left = "losses" Right = Percent }
+	Single = { Left = "commander" Right = String }
+	Single = { Left = "country" Right = Tag }
+}

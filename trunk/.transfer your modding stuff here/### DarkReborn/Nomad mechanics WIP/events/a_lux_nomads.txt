@@ -1,0 +1,655 @@
+namespace = nomad
+
+#Adding Nomad traits to nomads
+character_event = {
+	id = nomad.1
+	hide_window = yes
+	
+	trigger = {
+		NOT = { trait = nomad }
+		primary_title = {
+			has_law = nomad_0
+		}
+	}
+	
+	immediate = {
+		add_trait = nomad
+		character_event = { id = nomad.2 }
+		character_event = { id = nomad.6 }
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+#Nomad camp upgrade, one upgrade per nomad respect modifier level.
+character_event = {
+	id = nomad.2
+	hide_window = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		capital_holding = {
+			if = {
+				limit = { has_building = ca_nomad_camp_3 }
+				add_building = ca_nomad_camp_4
+			}
+			if = {
+				limit = { has_building = ca_nomad_camp_2 }
+				add_building = ca_nomad_camp_3
+			}
+			if = {
+				limit = { has_building = ca_nomad_camp_1 }
+				add_building = ca_nomad_camp_2
+			}
+			if = {
+				limit = { has_building = ca_nomad_camp_0 }
+				add_building = ca_nomad_camp_1
+			}
+			add_building = ca_nomad_camp_0
+		}
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+
+
+#Removing Nomad traits from settled nomads or non-nomads
+character_event = {
+	id = nomad.3
+	hide_window = yes
+	
+	
+	trigger = {
+			trait = nomad 
+			NOT = {
+				primary_title = {
+					has_law = nomad_0
+				}
+			}
+	}
+	
+	immediate = {
+		remove_trait = nomad
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+#Calling the hordes
+character_event = {
+	id = nomad.4
+	desc = EVTDESCNOMAD2
+	picture = GFX_evt_battle
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "Spend 100 authority to call a small band of warriors"
+		hidden_tooltip = {
+			prestige = -100
+			add_character_modifier = {
+				name = called_horde
+				duration = 60
+			}
+			if = {
+					limit = { culture_group = altaic }
+					capital_scope = {
+						ROOT = {
+							spawn_unit = {
+								province = PREV
+								owner = ROOT
+							troops = {
+								horse_archers = { 250 250 }
+								light_cavalry = { 150 150 }
+							}
+								cannot_inherit = yes
+							}
+						}
+					}
+				}
+			if = {
+					limit = { NOT = {culture_group = altaic} }
+					capital_scope = {
+						ROOT = {
+							spawn_unit = {
+								province = PREV
+								owner = ROOT
+							troops = {
+								light_infantry = { 250 250 }
+								archers = { 150 150 }
+							}
+								cannot_inherit = yes
+							}
+						}
+					}
+				}
+		}
+	}
+	
+	option = {
+		ai_chance = { factor = 100 }
+		name = "Spend 100 wealth to call a small band of warriors"
+			hidden_tooltip = {
+				wealth = -100
+				add_character_modifier = {
+					name = called_horde
+					duration = 60
+				}
+			if = {
+					limit = { culture_group = altaic }
+					capital_scope = {
+						ROOT = {
+							spawn_unit = {
+								province = PREV
+								owner = ROOT
+							troops = {
+								horse_archers = { 250 250 }
+								light_cavalry = { 150 150 }
+							}
+								cannot_inherit = yes
+							}
+						}
+					}
+				}
+			if = {
+					limit = { NOT = {culture_group = altaic} }
+					capital_scope = {
+						ROOT = {
+							spawn_unit = {
+								province = PREV
+								owner = ROOT
+							troops = {
+								light_infantry = { 250 250 }
+								archers = { 150 150 }
+							}
+								cannot_inherit = yes
+							}
+						}
+					}
+				}
+			}
+	}
+	
+	option = {
+		trigger = { realm_size = 20 NOT = {realm_size = 10 } }
+		name = "Spend 200 authority to call an average band of warriors"
+		hidden_tooltip = {
+			prestige = -200
+			add_character_modifier = {
+				name = called_horde
+				duration = 60
+			}
+			if = {
+				limit = { culture_group = altaic }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							horse_archers = { 300 300 }
+							light_cavalry = { 250 250 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+			if = {
+				limit = { NOT = {culture_group = altaic} }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							light_infantry = { 300 300 }
+							archers = { 250 250 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+		}
+	}
+	
+	option = {
+	ai_chance = { factor = 100 }
+		trigger = { realm_size = 20 NOT = {realm_size = 10 } }
+		name = "Spend 200 wealth to call an average band of warriors"
+			hidden_tooltip = {
+				wealth = -200
+				add_character_modifier = {
+					name = called_horde
+					duration = 60
+				}
+			if = {
+				limit = { culture_group = altaic }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							horse_archers = { 300 300 }
+							light_cavalry = { 250 250 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+			if = {
+				limit = { NOT = {culture_group = altaic} }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							light_infantry = { 300 300 }
+							archers = { 250 250 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+			}
+	}
+	
+	option = {
+		trigger = { realm_size = 30 NOT = {realm_size = 20 } }
+		name = "Spend 300 authority to call a medium band of warriors"
+		hidden_tooltip = {
+			prestige = -300
+			add_character_modifier = {
+				name = called_horde
+				duration = 60
+			}
+			if = {
+				limit = { culture_group = altaic }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							horse_archers = { 400 400 }
+							light_cavalry = { 350 350 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+			if = {
+				limit = { NOT = {culture_group = altaic} }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							light_infantry = { 400 400 }
+							archers = { 350 350 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+		}
+	}
+	
+	option = {
+	ai_chance = { factor = 100 }
+		trigger = { realm_size = 30 NOT = {realm_size = 20 } }
+		name = "Spend 300 wealth to call a medium band of warriors"
+			hidden_tooltip = {
+				wealth = -300
+				add_character_modifier = {
+					name = called_horde
+					duration = 60
+				}
+			if = {
+				limit = { culture_group = altaic }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							horse_archers = { 400 400 }
+							light_cavalry = { 350 350 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+			if = {
+				limit = { NOT = {culture_group = altaic} }
+				capital_scope = {
+					ROOT = {
+						spawn_unit = {
+							province = PREV
+							owner = ROOT
+						troops = {
+							light_infantry = { 400 400 }
+							archers = { 350 350 }
+						}
+							cannot_inherit = yes
+						}
+					}
+				}
+				}
+			}
+	}
+	
+	option = {
+		name = "I have no need for warriors now"
+	}
+}
+
+
+# Prestigious nomad gains camp level
+character_event = {
+	id = nomad.5
+	desc = "EVTDESCNOMAD01"
+	
+	only_rulers = yes
+	min_age = 14
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		trait = nomad
+		OR = {
+			NOT = { capital_holding = { has_building = ca_nomad_camp_4 } }
+		}
+		prestige = 0
+	}
+	
+	mean_time_to_happen = {
+		months = 175
+		
+		modifier = {
+			factor = 2
+			capital_holding = { has_building = ca_nomad_camp_3 }
+		}
+		modifier = {
+			factor = 2
+			capital_holding = { has_building = ca_nomad_camp_4 }
+		}
+
+		modifier = {
+			factor = 1.33
+			NOT = {
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}
+			}	
+		}
+		modifier = {
+			factor = 1.18
+			trait = poor_warrior
+		}
+		modifier = {
+			factor = 0.85
+			trait = skilled_warrior
+		}
+		modifier = {
+			factor = 0.75
+			trait = master_warrior
+		}	
+		modifier = {
+			factor = 1.25
+			NOT = { martial = 2 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { martial = 5 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { martial = 8 }
+		}
+		modifier = {
+			factor = 0.8
+			martial = 11
+		}
+		modifier = {
+			factor = 0.8
+			martial = 14
+		}
+		modifier = {
+			factor = 0.8
+			martial = 17
+		}
+		modifier = {
+			factor = 0.8
+			martial = 20
+		}
+		modifier = {
+			factor = 0.8
+			martial = 23
+		}
+		modifier = {
+			factor = 0.8
+			martial = 26
+		}
+		
+		modifier = {
+			factor = 0.5
+			trait = brave
+		}
+		modifier = {
+			factor = 0.5
+			trait = just
+		}
+		modifier = {
+			factor = 0.5
+			trait = strong
+		}
+		modifier = {
+			factor = 2
+			trait = craven
+		}
+		modifier = {
+			factor = 2
+			trait = arbitrary
+		}
+		modifier = {
+			factor = 2
+			trait = weak
+		}
+		
+		modifier = {
+			factor = 1.25
+			trait = ill
+		}
+		modifier = {
+			factor = 1.25
+			trait = wounded
+		}
+		modifier = {
+			factor = 2
+			trait = maimed
+		}
+		modifier = {
+			factor = 2
+			trait = dwarf
+		}
+		modifier = {
+			factor = 2
+			trait = hunchback
+		}
+		modifier = {
+			factor = 2
+			trait = clubfooted
+		}
+		modifier = {
+			factor = 2
+			trait = inbred
+		}
+		modifier = {
+			factor = 2
+			trait = imbecile
+		}
+		modifier = {
+			factor = 4
+			trait = leper
+		}
+		modifier = {
+			factor = 4
+			trait = infirm
+		}
+		
+		modifier = {
+			factor = 0.9
+			prestige = 100
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 200
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 300
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 400
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 500
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 600
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 700
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 800
+		}
+		modifier = {
+			factor = 0.9
+			prestige = 900
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1000
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1100
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1200
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1300
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1400
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1500
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1600
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1700
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1800
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 1900
+		}
+		modifier = {
+			factor = 0.8
+			prestige = 2000
+		}
+	}
+	
+	option = {
+		name = "Good"
+		if = {
+			limit = { capital_holding = { NOT = { has_building = ca_nomad_camp_4 } } }
+			character_event = { id = nomad.2 }
+		}	
+	}
+}
+
+#Nomadizing the provinces
+character_event = {
+	id = nomad.6
+	hide_window = yes
+	
+	trigger = {
+		trait = nomad 
+	}
+	
+	immediate = {
+		any_realm_province =  {
+			add_province_modifier = {
+				name = nomad_province
+				duration = -1
+			}
+		}
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+#De-nomadizing the provinces
+character_event = {
+	id = nomad.7
+	hide_window = yes
+	
+	trigger = {
+			independent = yes
+			primary_title = {
+				has_law = nomad_1
+			}
+	}
+	
+	immediate = {
+		any_realm_province =  {
+			remove_province_modifier = nomad_province
+		}
+	}
+	
+	option = {
+		name = OK
+	}
+}

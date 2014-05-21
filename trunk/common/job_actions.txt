@@ -1,0 +1,839 @@
+##########################################
+# COUNCILLOR ACTIONS
+##########################################
+# attribute = [diplomacy/stewardship/intrigue/martial/learning] - Character attribute is multiplied with the modifiers
+# trigger = Province scope trigger to determine if the action is meaningful in a province (the player character is FROM)
+# Events that can trigger off this action. This info is only used by the GUI.
+# All modifiers (like 'local_build_time_modifier') are multiplied by the attribute
+
+# Chancellor
+action_improve_relations = {
+	attribute = diplomacy
+	
+	trigger = {
+		any_province_lord = {
+			NOT = { character = FROM }
+			is_theocracy = no
+		}
+		is_within_diplo_range = FROM
+	}
+	
+	events = { 910 911 }
+}
+
+action_fabricate_claims = {
+	attribute = diplomacy
+	
+	trigger = {
+		any_province_lord = {
+			NOT = { character = FROM }
+		}
+		is_within_diplo_range = FROM
+	}
+	
+	events = { 913 914 }
+}
+
+action_sow_dissent = { #rework into Pacify Province job
+	attribute = diplomacy
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	local_revolt_risk = -0.015
+	local_build_time_modifier = 0.005
+	local_tax_modifier = -0.005
+	
+	events = {  }
+}
+
+# Steward
+action_squeeze_peasants = {
+	attribute = stewardship
+
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	local_tax_modifier = 0.025
+	local_revolt_risk = 0.005
+	
+	events = { 920 921 }
+}
+
+action_oversee_construction = {
+	attribute = stewardship
+
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	local_build_time_modifier = -0.025
+	
+	events = { 923 924 }
+}
+
+action_advance_eco_tech = {
+	attribute = stewardship
+
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	tech_growth_modifier_economy = 0.1
+	
+	events = { 320500 320502 }  #### from CK2+ (by Ash)
+}
+
+# Spymaster
+action_uncover_plots = {
+	attribute = intrigue
+	
+	trigger = {
+		any_province_lord = {
+			OR = {
+				is_liege_or_above = FROM
+				same_liege = FROM
+			}
+		}
+	}
+	
+	plot_discovery_chance = 0.01
+	
+	events = { 929 931 9000 9020}
+}
+
+action_study_technology = {
+	attribute = intrigue
+	
+	trigger = {
+		any_province_lord = {
+			NOT = { is_liege_or_above = FROM }
+			NOT = { character = FROM }
+		}
+		is_within_diplo_range = FROM
+	}
+	
+	events = { 935 932 933 916 917 } #transferred 935/vicious-rumours and 916+917/sow-dissent here
+}
+
+action_organize_spies = {
+	attribute = intrigue
+	
+	trigger = {
+		any_province_lord = {
+			NOT = { character = FROM }
+		}
+		is_within_diplo_range = FROM
+	}
+	
+	assassinate_chance_modifier = 0.003
+	arrest_chance_modifier = 0.003
+	local_revolt_risk = -0.003
+	events = { 935 936 }
+}
+
+# Marshal
+action_advance_mil_tech = {
+	attribute = martial
+
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	tech_growth_modifier_military = 0.1
+	
+	events = { 938 939 }
+}
+
+action_train_troops = {
+	attribute = martial
+
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	levy_size = 0.025
+	levy_reinforce_rate = 0.05
+	
+	events = { 941 942 }
+}
+
+action_assist_arrest = {
+	attribute = martial
+	
+	trigger = {
+		any_province_lord = {
+			OR = {
+				character = FROM
+				is_liege_or_above = FROM
+			}
+		}
+	}
+	
+	arrest_chance_modifier = 0.005
+	local_revolt_risk = -0.01
+	local_tax_modifier = -0.005
+	levy_size = -0.005
+	
+	events = { }
+}
+
+# Lord Spiritual
+action_inquisition = {
+	attribute = learning
+	
+	trigger = {
+		OR = {
+			owner = {
+				FROM = {
+					OR = { # Religions that allow missionaries
+						religion = adoptionist
+						religion = alexandros
+						religion = almaqah
+						religion = apollinarist
+						religion = arian
+						religion = ashari
+						religion = athari
+						religion = audianist
+						religion = aztec
+#						religion = bektashi
+						religion = bud_gandharan
+						religion = buddhist
+						religion = catholic
+						religion = docetist
+						religion = donatist
+						religion = haruri
+						religion = hurufi
+						religion = iconoclast
+						religion = ilm_islam
+						religion = indoh_bud
+						religion = indoh_hindu
+						religion = indoh_zor
+						religion = jud_zion
+						religion = jupiter
+						religion = luwian
+						religion = mani
+						religion = mani_mithra
+						religion = marcionist
+						religion = maturidi
+						religion = melkite
+						religion = mithra
+						religion = mithra_christ
+						religion = mithra_sol
+						religion = monophysite
+						religion = monothelite
+						religion = murjiah
+						religion = mutazil
+						religion = neoplato
+						religion = nestorian
+						religion = orthodox
+						religion = pelagian
+						religion = plato_christ
+						religion = plato_islam
+						religion = plato_pythagorean
+						religion = porphyryan
+						religion = roman_imperial
+						religion = sabellianist
+						religion = semipelagian
+						religion = shiite
+						religion = sol
+						religion = sol_apollo
+						religion = sol_christ
+						religion = solomonic_alexandros
+						religion = solomonic_christ
+						religion = sunni
+						religion = unctionist
+						religion = valentinian
+						religion = yoruba
+						religion = zahiri
+						religion = zal
+						religion = zal_christ
+						religion = zal_mani
+						religion = zor_hindu
+						religion = zoroastrian
+						# Custom religions
+						religion = shaytana
+						# Reformed religions
+						religion = ahriman_reformed
+						religion = amun_reformed
+						religion = arab_pagan_reformed
+						religion = aten_reformed
+						religion = baal_monotheistic_reformed
+						religion = baltic_pagan_reformed
+						religion = berber_pagan_reformed
+						religion = bud_zor_reformed
+						religion = cathar_reformed
+						religion = celtic_christ_reformed
+						religion = celtic_pagan_reformed
+						religion = christian_populist_reformed
+						religion = chumbylat_reformed
+						religion = cybele_reformed
+						religion = druze_reformed
+						religion = ethiopian_war_reformed
+						religion = finnish_pagan_reformed
+						religion = german_pagan_reformed
+						religion = graeco_roman_reformed
+						religion = illuyanka_reformed
+						religion = indohelen_reformed
+						religion = judaism_reformed
+						religion = mand_ruha_reformed
+						religion = mandaean_reformed
+						religion = mani_germanic_reformed
+						religion = mani_slavic_reformed
+						religion = mari_christ_reformed
+						religion = mazdakism_reformed
+						religion = montanist_reformed
+						religion = muslim_aliite_reformed
+						religion = muslim_domination_reformed
+						religion = muslim_sufi_reformed
+						religion = norse_christ_reformed
+						religion = norse_pagan_reformed
+						religion = northern_sun_reformed
+						religion = priscillian_reformed
+						religion = ragnarok_reformed
+						religion = serer_reformed
+						religion = sethian_reformed
+						religion = slavic_christian_reformed
+						religion = slavic_pagan_reformed
+						religion = sol_boreas_reformed
+						religion = sol_islam_reformed
+						religion = sol_sahara_reformed
+						religion = tarhunt_reformed
+						religion = teiwaz_reformed
+						religion = tengri_bud_reformed
+						religion = tengri_mani_reformed
+						religion = tengri_pagan_reformed
+						religion = tengri_rod_reformed
+						religion = vattisenyaly_reformed
+						religion = voipel_reformed
+						religion = yazdanism_reformed
+						religion = zor_angra_reformed
+						religion = zurvanism_reformed
+					}
+				}
+				independent = yes
+				OR = { # Religions that can be proselytized to ("Pagans")
+					religion = allfather
+					religion = amanai
+					religion = berber_pagan
+					religion = celtic_christ
+					religion = celtic_pagan
+					religion = chumbylat
+					religion = dazhbog
+					religion = dievas
+					religion = finnish_pagan
+					religion = german_pagan
+					religion = gurzil
+					religion = ilmatar
+					religion = irminsul
+					religion = jumala
+					religion = lugh
+					religion = mande_pagan
+					religion = norse_christ
+					religion = norse_pagan
+					religion = norse_war
+					religion = peckols
+					religion = perkunas
+					religion = perun
+					religion = ragnarok
+					religion = rod
+					religion = saule
+					religion = slavic_pagan
+					religion = sol_norse
+					religion = sol_sahara
+					religion = sol_slav
+					religion = sowilo
+					religion = svaroh
+					religion = svetovid
+					religion = teiwaz
+					religion = tengri_ahriman
+					religion = tengri_bud
+					religion = tengri_mani
+					religion = tengri_pagan
+					religion = tengri_rod
+					religion = vattisenyaly
+					religion = veles
+					religion = voipel
+					religion = zande_pagan
+				}
+				NOT = { religion = FROM }
+				is_reformed_religion = no
+				capital_scope = {
+					province = ROOT
+				}
+				controls_religion = no
+				FROM = {
+					higher_tier_than = COUNT
+					OR = {
+						independent = yes
+						higher_tier_than = DUKE
+					}
+				}
+				NOT = {
+					has_opinion_modifier = { who = FROM modifier = opinion_sent_preacher }
+				}
+				is_within_diplo_range = FROM
+			}
+			any_province_lord = {
+				OR = {
+					character = FROM
+					is_liege_or_above = FROM
+				}
+			}
+		}
+	}
+	
+	events = { 900 901 902 903 }
+}
+
+# Divine (Traditional Soul)
+action_divine = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			OR = {
+				religion = allat
+				religion = allfather
+				religion = audianist 
+#				religion = bektashi
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = donatist 
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jud_ark
+				religion = jumala
+				religion = malakbel
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+				religion = jud_ark_reformed
+				religion = muslim_sufi_reformed 
+				religion = yazdanism_reformed
+			}
+		}
+	}
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	events = { 1331100 1331102 1331104 1331106 }
+}
+
+action_improve_rel_relations = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			NOT = { religion_group = muslim }
+		}
+	}
+	
+	trigger = {
+		any_province_lord = {
+			religion = FROM
+			is_theocracy = yes
+		}
+		is_within_diplo_range = FROM
+	}
+	
+	events = { 906 907 }
+}
+
+action_advance_cul_tech = {
+	attribute = learning
+	
+	trigger = {
+		any_province_lord = {
+			OR = {
+				character = FROM
+				is_liege_or_above = FROM
+			}
+		}
+	}
+	
+	tech_growth_modifier_culture = 0.1
+	
+	events = { 926 927 }
+}
+
+# Lord Spiritual (Muslim only)
+action_charity = {
+	attribute = learning
+	
+	potential = {
+		FROM = { religion_group = muslim }
+	}
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	local_revolt_risk = -0.01
+	
+	events = { 20040 20043 20048 20050 }
+}
+#Seid (norse)
+action_do_seid_nm = {
+	attribute = learning
+	
+	potential = {
+		always = no
+	}
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	events = { 331100 331102 331104 331106 }
+}
+
+action_academic_conference = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			OR = {
+				religion = docetist
+				religion = hurufi
+				religion = ilm_islam
+				religion = marcionist 
+				religion = neoplato
+				religion = plato_christ
+				religion = plato_islam
+				religion = plato_pythagorean
+				religion = porphyryan
+				religion = valentinian 
+			}
+		}
+	}
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	tech_growth_modifier_culture = 0.05
+	tech_growth_modifier_economy = 0.05
+	tech_growth_modifier_military = 0.05
+	
+	events = { 312410 312412 312414 }
+}
+action_state_rituals = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			OR = {
+				religion = amun
+				religion = arian
+				religion = beelshamen
+				religion = bud_gandharan
+				religion = indoh_bud
+				religion = indoh_hindu
+				religion = indoh_zor
+				religion = jupiter
+				religion = luwian
+				religion = mani_germanic
+				religion = murjiah
+				religion = norse_christ
+				religion = orthodox
+				religion = roman_imperial
+				religion = sol
+				religion = sol_apollo
+				religion = sol_boreas
+				religion = sol_christ
+				religion = sol_islam
+				religion = sol_mani
+				religion = sol_norse
+				religion = sol_slav
+				religion = solomonic_christ
+				religion = sowilo
+				religion = sunni
+				religion = svaroh
+				religion = tengri_rod
+				religion = unctionist
+				religion = zor_hindu
+				religion = amun_reformed
+				religion = arab_pagan_reformed
+				religion = baal_monotheistic_reformed
+				religion = baltic_pagan_reformed 
+				religion = bud_zor_reformed 
+				religion = celtic_christ_reformed
+				religion = celtic_pagan_reformed
+				religion = chumbylat_reformed 
+				religion = druze_reformed
+				religion = finnish_pagan_reformed 
+				religion = german_pagan_reformed 
+				religion = graeco_roman_reformed
+				religion = indohelen_reformed 
+				religion = judaism_reformed 
+				religion = mani_germanic_reformed 
+				religion = mani_slavic_reformed 
+				religion = montanist_reformed 
+				religion = norse_christ_reformed
+				religion = norse_pagan_reformed
+				religion = northern_sun_reformed 
+				religion = serer_reformed 
+				religion = sethian_reformed
+				religion = slavic_pagan_reformed 
+				religion = sol_boreas_reformed 
+				religion = sol_islam_reformed 
+				religion = sol_sahara_reformed
+				religion = tarhunt_reformed 
+				religion = tengri_pagan_reformed
+				religion = tengri_rod_reformed
+				religion = vattisenyaly_reformed
+			}
+		}
+	}
+	
+	local_tax_modifier = 0.025
+	local_revolt_risk = -0.003
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	events = { 312418 312416 }
+}
+action_doctrinal_council = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			OR = {
+				religion = adoptionist
+				religion = almaqah
+				religion = apollinarist
+				religion = ashari
+				religion = athari
+				religion = buddhist
+				religion = catholic
+				religion = cybele
+				religion = haruri
+				religion = iconoclast
+				religion = ilmatar
+				religion = irminsul
+				religion = isis
+				religion = judaism
+				religion = maturidi
+				religion = melkite
+				religion = monophysite
+				religion = monothelite
+				religion = montanist
+				religion = mutazil
+				religion = peckols
+				religion = pelagian
+				religion = sabellianist 
+				religion = saule
+				religion = semipelagian
+				religion = shams
+				religion = slavic_christian
+				religion = tengri_bud
+				religion = yoruba
+				religion = zahiri
+				religion = zoroastrian
+				religion = zurvanism
+				religion = cathar_reformed
+				religion = isis_reformed
+				religion = mari_christ_reformed 
+				religion = priscillian_reformed
+				religion = slavic_christian_reformed 
+				religion = tengri_bud_reformed 
+				religion = tengri_mani_reformed 
+				religion = zurvanism_reformed
+			}
+		}
+	}
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	events = { 312511 312512 312514 }
+}
+action_populist_rally = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			OR = {
+				religion = antinomian 
+				religion = bogomilist
+				religion = cathar
+				religion = fraticelli
+				religion = jud_zion
+				religion = kharijite
+				religion = mani_slavic
+				religion = mazdakism
+				religion = waldensian
+			}
+		}
+	}
+	
+	local_revolt_risk = -0.003
+	levy_size = 0.025
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	events = { 312610 312612 312614 }
+} 
+action_milenarian_mobilization = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			OR = {
+				religion = aglibol
+				religion = horus_re
+				religion = lugh
+				religion = mani
+				religion = mani_ahriman
+				religion = nestorian
+				religion = priscillian 
+				religion = qarmatian
+				religion = ragnarok
+				religion = set
+				religion = shiite
+				religion = sol_sahara
+				religion = talab
+				religion = tengri_ahriman
+				religion = voipel
+				religion = yahyanism
+				religion = zor_angra
+				religion = ahriman_reformed
+				religion = christian_populist_reformed 
+				religion = illuyanka_reformed
+				religion = mand_ruha_reformed
+				religion = mandaean_reformed
+				religion = mazdakism_reformed
+				religion = muslim_aliite_reformed 
+				religion = ragnarok_reformed
+				religion = voipel_reformed
+				religion = zor_angra_reformed
+				religion = shaytana
+			}
+		}
+	}
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	local_revolt_risk = -0.003
+	levy_size = 0.025
+	
+	events = { 312616 }
+}
+action_martial_training = {
+	attribute = learning
+	
+	potential = {
+		FROM = {
+			OR = {
+				religion = alexandros
+				religion = amanai
+				religion = aten
+				religion = attar
+				religion = aztec
+				religion = dazhbog
+				religion = ghazi_islam
+				religion = gurzil
+				religion = jud_sabaoth
+				religion = maher
+				religion = mani_mithra
+				religion = mithra
+				religion = mithra_christ
+				religion = mithra_sol
+				religion = norse_war
+				religion = perun
+				religion = sol_tsahay
+				religion = solomonic_alexandros
+				religion = svetovid
+				religion = tarhunt
+				religion = teiwaz
+				religion = zal
+				religion = zal_christ
+				religion = zal_mani
+				religion = zande_pagan
+				religion = aten_reformed
+				religion = berber_pagan_reformed
+				religion = cybele_reformed
+				religion = ethiopian_war_reformed
+				religion = muslim_domination_reformed
+				religion = set_reformed
+				religion = teiwaz_reformed 
+				religion = zande_pagan_reformed
+			}
+		}
+	}
+	
+	levy_reinforce_rate = 0.05
+	local_revolt_risk = -0.003
+	
+	trigger = {
+		any_province_lord = {
+			character = FROM
+		}
+	}
+	
+	events = { }
+}

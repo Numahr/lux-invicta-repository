@@ -1,0 +1,235 @@
+namespace = prisoners
+
+#Your captor has demanded your hand in marriage.
+letter_event = {
+	id = prisoners.1
+	desc = "EVTDESCprisoners.1"
+	picture = GFX_evt_bed
+	#hide_from = yes
+	is_triggered_only = yes
+	
+	option = {			#I guess I have no choice...
+		name = "EVTOPTAprisoners.1"
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0.1
+				trait = proud
+			}
+			modifier = {
+				factor = 0.1
+				trait = moody
+			}
+			modifier = {
+				factor = 0.1
+				trait = arrogant
+			}
+			modifier = {
+				factor = 0.3
+				trait = confident
+			}
+			modifier = {
+				factor = 0.3
+				trait = pompous
+			}
+			modifier = {
+				factor = 0.3
+				trait = constant
+			}
+			modifier = {
+				factor = 2
+				trait = submissive
+			}
+			modifier = {
+				factor = 0.1
+				trait = rigid
+			}
+		}
+		FROM = {
+			letter_event = {
+				id = prisoners.2
+				days = 1
+#				tooltip = EVTTOOLTIPprisoners.2
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBprisoners.1" #I'd rather kiss a toad
+		ai_chance = {
+			factor = 2
+			modifier = {
+				factor = 30
+				trait = rude
+			}
+			modifier = {
+				factor = 30
+				trait = irrational
+			}
+			modifier = {
+				factor = 30
+				trait = moody
+			}
+			modifier = {
+				factor = 30
+				trait = rebellious
+			}
+			modifier = {
+				factor = 30
+				trait = tactless
+			}
+			modifier = {
+				factor = 30
+				trait = impulsive
+			}
+		}
+		FROM = {
+			letter_event = {
+				id = prisoners.3
+				days = 5
+#				tooltip = EVTTOOLTIPprisoners.3
+			}
+		}
+	}
+}
+
+#Prisoner accepted marriage offer
+letter_event = {
+	id = prisoners.2
+	desc = "EVTDESCprisoners.2"
+	picture = GFX_evt_bed
+	#hide_from = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAprisoners.2"
+		add_spouse = FROM
+		FROM = {
+			letter_event = {
+				id = prisoners.4
+				days = 3
+			}
+			opinion = {
+				modifier = forced_marriage
+				who = ROOT
+				months = 60
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBprisoners.2"
+	}
+}
+
+#Refused offer
+letter_event = {
+	id = prisoners.3
+	desc = "EVTDESCprisoners.3"
+	picture = GFX_evt_bed
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTDESCprisoners.3"
+	}
+}
+
+#Forced into marriage
+letter_event = {
+	id = prisoners.4
+	desc = "EVTDESCprisoners.4"
+	picture = GFX_evt_bed
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTDESCprisoners.4"
+	}
+}
+
+#Captor wants to take prisoner child as ward
+letter_event = {
+	id = prisoners.10
+	desc = "EVTDESCprisoners.10"	#Come with me, my lord wishes to see you.
+	picture = GFX_evt_court
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		NOT = {
+			has_character_flag = refused_wardship
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAprisoners.10"	#I have no choice.
+		hidden_tooltip = {
+			FROM = {
+				letter_event = {
+					id = prisoners.11
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+letter_event = {
+	id = prisoners.11
+	desc = "EVTDESCprisoners.11" #Captor examines prospective ward
+	picture = GFX_evt_court
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAprisoners.11" #Yes, this one
+		FROM = {
+			set_guardian = ROOT
+			prisoner = no
+			hidden_tooltip = {
+				letter_event = {
+					id = prisoners.12
+					days = 3
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBprisoners.11" #No, take him back
+		FROM = {
+			hidden_tooltip = {
+				set_character_flag = refused_wardship
+				letter_event = {
+					id = prisoners.13
+					days = 3
+				}
+			}
+		}
+	}
+}
+
+letter_event = {
+	id = prisoners.12
+	desc = "EVTDESCprisoners.12"	#My captor has decided to make me his ward
+	picture = GFX_evt_court
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAprisoners.12"	#Do I have a say in the matter?
+	}
+}
+
+letter_event = {
+	id = prisoners.13
+	desc = "EVTDESCprisoners.13"	#My captor has sent me back to the dungeon.
+	picture = GFX_evt_court
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAprisoners.13"	#Do I have a say in the matter?
+	}
+}

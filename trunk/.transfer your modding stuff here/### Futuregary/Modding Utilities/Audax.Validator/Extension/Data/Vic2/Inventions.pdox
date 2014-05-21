@@ -1,0 +1,45 @@
+(Validator Inventions) = {
+	Type = Default
+	FriendlyName = "Inventions"
+	(FileGroup "inventions" "*_inventions.txt")
+	ValidatorName = InventionFile
+}
+
+(Local InventionName Uid) = Left
+
+(Type InventionFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = Invention (LocalOp Validate InventionName) (CheckKey "*" Left IfNot = NoCheckKey) }
+}
+
+(Type Invention) = {
+	Inherits = TechInventionModifier
+
+	Single = { Left = "limit" Right = CountryTrigger }
+	Single = { Left = "chance" Right = ChanceClause }
+	(Optional If = Vic2Hod) = { Left = "news" Right = Bool }
+	Optional = { Left = "effect" Right = {
+		Inherits = TechInventionModifier
+		Optional = { Left = "plurality" Right = Double }
+		Optional = { Left = "shared_prestige" Right = Double }
+		Optional = { Left = "permanent_prestige" Right = Double }
+		Optional = { Left = "supply_range" Right = Double }
+		Optional = { Left = "max_railroad" Right = Double }
+		(Ch N Y) = { Left = "activate_unit" Right = Unit }
+		(Ch N Y) = { Left = "enable_crime" Right = Crime }
+		Optional = { Left = "gas_defence" Right = Bool }
+		Optional = { Left = "gas_attack" Right = Bool }
+		(Ch N Y) = { Left = "activate_building" Right = Building }
+
+	} }
+}
+
+(Type ChanceClause) = {
+	Single = { Left = "base" Right = Double }
+	(Ch N Y) = { Left = "modifier" Right = ChanceModifier }
+}
+
+(Type ChanceModifier) = {
+	Inherits = CountryTrigger
+	
+	Single = { Left = "factor" Right = Double }
+}

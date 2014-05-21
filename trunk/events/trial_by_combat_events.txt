@@ -1,0 +1,3428 @@
+namespace = trial_by_combat
+#Rodri's Trial-By-Combat event chain
+
+#adapted for the duel engine by knuckey
+#Adapted to LI by DarkReborn - all credits to Rodri, Knuckey and the rest of the AGOT team
+
+letter_event = { # relative receive event 
+	id = trial_by_combat.1
+	desc = "EVTDESCtrial_by_combat.1"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+	
+	show_from_from = yes
+	
+	trigger = {
+		FROM = {
+			FROM = {
+				prisoner = yes
+				is_alive = yes
+				ROOT = {
+					OR = {
+						AND = {
+							dynasty = PREV
+							is_close_relative = PREV
+						}
+						liege = { character = PREVPREV }
+					}
+				}	
+			}
+		}	
+	}
+
+	option = { # yes he will fight
+		name = "EVTOPTAtrial_by_combat.1" 
+		ai_chance = { 
+			factor = 50
+			modifier = {
+				factor = 2
+				trait = brave
+			}
+			modifier = {
+				factor = 2
+				trait = honorable
+			}
+			modifier = {
+				factor = 2
+				trait = wroth
+			}
+			modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value = 15 }
+			}
+			modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value = 40 }
+			}
+			modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value = 65 }
+			}
+			modifier = {
+				factor = 1.5
+				opinion = { who = FROMFROM value = 90 }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { FROM = { dynasty = ROOT } }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { FROM = { is_close_relative = ROOT } }
+			}
+			modifier = {
+				factor = 5
+				FROM = { 
+					FROM = { 
+						is_close_relative = ROOT 
+						trait = familyperson
+					}
+				}
+			}
+		}
+		FROM = {
+			FROM = {
+				opinion = { who = ROOT modifier = champion_of_relative years = 10 }
+				letter_event = { id = trial_by_combat.2 tooltip = EVTTOOLTIPtrial_by_combat.2 }
+			}
+		}
+		piety = 35	
+	}
+	
+	option = { # no
+		name = "EVTOPTBtrial_by_combat.1" 
+		ai_chance = { 
+			factor = 50
+			modifier = {
+				factor = 2
+				trait = craven
+			}
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+			modifier = {
+				factor = 2
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 1.5
+				is_ruler = yes
+			}
+			modifier = {
+				factor = 1.5
+				is_primary_heir = yes
+			}
+		}
+		FROM = {
+			FROM = {
+				opinion = {
+					who = ROOT
+					modifier = refused_championing
+					years = 5
+				}
+				letter_event = { id = trial_by_combat.3 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.3 }	
+			}
+		}	
+	}
+}
+
+letter_event = { # inform accept
+	id = trial_by_combat.2
+	desc = "EVTDESCtrial_by_combat.2"
+	
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = { NOT = { character = ROOT } }
+		has_opinion_modifier = { who = FROM modifier = champion_of_relative } 
+	}
+
+	option = { # 
+		name = "EVTOPTAtrial_by_combat.2" 
+		hidden_tooltip = {
+			FROM = {
+				set_character_flag = champion_of_relative
+				add_trait = duel_target
+			}
+			host = {
+				character_event = {
+					id = trial_by_combat.13
+					days = 2
+				}
+			}
+		}	
+	}
+}
+
+letter_event = { # inform reject
+	id = trial_by_combat.3
+	desc = "EVTDESCtrial_by_combat.3"
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		FROM = { NOT = { character = ROOT } }
+		has_opinion_modifier = { who = FROM modifier = refused_championing } 
+	}
+
+	option = { # 
+		name = "EVTOPTAtrial_by_combat.3" 
+		set_character_flag = select_champion
+	}
+}
+
+character_event = { #elijo champion
+	id = trial_by_combat.4
+	desc = "EVTDESCtrial_by_combat.4"
+	picture = "GFX_trial_by_combat"
+	
+	only_playable = yes
+	is_triggered_only = yes
+	
+	trigger = {
+		OR = {
+			has_character_flag = lunatic_trial
+			FROM = {
+				host = { 
+					character = ROOT 
+					NOT = { has_character_flag = trial_by_combat }
+				}
+				prisoner = yes	
+			}
+		}	
+	}
+	
+	immediate = {
+		FROM = {
+			opinion = { who = ROOT modifier = host_of_prisoner years = 100 }
+			set_character_flag = demmanded_trial_by_combat
+			clr_character_flag = choosing_champion
+		}
+		set_character_flag = trial_by_combat
+	}
+	
+	option = { # cualquiera / lider e hijos incluidos (pick finest knight)
+		name = "EVTOPTAtrial_by_combat.4" 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					trait = trained_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					trait = skilled_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					trait = master_warrior
+				}
+			}
+		}
+		trigger = { 
+			any_courtier = { 
+				is_female = no
+				age = 16
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				prisoner = no
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+		}	
+		set_character_flag = sons_can_fight
+		hidden_tooltip = { character_event = { id = trial_by_combat.6 } }	
+	}
+	option = { # NO SONS
+		name = "EVTOPTBtrial_by_combat.4" 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					NOT = { is_child_of = ROOT }
+					trait = trained_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					NOT = { is_child_of = ROOT }
+					trait = skilled_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					NOT = { is_child_of = ROOT }
+					trait = master_warrior
+				}
+			}
+			modifier = {
+				factor = 2
+				trait = familyperson
+			}
+			modifier = {
+				factor = 2
+				NOT = { num_of_children = 3 }
+			}
+			modifier = {
+				factor = 2
+				NOT = { num_of_children = 2 }
+			}
+		}
+		trigger = { 			
+			any_courtier = { 
+				is_female = no
+				age = 16
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				is_child_of = ROOT
+				prisoner = no
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+		}
+		hidden_tooltip = { character_event = { id = trial_by_combat.6 } }
+	}
+	option = {
+			name = "EVTOPTDtrial_by_combat.4"  #I will fight!
+			ai_chance = {
+				factor = 5
+				modifier = {
+					factor = 2
+					trait = trained_warrior
+				}
+				modifier = {
+					factor = 2
+					trait = skilled_warrior
+				}
+				modifier = {
+					factor = 2
+					trait = master_warrior
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { trait = trained_warrior }
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { trait = skilled_warrior }
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { trait = master_warrior }
+				}
+				modifier = {
+					factor = 1.5
+					trait = brave
+				}
+				modifier = {
+					factor = 1.5
+					trait = strong
+				}
+				modifier = {
+					factor = 0.5
+					trait = craven
+				}
+				modifier = {
+					factor = 0.5
+					trait = weak
+				}
+				modifier = {
+					factor = 0.5
+					tier = EMPEROR
+				}
+				modifier = {
+					factor = 0.75
+					tier = KING
+				}
+			}
+			trigger = {
+				NOT = { character = FROM }
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				age = 16
+				is_ill = no
+				NOT = { trait = crippled }
+				NOT = { trait = incapable }
+				OR = {
+					is_female = no
+					trait = brave
+					trait = strong
+				}
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+			}
+			prestige = 100
+			set_character_flag = elected_champion 
+			set_character_flag = self_elected_champion 
+			#set_character_flag = flag_duel_to_the_death
+			any_courtier = { 
+				limit = { 
+					has_opinion_modifier = { who = ROOT modifier = host_of_prisoner }
+				}
+				hidden_tooltip = {
+					character_event = { 
+						id = trial_by_combat.9 days = 1
+					}	
+				}	
+			}
+		}
+		
+		option = {
+			name = "EVTOPTEtrial_by_combat.4" # Denied
+			trigger = {
+				NOT = { has_character_modifier = giving_justice }
+				NOT = { character = FROM }
+			}
+			ai_chance = {
+				factor = 20
+				modifier = {
+					factor = 0.5
+					trait = just
+				}
+				modifier = {
+					factor = 2
+					trait = arbitrary
+				}
+				modifier = {
+					factor = 0.75
+					trait = kind
+				}
+				modifier = {
+					factor = 1.5
+					trait = wroth
+				}
+				modifier = {
+					factor = 0.5
+					trait = honest
+				}
+				modifier = {
+					factor = 2
+					trait = deceitful
+				}
+				modifier = {
+					factor = 0.5
+					trait = zealous
+				}
+				modifier = {
+					factor = 2
+					trait = cynical
+				}
+			}
+			any_courtier = { 
+				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
+				hidden_tooltip = {
+					clr_character_flag = demmanded_trial_by_combat
+					add_character_modifier = { name = getting_justice duration = 365 }
+					remove_opinion = {
+						who = ROOT modifier = host_of_prisoner 
+					}
+				}	
+				opinion = {
+					who = ROOT modifier = denied_trial_by_combat  years = 5
+				}
+				character_event = { id = trial_by_combat.5 tooltip = "TOOLTIPtrial_by_combat.5" } 
+			}
+			clr_character_flag = trial_by_combat
+			hidden_tooltip = { remove_character_modifier = giving_justice }
+			prestige = -100
+		}
+		
+	option = { # Sacrifice him to the gods
+		name = "EVTOPTFtrial_by_combat.4" 
+		ai_chance = {
+			factor = 100
+		}
+		trigger = { 
+			NOT = { character = FROM }
+			OR ={
+				trait = cruel
+				trait = lunatic
+				trait = zealous
+				trait = possessed
+			}
+			OR = {
+				religion_group = sol_group
+				religion_group = celtic_group
+				religion_group = aztec_group
+				religion_group = slavic_group
+				religion_group = serer_group
+				religion_group = zal_group
+				religion_group = norsegerman_group
+				religion = tengri_ahriman
+				religion = mani_ahriman
+				religion = ahriman_reformed
+				religion = zor_angra
+			}
+			NOT = {
+				OR = {
+					religion = slavic_christian
+					religion = celtic_christ_reformed
+					religion = sol_christ
+					religion = sol_islam
+					religion = sol_islam_reformed
+				}
+			}
+		}
+		clr_character_flag = trial_by_combat
+		hidden_tooltip = { remove_character_modifier = giving_justice }
+		piety = 150
+		FROM = { 
+			character_event = { id=trial_by_combat.24 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.24 } ##tooltip
+			if = { 
+				limit = { 
+					father = { 
+						NOT = { character = ROOT } 
+						is_alive = yes	
+					}			
+				}
+				father = {
+					opinion = {
+						modifier = opinion_killed_close_kin
+						who = ROOT
+						years = 25
+					}	
+				}	
+			}
+			if = { 
+				limit = { 
+					mother = { 
+						NOT = { character = ROOT } 
+						is_alive = yes	
+					}			
+				}
+				mother = { 
+					opinion = {
+						modifier = opinion_killed_close_kin
+						who = ROOT
+						years = 25
+					}	
+				}	
+			}
+			if = { 
+				limit = { 
+					spouse = { 
+						NOT = { character = ROOT } 
+						is_alive = yes	
+					}			
+				}
+				spouse = { 
+					opinion = {
+						modifier = opinion_killed_close_kin
+						who = ROOT
+						years = 25
+					}	
+				}	
+			}
+			any_dynasty_member = {
+				limit = { 
+					NOT = { character = ROOT } 
+					is_close_relative = FROM
+				}
+				opinion = {
+					modifier = opinion_killed_close_kin
+					who = ROOT
+					years = 25
+				}	
+			}
+		}
+	}
+	option = { # nobody suitable - straws / no sons
+		name = "EVTOPTCtrial_by_combat.4" 
+		ai_chance = {
+			factor = 50
+		}
+		trigger = {
+			NOT = { 
+				any_courtier = { 
+					is_female = no
+					age = 16
+					OR = {
+						trait = poor_warrior
+						trait = trained_warrior
+						trait = skilled_warrior
+						trait = master_warrior
+					}	
+					prisoner = no
+					NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+					NOT = { trait = incapable }
+					NOT = { trait = crippled }
+					OR = {
+						NOT = { trait = dwarf }
+						trait = skilled_warrior
+					}	
+					NOT = { trait = clubfooted }
+					NOT = { trait = hunchback }
+					is_ruler = no
+				}
+			} 
+			any_courtier = {
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				NOT = { is_child_of = PREV }
+			}
+		}
+		random_courtier = {
+			limit = {
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				NOT = { is_child_of = PREV }
+			}
+			character_event = { id = trial_by_combat.7 tooltip = TOOLTIPAtrial_by_combat.7 } 
+		}	
+	}
+}
+character_event = { # inform reject
+	id = trial_by_combat.5
+	desc = "EVTDESCtrial_by_combat.5"
+	is_triggered_only = yes
+
+	option = { # 
+		name = "EVTOPTAtrial_by_combat.5" 
+		hidden_tooltip = {
+			duel_target = {
+				limit = {
+					has_character_flag = champion_of_relative
+					reverse_has_opinion_modifier = { who = ROOT modifier = champion_of_relative }
+				}
+				clr_character_flag = champion_of_relative
+				remove_trait = duel_target
+				reverse_remove_opinion = { who = ROOT modifier = champion_of_relative }
+			}
+		}	
+	}
+}
+character_event = { #select champion
+	id = trial_by_combat.6
+	desc = "EVTDESCtrial_by_combat.6"
+	picture = "GFX_trial_by_combat"
+	
+	only_playable = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = master_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_1
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = master_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = { has_character_flag = champion_1 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+				
+			}
+			set_character_flag = champion_2
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = master_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+				
+			}
+			set_character_flag = champion_3
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = master_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				NOT = { has_character_flag = champion_3 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+				
+			}
+			set_character_flag = champion_4
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = skilled_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_1
+						} 
+					}
+				}
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_1
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = skilled_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_2
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_2
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = skilled_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_3
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_3
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = skilled_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_4
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				NOT = { has_character_flag = champion_3 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_4
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = trained_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_1
+						} 
+					}
+				}
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_1
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = trained_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_2
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_2
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = trained_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_3
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_3
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = trained_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_4
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				NOT = { has_character_flag = champion_3 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_4
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = poor_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_1
+						} 
+					}
+				}
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_1
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = poor_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_2
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_2
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = poor_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_3
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_3
+		}
+		random_courtier = {
+			limit = {
+				is_female = no
+				age = 16
+				trait = poor_warrior
+				OR = {
+					NOT = { is_child_of = ROOT }
+					FROM = { has_character_flag = sons_can_fight }
+				}	
+				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
+				NOT = {
+					FROM = {
+						any_courtier = {
+							has_character_flag = champion_4
+						} 
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				NOT = { has_character_flag = champion_3 }
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { trait = crippled }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+			set_character_flag = champion_4
+		}
+	}
+	
+	option = { # champion 1
+		name = "EVTOPTAtrial_by_combat.6" 
+		ai_chance = { factor = 100 }
+		random_courtier = {
+			limit = { has_character_flag = champion_1 }
+			custom_tooltip = { text = TOOLTIPCHOOSETHISPERSON }
+			hidden_tooltip = { 
+				if = {
+					limit = { FROM = { NOT = { has_character_flag = prisoner_has_champion } } }
+					character_event = { id = trial_by_combat.7 } 
+				}	
+				if = {
+					limit = { FROM = { has_character_flag = prisoner_has_champion } }
+					character_event = { id = trial_by_combat.14 } 
+				}	
+			}
+		}	
+		clr_character_flag = sons_can_fight
+		hidden_tooltip = {
+			any_courtier = {
+				clr_character_flag = champion_1
+				clr_character_flag = champion_2
+				clr_character_flag = champion_3
+				clr_character_flag = champion_4
+			}
+		}
+	}
+	option = { # champion 2
+		name = "EVTOPTBtrial_by_combat.6" 
+		trigger = {
+			any_courtier = {
+				has_character_flag = champion_2
+			}
+		}
+		ai_chance = { factor = 50 }
+		random_courtier = {
+			limit = { has_character_flag = champion_2 }
+			custom_tooltip = { text = TOOLTIPCHOOSETHISPERSON }
+			hidden_tooltip = { 
+				if = {
+					limit = { FROM = { NOT = { has_character_flag = prisoner_has_champion } } }
+					character_event = { id = trial_by_combat.7 } 
+				}	
+				if = {
+					limit = { FROM = { has_character_flag = prisoner_has_champion } }
+					character_event = { id = trial_by_combat.14 } 
+				}	
+			}
+		}	
+		clr_character_flag = sons_can_fight
+		hidden_tooltip = {
+			any_courtier = {
+				clr_character_flag = champion_1
+				clr_character_flag = champion_2
+				clr_character_flag = champion_3
+				clr_character_flag = champion_4
+			}
+		}
+	}
+	option = { # champion 3
+		name = "EVTOPTCtrial_by_combat.6" 
+		trigger = {
+			any_courtier = {
+				has_character_flag = champion_3
+			}
+		}
+		ai_chance = { factor = 20 }
+		random_courtier = {
+			limit = { has_character_flag = champion_3 }
+			custom_tooltip = { text = TOOLTIPCHOOSETHISPERSON }
+			hidden_tooltip = { 
+				if = {
+					limit = { FROM = { NOT = { has_character_flag = prisoner_has_champion } } }
+					character_event = { id = trial_by_combat.7 } 
+				}	
+				if = {
+					limit = { FROM = { has_character_flag = prisoner_has_champion } }
+					character_event = { id = trial_by_combat.14 } 
+				}	
+			}
+		}	
+		clr_character_flag = sons_can_fight
+		hidden_tooltip = {
+			any_courtier = {
+				clr_character_flag = champion_1
+				clr_character_flag = champion_2
+				clr_character_flag = champion_3
+				clr_character_flag = champion_4
+			}
+		}
+	}
+	option = { # champion 4
+		name = "EVTOPTDtrial_by_combat.6" 
+		trigger = {
+			any_courtier = {
+				has_character_flag = champion_4
+			}
+		}
+		ai_chance = { factor = 10 }
+		random_courtier = {
+			limit = { has_character_flag = champion_4 }
+			custom_tooltip = { text = TOOLTIPCHOOSETHISPERSON }
+			hidden_tooltip = { 
+				if = {
+					limit = { FROM = { NOT = { has_character_flag = prisoner_has_champion } } }
+					character_event = { id = trial_by_combat.7 } 
+				}	
+				if = {
+					limit = { FROM = { has_character_flag = prisoner_has_champion } }
+					character_event = { id = trial_by_combat.14 } 
+				}	
+			}
+		}	
+		clr_character_flag = sons_can_fight
+		hidden_tooltip = {
+			any_courtier = {
+				clr_character_flag = champion_1
+				clr_character_flag = champion_2
+				clr_character_flag = champion_3
+				clr_character_flag = champion_4
+			}
+		}
+	}
+
+}
+
+character_event = { 
+	id = trial_by_combat.7
+	desc = "EVTDESCtrial_by_combat.7"
+	picture = "GFX_trial_by_combat"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.7" 
+		set_character_flag = elected_champion
+		hidden_tooltip = { add_trait = duel_target }
+		FROM = { 
+			opinion = { who = ROOT modifier = champion_of_liege years = 5 } 
+			hidden_tooltip = { character_event = { id = trial_by_combat.8 days = 1 } } ##tooltip
+		}
+	}
+}
+
+character_event = { # Host selection / Prisoner fights
+		id = trial_by_combat.8
+		desc = "EVTDESCtrial_by_combat.8"
+		picture = "GFX_trial_by_combat"
+	
+		is_triggered_only = yes
+		
+		immediate = {
+			clr_character_flag = elected_champion
+			clr_character_flag = has_champion
+		}
+		
+		option = {  # 
+			name = "EVTOPTAtrial_by_combat.8" 
+			prestige = 25
+			any_courtier = { 
+				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
+				custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST_CHAMP }
+				hidden_tooltip = {
+					character_event = { 
+						id = trial_by_combat.9 
+					} 
+				}	
+			}
+			if = { 
+				limit = { has_character_flag = lunatic_trial }
+				custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST_CHAMP }
+				hidden_tooltip = {
+					character_event = { 
+						id = trial_by_combat.9 
+					} 
+					# any_realm_lord = {
+						# character_event = { 
+							# id = 6461
+						# } 
+					# }
+				}	
+			}
+		}
+	
+}
+
+
+character_event = { # fight takes place / prisoner fights
+	id = trial_by_combat.9
+	desc = "EVTDESCtrial_by_combat.9"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAtrial_by_combat.9" 
+		#set_character_flag = flag_duel_to_the_death
+		if = {
+			limit = { host = { has_character_flag = self_elected_champion } }
+			host = { custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST } }
+			hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
+		}
+		if = {
+			limit = { 
+				NOT = { host = { has_character_flag = self_elected_champion } }
+				NOT = { has_character_flag = lunatic_trial }
+			}
+			host = {
+				duel_target = {
+					limit = { 
+						has_character_flag = elected_champion 
+						reverse_has_opinion_modifier = { who = PREV modifier = champion_of_liege }
+					}
+					custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON }
+					hidden_tooltip = { character_event = { id = trial_by_combat.10 } }
+				}
+			}
+		}
+		if = {
+			limit = { has_character_flag = lunatic_trial }
+			duel_target = {
+				limit = { 
+					has_character_flag = elected_champion 
+					reverse_has_opinion_modifier = { who = ROOT modifier = champion_of_liege }
+				}
+				custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON }
+				hidden_tooltip = { character_event = { id = trial_by_combat.10 } }
+			}
+		}
+	}
+}
+character_event = { # fight takes place / champion fights
+	id = trial_by_combat.10
+	desc = "EVTDESCtrial_by_combat.10"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAtrial_by_combat.10" 
+		#set_character_flag = flag_duel_to_the_death
+		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
+	}
+}
+#Inform host prisoner loses tria
+
+character_event = {
+	id = trial_by_combat.11
+	desc = "EVTDESCtrial_by_combat.11"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+	
+	immediate = { 
+		clr_character_flag = trial_by_combat 
+		hidden_tooltip = { remove_character_modifier = giving_justice }
+		clr_character_flag = prisoner_has_champion
+		clr_character_flag = self_elected_champion 
+		clr_character_flag = self_elected_champion_b
+		clr_character_flag = lunatic_trial
+		FROM = { 
+			FROM = { 
+				clr_character_flag = elected_champion 
+				remove_opinion = {
+					who = ROOT modifier = host_of_prisoner 
+				}
+			} 
+		}	
+	}
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.11" 
+		trigger = { FROM = { FROM = { is_alive = no } } }
+	}
+	
+	option = {
+		name = "EVTOPTBtrial_by_combat.11" #Death
+		trigger = { FROM = { FROM = { is_alive = yes } } }
+		ai_chance = { 
+			factor = 25 		
+			modifier = {
+				factor = 4
+				trait = cruel
+			}
+			modifier = {
+				factor = 4
+				trait = wroth
+			}
+			modifier = {
+				factor = 4
+				trait = proud
+			}
+			modifier = {
+				factor = 4
+				trait = ruthless
+			}
+			modifier = {
+				factor = 4
+				FROM = { FROM = { any_claim = { holder_scope = { character = ROOT } } } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -10 } } } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -35 } } } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -60 } } } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -85 } } } }
+			}
+		}
+		FROM = { FROM = { character_event = { id = trial_by_combat.121 tooltip = TOOLTIPtrial_by_combat.121 } } }	
+	}
+	
+	option = {
+		name = "EVTOPTDtrial_by_combat.11" #Back to the Dungeon
+		trigger = { FROM = { FROM = { is_alive = yes } } }
+		ai_chance = { 
+			factor = 25 
+			modifier = {
+				factor = 4
+				trait = just
+			}
+			modifier = {
+				factor = 4
+				trait = paranoid
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -10 } } } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -35 } } } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -60 } } } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { NOT = { reverse_opinion = { who = ROOT value = -85 } } } }
+			}
+			modifier = {
+				factor = 4
+				FROM = { FROM = { dynasty = ROOT } }
+			}
+		}
+		FROM = { FROM = { character_event = { id = trial_by_combat.123 tooltip = TOOLTIPtrial_by_combat.123 } } }	
+	}
+	
+	option = {
+		name = "EVTOPTEtrial_by_combat.11" #House Arrest
+		trigger = { FROM = { FROM = { is_alive = yes } } }
+		ai_chance = { 
+			factor = 25 
+			modifier = {
+				factor = 4
+				trait = kind
+			}
+			modifier = {
+				factor = 4
+				trait = patient
+			}
+			modifier = {
+				factor = 4
+				trait = honorable
+				FROM = {
+					FROM = { 
+						OR = {
+							is_ruler = yes 
+#							trait = knight
+#							trait = septon
+						}	
+					}
+				}	
+			}
+			modifier = {
+				factor = 4
+				FROM = { FROM = { dynasty = ROOT } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { is_close_relative = ROOT } }
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { reverse_opinion = { who = ROOT value = 10 } } } 
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { reverse_opinion = { who = ROOT value = 35 } } } 
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { reverse_opinion = { who = ROOT value = 60 } } } 
+			}
+			modifier = {
+				factor = 2
+				FROM = { FROM = { reverse_opinion = { who = ROOT value = 85 } } } 
+			}
+		}
+		FROM = {
+			FROM = { 
+				character_event = { id = trial_by_combat.124 tooltip = TOOLTIPtrial_by_combat.124 }
+				opinion = {
+					who = ROOT
+					modifier = opinion_merciful
+					years = 5
+				}			
+			}
+		}	
+	}
+}
+
+#Inform host prisoner win trial
+character_event = {
+	id = trial_by_combat.12
+	desc = "EVTDESCtrial_by_combat.12"
+	picture = "GFX_trial_by_combat"
+	
+	is_triggered_only = yes
+	
+	immediate = { 
+		clr_character_flag = trial_by_combat 
+		hidden_tooltip = { remove_character_modifier = giving_justice }
+		clr_character_flag = prisoner_has_champion
+		clr_character_flag = self_elected_champion 
+		clr_character_flag = self_elected_champion_b
+		FROM = { 
+			clr_character_flag = elected_champion 
+			if = {
+				limit = { any_claim = { tier = EMPEROR holder_scope = { character = ROOT } } }
+				clr_character_flag = exiled_royal_family
+				reverse_remove_opinion = {
+					who = ROOT
+					modifier = opinion_exiled_pretender
+				}
+			}
+		}
+		reverse_remove_opinion = {
+			who = FROM modifier = host_of_prisoner 
+		}
+		clr_character_flag = lunatic_trial
+	}
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.12" 
+		FROM = { 
+			prisoner = no
+			hidden_tooltip = {
+				if = {
+					limit = {
+						is_ruler = no
+						liege = { character = ROOT }
+						NOT = { character = ROOT }
+					}
+					random_dynasty_member = {
+						limit = { 
+							is_alive = yes 
+							NOT = { character = ROOT }
+							OR = {
+								is_ruler = yes
+								NOT = { liege = { character = ROOT } }
+							}
+						}
+						PREV = { set_character_flag = banished }
+						if = {
+							limit = { is_ruler = yes }
+							reverse_banish = PREV
+						}
+						if = {
+							limit = { is_ruler = no }
+							liege = { reverse_banish = PREVPREV }
+						}
+					}
+					if = {
+						limit = { NOT = { has_character_flag = banished } }
+						random_playable_ruler = {
+							limit = { 
+								culture = PREV
+								NOT = { character = ROOT }
+							}
+							reverse_banish = PREV
+						}
+					}
+					clr_character_flag = banished			
+				}
+			}				
+		}
+	}
+}
+
+#-----------------------------------------------------------------------------------------------------------------
+character_event = { #choosing champion / prisoner doesn-t fight
+	id = trial_by_combat.13
+	desc = "EVTDESCtrial_by_combat.13"
+	picture = "GFX_trial_by_combat"
+	
+	only_playable = yes
+	is_triggered_only = yes
+	
+	trigger = {
+		FROM = {
+			host = { 
+				character = ROOT 
+				NOT = { has_character_flag = trial_by_combat }
+			}
+			prisoner = yes	
+		}
+	}
+	
+	immediate = {
+		FROM = {
+			opinion = { who = ROOT modifier = host_of_prisoner years = 100 }
+			set_character_flag = demmanded_trial_by_combat
+			clr_character_flag = choosing_champion
+		}
+		set_character_flag = trial_by_combat
+		set_character_flag = prisoner_has_champion
+	}
+	
+	option = { # cualquiera / lider e hijos incluidos (pick finest knight)
+		name = "EVTOPTAtrial_by_combat.4" 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					trait = trained_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					trait = skilled_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					trait = master_warrior
+				}
+			}
+		}
+		trigger = { 
+			any_courtier = { 
+				is_female = no
+				age = 16
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				prisoner = no
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				NOT = { trait = incapable }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+		}	
+		FROM = {
+			tooltip = {
+				 FROM = { }
+			}
+		}	
+		set_character_flag = sons_can_fight
+		hidden_tooltip = { character_event = { id = trial_by_combat.6 } }	
+	}
+	option = { # NO SONS
+		name = "EVTOPTBtrial_by_combat.4" 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					NOT = { is_child_of = ROOT }
+					trait = trained_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					NOT = { is_child_of = ROOT }
+					trait = skilled_warrior
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_courtier = {
+					NOT = { is_child_of = ROOT }
+					trait = master_warrior
+				}
+			}
+			modifier = {
+				factor = 2
+				trait = familyperson
+			}
+			modifier = {
+				factor = 2
+				NOT = { num_of_children = 3 }
+			}
+			modifier = {
+				factor = 2
+				NOT = { num_of_children = 2 }
+			}
+		}
+		trigger = { 					
+			any_courtier = { 
+				is_female = no
+				age = 16
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				is_child_of = ROOT
+				prisoner = no
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				NOT = { trait = incapable }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				is_ruler = no
+			}
+		}
+		FROM = {
+			tooltip = {
+				 FROM = { }
+			}
+		}
+		hidden_tooltip = { character_event = { id = trial_by_combat.6 } }
+	}
+	option = {
+		name = "EVTOPTDtrial_by_combat.4"  #I will fight!
+		ai_chance = {
+				factor = 5
+				modifier = {
+					factor = 2
+					trait = trained_warrior
+				}
+				modifier = {
+					factor = 2
+					trait = skilled_warrior
+				}
+				modifier = {
+					factor = 2
+					trait = master_warrior
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { FROM = { trait = trained_warrior } }
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { FROM = { trait = skilled_warrior } }
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { FROM = { trait = master_warrior } }
+				}
+				modifier = {
+					factor = 1.5
+					trait = brave
+				}
+				modifier = {
+					factor = 1.5
+					trait = strong
+				}
+				modifier = {
+					factor = 0.5
+					trait = craven
+				}
+				modifier = {
+					factor = 0.5
+					trait = weak
+				}
+				modifier = {
+					factor = 0.5
+					tier = EMPEROR
+				}
+				modifier = {
+					factor = 0.75
+					tier = KING
+				}
+			}
+		trigger = {
+			FROM = { NOT = { character = ROOT } }
+			OR = {
+				trait = poor_warrior
+				trait = trained_warrior
+				trait = skilled_warrior
+				trait = master_warrior
+			}	
+			age = 16
+			is_ill = no
+			OR = {
+				is_female = no
+				trait = brave
+				trait = strong
+			}
+			OR = {
+				NOT = { trait = dwarf }
+				trait = skilled_warrior
+			}	
+			NOT = { trait = clubfooted }
+			NOT = { trait = hunchback }
+		}
+		FROM = {
+			tooltip = {
+				 FROM = { }
+			}
+		}
+		prestige = 100
+		set_character_flag = elected_champion 
+		set_character_flag = self_elected_champion_b 
+		#set_character_flag = flag_duel_to_the_death
+		any_courtier = { 
+			limit = { 
+				has_opinion_modifier = { who = ROOT modifier = host_of_prisoner }
+			}
+			character_event = { 
+				id = trial_by_combat.17 days = 1
+			}	 
+		}
+	}			
+
+	option = {
+			name = "EVTOPTEtrial_by_combat.4" # Denied
+			ai_chance = {
+				factor = 20
+				modifier = {
+					factor = 0.5
+					trait = just
+				}
+				modifier = {
+					factor = 2
+					trait = arbitrary
+				}
+				modifier = {
+					factor = 0.75
+					trait = kind
+				}
+				modifier = {
+					factor = 1.5
+					trait = wroth
+				}
+				modifier = {
+					factor = 0.5
+					trait = honest
+				}
+				modifier = {
+					factor = 2
+					trait = deceitful
+				}
+				modifier = {
+					factor = 0.5
+					trait = zealous
+				}
+				modifier = {
+					factor = 2
+					trait = cynical
+				}
+			}
+			any_courtier = { 
+				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
+				hidden_tooltip = {
+					clr_character_flag = demmanded_trial_by_combat
+					remove_opinion = {
+						who = ROOT modifier = host_of_prisoner 
+					}
+				}	
+				opinion = {
+					who = ROOT modifier = denied_trial_by_combat  years = 5
+				}
+				character_event = { id = trial_by_combat.5 tooltip = "TOOLTIPtrial_by_combat.5" }
+				#inform champion
+			}
+			FROM = {
+				tooltip = {
+					 FROM = { }
+				}
+			}
+			clr_character_flag = trial_by_combat
+			hidden_tooltip = { remove_character_modifier = giving_justice }
+			prestige = -100
+		}
+		
+	option = { # My god will be my champion
+		name = "EVTOPTFtrial_by_combat.4" 
+		ai_chance = {
+			factor = 100
+		}
+		trigger = { 
+			OR ={
+				trait = cruel
+				trait = lunatic
+				trait = zealous
+				trait = possessed
+			}
+			OR = {
+				religion_group = sol_group
+				religion_group = celtic_group
+				religion_group = aztec_group
+				religion_group = slavic_group
+				religion_group = serer_group
+				religion_group = zal_group
+				religion_group = norsegerman_group
+				religion = tengri_ahriman
+				religion = mani_ahriman
+				religion = ahriman_reformed
+				religion = zor_angra
+			}
+			NOT = {
+				OR = {
+					religion = slavic_christian
+					religion = celtic_christ_reformed
+					religion = sol_christ
+					religion = sol_islam
+					religion = sol_islam_reformed
+				}
+			}
+		}
+		FROM = {
+			tooltip = {
+				 FROM = { }
+			}
+		}
+		piety = 150
+		clr_character_flag = trial_by_combat
+		hidden_tooltip = { remove_character_modifier = giving_justice }
+		FROM = { 
+			character_event = { id=trial_by_combat.26 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.26 } 
+		} 
+		FROM = {
+			FROM = { 
+				character_event = { id=trial_by_combat.24 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.24 } 
+				if = { 
+					limit = { 
+						father = { 
+							NOT = { character = ROOT } 
+							is_alive = yes	
+						}			
+					}
+					father = {
+						opinion = {
+							modifier = opinion_killed_close_kin
+							who = ROOT
+							years = 25
+						}	
+					}	
+				}
+				if = { 
+					limit = { 
+						mother = { 
+							NOT = { character = ROOT } 
+							is_alive = yes	
+						}			
+					}
+					mother = { 
+						opinion = {
+							modifier = opinion_killed_close_kin
+							who = ROOT
+							years = 25
+						}	
+					}	
+				}
+				if = { 
+					limit = { 
+						spouse = { 
+							NOT = { character = ROOT } 
+							is_alive = yes	
+						}			
+					}
+					spouse = { 
+						opinion = {
+							modifier = opinion_killed_close_kin
+							who = ROOT
+							years = 25
+						}	
+					}	
+				}
+				any_dynasty_member = {
+					limit = { 
+						NOT = { character = ROOT } 
+						is_close_relative = PREV
+					}
+					opinion = {
+						modifier = opinion_killed_close_kin
+						who = ROOT
+						years = 25
+					}	
+				}
+			} 
+		}	
+	}
+	
+	option = { # nobody suitable - straws / no sons
+		name = "EVTOPTCtrial_by_combat.4" 
+		ai_chance = {
+			factor = 50
+		}
+		trigger = {
+			NOT = { 
+				any_courtier = { 
+					is_female = no
+					age = 16
+					OR = {
+						trait = poor_warrior
+						trait = trained_warrior
+						trait = skilled_warrior
+						trait = master_warrior
+					}	
+					prisoner = no
+					NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+					NOT = { trait = incapable }
+					OR = {
+						NOT = { trait = dwarf }
+						trait = skilled_warrior
+					}	
+					NOT = { trait = clubfooted }
+					NOT = { trait = hunchback }
+					is_ruler = no
+				}
+			} 
+			any_courtier = {
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				NOT = { is_child_of = PREV }
+			}
+		}
+		FROM = {
+			tooltip = {
+				 FROM = { }
+			}
+		}
+		random_courtier = {
+			limit = {
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
+				OR = {
+					NOT = { trait = dwarf }
+					trait = skilled_warrior
+				}	
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				NOT = { is_child_of = PREV }
+			}
+			character_event = { id = trial_by_combat.14 tooltip = TOOLTIPAtrial_by_combat.7 }
+		}	
+	}
+}
+character_event = { 
+	id = trial_by_combat.14
+	desc = "EVTDESCtrial_by_combat.14"
+	picture = "GFX_trial_by_combat"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.7" 
+		set_character_flag = elected_champion
+		hidden_tooltip = { add_trait = duel_target }
+		FROM = { 
+			opinion = { who = ROOT modifier = champion_of_liege years = 5 } 
+			hidden_tooltip = { character_event = { id = trial_by_combat.15 days = 1 } }
+		}	
+	}
+}
+
+character_event = { # Host selection / champion of prisoner fights
+		id = trial_by_combat.15
+		desc = "EVTDESCtrial_by_combat.15"
+		picture = "GFX_trial_by_combat"
+	
+		is_triggered_only = yes
+			
+		immediate = {
+			clr_character_flag = elected_champion
+			clr_character_flag = has_champion
+		}
+		
+		option = {  # 
+			name = "EVTOPTAtrial_by_combat.15" 
+			prestige = 25
+			any_courtier = { 
+				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
+				character_event = { 
+					id = trial_by_combat.16
+				} 
+			}
+		}
+		
+	
+}
+
+character_event = { # prisoner is readied to spectate trial
+	id = trial_by_combat.16
+	desc = "EVTDESCtrial_by_combat.16"
+	picture = "GFX_trial_by_combat"
+	
+	is_triggered_only = yes
+	
+	show_from_from = yes
+
+	option = {
+		name = "EVTOPTAtrial_by_combat.16" 
+		duel_target = {
+			limit = { 
+				reverse_has_opinion_modifier = { who = ROOT modifier = champion_of_relative } 
+				has_character_flag = champion_of_relative
+			}
+			custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_CHAMP }
+			hidden_tooltip = { character_event = { id = trial_by_combat.18 } }
+		}	
+	}	
+}
+
+character_event = { # prisoner is readied to spectate trial -host is fighting
+	id = trial_by_combat.17
+	desc = "EVTDESCtrial_by_combat.17"
+	picture = "GFX_trial_by_combat"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.17" 
+		duel_target = {
+			limit = { 
+				reverse_has_opinion_modifier = { who = ROOT modifier = champion_of_relative } 
+				has_character_flag = champion_of_relative
+			}
+			custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST_CHAMP }
+			hidden_tooltip = { character_event = { id = trial_by_combat.18 } }
+		}	
+	}	
+}
+
+character_event = { # fight takes place / prisoner's champ fights
+	id = trial_by_combat.18
+	desc = "EVTDESCtrial_by_combat.18"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAtrial_by_combat.18" 
+		#set_character_flag = flag_duel_to_the_death
+		clr_character_flag = trial_by_combat.18fired
+		if = {
+			limit = { FROM = { host = { has_character_flag = self_elected_champion_b  } } }
+			FROM = { 
+				host = { 
+					custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON }
+					hidden_tooltip = { character_event = { id = trial_by_combat.19 } }
+				} 
+			}
+		}
+		if = {
+			limit = { 
+				NOT = { 
+					FROM = { host = { has_character_flag = self_elected_champion_b  } } 
+				} 
+			}
+			FROM = {
+				host = {
+					duel_target = {
+						limit = { has_character_flag = elected_champion reverse_has_opinion_modifier = { who = PREV modifier = champion_of_liege } }
+						custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON }
+						hidden_tooltip = { character_event = { id = trial_by_combat.19 } }
+					}
+				}
+			}	
+		}
+	}	
+}
+
+character_event = { # fight takes place / champion fights
+	id = trial_by_combat.19
+	desc = "EVTDESCtrial_by_combat.19"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAtrial_by_combat.19" 
+		#set_character_flag = flag_duel_to_the_death
+		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
+	}
+}
+
+
+character_event = { # kill prisoner -> inform host
+	id = trial_by_combat.20
+	desc = "EVTDESCtrial_by_combat.20"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.20" 
+		host = {
+			hidden_tooltip = {
+				character_event = {
+					id = trial_by_combat.21
+				}
+			}	
+			# ROOT = {
+				# death = {
+					# death_reason = death_execution
+					# killer = PREV
+				# }								
+			# }	
+		}
+		clr_character_flag = demmanded_trial_by_combat
+	}
+}	
+
+character_event = { # inform host, choose punishment
+	id = trial_by_combat.21
+	desc = "EVTDESCtrial_by_combat.21"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+	
+	immediate = { 
+		clr_character_flag = trial_by_combat 
+		hidden_tooltip = { remove_character_modifier = giving_justice }
+		clr_character_flag = prisoner_has_champion
+		clr_character_flag = self_elected_champion 
+		clr_character_flag = self_elected_champion_b
+		FROM = { 
+			clr_character_flag = elected_champion 
+			remove_opinion = {
+				who = ROOT modifier = host_of_prisoner 
+			}
+		} 
+	}
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.21" #Death
+		ai_chance = { 
+			factor = 25 		
+			modifier = {
+				factor = 4
+				trait = cruel
+			}
+			modifier = {
+				factor = 4
+				trait = wroth
+			}
+			modifier = {
+				factor = 4
+				trait = proud
+			}
+			modifier = {
+				factor = 4
+				trait = ruthless
+			}
+			modifier = {
+				factor = 4
+				FROM = { any_claim = { holder_scope = { character = ROOT } } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -10 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -35 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -60 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -85 } }
+			}
+		}
+		FROM = { character_event = { id = trial_by_combat.121 tooltip = TOOLTIPtrial_by_combat.121 } }	
+	}
+	
+	option = {
+		name = "EVTOPTCtrial_by_combat.21" #Back to the Dungeon
+		ai_chance = { 
+			factor = 25 
+			modifier = {
+				factor = 4
+				trait = just
+			}
+			modifier = {
+				factor = 4
+				trait = paranoid
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -10 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -35 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -60 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { opinion = { who = FROM value = -85 } }
+			}
+			modifier = {
+				factor = 4
+				FROM = { dynasty = ROOT }
+			}
+		}
+		FROM = { character_event = { id = trial_by_combat.123 tooltip = TOOLTIPtrial_by_combat.123 } }	
+	}
+	
+	option = {
+		name = "EVTOPTDtrial_by_combat.21" #House Arrest
+		ai_chance = { 
+			factor = 25 
+			modifier = {
+				factor = 4
+				trait = kind
+			}
+			modifier = {
+				factor = 4
+				trait = patient
+			}
+			modifier = {
+				factor = 4
+				trait = honorable
+			}
+			modifier = {
+				factor = 4
+				FROM = { dynasty = ROOT }
+			}
+			modifier = {
+				factor = 2
+				FROM = { is_close_relative = ROOT }
+			}
+			modifier = {
+				factor = 2
+				opinion = { who = FROM value = 10 } 
+			}
+			modifier = {
+				factor = 2
+				opinion = { who = FROM value = 35 } 
+			}
+			modifier = {
+				factor = 2
+				opinion = { who = FROM value = 60 } 
+			}
+			modifier = {
+				factor = 2
+				opinion = { who = FROM value = 85 } 
+			}
+		}
+		FROM = { 
+			character_event = { id = trial_by_combat.124 tooltip = TOOLTIPtrial_by_combat.124 }
+			opinion = {
+				who = ROOT
+				modifier = opinion_merciful
+				years = 5
+			}			
+		}	
+	}
+}
+#Inform DEATH
+character_event = {
+   id = trial_by_combat.121
+   desc = "EVTDESCtrial_by_combat.121" 
+   picture = GFX_evt_beheading
+   
+	is_triggered_only = yes
+	
+	immediate = {
+		if = {
+			limit = { 
+				NOT = { mother = { character = FROM } }
+			}	
+			mother = {	
+				opinion = {
+					who = FROM
+					modifier = executed_kin
+					months = 120
+				}	
+				set_character_flag = murder_opinion_set
+			}	
+		}
+		if = {
+			limit = { 
+				NOT = { father = { character = FROM } }
+			}			
+			father = {
+				opinion = {
+					who = FROM
+					modifier = executed_kin
+					months = 120
+				}
+				set_character_flag = murder_opinion_set				
+			}
+		}
+		any_sibling = {
+			limit = { 
+				NOT = { character = FROM }
+				NOT = { has_character_flag = murder_opinion_set }
+			}	
+			opinion = {
+				who = FROM
+				modifier = executed_kin
+				months = 120
+			}
+			set_character_flag = murder_opinion_set				
+		}
+		any_spouse = {
+			limit = { 
+				NOT = { character = FROM }
+				NOT = { has_character_flag = murder_opinion_set }
+				opinion = { who = ROOT value = 0 }
+			}	
+			opinion = {
+				who = FROM
+				modifier = executed_kin
+				months = 120
+			}
+			set_character_flag = murder_opinion_set				
+		}
+		any_child = {
+			limit = { 
+				NOT = { character = FROM }
+				NOT = { has_character_flag = murder_opinion_set }
+			}	
+			opinion = {
+				who = FROM
+				modifier = executed_kin
+				months = 120
+			}				
+		}	
+		any_spouse = { clr_character_flag = murder_opinion_set	}
+		mother = { clr_character_flag = murder_opinion_set	}
+		father = { clr_character_flag = murder_opinion_set	}	
+		any_sibling = { clr_character_flag = murder_opinion_set	}
+	}
+
+	option = { 
+		name = "EVTOPTAtrial.22" ##I got killed. Wah!	
+		death = { death_reason = death_execution killer = FROM }	
+	}
+}
+
+#Inform dungeon
+character_event = {
+   id = trial_by_combat.123
+   desc = "EVTDESCtrial_by_combat.123" 
+    picture = "GFX_evt_into_the_dungeon"
+   
+	is_triggered_only = yes
+	
+	immediate = { 
+		set_character_flag = lost_trial_by_combat 
+		clr_character_flag = demmanded_trial_by_combat 
+		clr_character_flag = demmanded_first_trial_by_combat
+	}
+	
+	option = { 
+		name = "EVTOPTAtrial_by_combat.123" 
+		hidden_tooltip = {
+			remove_character_modifier = house_arrest
+			remove_character_modifier = the_oubliette
+			remove_character_modifier = the_dungeon
+		}
+		if = {
+			limit = { NOT = { character = FROM } }
+			add_character_modifier = { 
+				name = the_dungeon
+				duration = -1
+			}
+		}
+		if = {
+			limit = { character = FROM } 
+			add_character_modifier = { 
+				name = the_dungeon
+				duration = 365
+			}
+		}			
+	}
+}
+#Inform house arrest
+character_event = {
+   id = trial_by_combat.124
+   desc = "EVTDESCtrial_by_combat.124" 
+   picture = "GFX_evt_into_the_dungeon"
+   
+	is_triggered_only = yes
+	
+	immediate = { 
+		set_character_flag = lost_trial_by_combat 
+		clr_character_flag = demmanded_trial_by_combat 
+		clr_character_flag = demmanded_first_trial_by_combat
+	}
+	
+	option = { 
+		name = "EVTOPTAtrial_by_combat.124" 
+		hidden_tooltip = {
+			remove_character_modifier = house_arrest
+			remove_character_modifier = the_oubliette
+			remove_character_modifier = the_dungeon
+		}
+		if = {
+			limit = { NOT = { character = FROM } }
+			add_character_modifier = { 
+				name = house_arrest
+				duration = -1
+			}
+		}
+		if = {
+			limit = { character = FROM } 
+			add_character_modifier = { 
+				name = house_arrest
+				duration = 365
+			}
+		}
+		any_dynasty_member = {
+			limit = {
+				prisoner = yes
+				is_close_relative = ROOT
+				NOT = { age = 16 }
+				host = { character = FROM }	
+				NOT = { has_character_modifier = house_arrest }
+			}
+			hidden_tooltip = {
+				remove_character_modifier = the_oubliette
+				remove_character_modifier = the_dungeon
+			}
+			add_character_modifier = { 
+				name = house_arrest
+				duration = -1
+			}
+		}
+	}
+}
+
+character_event = { # inform prisoner his champ is winner
+	id = trial_by_combat.22
+	desc = "EVTDESCtrial_by_combat.22"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.22" 
+		hidden_tooltip = {
+			host = {
+				character_event = {
+					id = trial_by_combat.23
+				}
+			}
+		}	
+		prisoner = no
+		clr_character_flag = demmanded_trial_by_combat
+	}
+}
+
+
+character_event = { # inform host death of his own champ
+	id = trial_by_combat.23
+	desc = "EVTDESCtrial_by_combat.23"
+	picture = "GFX_trial_by_combat"
+	is_triggered_only = yes
+	
+	immediate = { 
+		clr_character_flag = trial_by_combat 
+		hidden_tooltip = { remove_character_modifier = giving_justice }
+		clr_character_flag = prisoner_has_champion
+		clr_character_flag = self_elected_champion 
+		clr_character_flag = self_elected_champion_b
+		FROM = { 
+			clr_character_flag = elected_champion 
+			remove_opinion = {
+				who = ROOT modifier = host_of_prisoner 
+			}
+			if = {
+				limit = { any_claim = { tier = EMPEROR holder_scope = { character = ROOT } } }
+				clr_character_flag = exiled_royal_family
+				reverse_remove_opinion = {
+					who = ROOT
+					modifier = opinion_exiled_pretender
+				}
+			}
+		} 	
+	}
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.23" 
+		FROM = { 
+			prisoner = no 
+			hidden_tooltip = {
+				if = {
+					limit = {
+						is_ruler = no
+						liege = { character = ROOT }
+					}
+					random_dynasty_member = {
+						limit = { 
+							is_alive = yes 
+							NOT = { character = ROOT }
+							OR = {
+								is_ruler = yes
+								NOT = { liege = { character = ROOT } }
+							}
+						}
+						PREV = { set_character_flag = banished }
+						if = {
+							limit = { is_ruler = yes }
+							reverse_banish = PREV
+						}
+						if = {
+							limit = { is_ruler = no }
+							liege = { reverse_banish = PREVPREV }
+						}
+					}
+					if = {
+						limit = { NOT = { has_character_flag = banished } }
+						random_playable_ruler = {
+							limit = { 
+								culture = PREV
+								NOT = { character = ROOT }
+							}
+							reverse_banish = PREV
+						}
+					}
+					clr_character_flag = banished			
+				}
+			}	
+		}
+	}
+}
+
+character_event = { # Sacrificed!
+	id = trial_by_combat.24
+	desc = "EVTDESCtrial_by_combat.24"
+	picture = "GFX_burn_alive" 
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.24" 
+		death = {
+			death_reason = death_sacrificed
+			killer = FROM
+		}	
+		hidden_tooltip = {
+			if = { limit = { father = { NOT = { character = FROM } } }
+				father = {
+					character_event = { id = trial_by_combat.25 days = 1}
+				}
+			}
+			if = { limit = { mother = { NOT = { character = FROM } } }
+				mother = {
+					character_event = { id = trial_by_combat.25 days = 1}
+				}
+			}
+			any_child = {
+				limit = { NOT = { character = FROM } }
+				character_event = { id = trial_by_combat.25 days = 1}
+			}
+			any_sibling = {
+				limit = { NOT = { character = FROM } }
+				character_event = { id = trial_by_combat.25 days = 1}
+			}
+		}		
+	}
+}
+
+#Sacrificed!
+character_event = {
+	id = trial_by_combat.25
+	desc = "EVTDESCtrial_by_combat.25"
+	picture = "GFX_burn_alive" 
+	
+	is_triggered_only = yes	
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.24"  #
+	}
+}
+
+#Championed Sacrificed!
+character_event = {
+	id = trial_by_combat.26
+	desc = "EVTDESCtrial_by_combat.26"
+	picture = "GFX_burn_alive" 
+	
+	is_triggered_only = yes	
+	
+	option = {
+		name = "EVTOPTAtrial_by_combat.26"  #
+		random_dynasty_member = {
+			limit = {
+				has_character_flag = champion_of_relative
+				reverse_has_opinion_modifier = { who = ROOT modifier = champion_of_relative }
+			}
+			custom_tooltip = { text = TOOLTIPEVTtrial_by_combat.26 }
+		}
+		random_vassal = {
+			limit = {
+				has_character_flag = champion_of_liege
+				reverse_has_opinion_modifier = { who = ROOT modifier = champion_of_relative }
+			}
+			custom_tooltip = { text = TOOLTIPEVTtrial_by_combat.26 }
+		}
+		random_courtier = {
+			limit = {
+				has_character_flag = champion_of_liege
+				reverse_has_opinion_modifier = { who = ROOT modifier = champion_of_relative }
+			}
+			custom_tooltip = { text = TOOLTIPEVTtrial_by_combat.26 }
+		}
+		death = {
+			death_reason = death_sacrificed
+			killer = FROM
+		}	
+	}
+}
+
+
+character_event = { #ai prisoner selects champion
+	id = trial_by_combat.27
+	desc = "EVTDESCtrial_by_combat.27"
+	picture = "GFX_trial_by_combat"
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		any_dynasty_member = {
+			limit = { 
+				is_close_relative = ROOT
+			}
+			clr_character_flag = champion_1 
+			clr_character_flag = champion_3
+		}
+		any_courtier = {
+			clr_character_flag = champion_2 
+			clr_character_flag = champion_3
+		}
+		random_dynasty_member = {
+			limit = {
+				age = 16
+				is_female = no
+				is_close_relative = ROOT
+				ROOT = { NOT = { host = { character = PREVPREV } } }
+				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
+				OR = {
+					NOT = { has_character_flag = no_championing }
+					had_character_flag = { flag = no_championing days = 100 }
+				}
+				OR = {
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				NOT = { trait = incapable }
+				is_ill = no
+				prisoner = no
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				opinion = { who = ROOT value = 10 }  #TESTING POURPOSES CHANGE -99 TO 50
+			}
+			set_character_flag = champion_1
+		}
+		random_dynasty_member = {
+			limit = {
+				age = 16
+				is_female = no
+				is_close_relative = ROOT
+				ROOT = { NOT = { host = { character = PREVPREV } } }
+				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
+				OR = {
+					NOT = { has_character_flag = no_championing }
+					had_character_flag = { flag = no_championing days = 100 }
+				}
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+				}	
+				NOT = { 
+					ROOT = { 
+						any_dynasty_member = {
+							is_close_relative = ROOT
+							has_character_flag = champion_1
+						}
+					}
+				}
+				NOT = { trait = incapable }
+				is_ill = no
+				prisoner = no
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				opinion = { who = ROOT value = 10 }  #TESTING POURPOSES CHANGE -99 TO 50
+			}
+			set_character_flag = champion_1
+		}
+		random_dynasty_member = {
+			limit = {
+				age = 16
+				is_female = no
+				is_close_relative = ROOT
+				ROOT = { NOT = { host = { character = PREVPREV } } }
+				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
+				OR = {
+					NOT = { has_character_flag = no_championing }
+					had_character_flag = { flag = no_championing days = 100 }
+				}
+				OR = {
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				NOT = { has_character_flag = champion_1 }
+				NOT = { trait = incapable }
+				is_ill = no
+				prisoner = no
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				opinion = { who = ROOT value = 10 }  #TESTING POURPOSES CHANGE -99 TO 50
+			}
+			set_character_flag = champion_2
+		}
+		random_dynasty_member = {
+			limit = {
+				age = 16
+				is_female = no
+				is_close_relative = ROOT
+				ROOT = { NOT = { host = { character = PREVPREV } } }
+				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
+				OR = {
+					NOT = { has_character_flag = no_championing }
+					had_character_flag = { flag = no_championing days = 100 }
+				}
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+				}	
+				NOT = { 
+					ROOT = { 
+						any_dynasty_member = {
+							is_close_relative = ROOT
+							has_character_flag = champion_2
+						}
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { trait = incapable }
+				is_ill = no
+				prisoner = no
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				opinion = { who = ROOT value = 10 }  #TESTING POURPOSES CHANGE -99 TO 50
+			}
+			set_character_flag = champion_2
+		}
+		random_dynasty_member = {
+			limit = {
+				age = 16
+				is_female = no
+				is_close_relative = ROOT
+				ROOT = { NOT = { host = { character = PREVPREV } } }
+				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
+				OR = {
+					NOT = { has_character_flag = no_championing }
+					had_character_flag = { flag = no_championing days = 100 }
+				}
+				OR = {
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				NOT = { trait = incapable }
+				is_ill = no
+				prisoner = no
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				opinion = { who = ROOT value = 10 }  #TESTING POURPOSES CHANGE -99 TO 50
+			}
+			set_character_flag = champion_3
+		}
+		random_dynasty_member = {
+			limit = {
+				age = 16
+				is_female = no
+				is_close_relative = ROOT
+				ROOT = { NOT = { host = { character = PREVPREV } } }
+				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
+				OR = {
+					NOT = { has_character_flag = no_championing }
+					had_character_flag = { flag = no_championing days = 100 }
+				}
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+				}	
+				NOT = { 
+					ROOT = { 
+						any_dynasty_member = {
+							is_close_relative = ROOT
+							has_character_flag = champion_3
+						}
+					}
+				}
+				NOT = { 
+					ROOT = { 
+						any_courtier = {
+							has_character_flag = champion_3
+						}
+					}
+				}
+				NOT = { has_character_flag = champion_1 }
+				NOT = { has_character_flag = champion_2 }
+				NOT = { trait = incapable }
+				is_ill = no
+				prisoner = no
+				NOT = { trait = clubfooted }
+				NOT = { trait = hunchback }
+				opinion = { who = ROOT value = 10 }  #TESTING POURPOSES CHANGE -99 TO 50
+			}
+			set_character_flag = champion_3
+		}
+		if = {
+			limit = {
+				NOT = { any_dynasty_member = { has_character_flag = champion_1 } }
+			}
+			random_dynasty_member = { 
+				limit = {
+					NOT = { trait = incapable }
+					age = 16
+					is_female = no
+					ROOT = { NOT = { host = { character = PREVPREV } } }
+					NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
+				}
+				set_character_flag = champion_1 
+			}
+		}
+		if = {
+			limit = {
+				NOT = { any_dynasty_member = { has_character_flag = champion_1 } }
+			}
+			set_character_flag = no_eligible_champions
+		}
+	}
+	
+	option = { # champion 1
+		name = "EVTOPTAtrial_by_combat.6" 
+		trigger = {
+			OR = {
+				any_courtier = {
+					has_character_flag = champion_1
+				}
+				any_dynasty_member = {
+					#is_close_relative = ROOT
+					has_character_flag = champion_1
+				}
+			}
+		}
+		ai_chance = { 
+			factor = 50 
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_1
+					trait = trained_warrior
+				}
+			}
+			modifier = {
+				factor = 5
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_1
+					trait = skilled_warrior
+				}
+			}
+			modifier = {
+				factor = 10
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_1
+					trait = master_warrior
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_1
+					trait = strong
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_1
+					trait = brave
+				}
+			}
+			modifier = {
+				factor = 1.5
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_1
+					trait = tall
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_1
+					trait = wroth
+				}
+			}	
+		}
+		random_dynasty_member = {
+			limit = { 
+				has_character_flag = champion_1 
+				is_close_relative = ROOT
+			}
+			letter_event = { 
+				id = trial_by_combat.1 
+				days = 20
+			} 
+		}	
+		any_dynasty_member = {
+			limit = { 
+				is_close_relative = ROOT
+			}
+			clr_character_flag = champion_1 
+			clr_character_flag = champion_3
+		}
+		any_courtier = {
+			clr_character_flag = champion_2 
+			clr_character_flag = champion_3
+		}
+	}
+	option = { # champion 2
+		name = "EVTOPTBtrial_by_combat.6" 
+		trigger = {
+			OR = {
+				any_courtier = {
+					has_character_flag = champion_2
+				}
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+				}
+			}
+		}
+		ai_chance = { 
+			factor = 50 
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+					trait = trained_warrior
+				}
+			}
+			modifier = {
+				factor = 5
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+					trait = skilled_warrior
+				}
+			}
+			modifier = {
+				factor = 10
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+					trait = master_warrior
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+					trait = strong
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+					trait = brave
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+					trait = tall
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_2
+					trait = wroth
+				}
+			}
+			# modifier = {
+				# factor = 2
+				# any_courtier = {
+					# has_character_flag = champion_2
+					# trait = trained_warrior
+				# }
+			# }
+			# modifier = {
+				# factor = 3.5
+				# any_courtier = {
+					# has_character_flag = champion_2
+					# trait = skilled_warrior
+				# }
+			# }
+			# modifier = {
+				# factor = 5
+				# any_courtier = {
+					# has_character_flag = champion_2
+					# trait = master_warrior
+				# }
+			# }
+			# modifier = {
+				# factor = 1.5
+				# any_courtier = {
+					# has_character_flag = champion_2
+					# trait = strong
+				# }
+			# }
+			# modifier = {
+				# factor = 1.5
+				# any_courtier = {
+					# has_character_flag = champion_2
+					# trait = brave
+				# }
+			# }
+			# modifier = {
+				# factor = 1.5
+				# any_courtier = {
+					# has_character_flag = champion_2
+					# trait = tall
+				# }
+			# }
+			# modifier = {
+				# factor = 1.5
+				# any_courtier = {
+					# has_character_flag = champion_2
+					# trait = wroth
+				# }
+			# }	
+		}
+		random_dynasty_member = {
+			limit = { has_character_flag = champion_2 }
+			letter_event = { 
+				id = trial_by_combat.1 
+				days = 20
+			} 
+		}	
+		any_dynasty_member = {
+			limit = { 
+				is_close_relative = ROOT
+			}
+			clr_character_flag = champion_1 
+			clr_character_flag = champion_3
+		}
+		any_courtier = {
+			clr_character_flag = champion_2 
+			clr_character_flag = champion_3
+		}
+		
+	}
+	option = { # champion 3
+		name = "EVTOPTCtrial_by_combat.6" 
+		trigger = {
+			OR = {
+				any_courtier = {
+					has_character_flag = champion_3
+				}
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+				}
+			}	
+		}
+		ai_chance = { 
+			factor = 50 
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+					trait = trained_warrior
+				}
+			}
+			modifier = {
+				factor = 5
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+					trait = skilled_warrior
+				}
+			}
+			modifier = {
+				factor = 10
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+					trait = master_warrior
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+					trait = strong
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+					trait = brave
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+					trait = tall
+				}
+			}
+			modifier = {
+				factor = 2
+				any_dynasty_member = {
+					is_close_relative = ROOT
+					has_character_flag = champion_3
+					trait = wroth
+				}
+			}	
+		}
+		random_courtier = {
+			limit = { has_character_flag = champion_3 }
+			letter_event = { id = trial_by_combat.1 } 
+		}
+		random_dynasty_member = {
+			limit = { 
+				has_character_flag = champion_1 
+				is_close_relative = ROOT
+			}
+			letter_event = { 
+				id = trial_by_combat.1 
+				days = 20
+			} 
+		}
+		any_dynasty_member = {
+			limit = { 
+				is_close_relative = ROOT
+			}
+			clr_character_flag = champion_1 
+			clr_character_flag = champion_3
+		}
+		any_courtier = {
+			clr_character_flag = champion_2 
+			clr_character_flag = champion_3
+		}
+	}
+	option = { # I will fight
+		name = "EVTOPTDtrial_by_combat.6" 
+		trigger = {
+			OR = {
+				AND = {
+					prisoner = yes	
+					OR = {
+						trait = poor_warrior
+						trait = trained_warrior
+						trait = skilled_warrior
+						trait = master_warrior
+					}	
+					age = 16
+					is_ill = no
+					OR = {
+						is_female = no
+						trait = brave
+						trait = strong
+					}
+					OR = {
+						NOT = { trait = dwarf }
+						trait = skilled_warrior
+					}	
+					NOT = { trait = clubfooted }
+					NOT = { trait = hunchback }
+				}
+				has_character_flag = no_eligible_champions		
+			}	
+		}
+		ai_chance = { 
+			factor = 50 
+			modifier = {
+				factor = 2
+				trait = trained_warrior
+			}
+			modifier = {
+				factor = 5
+				trait = skilled_warrior
+			}
+			modifier = {
+				factor = 10
+				trait = master_warrior
+			}
+			modifier = {
+				factor = 2
+				trait = strong
+			}
+			modifier = {
+				factor = 2
+				trait = brave
+			}
+			modifier = {
+				factor = 2
+				trait = tall
+			}
+			modifier = {
+				factor = 2
+				trait = wroth
+			}	
+		}
+		host = {
+			character_event = {
+				id = trial_by_combat.4
+				days = 20
+			}
+		}
+		any_dynasty_member = {
+			limit = { 
+				is_close_relative = ROOT
+			}
+			clr_character_flag = champion_1 
+			clr_character_flag = champion_3
+		}
+		any_courtier = {
+			clr_character_flag = champion_2 
+			clr_character_flag = champion_3
+		}
+		clr_character_flag = no_eligible_champions	
+	}
+}

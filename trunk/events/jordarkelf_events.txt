@@ -1,0 +1,185 @@
+####################################################################################
+#
+# Events based on Jordarkelf's Code
+#
+####################################################################################
+
+namespace = jordarkelf
+
+#Legitimize a hidden bastard if old and childless?
+character_event = {
+	id = jordarkelf.1
+	desc = jordarkelf.1.desc
+	picture = GFX_evt_courtiers_talking
+	
+	min_age = 50
+	only_rulers = yes
+		
+	trigger = {
+		NOT = { has_law = succ_feudal_elective }
+		is_feudal = yes
+		current_heir = { NOT = { dynasty = ROOT } }
+		NOT = {
+			any_child = {
+				dynasty = ROOT
+				is_female = no
+			}
+		}
+		any_child = {
+			was_conceived_a_bastard = yes
+			father = {
+				NOT = { character = ROOT }
+			}
+			is_female = no
+			NOT = { trait = bastard }
+			NOT = { trait = legit_bastard }
+		}
+	}
+	
+	mean_time_to_happen = {	years = 1 }
+	
+	option = {
+		name = EVTOPTA301 # Legitimize the child
+		ai_chance = { factor = 80 }
+		random_child = {
+			limit = {
+				was_conceived_a_bastard = yes
+				father = {
+					NOT = { character = ROOT }
+				}
+				is_female = no
+				NOT = { trait = bastard }
+				NOT = { trait = legit_bastard }
+			}
+			character_event = { id = 302 tooltip = EVTTOOLTIP302 } # The child gets the father's dynasty
+			mother = {
+				character_event = { id = jordarkelf.2 tooltip = EVTTOOLTIP303 } # The child's mother is very pleased
+				spouse = {
+					character_event = { id = 304 tooltip = EVTTOOLTIP304 } # The child's mother's husband is pissed off
+				}
+				consort = {
+					character_event = { id = 304 tooltip = EVTTOOLTIP304 } # The child's mother's lord is pissed off
+				}					
+			}
+		}
+		any_child = {
+			limit = {
+				dynasty = ROOT
+				was_conceived_a_bastard = no
+			}
+			opinion = {
+				who = ROOT
+				modifier = legitimized_bastard
+				months = 12
+			}
+		}
+	}
+	option = {
+		name = jordarkelf.1.b
+		ai_chance = { factor = 20 }
+	}
+}
+
+# The child's mother is very pleased
+character_event = {
+	id = jordarkelf.2
+	
+	is_triggered_only = yes 
+	desc = EVTDESC307
+	picture = GFX_evt_birth
+
+	option = {
+		name = EVTOPTA303
+		opinion = {
+			who = FROM
+			modifier = legitimized_child
+			years = 10
+		}
+	}
+}
+
+# Syphilis Effects
+character_event = {
+	id = jordarkelf.6
+	desc = jordarkelf.6.desc
+	picture = GFX_evt_illness
+	
+	trigger = {
+		trait = syphilitic
+	}
+	
+	mean_time_to_happen = {
+		years = 20
+		
+		modifier = {
+			factor = 0.5
+			NOT = { health = 6 }
+		}
+		modifier = {
+			factor = 0.5
+			NOT = { health = 5 }
+		}
+		modifier = {
+			factor = 0.5
+			NOT = { health = 4 }
+		}
+		modifier = {
+			factor = 0.5
+			NOT = { health = 3 }
+		}
+	}
+	
+	option = {
+		name = CURSES
+		random_list = {
+			50 = { add_trait = blinded }
+			30 = { add_trait = incapable }
+			20 = { death = { death_reason = death_trait } }
+		}
+	}
+}
+
+# Leprosy Effects
+character_event = {
+	id = jordarkelf.7
+	desc = jordarkelf.6.desc
+	picture = GFX_evt_illness
+	
+	trigger = {
+		trait = leper
+	}
+	
+	mean_time_to_happen = {
+		years = 20
+		
+		modifier = {
+			factor = 0.5
+			NOT = { health = 6 }
+		}
+		modifier = {
+			factor = 0.5
+			NOT = { health = 5 }
+		}
+		modifier = {
+			factor = 0.5
+			NOT = { health = 4 }
+		}
+		modifier = {
+			factor = 0.5
+			NOT = { health = 3 }
+		}
+	}
+	
+	option = {
+		name = CURSES
+		random_list = {
+			40 = { add_trait = blinded }
+			30 = { add_trait = deaf }
+			20 = { add_trait = incapable }
+			10 = { death = { death_reason = death_trait } }
+		}
+	}
+}
+
+# VIET SoA events moved to VIET_Immersion_religion_misc.txt
+#.8 next one

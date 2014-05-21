@@ -1,0 +1,1879 @@
+########################################
+###Written by Ogaburan aka Ran Miller###
+########################################
+
+#################################
+#########Misc Traits#############
+namespace = misc_traits
+#################################
+
+############################
+######Childhood Events######
+############################
+###Fashionable
+#misc_traits.1 - Child likes dresses. (Fashionable)
+#misc_traits.2 - My ward likes dresses. (Fashionable)
+#misc_traits.3 - Child notification. (Got fashionable)
+#misc_traits.4 - Child notification. (Didnt get fashionable)
+###Authoritative
+#misc_traits.5 - Child is authoritative. (Authoritative)
+#misc_traits.6 - Child is being bossy. (Authoritative)
+#misc_traits.7 - Child notification. (Got Authoritative)
+#misc_traits.8 - Child notification. (Didnt get Authoritative)
+###Rude
+#misc_traits.9 - Child is rude. (Rude)
+#misc_traits.10 - My ward is rude. (Rude)
+#misc_traits.11 - Child notification. (Got rude)
+#misc_traits.12 - Child notification. (Didnt get rude)
+###Family Person
+#misc_traits.13 - Children Napotism. (familyperson)
+#misc_traits.14 - My ward likes nepotism. (familyperson)
+#misc_traits.15 - Child notification. (Got familyperson)
+#misc_traits.16 - Child notification. (Didnt get familyperson)
+###Selfish
+#misc_traits.17 - Child being selfish. (selfish)
+#misc_traits.18 - My ward is selfish. (selfish)
+#misc_traits.19 - Child notification. (Got selfish)
+#misc_traits.20 - Child notification. (Didnt get selfish)
+###Stubborn
+#misc_traits.21 - Child is stubborn. (stubborn)
+#misc_traits.22 - My ward is being stubborn. (stubborn)
+#misc_traits.23 - Child notification. (Got stubborn)
+#misc_traits.24 - Child notification. (Didnt get stubborn)
+
+###	Ruthless/Honorable Choices
+##	Ward Acting Ruthless
+#misc_traits.25	Child Acting Ruthless - Inform Child
+#misc_traits.26	Child Acting Ruthless - Inform Guardian
+#misc_traits.27	Child Is Ruthless - Inform Child
+#misc_traits.28	Child Is Not Ruthless - Inform Child
+##	Ward Acting Honorable
+#misc_traits.29	Child Acting Honorable - Inform Child
+#misc_traits.30	Child Acting Honorable - Inform Guardian
+#misc_traits.31	Child Is Honorable - Inform Child
+#misc_traits.32	Child Is Not Honorable - Inform Child
+
+###########################
+######Mid-Life Events######
+###########################
+#on_five_year_pulse (10) <---I DONT KNOW IF THIS IS BALANCED might be too rare... needs testing!
+###Fashionable
+#misc_traits.33 - People are mocking the way you dress. (Fashionable)
+#misc_traits.34 - Marhsal has new ideas, that contradicts your orders. (Authoritative)
+
+#################################
+
+#misc_traits.1 - Child likes dresses. (Fashionable)
+#on_yearly_childhood_pulse (20)
+character_event = {
+	id = misc_traits.1
+	desc = "EVTDESCmisc_traits.1"
+	picture = "GFX_fashion"
+	
+	min_age = 6
+	max_age = 16
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_guardian = yes
+		NOT = { trait = shy }
+		NOT = { trait = humble }
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 2
+			is_female = yes
+		}
+		modifier = {
+			factor = 1.5
+			OR = {
+				trait = fair
+				trait = envious
+				trait = proud
+				trait = gregarious
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = ugly
+				trait = dwarf
+				trait = stutter
+				trait = content
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.1"
+		guardian = {
+			character_event = {
+				id = misc_traits.2
+				tooltip = "EVTOOLTIPmisc_traits.1" #Guardian will descide.
+			}
+		}
+	}
+}
+
+#misc_traits.2 - My ward likes dresses. (Fashionable)
+character_event = {
+	id = misc_traits.2
+	desc = "EVTDESCmisc_traits.2"
+	picture = "GFX_fashion"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAmisc_traits.2" #Encourage him.
+		
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = gregarious
+					trait = lustful
+					trait = poet
+					trait = fashion
+					trait = hedonist
+				}
+			}
+		}
+		
+		if = {
+			limit = {
+				OR = {
+					trait = gregarious
+					trait = lustful
+					trait = poet
+					trait = fashion
+					trait = hedonist
+				}
+			}
+			random_list = {
+				50 = { change_diplomacy = 1 }
+				50 = { }
+			}
+		}
+		FROM ={
+			add_trait = fashion
+			character_event = {
+				id = misc_traits.3
+				tooltip = "EVTOOLTIPmisc_traits.3" #Ward gets fashionable.
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.2" #Tell him to stop it!
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = shy
+					trait = wroth
+					trait = celibate
+					trait = hunchback
+				}
+			}
+		}
+		FROM ={
+			character_event = {
+				id = misc_traits.4
+				tooltip = "EVTOOLTIPmisc_traits.4" #Ward no gets fashionable.
+			}
+		}
+	}
+}
+
+#misc_traits.3 - Child notification. (Got fashionable)
+character_event = {
+	id = misc_traits.3
+	desc = "EVTDESCmisc_traits.3"
+	picture = "GFX_sansa"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.4 - Child notification. (Didnt get fashionable)
+character_event = {
+	id = misc_traits.4
+	desc = "EVTDESCmisc_traits.4"
+	picture = "GFX_sad_aria"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.5 - Child is authoritative. (Authoritative)
+#on_yearly_childhood_pulse (20)
+character_event = {
+	id = misc_traits.5
+	desc = "EVTDESCmisc_traits.5"
+	picture = "GFX_authoritative"
+	
+	min_age = 6
+	max_age = 16
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_guardian = yes
+		NOT = { trait = shy }
+		NOT = { trait = lisp }
+		NOT = { trait = stutter }
+		NOT = { trait = content }
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 1.5
+			OR = {
+				trait = fair
+				trait = strong
+				trait = wroth
+				trait = proud
+				trait = brave
+				trait = gregarious
+				trait = ambitious
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = ugly
+				trait = hunchback
+				trait = dwarf
+				trait = weak
+				trait = slothful
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.1"
+		guardian = {
+			character_event = {
+				id = misc_traits.6
+				tooltip = "EVTOOLTIPmisc_traits.1" #Guardian will descide.
+			}
+		}
+	}
+}
+
+#misc_traits.6 - Child is being bossy. (Authoritative)
+character_event = {
+	id = misc_traits.6
+	desc = "EVTDESCmisc_traits.6"
+	picture = "GFX_authoritative"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAmisc_traits.6" #Encourage.
+		
+		ai_chance = {
+			factor = 2
+		}
+		
+		random_list = {
+			50 = {
+				FROM = { 
+					add_trait = brave 
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38170
+							}
+						} 
+						character_event = {
+							id = 38270
+						}
+					}
+				} 
+			}
+			50 = { 
+				FROM = { 
+					add_trait = proud 
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38161
+							}
+						} 
+						character_event = {
+							id = 38261
+						}
+					}
+				} 
+			}
+			50 = { 
+				FROM = { 
+					add_trait = gregarious
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38165
+							}
+						} 
+						character_event = {
+							id = 38265
+						}
+					}
+				} 
+			}
+			100 = { }
+		}
+		
+		FROM ={
+			add_trait = authoritative
+			character_event = {
+				id = misc_traits.7
+				tooltip = "EVTOOLTIPmisc_traits.7"
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.6" #Better not talk to me in that tone! (slap)
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = wroth
+					trait = cruel
+				}
+			}
+		}
+		random_list = {
+			25 = { 
+				FROM = { 
+					add_trait = wroth
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38154
+							}
+						} 
+						character_event = {
+							id = 38254
+						}
+					}
+				} 
+			}
+			25 = { 
+				FROM = { 
+					add_trait = wounded
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38180
+							}
+						} 
+						character_event = {
+							id = 38280
+						}
+					}
+				} 
+			}
+			50 = { }
+		}
+		FROM ={
+			opinion = {
+				modifier = opinion_angry
+				who = ROOT
+				years = 5
+			}
+			character_event = {
+				id = misc_traits.8
+				tooltip = "EVTOOLTIPmisc_traits.8" 
+			}
+		}
+	}
+}
+
+#misc_traits.7 - Child notification. (Got Authoritative)
+character_event = {
+	id = misc_traits.7
+	desc = "EVTDESCmisc_traits.7"
+	picture = "GFX_oil_rik"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.8 - Child notification. (Didnt get Authoritative)
+character_event = {
+	id = misc_traits.8
+	desc = "EVTDESCmisc_traits.8"
+	picture = "GFX_sad_aria"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.9 - Child is rude. (Rude)
+#on_yearly_childhood_pulse (10)
+character_event = {
+	id = misc_traits.9
+	desc = "EVTDESCmisc_traits.9"
+	picture = "GFX_rude"
+	
+	min_age = 6
+	max_age = 16
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_guardian = yes
+		NOT = { trait = shy }
+		NOT = { trait = humble }
+		NOT = { trait = kind }
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 1.5
+			OR = {
+				trait = envious
+				trait = wroth
+				trait = gregarious
+				trait = cynical
+				trait = paranoid
+				trait = cruel
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = stutter
+				trait = content
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.1"
+		guardian = {
+			character_event = {
+				id = misc_traits.10
+				tooltip = "EVTOOLTIPmisc_traits.1" #Guardian will descide.
+			}
+		}
+	}
+}
+
+#misc_traits.10 - My ward is rude. (Rude)
+character_event = {
+	id = misc_traits.10
+	desc = "EVTDESCmisc_traits.10"
+	picture = "GFX_rude"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAmisc_traits.10" #Yes
+		
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = cruel
+					trait = rude
+					trait = cynical
+				}
+			}
+		}
+		
+		opinion = {
+			modifier = opinion_approves
+			who = FROM
+			years = 5
+		}
+		
+		FROM ={
+			add_trait = rude
+			character_event = {
+				id = misc_traits.11
+				tooltip = "EVTOOLTIPmisc_traits.11" #Ward gets rude.
+			}
+			opinion = {
+				modifier = opinion_approves
+				who = root
+				years = 5
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.10" #Tell him to stop it! He is embarassing me!
+		ai_chance = {factor = 2}
+		
+		opinion = {
+			modifier = opinion_embarrassed
+			who = FROM
+			years = 5
+		}
+		
+		random_list = {
+			30 = { }
+			30 = { 
+				FROM = { 
+					add_trait = wroth 
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38154
+							}
+						} 
+						character_event = {
+							id = 38254
+						}
+					}
+				} 
+			}
+			40 = {
+				FROM = {
+					add_trait = rude
+					hidden_tooltip = { character_event = { id = misc_traits.12 } }
+				}
+			}
+		}
+		
+		FROM ={
+			opinion = {
+				modifier = opinion_disapprove
+				who = root
+				years = 5
+			}
+		}
+	}
+}
+
+#misc_traits.11 - Child notification. (Got rude)
+character_event = {
+	id = misc_traits.11
+	desc = "EVTDESCmisc_traits.11"
+	picture = "GFX_rude"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.12 - Child notification. (Didnt get rude)
+character_event = {
+	id = misc_traits.12
+	desc = "EVTDESCmisc_traits.12"
+	picture = "GFX_rude"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.13 - Children Napotism. (familyperson)
+#on_yearly_childhood_pulse (20)
+character_event = {
+	id = misc_traits.13
+	desc = "EVTDESCmisc_traits.13"
+	picture = "GFX_familyperson"
+	
+	min_age = 6
+	max_age = 16
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_guardian = yes
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 2
+			trait = inbred
+		}
+		modifier = {
+			factor = 1.2
+			OR = {
+				trait = charitable
+				trait = kind
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			trait = envious
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.1"
+		guardian = {
+			character_event = {
+				id = misc_traits.14
+				tooltip = "EVTOOLTIPmisc_traits.1" #Guardian will descide.
+			}
+		}
+	}
+}
+
+#misc_traits.14 - My ward likes nepotism. (familyperson)
+character_event = {
+	id = misc_traits.14
+	desc = "EVTDESCmisc_traits.14"
+	picture = "GFX_familyperson"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAmisc_traits.14" #Encourage him.
+		
+		ai_chance = {
+			factor = 2
+			modifier = {
+				factor = 5
+				OR = {
+					trait = familyperson
+					trait = inbred
+					trait = proud
+				}
+			}
+		}
+		
+		FROM ={
+			add_trait = familyperson
+			character_event = {
+				id = misc_traits.15
+				tooltip = "EVTOOLTIPmisc_traits.15" #Ward gets familyperson.
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.14" #Tell him to stop it!
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 3
+				OR = {
+					trait = charitable
+					trait = kind
+					trait = humble
+				}
+			}
+		}
+		
+		random_list = {
+			25 = { 
+				FROM = { 
+					add_trait = charitable 
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38173
+							}
+						} 
+						character_event = {
+							id = 38273
+						}
+					}
+				} 
+			}
+			25 = { 
+				FROM = { 
+					add_trait = kind
+					hidden_tooltip = {
+						ROOT = { 
+							character_event = {
+								id = 38168
+							}
+						} 
+						character_event = {
+							id = 38268
+						}
+					}
+				} 
+			}
+			25 = { 
+				FROM = { 
+					add_trait =selfish
+				} 
+			}
+			25 = { }
+		}
+		
+		FROM ={
+			character_event = {
+				id = misc_traits.16
+				tooltip = "EVTOOLTIPmisc_traits.16" #Ward no gets familyperson.
+			}
+		}
+	}
+}
+
+#misc_traits.15 - Child notification. (Got familyperson)
+character_event = {
+	id = misc_traits.15
+	desc = "EVTDESCmisc_traits.15"
+	picture = "GFX_familyperson"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.16 - Child notification. (Didnt get familyperson)
+character_event = {
+	id = misc_traits.16
+	desc = "EVTDESCmisc_traits.16"
+	picture = "GFX_familyperson"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.17 - Child being selfish. (Selfish)
+#on_yearly_childhood_pulse (20)
+character_event = {
+	id = misc_traits.17
+	desc = "EVTDESC420016"
+	picture = "GFX_selfish"
+	
+	min_age = 6
+	max_age = 16
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_guardian = yes
+		NOT = { trait = charitable }
+		NOT = { trait = trusting }
+		NOT = { trait = familyperson }
+		NOT = { trait = just }
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 2
+			OR = {
+				trait = greedy
+				trait = envious
+				trait = rude
+			}
+		}
+		modifier = {
+			factor = 1.5
+			OR = {
+				trait = gluttonous
+				trait = slothful
+				trait = cruel
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = kind
+				trait = humble
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.1"
+		guardian = {
+			character_event = {
+				id = misc_traits.18
+				tooltip = "EVTOOLTIPmisc_traits.1" #Guardian will descide.
+			}
+		}
+	}
+}
+
+#misc_traits.18 - My ward is selfish. (selfish)
+character_event = {
+	id = misc_traits.18
+	desc = "EVTDESCmisc_traits.18"
+	picture = "GFX_selfish"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAmisc_traits.18" #Encourage him.
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = slothful
+					trait = shy
+				}
+			}
+		}
+		random_list = {
+			50 = { add_trait = poet }
+			50 = { add_trait = gardener }
+			50 = { add_trait = hunter }
+			50 = { add_trait = falconer }
+			100 = { 
+				if = {
+					limit = { trait = diligent }
+					remove_trait = diligent
+				}
+				add_trait = slothful 
+				hidden_tooltip = {
+					character_event ={
+						id = 38251 #Notify
+					}
+				}
+			}
+		}
+		
+		FROM ={
+			add_trait = selfish
+			character_event = {
+				id = misc_traits.19
+				tooltip = "EVTOOLTIPmisc_traits.19" #Ward gets selfish.
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.18" #Tell him to stop it!
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = familyperson
+					trait = just
+					trait = kind
+					trait = charitable
+				}
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					trait = gregarious
+					trait = poet
+				}
+			}
+			random_list = {
+				50 = { change_diplomacy = 1 }
+				50 = { }
+			}
+		}
+		FROM ={
+			character_event = {
+				id = misc_traits.20
+				tooltip = "EVTOOLTIPmisc_traits.20" #Ward no gets selfish.
+			}
+		}
+	}
+}
+
+#misc_traits.19 - Child notification. (Got selfish)
+character_event = {
+	id = misc_traits.19
+	desc = "EVTDESCmisc_traits.19"
+	picture = "GFX_selfish"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.20 - Child notification. (Didnt get selfish)
+character_event = {
+	id = misc_traits.20
+	desc = "EVTDESCmisc_traits.16"
+	picture = "GFX_selfish"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.21 - Child is stubborn. (stubborn)
+#on_yearly_childhood_pulse (20)
+character_event = {
+	id = misc_traits.21
+	desc = "EVTDESCmisc_traits.21"
+	picture = "GFX_oil_rik"
+	
+	min_age = 6
+	max_age = 16
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_guardian = yes
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 1.5
+			OR = {
+				trait = wroth
+				trait = proud
+				trait = ambitious
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = patient
+				trait = content
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.1"
+		guardian = {
+			character_event = {
+				id = misc_traits.22
+				tooltip = "EVTOOLTIPmisc_traits.1" #Guardian will descide.
+			}
+		}
+	}
+}
+
+#misc_traits.22 - My ward is being stubborn. (stubborn)
+character_event = {
+	id = misc_traits.22
+	desc = "EVTDESCmisc_traits.22"
+	picture = "GFX_oil_rik"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAmisc_traits.18" #Encourage him.
+		
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = slothful
+					trait = content
+					trait = shy
+				}
+			}
+		}
+		
+		random_list = {
+			50 = { add_trait = poet }
+			50 = { add_trait = gardener }
+			50 = { add_trait = hunter }
+			50 = { add_trait = falconer }
+			100 = { 
+				if = {
+					limit = { trait = diligent }
+					remove_trait = diligent
+				}
+				add_trait = slothful 
+				hidden_tooltip = {
+					character_event ={
+						id = 38251 #Notify
+					}
+				}
+			}
+		}
+		
+		FROM ={
+			add_trait = stubborn
+			character_event = {
+				id = misc_traits.23
+				tooltip = "EVTOOLTIPmisc_traits.23" #Ward gets stubborn.
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.22" #Tell him to stop it!
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 5
+				OR = {
+					trait = scholar
+					trait = diligent
+					trait = patient
+				}
+			}
+		}
+		FROM ={
+			character_event = {
+				id = misc_traits.24
+				tooltip = "EVTOOLTIPmisc_traits.20" #Ward no gets stubborn.
+			}
+		}
+	}
+}
+
+#misc_traits.23 - Child notification. (Got stubborn)
+character_event = {
+	id = misc_traits.23
+	desc = "EVTDESCmisc_traits.23"
+	picture = "GFX_oil_rik"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+#misc_traits.24 - Child notification. (Didnt get stubborn)
+character_event = {
+	id = misc_traits.24
+	desc = "EVTDESCmisc_traits.24"
+	picture = "GFX_oil_rik"
+	
+	is_triggered_only = yes
+	
+	option = {name = "OK"}
+}
+
+# Ruthless
+character_event = {
+	id = misc_traits.25
+	desc = "EVTDESCmisc_traits.25"
+	picture = GFX_evt_child_bully
+	
+	is_triggered_only = yes
+	
+	min_age = 6
+	max_age = 16
+	
+	trigger = {
+		has_guardian = yes
+		NOT = { trait = ruthless }
+		NOT = { trait = honorable }
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		# Role Models
+		modifier = {
+			factor = 5
+			guardian = {
+				trait = ruthless
+				reverse_opinion = { who = ROOT value = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.2
+			guardian = {
+				trait = honorable
+				reverse_opinion = { who = ROOT value = 0 }
+			}
+		}
+		modifier = {
+			factor = 5
+			any_sibling = {
+				trait = ruthless
+				age = 16
+			}
+		}
+		modifier = {
+			factor = 0.2
+			any_sibling = {
+				trait = honorable
+				age = 16
+			}
+		}
+		
+		# Rebellion
+		modifier = {
+			factor = 0.2
+			guardian = {
+				trait = ruthless
+				NOT = { reverse_opinion = { who = ROOT value = 0 } }
+			}
+		}
+		
+		# Personality Effects
+		modifier = {
+			factor = 5
+			trait = proud
+		}
+		modifier = {
+			factor = 0.2
+			trait = humble
+		}
+		modifier = {
+			factor = 5
+			trait = ambitious
+		}
+		modifier = {
+			factor = 0.2
+			trait = content
+		}
+		modifier = {
+			factor = 2
+			trait = cruel
+		}
+		modifier = {
+			factor = 0.5
+			trait = kind
+		}
+		modifier = {
+			factor = 1.25
+			trait = wroth
+		}
+		modifier = {
+			factor = 0.8
+			trait = patient
+		}
+		
+		# Negative Examples
+		modifier = {
+			factor = 10
+			OR = {
+				father_even_if_dead = {
+					OR = {
+						trait = kind
+						trait = just
+						trait = honorable
+						trait = charitable
+					}
+					OR = {
+						NOT = { prestige = 0 }
+						NOT = { wealth = 0 }
+					}
+				}
+				mother = {
+					OR = {
+						trait = kind
+						trait = just
+						trait = honorable
+						trait = charitable
+					}
+					OR = {
+						NOT = { prestige = 0 }
+						NOT = { wealth = 0 }
+					}
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.25"
+		guardian = { character_event = { id = misc_traits.26 tooltip = "EVTTOOLTIPmisc_traits.26" } }
+	}
+}
+
+character_event = {
+	id = misc_traits.26
+	desc = "EVTDESCmisc_traits.26"
+	picture = GFX_evt_child_bully
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAmisc_traits.26"
+		FROM = {
+			add_trait = ruthless
+			hidden_tooltip = { character_event = { id = misc_traits.27 } }
+		}
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 0
+				trait = honorable
+			}
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+			modifier = {
+				factor = 2
+				trait = proud
+			}
+			modifier = {
+				factor = 1.5
+				trait = cruel
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.26"
+		FROM = {
+			if = {
+				limit = { opinion = { who = ROOT value = 0 } }
+				random_list = {
+					20 = { 
+						add_trait = ruthless 
+						hidden_tooltip = {
+							ROOT = { 
+								character_event = {
+									id = 38312
+								}
+							} 
+							character_event = {
+								id = misc_traits.27
+							}
+						}
+					}
+					60 = { }
+					20 = { 
+						add_trait = honorable
+						hidden_tooltip = {
+							ROOT = { 
+								character_event = {
+									id = 38313
+								}
+							} 
+							character_event = {
+								id = misc_traits.31
+							}
+						}
+					}
+				}
+			}
+			if = {
+				limit = { NOT = { opinion = { who = ROOT value = 0 } } }
+				random_list = {
+					40 = { 
+						add_trait = ruthless 
+						hidden_tooltip = {
+							ROOT = { 
+								character_event = {
+									id = 38312
+								}
+							} 
+							character_event = {
+								id = misc_traits.27
+							}
+						}
+					}
+					60 = { }
+				}
+			}
+			#hidden_tooltip = { character_event = { id = misc_traits.28 } }
+		}
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 0
+				trait = ruthless
+			}
+			modifier = {
+				factor = 2
+				trait = kind
+			}
+			modifier = {
+				factor = 2
+				trait = just
+			}
+			modifier = {
+				factor = 2
+				trait = humble
+			}
+		}
+	}
+}
+
+character_event = {
+	id = misc_traits.27
+	desc = "EVTDESCmisc_traits.27"
+	picture = GFX_evt_child_bully
+	is_triggered_only = yes
+	
+	immediate = { remove_trait = ruthless }
+	
+	option = {
+		name = "EVTOPTAmisc_traits.27"
+		add_trait = ruthless
+	}
+}
+
+# character_event = {
+	# id = misc_traits.28
+	# desc = "EVTDESCmisc_traits.28"
+	# picture = GFX_evt_child_sword
+	# is_triggered_only = yes
+	
+	# immediate = {
+		# remove_trait = ruthless
+		# remove_trait = honorable
+	# }
+	
+	# option = {
+		# name = "EVTOPTAmisc_traits.28"
+		# if = {
+			# limit = { opinion = { who = FROM value = 0 } }
+			# random_list = {
+				# 20 = { add_trait = ruthless }
+				# 60 = { }
+				# 20 = { add_trait = honorable }
+			# }
+		# }
+		# if = {
+			# limit = { NOT = { opinion = { who = FROM value = 0 } } }
+			# random_list = {
+				# 40 = { add_trait = ruthless }
+				# 60 = { }
+			# }
+		# }
+	# }
+# }
+
+character_event = {
+	id = misc_traits.29
+	desc = "EVTDESCmisc_traits.29"
+	picture = GFX_evt_sword
+	is_triggered_only = yes
+	
+	min_age = 6
+	max_age = 16
+	
+	trigger = {
+		has_guardian = yes
+		NOT = { trait = ruthless }
+		NOT = { trait = honorable }
+		
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		# Role Model Effects
+		modifier = {
+			factor = 5
+			guardian = {
+				trait = honorable
+				reverse_opinion = { who = ROOT value = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.2
+			guardian = {
+				trait = ruthless
+				reverse_opinion = { who = ROOT value = 0 }
+			}
+		}
+		modifier = {
+			factor = 5
+			any_sibling = {
+				trait = honorable
+				age = 16
+			}
+		}
+		modifier = {
+			factor = 0.2
+			any_sibling = {
+				trait = ruthless
+				age = 16
+			}
+		}
+		
+		# Rebellion
+		modifier = {
+			factor = 0.2
+			guardian = {
+				trait = honorable
+				NOT = { reverse_opinion = { who = ROOT value = 0 } }
+			}
+		}
+		
+		# Personality Effects
+		modifier = {
+			factor = 5
+			trait = just
+		}
+		modifier = {
+			factor = 0.2
+			trait = arbitrary
+		}
+		modifier = {
+			factor = 5
+			trait = kind
+		}
+		modifier = {
+			factor = 0.2
+			trait = cruel
+		}
+		modifier = {
+			factor = 2
+			trait = honest
+		}
+		modifier = {
+			factor = 0.5
+			trait = deceitful
+		}
+		modifier = {
+			factor = 1.25
+			trait = content
+		}
+		modifier = {
+			factor = 0.8
+			trait = ambitious
+		}
+		modifier = {
+			factor = 1.25
+			trait = humble
+		}
+		modifier = {
+			factor = 0.8
+			trait = proud
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.29"
+		guardian = { character_event = { id = misc_traits.30 tooltip = "EVTTOOLTIPmisc_traits.30" } }
+	}
+}
+
+character_event = {
+	id = misc_traits.30
+	desc = "EVTDESCmisc_traits.30"
+	picture = GFX_evt_child_sword
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		NOT = { character = FROM }
+		age = 16
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.30"
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 0
+				trait = ruthless
+			}
+			modifier = {
+				factor = 2
+				trait = kind
+			}
+			modifier = {
+				factor = 2
+				trait = just
+			}
+			modifier = {
+				factor = 2
+				trait = humble
+			}
+		}
+		FROM = {
+			add_trait = honorable
+			hidden_tooltip = { character_event = { id = misc_traits.31 } }
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.30"
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 0
+				trait = honorable
+			}
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+			modifier = {
+				factor = 2
+				trait = proud
+			}
+			modifier = {
+				factor = 1.5
+				trait = cruel
+			}
+		}
+		FROM = {
+			if = {
+				limit = { opinion = { who = ROOT value = 0 } }
+				random_list = {
+					20 = { 
+						add_trait = honorable
+						hidden_tooltip = {
+							ROOT = { 
+								character_event = {
+									id = 38313
+								}
+							} 
+							character_event = {
+								id = misc_traits.31
+							}
+						}
+					}
+					60 = { }
+					20 = { 
+						add_trait = ruthless 
+						hidden_tooltip = {
+							ROOT = { 
+								character_event = {
+									id = 38312
+								}
+							} 
+							character_event = {
+								id = misc_traits.27
+							}
+						}
+					}
+				}
+			}
+			if = {
+				limit = { NOT = { opinion = { who = ROOT value = 0 } } }
+				random_list = {
+					40 = { 
+						add_trait = honorable
+						hidden_tooltip = {
+							ROOT = { 
+								character_event = {
+									id = 38313
+								}
+							} 
+							character_event = {
+								id = misc_traits.31
+							}
+						}
+					}
+					60 = { }
+				}
+			}
+			hidden_tooltip = { character_event = { id = misc_traits.32 } }
+		}
+	}
+}
+
+ character_event = {
+	 id = misc_traits.31
+	 desc = "EVTDESCmisc_traits.31"
+	 picture = GFX_evt_child_bully
+	 is_triggered_only = yes
+	
+	 option = {
+		 name = "EVTOPTAmisc_traits.31"
+		 add_trait = honorable
+	 }
+}
+
+ character_event = {
+	 id = misc_traits.32
+	 desc = "EVTDESCmisc_traits.32"
+	 picture = GFX_evt_child_sword
+	 is_triggered_only = yes
+	
+	 immediate = {
+		 remove_trait = ruthless
+		 remove_trait = honorable
+	}
+	
+	 option = {
+		 name = "EVTOPTAmisc_traits.32"
+		 if = {
+			 limit = { opinion = { who = FROM value = 0 } }
+			 random_list = {
+				 20 = { add_trait = ruthless }
+				 60 = { }
+				 20 = { add_trait = honorable }
+			 }
+		 }
+		 if = {
+			 limit = { NOT = { opinion = { who = FROM value = 0 } } }
+			 random_list = {
+				 40 = { add_trait = ruthless }
+				 60 = { }
+			 }
+		 }
+	 }
+ }
+
+#misc_traits.33 - People are mocking the way you dress. (Fashionable)
+character_event = {
+	id = misc_traits.33
+	desc = "EVTDESCmisc_traits.33" #You hear rumours, that people are mocking the way you dress...
+	picture = "GFX_fashion"
+	
+	min_age = 16
+	prisoner = no
+	only_men = yes
+	capable_only = yes
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		trait = fashion
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 2
+			OR = {
+				trait = ugly
+				trait = stutter
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = fair
+				trait = kind
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.33" #You shrug it off.
+		random_list = {
+			25 = {
+				if = {
+					limit = {
+						NOT = { trait = brave }
+						NOT = { trait = craven }
+					}	
+					add_trait=brave
+					hidden_tooltip = {
+						character_event = {
+							id = 38270 #Notify Brave
+						}
+					}
+				}	
+			}
+			50 = {
+				if = {
+					limit = {
+						NOT = { trait = cynical }
+						NOT = { trait = zealous }
+					}	
+					add_trait=cynical
+					hidden_tooltip = {
+						character_event = {
+							id = 38258 #Notify cynical
+						}
+					}
+				}
+			}
+			25 = {
+				if = {
+					limit = {
+						NOT = { trait = rude }
+						NOT = { trait = kind }
+					}	
+					add_trait=rude
+					hidden_tooltip = {
+						character_event = {
+							id = misc_traits.11
+						}
+					}
+				}
+			}
+		}
+		random_courtier = {
+			limit = {
+				age = 16
+				is_female = no
+			}
+			opinion = {
+				modifier = opinion_disapprove
+				who = ROOT
+				years = 5
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.33" #You Chnage the way you dress.
+		if = {
+			limit = {
+				NOT = { trait = gregarious }
+				NOT = { trait = shy }
+			}	
+			random = {
+				chance = 40
+				add_trait=gregarious
+				hidden_tooltip = {
+					character_event = {
+						id = 38265
+					}
+				}
+			}	
+		}
+		random = {
+			chance = 40
+			remove_trait = fashion
+			hidden_tooltip = {
+				character_event = {
+					id = misc_traits.4
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTCmisc_traits.33" #Confront the rumours	
+		trigger = {
+			OR = {
+				trait = brave
+				trait = duelist
+				trait = gregarious
+			}
+		}	
+		prestige = 10
+		random_courtier = {
+			limit = {
+				age = 16
+				is_female = no
+			}
+			opinion = {
+				modifier = opinion_disapprove
+				who = ROOT
+				years = 5
+			}
+		}
+	}
+}
+
+#misc_traits.34 - Marhsal has new ideas, that contradicts your orders. (Authoritative)
+character_event = {
+	id = misc_traits.34
+	desc = "EVTDESCmisc_traits.34" #Your marshall has new ideas that contradict previous orders.
+	picture = "GFX_authoritative"
+	
+	min_age = 16
+	prisoner = no
+	capable_only = yes
+	only_rulers = yes
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		trait = authoritative
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		#Pro
+		modifier = {
+			factor = 2
+			OR = {
+				trait = slow
+				trait = imbecile
+			}
+		}
+	
+		#Con
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = genius
+				trait = quick
+			}
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAmisc_traits.34" #How dares he!
+		prestige = 20
+		random_list = {
+			40 = {add_trait="stubborn"}
+			40 = {add_trait="wroth"}
+			20 = {}
+		}
+		job_marshal = {
+			opinion = {
+				modifier = opinion_disapprove
+				who = ROOT
+				years = 5
+			}
+			reverse_opinion = {
+				modifier = refused_money_request
+				who = ROOT
+				years = 5
+			}		
+		}
+	}
+	
+	option = {
+		name = "EVTOPTBmisc_traits.34" #You adopt them.
+		
+		trigger = {
+			NOT = { trait = wroth }
+		}
+		
+		prestige=-20
+		job_marshal = {
+			opinion = {
+				modifier = opinion_approves
+				who = ROOT
+				years = 5
+			}
+		}
+		
+		
+		random_list = {
+			60 = { remove_trait = authoritative }
+			40 = {}
+		}
+		random_list = {
+			40 = {add_trait="arbitrary"}
+			40 = {add_trait="patient"}
+			40 = {add_trait="diligent"}
+			20 = {}
+		}
+	}
+	
+}

@@ -1,0 +1,184 @@
+namespace = lirepublic
+##Lux Invicta Elections and other shenanigans
+# Credits to Atdoan and Galle for their inspiration and help
+
+character_event = {
+   id = lirepublic.100
+   desc = "This does nothing"
+   is_triggered_only = yes
+   trigger = {
+      always = no
+   }
+
+   option = {
+      name = OK
+   }
+}
+
+
+# Add election timer
+character_event = {
+	id = lirepublic.120
+	hide_window = yes
+	
+	only_rulers = yes
+	
+	trigger = {
+		any_demesne_title = {
+			OR = {
+				has_law = term_length_0
+				has_law = term_length_1
+				has_law = term_length_2
+				has_law = term_length_3
+			}
+		}
+		NOT = { has_character_flag = flag_term_limit_timer }
+	}
+	
+	immediate = { set_character_flag = flag_term_limit_timer }
+}
+
+# Remove election timer
+character_event = {
+	id = lirepublic.121
+	hide_window = yes
+	
+	trigger = {
+		NOT = {
+			any_demesne_title = {
+				OR = {
+					has_law = term_length_0
+					has_law = term_length_1
+					has_law = term_length_2
+					has_law = term_length_3
+				}
+			}
+		}
+		has_character_flag = flag_term_limit_timer
+	}
+	
+	immediate = { clr_character_flag = flag_term_limit_timer }
+}
+
+# Election triggered by term limit expiring
+character_event = {
+	id = lirepublic.122
+	desc = "EVTDESCLAWS122"
+	
+	trigger = {
+	NOT = { has_character_modifier = dictator }
+		OR = { # dont comment these ORs, they're to be used later in development
+			AND = {
+				had_character_flag = { flag = flag_term_limit_timer days = 365 }
+				primary_title = {
+					OR = {
+						has_law = term_length_0
+					}
+				}
+			}
+			AND = {
+				had_character_flag = { flag = flag_term_limit_timer days = 1460 }
+				primary_title = {
+					OR = {
+						has_law = term_length_1
+					}
+				}
+			}
+			AND = {
+				had_character_flag = { flag = flag_term_limit_timer days = 2920 }
+				primary_title = {
+					OR = {
+						has_law = term_length_2
+					}
+				}
+			}
+			AND = {
+				had_character_flag = { flag = flag_term_limit_timer days = 3650 }
+				primary_title = {
+					OR = {
+						has_law = term_length_3
+					}
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		if = {
+			limit = { has_character_flag = flag_term_limit_timer }
+			clr_character_flag = flag_term_limit_timer
+			set_character_flag = flag_term_limit_timer
+		}
+	}
+	
+	option = {
+		name = "EVTOPTALAWS122" # Abdicate/Hold vanilla election if merchant republic. To be replaced by full blown election mechanics for both feudals and non feudals later.
+		if = {
+			limit = { is_merchant_republic = no } 
+			abdicate = yes
+		}	
+		if = {
+			limit = { is_merchant_republic = yes }
+			hold_election = yes
+		}
+		ai_chance = { factor = 100 }
+	}
+	
+	option = { 
+		trigger = { 
+			primary_title = { 
+				OR = {
+					higher_tier_than = BARON 
+					mercenary = no
+					holy_order = no
+					is_theocracy = no
+				}
+			} 
+		}
+		name = "EVTOPTBLAWS122" # Refuse and suffer consequences. At the moment just the everyone-hates-you modifier, but eventually I'll make this into a possible rebellion against the "dictator".
+		# Add dictator modifier
+		add_character_modifier = { name = dictator duration = -1 }
+		
+		hidden_tooltip = {
+			any_realm_character = {
+				limit = { liege = { character = ROOT } }
+				character_event = { id = lirepublic.123 } # Inform vassals
+			}
+		}
+		ai_chance = {
+			factor = 100
+			
+			modifier = {
+				factor = 4
+				trait = ambitious
+			}
+			modifier = {
+				factor = 0.25
+				trait = content
+			}
+			modifier = {
+				factor = 2
+				trait = proud
+			}
+			modifier = {
+				factor = 0.5
+				trait = humble
+			}
+			
+			modifier = {
+				factor = 0.1
+				war = yes
+				NOT = { trait = lunatic }
+				NOT = { trait = imbecile }
+			}
+		}
+	}
+}
+
+character_event = {
+	id = lirepublic.123
+	desc = "EVTDESCLAWS123"
+	is_triggered_only = yes
+	
+	option = { name = "EVTOPTOUT" }
+}

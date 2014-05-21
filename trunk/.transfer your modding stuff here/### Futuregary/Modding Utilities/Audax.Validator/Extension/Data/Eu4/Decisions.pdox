@@ -1,0 +1,49 @@
+(Validator Decisions) = {
+	Type = Default
+	FriendlyName = "Decisions"
+	(FileGroup "decisions" "*.txt")
+	ValidatorName = DecisionFile
+}
+
+(Type DecisionFile) = {
+	Optional = { Left = "country_decisions" Right = CountryDecisionGroup }
+	Optional = { Left = "religion_decisions" Right = CountryDecisionGroup }
+	
+}
+
+(Type CountryDecisionGroup) = {
+	(Ch N N) = {
+		Left = { Type = String }
+		Right = CountryDecisionDef
+		(UniqueId IfNot = Decisions.NoCheckUniqueKey) = Left
+		(CheckKey "*_title" Left IfNot = NoCheckKey)
+		(CheckKey "*_desc" Left IfNot = NoCheckKey)
+	}
+}
+
+(Type CountryDecisionDef) = {
+	Optional = { Left = "major" Right = Bool }
+	Optional = { Left = "potential" Right = CountryTrigger }
+	Optional = { Left = "allow" Right = CountryTrigger }
+	Single = { Left = "effect" Right = CountryCommand }
+	Optional = { Left = "ai_importance" Right = Int }
+	Optional = { Left = "ai_will_do" Right = AiWillDo }
+	
+}
+
+(Type AiWillDo) = {
+	Optional = { Left = "factor" Right = NnDbl }
+	(Ch N Y) = { Left = "modifier" Right = Modifier }
+}
+
+(Type Modifier) = {
+	Inherits = FactorModifier
+	Optional = { Left = "factor" Right = NnDbl }
+	
+	Inherits = CountryTrigger
+	
+}
+
+
+
+

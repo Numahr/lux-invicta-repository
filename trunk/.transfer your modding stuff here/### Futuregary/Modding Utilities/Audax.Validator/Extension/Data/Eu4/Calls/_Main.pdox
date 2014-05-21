@@ -1,0 +1,222 @@
+# FromStatus[None | Country | Province]
+# Call[FromStatus; Location pointer; int id]
+
+Includes = {
+	Control
+	Misc
+	Religion
+	Scopes
+	Status
+	Territory
+}
+
+ContextValidatorInfo = {
+	AllowThis = False # True by default
+	AllowRoot = True # False by default; when enabled allows ROOT as a synonym for THIS
+	AllowPrev = True # False by default; when enabled allows arbitary chaining of PREV
+	EnableNamespaces = True
+
+	IdSearch = {
+		(FileGroup "events" "*.txt") = {
+			Province = "province_event\id"
+			Country = "country_event\id"
+		}
+		
+		EventTypes = { Country Province }
+	}
+	
+	CallSearch = {
+		(FileGroup "events" "*.txt") = {
+			Province = { SearchRoot = "province_event\option" Type = Event Id = "^\id\[R]" }
+			Country = { SearchRoot = "country_event\option" Type = Event Id = "^\id\[R]" }
+			Province = { SearchRoot = "province_event\immediate" Type = Event Id = "^\id\[R]" }
+			Country = { SearchRoot = "country_event\immediate" Type = Event Id = "^\id\[R]" }
+			
+			SearchMethod = 2
+		}
+		
+		(FileGroup "decisions" "*.txt") = {
+			Country = "country_decisions\*\effect"
+			Country = "religion_decisions\*\effect"
+			
+			SearchMethod = 2
+		}
+		
+		(FileGroup "missions"  "*.txt") = {
+			Country = "*\effect"
+			Country = "*\immediate"
+			Country = "*\abort_effect"
+			
+			SearchMethod = 2
+		}
+		
+		(FileGroup "common\rebel_types" "*.txt") = {
+			#None = "*\siege_won_effect"
+			#None = "*\demands_accepted_effect"
+			#None = "*\demands_enforced_effect"
+		}
+		
+		(FileGroup "common\hre_reforms" "*.txt") = {
+			None = "*\effect"
+			None = "*\on_effect"
+			None = "*\off_effect"
+			
+			SearchMethod = 2
+		}
+		
+		(FileGroup "tutorial" "*.txt") = {
+			None = "tutorial\page\effect"
+			
+			SearchMethod = 2
+		}
+		
+		(FileGroup "common\on_actions" "*.txt") = {
+			Char = { SearchRoot = "on_battle_lost_leader\*" Type = OnAction Id = "^\[L]" FromScope = Char }
+
+			Country = { SearchRoot = "on_battle_won_country\*" Type = OnAction Id = "^\[L]" }
+			Country = { SearchRoot = "on_battle_lost_country\*" Type = OnAction Id = "^\[L]" }
+			Country = { SearchRoot = "on_battle_won_province\*" Type = OnAction Id = "^\[L]" }
+			Country = { SearchRoot = "on_battle_lost_province\*" Type = OnAction Id = "^\[L]" }
+			Province = { SearchRoot = "on_siege_won_country\*" Type = OnAction Id = "^\[L]" }
+			Province = { SearchRoot = "on_siege_lost_country\*" Type = OnAction Id = "^\[L]" }
+			Country = { SearchRoot = "on_siege_won_province\*" Type = OnAction Id = "^\[L]" }
+			Country = { SearchRoot = "on_siege_lost_province\*" Type = OnAction Id = "^\[L]" }
+			Country = { SearchRoot = "on_annexed\*" Type = OnAction Id = "^\[L]" }
+			Country = { SearchRoot = "on_colonial_reintegration\*" Type = OnAction Id = "^\[L]" }
+			None = "*\*"
+			
+			SearchMethod = 3
+		}
+		
+		Search = {
+			province_event
+			country_event
+		}
+	}
+}
+
+(ContextValidator Country) = { }
+(ContextValidator Province) = { }
+
+(ContextValidator Trigger) = {
+	Abstract = True
+	
+	Set = {
+		CountryTrigger = CountryTrigger
+		ProvinceTrigger = ProvinceTrigger
+		
+		Country = Country
+		Province = Province
+	}
+}
+
+Global = {
+(Type ProvinceTrigger) = {
+	ContextValidator = ProvinceTrigger
+}
+}
+
+(ContextValidator ProvinceTrigger) = {
+	Inherits = Trigger
+	
+	ThisTarget = ProvinceTrigger
+	Conditional = ProvinceTrigger
+}
+
+Global = {
+(Type CountryTrigger) = {
+	ContextValidator = CountryTrigger
+}
+}
+
+(ContextValidator CountryTrigger) = {
+	Inherits = Trigger
+	ThisTarget = CountryTrigger
+	Conditional = CountryTrigger
+}
+
+(ContextValidator Command) = {
+	Abstract = True
+	
+	Set = {
+		CountryCommand = CountryCommand
+		ProvinceCommand = ProvinceCommand
+		CountryTrigger = CountryTrigger
+		ProvinceTrigger = ProvinceTrigger
+		
+		Country = Country
+		Province = Province
+	}
+}
+
+Global = {
+(Type ProvinceCommand) = {
+	ContextValidator = ProvinceCommand
+}
+}
+
+(ContextValidator ProvinceCommand) = {
+	Inherits = Command
+	
+	ThisTarget = ProvinceCommand
+}
+
+Global = {
+(Type CountryCommand) = {
+	ContextValidator = CountryCommand
+}
+}
+
+(ContextValidator CountryCommand) = {
+	Inherits = Command
+	ThisTarget = CountryCommand
+}
+
+Global = {
+(Type.Enum Owner) = { Values = { "owner" } }
+(Type.Enum Controller) = { Values = { "controller" } }
+(Type.Enum Capital) = { Values = { ("capitol" If = Debug) "capital" } }
+(Type.Enum Emperor) = { Values = { "emperor" } }
+(Type.Enum Xxx) = { Values = { "xxx" } }
+(Type.Enum Heretic) = { Values = { "heretic" } }
+(Type.Enum Random) = { Values = { "random" } }
+(Type.Enum Yes) = { Values = { "yes" } }
+}
+
+
+		# ([Left Uniqueness] [Right Uniqueness])
+		# N = never has to be unique
+		# A = has to be unique only in an And clause
+		# 		Only valid in conditionals
+		#		Hence, can have duplicates in Or, Not clauses
+		# Y = always has to be unique
+		# Right can be left out only if left is Y - always must be unique
+		# Hence, it is implied that Right is also Y.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

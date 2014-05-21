@@ -1,0 +1,716 @@
+decisions = {
+	#Show loan decisions
+	toggle_loan_decisions = {
+		potential = {	
+			ai = no
+			is_ruler = yes
+			NOT = { has_landed_title = e_mexikha }
+			#OR = {
+				prisoner = no
+				#has_character_flag = loan_decisions
+			#}
+			#OR = {
+			#	higher_tier_than = baron
+			#	is_patrician = yes
+			#}
+			#NOT = { has_character_flag = offended_moneylenders }
+			#NOT = { has_character_flag = loan_taken }
+			#NOT = { has_character_modifier = loan_timer }
+		}
+		allow = { 
+		#has_character_flag = loan_decisions
+		}
+		effect = {
+			if = {
+				limit = {
+					NOT = { has_character_flag = loan_decisions }
+				}
+				hidden_tooltip = {
+					set_character_flag = loan_decisions
+					set_character_flag = loan_decisions_temp
+				}
+			}
+			if = {
+				limit = {
+					has_character_flag = loan_decisions
+					NOT = { has_character_flag = loan_decisions_temp }
+				}
+				hidden_tooltip = {
+					clr_character_flag = loan_decisions
+				}
+			}
+			clr_character_flag = loan_decisions_temp
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	#Small loan - 100
+	take_small_loan = {
+		potential = {
+			is_ruler = yes
+			prisoner = no
+			primary_title = {
+				OR = {
+					# no popes/patriarchs: other rel. heads OK
+					is_landless_type_title = no
+					is_tribal_type_title = yes
+				}
+				NOT = {
+					temporary = yes # claimant adventurers
+					holy_order = yes
+					mercenary = yes
+					rebel = yes
+				}
+			}
+			NOT = { has_character_modifier = small_loan }
+			has_character_flag = loan_decisions
+			#OR = {
+				#religion_group = christian
+				#religion_group = muslim
+				#religion_group = zoroastrian_group
+				#religion_group = jewish_group
+			#}
+		}
+		allow = {
+			NOT = { 
+				#has_character_modifier = expelled_jewish
+				#top_liege = { #has_character_modifier = expelled_jewish }
+			}
+			yearly_income = 10
+		}
+		effect = {
+			add_character_modifier = {
+				name = small_loan
+				duration = -1
+				inherit = yes
+			}
+			wealth = 100
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				wealth = 0
+			}
+			modifier = {
+				factor = 10 # if at war personally, loan option is forced to AI attention ca. 10x/year
+				war = yes
+			}
+			modifier = {
+				factor = 0  # 75% monthly chance randomizer that AI will take loan if it's in the red
+				random = 75 # in any given month (and would otherwise take it). slight slow-down.
+			}
+		}
+	}
+	#Medium loan - 200
+	take_medium_loan = {
+		potential = {
+			is_ruler = yes
+			prisoner = no
+			primary_title = {
+				OR = {
+					# no popes/patriarchs: other rel. heads OK
+					is_landless_type_title = no
+					is_tribal_type_title = yes
+				}
+				NOT = {
+					temporary = yes # claimant adventurers
+					holy_order = yes
+					mercenary = yes
+					rebel = yes
+				}
+			}
+			NOT = { has_character_modifier = medium_loan }
+			has_character_flag = loan_decisions
+			#OR = {
+				#religion_group = christian
+				#religion_group = muslim
+				#religion_group = zoroastrian_group
+				#religion_group = jewish_group
+			#}
+		}
+		allow = {
+			NOT = { 
+				#has_character_modifier = expelled_jewish
+				#top_liege = { #has_character_modifier = expelled_jewish }
+			}
+			OR = {
+				higher_tier_than = count
+				is_patrician = yes
+			}
+			yearly_income = 20
+		}
+		effect = {
+			add_character_modifier = {
+				name = medium_loan
+				duration = -1
+				inherit = yes
+			}
+			wealth = 200
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				wealth = 0
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_character_modifier = small_loan }
+			}
+			modifier = {
+				factor = 10 # if at war personally, loan option is forced to AI attention ca. 10x/year
+				war = yes
+			}
+			modifier = {
+				factor = 0  # 75% monthly chance randomizer that AI will take loan if it's in the red
+				random = 75 # in any given month (and would otherwise take it). slight slow-down.
+			}
+		}
+	}
+	#Large loan - 400
+	take_large_loan = {
+		potential = {
+			is_ruler = yes
+			prisoner = no
+			primary_title = {
+				OR = {
+					# no popes/patriarchs: other rel. heads OK
+					is_landless_type_title = no
+					is_tribal_type_title = yes
+				}
+				NOT = {
+					temporary = yes # claimant adventurers
+					holy_order = yes
+					mercenary = yes
+					rebel = yes
+				}
+			}
+			NOT = { has_character_modifier = large_loan }
+			has_character_flag = loan_decisions
+			#OR = {
+				#religion_group = christian
+				#religion_group = muslim
+				#religion_group = zoroastrian_group
+				#religion_group = jewish_group
+			#}
+		}
+		allow = {
+			NOT = { 
+				#has_character_modifier = expelled_jewish
+				#top_liege = { #has_character_modifier = expelled_jewish }
+			}
+			OR = {
+				higher_tier_than = duke
+				is_merchant_republic = yes
+			}
+			yearly_income = 40
+		}
+		effect = {
+			add_character_modifier = {
+				name = large_loan
+				duration = -1
+				inherit = yes
+			}
+			wealth = 400
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				wealth = 0
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_character_modifier = small_loan }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_character_modifier = medium_loan }
+			}
+			modifier = {
+				factor = 10 # if at war personally, loan option is forced to AI attention ca. 10x/year
+				war = yes
+			}
+			modifier = {
+				factor = 0  # 75% monthly chance randomizer that AI will take loan if it's in the red
+				random = 75 # in any given month (and would otherwise take it). slight slow-down.
+			}
+		}
+	}
+	#Huge loan - 800
+	take_huge_loan = {
+		potential = {
+			is_ruler = yes
+			prisoner = no
+			primary_title = {
+				OR = {
+					# no popes/patriarchs: other rel. heads OK
+					is_landless_type_title = no
+					is_tribal_type_title = yes
+				}
+				NOT = {
+					temporary = yes # claimant adventurers
+					holy_order = yes
+					mercenary = yes
+					rebel = yes
+				}
+			}
+			NOT = { has_character_modifier = huge_loan }
+			has_character_flag = loan_decisions
+			#OR = {
+				#religion_group = christian
+				#religion_group = muslim
+				#religion_group = zoroastrian_group
+				#religion_group = jewish_group
+			#}
+		}
+		allow = {
+			NOT = { 
+				#has_character_modifier = expelled_jewish
+				#top_liege = { #has_character_modifier = expelled_jewish }
+			}
+			higher_tier_than = duke
+			yearly_income = 80
+		}
+		effect = {
+			add_character_modifier = {
+				name = huge_loan
+				duration = -1
+				inherit = yes
+			}
+			wealth = 800
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				wealth = 0
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_character_modifier = small_loan }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_character_modifier = medium_loan }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_character_modifier = large_loan }
+			}
+			modifier = {
+				factor = 10 # if at war personally, loan option is forced to AI attention ca. 10x/year
+				war = yes
+			}
+			modifier = {
+				factor = 0  # 75% monthly chance randomizer that AI will take loan if it's in the red
+				random = 75 # in any given month (and would otherwise take it). slight slow-down.
+			}
+		}
+	}
+	#Repay small loan - 100
+	repay_small_loan = {
+		potential = {
+			OR = {
+				has_character_modifier = small_loan
+				has_character_modifier = medium_loan
+			}
+		}
+		allow = {
+			wealth = 110
+		}
+		effect = {
+			if = {
+				limit = { has_character_modifier = small_loan }
+				set_character_flag = temp_loan
+				remove_character_modifier = small_loan
+			}
+			if = {
+				limit = {
+					NOT = { has_character_flag = temp_loan }
+					NOT = { has_character_modifier = small_loan }
+					has_character_modifier = medium_loan
+				}
+				remove_character_modifier = medium_loan
+				add_character_modifier = {
+					name = small_loan
+					duration = -1
+					inherit = yes
+				}
+			}
+			clr_character_flag = temp_loan
+			wealth = -100
+			if = {
+				limit = { NOT = { stewardship = 5 } }
+				wealth = -10
+			}
+			if = {
+				limit = {
+					stewardship = 5
+					NOT = { stewardship = 10 }
+				}
+				wealth = -9
+			}
+			if = {
+				limit = {
+					stewardship = 10
+					NOT = { stewardship = 15 }
+				}
+				wealth = -8
+			}
+			if = {
+				limit = { stewardship = 15 }
+				wealth = -7
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { wealth = 150 }
+			}
+			modifier = {
+				factor = 0.5 # slow it down, ca. once every 2 years
+			}
+			modifier = {
+				factor = 0.2 # slow it to a crawl during war, ca. once every 10 years
+				OR = {
+					war = yes
+					any_liege = {
+						war = yes
+						has_raised_levies = ROOT
+					}
+				}
+			}
+		}
+	}
+	#Repay medium loan - 200
+	repay_medium_loan = {
+		potential = {
+			OR = {
+				has_character_modifier = medium_loan
+				has_character_modifier = large_loan
+			}
+		}
+		allow = {
+			wealth = 220
+		}
+		effect = {
+			if = {
+				limit = { has_character_modifier = medium_loan }
+				set_character_flag = temp_loan
+				remove_character_modifier = medium_loan
+			}
+			if = {
+				limit = {
+					NOT = { has_character_flag = temp_loan }
+					NOT = { has_character_modifier = medium_loan }
+					has_character_modifier = large_loan
+				}
+				remove_character_modifier = large_loan
+				add_character_modifier = {
+					name = medium_loan
+					duration = -1
+					inherit = yes
+				}
+			}
+			clr_character_flag = temp_loan
+			wealth = -200
+			if = {
+				limit = { NOT = { stewardship = 5 } }
+				wealth = -20
+			}
+			if = {
+				limit = {
+					stewardship = 5
+					NOT = { stewardship = 10 }
+				}
+				wealth = -18
+			}
+			if = {
+				limit = {
+					stewardship = 10
+					NOT = { stewardship = 15 }
+				}
+				wealth = -16
+			}
+			if = {
+				limit = { stewardship = 15 }
+				wealth = -14
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { wealth = 300 }
+			}
+			modifier = {
+				factor = 0.5 # slow it down, ca. once every 2 years
+			}
+			modifier = {
+				factor = 0.2 # slow it to a crawl during war, ca. once every 10 years
+				OR = {
+					war = yes
+					any_liege = {
+						war = yes
+						has_raised_levies = ROOT
+					}
+				}
+			}
+		}
+	}
+	#Repay large loan - 400
+	repay_large_loan = {
+		potential = {
+			OR = {
+				has_character_modifier = large_loan
+				has_character_modifier = huge_loan
+			}
+		}
+		allow = {
+			wealth = 440
+		}
+		effect = {
+			if = {
+				limit = { has_character_modifier = large_loan }
+				set_character_flag = temp_loan
+				remove_character_modifier = large_loan
+			}
+			if = {
+				limit = {
+					NOT = { has_character_flag = temp_loan }
+					NOT = { has_character_modifier = large_loan }
+					has_character_modifier = huge_loan
+				}
+				remove_character_modifier = huge_loan
+				add_character_modifier = {
+					name = large_loan
+					duration = -1
+					inherit = yes
+				}
+			}
+			clr_character_flag = temp_loan
+			wealth = -400
+			if = {
+				limit = { NOT = { stewardship = 5 } }
+				wealth = -40
+			}
+			if = {
+				limit = {
+					stewardship = 5
+					NOT = { stewardship = 10 }
+				}
+				wealth = -36
+			}
+			if = {
+				limit = {
+					stewardship = 10
+					NOT = { stewardship = 15 }
+				}
+				wealth = -32
+			}
+			if = {
+				limit = { stewardship = 15 }
+				wealth = -28
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { wealth = 550 }
+			}
+			modifier = {
+				factor = 0.5 # slow it down, ca. once every 2 years
+			}
+			modifier = {
+				factor = 0.2 # slow it to a crawl during war, ca. once every 10 years
+				OR = {
+					war = yes
+					any_liege = {
+						war = yes
+						has_raised_levies = ROOT
+					}
+				}
+			}
+		}
+	}
+	#Repay huge loan - 800
+	repay_huge_loan = {
+		potential = {
+			has_character_modifier = huge_loan
+		}
+		allow = {
+			wealth = 880
+		}
+		effect = {			
+			remove_character_modifier = huge_loan
+			wealth = -800
+			if = {
+				limit = { NOT = { stewardship = 5 } }
+				wealth = -80
+			}
+			if = {
+				limit = {
+					stewardship = 5
+					NOT = { stewardship = 10 }
+				}
+				wealth = -72
+			}
+			if = {
+				limit = {
+					stewardship = 10
+					NOT = { stewardship = 15 }
+				}
+				wealth = -64
+			}
+			if = {
+				limit = { stewardship = 15 }
+				wealth = -56
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { wealth = 1000 }
+			}
+			modifier = {
+				factor = 0.5 # slow it down, ca. once every 2 years
+			}
+			modifier = {
+				factor = 0.2 # slow it to a crawl during war, ca. once every 10 years
+				OR = {
+					war = yes
+					any_liege = {
+						war = yes
+						has_raised_levies = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	
+	ai_take_loan = {
+		potential = {
+			ai = yes
+			is_ruler = yes
+			NOT = { has_landed_title = e_mexikha }
+			OR = { higher_tier_than = baron is_patrician = yes }
+			NOT = { check_variable = { which = "loan_amount" value = 49.5 } }
+			difficulty = 2 #ai won't take loans on low difficulties
+		}
+		allow = { 
+			OR = {	
+				AND = {
+					prisoner = yes
+					host = {
+						war = no 
+						NOT = { is_liege_of = ROOT } 
+					}
+				}
+				war = yes
+				NOT = { wealth = 0 }
+			}
+		}
+		effect = {
+			#50g loan
+			if = {
+				limit = {
+					NOT = { monthly_income = 2.5 }
+				}
+				wealth = 50
+				set_variable = { which = "loan_amount" value = 50 }
+			}
+			#100g loan
+			if = {
+				limit = {
+					monthly_income = 2.5
+					NOT = { monthly_income = 5 }
+				}
+				wealth = 100
+				set_variable = { which = "loan_amount" value = 100 }			
+			}
+			#200g loan
+			if = {
+				limit = {
+					monthly_income = 5
+					NOT = { monthly_income = 10 } 	
+				}
+				wealth = 200
+				set_variable = { which = "loan_amount" value = 200 }				
+			}
+			#400g loan
+			if = {
+				limit = {
+					monthly_income = 10
+					NOT = { monthly_income = 15 } 
+				}
+				wealth = 400
+				set_variable = { which = "loan_amount" value = 400 }			
+			}
+			#600g loan
+			if = {
+				limit = {
+					monthly_income = 15
+					NOT = { monthly_income = 20 }
+				}
+				wealth = 600
+				set_variable = { which = "loan_amount" value = 600 }			
+			}
+			#800g loan
+			if = {
+				limit = {
+					monthly_income = 20
+					NOT = { monthly_income = 25 }
+				}
+				wealth = 800
+				set_variable = { which = "loan_amount" value = 800 }				
+			}			
+			#1000g loan
+			if = {
+				limit = {
+					monthly_income = 25 	
+				}
+				wealth = 1000
+				set_variable = { which = "loan_amount" value = 1000 }				
+			}
+			add_character_modifier = { name = "loan_timer" duration = -1 }
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1			
+		}
+	}
+	ai_repay_loan = {
+		potential = {
+			ai = yes
+			is_ruler = yes
+			prisoner = no
+			war = no
+			OR = { higher_tier_than = baron is_patrician = yes }
+			check_variable = { which = "loan_amount" value = 49.5 }
+		}
+		allow = { 
+			wealth = 50
+		}
+		effect = {
+			wealth = -50
+			change_variable = { which = "loan_amount" value = -50 }
+			if = {
+				limit = { NOT = { check_variable = { which = "loan_amount" value = 49.5 } } }
+				remove_character_modifier = loan_timer
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	}

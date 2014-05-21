@@ -1,0 +1,111 @@
+(Validator RebelTypes) = {
+	Type = Default
+	FriendlyName = "Rebel types"
+	(FileGroup "common\rebel_types" "*.txt")
+	ValidatorName = RebelTypeFile
+}
+
+(Type RebelTypeFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = RebelTypeDef }
+}
+
+(Type RebelTypeDef) = {
+	(CheckKey "*_demand" Left IfNot = NoCheckKey)
+	(CheckKey "*_demand_desc" Left IfNot = NoCheckKey)
+	(CheckKey "*_title" Left IfNot = NoCheckKey)
+	(CheckKey "*_name" Left IfNot = NoCheckKey)
+	(CheckKey "*_desc" Left IfNot = NoCheckKey)
+	(CheckKey "*_army" Left IfNot = NoCheckKey)
+	
+	Single = { Left = "area" Right = { (Type.Enum RebelArea) = { Values = { nation culture nation_culture nation_religion religion all } } } }
+	Single = { Left = "government" Right = { (Type.Enum RebelGovernment) = { Values = { monarchy republic theocracy anti any } } } }
+	Single = { Left = "defection" Right = { (Type.Enum RebelDefection) = { Values = { culture culture_group religion any none } } } }
+	Single = { Left = "independence" Right = { (Type.Enum RebelIndependence) = { Values = { culture culture_group religion colonial any none } } } }
+	Single = { Left = "gfx_type" Right = { (Type.Enum RebelIndependence) = { Values = { culture_province culture_owner } } } }
+	Optional = { Left = "defect_delay" Right = Int }
+	Single = { Left = "unit_transfer" Right = Bool }
+	Optional = { Left = "religion" Right = Religion }
+	
+	Optional = { Left = "resilient" Right = Bool }
+	Optional = { Left = "reinforcing" Right = Bool }
+	Optional = { Left = "general" Right = Bool }
+	Optional = { Left = "smart" Right = Bool }
+	Optional = { Left = "unit_transfer" Right = Bool }
+	Optional = { Left = "disband_on_leader_death" Right = Bool }
+	
+	Optional = { Left = "artillery" Right = Double }
+	Optional = { Left = "infantry" Right = Double }
+	Optional = { Left = "cavalry" Right = Double }
+	Optional = { Left = "morale" Right = Double }
+	
+	Optional = { Left = "handle_action_negotiate" Right = Bool }
+	Optional = { Left = "handle_action_stability" Right = Bool }
+	Optional = { Left = "handle_action_build_core" Right = Bool }
+	Optional = { Left = "handle_action_send_missionary" Right = Bool }
+	Optional = { Left = "handle_action_change_culture" Right = Bool }
+	
+	Optional = { Left = "spawn_chance" Right = RebelOtherChance }
+	Optional = { Left = "movement_evaluation" Right = RebelOtherChance }
+
+	Optional = { Left = "siege_won_trigger" Right = SiegeWonTrigger }
+	Optional = { Left = "siege_won_effect" Right = SiegeWonCommand }
+
+	Optional = { Left = "can_negotiate_trigger" Right = RebelWithCountryTrigger }
+	Optional = { Left = "can_enforce_trigger" Right = RebelWithCountryTrigger }
+
+	Optional = { Left = "demands_accepted_effect" Right = RebelWithCountryCommand }
+	Optional = { Left = "demands_enforced_effect" Right = RebelWithCountryCommand }
+	Single = { Left = "demands_description" Right = Key }
+
+}
+
+(Type RebelOtherChance) = {
+	Optional = { Left = "factor" Right = NnDbl }
+	(Ch N Y) = { Left = "modifier" Right = RebelOtherModifier }
+}
+
+(Type RebelOtherModifier) = {
+	Inherits = FactorModifier
+	Optional = { Left = "factor" Right = NnDbl }
+	
+	Inherits = RebelOtherTrigger
+	
+}
+
+(Type RebelOtherTrigger) = { ContextValidator = RebelOtherTrigger }
+
+(ContextValidator RebelOtherTrigger) = {
+	Inherits = ProvinceTrigger
+	FromTarget = Country
+	ThisTarget = Country
+}
+
+(Type RebelWithCountryTrigger) = { ContextValidator = RebelWithCountryTrigger }
+
+(ContextValidator RebelWithCountryTrigger) = {
+	Inherits = CountryTrigger
+}
+
+(Type RebelWithCountryCommand) = { ContextValidator = RebelWithCountryCommand }
+
+(ContextValidator RebelWithCountryCommand) = {
+	Inherits = CountryCommand
+}
+
+(Type SiegeWonTrigger) = { ContextValidator = SiegeWonTrigger }
+
+(ContextValidator SiegeWonTrigger) = {
+	Inherits = ProvinceTrigger
+	FromTarget = Country
+}
+
+(Type SiegeWonCommand) = { ContextValidator = SiegeWonCommand }
+
+(ContextValidator SiegeWonCommand) = {
+	Inherits = ProvinceCommand
+	FromTarget = Country
+}
+
+
+
+

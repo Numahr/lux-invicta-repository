@@ -1,0 +1,162 @@
+decisions = {
+
+# Ask for a Voluntary Contribution
+
+# Demand Peacetime Scutage
+	levy_tax.2  = {
+		is_high_prio = yes
+		potential = {
+		war = no
+			NOT = {
+				has_character_flag = peace_tax_levy_enacted
+			}
+			NOT = {
+				has_character_modifier = peace_tax_levied_timer
+			}
+			independent = yes
+
+		}
+		allow = {
+			age = 16
+			prestige = 500 #you need to be respected enough to pull this first
+			not = { wealth = 50 }
+		}
+		effect = {
+			set_character_flag = peace_tax_levy_enacted
+			add_character_modifier = {
+				name = peace_tax_levied_timer
+				hidden = yes
+				days = 3650
+			}
+			prestige = -333
+			character_event = { id = libert3tax.20 } 
+			hidden_tooltip = {
+				any_vassal = {
+					limit = {
+						OR = { #not sure what that was for again
+							tier = baron
+							not = { num_of_vassals = 1 }
+						}
+					}
+					reverse_opinion = {
+						modifier = peace_tax_levied
+						who = ROOT
+						years = 10
+					}
+				}
+				letter_event = { id = libert3tax.22 days = 20 } # End result tax levy
+				any_vassal = {
+					limit = {
+						prisoner = no
+						or = {
+							tier = count
+							tier = duke
+							tier = king
+						}
+						num_of_vassals = 1
+					}
+					character_event = { id = libert3tax.21 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				war = yes
+				wealth = 50
+				scaled_wealth = 0.5
+			}
+			modifier = {
+				factor = 0
+				war = no
+				OR = {
+					any_vassal = {
+						not = { opinion = { who = ROOT value =  0 } }
+						not = { tier = baron }
+					}
+					not = { prestige = 50 }
+				}
+			}
+		}
+	}
+
+# Levy a War Tax
+	levy_tax.3  = {
+		is_high_prio = yes
+		potential = {
+		war = yes
+			NOT = {
+				has_character_flag = war_tax_levy_enacted
+			}
+			NOT = {
+				has_character_modifier = war_tax_levied_timer
+			}
+			independent = yes
+
+		}
+		allow = {
+			age = 16
+			#prestige = 500 #desperation knows no bounds
+			not = { wealth = 50 }
+		}
+		effect = {
+			set_character_flag = war_tax_levy_enacted
+			add_character_modifier = {
+				name = war_tax_levied_timer
+				hidden = yes
+				days = 3650
+			}
+			prestige = -250 # NOTE: tweak so that it only gives -168 for martial next time
+			character_event = { id = libert3tax.30 } 
+			hidden_tooltip = {
+				any_vassal = {
+					limit = {
+						OR = { #not sure what that was for again
+							tier = baron
+							not = { num_of_vassals = 1 }
+						}
+					}
+					reverse_opinion = {
+						modifier = war_tax_levied
+						who = ROOT
+						years = 5
+					}
+				}
+				letter_event = { id = libert3tax.32 days = 20 } # End result tax levy
+				any_vassal = {
+					limit = {
+						prisoner = no
+						or = {
+							tier = count
+							tier = duke
+							tier = king
+						}
+						num_of_vassals = 1
+					}
+					character_event = { id = libert3tax.31 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				war = yes
+				wealth = 50
+				scaled_wealth = 0.25
+			}
+			modifier = {
+				factor = 0
+				war = no
+				OR = {
+					any_vassal = {
+						not = { opinion = { who = ROOT value =  0 } }
+						not = { tier = baron }
+					}
+					not = { prestige = 50 }
+				}
+			}
+		}
+	}
+}

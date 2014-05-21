@@ -1,0 +1,167 @@
+#decisions to arrange prisoner swap
+
+decisions = {
+	bring_out_of_hiding = {
+		is_high_prio = yes
+		potential = {
+			is_ruler = yes
+			prisoner = no
+			OR = {
+				has_character_modifier = stalwart_defender 
+				has_character_modifier = left_at_siege
+				has_character_modifier = modifier_hidden
+				any_dynasty_member = {
+					at_location = ROOT
+					OR = {
+						has_character_modifier = modifier_hidden
+						has_character_modifier = left_at_siege
+						#has_character_modifier = stalwart_defender
+					}
+				}
+				any_courtier = {
+					at_location = ROOT
+					OR = {
+						has_character_modifier = modifier_hidden
+						has_character_modifier = left_at_siege
+						#has_character_modifier = stalwart_defender
+					}
+				}
+			}		
+		}
+		allow = { 
+			war = no
+			NOT = { any_liege = { war = yes } }
+		}
+		effect = {
+			clr_character_flag = siege_choice_made
+			if = {
+				limit = { 
+					has_character_modifier = modifier_hidden
+				}
+				remove_character_modifier = modifier_hidden
+			}
+			if = {
+				limit = { 
+					has_character_modifier = left_at_siege
+				}
+				remove_character_modifier = left_at_siege
+			}
+			any_dynasty_member = {
+				limit = { 
+					at_location = ROOT
+					has_character_modifier = modifier_hidden
+				}
+				remove_character_modifier = modifier_hidden
+			}
+			any_courtier = {
+				limit = { 
+					at_location = ROOT
+					NOT = { dynasty = ROOT }
+					has_character_modifier = modifier_hidden
+				}
+				remove_character_modifier = modifier_hidden
+			}
+			any_dynasty_member = {
+				limit = { 
+					at_location = ROOT
+					has_character_modifier = left_at_siege
+				}
+				remove_character_modifier = left_at_siege
+			}
+			any_courtier = {
+				limit = { 
+					at_location = ROOT
+					NOT = { dynasty = ROOT }
+					has_character_modifier = left_at_siege
+				}
+				remove_character_modifier = left_at_siege
+			}#
+			hidden_tooltip = {
+				remove_character_modifier = stalwart_defender
+			}	
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+	}#bring
+	
+	request_important_prisoners = {
+		is_high_prio = yes
+		potential = {
+			prisoner = no
+			is_ruler = yes
+			primary_title = { higher_tier_than = BARON }	
+			any_realm_lord = {
+				any_courtier = {
+					prisoner = yes
+					host = { character = PREVPREV }
+					OR = {
+						AND = {
+							primary_title = { higher_tier_than = BARON }
+							war_with = ROOT
+						}
+						liege = {
+							is_close_relative = PREV
+							primary_title = { higher_tier_than = BARON }
+							war_with = ROOT
+						}							
+					}	
+				}
+			}
+		}
+
+		allow = { prestige = 0 }
+
+		effect = {
+			any_realm_lord = {
+				any_courtier = {		
+					limit = {
+						prisoner = yes
+						host = { character = PREVPREV }
+						OR = {
+							AND = {
+								primary_title = { higher_tier_than = BARON }
+								war_with = ROOT
+							}
+							liege = {
+								is_close_relative = PREV
+								primary_title = { higher_tier_than = BARON }
+								war_with = ROOT
+							}							
+						}
+					}
+					custom_tooltip = { text = EVTTOOLTIPprisreq }
+					hidden_tooltip = {
+						prisoner = no
+						imprison = ROOT
+					}
+				}
+			}	
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+					
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,280 @@
+### LIBERT3 taxation events
+### Template borrowed from TPATT
+### Originally Written by Van Diemen
+
+namespace=libert3tax
+
+
+## Ask for a Voluntary Contribution
+
+
+## Demand Peactime Scutage
+
+#Peace Scutage Note
+character_event = {
+	id = libert3tax.20
+	desc = "libert3tax.20.desc"
+	picture = GFX_evt_emissary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "libert3tax.20.opt"
+	}
+}
+
+# Extra tax levy decision - contribution asked - has vassals
+character_event = {
+	id = libert3tax.21
+	title = "libert3tax.21.title"
+	desc = "libert3tax.21.desc"
+	picture = "GFX_evt_emissary"
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.21.optA" # I will pay the tax myself
+		scaled_wealth = -0.5 #hardly accurate, but what the hell...
+		wealth = -50
+		set_character_flag = taxes_payed_self
+		#transfer_scaled_wealth = {
+		#		to = FROM
+		#		value = 0.25
+		#	} #doesn't seem to work
+		opinion = {
+			modifier = peace_tax_levied
+			who = FROM
+			years = 5
+		}
+	}
+	option = {
+		name = "libert3tax.21.optB" # My vassals will pay the tax
+		hidden_tooltip = {
+			any_vassal = {
+				character_event = { id = libert3tax.21 }
+			}
+		}
+		set_character_flag = taxes_payed
+		reverse_opinion = {
+			modifier = peace_tax_levied
+			who = FROM
+			years = 5
+		}
+	}
+}
+
+# Extra tax levy - tax contributions collected
+letter_event = {
+	id = libert3tax.22
+	title = "libert3tax.20.title"
+	desc = "libert3tax.22.desc"
+	#picture = "GFX_evt_courier"
+	is_friendly = yes
+	major = no
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.22.opt" # Thank the lords for their contribution
+		scaled_wealth = 1.5
+		wealth = 150
+		hidden_tooltip = {
+			any_vassal = {
+				limit = {
+					has_character_flag = taxes_payed_self
+				}
+				letter_event = { id = libert3tax.231 }
+			}
+			any_vassal = {
+				limit = {
+					has_character_flag = taxes_payed
+				}
+				letter_event = { id = libert3tax.232 }
+			}
+			clr_character_flag = tax_levy_enacted
+		}
+	}
+}
+# Extra tax levy - vassal receives thanks for cooperation
+letter_event = {
+	id = libert3tax.231
+	title = "libert3tax.20.title"
+	desc = "libert3tax.231.desc"
+	#picture = "Character_recieving_letter"
+	major = no
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.231.opt" # Yes, I thank you too (really not)
+		clr_character_flag = taxes_payed_self
+		clr_character_flag = taxes_payed
+	}
+}
+# Extra tax levy - vassal receives thanks for cooperation - not own payment
+letter_event = {
+	id = libert3tax.232
+	title = "libert3tax.20.title"
+	desc = "libert3tax.232.desc"
+	#picture = "Character_recieving_letter"
+	major = no
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.232.opt" # I am eager to serve my liege
+		hidden_tooltip = {
+			any_vassal = {
+				limit = {
+					has_character_flag = taxes_payed_self
+				}
+				letter_event = { id = libert3tax.231 }
+			}
+			any_vassal = {
+				limit = {
+#					or = {
+						has_character_flag = taxes_payed
+#					}
+				}
+				letter_event = { id = libert3tax.232 }
+			}
+		}
+		clr_character_flag = taxes_payed_self
+		clr_character_flag = taxes_payed
+	}
+}
+
+## Levy a War Tax
+# yes, I know. I'm essentially copy-pasting TPATT for now.
+
+#War Tax Note
+character_event = {
+	id = libert3tax.30
+	desc = "libert3tax.30.desc"
+	picture = GFX_evt_emissary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "libert3tax.30.opt"
+	}
+}
+
+# Extra tax levy decision - contribution asked - has vassals
+character_event = {
+	id = libert3tax.31
+	#title = "libert3tax.31.title"
+	desc = "libert3tax.31.desc"
+	picture = "GFX_evt_emissary"
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.31.optA" # I will pay the tax myself
+		scaled_wealth = -0.25 #hardly accurate, but what the hell...
+		wealth = -25
+		set_character_flag = taxes_payed_self
+		#transfer_scaled_wealth = {
+		#		to = FROM
+		#		value = 0.25
+		#	} #doesn't seem to work
+		opinion = {
+			modifier = war_tax_levied
+			who = FROM
+			months = 30
+		}
+	}
+	option = {
+		name = "libert3tax.31.optB" # My vassals will pay the tax
+		hidden_tooltip = {
+			any_vassal = {
+				character_event = { id = libert3tax.31 }
+			}
+		}
+		set_character_flag = taxes_payed
+		opinion = {
+			modifier = war_tax_levied
+			who = FROM
+			months = 30
+		}
+	}
+}
+
+# Extra tax levy - tax contributions collected
+letter_event = {
+	id = libert3tax.32
+	title = "libert3tax.30.title"
+	desc = "libert3tax.32.desc"
+	#picture = "GFX_evt_courier"
+	is_friendly = yes
+	major = no
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.32.opt" # Thank the lords for their contribution
+		scaled_wealth = 0.75
+		wealth = 75
+		hidden_tooltip = {
+			any_vassal = {
+				limit = {
+					has_character_flag = taxes_payed_self
+				}
+				letter_event = { id = libert3tax.331 }
+			}
+			any_vassal = {
+				limit = {
+					has_character_flag = taxes_payed
+				}
+				letter_event = { id = libert3tax.332 }
+			}
+			clr_character_flag = tax_levy_enacted
+		}
+	}
+}
+# Extra tax levy - vassal receives thanks for cooperation
+letter_event = {
+	id = libert3tax.331
+	title = "libert3tax.30.title"
+	desc = "libert3tax.331.desc"
+	#picture = "Character_recieving_letter"
+	major = no
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.331.opt" # Yes, I thank you too (really not)
+		clr_character_flag = taxes_payed_self
+		clr_character_flag = taxes_payed
+	}
+}
+# Extra tax levy - vassal receives thanks for cooperation - not own payment
+letter_event = {
+	id = libert3tax.332
+	title = "libert3tax.30.title"
+	desc = "libert3tax.332.desc"
+	#picture = "Character_recieving_letter"
+	major = no
+
+	is_triggered_only = yes
+
+	option = {
+		name = "libert3tax.332.opt" # I am eager to serve my liege
+		hidden_tooltip = {
+			any_vassal = {
+				limit = {
+					has_character_flag = taxes_payed_self
+				}
+				letter_event = { id = libert3tax.331 }
+			}
+			any_vassal = {
+				limit = {
+					has_character_flag = taxes_payed
+				}
+				letter_event = { id = libert3tax.332 }
+			}
+		}
+		clr_character_flag = taxes_payed_self
+		clr_character_flag = taxes_payed
+	}
+}

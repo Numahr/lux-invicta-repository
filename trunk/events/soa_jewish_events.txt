@@ -1,0 +1,298 @@
+###################################
+#
+# THE SONS OF ABRAHAM 
+# - Jewish Events
+#
+###################################
+
+namespace = SoA
+
+# Third Temple Construction Begun
+character_event = {
+	id = SoA.100
+	desc = EVTDESC_SoA_100
+	picture = GFX_evt_castle_construction
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_SoA_100
+		set_global_flag = building_third_temple
+		custom_tooltip = { text = third_temple_construction }
+	}
+}
+
+# Third Temple Built
+narrative_event = {
+	id = SoA.101
+	title = EVTNAME_SoA_101
+	desc = EVTDESC_SoA_101
+	picture = GFX_evt_jerusalem_captured_jews
+	border = GFX_event_narrative_frame_religion
+	major = yes
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	major_trigger = {
+		ai = no
+		religion = judaism
+	}
+	
+	immediate = {
+		set_global_flag = third_temple_built
+		clr_global_flag = building_third_temple
+	}
+	
+	option = {
+		name = EVTOPTA_SoA_101
+	}
+}
+
+# Creation of Israel
+#narrative_event = {
+#	id = SoA.102
+#	title = EVTNAME_SoA_102
+#	desc = EVTDESC_SoA_102
+#	picture = GFX_evt_jerusalem_captured_jews
+#	border = GFX_event_narrative_frame_religion
+#	
+#	is_triggered_only = yes
+#	
+#	hide_from = yes
+#	
+#	immediate = {
+#		set_character_flag = achievement_kingdom_of_david
+#		set_global_flag = jewish_homeland_restored
+#	}
+#	
+#	option = {
+#		name = EVTOPTA_SoA_102
+#		primary_title = {
+#			k_israel = {
+#				grant_title = ROOT
+#				copy_title_laws = PREV
+#			}
+#		}
+#		give_nickname = nick_the_great
+#		add_trait = israel_restorer
+#		piety = 200
+#		prestige = 200
+#		if = {
+#			limit = {
+#				NOT = { has_landed_title = k_israel }
+#			}
+#			k_israel = {
+#				grant_title = ROOT
+#			}
+#		}
+#		k_jerusalem = {
+#			any_direct_de_jure_vassal_title = {
+#				de_jure_liege = k_israel
+#			}
+#		}
+#		k_israel = {
+#			de_jure_liege = e_arabia
+#		}
+#		k_jerusalem = {
+#			destroy_landed_title = THIS
+#		}
+#		
+#		if = {
+#			limit = {
+#				tier = king
+#				primary_title = {
+#					NOT = { title = k_israel }
+#				}
+#			}
+#			k_israel = { make_primary_title = yes }
+#		}
+#		
+#		hidden_tooltip = {
+#			character_event = { id = VIETjewish.15 }
+#		}
+#	}
+#}
+
+### Jewish Passover
+
+# Invitation Sent
+character_event = {
+	id = SoA.500
+	desc = EVTDESC_SoA_500
+	picture = GFX_evt_synagogue
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_SoA_500
+		any_vassal = {
+			limit = {
+				religion = judaism
+				age = 16
+				prisoner = no
+				war = no
+				NOT = { trait = incapable }
+			}
+			character_event = { id = SoA.501 days = 2 tooltip = EVTTOOLTIP_SoA_501 }
+		}
+		custom_tooltip = { text = passover_invitations_sent }
+		hidden_tooltip = { character_event = { id = SoA.503 days = 10 } }
+		hidden_tooltip = { character_event = { id = SoA.504 days = 12 } }
+	}
+}
+
+# Invitation Received
+character_event = {
+	id = SoA.501
+	desc = EVTDESC_SoA_501
+	picture = GFX_evt_synagogue
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_SoA_501
+		ai_chance = {
+			factor = 80
+			modifier = {
+				factor = 0
+				NOT = {	opinion = { who = ROOT value = -20 } }
+			}
+		}
+		custom_tooltip = { text = passover_accepted }
+		set_character_flag = attending_passover
+		set_character_flag = do_not_disturb
+		hidden_tooltip = { character_event = { id = SoA.503 days = 8 } }
+	}
+	option = {
+		name = EVTOPTB_SoA_501
+		ai_chance = {
+			factor = 20
+		}
+		FROM = {
+			opinion = {
+				modifier = opinion_refused_passover
+				who = ROOT
+			}
+		}
+		custom_tooltip = { text = passover_declined }
+		hidden_tooltip = {
+			FROM = { character_event = { id = SoA.502 } }
+		}
+	}
+}
+
+# Invitation Refused
+character_event = {
+	id = SoA.502
+	desc = EVTDESC_SoA_502
+	picture = GFX_evt_synagogue
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_SoA_502
+		opinion = {
+			modifier = opinion_refused_passover
+			who = FROM
+		}
+	}
+}
+
+# Passover Sedar Begins
+character_event = {
+	id = SoA.503
+	desc = EVTDESC_SoA_503
+	picture = GFX_evt_synagogue
+	border = GFX_event_normal_frame_religion
+	
+	hide_from = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_SoA_503
+	}
+}
+
+# Passover Sedar Ends (Host)
+character_event = {
+	id = SoA.504
+	desc = EVTDESC_SoA_504
+	picture = GFX_evt_synagogue
+	border = GFX_event_normal_frame_religion
+	
+	hide_from = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_SoA_504
+		any_vassal = {
+			limit = { has_character_flag = attending_passover }
+			opinion = {
+				modifier = opinion_passover
+				who = ROOT
+			}
+		}
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_passover }
+				character_event = { id = SoA.505 }
+			}
+		}
+		add_character_modifier = {
+			name = held_passover_timer
+			duration = 1825
+			hidden = yes
+		}
+		prestige = 100
+		piety = 100
+		clr_character_flag = holding_passover
+		clr_character_flag = do_not_disturb
+	}
+}
+
+# Passover Sedar Ends (Guest)
+character_event = {
+	id = SoA.505
+	desc = EVTDESC_SoA_505
+	picture = GFX_evt_synagogue
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_SoA_504
+		clr_character_flag = attending_passover
+		clr_character_flag = do_not_disturb
+	}
+}
+
+# Safety catch - clears character flags and modifiers
+character_event = {
+	id = SoA.599
+
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		clr_character_flag = do_not_disturb
+		clr_character_flag = holding_passover
+		clr_character_flag = attending_passover
+	}
+}
+
+
+
+# Not applicable to LI timeline from here on

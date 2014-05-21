@@ -1,0 +1,1860 @@
+# DO NOT ALTER THE NAME OR NUMBER OF THESE!
+
+succession_laws = {
+
+	succ_institute_ultimogeniture = {
+		oldest_child_opinion = 30
+		child_opinion = -20
+		potential = {
+			is_primary_holder_title = yes		
+			is_landless_type_title = no
+			holder_scope = {
+				OR = {
+					NOT = { religion_group = muslim }
+					culture = mongol
+				}
+				is_merchant_republic = no
+				is_patrician = no
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			is_primary_type_title = no
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			OR = {
+				NOT = { has_law = succ_feudal_elective }
+				is_titular = yes
+			}
+			NOT = { has_law = succ_ultimogeniture }
+			holder_scope = { NOT = { religion_group = muslim } }
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					culture = mongol							
+				}	
+			}
+			has_global_flag = startup
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			tooltip = { succession = ultimogeniture }
+			hidden_tooltip = { 
+				add_law = succ_ultimogeniture
+				holder_scope = {
+					any_demesne_title = {
+						limit = {
+							is_primary_holder_title = no
+							OR = {
+								is_primary_holder_title_tier = yes
+								higher_tier_than = duke
+							}
+						}
+						add_law = succ_ultimogeniture
+					}
+				}
+			}
+			hidden_tooltip = { 
+				current_heir = {
+					set_character_flag = new_heir
+				}
+				holder_scope = {
+					#new heir is happy
+					any_realm_character = {
+						limit = {
+							has_character_flag = new_heir
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_good_succ_law_change
+							months = 240
+						}						
+						clr_character_flag = new_heir
+					}
+					any_independent_ruler = {
+						any_realm_character = {
+							limit = {
+								has_character_flag = new_heir
+							}
+							opinion = {
+								who = PREVPREV
+								modifier = opinion_good_succ_law_change
+								months = 240
+							}						
+							clr_character_flag = new_heir
+						}					
+					}
+					#legitimate children are upset
+					any_child = {
+						limit = { 
+							NOT = { trait = bastard } 
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_bad_succ_law_change
+							months = 240
+						}
+					}					
+					#vassals are slightly upset
+					any_vassal = {
+						limit = {
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_succ_law_change
+							months = 240
+						}							
+					}
+				}
+			}			
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}	
+
+	succ_institute_tanistry = {
+		oldest_child_opinion = -40
+		child_opinion = -20
+		dynasty_opinion = 10
+		vassal_opinion = 5
+		
+		potential = {
+			is_primary_holder_title = yes
+			is_landless_type_title = no
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_feudal = yes
+				OR = {
+					culture_group = celtic
+					culture = scottish
+				}
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			is_primary_type_title = no
+			NOT = { tier = baron }
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			NOT = { has_law = succ_tanistry }
+			OR = {
+				NOT = { has_law = succ_feudal_elective }
+				is_titular = yes
+			}
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					religion_group = christian
+					NOT = { current_heir = { father = { character = PREVPREV } } }
+					NOT = { current_heir = { mother = { character = PREVPREV } } }
+					NOT = { current_heir = { any_sibling = { character = PREVPREV } } }
+					age = 30
+					OR = {
+						trait = charitable
+						trait = just
+					}					
+				}
+			}
+			has_global_flag = startup
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {			
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			tooltip = { succession = tanistry }
+			hidden_tooltip = { 
+				add_law = succ_tanistry 
+				holder_scope = {
+					any_demesne_title = {
+						limit = {
+							is_primary_holder_title = no
+							OR = {
+								is_primary_holder_title_tier = yes
+								higher_tier_than = duke
+							}
+						}
+						add_law = succ_tanistry 
+					}
+				}
+			}
+			hidden_tooltip = {
+				any_de_jure_vassal = {
+					limit = {
+						OR = {
+							AND = {
+								tier = baron
+								PREV = { tier = count }
+							}
+							AND = {
+								tier = count
+								PREV = { tier = duke }
+							}	
+							higher_tier_than = count
+						}					
+					}
+					set_character_flag = dejure_vassal
+				}			
+				holder_scope = {
+					#legitimate children are upset
+					any_child = {
+						limit = { 
+							NOT = { trait = bastard } 
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}						
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_bad_succ_law_change
+							months = 240
+						}
+					}
+					#dynasty members are pleased
+					any_realm_character = {
+						limit = { 
+							dynasty = PREV
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_good_succ_law_change
+							months = 240
+						}
+					}
+					#electors are pleased
+					any_vassal = {
+						limit = {
+							has_character_flag = dejure_vassal
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_good_succ_law_change
+							months = 240
+						}
+					}
+					#other vassals are slightly upset
+					any_vassal = {
+						limit = {
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_succ_law_change
+							months = 240
+						}							
+					}									
+				}
+				any_de_jure_vassal = {
+					clr_character_flag = dejure_vassal
+				}					
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1						
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}	
+
+	succ_institute_feudal_elective = {
+		oldest_child_opinion = -40
+		child_opinion = -20
+		dynasty_opinion = -10
+		vassal_opinion = 10
+		
+		potential = {
+			is_primary_holder_title = yes
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_merchant_republic = no
+				is_patrician = no
+				NOT = {
+					culture_group = celtic
+					culture = scottish		
+				}					
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			is_primary_type_title = no
+			NOT = { tier = baron }
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			NOT = { has_law = succ_feudal_elective }	
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					religion_group = christian				
+					NOT = { current_heir = { father = { character = PREVPREV } } }
+					NOT = { current_heir = { mother = { character = PREVPREV } } }
+					NOT = { current_heir = { any_sibling = { character = PREVPREV } } }
+					age = 30
+					OR = {
+						trait = charitable
+						trait = just
+					}					
+				}
+			}
+			has_global_flag = startup
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {			
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			tooltip = { succession = feudal_elective }
+			hidden_tooltip = { 
+				add_law = succ_feudal_elective 
+				holder_scope = {
+					any_demesne_title = {
+						limit = {
+							is_primary_holder_title = no
+							OR = {
+								is_primary_holder_title_tier = yes
+								higher_tier_than = duke
+							}
+						}
+						add_law = succ_feudal_elective 
+					}
+				}
+			}
+			hidden_tooltip = {
+				any_de_jure_vassal = {
+					limit = {
+						OR = {
+							AND = {
+								tier = baron
+								PREV = { tier = count }
+							}
+							AND = {
+								tier = count
+								PREV = { tier = duke }
+							}	
+							higher_tier_than = count
+						}					
+					}
+					set_character_flag = dejure_vassal
+				}			
+				holder_scope = {
+					#legitimate children are upset
+					any_child = {
+						limit = { 
+							NOT = { trait = bastard } 
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}						
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_bad_succ_law_change
+							months = 240
+						}
+					}
+					#dynasty members are somewhat upset
+					any_realm_character = {
+						limit = { 
+							dynasty = PREV
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_succ_law_change
+							months = 240
+						}
+					}
+					#electors are pleased
+					any_vassal = {
+						limit = {
+							has_character_flag = dejure_vassal
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_good_succ_law_change
+							months = 240
+						}
+					}
+					#other vassals are slightly upset
+					any_vassal = {
+						limit = {
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_succ_law_change
+							months = 240
+						}							
+					}									
+				}
+				any_de_jure_vassal = {
+					clr_character_flag = dejure_vassal
+				}					
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1						
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}	
+	
+	succ_institute_gavelkind = {
+		oldest_child_opinion = -20
+		child_opinion = 30
+		dynasty_opinion = 10
+		vassal_opinion = 5
+	
+		potential = {
+			is_primary_holder_title = yes
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_merchant_republic = no
+				is_patrician = no
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			is_primary_type_title = no
+			NOT = { tier = baron }
+			OR = {
+				NOT = { has_law = succ_feudal_elective }
+				is_titular = yes
+			}
+			NOT = { has_law = succ_gavelkind }
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					has_global_flag = startup
+					age = 30
+					OR = {
+						trait = content
+						trait = charitable
+					}					
+				}								
+			}			
+			has_global_flag = startup
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			tooltip = { succession = gavelkind }
+			hidden_tooltip = { 
+				current_heir = {
+					set_character_flag = old_heir
+				}
+			}
+			hidden_tooltip = { 
+				add_law = succ_gavelkind
+				holder_scope = {
+					any_demesne_title = {
+						limit = {
+							is_primary_holder_title = no
+							OR = {
+								is_primary_holder_title_tier = yes
+								higher_tier_than = duke
+							}
+						}
+						add_law = succ_gavelkind
+					}
+				}
+			}
+			hidden_tooltip = { 
+				holder_scope = {
+					#old heir is mad
+					any_realm_character = {
+						limit = {
+							has_character_flag = old_heir
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_bad_succ_law_change
+							months = 240
+						}						
+						clr_character_flag = old_heir
+					}
+					any_independent_ruler = {
+						any_realm_character = {
+							limit = {
+								has_character_flag = old_heir
+							}
+							opinion = {
+								who = PREVPREV
+								modifier = opinion_bad_succ_law_change
+								months = 240
+							}						
+							clr_character_flag = old_heir
+						}					
+					}
+					#legitimate children are happy
+					any_child = {
+						limit = { 
+							NOT = { trait = bastard } 
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_good_succ_law_change
+							months = 240
+						}
+					}
+					#vassals are slightly upset
+					any_vassal = {
+						limit = {
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_succ_law_change
+							months = 240
+						}							
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}
+	
+	succ_institute_seniority = {
+		oldest_child_opinion = -30
+		child_opinion = -20
+		dynasty_opinion = 20
+	
+		potential = {
+			is_primary_holder_title = yes
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_merchant_republic = no
+				
+				OR = {
+					is_republic = no
+					is_patrician = yes
+				}
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			
+			is_primary_type_title = no
+			
+			OR = {
+				NOT = { tier = baron }
+				holder_scope = { is_patrician = yes }
+			}
+			OR = {
+				NOT = { has_law = succ_feudal_elective }
+				is_titular = yes
+			}
+			NOT = { has_law = succ_seniority }
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					religion_group = christian
+					NOT = { current_heir = { father = { character = PREVPREV } } }
+					NOT = { current_heir = { mother = { character = PREVPREV } } }
+					NOT = { current_heir = { any_sibling = { character = PREVPREV } } }
+					age = 30
+					OR = {
+						trait = humble
+						trait = trusting
+					}					
+				}
+			}
+			has_global_flag = startup			
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			tooltip = { succession = seniority }
+			hidden_tooltip = { 
+				add_law = succ_seniority
+				holder_scope = {
+					any_demesne_title = {
+						limit = {
+							is_primary_holder_title = no
+							OR = {
+								is_primary_holder_title_tier = yes
+								higher_tier_than = duke
+							}
+						}
+						add_law = succ_seniority
+					}
+				}
+			}
+			hidden_tooltip = { 
+				holder_scope = {
+					#legitimate children are angry
+					any_child = {
+						limit = { 
+							dynasty = PREV
+							NOT = { trait = bastard } 
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_bad_succ_law_change
+							months = 240
+						}
+					}
+					#dynasty members are pleased
+					any_realm_character = {
+						limit = { 
+							dynasty = PREV
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_good_succ_law_change
+							months = 240
+						}
+					}					
+					#vassals are slightly upset
+					any_vassal = {
+						limit = {
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_succ_law_change
+							months = 240
+						}							
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}
+	
+	succ_institute_primogeniture = {
+		oldest_child_opinion = 30
+		child_opinion = -20
+		potential = {
+			is_primary_holder_title = yes
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_merchant_republic = no
+				is_patrician = no
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			is_primary_type_title = no
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			NOT = { has_law = succ_primogeniture }
+			OR = {
+				NOT = { has_law = succ_feudal_elective }
+				is_titular = yes
+			}
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					any_child = {
+						is_female = no
+						age = 6
+					}				
+					age = 30
+					OR = {
+						trait = proud
+						trait = ambitious
+						trait = greedy
+					}					
+				}	
+			}
+			has_global_flag = startup
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			tooltip = { succession = primogeniture }
+			hidden_tooltip = { 
+				add_law = succ_primogeniture
+				holder_scope = {
+					any_demesne_title = {
+						limit = {
+							is_primary_holder_title = no
+							OR = {
+								is_primary_holder_title_tier = yes
+								higher_tier_than = duke
+							}
+						}
+						add_law = succ_primogeniture
+					}
+				}
+			}
+			hidden_tooltip = { 
+				current_heir = {
+					set_character_flag = new_heir
+				}
+				holder_scope = {
+					#new heir is happy
+					any_realm_character = {
+						limit = {
+							has_character_flag = new_heir
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_good_succ_law_change
+							months = 240
+						}						
+						clr_character_flag = new_heir
+					}
+					any_independent_ruler = {
+						any_realm_character = {
+							limit = {
+								has_character_flag = new_heir
+							}
+							opinion = {
+								who = PREVPREV
+								modifier = opinion_good_succ_law_change
+								months = 240
+							}						
+							clr_character_flag = new_heir
+						}					
+					}
+					#legitimate children are upset
+					any_child = {
+						limit = { 
+							NOT = { trait = bastard } 
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_bad_succ_law_change
+							months = 240
+						}
+					}					
+					#vassals are slightly upset
+					any_vassal = {
+						limit = {
+							NOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_good_succ_law_change
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_bad_succ_law_change
+								}
+							}							
+						}
+						opinion = {
+							who = PREV
+							modifier = opinion_succ_law_change
+							months = 240
+						}							
+					}
+				}
+			}			
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}		
+	
+	succ_elective_to_gavelkind = {
+		oldest_child_opinion = -20
+		child_opinion = 30
+		dynasty_opinion = 10
+		vassal_opinion = 5
+	
+		potential = {
+			is_primary_holder_title = yes
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_merchant_republic = no
+				is_patrician = no
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			is_primary_type_title = no
+			NOT = { tier = baron }
+			has_law = succ_feudal_elective
+			is_titular = no
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					has_global_flag = startup
+					age = 30
+					OR = {
+						trait = content
+						trait = charitable
+					}					
+				}								
+			}			
+			holder_scope = { NOT = { has_character_flag = voting_on_succession_law } }
+			has_global_flag = startup
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			hidden_tooltip = {
+				holder_scope = { 
+					set_character_flag = voting_on_succession_law
+					character_event = { id = 400000 days = 1 } 
+					set_variable = { which = "succession_law_vote" value = 1 } 
+				}
+				any_de_jure_vassal_title = {
+					holder_scope = { set_character_flag = vote_is_for_gavelkind }
+					if = {
+						limit = {
+							OR = {
+								AND = {	
+									PREV = { tier = COUNT }
+									tier = BARON
+								}
+								AND = {	
+									PREV = { tier = DUKE }
+									tier = COUNT
+								}
+								AND = {	
+									PREV = { tier = KING }
+									tier = DUKE
+								}
+								AND = {	
+									PREV = { tier = EMPEROR }
+									tier = DUKE
+								}
+								AND = {	
+									PREV = { tier = EMPEROR }
+									tier = KING
+								}
+							}
+							holder_scope = { 
+								ROOT = {
+									holder_scope = {
+										OR = {
+											same_realm = PREVPREV
+											religion = PREVPREV
+										}
+									}
+								}						
+								NOT = { has_character_flag = voted_on_gavelkind } 
+								NOT = { has_landed_title = PREVPREV }
+							}
+						}
+						holder_scope = { 
+							set_character_flag = succession_vote
+							set_character_flag = voted_on_gavelkind
+							letter_event = { id = 400001 days = 3 } 
+						}
+					}
+				}			
+			}
+			custom_tooltip = CUSTOMTOOLTIP7
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}
+	
+	succ_elective_to_seniority = {
+		oldest_child_opinion = -30
+		child_opinion = -20
+		dynasty_opinion = 20
+	
+		potential = {
+			is_primary_holder_title = yes
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_merchant_republic = no
+				
+				OR = {
+					is_republic = no
+					is_patrician = yes
+				}
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			
+			is_primary_type_title = no
+			
+			OR = {
+				NOT = { tier = baron }
+				holder_scope = { is_patrician = yes }
+			}
+			has_law = succ_feudal_elective
+			is_titular = no
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					religion_group = christian
+					NOT = { current_heir = { father = { character = PREVPREV } } }
+					NOT = { current_heir = { mother = { character = PREVPREV } } }
+					NOT = { current_heir = { any_sibling = { character = PREVPREV } } }
+					age = 30
+					OR = {
+						trait = humble
+						trait = trusting
+					}					
+				}
+			}
+			holder_scope = { NOT = { has_character_flag = voting_on_succession_law } }
+			has_global_flag = startup			
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			hidden_tooltip = { 
+				holder_scope = { 
+					set_character_flag = voting_on_succession_law
+					character_event = { id = 400000 days = 1 } 
+					set_variable = { which = "succession_law_vote" value = 1 } 
+				}			
+				any_de_jure_vassal_title = {
+					holder_scope = { set_character_flag = vote_is_for_seniority }
+					if = {
+						limit = {
+							OR = {
+								AND = {	
+									PREV = { tier = COUNT }
+									tier = BARON
+								}
+								AND = {	
+									PREV = { tier = DUKE }
+									tier = COUNT
+								}
+								AND = {	
+									PREV = { tier = KING }
+									tier = DUKE
+								}
+								AND = {	
+									PREV = { tier = EMPEROR }
+									tier = DUKE
+								}
+								AND = {	
+									PREV = { tier = EMPEROR }
+									tier = KING
+								}
+							}						
+							holder_scope = { 
+								ROOT = {
+									holder_scope = {
+										OR = {
+											same_realm = PREVPREV
+											religion = PREVPREV
+										}
+									}
+								}						
+								NOT = { has_character_flag = voted_on_seniority } 
+								NOT = { has_landed_title = PREVPREV }
+							}
+						}
+						holder_scope = { 
+							set_character_flag = succession_vote
+							set_character_flag = voted_on_seniority
+							letter_event = { id = 400003 days = 3 } 
+						}
+					}
+				}			
+			}
+			custom_tooltip = CUSTOMTOOLTIP7
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}
+	
+	succ_elective_to_primogeniture = {
+		oldest_child_opinion = 30
+		child_opinion = -20
+		potential = {
+			is_primary_holder_title = yes
+			holder_scope = {
+				NOT = { religion_group = muslim }
+				is_merchant_republic = no
+				is_patrician = no
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+			}
+			is_primary_type_title = no
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			has_law = succ_feudal_elective
+			is_titular = no
+			OR = {
+				holder_scope = { ai = no }
+				holder_scope = {
+					any_child = {
+						is_female = no
+						age = 6
+					}				
+					age = 30
+					OR = {
+						trait = proud
+						trait = ambitious
+						trait = greedy
+					}					
+				}	
+			}
+			holder_scope = { NOT = { has_character_flag = voting_on_succession_law } }
+			has_global_flag = startup
+		}
+		allow = {
+			OR = {
+				AND = {
+					tier = BARON
+					holder_scope = { prestige = 125 }
+				}			
+				AND = {
+					tier = COUNT
+					holder_scope = { prestige = 250 }
+				}
+				AND = {
+					tier = DUKE
+					holder_scope = { prestige = 500 }
+				}
+				AND = {
+					tier = KING
+					holder_scope = { prestige = 750 }
+				}
+				AND = {
+					tier = EMPEROR
+					holder_scope = { prestige = 1000 }
+				}				
+			}		
+		}		
+		effect = {
+			if = {
+				limit = {
+					tier = BARON
+				}
+				holder_scope = { prestige = -125 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = COUNT
+				}
+				holder_scope = { prestige = -250 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = DUKE
+				}
+				holder_scope = { prestige = -500 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = KING
+				}
+				holder_scope = { prestige = -750 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			if = {
+				limit = {
+					tier = EMPEROR
+				}
+				holder_scope = { prestige = -1000 custom_tooltip = COURTFACTIONMOODMINUS change_variable = { which = "faction_mood_court" value = -2 } }
+			}
+			holder_scope = { hidden_tooltip = { random_courtier = { limit = { ai = yes } character_event = { id = 110073 days = 1 } } } }
+			hidden_tooltip = { 
+				holder_scope = { 
+					set_character_flag = voting_on_succession_law
+					character_event = { id = 400000 days = 1 }
+					set_variable = { which = "succession_law_vote" value = 1 } 
+				}			
+				any_de_jure_vassal_title = {
+					holder_scope = { set_character_flag = vote_is_for_primogeniture }
+					if = {
+						limit = {
+							OR = {
+								AND = {	
+									PREV = { tier = COUNT }
+									tier = BARON
+								}
+								AND = {	
+									PREV = { tier = DUKE }
+									tier = COUNT
+								}
+								AND = {	
+									PREV = { tier = KING }
+									tier = DUKE
+								}
+								AND = {	
+									PREV = { tier = EMPEROR }
+									tier = DUKE
+								}
+								AND = {	
+									PREV = { tier = EMPEROR }
+									tier = KING
+								}
+							}						
+							holder_scope = { 
+								ROOT = {
+									holder_scope = {
+										OR = {
+											same_realm = PREVPREV
+											religion = PREVPREV
+										}
+									}
+								}						
+								NOT = { has_character_flag = voted_on_primogeniture } 
+								NOT = { has_landed_title = PREVPREV }
+							}
+						}
+						holder_scope = { 
+							set_character_flag = succession_vote
+							set_character_flag = voted_on_primogeniture
+							letter_event = { id = 400002 days = 3 } 
+						}
+					}
+				}			
+			}
+			custom_tooltip = CUSTOMTOOLTIP7
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}		
+	}	
+}

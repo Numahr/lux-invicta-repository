@@ -1,0 +1,449 @@
+decisions = {
+
+	perform_sacrifice = {
+		potential = {
+		NOT = {
+			religion_group = christian
+			religion_group = muslim
+			religion_group = zoroastrian_group
+			religion_group = bud_group
+			religion_group = celtic_group
+			religion = norse_pagan
+			religion = norse_pagan_reformed
+			religion = norse_war
+			religion = ragnarok
+			religion = ragnarok_reformed
+			religion = sowilo
+			religion_group = finnish_group
+			religion_group = baltic_group
+			religion_group = slavic_group
+			religion_group = jewish_group
+			religion = judaism_reformed
+			religion_group = tengri_group
+			religion = indoh_bud
+		}
+			higher_tier_than = BARON
+			age = 16
+			demesne_size = 1
+			NOT = { mercenary = yes  }
+		}
+		allow = {
+			war = no
+			wealth = 20
+			NOT = { has_character_modifier = performed_sacrifice }
+			NOT = { has_character_modifier = holding_large_feast }
+			NOT = { has_character_modifier = holding_summer_fair }
+			NOT = { has_character_flag = holding_grand_hunt }
+			NOT = { has_character_flag = epic_tournament }
+			NOT = { trait = traveling }
+			NOT = { has_character_modifier = performed_sacrifice }
+		}
+		effect = {
+			scaled_wealth = -0.4
+
+			if = {
+				limit = {
+					has_character_flag = finished_sacrifice
+				}
+				clr_character_flag = finished_sacrifice
+			}
+			
+			add_character_modifier = {
+				name = performed_sacrifice
+				duration = 1100
+			}
+			
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.25 #Decrease chance AI will do this
+			}
+			modifier = {
+				factor = 0.6
+				trait = cynical
+			}
+			modifier = {
+				factor = 0.6
+				trait = slothful
+			}
+			modifier = {
+				factor = 0.75
+				trait = gluttonous
+			}
+			modifier = {
+				factor = 0.75
+				trait = greedy
+			}
+			modifier = {
+				factor = 1.2
+				trait = zealous
+			}
+			modifier = {
+				factor = 1.1
+				trait = ambitious
+			}
+			modifier = {
+				factor = 1.1
+				trait = diligent
+			}
+			modifier = {
+				factor = 1.05
+				trait = humble
+			}
+			modifier = {
+				factor = 1.05
+				trait = proud
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					wealth = 20
+				}
+			}
+		}
+	}
+	
+	employ_eunuch = { #Employ eunuch
+		potential = {
+			is_ruler = yes
+			OR = {
+				ai = no
+				higher_tier_than = count
+			}
+			OR = {
+				religion_group = muslim
+				culture_group = iranian
+				culture_group = altaic
+				culture_group = byzantine
+				culture_group = arabic
+				culture_group = ethiopic
+				culture_group = nilo_saharan
+				culture_group = congo_nigerian
+			}
+		}
+		allow = {
+			scaled_wealth = 0.2
+		}
+		effect = {
+			scaled_wealth = -0.2
+			random_list = {
+				20 = {
+					create_random_steward = {
+						random_traits = yes
+						trait = eunuch
+						dynasty = random
+						female = no
+					}
+				}
+				20 = {
+					create_random_diplomat = {
+						random_traits = yes
+						trait = eunuch
+						dynasty = random
+						female = no
+					}
+				}
+				20 = {
+					create_random_soldier = {
+						random_traits = yes
+						trait = eunuch
+						dynasty = random
+						female = no
+					}
+				}
+				20 = {
+					create_random_intriguer = {
+						random_traits = yes
+						trait = eunuch
+						dynasty = random
+						female = no
+					}
+				}
+				20 = {
+					create_random_priest = {
+						random_traits = yes
+						trait = eunuch
+						dynasty = random
+						female = no
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { scaled_wealth = 0.6 }
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					trait = eunuch
+				}
+			}
+			modifier = {
+				factor = 0
+				job_marshal = {
+					martial = 13
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					martial = 13
+					is_female = no
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					martial = 13
+					is_female = no
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				job_spymaster = {
+					intrigue = 13
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					intrigue = 13
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					intrigue = 13
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				job_chancellor = {
+					diplomacy = 13
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					diplomacy = 13
+					OR = {
+						is_female = no
+						liege = {
+							primary_title = {
+								has_law = true_cognatic_succession
+							}
+						}
+					}
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					diplomacy = 13
+					OR = {
+						is_female = no
+						liege = {
+							primary_title = {
+								has_law = true_cognatic_succession
+							}
+						}
+					}
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+		}
+	}	
+	
+	take_courtier_as_concubine = { # AI Pagan rulers get concubines
+		potential = {
+			is_ruler = yes
+			higher_tier_than = baron
+			is_adult = yes
+			is_female = no
+			NOT = { trait = incapable }
+			OR = { # Religions with concubines
+				religion = aglibol
+				religion = alexandros
+				religion = allat
+				religion = allfather
+				religion = almaqah
+				religion = attar
+				religion = beelshamen
+				religion = bud_zor
+				religion = chumbylat
+				religion = finnish_pagan
+				religion = hubal
+				religion = illuyanka
+				religion = ilmatar
+				religion = indoh_zor
+				religion = luwian
+				religion = maher
+				religion = malakbel
+				religion = mani
+				religion = mani_ahriman
+				religion = mani_mithra
+				religion = mazdakism
+				religion = nestorian
+				religion = norse_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = ragnarok
+				religion = shams
+				religion = solomonic_christ
+				religion = sol_boreas
+				religion = sol_mani
+				religion = sol_norse
+				religion = sol_tsahay
+				religion = sowilo
+				religion = talab
+				religion = tarhunt
+				religion = tengri_ahriman
+				religion = tengri_bud
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = tengri_rod
+				religion = vattisenyaly
+				religion = voipel
+				religion = yazdanism
+				religion = yazidism
+				religion = zoroastrian
+				religion = zor_angra
+				religion = zor_hindu
+				religion = zurvanism
+			}
+		}
+		allow = {
+			#any_courtier = {
+			#	is_consort = no
+			#}
+		}
+		effect = {
+			prestige = -5
+			create_character = {
+				random_traits = yes
+				dynasty = random
+				female = yes
+			}
+			new_character = {
+				add_consort = ROOT
+			}
+			set_character_flag = concubine_decision_taken
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.2
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					is_consort = yes
+				}
+			}
+			modifier = {
+				factor = 0
+				has_character_flag = concubine_decision_taken
+			}
+			modifier = {
+				factor = 2
+				trait = lustful
+			}
+			modifier = {
+				factor = 2
+				trait = gregarious
+			}
+			modifier = {
+				factor = 0.5
+				trait = chaste
+			}
+			modifier = {
+				factor = 0.5
+				trait = celibate
+			}
+			modifier = {
+				factor = 2
+				trait = hedonist
+			}
+			modifier = {
+				factor = 0.5
+				trait = incapable
+			}
+		}
+	}
+	
+	
+	adopt_a_child = { # Adopt a child
+		potential = {
+			ai = no
+			is_ruler = yes
+			is_adult = yes
+			is_female = no
+			NOT = { trait = incapable }
+			age = 50
+			NOT = {
+				any_sibling = {
+					is_alive = yes
+				}
+			}
+			NOT = {
+				any_child = {
+					is_alive = yes
+				}
+			}
+			NOT = {
+				any_child = {
+					any_child = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		allow = {
+		
+		}
+		effect = {
+			hidden_tooltip = {
+				character_event = {
+					id = VIETmisc.3
+					days = 1
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}	
+	
+}
+

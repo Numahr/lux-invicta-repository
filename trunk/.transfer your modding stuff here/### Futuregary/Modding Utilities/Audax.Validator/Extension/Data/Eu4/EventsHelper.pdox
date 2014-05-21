@@ -1,0 +1,78 @@
+(Type CountryEvent If = "c") = {
+	Inherits = Event
+}
+
+(Type ProvinceEvent If = "p") = {
+	Inherits = Event
+}
+
+(Type Event) = {
+	Single = { Left = "id" Right = NamespaceEventId UniqueId = Right }
+	Single = { Left = "title" Right = Key }
+	Single = { Left = "desc" Right = Key }
+
+	Optional = { Left = "exclusive" Right = Bool }
+	Optional = { Left = "major" Right = Bool }
+	Optional = { Left = "is_triggered_only" Right = Bool }
+	Optional = { Left = "fire_only_once" Right = Bool }
+	Optional = { Left = "picture" Right = String }
+	
+	(If If = "c") = {
+		Optional = { Left = "immediate" Right = CountryCommand }
+		Optional = { Left = "trigger" Right = CountryTrigger }
+	}
+	
+	(If If = "p") = {
+		Optional = { Left = "immediate" Right = ProvinceCommand }
+		Optional = { Left = "trigger" Right = ProvinceTrigger }
+		#(Optional If = "Eu3Ht") = { Left = "exclusive" Right = Bool }
+	}
+	
+	Required = { Left = "option" Right = Option }
+	Optional = { Left = "mean_time_to_happen" Right = Mtth }
+}
+
+(Type Option) = {
+	Single = { Left = "name" Right = Key }
+	Optional = { Left = "ai_chance" Right = AiClause }
+	
+	(If If = "c") = {
+		Optional = { Left = "trigger" Right = CountryTrigger }
+		Inherits = CountryCommand
+	}
+	
+	(If If = "p") = {
+		Optional = { Left = "trigger" Right = ProvinceTrigger }
+		Inherits = ProvinceCommand
+	}
+	
+}
+		
+(Type AiClause) = {
+	Single = { Left = "factor" Right = Int }
+	Optional = { Left = "days" Right = Int }
+	(Ch N N) = { Left = "modifier" Right = MtthModifier }
+}
+		
+(Type RandomClause) = {
+	Single = { Left = "chance" Right = Int }
+	
+	(Inherits If = "c") = CountryCommand
+	(Inherits If = "p") = ProvinceCommand
+}
+		
+(Type Mtth) = {
+	OneOf = { "days" "months" "years" }
+	Optional = { Left = "days" Right = NonNegativeInt }
+	Optional = { Left = "months" Right = NonNegativeInt }
+	Optional = { Left = "years" Right = NonNegativeInt }
+	Child = { Left = "modifier" Right = MtthModifier }
+}
+
+(Type MtthModifier) = {
+	Inherits = FactorModifier
+	Single = { Left = "factor" Right = Double }
+	
+	(Inherits If = "c") = CountryTrigger
+	(Inherits If = "p") = ProvinceTrigger
+}

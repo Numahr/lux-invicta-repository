@@ -1,0 +1,169 @@
+plot_escape_slavery = {
+	type = realm_characters_plus
+	intrigue_plot = yes
+	
+	potential = {
+		trait = slave
+		NOT = { trait = incapable }
+		age = 14
+		prisoner = no
+		ai = yes
+		any_independent_ruler = { crownlaw_title = { has_law = slavery_0 } }
+	}
+	
+	allow = {
+		trait = slave_owner
+		#is_liege_of = FROM
+		has_opinion_modifier = { who = FROM modifier = opinion_my_slave }
+	}
+	
+	chance = {
+		factor = 100
+		
+		# Slave's personality
+		modifier = {
+			factor = 6
+			FROM = { trait = ambitious }
+		}
+#		modifier = {
+#			factor = 4
+#			FROM = { trait = dragon_rider }
+#		}
+		modifier = {
+			factor = 4
+			FROM = { trait = brave }
+		}
+		modifier = {
+			factor = 4
+			FROM = { trait = proud }
+		}
+		modifier = {
+			factor = 0.05
+			FROM = { trait = content }
+		}
+		modifier = {
+			factor = 0.2
+			FROM = { trait = craven }
+		}
+		modifier = {
+			factor = 0.2
+			FROM = { trait = humble }
+		}
+		#Liege is likely to hurt me 
+		modifier = {
+			factor = 0.33
+			trait = cruel
+		}
+		modifier = {
+			factor = 0.33
+			trait = impaler
+		}
+		#Liege is soft
+		modifier = {
+			factor = 3
+			trait = kind
+		}
+		modifier = {
+			factor = 3
+			trait = honorable
+		}
+		# Slave's opinion of master
+		modifier = {
+			factor = 0
+			reverse_opinion = { who = FROM value = 50 }
+		}
+		modifier = {
+			factor = 0.5
+			reverse_opinion = { who = FROM value = 50 }		
+		}
+		modifier = {
+			factor = 0.8
+			reverse_opinion = { who = FROM value = 40 }
+		}
+		modifier = {
+			factor = 0.8
+			reverse_opinion = { who = FROM value = 30 }
+		}
+		modifier = {
+			factor = 0.8
+			reverse_opinion = { who = FROM value = 20 }
+		}
+		modifier = {
+			factor = 0.8
+			reverse_opinion = { who = FROM value = 10 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -9 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -19 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -29 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -39 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -49 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -59 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -69 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -79 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -89 } }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { reverse_opinion = { who = FROM value = -99 } }
+		}
+		
+		# Previous failed escape attempt
+		modifier = {
+			factor = 0.1
+			reverse_has_opinion_modifier = { who = FROM modifier = opinion_slave_attempted_escape }
+		}
+	}
+	
+	success = { FROM = { NOT = { trait = slave } } }
+	effect = { 
+		FROM = {
+			clr_character_flag = abort_plot
+			clr_character_flag = plot_check
+			clr_character_flag = escape_slavery_decision
+		}
+	}
+	abort = {
+		FROM = {
+			OR = {
+				ai = no # Slaves SHOULD always be unplayable
+				has_character_flag = abort_plot
+				prisoner = yes
+				trait = incapable
+				#NOT = { any_independent_ruler = { crownlaw_title = { has_law = slavery_0 } } }
+			}
+		}
+	}
+	abort_effect = {
+		FROM = {
+			clr_character_flag = abort_plot
+			clr_character_flag = plot_check
+			clr_character_flag = escape_slavery_decision
+		}
+	}
+}

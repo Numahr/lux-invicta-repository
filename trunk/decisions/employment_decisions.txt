@@ -1,0 +1,602 @@
+decisions = {
+
+	employ_priest = {
+		potential = {
+			is_ruler = yes
+			OR = {
+				ai = no
+				higher_tier_than = count
+			}
+		}
+		allow = {
+			piety = 5
+			scaled_wealth = 0.1
+		}
+		effect = {
+			piety = -5
+			scaled_wealth = -0.1
+			if = {
+				limit = {
+					NOT = {
+						religion = allat
+						religion = almaqah
+						religion = amanai
+						religion = attar
+						religion = berber_pagan
+						religion = gurzil
+						religion = hubal
+						religion = maher
+						religion = norse_pagan
+						religion = norse_war
+						religion = ragnarok
+						religion = shams
+						religion = sowilo
+						religion = talab
+					}
+				}
+				create_random_priest = {
+					random_traits = yes
+					dynasty = random
+					female = no
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						religion = allat
+						religion = almaqah
+						religion = amanai
+						religion = attar
+						religion = berber_pagan
+						religion = gurzil
+						religion = hubal
+						religion = maher
+						religion = norse_pagan
+						religion = norse_war
+						religion = ragnarok
+						religion = shams
+						religion = sowilo
+						religion = talab
+					}
+				}
+				create_random_priest = {
+					random_traits = yes
+					dynasty = random
+				}
+			}
+			new_character = {
+				hidden_tooltip = {
+					if = {
+						limit = {
+							OR = {
+								religion_group = indian_group
+								religion_group = indohelen_group
+							}
+						}
+						add_trait = brahmin
+						character_event = { id = RoI.30121 }
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { piety = 15 }
+			}
+			modifier = {
+				factor = 0
+				NOT = { scaled_wealth = 0.3 }
+			}
+			modifier = {
+				factor = 0
+				job_spiritual = {
+					learning = 10
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					learning = 10
+					age = 16
+					prisoner = no
+					religion = ROOT
+					is_female = no
+					OR = {
+						is_ruler = no
+						is_theocracy = yes
+						liege = { religion_group = muslim }
+					}
+					NOT = { trait = incapable }
+					OR = {
+						NOT = { liege = { religion_group = muslim } }
+						NOT = { religion_group = muslim }
+						trait = detached_priest
+						trait = martial_cleric
+						trait = scholarly_theologian
+						trait = mastermind_theologian
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					learning = 10
+					age = 16
+					prisoner = no
+					religion = ROOT
+					is_female = no
+					OR = {
+						is_ruler = no
+						is_theocracy = yes
+						liege = { religion_group = muslim }
+					}
+					NOT = { trait = incapable }
+					OR = {
+						NOT = { liege = { religion_group = muslim } }
+						NOT = { religion_group = muslim }
+						trait = detached_priest
+						trait = martial_cleric
+						trait = scholarly_theologian
+						trait = mastermind_theologian
+					}
+				}
+			}
+		}
+	}
+	
+	employ_steward = {
+		potential = {
+			is_ruler = yes
+			OR = {
+				ai = no
+				higher_tier_than = count
+			}
+		}
+		allow = {
+			scaled_wealth = 0.2
+		}
+		effect = {
+			scaled_wealth = -0.2
+			if = {
+				limit = {
+					religion_group = muslim
+				}
+				create_random_steward = {
+					random_traits = yes
+					dynasty = random
+					female = no
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						religion_group = muslim
+					}
+				}
+				create_random_steward = {
+					random_traits = yes
+					dynasty = random
+				}
+			}
+			new_character = {
+				hidden_tooltip = {
+					if = {
+						limit = {
+							OR = {
+									religion_group = indian_group
+									religion_group = indohelen_group
+								}
+						}
+						add_trait = kshatriya
+						character_event = { id = RoI.30121 }
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { scaled_wealth = 0.6 }
+			}
+			modifier = {
+				factor = 0
+				job_treasurer = {
+					stewardship = 10
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					stewardship = 10
+					OR = {
+						is_female = no
+						liege = {
+							primary_title = {
+								NOT = {
+									has_law = agnatic_succession
+								}
+							}
+						}
+					}
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					stewardship = 10
+					OR = {
+						is_female = no
+						liege = {
+							primary_title = {
+								NOT = {
+									has_law = agnatic_succession
+								}
+							}
+						}
+					}
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+		}
+	}
+	
+	employ_marshal = {
+		potential = {
+			is_ruler = yes
+			OR = {
+				ai = no
+				higher_tier_than = count
+			}
+		}
+		allow = {
+			scaled_wealth = 0.2
+		}
+		effect = {
+			scaled_wealth = -0.2
+			if = {
+				limit = {
+					NOT = {
+						religion = gurzil
+						religion = hubal
+						religion_group = zoroastrian_group
+						culture_group = iranian
+						top_liege = {
+							has_character_modifier = female_marshals_allowed
+							has_character_modifier = female_marshals_accepted
+							has_character_modifier = female_marshals_approved
+						}
+					}
+				}
+				create_random_soldier = {
+					random_traits = yes
+					dynasty = random
+					female = no
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						religion = hubal
+						religion = gurzil
+						religion_group = zoroastrian_group
+						culture_group = iranian
+						top_liege = {
+							has_character_modifier = female_marshals_allowed
+							has_character_modifier = female_marshals_accepted
+							has_character_modifier = female_marshals_approved
+						}
+					}
+				}
+				create_random_soldier = {
+					random_traits = yes
+					dynasty = random
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { scaled_wealth = 0.6 }
+			}
+			modifier = {
+				factor = 0
+				job_marshal = {
+					martial = 10
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					martial = 10
+					is_female = no
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					martial = 10
+					is_female = no
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+		}
+	}
+	
+	employ_spymaster = {
+		potential = {
+			is_ruler = yes
+			OR = {
+				ai = no
+				higher_tier_than = count
+			}
+		}
+		allow = {
+			scaled_wealth = 0.2
+		}
+		effect = {
+			scaled_wealth = -0.2
+			create_random_intriguer = {
+				random_traits = yes
+				dynasty = random
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { scaled_wealth = 0.6 }
+			}
+			modifier = {
+				factor = 0
+				job_spymaster = {
+					intrigue = 10
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					intrigue = 10
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					intrigue = 10
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+		}
+	}
+	
+	employ_chancellor = {
+		potential = {
+			is_ruler = yes
+			OR = {
+				ai = no
+				higher_tier_than = count
+			}
+		}
+		allow = {
+			scaled_wealth = 0.2
+		}
+		effect = {
+			scaled_wealth = -0.2
+			if = {
+				limit = {
+					NOT = {
+						religion = allat
+						religion = almaqah
+						religion = amanai
+						religion = attar
+						religion = berber_pagan
+						religion = gurzil
+						religion = hubal
+						religion = maher
+						religion = norse_pagan
+						religion = norse_war
+						religion = ragnarok
+						religion = shams
+						religion = sowilo
+						religion = talab
+						religion = arab_pagan_reformed
+						religion = berber_pagan_reformed
+						religion = norse_pagan_reformed
+						religion = ragnarok_reformed
+					}
+				}
+				create_random_diplomat = {
+					random_traits = yes
+					dynasty = random
+					female = no
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						religion = allat
+						religion = almaqah
+						religion = amanai
+						religion = attar
+						religion = berber_pagan
+						religion = gurzil
+						religion = hubal
+						religion = maher
+						religion = norse_pagan
+						religion = norse_war
+						religion = ragnarok
+						religion = shams
+						religion = sowilo
+						religion = talab
+						religion = arab_pagan_reformed
+						religion = berber_pagan_reformed
+						religion = norse_pagan_reformed
+						religion = ragnarok_reformed
+					}
+				}
+				create_random_diplomat = {
+					random_traits = yes
+					dynasty = random
+				}				
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { scaled_wealth = 0.6 }
+			}
+			modifier = {
+				factor = 0
+				job_chancellor = {
+					diplomacy = 10
+				}
+			}
+			modifier = {
+				factor = 0
+				any_vassal = {
+					diplomacy = 10
+					OR = {
+						is_female = no
+						liege = {
+							primary_title = {
+								has_law = true_cognatic_succession
+							}
+						}
+					}
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+			modifier = {
+				factor = 0
+				any_courtier = {
+					diplomacy = 10
+					OR = {
+						is_female = no
+						liege = {
+							primary_title = {
+								has_law = true_cognatic_succession
+							}
+						}
+					}
+					age = 16
+					prisoner = no
+					NOT = { trait = incapable }
+				}
+			}
+		}
+	}
+	
+	present_debutante = {
+		potential = {
+			is_ruler = yes
+			OR = {
+				ai = no
+				higher_tier_than = count
+			}
+		}
+		allow = {
+			scaled_wealth = 0.2
+		}
+		effect = {
+			treasury = -10
+			random_list = {
+				20 = {
+					create_character = {
+					random_traits = yes
+					trait = fair 
+					dynasty = random
+					female = yes
+					age = 16
+					}
+				}
+				20 = {
+					create_character = {
+					random_traits = yes
+					trait = gregarious 
+					dynasty = random
+					female = yes
+					age = 16
+					}
+				}
+				20 = {
+					create_character = {
+					random_traits = yes
+					trait = shy 
+					dynasty = random
+					female = yes
+					age = 16
+					}
+				}
+				20 = {
+					create_character = {
+					random_traits = yes
+					trait = lustful 
+					dynasty = random
+					female = yes
+					age = 16
+					}
+				}
+				20 = {
+					create_character = {
+					random_traits = yes
+					trait = deceitful  
+					dynasty = random
+					female = yes
+					age = 16
+					}
+				}
+			}
+			new_character = {
+				set_character_flag = debutante
+			}
+			add_character_modifier = {
+				name = employment_timer
+				duration = 180
+				hidden = yes
+			}
+			set_character_flag = employed_debutante
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}

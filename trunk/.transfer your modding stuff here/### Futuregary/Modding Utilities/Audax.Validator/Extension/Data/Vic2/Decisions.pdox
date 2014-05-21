@@ -1,0 +1,103 @@
+(Validator Decisions) = {
+	Type = GroupValidator
+	FriendlyName = "Decisions"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "decisions" "*.txt")
+		ValidatorName = DecisionFile
+	}
+	
+	Validator = {
+		Type = ResourceUseValidator
+		Description = "Decision pictures"
+		SupplyUnique = True
+		
+		# For picture=""
+		Supply = {
+			(DataSource StringList) = { "" }
+			MustBeMatched = False
+		}
+		
+		Supply = {
+			(DataSource Chained) = {
+				Or = {
+					(FileGroup "gfx\pictures\decisions" "*.dds")
+					(FileGroup "gfx\pictures\decisions" "*.tga")
+				}
+				(StringOp ToUpper)
+				(StringOp Replace "\\" "\")
+				(StringOp Replace ".DDS" "")
+				(StringOp Replace ".TGA" "")
+				(StringOp Replace "GFX\PICTURES\DECISIONS\" "")
+			}
+			
+			MustBeMatched = True
+		}
+		
+		Demand = {
+			(DataSource Chained) = {
+				Pdo = { (FileGroup "decisions" "*.txt") }
+				SelectPath = { Path = "*\*\picture\[R]" }
+				(StringOp ToUpper)
+			}
+			
+			MustBeMatched = True
+		}
+	}
+}
+Global = {
+	(Type.Enum Decision) = { Import = { (FileGroup "decisions" "*.txt") SelectPath = "*\*\[L]" } }
+}
+
+(Type DecisionFile) = {
+	Optional = { Left = "political_decisions" Right = DecisionGroup }
+}
+
+(Type DecisionGroup) = {
+	Child = {
+		Left = { Type = String } Right = DecisionType UniqueId = Left
+		(CheckKey "*_title" Left IfNot = NoCheckKey)
+		(CheckKey "*_desc" Left IfNot = NoCheckKey)
+	}
+}
+
+(Type DecisionType) = {
+	Optional = { Left = "alert" Right = Bool }
+	Single = { Left = "potential" Right = CountryTrigger }
+	Single = { Left = "allow" Right = CountryTrigger }
+	Single = { Left = "effect" Right = CountryCommand }
+	Optional = { Left = "ai_will_do" Right = AiWillDo }
+	Optional = { Left = "picture" Right = String }
+	
+	(If If = Vic2Hod) = {
+		NodeSwitcher = {
+			Node = "news"
+			Default = Empty
+			
+			Switch = {
+				"yes" = {
+					Optional = { Left = "news_title" Right = String (CheckKey "*" Right IfNot = NoCheckKey) }
+					Single = { Left = "news_desc_long" Right = String (CheckKey "*" Right IfNot = NoCheckKey) }
+					Single = { Left = "news_desc_medium" Right = String (CheckKey "*" Right IfNot = NoCheckKey) }
+					Single = { Left = "news_desc_short" Right = String (CheckKey "*" Right IfNot = NoCheckKey) }
+				}
+				"no" = Empty
+			}
+		}
+	}
+	
+}
+
+(Type AiWillDo) = {
+	Single = { Left = "factor" Right = NonNegDbl }
+	
+	(Ch N Y) = { Left = "modifier" Right = AiModifier }
+}
+
+(Type AiModifier) = {
+	Inherits = FactorModifier
+	Inherits = CountryTrigger
+	
+	Single = { Left = "factor" Right = NonNegDbl }
+}

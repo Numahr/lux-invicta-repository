@@ -1,0 +1,111 @@
+(Validator Maps) = {
+	FriendlyName = "Map"
+	Type = GroupValidator
+		
+	Validator = {
+		Type = Default
+		(FileGroup "map\positions.txt")
+		ValidatorName = PositionsFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "map\continent.txt")
+		ValidatorName = ContinentFile
+	}
+	
+	Validator = {
+		Type = Default
+		(DataSource Csv) = {
+			(FileGroup "map\adjacencies.csv")
+			Columns = 9
+			AllowExtraColumns = False
+		}
+		ValidatorName = AdjacencyRow
+	}
+}
+
+(Type PositionsFile) = {
+	OptionList = { Left = { Type = LandProvince } Right = LandProvincePosition }
+	OptionList = { Left = { Type = SeaProvince } Right = SeaProvincePosition }
+}
+
+(Type PositionBase) = {
+	Optional = { Left = "position" Right = { (PdoList N) = { Type = Double } } }
+	Optional = { Left = "rotation" Right = { (PdoList N) = { Type = Double } } }
+	Optional = { Left = "height" Right = { (PdoList N) = { Type = Double } } }
+}
+
+(Type LandProvincePosition) = {
+	Inherits = PositionBase
+	
+	
+}
+
+(Type SeaProvincePosition) = {
+	Inherits = PositionBase
+
+}
+
+(Type ContinentFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = { (PdoList Y) = { Type = Province } } }
+}
+
+(Type AdjacencyRow) = {
+	NodeSwitcher = {
+		Node = "0"
+		Switch = {
+			"-1" = DummyAdjacencyRow
+			(LandProvince Enum) = NormalAdjacencyRow
+			(SeaProvince Enum) = SeaAdjacencyRow
+		}
+	}	
+	
+	Single = { Left = "4" Right = { Literal = "-1" } }
+	Single = { Left = "5" Right = { Literal = "-1" } }
+	Single = { Left = "6" Right = { Literal = "-1" } }
+	Single = { Left = "7" Right = { Literal = "-1" } }
+	Single = { Left = "8" Right = String }
+}
+
+(Type DummyAdjacencyRow) = {
+	Single = { Left = "1" Right = { Literal = "-1" } }
+	Single = { Left = "2" Right = { Literal = "" Literal = "-1" } }
+	Single = { Left = "3" Right = { Literal = "-1" } }
+}
+
+(Type NormalAdjacencyRow) = {
+	NodeSwitcher = {
+		Node = "2"
+		Switch = {
+			"" = {
+				Single = { Left = "3" Right = { Literal = "" } }
+			}
+			"major_river" = HasSeaProvRow
+			"sea" = HasSeaProvRow
+		}
+	}
+	Single = { Left = "1" Right = LandProvince }
+}
+
+(Type SeaAdjacencyRow) = {
+	Single = { Left = "1" Right = SeaProvince }
+	Single = { Left = "2" Right = { Literal = "portage" } }
+	Single = { Left = "3" Right = LandProvince }
+}
+
+(Type HasSeaProvRow) = {
+	Single = { Left = "3" Right = SeaProvince }
+}
+
+
+
+
+
+
+
+
+
+
+
+

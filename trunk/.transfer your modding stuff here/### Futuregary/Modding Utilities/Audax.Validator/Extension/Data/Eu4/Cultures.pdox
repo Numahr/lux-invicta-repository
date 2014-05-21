@@ -1,0 +1,27 @@
+(Validator CultureValidator) = {
+	Type = Default
+	FriendlyName = "Cultures"
+	ValidatorName = CultureFile
+	(FileGroup "common\cultures" "*.txt")
+}
+
+(Type CultureFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = CultureGroup (CheckKey "*" Left IfNot = NoCheckKey) }
+}
+
+(Type CultureGroup) = {
+	Optional = { Left = "graphical_culture" Right = GraphicalCultureType }
+	Optional = { Left = "second_graphical_culture" Right = GraphicalCultureType }
+	Optional = { Left = "union" Right = Tag }
+	Optional = { Left = "dynasty_names" Right = { (PdoList Y) = { Type = String } } }
+	(Ch N N) = { Left = { Type = String } Right = Culture UniqueId = Left (CheckKey "*" Left IfNot = NoCheckKey) }
+
+}
+
+(Type Culture) = {
+	Optional = { Left = "graphical_culture" Right = GraphicalCultureType }
+	Optional = { Left = "second_graphical_culture" Right = GraphicalCultureType }
+	Optional = { Left = "primary" Right = Tag }
+	Optional = { Left = "dynasty_names" Right = { (PdoList Y) = { Type = String } } }
+}
+

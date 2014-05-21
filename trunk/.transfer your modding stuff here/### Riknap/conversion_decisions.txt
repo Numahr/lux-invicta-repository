@@ -1,0 +1,4281 @@
+decisions = {
+	convert_to_capital_religion = {
+		potential = {
+			ai = no
+			capital_scope = {
+				NOT = { religion = ROOT }
+				religion_group = ROOT
+				NOT = {
+					ROOT = {
+						liege = {
+							religion = PREVPREV
+						}
+					}
+				}
+			}
+			NOT = { has_character_flag = converted_religion }
+		}
+		allow = {
+			NOT = { trait = zealous }
+			NOT = { trait = dogmatic } ## added by Ash
+			NOT = { trait = idealistic } ## added by Ash
+		}
+		effect = {
+			piety = -500
+			capital_scope = {
+				reverse_religion = ROOT
+			}
+			set_character_flag = converted_religion
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}	
+	convert_to_liege_religion = {
+		potential = {
+			is_playable = yes
+			liege = {
+				NOT = { character = ROOT }
+				NOT = { religion = ROOT }
+				religion_group = ROOT
+			}
+		}
+		allow = {
+			NOT = { trait = zealous }
+			NOT = { trait = dogmatic } ## added by Ash
+			NOT = { trait = idealistic } ## added by Ash
+		}
+		effect = {
+			prestige = -500
+			if = {
+				limit = { higher_tier_than = BARON }
+				religion_authority = {
+					modifier = ruler_converted_from
+				}
+			}
+			liege = {
+				reverse_religion = ROOT
+			}
+			if = {
+				limit = { higher_tier_than = BARON }
+				hidden_tooltip = {
+					religion_authority = {
+						modifier = ruler_converted_to
+					}
+				}
+			}
+			piety = 200
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0.05
+			modifier = {
+				factor = 2
+				trait = content
+			}
+		}
+	}
+	
+	convert_to_liege_culture = {
+		potential = {
+			is_playable = yes
+			liege = {
+				NOT = { character = ROOT }
+				NOT = { culture = ROOT }
+			}
+		}
+		allow = {
+			prestige = 100
+		}
+		effect = {
+			prestige = -100
+			liege = {
+				reverse_culture = ROOT
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+	convert_to_parent_religion = {
+		potential = {
+			is_playable = yes
+			independent = yes
+			is_heretic = yes
+		}
+		allow = {
+			NOT = { trait = zealous }
+			NOT = { trait = dogmatic } ## added by Ash
+			NOT = { trait = idealistic } ## added by Ash
+			independent = yes
+		}
+		effect = {
+			prestige = -500
+			if = {
+				limit = { higher_tier_than = BARON }
+				religion_authority = {
+					modifier = ruler_converted_from
+				}
+			}
+			
+			abandon_heresy = yes
+			
+			if = {
+				limit = { higher_tier_than = BARON }
+				hidden_tooltip = {
+					religion_authority = {
+						modifier = ruler_converted_to
+					}
+				}
+			}
+			piety = 200
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_attacker_religion = {
+		is_high_prio = yes
+		
+		potential = {
+			is_playable = yes
+			controls_religion = no
+			war = yes
+			any_war = {
+				defender = { character = ROOT }
+				attacker = {
+					AND = {
+					NOT = { religion = ROOT } 				
+					OR = {
+						using_cb = religious
+						using_cb = crusade
+						#using_cb = sacred_war
+						}
+					}
+				}
+				OR = {
+				using_cb = religious
+				using_cb = crusade
+				#using_cb = sacred_war
+				}
+			}
+			
+		}
+		
+		allow = {
+			NOT = { trait = zealous }
+			prestige = 500
+		}
+		
+		effect = {
+			prestige = -500
+			piety = -100
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			any_war = {
+				limit = {
+				AND = {
+					defender = { character = ROOT }
+					OR = {
+						using_cb = crusade
+						using_cb = religious
+						#using_cb = sacred_war
+					}
+					attacker = {
+					NOT = { religion = ROOT } 				
+					OR = {
+						using_cb = religious
+						using_cb = crusade
+						#using_cb = sacred_war
+						}
+					}
+					}
+				}
+				attacker = {
+					hidden_tooltip = {
+						letter_event = { id = 62800 }
+					}
+					hidden_tooltip = {
+						ROOT = {
+							any_courtier = {
+								limit = {
+									religion = ROOT
+									employer = { character = ROOT }
+								}
+								religion = PREVPREV
+							}
+							any_vassal = {
+								limit = {
+									is_playable = no
+									religion = ROOT
+								}
+								religion = PREVPREV
+							}
+							capital_scope = {
+								if = {
+									limit = { religion = ROOT }
+									religion = PREVPREV
+								}
+							}
+						}
+					}
+					reverse_religion = ROOT 
+				}
+			}
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			
+			#piety = 100
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.1
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					any_war = {
+						defender = { character = ROOT }
+						OR = {
+							using_cb = crusade
+							using_cb = religious
+							#using_cb = sacred_war
+						}
+						war_score = 50
+						thirdparty_title_scope = {
+							ROOT = {
+								primary_title = {
+									title = PREVPREV
+								}
+							}
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				any_war = {
+					defender = { character = ROOT }
+					OR = {
+						using_cb = crusade
+						using_cb = religious
+						#using_cb = sacred_war
+					}
+					war_score = 75
+					thirdparty_title_scope = {
+						ROOT = {
+							primary_title = {
+								title = PREVPREV
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	# convert_to_reformed = { # Can't use due to heresies being able to reform before reformed religion becomes available. Maybe Paradox has made a fix in 2.0? -FG
+		# potential = {
+			# is_playable = yes
+			# is_heretic = yes
+			# OR = { #unreformed religions
+			# }
+		# }
+		# allow = {
+			# NOT = { trait = zealous }
+			# piety = 50
+		# }
+		# effect = {
+			# piety = -50
+			# if = {
+				# limit = { religion = norse_pagan }
+				# religion = norse_pagan_reformed
+			# }
+			# if = {
+				# limit = { religion = finnish_pagan }
+				# religion = finnish_pagan_reformed
+			# }
+			# if = {
+				# limit = { religion = baltic_pagan }
+				# religion = baltic_pagan_reformed
+			# }
+			# if = {
+				# limit = { religion = tengri_pagan }
+				# religion = tengri_pagan_reformed
+			# }
+			# if = {
+				# limit = { religion = slavic_pagan }
+				# religion = slavic_pagan_reformed
+			# }
+			# if = {
+				# limit = { religion = aztec }
+				# religion = aztec_reformed
+			# }
+			# if = {
+				# limit = { religion = west_african_pagan }
+				# religion = west_african_pagan_reformed
+			# }
+			
+			# hidden_tooltip = {
+				# any_courtier = {
+					# limit = {
+						# is_heresy_of = ROOT
+						# employer = { character = ROOT }
+					# }
+					# religion = ROOT
+				# }
+				# any_vassal = {
+					# limit = {
+						# is_playable = no
+						# is_heresy_of = ROOT
+					# }
+					# religion = ROOT
+				# }
+				# capital_scope = {
+					# if = {
+						# limit = { is_heresy_of = ROOT }
+						# religion = ROOT
+					# }
+				# }
+			# }
+		# }
+		# revoke_allowed = {
+			# always = no
+		# }
+		# ai_will_do = {
+			# factor = 1 # On average ca 1 year before taken
+			# modifier = {
+				# factor = 0.025 # Generally quite a slow process - ca 40 years
+			# }
+			# modifier = {
+				# factor = 0.5
+				# trait = slow
+			# }
+			# modifier = {
+				# factor = 0.1
+				# trait = imbecile
+			# }
+			# modifier = {
+				# factor = 0.5
+				# trait = content
+			# }
+			# modifier = {
+				# factor = 2.0
+				# trait = quick
+			# }
+			# modifier = {
+				# factor = 4.0
+				# trait = genius
+			# }
+			# modifier = {
+				# factor = 5.0
+				# trait = cynical # It's the future..
+			# }
+			# modifier = {
+				# factor = 2.0
+				# trait = ambitious
+			# }
+			# modifier = {
+				# factor = 0
+				# independent = no
+				# any_liege = {
+					# religion = ROOT
+				# }
+			# }
+		# }
+	# }
+	
+	### Spousal/Concubine conversion decisions done by SirKulinski
+	convert_to_spouse_aztec = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = aztec
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = aztec
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = aztec
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_gandharan_buddhist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = bud_gandharan
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = bud_gandharan
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = bud_gandharan
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_adoptionist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = adoptionist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = adoptionist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = adoptionist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_apollinarist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = apollinarist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = apollinarist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = apollinarist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_arian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = arian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = arian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = arian
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_audianist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = audianist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = audianist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = audianist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_bogomilist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = bogomilist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = bogomilist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = bogomilist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_catholic = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = catholic
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = catholic
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = catholic
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_docetist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = docetist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = docetist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = docetist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_donatist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = donatist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = donatist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = donatist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_iconoclast = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = iconoclast
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = iconoclast
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = iconoclast
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_marcionist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = marcionist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = marcionist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = marcionist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_melkite = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = melkite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = melkite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = melkite
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_monophysite = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = monophysite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = monophysite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = monophysite
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_monothelite = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = monothelite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = monothelite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = monothelite
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_montanist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = montanist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = montanist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = montanist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_nestorian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = nestorian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = nestorian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = nestorian
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_orthodox = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = orthodox
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = orthodox
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = orthodox
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_sabellianist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = sabellianist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = sabellianist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = sabellianist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_solomonic_christian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = solomonic_christ
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = solomonic_christ
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = solomonic_christ
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_unctionist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = unctionist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = unctionist
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = unctionist
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_valentinian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = valentinian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = valentinian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = valentinian
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_imperial_cultist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = roman_imperial
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = roman_imperial
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = roman_imperial
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_jupiterite = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = jupiter
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = jupiter
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = jupiter
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_manichaean = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = mani
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = mani
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = mani
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_theomachian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = mani_mithra
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = mani_mithra
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = mani_mithra
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_eosphorist = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = mithra_sol
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = mithra_sol
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = mithra_sol
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_mithraic = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = mithra
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = mithra
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = mithra
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_mithraic_christian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = mithra_christ
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = mithra_christ
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = mithra_christ
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_athari = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = athari
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = athari
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = athari
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_haruri = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = haruri
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = haruri
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = haruri
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_hurufi = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = hurufi
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = hurufi
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = hurufi
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_shia = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = shiite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = shiite
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = shiite
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_sunni = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = sunni
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = sunni
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = sunni
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_ashari = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = ashari
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = ashari
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = ashari
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_maturidi = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = maturidi
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = maturidi
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = maturidi
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_zahiri = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = zahiri
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = zahiri
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = zahiri
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_apollo_heliosean = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = sol_apollo
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = sol_apollo
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = sol_apollo
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_solar_christian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = sol_christ
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = sol_christ
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = sol_christ
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_solar_imperial = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = sol
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = sol
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = sol
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_solar_manichaean = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = sol_mani
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = sol_mani
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = sol_mani
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_zoroastrian = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = zoroastrian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = zoroastrian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = zoroastrian
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_zoroastrian_hindu = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = zor_hindu
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = zor_hindu
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = zor_hindu
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_ilm_islam = {
+		potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = ilm_islam
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = ilm_islam
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = ilm_islam
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	convert_to_spouse_luwian = {
+			potential = {
+			is_playable = yes
+			OR = { # Traditional Religions
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = beelshamen
+				religion = berber_pagan
+				religion = bud_zor
+				religion = celtic_christ
+				religion = celtic_pagan
+				religion = chumbylat
+				religion = dievas
+				religion = druze
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = graeco_roman
+				religion = hubal
+				religion = ibadi
+				religion = illuyanka
+				religion = indohelen
+				religion = jumala
+				religion = mand_ruha
+				religion = mandaean
+				religion = mande_pagan
+				religion = marabout
+				religion = mari_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = perkunas
+				religion = rod
+				religion = sethian
+				religion = slavic_pagan
+				religion = sufi
+				religion = talab
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = vattisenyaly
+				religion = veles
+				religion = yazdanism
+				religion = yazidism
+			}
+			controls_religion = no
+			NOT = { trait = zealous }
+			OR = {
+				any_spouse = {
+					religion = luwian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+				any_consort = {
+					religion = luwian
+					hidden_tooltip = {
+						is_alive = yes
+					}
+				}
+			}
+		}
+		
+		effect = {
+			prestige = -500
+			religion_authority = {
+				modifier = ruler_converted_from
+			}
+			
+			religion = luwian
+			
+			hidden_tooltip = {
+				religion_authority = {
+					modifier = ruler_converted_to
+				}
+			}
+			piety = 200
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}

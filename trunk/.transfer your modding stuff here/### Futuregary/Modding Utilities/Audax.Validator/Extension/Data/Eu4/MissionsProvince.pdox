@@ -1,0 +1,44 @@
+
+Shared = {
+(Type ProvinceMissionDef) = {
+	Single = { Left = "allow" Right = MissionProvinceTrigger }
+	Optional = { Left = "abort" Right = MissionProvinceTrigger }
+	Single = { Left = "success" Right = MissionProvinceTrigger }
+	Single = { Left = "chance" Right = ProvinceChanceClause }
+	Single = { Left = "effect" Right = MissionProvinceCommand }
+	Optional = { Left = "immediate" Right = MissionProvinceCommand }
+	Optional = { Left = "abort_effect" Right = MissionProvinceCommand }
+}
+}
+
+(Type MissionProvinceTrigger) = { ContextValidator = MissionProvinceTrigger }
+(ContextValidator MissionProvinceTrigger) = {
+	Inherits = ProvinceTrigger
+	FromTarget = Country
+	Set = {
+		ProvinceTrigger = MissionProvinceTrigger
+	}
+}
+
+(Type MissionProvinceCommand) = { ContextValidator = MissionProvinceCommand }
+(ContextValidator MissionProvinceCommand) = {
+	Inherits = ProvinceCommand
+	FromTarget = Country
+	Set = {
+		ProvinceTrigger = MissionProvinceTrigger
+		ProvinceCommand = MissionProvinceCommand
+	}
+}
+
+(Type ProvinceChanceClause) = {
+	Optional = { Left = "factor" Right = NnDbl }
+	(Ch N Y) = { Left = "modifier" Right = ProvinceChanceModifier }
+}
+
+(Type ProvinceChanceModifier) = {
+	Inherits = FactorModifier
+	Optional = { Left = "factor" Right = NnDbl }
+	
+	Inherits = MissionProvinceTrigger
+	
+}

@@ -1,0 +1,499 @@
+### the abbey of crime
+
+narrative_event = {
+	id = 2000099
+	title = EVTNAME2000099
+	desc = EVTDESC2000099
+	picture = GFX_evt_monk
+	border = GFX_event_narrative_frame_intrigue
+
+	only_playable = yes
+	only_rulers = yes
+	min_age = 20
+	prisoner = no
+
+	trigger = {
+		#religion = catholic #removed
+		any_courtier = {
+			trait = celibate
+			age = 45
+			is_female = no
+			is_married = no
+			OR = {
+				trait = scholarly_theologian
+				trait = mastermind_theologian
+				}
+			learning = 15
+			#any_ward = { # removed from the story
+			#	age = 12
+			#	is_female = no
+			#	NOT = { trait = slow }
+			#	NOT = { trait = imbecile }
+			#	NOT = { trait = incapable }
+			#	NOT = { trait = inbred }
+			#	}
+			}
+		any_demesne_province = {
+			any_province_lord = {
+				is_theocracy = yes
+				}
+			}
+		}
+
+	mean_time_to_happen = {
+		months = 1000 #reduced to 1/5
+
+		modifier = {
+			any_demesne_province = {
+				any_province_lord = {
+					is_theocracy = yes
+					any_courtier = {
+						trait = celibate
+						OR = {
+							trait = intricate_webweaver
+							trait = elusive_shadow
+							}
+						}
+					}
+				}
+			factor = 0.5
+			}
+		}
+
+	option = {
+		name = "EVTOPTA2000099"
+		hidden_tooltip = {
+			random_courtier = {
+				limit = {
+					trait = celibate
+					age = 45
+					is_female = no
+					is_married = no
+					OR = {
+						trait = scholarly_theologian
+						trait = mastermind_theologian
+						}
+					learning = 15
+				#	any_ward = {
+				#		age = 12
+				#		is_female = no
+				#		NOT = { trait = slow }
+				#		NOT = { trait = imbecile }
+				#		NOT = { trait = incapable }
+				#		NOT = { trait = inbred }
+				#		}
+					}
+				character_event = {
+					id = 2000100
+					}
+				}
+			}
+		}
+	}
+
+# first movement: the character survives and delves deeper
+
+character_event = {
+	id = 2000100
+	desc = EVTDESC2000100
+	picture = GFX_evt_monk
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_alive = yes
+		}
+
+	option = {
+		name = "EVTOPTA2000100"
+		liege = {
+			random_list = {
+				85 = {
+					letter_event = { id = 2000101 days = 2 random = 3 }
+					}
+				15 = {
+					letter_event = { id = 2000102 days = 2 random = 3 }
+					}
+				}
+			}
+		}
+	}
+
+# liege: monk survives
+
+letter_event = {
+	id = 2000101
+	desc = EVTDESC2000101
+
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTA2000101"
+		hidden_tooltip = {
+			FROM = {
+				character_event = { id = 2000103 days = 2 }
+				}
+			}
+		}
+	}
+
+# liege: monk dies assassinated
+
+letter_event = {
+	id = 2000102
+	desc = EVTDESC2000102
+
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTA2000102"
+		hidden_tooltip = {
+			FROM = {
+				death = { death_reason = death_murder_unknown }
+				}
+			}
+		custom_tooltip = { text = EVTTOOLA2000102 }
+		}
+	}
+
+# second movement: the monk delves into the library mystery
+
+character_event = {
+	id = 2000103
+	desc = EVTDESC2000103
+	picture = GFX_evt_monk
+
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTA2000103"
+		if = {
+			limit = {
+				NOT = { learning = 16 }
+				}
+			liege = {
+				random_list = {
+					75 = {
+						letter_event = { id = 2000104 }
+						}
+					25 = {
+						letter_event = { id = 2000105 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 16
+				NOT = { learning = 17 }
+				}
+			liege = {
+				random_list = {
+					80 = {
+						letter_event = { id = 2000104 }
+						}
+					20 = {
+						letter_event = { id = 2000105 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 17
+				NOT = { learning = 18 }
+				}
+			liege = {
+				random_list = {
+					85 = {
+						letter_event = { id = 2000104 }
+						}
+					15 = {
+						letter_event = { id = 2000105 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 18
+				NOT = { learning = 19 }
+				}
+			liege = {
+				random_list = {
+					90 = {
+						letter_event = { id = 2000104 }
+						}
+					10 = {
+						letter_event = { id = 2000105 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 19
+				NOT = { learning = 20 }
+				}
+			liege = {
+				random_list = {
+					95 = {
+						letter_event = { id = 2000104 }
+						}
+					5 = {
+						letter_event = { id = 2000105 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 20
+				}
+			liege = {
+				letter_event = { id = 2000104 }
+				}
+			}
+		}
+	}
+
+# liege: monk delves deeper, investigates library, inquisitor arrives
+
+letter_event = {
+	id = 2000104
+	desc = EVTDESC2000104
+
+	is_triggered_only = yes
+
+	option = { #go on
+		name = "EVTOPTA2000104"
+		hidden_tooltip = {
+			add_character_modifier = {
+				name = "confronted_an_inquisitor"
+				duration = 365
+				}
+			FROM = {
+				add_character_modifier = {
+					name = "confronted_an_inquisitor"
+					duration = 1280
+					}
+				character_event = { id = 2000106 days = 2 random = 2 }
+				}
+			}
+		}
+	option = { #withdraw
+		name = "EVTOPTB2000104"
+		custom_tooltip = { text = EVTTOOLB2000104 }
+		}
+	}
+
+# liege: monk failed to uncover mystery, inquisitor arrives
+
+letter_event = {
+	id = 2000105
+	desc = EVTDESC2000105
+
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTA2000105"
+		custom_tooltip = { text = EVTTOOLA2000105 }
+		}
+	}
+
+# monk enters the library and confronts the old brother
+
+character_event = {
+	id = 2000106
+	desc = EVTDESC2000106
+	picture = GFX_evt_monk
+
+	is_triggered_only = yes
+
+	trigger = { is_alive = yes }
+
+	option = {
+		name = "EVTOPTA2000106"
+		liege = {
+			letter_event = { id = 2000107 }
+			}
+		if = {
+			limit = {
+				NOT = { learning = 16 }
+				}
+			liege = {
+				random_list = {
+					75 = {
+						narrative_event = { id = 2000108 days = 2 }
+						}
+					25 = {
+						character_event = { id = 2000109 days = 2 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 16
+				NOT = { learning = 17 }
+				}
+			liege = {
+				random_list = {
+					80 = {
+						narrative_event = { id = 2000108 days = 2 }
+						}
+					20 = {
+						character_event = { id = 2000109 days = 2 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 17
+				NOT = { learning = 18 }
+				}
+			liege = {
+				random_list = {
+					85 = {
+						narrative_event = { id = 2000108 days = 2 }
+						}
+					15 = {
+						character_event = { id = 2000109 days = 2 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 18
+				NOT = { learning = 19 }
+				}
+			liege = {
+				random_list = {
+					90 = {
+						narrative_event = { id = 2000108 days = 2 }
+						}
+					10 = {
+						character_event = { id = 2000109 days = 2 }
+						}
+					}
+				}
+			}
+		if = {
+			limit = {
+				learning = 19
+				}
+			liege = {
+				random_list = {
+					95 = {
+						narrative_event = { id = 2000108 days = 2 }
+						}
+					5 = {
+						character_event = { id = 2000109 days = 2 }
+						}
+					}
+				}
+			}
+		}
+	}
+
+# letter to liege, about to enter the library
+# showdown the next day
+
+letter_event = {
+	id = 2000107
+	desc = EVTDESC2000107
+
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTA2000107"
+		}
+	}
+
+### the mystery is solved: the library burns, the book is lost, monk survives
+
+narrative_event = {
+	id = 2000108
+	title = EVTNAME2000108
+	desc = EVTDESC2000108
+	picture = GFX_evt_burning_house
+	border = GFX_event_narrative_frame_intrigue
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = { is_alive = yes }
+		}
+
+	option = {
+		name = "EVTOPTA2000108"
+		hidden_tooltip = {
+			remove_character_modifier = confronted_an_inquisitor
+			piety = 25
+			prestige = 25
+			random = {
+				chance = 25
+				add_trait = cynical
+				}
+			FROM = {
+				piety = 50
+				prestige = 50
+				#random_ward = {
+				#	limit = {
+				#		age = 12
+				#		is_female = no
+				#		NOT = { trait = slow }
+				#		NOT = { trait = imbecile }
+				#		NOT = { trait = incapable }
+				#		NOT = { trait = inbred }
+				#		}
+				#	change_learning = 2
+				#	}
+				}
+			}
+		custom_tooltip = { text = EVTTOOLA2000108 }
+		}
+	}
+
+# showdown: monk and pupil did not survive
+
+character_event = {
+	id = 2000109
+	desc = EVTDESC2000109
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = { is_alive = yes }
+		}
+
+	option = {
+		name = "EVTOPTA2000109"
+		hidden_tooltip = {
+			remove_character_modifier = confronted_an_inquisitor
+			add_character_modifier = {
+				name = "confronted_an_inquisitor"
+				duration = 1280
+				}
+			FROM = {
+			#	random_ward = {
+			#		limit = {
+			#			age = 12
+			#			is_female = no
+			#			NOT = { trait = slow }
+			#			NOT = { trait = imbecile }
+			#			NOT = { trait = incapable }
+			#			NOT = { trait = inbred }
+			#			}
+			#		death = { death_reason = death_accident }
+			#		}
+				death = { death_reason = death_accident }
+				}
+			}
+		custom_tooltip = { text = EVTTOOLA2000109 }
+		}
+	}

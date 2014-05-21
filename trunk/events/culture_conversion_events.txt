@@ -1,0 +1,741 @@
+#################################################
+#
+# CULTURAL CONVERSION EVENTS
+#
+#################################################
+
+# Province culture changes
+province_event = {
+	id = 55000
+	desc = "EVTDESC55000"
+	picture = GFX_evt_stone_church
+	
+	trigger = {
+		owner = {
+			top_liege = {
+				culture = PREV
+			}
+			NOT = { culture = ROOT }
+			religion = ROOT
+		}
+		any_neighbor_province = {
+			has_owner = yes
+			ROOT = {
+				owner = {
+					culture = PREVPREV
+				}
+			}
+			owner = {
+				ROOT = {
+					owner = {
+						culture = PREVPREV
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 6000 #original 3000 months
+
+		modifier = {
+			factor = 1.5
+			owner = { NOT = { stewardship = 2 } }
+		}
+		modifier = {
+			factor = 1.5
+			owner = { NOT = { stewardship = 3 } }
+		}
+		modifier = {
+			factor = 1.5
+			owner = { NOT = { stewardship = 4 } }
+		}
+		modifier = {
+			factor = 1.5
+			owner = { NOT = { stewardship = 5 } }
+		}
+		modifier = {
+			factor = 0.75
+			owner = { stewardship = 9 }
+		}
+		modifier = {
+			factor = 0.75
+			owner = { stewardship = 11 }
+		}
+		modifier = {
+			factor = 0.75
+			owner = { stewardship = 13 }
+		}
+		modifier = {
+			factor = 0.75
+			owner = { stewardship = 15 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 11 }
+		}
+		modifier = {	## added by Ash
+			factor = 1.1
+			owner = { trait = tolerant }
+		}
+		modifier = {	## added by Ash
+			factor = 1.1
+			owner = { trait = eccentric }
+		}
+		modifier = {	## added by Ash
+			factor = 1.1
+			owner = { trait = unpredictable }
+		}
+		modifier = {	## added by Ash
+			factor = 0.7
+			owner = { trait = oldfashioned }
+		}
+		modifier = {
+			factor = 0.75
+			owner = {
+				OR = {
+					primary_title = {
+						conquest_culture = PREV
+					}
+					ROOT = {
+						county = {
+							conquest_culture = PREVPREV
+						}
+					}
+					ROOT = {
+						duchy = {
+							holder_scope = {
+								character = PREVPREVPREV
+							}
+							conquest_culture = PREVPREV
+						}
+					}
+					ROOT = {
+						kingdom = {
+							holder_scope = {
+								character = PREVPREVPREV
+							}
+							conquest_culture = PREVPREV
+						}
+					}
+					ROOT = {
+						empire = {
+							holder_scope = {
+								character = PREVPREVPREV
+							}
+							conquest_culture = PREVPREV
+						}
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.333 #libert3v12a reduced from .66 to .333
+			OR={
+				owner = { has_ambition = obj_civilize_province }
+				owner = { any_liege= { culture=PREV has_ambition = obj_civilize_province } }
+			}
+		}
+	}
+
+	option = {
+		name = "EVTOPTA55000"
+		owner = {
+			reverse_culture = ROOT
+			if = {
+				limit = {
+					has_ambition = obj_civilize_province
+				}
+				character_event = { id = ao_cleanup.1 days = 3 }
+			}
+			any_liege = {
+				if = {
+					limit = {
+						culture = PREV
+						has_ambition = obj_civilize_province
+					}
+					character_event = { id = ao_cleanup.1 days = 3 }
+				}
+			}
+		}
+	}
+}
+
+# Bring in some settlers
+province_event = {
+	id = 55001
+	desc = "EVTDESC55001"
+	picture = GFX_evt_stone_church
+	
+#	only_rulers = yes		# only_rulers applies to character events, not province events. - RVH
+	
+	trigger = {
+		owner = {
+			top_liege = {
+				culture = PREV
+			}
+			NOT = { culture = ROOT }
+			capital_scope = {
+				province_id = ROOT
+			}
+			
+			OR = {
+				primary_title = {
+					conquest_culture = PREV
+				}
+				ROOT = {
+					county = {
+						conquest_culture = PREVPREV
+					}
+				}
+				ROOT = {
+					duchy = {
+						holder_scope = {
+							character = PREVPREVPREV
+						}
+						conquest_culture = PREVPREV
+					}
+				}
+				ROOT = {
+					kingdom = {
+						holder_scope = {
+							character = PREVPREVPREV
+						}
+						conquest_culture = PREVPREV
+					}
+				}
+				ROOT = {
+					empire = {
+						holder_scope = {
+							character = PREVPREVPREV
+						}
+						conquest_culture = PREVPREV
+					}
+				}
+			}
+		}
+		
+		NOT = { # Exclude provinces covered by event 55000
+			any_neighbor_province = {
+				has_owner = yes
+				ROOT = {
+					owner = {
+						culture = PREVPREV
+					}
+				}
+				owner = {
+					ROOT = {
+						owner = {
+							culture = PREVPREV
+						}
+					}
+				}
+			}
+		}
+		port = yes
+		any_neighbor_province = {
+			owner = {
+				ROOT = {
+					owner = {
+						NOT = {
+							culture = PREVPREV
+							culture = PREVPREVPREV
+						}
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 9000 #original 1200
+
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 1 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 2 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 3 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 4 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 5 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 6 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 7 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 8 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { learning = 9 } }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 11 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 12 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 13 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 14 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 15 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 16 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 17 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 18 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 19 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 20 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 21 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 22 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 23 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 24 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { learning = 25 }
+		}
+		#LIBERT3 v12 - added diplomacy as a factor
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 1 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 2 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 3 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 4 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 5 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 6 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 7 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 8 } }
+		}
+		modifier = {
+			factor = 1.05
+			owner = { NOT = { diplomacy = 9 } }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 11 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 12 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 13 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 14 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 15 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 16 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 17 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 18 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 19 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 20 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 21 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 22 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 23 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 24 }
+		}
+		modifier = {
+			factor = 0.95
+			owner = { diplomacy = 25 }
+		}
+		modifier = {
+			factor = 0.75
+			owner = {
+				OR = {
+					primary_title = {
+						conquest_culture = PREV
+					}
+					ROOT = {
+						county = {
+							conquest_culture = PREVPREV
+						}
+					}
+					ROOT = {
+						duchy = {
+							owner = {
+								character = PREVPREVPREV
+							}
+							conquest_culture = PREVPREV
+						}
+					}
+					ROOT = {
+						kingdom = {
+							owner = {
+								character = PREVPREVPREV
+							}
+							conquest_culture = PREVPREV
+						}
+					}
+					ROOT = {
+						empire = {
+							owner = {
+								character = PREVPREVPREV
+							}
+							conquest_culture = PREVPREV
+						}
+					}
+				}
+			}
+		}
+
+		modifier = {
+			factor = 0.333 #libert3v12a reduced from .66 to .333
+			OR={
+				owner = { has_ambition = obj_civilize_province }
+				owner = { any_liege= { culture=PREV has_ambition = obj_civilize_province } }
+			}
+		}
+	}
+
+	option = {
+		name = "EVTOPTA55001"
+		
+		owner = {
+			reverse_culture = ROOT
+			wealth = -150
+			piety = 25
+			prestige = 50
+			if = {
+				limit = {
+					NOT = { religion = ROOT }
+				}
+				reverse_religion = ROOT
+			}
+			if={ limit={has_ambition = obj_civilize_province} character_event={id=ao_cleanup.1 days = 3}}
+			any_liege = { if = { limit = { culture=PREV has_ambition = obj_civilize_province } } character_event={id=ao_cleanup.1 days = 3} }
+		}
+	}
+	option = {
+		name = "EVTOPTB55001"
+		trigger = {
+			owner = {
+				ai = no
+			}
+		}
+		owner = { 
+		set_character_flag = rejects_culture
+		prestige = -5
+		}
+	}
+}
+
+# A ruler is assimilated by the local culture
+character_event = {
+	id = 55010
+	desc = "EVTDESC55010"
+	picture = GFX_evt_stone_church
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+
+	trigger = {
+		primary_title = {
+			NOT = { conquest_culture = ROOT }
+			NOT = { culture = ROOT }
+			any_previous_holder = {
+				NOT = { character = ROOT } # The first holder of a title does not convert
+			}
+		}
+		capital_scope = {
+			NOT = { culture = ROOT }
+		}
+		top_liege = {
+			OR = {
+				character = ROOT
+				ROOT = {
+					capital_scope = {
+						culture = PREVPREV
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 400 # original 1200
+
+		# LIBERT3 v12 - a high diplomacy ruler is less likely to be assimilated
+		modifier = { 
+			factor = 0.001
+			has_character_flag = rejects_culture
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 1 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 2 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 3 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 4 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 5 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 6 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 7 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 8 }
+		}
+		modifier = {
+			factor = 0.9
+			NOT = { diplomacy = 9 }
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 11
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 12
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 13
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 14
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 15
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 16
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 17
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 18
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 19
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 20
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 21
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 22
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 23
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 24
+		}
+		modifier = {
+			factor = 1.11
+			diplomacy = 25
+		}
+		modifier = {
+			factor = 0.5
+			top_liege = {
+				NOT = { character = ROOT }
+				ROOT = {
+					capital_scope = {
+						culture = PREVPREV
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.5
+			primary_title = {
+				ROOT = {
+					capital_scope = {
+						culture = PREVPREV
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 2.0
+			capital_scope = {
+				culture_group = ROOT # Same culture group: slower assimilation
+			}
+		}
+	}
+
+	option = {
+		name = "EVTOPTA55010"
+
+		# Piss off the appropriate vassals
+		any_vassal = {
+			limit = {
+				culture = ROOT
+				age = 16
+			}
+			opinion = {
+				who = ROOT
+				modifier = opinion_adopted_foreign_ways
+				years = 10
+			}
+			hidden_tooltip = { character_event = { id = 55011 days = 0 } }
+		}
+
+		capital_scope = {
+			reverse_culture = ROOT
+		}
+	}
+
+	option = {
+		name = "EVTOPTB55010"
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+character_event = {
+	id = 55011
+	desc = "EVTDESC55011"
+	picture = GFX_evt_scandal
+
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTA55011"
+		tooltip = {
+			opinion = {
+				who = FROM
+				modifier = opinion_adopted_foreign_ways
+				years = 10
+			}
+		}
+	}
+}

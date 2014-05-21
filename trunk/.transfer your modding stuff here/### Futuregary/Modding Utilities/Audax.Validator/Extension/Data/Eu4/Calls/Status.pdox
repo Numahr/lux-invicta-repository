@@ -1,0 +1,214 @@
+(ContextValidator Trigger) = { Members = {
+	(Y  ) = { Left = "is_year" Right = Int }
+	(Y  ) = { Left = "is_month" Right = Int }
+	(N Y) = { Left = "exists"					Right = Tag }
+	(Y  ) = { Left = "revolution_target_exists"	Right = Bool }
+	(N Y) = { Left = "has_global_flag" Right = { Right = String (LocalOp "chk" "[R]" AddChecker GlobalFlag) } }
+	
+	(N N) = { Left = "check_variable" Right = CheckVar }
+	(N Y) = { Left = "had_global_flag" Right = HadGlobalFlag }
+	
+	#(If If = Eu3Ht) = {
+	#	(N Y) = { Left = "has_hre_emperor_modifier"	Right = EModifier }
+	#	(N Y) = { Left = "has_hre_member_modifier"	Right = EModifier }
+	#}
+	
+	(Y  ) = { Left = "count" Right = PInt }
+} }
+
+(ContextValidator ProvinceTrigger) = { Members = {
+	(N Y) = { Left = "has_province_flag" Right = { Right = String (LocalOp "chk" "[R]" AddChecker ProvinceFlag) } }
+	(N Y) = { Left = "has_country_flag" Right = { Right = String (LocalOp "chk" "[R]" AddChecker CountryFlag) } }
+
+	(N Y) = { Left = "has_trade_modifier" Right = RemoveTradeModifier } # UNTESTED
+	(N Y) = { Left = "has_province_modifier" Right = { EventModifier StaticModifier TriggeredModifier } }
+	(N Y) = { Left = "had_province_flag" Right = HadProvinceFlag } # UNTESTED
+	# has_country_modifier DOES NOT work in this scope at this time
+} }
+
+(ContextValidator CountryTrigger) = { Members = {
+	(N Y If = Debug) = { Left = "has_province_modifier" Right = EventModifier } # BROKEN it seems
+	(N Y) = { Left = "has_country_flag" Right = { Right = String (LocalOp "chk" "[R]" AddChecker CountryFlag) } }
+	(N Y) = { Left = "has_country_modifier" Right = { EventModifier StaticModifier TriggeredModifier } }
+	(N Y) = { Left = "had_country_flag" Right = HadCountryFlag } # UNTESTED: Positive form
+	
+	(N Y) = { Left = "has_ruler_modifier" Right = { EventModifier StaticModifier TriggeredModifier } } # UNTESTED: Positive form
+	
+	#(Y Y) = { Left = "is_revolution_target" Right = Bool }
+	#(Y Y) = { Left = "is_crusade_target" Right = Bool }
+	#(Y Y) = { Left = "ai" Right = Bool }
+	
+	#(If If = Eu3Ht) = {
+	#	(Y Y) = { Left = "legitimacy" Right = { Double ThisCountry ThisProvince } }
+	#	(Y Y) = { Left = "has_national_focus" Right = Bool }
+	#	(Y Y) = { Left = "cultural_tradition" Right = Double }
+	#	(Y Y) = { Left = "in_league" Right = Bool }
+	#	(A Y) = { Left = "likely_rebels" Right = RebelType }
+	#	(Y Y) = { Left = "tribal" Right = Bool }
+	#}
+} }
+
+(ContextValidator Command) = { Members = {
+	(N N) = { Left = "set_variable" Right = SetVar }
+	(N N) = { Left = "change_variable" Right = ChangeVar }
+	(N N) = { Left = "multiply_variable" Right = ChangeVar }
+	(N N) = { Left = "subtract_variable" Right = ChangeVar }
+	(N Y) = { Left = "set_global_flag" Right = { Right = String (LocalOp "set" "[R]" AddSetter GlobalFlag) } }
+	(N Y) = { Left = "clr_global_flag" Right = { Right = String (LocalOp "clr" "[R]" AddSetter GlobalFlag) } }
+		
+	(N Y) = { Left = "add_country_modifier" Right = Modifier }
+	(N Y) = { Left = "remove_country_modifier" Right = EModifier }
+	(N Y) = { Left = "add_ruler_modifier" Right = RulerModifier }
+	(N Y) = { Left = "remove_ruler_modifier" Right = EModifier }
+
+	#(If If = Eu3Ht) = {
+	#	(N Y) = { Left = "add_hre_emperor_modifier" Right = Modifier }
+	#	(N Y) = { Left = "add_hre_member_modifier" Right = Modifier }
+	#	(N Y) = { Left = "remove_hre_emperor_modifier" Right = EModifier }
+	#	(N Y) = { Left = "remove_hre_member_modifier" Right = EModifier }	
+	#}
+} }
+
+(ContextValidator ProvinceCommand) = { Members = {
+	(N Y) = { Left = "add_province_modifier" Right = Modifier }
+	(N Y) = { Left = "add_permanent_province_modifier" Right = Modifier } # UNTESTED
+	(N Y) = { Left = "remove_province_modifier" Right = EModifier }
+	(N Y) = { Left = "set_province_flag" Right = { Right = String (LocalOp "set" "[R]" AddSetter ProvinceFlag) } }
+	(N Y) = { Left = "clr_province_flag" Right = { Right = String (LocalOp "clr" "[R]" AddSetter ProvinceFlag) } }
+	
+	(N Y) = { Left = "set_country_flag" Right = { Right = String (LocalOp "set" "[R]" AddSetter CountryFlag) } }
+	(N Y) = { Left = "clr_country_flag" Right = { Right = String (LocalOp "clr" "[R]" AddSetter CountryFlag) } }
+	
+	(N Y) = { Left = "add_trade_modifier" Right = AddTradeModifier } # UNTESTED
+	(N Y) = { Left = "remove_trade_modifier" Right = RemoveTradeModifier } # UNTESTED
+} }
+
+(ContextValidator CountryCommand) = { Members = {
+	(N Y If = Debug) = { Left = "add_province_modifier" Right = Modifier } # BROKEN it seems
+	
+	(N Y) = { Left = "set_country_flag" Right = { Right = String (LocalOp "set" "[R]" AddSetter CountryFlag) } }
+	(N Y) = { Left = "clr_country_flag" Right = { Right = String (LocalOp "clr" "[R]" AddSetter CountryFlag) } }
+	(N Y) = { Left = "remove_province_modifier" Right = EModifier }
+	
+	(N Y) = { Left = "set_province_flag" Right = { Right = String (LocalOp "set" "[R]" AddSetter ProvinceFlag) } } # UNTESTED
+	
+	#(If If = Eu3Ht) = {
+	#	(Y Y) = { Left = "cultural_tradition" Right = Double }
+	#	(Y Y) = { Left = "legitimacy" Right = Double }
+	#	(Y Y) = { Left = "officials" Right = Double }
+	#}
+} }
+
+(Type HadFlag) = {
+	Single = { Left = "flag" Right = String }
+	Single = { Left = "days" Right = Double }
+}
+
+(Type HadGlobalFlag) = {
+	Inherits = HadFlag
+	(LocalOp "had" "flag\[R]" AddChecker GlobalFlag)
+}
+
+(Type HadCountryFlag) = {
+	Inherits = HadFlag
+	(LocalOp "had" "flag\[R]" AddChecker CountryFlag)
+}
+
+(Type HadProvinceFlag) = {
+	Inherits = HadFlag
+	(LocalOp "had" "flag\[R]" AddChecker ProvinceFlag)
+}
+
+
+(Type Modifier) = {
+	Single = { Left = "name" Right = EModifier }
+	Optional = { Left = "duration" Right = Int }
+	Optional = { Left = "hidden" Right = Bool }
+	Optional = { Left = "desc" Right = Key }
+}
+
+(Type RulerModifier) = {
+	Single = { Left = "name" Right = EModifier }
+	Optional = { Left = "duration" Right = Int } # Might or might not exist
+	Optional = { Left = "hidden" Right = Bool }
+	Optional = { Left = "desc" Right = Key }
+}
+
+Global = {
+(Type.Or EModifier) = {
+	Type = EventModifier
+	Type = StaticModifier
+}
+}
+
+(Type Var) = {
+	Single = { Left = "which" Right = String }
+	Single = { Left = "value" Right = Double }
+}
+
+(Type CheckVar) = {
+	FancilyPickCorrectBecauseParadoxDoesntMakeThingsWithDifferentNames = { TwoWhich = CheckVar0 Else = CheckVar1 }
+}
+
+(Type CheckVar0) = {
+	(Ch N Y 2 2) = { Left = "which" Right = String }
+	(LocalOp "chk" "which\[R]" AddChecker Variable)
+}
+
+(Type CheckVar1) = {
+	Inherits = Var
+	(LocalOp "chk" "which\[R]" AddChecker Variable)
+}
+
+(Type SetVar) = {
+	FancilyPickCorrectBecauseParadoxDoesntMakeThingsWithDifferentNames = { TwoWhich = SetVar0 Else = SetVar1 }
+}
+
+(Type SetVar0) = {
+	(Ch N Y 2 2) = { Left = "which" Right = String }
+	(LocalOp "set" "which\[R]" AddSetter Variable)
+}
+
+(Type SetVar1) = {
+	Inherits = Var
+	(LocalOp "set" "which\[R]" AddSetter Variable)
+}
+
+(Type ChangeVar) = {
+	FancilyPickCorrectBecauseParadoxDoesntMakeThingsWithDifferentNames = { TwoWhich = ChangeVar0 Else = ChangeVar1 }
+}
+
+(Type ChangeVar0) = {
+	(Ch N Y 2 2) = { Left = "which" Right = String }
+	(LocalOp "cng" "which\[R]" AddSetter Variable)
+}
+
+(Type ChangeVar1) = {
+	Inherits = Var
+	(LocalOp "cng" "which\[R]" AddSetter Variable)
+}
+
+(Type AddTradeModifier) = {
+	Single = { Left = "who" Right = { Tag ThisCountry } }
+	Single = { Left = "duration" Right = Int }
+	Single = { Left = "power" Right = Int }
+	Single = { Left = "key" Right = Key }
+}
+
+(Type RemoveTradeModifier) = {
+	Single = { Left = "who" Right = { Tag ThisCountry } }
+	Single = { Left = "name" Right = Key }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

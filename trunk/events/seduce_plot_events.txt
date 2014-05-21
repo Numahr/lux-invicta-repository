@@ -1,0 +1,1085 @@
+namespace = seduceplot
+
+# Evts for Seduce plots - by JGCrusader
+# 0 - 3, seduce liege events
+# 4 - 7, seduce for men events
+# 8 -10, seduce liege - trigger events
+# 11-13, seduce for men - trigger events
+
+# Successful seduce liege
+character_event = {
+	id = seduceplot.0
+	desc = seduceplot.0.desc
+	picture = "GFX_evt_lovers"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EXCELLENT"
+		plot_target_char = {
+			character_event = { id = seduceplot.1 days = 1 }
+		}
+		set_character_flag = plot_seducer
+	}
+}
+
+# Target is informed of seduction
+character_event = {
+	id = seduceplot.1
+	desc = seduceplot.1.desc
+	picture = "GFX_evt_lovers"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = seduceplot.1.a
+		add_lover = FROM
+		hidden_tooltip = {
+			impregnate = FROM
+			set_character_flag = was_seduced_by_plot
+		}
+	}
+}
+
+# Failed!
+character_event = {
+	id = seduceplot.2
+	desc = seduceplot.2.desc
+	picture = "GFX_evt_scandal"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "CURSES"
+		plot_target_char = {
+			character_event = { id = seduceplot.3 days = 1 }
+		}
+	}
+}
+
+# Failed - inform liege and his wife
+character_event = {
+	id = seduceplot.3
+	desc = seduceplot.3.desc
+	picture = "GFX_evt_scandal"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = seduceplot.3.a
+		spouse = {
+			opinion = {
+				modifier = slut_seductress
+				who = FROM
+				months = 120
+			}
+		}
+		FROM = {
+			set_character_flag = plot_seduce_failed
+		}
+	}
+}
+
+# Seduce for men events
+# Successful seduce 
+character_event = {
+	id = seduceplot.4
+	desc = seduceplot.4.desc
+	picture = "GFX_evt_lovers"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EXCELLENT"
+		plot_target_char = {
+			character_event = { id = seduceplot.5 days = 1 }
+		}
+		set_character_flag = plot_seducer
+	}
+}
+
+# Inform target of success
+character_event = {
+	id = seduceplot.5
+	desc = seduceplot.5.desc
+	picture = "GFX_evt_lovers"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = seduceplot.5.a
+		add_lover = FROM
+		hidden_tooltip = {
+			impregnate = FROM
+			set_character_flag = was_seduced_by_plot
+		}
+	}
+}
+
+# Failed seduce 
+character_event = {
+	id = seduceplot.6
+	desc = seduceplot.6.desc
+	picture = "GFX_evt_scandal"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "CURSES"
+		plot_target_char = {
+			character_event = { id = seduceplot.7 days = 1 }
+				}
+	}
+}
+
+# Inform target of failure
+character_event = {
+	id = seduceplot.7
+	desc = seduceplot.7.desc
+	picture = "GFX_evt_scandal"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = seduceplot.7.a
+		spouse = {
+			opinion = {
+				modifier = cuckolded
+				who = FROM
+				months = 120
+			}
+		}
+		FROM = {
+			set_character_flag = plot_seduce_failed
+		}
+	}
+}
+
+# The plotter sees an opportunity - seduce liege
+character_event = {
+	id = seduceplot.8
+	desc = seduceplot.8.desc
+	picture = GFX_evt_lovers
+	border = GFX_event_normal_frame_intrigue
+	
+	capable_only = yes
+	prisoner = no
+	only_women = yes
+	
+	trigger = {
+		has_plot = plot_seduce_liege
+		is_pregnant = no
+		plot_target_char = {
+			prisoner = no
+			at_location = ROOT # The Plot Head needs to be at the target's location to get a chance
+			NOT = { trait = incapable }
+		}
+		NOT = { has_character_flag = seduce_in_motion }
+		plot_power_contribution = 
+		{
+			plotter = ROOT
+			power = 0.02
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 850
+		
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.10
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.20
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.30
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.40
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.50
+			}
+		}
+		modifier = {
+			factor = 0.8
+			plot_target_char = {
+				opinion = { who = ROOT value = 20 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.7
+			plot_target_char = {
+				opinion = { who = ROOT value = 40 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.7
+			plot_target_char = {
+				opinion = { who = ROOT value = 60 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.6
+			plot_target_char = {
+				opinion = { who = ROOT value = 80 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.5
+			plot_power = 0.5
+		}
+		
+		modifier = {
+			factor = 0.5
+			plot_power = 0.7
+		}
+		
+		modifier = {
+			factor = 0.5
+			plot_power = 0.9
+		}
+		
+		modifier = {
+			factor = 0.6
+			trait = fair
+		}
+		
+		modifier = {
+			factor = 0.85
+			trait = strong
+		}
+		
+		modifier = {
+			factor = 0.95
+			trait = gregarious
+		}
+		
+		modifier = {
+			factor = 0.75
+			plot_target_char = {
+				OR = {
+					trait = lustful
+					trait = hedonist
+				}
+			}
+		}
+		
+		modifier = {
+			factor = 1.85
+			plot_target_char = {
+				trait = chaste
+			}
+		}
+		
+		modifier = {
+			factor = 0.8
+			plot_target_char = {
+				is_married = no
+			}
+		}
+		
+		modifier = {
+			factor = 0.8
+			plot_target_char = {
+				spouse = {
+					character = ROOT
+				}
+			}
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 11
+		}
+		
+		modifier = {
+			factor = 0.9
+			diplomacy = 13
+		}
+		
+		modifier = {
+			factor = 0.85
+			diplomacy = 15
+		}
+		
+		modifier = {
+			factor = 0.8
+			diplomacy = 17
+		}
+		
+		modifier = {
+			factor = 0.8
+			NOT = { age = 25 }
+		}
+		
+		modifier = {
+			factor = 0.9
+			NOT = { age = 35 }
+		}
+		
+	}
+	
+	option = {
+		name = "seduceplot.8.a" # Seduce attempt
+		trigger = {
+			plot_power = 1.0
+		}	
+		set_character_flag = seduce_in_motion
+		random_list = {
+			90 = {
+				character_event = { id = seduceplot.0 days = 3 tooltip = "seduce_plot_success_tooltip" }
+			}
+			10 = {
+				character_event = { id = seduceplot.2 days = 3 tooltip = "seduce_plot_fail_tooltip" }
+			}
+		}
+		
+	}
+	
+	option = {
+		name = "seduceplot.8.b" # Too risky
+		trigger = {
+			NOT = { plot_power = 1.0 }
+			ai = no
+		}
+	}
+}
+
+# A plot backer sees an opportunity - seduce liege
+character_event = {
+	id = seduceplot.9
+	desc = seduceplot.9.desc
+	picture = GFX_evt_garden
+	border = GFX_event_normal_frame_intrigue
+	
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		any_backed_character = {
+			has_plot = plot_seduce_liege
+			plot_power = 0.4
+			is_pregnant = no
+			plot_target_char = {
+				prisoner = no
+				at_location = ROOT # The Plot backer needs to be at the target's location to get a chance
+				NOT = { trait = incapable }
+			}
+			NOT = { has_character_flag = seduce_in_motion }
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.02
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 750
+		
+		modifier = {
+			factor = 0.6
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.10
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.6
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.20
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.6
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.30
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.6
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.40
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.9
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_target_char = {
+					opinion = { who = PREV value = 20 }
+				}
+			}
+		}
+		modifier = {
+			factor = 0.8
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_target_char = {
+					opinion = { who = PREV value = 40 }
+				}
+			}
+		}
+		modifier = {
+			factor = 0.8
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_target_char = {
+					opinion = { who = PREV value = 60 }
+				}
+			}
+		}
+		modifier = {
+			factor = 0.7
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_target_char = {
+					opinion = { who = PREV value = 80 }
+				}
+			}
+		}
+		
+		modifier = {
+			factor = 0.5
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_power = 0.5
+			}
+		}
+		
+		modifier = {
+			factor = 0.5
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_power = 0.7
+			}
+		}
+		
+		modifier = {
+			factor = 0.33
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_power = 0.9
+			}
+		}
+		
+		modifier = {
+			factor = 0.95
+			trait = gregarious
+		}
+		
+		modifier = {
+			factor = 0.85
+			diplomacy = 7
+		}
+		
+		modifier = {
+			factor = 0.9
+			diplomacy = 9
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 11
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 13
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 15
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 17
+		}
+		
+	}
+	
+	option = {
+		name = "seduceplot.9.a" # Seduce attempt
+		trigger = {
+			any_backed_character = {
+				has_plot = plot_seduce_liege
+				plot_power = 1.0
+			}
+		}		
+		random_backed_character = { 
+			limit = {
+				has_plot = plot_seduce_liege
+				plot_power = 1.0
+				is_pregnant = no
+				plot_target_char = {
+					prisoner = no
+					at_location = ROOT # The Plot Head needs to be at the target's location to get a chance
+					NOT = { trait = incapable }
+				}
+				NOT = { has_character_flag = seduce_in_motion }
+			}
+			character_event = { id = seduceplot.10 days = 3 tooltip = "seduce_plot_attempt_tooltip" } 
+		}
+		
+	}
+	
+}
+
+# Plotter tells backer to go ahead - seduce liege
+character_event = {
+	id = seduceplot.10
+	desc = seduceplot.10.desc
+	picture = GFX_evt_lovers
+	border = GFX_event_normal_frame_intrigue
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "seduceplot.10.a"
+		set_character_flag = seduce_in_motion
+		random_list = {
+			90 = {
+				character_event = { id = seduceplot.0 days = 3 tooltip = "seduce_plot_success_tooltip" }
+			}
+			10 = {
+				character_event = { id = seduceplot.2 days = 3 tooltip = "seduce_plot_fail_tooltip" }
+			}
+		}
+	}
+	
+	option = {
+		name = "seduceplot.10.b" # Too risky
+		trigger = {
+			ai = no
+		}
+	}
+}
+
+# The plotter sees an opportunity - seduce for men
+character_event = {
+	id = seduceplot.11
+	desc = seduceplot.11.desc
+	picture = GFX_evt_lovers
+	border = GFX_event_normal_frame_intrigue
+	
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		has_plot = plot_seduce_for_men
+		is_pregnant = no
+		plot_target_char = {
+			prisoner = no
+			at_location = ROOT # The Plot Head needs to be at the target's location to get a chance
+			NOT = { trait = incapable }
+		}
+		NOT = { has_character_flag = seduce_in_motion }
+		plot_power_contribution = 
+		{
+			plotter = ROOT
+			power = 0.02
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 850
+		
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.10
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.20
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.30
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.40
+			}
+		}
+		modifier = {
+			factor = 0.75
+			plot_power_contribution = 
+			{
+				plotter = ROOT
+				power = 0.50
+			}
+		}
+		modifier = {
+			factor = 0.8
+			plot_target_char = {
+				opinion = { who = ROOT value = 20 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.7
+			plot_target_char = {
+				opinion = { who = ROOT value = 40 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.7
+			plot_target_char = {
+				opinion = { who = ROOT value = 60 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.6
+			plot_target_char = {
+				opinion = { who = ROOT value = 80 }
+			}
+		}
+		
+		modifier = {
+			factor = 0.65
+			trait = fair
+		}
+		
+		modifier = {
+			factor = 0.85
+			trait = poet
+		}
+		
+		modifier = {
+			factor = 0.9
+			trait = gardener
+		}
+		
+		modifier = {
+			factor = 0.7
+			trait = strong
+		}
+		
+		modifier = {
+			factor = 0.95
+			trait = gregarious
+		}
+		
+		modifier = {
+			factor = 0.95
+			trait = scarred
+		}
+		
+		modifier = {
+			factor = 0.7
+			plot_target_char = {
+				OR = {
+					trait = lustful
+					trait = hedonist
+				}
+			}
+		}
+		
+		modifier = {
+			factor = 0.5
+			plot_power = 0.5
+		}
+		
+		modifier = {
+			factor = 0.5
+			plot_power = 0.7
+		}
+		
+		modifier = {
+			factor = 0.5
+			plot_power = 0.9
+		}
+		
+		modifier = {
+			factor = 1.55
+			plot_target_char = {
+				trait = chaste
+			}
+		}
+		
+		modifier = {
+			factor = 0.8
+			plot_target_char = {
+				is_married = no
+			}
+		}
+		
+		modifier = {
+			factor = 0.8
+			plot_target_char = {
+				spouse = {
+					character = ROOT
+				}
+			}
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 11
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 13
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 15
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 17
+		}
+		
+	}
+	
+	option = {
+		name = "seduceplot.11.a" # Seduce attempt
+		trigger = {
+			plot_power = 1.0
+		}		
+		set_character_flag = seduce_in_motion
+		random_list = {
+			90 = {
+				character_event = { id = seduceplot.4 days = 3 tooltip = "seduce_plot_success_tooltip" }
+			}
+			10 = {
+				character_event = { id = seduceplot.6 days = 3 tooltip = "seduce_plot_fail_tooltip" }
+			}
+		}
+		
+	}
+	
+	option = {
+		name = "seduceplot.11.b" # Too risky
+		trigger = {
+			ai = no
+			NOT = { plot_power = 1.0 }
+		}
+	}
+}
+
+# A plot backer sees an opportunity - seduce for men
+character_event = {
+	id = seduceplot.12
+	desc = seduceplot.12.desc
+	picture = GFX_evt_garden
+	border = GFX_event_normal_frame_intrigue
+	
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		any_backed_character = {
+			has_plot = plot_seduce_for_men
+			plot_power = 0.4
+			plot_target_char = {
+				prisoner = no
+				is_pregnant = no
+				at_location = ROOT # The Plot backer needs to be at the target's location to get a chance
+				NOT = { trait = incapable }
+			}
+			NOT = { has_character_flag = seduce_in_motion }
+			plot_power_contribution = 
+			{
+				plotter = PREV
+				power = 0.02
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 750
+		
+		modifier = {
+			factor = 0.65
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.10
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.65
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.20
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.65
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.30
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.6
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				ROOT = {
+					plot_power_contribution = 
+					{
+						plotter = PREV
+						power = 0.40
+					}
+				}
+			}
+		}
+		modifier = {
+			factor = 0.9
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_target_char = {
+					opinion = { who = PREV value = 20 }
+				}
+			}
+		}
+		modifier = {
+			factor = 0.8
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_target_char = {
+					opinion = { who = PREV value = 40 }
+				}
+			}
+		}
+		modifier = {
+			factor = 0.8
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_target_char = {
+					opinion = { who = PREV value = 60 }
+				}
+			}
+		}
+		modifier = {
+			factor = 0.7
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_target_char = {
+					opinion = { who = PREV value = 80 }
+				}
+			}
+		}
+		
+		modifier = {
+			factor = 0.5
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_power = 0.5
+			}
+		}
+		
+		modifier = {
+			factor = 0.5
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_power = 0.7
+			}
+		}
+		
+		modifier = {
+			factor = 0.33
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_power = 0.9
+			}
+		}
+		
+		modifier = {
+			factor = 0.95
+			trait = gregarious
+		}
+		
+		modifier = {
+			factor = 0.85
+			diplomacy = 7
+		}
+		
+		modifier = {
+			factor = 0.9
+			diplomacy = 9
+		}
+		
+		modifier = {
+			factor = 0.9
+			diplomacy = 11
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 13
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 15
+		}
+		
+		modifier = {
+			factor = 0.95
+			diplomacy = 17
+		}
+		
+		modifier = {
+			factor = 0.9
+			NOT = { age = 25 }
+		}
+		
+		modifier = {
+			factor = 0.95
+			NOT = { age = 40 }
+		}
+	}
+	
+	option = {
+		name = "seduceplot.12.a" # Seduce attempt
+		trigger = {
+			any_backed_character = {
+				has_plot = plot_seduce_for_men
+				plot_power = 1.0
+			}
+		}
+		random_backed_character = { 
+			limit = {
+				has_plot = plot_seduce_for_men
+				plot_power = 1.0
+				plot_target_char = {
+					is_pregnant = no
+					prisoner = no
+					at_location = ROOT
+					NOT = { trait = incapable }
+				}
+				NOT = { has_character_flag = seduce_in_motion }
+			}
+			character_event = { id = seduceplot.13 days = 1 tooltip = "seduce_plot_attempt_tooltip" } 
+		}
+		
+	}
+	
+}
+
+# Plotter tells backer to go ahead - seduce for men
+character_event = {
+	id = seduceplot.13
+	desc = seduceplot.13.desc
+	picture = GFX_evt_lovers
+	border = GFX_event_normal_frame_intrigue
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "seduceplot.13.a"
+		set_character_flag = seduce_in_motion
+		random_list = {
+			90 = {
+				character_event = { id = seduceplot.4 days = 7 tooltip = "seduce_plot_success_tooltip" }
+			}
+			10 = {
+				character_event = { id = seduceplot.6 days = 7 tooltip = "seduce_plot_fail_tooltip" }
+			}
+		}
+	}
+	
+	option = {
+		name = "seduceplot.13.b" # Too risky
+		trigger = {
+			ai = no
+		}
+	}
+}

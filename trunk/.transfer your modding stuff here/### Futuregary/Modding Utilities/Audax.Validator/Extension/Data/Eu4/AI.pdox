@@ -1,0 +1,71 @@
+(Validator AI) = {
+	Type = GroupValidator
+	FriendlyName = "AI"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\ai_attitudes" "*.txt")
+		ValidatorName = AiAttitudesFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\ai_personalities" "*.txt")
+		ValidatorName = AiPersonalitiesFile
+	}
+	
+}
+
+(Type AiAttitudesFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = AiAttitudeDef }
+}
+
+(Type AiAttitudeDef) = {
+	Optional = { Left = "antagonize" Right = Bool }
+	Optional = { Left = "annex" Right = Bool }
+	Optional = { Left = "weaken" Right = Bool }
+	Optional = { Left = "coalition" Right = Bool }
+	Optional = { Left = "warn" Right = Bool }
+	Optional = { Left = "vassalize" Right = Bool }
+	Optional = { Left = "ally" Right = Bool }
+	Optional = { Left = "befriend" Right = Bool }
+	Optional = { Left = "protect" Right = Bool }
+	Optional = { Left = "threat" Right = Bool }
+	Optional = { Left = "ignore" Right = Bool }
+	
+	Single = { Left = "chance" Right = AiAttitudeChance }
+	Single = { Left = "icon" Right = { IconRef = GFX_attitude_icons_strip } }
+	
+}
+
+(Type AiAttitudeChance) = {
+	Optional = { Left = "factor" Right = NnDbl }
+	(Ch N Y) = { Left = "modifier" Right = AiAttitudeCountryTrigger }
+}
+
+(Type AiAttitudeCountryTrigger) = {
+	Inherits = FactorModifier
+	Optional = { Left = "factor" Right = NnDbl }
+	
+	ContextValidator = AiAttitudeCountryTrigger
+}
+
+(ContextValidator AiAttitudeCountryTrigger) = {
+	Inherits = CountryTrigger
+	FromTarget = Country
+}
+
+(Type AiPersonalitiesFile) = {
+	(Ch Y N) = { Left = { Type = String } Right = AiPersonalityDef }
+}
+
+(Type AiPersonalityDef) = {
+	(Single If = Add1) = { Left = "icon" Right = { IconRef = GFX_personality_icons_strip } }
+	Single = { Left = "chance" Right = AiAttitudeChance }
+
+}
+
+
+
+
+
