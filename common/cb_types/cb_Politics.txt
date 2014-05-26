@@ -70,7 +70,10 @@ bid_for_independence = {
 			}
 		}
 		FROM = {
-			higher_tier_than = ROOT
+			any_demesne_title = {
+				NOT = { lower_tier_than = ROOT }
+				temporary = no
+			}
 		}
 	}
 
@@ -255,12 +258,10 @@ cb_faction_independence = {
 	truce_days = 3650
 	major_revolt = yes
 	
-	can_call_allies = no
-	can_ask_to_join_war = yes
+	attacker_can_call_allies = no
+	can_ask_to_join_war = no
 	
 	is_independence = yes
-	
-#	attacker_alliance_occ_warscore = yes # Occupying any holding of any attacker counts towards war score
 	
 	can_use = {
 		ROOT = {
@@ -282,7 +283,10 @@ cb_faction_independence = {
 			}
 		}
 		FROM = {
-			higher_tier_than = ROOT
+			any_demesne_title = {
+				NOT = { lower_tier_than = ROOT }
+				temporary = no
+			}
 			independent = yes
 		}
 	}
@@ -373,7 +377,7 @@ cb_faction_independence = {
 						add_weak_pressed_claim = FROM
 					}
 				}
-			}
+			}		
 		}
 		
 		any_attacker = {
@@ -426,7 +430,7 @@ cb_faction_independence = {
 	on_fail = {
 		ROOT = {
 			prestige = -50
-			prisoner = FROM
+#			prisoner = FROM
 			add_character_modifier = {
 				name = faction_independence_ultimatum_timer
 				hidden = yes
@@ -499,22 +503,16 @@ cb_faction_independence = {
 
 	on_attacker_leader_death = {
 		hidden_tooltip = {
-			any_attacker = {
-				disband_event_forces = faction_revolters
-			}
-			FROM = {
-				disband_event_forces = faction_loyalists
-			}
 			any_defender = {
 				letter_event = {
 					id = 251
 				}
 			}
 		}
-		
+
 		end_war = invalid
 	}
-	
+
 	attacker_ai_victory_worth = {
 		factor = -1 # always accept
 	}
@@ -522,7 +520,7 @@ cb_faction_independence = {
 	attacker_ai_defeat_worth = {
 		factor = 150
 	}
-	
+
 	defender_ai_victory_worth = {
 		factor = -1 # always accept
 	}
@@ -540,14 +538,14 @@ depose_liege = {
 	truce_days = 3650
 	
 	is_permanent = yes
-	can_call_vassals = yes
+	can_call_vassals = no
+	major_revolt = no
 
 	can_use = {
 		ROOT = {
 			de_facto_liege = FROM
 		}
 		
-		# cannot depose 
 		FROM = {
 			is_feudal = yes
 			in_revolt = no
@@ -595,7 +593,10 @@ depose_liege = {
 			}
 		}
 		FROM = {
-			higher_tier_than = ROOT
+			any_demesne_title = {
+				NOT = { lower_tier_than = ROOT }
+				temporary = no
+			}
 		}
 	}
 
@@ -618,6 +619,7 @@ depose_liege = {
 						tier = king
 						tier = emperor
 					}
+#					is_titular = no
 					NOT = { has_law = centralization_0 }
 				}
 				if = {
@@ -697,6 +699,8 @@ overthrow_ruler = {
 	
 	is_revolt_cb = yes
 	can_call_vassals = yes
+	attacker_can_call_allies = no
+	major_revolt = yes
 
 	can_use = {
 		ROOT = {
@@ -718,10 +722,12 @@ overthrow_ruler = {
 			}
 		}
 		FROM = {
-			higher_tier_than = ROOT
+			any_demesne_title = {
+				NOT = { lower_tier_than = ROOT }
+				temporary = no
+			}
 		}
 	}
-
 	on_add = {
 		hidden_tooltip = {
 			FROM = {
@@ -730,10 +736,6 @@ overthrow_ruler = {
 				}
 			}
 		}
-	}
-	
-	on_defender_leader_death = {
-		end_war = invalid
 	}
 
 	on_success = {
@@ -754,6 +756,7 @@ overthrow_ruler = {
 						tier = king
 						tier = emperor
 					}
+#					is_titular = no
 					NOT = { has_law = centralization_0 }
 				}
 				if = {
