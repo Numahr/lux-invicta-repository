@@ -717,10 +717,10 @@ NDecadence = {
 NMilitary = {
 	CONTROLLER_MONTHS_BEFORE_OWNER_CHANGE = 120,	-- Number of months before ownership change of province, for certain cb:s that have contested titles
 	MORALE_COLLAPSE_THRESHOLD = 0.1,				-- Threshold before unit runs away --v12 reduced to 10%
-	TROOP_KILL_FACTOR = 0.009,						-- Affects the death rate in combats(higher gives bigger losses) > v10 increased from 1.5 to 2  v12 reduced to .01 v12a reduced to .005 (vanilla 0.15) v12c increased to .009
+	TROOP_KILL_FACTOR = 0.01,						-- Affects the death rate in combats(higher gives bigger losses) > v10 increased from 1.5 to 2  v12 reduced to .01 v12a reduced to .005 (vanilla 0.15) v12c increased to .009 v14 rebalanced to .01
 	MORALELOSS_FACTOR = 3,							-- Affects the morale loss rate in combats(higher gives bigger losses) >v10 reduced to 5 v12a reduced to 3 (vanilla 6)
-	MIN_COMBAT_DAYS = 8,							-- Minimum number of days in combat
-	NUMBER_OF_RETREAT_DAYS = 8,						-- Number of days before you retreat successfully --v12 doubled
+	MIN_COMBAT_DAYS = 7,							-- Minimum number of days in combat v14 rebalanced to 7
+	NUMBER_OF_RETREAT_DAYS = 7,						-- Number of days before you retreat successfully --v12 doubled v14 rebalanced to 7
 	NUMBER_OF_TROOPS_PER_GALLEY = 100,				-- Number of men each galley can hold
 	FRIENDLY_TERRITORY_LEVY_RETURN_PERCENT = 1.0,	-- Percent of subunit that returns to levy when unit is disbanded in friendly territory
 	OTHER_TERRITORY_LEVY_RETURN_PERCENT = 0.7,		-- Percent of subunit that returns to levy when unit is disbanded in non-friendly territory v10 increased to limit ai handicap
@@ -837,67 +837,67 @@ NMilitary = {
 	LIEGE_LEVY_COST_MULTIPLIER = 0.25,				-- The vassal will pay regular maintenance * this for the liege levy
 	LIEGE_LEVY_SUBUNIT_SIZE_CUTOFF = 3000,			-- The max size of each liege levy subunit.
 	LIEGE_LEVY_SUBUNIT_SIZE_MIN = 500,				-- The min size before liege levy subunits start splitting.
-	--v11 modified maintenance
+	-- v14 significant rebalance. Graphical Factor also now dependent on relative "worth"
 	LIGHT_INFANTRY_MORALE = 3,
 	LIGHT_INFANTRY_MAINTENANCE = 1,
-	LIGHT_INFANTRY_PHASE_SKIRMISH_ATTACK = 4, --prev 2
+	LIGHT_INFANTRY_PHASE_SKIRMISH_ATTACK = 4,
 	LIGHT_INFANTRY_PHASE_MELEE_ATTACK = 3,
 	LIGHT_INFANTRY_PHASE_PURSUE_ATTACK = 3,
 	LIGHT_INFANTRY_PHASE_SKIRMISH_DEFENSE = 3,
 	LIGHT_INFANTRY_PHASE_MELEE_DEFENSE = 3,
-	LIGHT_INFANTRY_PHASE_PURSUE_DEFENSE = 3,
+	LIGHT_INFANTRY_PHASE_PURSUE_DEFENSE = 4,
 	LIGHT_INFANTRY_GRAPHICAL_FACTOR = 1,
-
+	--I've tweaked LI a bit so that they function more as all-around-skirmishers rather than simply junk troops. They're still the least valuable troop per person, but at least they're less trash now.
 	HEAVY_INFANTRY_MORALE = 5,
 	HEAVY_INFANTRY_MAINTENANCE = 3,
-	HEAVY_INFANTRY_PHASE_SKIRMISH_ATTACK = 0.5,
-	HEAVY_INFANTRY_PHASE_MELEE_ATTACK = 6,
+	HEAVY_INFANTRY_PHASE_SKIRMISH_ATTACK = 1,
+	HEAVY_INFANTRY_PHASE_MELEE_ATTACK = 8,
 	HEAVY_INFANTRY_PHASE_PURSUE_ATTACK = 2,
-	HEAVY_INFANTRY_PHASE_SKIRMISH_DEFENSE = 5,
+	HEAVY_INFANTRY_PHASE_SKIRMISH_DEFENSE = 6,
 	HEAVY_INFANTRY_PHASE_MELEE_DEFENSE = 4,
-	HEAVY_INFANTRY_PHASE_PURSUE_DEFENSE = 3, --v11 made same level as AR/LI
-	HEAVY_INFANTRY_GRAPHICAL_FACTOR = 1,
--- v11 pikemen rebalanced vis-a-vis heavy infantry
+	HEAVY_INFANTRY_PHASE_PURSUE_DEFENSE = 3,
+	HEAVY_INFANTRY_GRAPHICAL_FACTOR = 2,
+	-- A slight few tweaks from vanilla, heavy infantry are now thrice as expensive as light infantry, but are slightly stronger in skirmish/melee as well as a bit more defence. The price difference is to account for better equipment maintenance and whatnot relative to light infantry.
 	PIKEMEN_MORALE = 5, -- prev 6
 	PIKEMEN_MAINTENANCE = 3,
-	PIKEMEN_PHASE_SKIRMISH_ATTACK = 0.25, --prev 0.2
-	PIKEMEN_PHASE_MELEE_ATTACK = 6,
-	PIKEMEN_PHASE_PURSUE_ATTACK = 0.25,
-	PIKEMEN_PHASE_SKIRMISH_DEFENSE = 5,
-	PIKEMEN_PHASE_MELEE_DEFENSE = 7, --prev 8
+	PIKEMEN_PHASE_SKIRMISH_ATTACK = 0.1,
+	PIKEMEN_PHASE_MELEE_ATTACK = 6.9,
+	PIKEMEN_PHASE_PURSUE_ATTACK = 1,
+	PIKEMEN_PHASE_SKIRMISH_DEFENSE = 6,
+	PIKEMEN_PHASE_MELEE_DEFENSE = 8,
 	PIKEMEN_PHASE_PURSUE_DEFENSE = 2,
-	PIKEMEN_GRAPHICAL_FACTOR = 1,
--- v11 light cavalry buffed
+	PIKEMEN_GRAPHICAL_FACTOR = 2,
+	-- Pikemen-type troops had a bit of rebalance to them, having equal morale with heavy infantry as well as also thrice as expensive as light infantry. Their melee attack is relatively slighly weaker than heavy infantry, but they have twice the defensive capabilities in melee of heavy infantry (a vanilla ratio anyway) in exchange for weaker performance in pursuit. Also, the decimal-value skirmish is mostly a vanilla safeguard I retained to keep them marginally useful in siege assaults (which apparently use skirmish values).
 	LIGHT_CAVALRY_MORALE = 4,
 	LIGHT_CAVALRY_MAINTENANCE = 4,
-	LIGHT_CAVALRY_PHASE_SKIRMISH_ATTACK = 8,  --prev 2
-	LIGHT_CAVALRY_PHASE_MELEE_ATTACK = 2,
-	LIGHT_CAVALRY_PHASE_PURSUE_ATTACK = 12, --prev 10
-	LIGHT_CAVALRY_PHASE_SKIRMISH_DEFENSE = 4,
-	LIGHT_CAVALRY_PHASE_MELEE_DEFENSE = 3,
-	LIGHT_CAVALRY_PHASE_PURSUE_DEFENSE = 7,
-	LIGHT_CAVALRY_GRAPHICAL_FACTOR = 1,
-	
-	KNIGHTS_MORALE = 9, -- prev 10
+	LIGHT_CAVALRY_PHASE_SKIRMISH_ATTACK = 5,
+	LIGHT_CAVALRY_PHASE_MELEE_ATTACK = 4.5,
+	LIGHT_CAVALRY_PHASE_PURSUE_ATTACK = 12,
+	LIGHT_CAVALRY_PHASE_SKIRMISH_DEFENSE = 6,
+	LIGHT_CAVALRY_PHASE_MELEE_DEFENSE = 4,
+	LIGHT_CAVALRY_PHASE_PURSUE_DEFENSE = 6,
+	LIGHT_CAVALRY_GRAPHICAL_FACTOR = 2.5,
+	-- Light Cavalry had been rebalanced by a fair amount. They have strengthened a significantly strengthened skirmish offensive and boosted pursuit value and thus more valuable as a combat unit, but are comparably more expensive as well (quadruple that of light infantry).
+	KNIGHTS_MORALE = 8,
 	KNIGHTS_MAINTENANCE = 6,
-	KNIGHTS_PHASE_SKIRMISH_ATTACK = 1,
+	KNIGHTS_PHASE_SKIRMISH_ATTACK = 0.5,
 	KNIGHTS_PHASE_MELEE_ATTACK = 10,
-	KNIGHTS_PHASE_PURSUE_ATTACK = 8,
-	KNIGHTS_PHASE_SKIRMISH_DEFENSE = 7, --prev 8
-	KNIGHTS_PHASE_MELEE_DEFENSE = 7, --prev 8
+	KNIGHTS_PHASE_PURSUE_ATTACK = 9,
+	KNIGHTS_PHASE_SKIRMISH_DEFENSE = 6,
+	KNIGHTS_PHASE_MELEE_DEFENSE = 7,
 	KNIGHTS_PHASE_PURSUE_DEFENSE = 5,
-	KNIGHTS_GRAPHICAL_FACTOR = 1, -- reduced v10l
-
-	ARCHERS_MORALE = 2, -- v11 increased
+	KNIGHTS_GRAPHICAL_FACTOR = 5,
+	--Heavy Cavalry underwent a fair amount of rebalance as well. I've reduced their base morale relative to vanilla, as well as slightly boosting their skirmish/pursuit offensive in exchange for reducing their skirmish/melee defences. They're also more expensive as well, now six times as expensive as a light infantryman, making them less overpowered as it used to be in vanilla (especially since heavy cavalry are fairly numerous in lux invicta relative to vanilla too).
+	ARCHERS_MORALE = 3,
 	ARCHERS_MAINTENANCE = 1,
 	ARCHERS_PHASE_SKIRMISH_ATTACK = 8,
-	ARCHERS_PHASE_MELEE_ATTACK = 1,
+	ARCHERS_PHASE_MELEE_ATTACK = 3,
 	ARCHERS_PHASE_PURSUE_ATTACK = 2,
-	ARCHERS_PHASE_SKIRMISH_DEFENSE = 2, --v11 reduced
-	ARCHERS_PHASE_MELEE_DEFENSE = 2,
+	ARCHERS_PHASE_SKIRMISH_DEFENSE = 1,
+	ARCHERS_PHASE_MELEE_DEFENSE = 3,
 	ARCHERS_PHASE_PURSUE_DEFENSE = 3,
 	ARCHERS_GRAPHICAL_FACTOR = 1,
-	-- isn't this redundant ?
+	-- Archers also were rebalanced by much as well. Aside from having the same base morale of light infantry (3), they now have a stronger skirmish value (twice of light infantry) and a bit more melee in exchange for reduced skirmish defences. This essentially makes them a glass-cannon variant of light infantry then, but significantly more stronger than the vanilla version.
 	SPECIAL_TROOPS_MORALE = 8,
 	SPECIAL_TROOPS_MAINTENANCE = 4,
 	SPECIAL_TROOPS_PHASE_SKIRMISH_ATTACK = 8,
@@ -907,7 +907,7 @@ NMilitary = {
 	SPECIAL_TROOPS_PHASE_MELEE_DEFENSE = 3,
 	SPECIAL_TROOPS_PHASE_PURSUE_DEFENSE = 7,
 	SPECIAL_TROOPS_GRAPHICAL_FACTOR = 1,
-	-- isn't that redundant ?
+	-- isn't that redundant ? I'll keep them at the values they have right now for now.
 	GALLEYS_MORALE = 1,
 	GALLEYS_MAINTENANCE = 50,
 	GALLEYS_PHASE_SKIRMISH_ATTACK = 1,
