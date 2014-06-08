@@ -1127,4 +1127,411 @@ character_event = {
 # CHANCELLOR
 # JOB: action_sow_dissent
 ##############################
-# SPYMASTER EVENT NOW - transferred accordingly to remove confusion
+
+# 916: The Chancellor sows dissent between a local noble and his liege
+character_event = {
+	id = 916
+	title = "EVTNAME916"
+	desc = "EVTDESC916"
+	picture = GFX_evt_spymaster
+	border = GFX_event_normal_frame_diplomacy
+
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		has_job_action = action_sow_dissent
+		location = {
+			any_province_lord = {
+				NOT = { is_liege_of = ROOT }
+				NOT = { character = ROOT }
+				NOT = { same_realm = ROOT }
+				independent = no
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 120
+		
+		modifier = {
+			factor = 1.25
+			NOT = { diplomacy = 2 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { diplomacy = 3 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { diplomacy = 4 }
+		}
+		modifier = {
+			factor = 1.25
+			NOT = { diplomacy = 5 }
+		}
+		modifier = {
+			factor = 0.75
+			diplomacy = 10
+		}
+		modifier = {
+			factor = 0.75
+			diplomacy = 11
+		}
+		modifier = {
+			factor = 0.75
+			diplomacy = 12
+		}
+		modifier = {
+			factor = 0.75
+			diplomacy = 13
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA916"
+		hidden_tooltip = {
+			location = {
+				random_province_lord = {
+					limit = {
+						NOT = { is_liege_of = ROOT }
+						NOT = { character = ROOT }
+						NOT = { same_realm = ROOT }
+						independent = no
+					}
+					character_event = { id = 20160 days = 7 }
+				}
+			}
+		}
+	}
+}
+
+# 20160: The local noble start disliking his liege
+character_event = {
+	id = 20160
+	desc = "EVTDESC20160"
+	picture = GFX_evt_spymaster
+	border = GFX_event_normal_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20160"
+		liege = {
+			reverse_opinion = {
+				modifier = opinion_furious
+				who = ROOT
+				years = 2
+			}
+			character_event = { id = 20161 days = 7 tooltip = "EVTTOOLTIP20161" }
+		}
+		hidden_tooltip = {
+			FROM = {
+				liege = {
+					letter_event = { id = 20162 days = 7 }
+				}
+			}
+		}
+	}
+}
+
+# 20161: The liege of the local noble is informed
+character_event = {
+	id = 20161
+	desc = "EVTDESC20161"
+	picture = GFX_evt_spymaster
+	border = GFX_event_normal_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20161"
+		tooltip = {
+			FROM = {
+				opinion = {
+					modifier = opinion_furious
+					who = ROOT
+					years = 2
+				}
+			}
+		}
+		opinion = {
+			modifier = opinion_angry
+			who = FROM
+			years = 2
+		}
+	}
+}
+
+# 20162: The liege of the Chancellor is informed
+letter_event = {
+	id = 20162
+	desc = "EVTDESC20162"
+	border = GFX_event_letter_frame_diplomacy
+
+	show_from_from = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20162"
+	}
+}
+
+
+# 917: Chancellor Discovered
+character_event = {
+	id = 917
+	title = "EVTNAME917"
+	desc = "EVTDESC917"
+	picture = GFX_evt_spymaster
+	border = GFX_event_normal_frame_diplomacy
+
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		has_job_action = action_sow_dissent
+		location = {
+			any_province_lord = {
+				NOT = { is_liege_of = ROOT }
+				NOT = { same_realm = ROOT }
+				independent = no
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 120
+		
+		modifier = {
+			factor = 0.75
+			NOT = { diplomacy = 2 }
+		}
+		modifier = {
+			factor = 0.75
+			NOT = { diplomacy = 3 }
+		}
+		modifier = {
+			factor = 0.75
+			NOT = { diplomacy = 4 }
+		}
+		modifier = {
+			factor = 0.75
+			NOT = { diplomacy = 5 }
+		}
+		modifier = {
+			factor = 1.25
+			diplomacy = 10
+		}
+		modifier = {
+			factor = 1.25
+			diplomacy = 11
+		}
+		modifier = {
+			factor = 1.25
+			diplomacy = 12
+		}
+		modifier = {
+			factor = 1.25
+			diplomacy = 13
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA917"
+		location = {
+			random_province_lord = {
+				limit = {
+					NOT = { is_liege_of = ROOT }
+					NOT = { same_realm = ROOT }
+					independent = no
+				}
+				character_event = { id = 20170 days = 7 tooltip = "EVTTOOLTIP20170" }
+			}
+		}
+	}
+}
+
+# 20170: The local noble is informed
+character_event = {
+	id = 20170
+	desc = "EVTDESC20170"
+	picture = GFX_evt_spymaster
+	border = GFX_event_normal_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20170"
+		FROM = {
+			imprison = ROOT
+		}
+		hidden_tooltip = {
+			FROM = {
+				character_event = { id = 20171 }
+				liege = { letter_event = { id = 20172 days = 7 } }
+			}
+			liege = { letter_event = { id = 20173 days = 7 } }
+		}
+	}
+	option = {
+		name = "EVTOPTB20170"
+		FROM = {
+			liege = {
+				reverse_opinion = {
+					modifier = opinion_furious
+					who = ROOT
+					years = 2
+				}
+			}
+		}
+		hidden_tooltip = {
+			FROM = {
+				liege = { letter_event = { id = 20175 days = 7 } }
+			}
+			liege = { letter_event = { id = 20174 days = 7 } }
+		}
+	}
+}
+
+# 20171: The Chancellor is imprisoned
+character_event = {
+	id = 20171
+	desc = "EVTDESC20171"
+	picture = GFX_evt_into_the_dungeon
+	border = GFX_event_normal_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20171"
+		prestige = -10
+	}
+}
+
+# 20172: The Chancellor's liege is informed about imprisonment
+letter_event = {
+	id = 20172
+	desc = "EVTDESC20172"
+	border = GFX_event_letter_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20172"
+		prestige = -10
+	}
+}
+
+# 20173: The local noble informs his liege about imprisonment
+letter_event = {
+	id = 20173
+	desc = "EVTDESC20173"
+	border = GFX_event_letter_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20173"
+		FROM = {
+			FROM = {
+				liege = {
+					reverse_opinion = {
+						modifier = opinion_furious
+						who = ROOT
+						years = 2
+					}
+					hidden_tooltip = {
+						letter_event = { id = 20176 days = 7}
+					}
+				}
+			}
+		}
+	}
+}
+
+# 20174: The local noble informs his liege about the Chancellor's doing
+letter_event = {
+	id = 20174
+	desc = "EVTDESC20174"
+	border = GFX_event_letter_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20174"
+		FROM = {
+			FROM = {
+				liege = {
+					reverse_opinion = {
+						modifier = opinion_furious
+						who = ROOT
+						years = 2
+					}
+					hidden_tooltip = {
+						letter_event = { id = 20176 days = 7 }
+					}
+				}
+			}
+		}
+	}
+}
+
+# 20175: The Chancellor's liege is informed about the reaction of the noble
+letter_event = {
+	id = 20175
+	desc = "EVTDESC20175"
+	border = GFX_event_letter_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20175"
+		prestige = -5
+		hidden_tooltip = {
+			FROM = {
+				remove_opinion = {
+					modifier = opinion_furious
+					who = ROOT
+				}
+			}
+		}
+		FROM = {
+			opinion = {
+				modifier = opinion_furious
+				who = ROOT
+				years = 2
+			}
+		}
+	}
+}
+
+# 20176: The Chancellor's liege is informed about the reaction of the noble's liege
+letter_event = {
+	id = 20176
+	desc = "EVTDESC20176"
+	border = GFX_event_letter_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA20176"
+		prestige = -10
+		hidden_tooltip = {
+			FROM = {
+				remove_opinion = {
+					modifier = opinion_furious
+					who = ROOT
+				}
+			}
+		}
+		FROM = {
+			opinion = {
+				modifier = opinion_furious
+				who = ROOT
+				years = 2
+			}
+		}
+	}
+}
