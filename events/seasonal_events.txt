@@ -1,0 +1,211 @@
+##################################################################
+#                                                                #
+# Seasonal events written by chatnoir17							 #
+#                                                                #
+##################################################################
+
+## Bad crops event chain
+
+# long rain
+
+province_event = {
+	id = VIETnam.2
+	desc = "EVTDESC1000053005"
+	picture = GFX_evt_tuscan_country
+
+	trigger = {
+		month = 2
+		NOT = { month = 8 }
+		NOT = { has_province_modifier = long_rain }
+	}
+
+	mean_time_to_happen = {
+		months = 5000
+	}
+
+	option = {
+		name = "EVTOPTA1000053005"
+		add_province_modifier = {
+			name = long_rain
+			duration = 180
+		}
+	}
+}
+
+# cold weather
+
+province_event = {
+	id = VIETnam.3
+	desc = "EVTDESC1000053006"
+	picture = GFX_evt_tuscan_country
+
+	trigger = {
+		month = 2
+		NOT = { month = 8 }
+		NOT = { has_province_modifier = cold_weather }
+	}
+
+	mean_time_to_happen = {
+		months = 5000
+	}
+
+	option = {
+		name = "EVTOPTA1000053006"
+		add_province_modifier = {
+			name = cold_weather
+			duration = 180
+		}
+	}
+}
+
+# bad crops in autumn
+
+province_event = {
+	id = VIETnam.4
+	desc = "EVTDESC1000053007"
+	picture = GFX_evt_autumn_harvest
+
+	trigger = {
+		month = 8
+		NOT = { month = 9 }
+		NOT = { has_province_modifier = bad_crops }
+		NOT = { has_province_modifier = good_crops }
+	}
+
+	mean_time_to_happen = {
+		months = 5000
+		modifier = {
+			factor = 0.1
+			has_province_modifier = long_rain
+		}
+		modifier = {
+			factor = 0.1
+			has_province_modifier = cold_weather
+		}
+	}
+
+	option = {
+		name = "EVTOPTA1000053007"
+		add_province_modifier = {
+			name = bad_crops
+			duration = 365
+		}
+	}
+}
+
+# famine in the next year
+
+province_event = {
+	id = VIETnam.5
+	desc = "EVTDESC1000053008"
+	picture = GFX_evt_plague_doctor
+
+	trigger = {
+		month = 2
+		NOT = { month = 8 }
+		has_province_modifier = bad_crops
+		NOT = { has_province_modifier = serious_famine }
+	}
+
+	mean_time_to_happen = {
+		months = 120
+	}
+
+	option = { # help poor peasants and citizens!
+		name = "EVTOPTA1000053008"
+		ai_chance = {
+			factor = 5
+#	Modifier with owner's wealth			
+			modifier = {
+				factor = 20
+				owner = { treasury = 100 }
+			}
+#	Modifier with owner's positive traits
+			modifier = {
+				factor = 10
+				owner = { trait = kind }
+			}
+			modifier = {
+				factor = 10
+				owner = { trait = charitable }
+			}
+			modifier = {
+				factor = 10
+				owner = { trait = temperate }
+			}
+			modifier = {
+				factor = 10
+				owner = { trait = diligent }
+			}				
+		}
+		owner = { 
+			treasury = -50
+			piety = 10
+		}
+	}
+	
+	option = { # Let them eat cake!
+		name = "EVTOPTB1000053008"
+		ai_chance = {
+			factor = 5
+#	Modifier with owner's wealth			
+			modifier = {
+				factor = 20
+				owner = {
+					NOT = { treasury = 50 }
+				}
+			}
+#	Modifier with owner's nagative traits
+			modifier = {
+				factor = 10
+				owner = { trait = gluttonous }
+			}
+			modifier = {
+				factor = 10
+				owner = { trait = greedy }
+			}
+			modifier = {
+				factor = 10
+				owner = { trait = cruel }
+			}
+			modifier = {
+				factor = 10
+				owner = { trait = slothful }
+			}			
+		}
+		add_province_modifier = {
+			name = serious_famine
+			duration = 365
+		}
+		owner = { 
+			piety = -10
+		}
+	}
+}
+
+# good crops in autumn
+
+province_event = {
+	id = VIETnam.6
+	desc = "EVTDESC1000053009"
+	picture = GFX_evt_autumn_harvest
+
+	trigger = {
+		month = 8
+		NOT = { month = 9 }
+		NOT = { has_province_modifier = bad_crops }
+		NOT = { has_province_modifier = good_crops }
+	}
+
+	mean_time_to_happen = {
+		months = 5000
+	}
+
+	option = {
+		name = "EVTOPTA1000053009"
+		add_province_modifier = {
+			name = good_crops
+			duration = 365
+		}
+  }
+}
