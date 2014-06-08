@@ -13,8 +13,8 @@ NDiplomacy = {
 	CALL_TO_WAR_DELAY = 60, -- Months between attempts to call someone into war
 	PAPAL_INVEST_PIETY_COST_MULT = 0.5, -- The effect of Papal investiture on the piety cost of the special Papal actions
 	SHORT_REIGN_YEARS_END = 10,-- notes:x-2 opinion per year v10nincreased from 9 to 15 v11 increased to 20 v12 reduced to 8 (with -5 per year) v12 increased
-	LONG_REIGN_YEARS_START = 20, --v10n decreased from 20 to 15 v11 corrected computation. Gap is 5 (vanilla 20-9=11). v11 starts at 15 (gap of 7 years) v12 start 20, gap 10
-	SHORT_REIGN_OPINION_MULT = 5, -- v12 (-5 x 8 per year with DivineRight = 0)
+	LONG_REIGN_YEARS_START = 15, --v10n decreased from 20 to 15 v11 corrected computation. Gap is 5 (vanilla 20-9=11). v11 starts at 15 (gap of 7 years) v12 start 20, gap 10 v14 start 15, gap 5
+	SHORT_REIGN_OPINION_MULT = 4, -- v12 (-5 x 8 per year with DivineRight = 0) v14 reduced to 4
 	DOW_ON_ALLY_PRESTIGE_COST = 500, --v11 increased from 150 to 500
 	MINIMUM_SEND_GIFT_COST = 20,
 	SEND_GIFT_INCOME_SCALEFACTOR = 24, 
@@ -65,11 +65,11 @@ NDiplomacy = {
 	BASE_REVOLT_CHANCE_MOD = 225,				-- Pre Old Gods rebel spawn chance modifier (fires on_rebel_revolt) : lower means fewer revolts. MUST NOT BE ZERO. --v12 modified to be 30% of vanilla (1k) 21 reduced 12% further
 	TOG_REVOLT_CHANCE_MOD = 75,				-- Old Gods rebel spawn chance modifier (fires on_rebel_revolt) : lower means fewer revolts. MUST NOT BE ZERO. -- v12 reduced incidence to half of vanilla (200) 12a reduced 25% further
 	JAIN_LIEGE_OPINION_BONUS = 30,				-- Jain Lieges Get Vassal Opinion Bonus
-	MAX_DIPLO_DISTANCE = 700,					-- Most diplomacy is disallowed if two rulers are too distant
-	MAX_DIPLO_DISTANCE_SAME_RELIGION = 100,		-- Bonus to max diplo distance for being of the same religion
-	MAX_DIPLO_DISTANCE_SAME_RELIGION_GROUP = 0, -- Bonus to max diplo distance for being of the same religion group
-	MAX_DIPLO_DISTANCE_SAME_CULTURE = 100, 		-- Bonus to max diplo distance for being of the same culture
-	MAX_DIPLO_DISTANCE_SAME_CULTURE_GROUP = 100, -- Bonus to max diplo distance for being of the same culture group
+	MAX_DIPLO_DISTANCE = 500,					-- Most diplomacy is disallowed if two rulers are too distant v14 reduced from 700 to 500
+	MAX_DIPLO_DISTANCE_SAME_RELIGION = 500,		-- Bonus to max diplo distance for being of the same religion v14 boosted to 500 from 100
+	MAX_DIPLO_DISTANCE_SAME_RELIGION_GROUP = 300, -- Bonus to max diplo distance for being of the same religion group v14 boosted to 300 from 0
+	MAX_DIPLO_DISTANCE_SAME_CULTURE = 500, 		-- Bonus to max diplo distance for being of the same culture v14 boosted too 500 from 100
+	MAX_DIPLO_DISTANCE_SAME_CULTURE_GROUP = 300, -- Bonus to max diplo distance for being of the same culture group boosted to 300 from 100 
 	
 	IMPRISON_CHARACTER_INTERACTION_MONEY = 0,
 	IMPRISON_CHARACTER_INTERACTION_PIETY = 0,
