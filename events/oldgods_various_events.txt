@@ -858,77 +858,77 @@ character_event = {
 	}
 }
 
-### Varangian Events
+### Varangian Events. Transformed to son going to merc company or vassal merc if any
 
-# Varangian Guard Founded (Emperor)
-narrative_event = {
-	id = TOG.3100
-	title = EVTNAME_TOG_3100
-	desc = EVTDESC_TOG_3100
-	picture = GFX_evt_viking_battle_oldgods
-	border = GFX_event_narrative_frame_war
+# # Varangian Guard Founded (Emperor)
+# narrative_event = {
+	# id = TOG.3100
+	# title = EVTNAME_TOG_3100
+	# desc = EVTDESC_TOG_3100
+	# picture = GFX_evt_viking_battle_oldgods
+	# border = GFX_event_narrative_frame_war
 	
-	is_triggered_only = yes
+	# is_triggered_only = yes
 	
-	hide_from = yes
+	# hide_from = yes
 	
-	option = {
-		name = EVTOPTA_TOG_3100
-		hidden_tooltip = {
-			any_playable_ruler = {
-				limit = {
-					ai = no
-					culture_group = north_germanic
-				}
-				narrative_event = { id = TOG.3101 }
-			}
-		}
-	}
-}
+	# option = {
+		# name = EVTOPTA_TOG_3100
+		# hidden_tooltip = {
+			# any_playable_ruler = {
+				# limit = {
+					# ai = no
+					# culture_group = north_germanic
+				# }
+				# narrative_event = { id = TOG.3101 }
+			# }
+		# }
+	# }
+# }
 
-# Varangian Guard Founded (Norse)
-narrative_event = {
-	id = TOG.3101
-	title = EVTNAME_TOG_3100
-	desc = EVTDESC_TOG_3101
-	picture = GFX_evt_viking_battle_oldgods
-	border = GFX_event_narrative_frame_war
+# # Varangian Guard Founded (Norse)
+# narrative_event = {
+	# id = TOG.3101
+	# title = EVTNAME_TOG_3100
+	# desc = EVTDESC_TOG_3101
+	# picture = GFX_evt_viking_battle_oldgods
+	# border = GFX_event_narrative_frame_war
 	
-	is_triggered_only = yes
+	# is_triggered_only = yes
 	
-	option = {
-		name = EVTOPTA_TOG_3101
-		custom_tooltip = { text = varangians_organized }
-	}
-}
+	# option = {
+		# name = EVTOPTA_TOG_3101
+		# custom_tooltip = { text = varangians_organized }
+	# }
+# }
 
-# Varangian Captain gets Varangian trait
-character_event = {
-	id = TOG.3105
-	hide_window = yes
+# # Varangian Captain gets Varangian trait
+# character_event = {
+	# id = TOG.3105
+	# hide_window = yes
 	
-	min_age = 16
-	only_men = yes
-	capable_only = yes
-	prisoner = no
+	# min_age = 16
+	# only_men = yes
+	# capable_only = yes
+	# prisoner = no
 	
-	trigger = {
-		has_landed_title = d_varangian_guard
-		NOT = { trait = varangian }
-	}
+	# trigger = {
+		# has_landed_title = d_varangian_guard
+		# NOT = { trait = varangian_trait }
+	# }
 	
-	mean_time_to_happen = {
-		days = 1
-	}
+	# mean_time_to_happen = {
+		# days = 1
+	# }
 	
-	immediate = {
-		add_trait = varangian
-	}
+	# immediate = {
+		# add_trait = varangian_trait
+	# }
 	
-	option = {
-		name = OK
-	}
-}
+	# option = {
+		# name = OK
+	# }
+# }
 
 # Son has served a few years
 character_event = {
@@ -943,7 +943,7 @@ character_event = {
 	
 	immediate = {
 		set_character_flag = serving_varangian
-		clr_character_flag = wants_varangian
+		#clr_character_flag = wants_varangian
 	}
 	
 	option = {
@@ -951,7 +951,7 @@ character_event = {
 	}
 }
 
-# Son wants to join the Varangians (Son)
+# Son wants to join mercs (Son)
 character_event = {
 	id = TOG.3109
 	hide_window = yes
@@ -962,21 +962,32 @@ character_event = {
 	only_men = yes
 	capable_only = yes
 	prisoner = no
-	
+
 	trigger = {
 		has_dlc = "The Old Gods"
 		is_landed = no
-		in_command = no
-		has_global_flag = varangian_guard_founded
-		culture_group = north_germanic
+		in_command = no	
+		NOT = { 			
+				OR = { #Scholarly religions send their sons to the Akademia instead.
+						religion = docetist
+						religion = hurufi
+						religion = ilm_islam
+						religion = marcionist 
+						religion = neoplato
+						religion = plato_christ
+						religion = plato_islam
+						religion = plato_pythagorean
+						religion = porphyryan
+						religion = valentinian
+					}
+		}
 		NOT = { 
-			trait = varangian 
+			trait = varangian_trait 
 			has_character_flag = wants_varangian
 			has_character_flag = denied_varangian
 		}
 		father = {
 			is_alive = yes
-			culture_group = north_germanic
 			is_ruler = yes
 			is_liege_of = ROOT
 			prisoner = no
@@ -998,6 +1009,13 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.75
+			OR = {
+				trait = skilled_warrior
+				trait = master_warrior
+			}
+		}
+		modifier = {
+			factor = 0.75
 			trait = berserker
 		}
 		modifier = {
@@ -1009,26 +1027,45 @@ character_event = {
 			trait = impaler
 		}
 		modifier = {
-			factor = 1.5
+			factor = 0.8
+			trait = bastard
+		}
+		modifier = {
+			factor = 3
+			trait = poor_warrior
+		}
+		modifier = {
+			factor = 5
+			NOT = {
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}
+			}	
+		}
+		modifier = {
+			factor = 5 
 			trait = slothful
 		}
 		modifier = {
-			factor = 1.5
+			factor = 5 
 			trait = content
 		}
 		modifier = {
-			factor = 1.5
+			factor = 4 
 			is_primary_heir = yes
 		}
 		modifier = {
-			factor = 2.0
+			factor = 5 
 			trait = craven
 		}
 	}
 	
 	immediate = {
 		father = { character_event = { id = TOG.3110 } }
-		set_character_flag = wants_varangian
+		set_character_flag = wants_varangian	
 	}
 	
 	option = {
@@ -1036,11 +1073,11 @@ character_event = {
 	}
 }
 
-# Son wants to join the Varangians (Father)
+# Son wants to join mercs(Father)
 character_event = {
 	id = TOG.3110
 	desc = EVTDESC_TOG_3110
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
@@ -1056,13 +1093,33 @@ character_event = {
 			clr_character_flag = wants_varangian
 			set_character_flag = denied_varangian
 		}
-		prestige = -100
+		prestige = -25
 	}
 	option = { # Allow
 		name = EVTOPTB_TOG_3110
-		d_varangian_guard = {
-			holder_scope = {
+		if = {
+			limit = { NOT = { any_vassal = { primary_title = { mercenary = yes } } } }
+			random_independent_ruler = {
+				limit = {
+					primary_title = {
+						mercenary = yes
+					}	
+				}
 				FROM = {
+					move_character = PREV
+				}
+			}
+		}
+		if = {
+			limit = { any_vassal = { primary_title = { mercenary = yes } } }
+			random_vassal = {
+				limit = {
+					primary_title = {
+						mercenary = yes
+					}	
+				}
+				FROM = {
+					set_character_flag = son_vassal_merc
 					move_character = PREV
 				}
 			}
@@ -1072,11 +1129,11 @@ character_event = {
 				character_event = { id = TOG.3108 days = 1460 }
 			}
 		}
-		prestige = 100
+		prestige = 25
 	}
 }
 
-# Son stays in Greece with wife (Son)
+# Son stays in an important foreign court with wife (Son)
 character_event = {
 	id = TOG.3111
 	hide_window = yes
@@ -1084,6 +1141,7 @@ character_event = {
 	trigger = {
 		has_dlc = "The Old Gods"
 		has_character_flag = serving_varangian
+		NOT = { has_character_flag = son_vassal_merc }
 		is_married = no
 		NOT = {
 			OR = {
@@ -1119,13 +1177,22 @@ character_event = {
 	}
 	
 	immediate = {
-		father = { character_event = { id = TOG.3112 } }
-		e_byzantium = {
-			holder_scope = {
-				character_event = { id = TOG.3113 }
+		father = { character_event = { id = TOG.3112 days = 1 } }
+		random_independent_ruler = {
+			limit = {
+				OR = {	
+					tier = KING
+					tier = EMPEROR
+				}
+				NOT = { culture_group = ROOT }
+				NOT = { any_child = { character = ROOT } }
+				NOT = { dynasty = ROOT }
+				NOT = { culture = ROOT }		
 			}
+			character_event = { id = TOG.3113 }
 		}
 		clr_character_flag = serving_varangian
+		
 	}
 	
 	option = {
@@ -1133,11 +1200,11 @@ character_event = {
 	}
 }
 
-# Son stays in Greece with wife (Norse father)
+# Son stays in an important foreign court with wife (Father)
 character_event = {
 	id = TOG.3112
 	desc = EVTDESC_TOG_3112
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
@@ -1145,45 +1212,68 @@ character_event = {
 	option = {
 		name = EVTOPTA_TOG_3112
 		tooltip = {
-			e_byzantium = {
-				holder_scope = {
+			FROM = {
+				liege = {
 					FROM = {
 						move_character = PREV
 						religion = PREV
 					}
-				}
+				}	
 			}
+		}		
+		FROM = { 
+			prestige = 50
+			wealth = 50
 		}
-		FROM = { add_trait = varangian }
+		FROM = { add_trait = varangian_trait }
 	}
 }
 
-# Son stays in Greece with wife (Byzantine Emperor)
+# Son stays in important foreign court with wife (foreign Ruler)
 character_event = {
 	id = TOG.3113
 	desc = EVTDESC_TOG_3113
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
+	hide_window = yes
 	
-	option = {
-		name = EVTOPTA_TOG_3113
+	immediate = {
+		FROM = { set_character_flag = keep_lowborn_marriage }
 		create_character = {
 			random_traits = yes
 			dynasty = random
 			female = yes
 			age = 26
 			religion = ROOT
-			culture = greek
+			culture = ROOT
 		}
 		new_character = {
 			add_spouse_matrilineal = FROM
 		}
 		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
+			father = {
+				any_child = {
+					limit = { 
+						same_liege = PREVPREV 
+						NOT = { character = PREVPREV }
+						NOT = { has_character_flag = serving_varangian }
+					}
+					move_character = PREV
+				}
+			}
 			move_character = ROOT
-			religion = ROOT
+			religion = ROOT		
 		}
+	}
+	
+	option = {
+		name = EVTOPTA_TOG_3113
 	}
 }
 
@@ -1214,6 +1304,7 @@ character_event = {
 	immediate = {
 		father = { character_event = { id = TOG.3115 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1225,18 +1316,36 @@ character_event = {
 character_event = {
 	id = TOG.3115
 	desc = EVTDESC_TOG_3115
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3115
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
+			move_character = ROOT
+		}
 		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
 			move_character = ROOT
 			add_trait = scarred
-			add_trait = varangian
+			add_trait = varangian_trait
 			change_martial = 4
+			prestige = 50
+			wealth = 50
+		}
+		any_child = {
+			limit = { same_liege = FROM }
+			move_character = ROOT
 		}
 	}
 }
@@ -1272,6 +1381,7 @@ character_event = {
 	immediate = {
 		father = { character_event = { id = TOG.3117 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1283,17 +1393,31 @@ character_event = {
 character_event = {
 	id = TOG.3117
 	desc = EVTDESC_TOG_3117
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3117
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
+			move_character = ROOT
+		}
 		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
 			move_character = ROOT
 			add_trait = homosexual
-			add_trait = varangian
+			add_trait = varangian_trait
+			prestige = 50
+			wealth = 50
 		}
 	}
 }
@@ -1320,6 +1444,7 @@ character_event = {
 		add_trait = blinded
 		father = { character_event = { id = TOG.3119 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1331,18 +1456,30 @@ character_event = {
 character_event = {
 	id = TOG.3119
 	desc = EVTDESC_TOG_3119
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3119
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
+			move_character = ROOT
+		}
 		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
 			move_character = ROOT
 			tooltip = { add_trait = blinded }
 			add_trait = eunuch
-			add_trait = varangian
+			add_trait = varangian_trait
 		}
 	}
 }
@@ -1391,6 +1528,7 @@ character_event = {
 	immediate = {
 		father = { character_event = { id = TOG.3121 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1402,7 +1540,7 @@ character_event = {
 character_event = {
 	id = TOG.3121
 	desc = EVTDESC_TOG_3121
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
@@ -1437,10 +1575,24 @@ character_event = {
 				add_trait = skilled_tactician
 			}
 		}
-		FROM = {
-			change_martial = 2
-			add_trait = varangian
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
 			move_character = ROOT
+		}
+		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
+			change_martial = 2
+			add_trait = varangian_trait
+			move_character = ROOT
+			prestige = 50
+			wealth = 50
 		}
 	}
 }
@@ -1476,6 +1628,7 @@ character_event = {
 	immediate = {
 		father = { character_event = { id = TOG.3123 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1487,37 +1640,45 @@ character_event = {
 character_event = {
 	id = TOG.3123
 	desc = EVTDESC_TOG_3123
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3123
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
+			move_character = ROOT
+		}
 		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
 			move_character = ROOT
 			add_trait = stressed
 			add_trait = depressed
-			add_trait = varangian
+			add_trait = varangian_trait
+			wealth = 50
 		}
 	}
 }
 
-# Son returns home with Greek wife (Son)
+# Son returns home with foreing wife (Son)
 character_event = {
 	id = TOG.3124
 	hide_window = yes
 	
 	trigger = {
 		has_dlc = "The Old Gods"
+		NOT = { has_character_flag = son_vassal_merc }
 		has_character_flag = serving_varangian
 		is_married = no
-		e_byzantium = {
-			holder_scope = {
-				culture = greek
-				religion = orthodox
-			}
-		}
 	}
 	
 	mean_time_to_happen = {
@@ -1539,36 +1700,100 @@ character_event = {
 	}
 }
 
-# Son returns home with Greek wife
+# Son returns home with foreing wife
 character_event = {
 	id = TOG.3125
 	desc = EVTDESC_TOG_3125
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
+	immediate = {
+		random_list = {
+			1 = { set_character_flag = hellen_wife }
+			1 = { set_character_flag = visigoth_wife }
+			1 = { set_character_flag = indohellenic_wife }
+			1 = { set_character_flag = mandinka_wife }
+		}
+	}
+	
 	option = {
 		name = EVTOPTA_TOG_3125
-		create_character = {
-			random_traits = yes
-			dynasty = NONE
-			female = yes
-			age = 26
-			religion = orthodox
-			culture = greek
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
+			move_character = ROOT
 		}
+		FROM = { set_character_flag = keep_lowborn_marriage }
+		if = {
+			limit = { has_character_flag = hellen_wife }
+			clr_character_flag = hellen_wife
+			create_character = {
+				random_traits = yes
+				dynasty = NONE
+				female = yes
+				age = 26
+				culture = hellenistic
+				religion = alexandros
+			}
+		}	
+		if = {
+			limit = { has_character_flag = visigoth_wife }
+			clr_character_flag = visigoth_wife
+			create_character = {
+				random_traits = yes
+				dynasty = NONE
+				female = yes
+				age = 26
+				culture = visigothic
+				religion = arian
+			}
+		}	
+		if = {
+			limit = { has_character_flag = indohellenic_wife }
+			clr_character_flag = indohellenic_wife
+			create_character = {
+				random_traits = yes
+				dynasty = NONE
+				female = yes
+				age = 26
+				culture = indohellenic
+				religion = indoh_hindu
+			}
+		}	
+		if = {
+			limit = { has_character_flag = mandinka_wife }
+			clr_character_flag = mandinka_wife
+			create_character = {
+				random_traits = yes
+				dynasty = NONE
+				female = yes
+				age = 26
+				culture = mandinka
+				religion = yoruba
+			}
+		}	
 		new_character = {
 			add_spouse = FROM
 		}
 		FROM = { 
-			add_trait = varangian 
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
+			add_trait = varangian_trait 
 			move_character = ROOT
+			prestige = 50
+			wealth = 50
 		}
 	}
 }
 
-# Son returns home as a Christian zealot (Son)
+# Son returns home as a Mithraic zealot (Son)
 character_event = {
 	id = TOG.3126
 	hide_window = yes
@@ -1576,22 +1801,10 @@ character_event = {
 	trigger = {
 		has_dlc = "The Old Gods"
 		has_character_flag = serving_varangian
-		OR = {
-			religion = norse_pagan
-			religion = norse_pagan_reformed
-		}
-		father = {
-			OR = {
-				religion = norse_pagan
-				religion = norse_pagan_reformed
-			}
-		}
+		NOT = { has_character_flag = son_vassal_merc }
+		NOT = { religion = mithra }
+		father = { NOT = { religion = mithra } }
 		NOT = { trait = zealous }
-		e_byzantium = {
-			holder_scope = {
-				religion = orthodox
-			}
-		}
 	}
 	
 	mean_time_to_happen = {
@@ -1613,22 +1826,36 @@ character_event = {
 	}
 }
 
-# Son returns home as a Christian zealot
+# Son returns home as a Mithraic zealot
 character_event = {
 	id = TOG.3127
 	desc = EVTDESC_TOG_3127
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3127
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
+			move_character = ROOT
+		}
 		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
 			move_character = ROOT
 			add_trait = zealous
-			add_trait = varangian
-			religion = orthodox
+			add_trait = varangian_trait
+			religion = mithra
+			prestige = 50
+			wealth = 50
 		}
 	}
 }
@@ -1641,6 +1868,7 @@ character_event = {
 	trigger = {
 		has_dlc = "The Old Gods"
 		has_character_flag = serving_varangian
+		NOT = { trait = master_warrior }
 	}
 	
 	mean_time_to_happen = {
@@ -1674,11 +1902,16 @@ character_event = {
 			factor = 1.5
 			trait = imbecile
 		}
+		modifier = {
+			factor = 2
+			trait = craven
+		}
 	}
 	
 	immediate = {
 		father = { character_event = { id = TOG.3129 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1690,18 +1923,61 @@ character_event = {
 character_event = {
 	id = TOG.3129
 	desc = EVTDESC_TOG_3129
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3129
-		FROM = {
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
 			move_character = ROOT
-			add_trait = brave
-			add_trait = varangian
-			change_martial = 2
+		}
+		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
+			move_character = ROOT
+			if = {
+				limit = { trait = skilled_warrior }
+				hidden_tooltip = { remove_trait = skilled_warrior }
+				add_trait = master_warrior
+			}
+			if = {
+				limit = { trait = trained_warrior }
+				hidden_tooltip = { remove_trait = trained_warrior }
+				add_trait = skilled_warrior
+			}
+			if = {
+				limit = { 
+					NOT = { trait = trained_warrior }
+					NOT = { trait = skilled_warrior }
+					NOT = { trait = master_warrior }
+				}
+				hidden_tooltip = { remove_trait = poor_warrior }
+				add_trait = trained_warrior
+			}
+			if = {
+				limit = { 
+					NOT = { trait = brave }
+					NOT = { trait = craven }
+				}
+				add_trait = brave
+			}
+			if = {
+				limit = { trait = craven }
+				remove_trait = craven
+			}
+			prestige = 50
+			wealth = 50
+			add_trait = varangian_trait
+			#change_martial = 2
 		}
 	}
 }
@@ -1719,6 +1995,29 @@ character_event = {
 	mean_time_to_happen = {
 		months = 200
 		
+		modifier = {
+			factor = 0.75
+			NOT = {
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}
+			}	
+		}
+		modifier = {
+			factor = 0.85
+			trait = poor_warrior
+		}
+		modifier = {
+			factor = 1.15 
+			trait = skilled_warrior
+		}
+		modifier = {
+			factor = 1.25 
+			trait = master_warrior
+		}
 		modifier = {
 			factor = 0.75
 			trait = brave
@@ -1780,6 +2079,7 @@ character_event = {
 	immediate = {
 		father = { character_event = { id = TOG.3131 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1791,14 +2091,29 @@ character_event = {
 character_event = {
 	id = TOG.3131
 	desc = EVTDESC_TOG_3131
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3131
-		FROM = { death = { death_reason = death_battle } }
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
+			move_character = ROOT
+		}
+		FROM = { 
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
+			death = { death_reason = death_battle } 
+			prestige = 50
+		}
 	}
 }
 
@@ -1828,6 +2143,7 @@ character_event = {
 	immediate = {
 		father = { character_event = { id = TOG.3133 } }
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
@@ -1839,18 +2155,32 @@ character_event = {
 character_event = {
 	id = TOG.3133
 	desc = EVTDESC_TOG_3133
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_TOG_3133
-		FROM = {
+		any_child = {
+			limit = { 
+				same_liege = FROM
+				NOT = { character = FROM }
+				NOT = { has_character_flag = serving_varangian }
+			}
 			move_character = ROOT
-			add_trait = varangian
 		}
-		wealth = 300
+		FROM = {
+			any_child = {
+				limit = { same_liege = PREV }
+				move_character = ROOT
+			}
+			move_character = ROOT
+			add_trait = varangian_trait
+			wealth = 150
+			prestige = 50
+		}
+		wealth = 150
 	}
 }
 
@@ -1858,7 +2188,7 @@ character_event = {
 character_event = {
 	id = TOG.3134
 	desc = EVTDESC_TOG_3134
-	picture = GFX_evt_viking_throneroom_oldgods
+	picture = GFX_evt_throne_room
 	border = GFX_event_normal_frame_war
 	
 	ai = no
@@ -1872,20 +2202,17 @@ character_event = {
 		father = { is_alive = no }
 	}
 	
-	mean_time_to_happen = {
-		days = 1
-	}
-	
 	immediate = {
 		clr_character_flag = wants_varangian
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {
 		name = EVTOPTA_TOG_3134
-		add_trait = varangian
-		prestige = 200
-		wealth = 200
+		add_trait = varangian_trait
+		prestige = 50
+		wealth = 50
 	}
 }
 
@@ -1909,14 +2236,11 @@ character_event = {
 		father = { is_alive = no }
 	}
 	
-	mean_time_to_happen = {
-		days = 1
-	}
-	
 	immediate = {
-		add_trait = varangian
+		add_trait = varangian_trait
 		clr_character_flag = wants_varangian
 		clr_character_flag = serving_varangian
+		clr_character_flag = son_vassal_merc 
 	}
 	
 	option = {

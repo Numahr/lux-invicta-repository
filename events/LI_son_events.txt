@@ -1,0 +1,71 @@
+namespace = li_sonevents
+
+character_event = {
+	id = li_sonevents.0
+	desc = AI_ONLY
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	hide_window = yes
+	
+	option = {
+		name = OK
+		set_character_flag = wants_varangian
+		father = {
+			character_event = { id = li_sonevents.1 }
+		}
+	}
+}
+character_event = {
+	id = li_sonevents.1
+	desc = EVTDESCli_sonevents1
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = { # On second thoughts no
+		name = EVTOPTAli_sonevents1
+		FROM = {
+			clr_character_flag = wants_varangian
+		}
+		prestige = -25
+	}
+	option = { # Yes!
+		name = EVTOPTB_TOG_3110
+		if = {
+			limit = { NOT = { any_vassal = { primary_title = { mercenary = yes } } } }
+			random_independent_ruler = {
+				limit = {
+					primary_title = {
+						mercenary = yes
+					}	
+				}
+				FROM = {
+					move_character = PREV
+				}
+			}
+		}
+		if = {
+			limit = { any_vassal = { primary_title = { mercenary = yes } } }
+			random_vassal = {
+				limit = {
+					primary_title = {
+						mercenary = yes
+					}	
+				}
+				FROM = {
+					set_character_flag = son_vassal_merc
+					move_character = PREV
+				}
+			}
+		}
+		hidden_tooltip = {
+			FROM = { 
+				character_event = { id = TOG.3108 days = 1460 }
+			}
+		}
+		prestige = 25
+	}
+}
