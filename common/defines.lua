@@ -849,7 +849,7 @@ NMilitary = {
 	LIGHT_INFANTRY_GRAPHICAL_FACTOR = 1,
 	--I've tweaked LI a bit so that they function more as all-around-skirmishers rather than simply junk troops. They're still the least valuable troop per person, but at least they're less trash now.
 	HEAVY_INFANTRY_MORALE = 5,
-	HEAVY_INFANTRY_MAINTENANCE = 3,
+	HEAVY_INFANTRY_MAINTENANCE = 2,
 	HEAVY_INFANTRY_PHASE_SKIRMISH_ATTACK = 1,
 	HEAVY_INFANTRY_PHASE_MELEE_ATTACK = 8,
 	HEAVY_INFANTRY_PHASE_PURSUE_ATTACK = 2,
@@ -859,7 +859,7 @@ NMilitary = {
 	HEAVY_INFANTRY_GRAPHICAL_FACTOR = 2,
 	-- A slight few tweaks from vanilla, heavy infantry are now thrice as expensive as light infantry, but are slightly stronger in skirmish/melee as well as a bit more defence. The price difference is to account for better equipment maintenance and whatnot relative to light infantry.
 	PIKEMEN_MORALE = 5, -- prev 6
-	PIKEMEN_MAINTENANCE = 3,
+	PIKEMEN_MAINTENANCE = 2,
 	PIKEMEN_PHASE_SKIRMISH_ATTACK = 0.1,
 	PIKEMEN_PHASE_MELEE_ATTACK = 6.9,
 	PIKEMEN_PHASE_PURSUE_ATTACK = 1,
@@ -869,7 +869,7 @@ NMilitary = {
 	PIKEMEN_GRAPHICAL_FACTOR = 2,
 	-- Pikemen-type troops had a bit of rebalance to them, having equal morale with heavy infantry as well as also thrice as expensive as light infantry. Their melee attack is relatively slighly weaker than heavy infantry, but they have twice the defensive capabilities in melee of heavy infantry (a vanilla ratio anyway) in exchange for weaker performance in pursuit. Also, the decimal-value skirmish is mostly a vanilla safeguard I retained to keep them marginally useful in siege assaults (which apparently use skirmish values).
 	LIGHT_CAVALRY_MORALE = 4,
-	LIGHT_CAVALRY_MAINTENANCE = 4,
+	LIGHT_CAVALRY_MAINTENANCE = 2.5,
 	LIGHT_CAVALRY_PHASE_SKIRMISH_ATTACK = 5,
 	LIGHT_CAVALRY_PHASE_MELEE_ATTACK = 4.5,
 	LIGHT_CAVALRY_PHASE_PURSUE_ATTACK = 12,
@@ -879,7 +879,7 @@ NMilitary = {
 	LIGHT_CAVALRY_GRAPHICAL_FACTOR = 2.5,
 	-- Light Cavalry had been rebalanced by a fair amount. They have strengthened a significantly strengthened skirmish offensive and boosted pursuit value and thus more valuable as a combat unit, but are comparably more expensive as well (quadruple that of light infantry).
 	KNIGHTS_MORALE = 8,
-	KNIGHTS_MAINTENANCE = 6,
+	KNIGHTS_MAINTENANCE = 5,
 	KNIGHTS_PHASE_SKIRMISH_ATTACK = 0.5,
 	KNIGHTS_PHASE_MELEE_ATTACK = 10,
 	KNIGHTS_PHASE_PURSUE_ATTACK = 9,
