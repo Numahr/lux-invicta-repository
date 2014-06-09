@@ -12,51 +12,75 @@ namespace = meneth
 #Event to kill off useless courtiers
 character_event = {
 	id = meneth.201
-	desc = meneth.201.desc
-	picture = GFX_evt_battle
-	border = GFX_event_normal_frame_religion
+	desc = OK
+	hide_window = yes
+	is_triggered_only = yes
+	
+	only_rulers = yes
+	only_playable = yes
 	
 	trigger = {
-		is_ruler = no
-		is_councillor = no
-		is_married = no
-		is_adult = yes
-		OR = {
-			AND = {
-				age = 40 #5 years of fertility isn't much use
-				is_female = yes
-			}
-			trait = incapable #No reason to keep incapable characters around
-			has_character_modifier = old_age
-			NOT = {
-				OR = {
-					martial = 5
-					diplomacy = 5
-					intrigue = 5
-					stewardship = 5
-					learning = 5
-				}
-			}
-		}
-		NOT = {
-			any_dynasty_member = {
-				higher_tier_than = baron #Don't want the relatives of important people dying
-			}
-		}
-		NOT = {
-			any_child = {
-				higher_tier_than = baron #Don't want the relatives of important people dying
-			}
-		}
+		higher_tier_than = baron
 	}
 	
-	mean_time_to_happen = {
-		days = 1
+	immediate = {
+		any_courtier = {
+			limit = {
+				is_ruler = no
+				is_councillor = no
+				is_married = no
+				prisoner = no
+				is_adult = yes #Never kill kids
+				OR = { #Aren't important people
+					dynasty = 0
+					NOT = {
+						any_dynasty_member = {
+							higher_tier_than = baron
+						}
+					}
+				}
+				NOT = { #Have no useful claims
+					any_claim = {
+						higher_tier_than = baron
+					}
+				}
+				NOT = { #Not heir to anything
+					any_heir_title = {
+						always = yes
+					}
+				}
+				NOT = { #Bastards are always interesting
+					trait = bastard
+					trait = legit_bastard
+				}
+				NOT = { #Not if they have at least one attribute over 8
+						martial = 9
+						diplomacy = 9
+						intrigue = 9
+						stewardship = 9
+						learning = 9
+				}
+				OR = {
+					trait = incapable
+					AND = {
+						age = 40 #5 years of fertility isn't much use
+						is_female = yes
+					}
+					NOT = {
+						martial = 5
+						diplomacy = 5
+						intrigue = 5
+						stewardship = 5
+						learning = 5
+					}
+				}
+			}
+			death = { death_reason = death_poor_health }
+		}
 	}
 	
 	option = {
-		name = meneth.201.a
-		death = { death_reason = death_accident }
+		name = OK
 	}
 }
 #Interest on loans
@@ -66,8 +90,10 @@ character_event = {
 	picture = GFX_evt_council
 	
 	is_triggered_only = yes
+	only_rulers = yes
 	
 	trigger = {
+		is_ruler = yes
 		OR = {
 			has_character_modifier = small_loan
 			has_character_modifier = medium_loan
@@ -792,6 +818,29 @@ character_event = {
 		add_trait = excommunicated
 	}
 }
+
+# Character flag cleanup for clearly-errant do_not_disturb cases
+# Called from yearly on_action to cut down on evaluation overhead
+character_event = {
+	id = meneth.216
+	desc = OK
+	hide_window = yes
+	is_triggered_only = yes
+	
+	only_rulers = yes
+	
+	trigger = {
+		has_character_flag = do_not_disturb
+		had_character_flag = { flag = do_not_disturb days = 150 }
+	}
+	
+	immediate = {
+		clr_character_flag = do_not_disturb
+	}
+	
+	option = { name = OK }
+}
+
 #Remove tournament flag
 character_event = {
 	id = meneth.212
