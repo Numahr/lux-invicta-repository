@@ -1,77 +1,12 @@
 # rulers, dynasty stuff, realm stuff, demesne stuff
 
-(ContextValidator Trigger) = { Scopes = {
-	CharTrigger = "any_independent_ruler"
-	CharTrigger = "any_playable_ruler"
-
+(ContextValidator Trigger) = { Members = {
+	(N N) = { Left = "any_independent_ruler" Right = CharTrigger }
+	(N N) = { Left = "any_playable_ruler" Right = CharTrigger }
 } }
 
-(ContextValidator ProvTrigger) = { Scopes = {
-	CharTrigger = "ruler"
-
-} }
-
-(ContextValidator CharTrigger) = { Scopes = {
-	CharTrigger = "any_dynasty_member"
-	TitleTrigger = "any_realm_title"
-	CharTrigger = "any_realm_lord"
-	CharTrigger = "any_realm_character"
-	ProvTrigger = "any_realm_province"
-	TitleTrigger = "any_demesne_title"
-	ProvTrigger = "any_demesne_province"
-	
-	CharTrigger = "any_courtier"
-	CharTrigger = "host"
-	CharTrigger = "employer"
-	CharTrigger = "regent"
-	
-	TitleTrigger = "realm"
-
-} }
-
-(ContextValidator Command) = { Scopes = {
-	CharCommand = "any_independent_ruler"
-	CharCommand = "random_independent_ruler"
-	CharCommand = "any_playable_ruler"
-	CharCommand = "random_playable_ruler"
-
-} }
-
-(ContextValidator ProvCommand) = { Scopes = {
-	CharCommand = "ruler"
-	TitleCommand = "realm"
-	
-	ProvCommand = "random_demesne_province"
-	CharCommand = "random_courtier"
-	CharCommand = "random_vassal"
-
-} }
-
-(ContextValidator CharCommand) = { Scopes = {
-	CharCommand = "random_dynasty_member"
-	CharCommand = "any_dynasty_member"
-	
-	CharCommand = "any_realm_lord"
-	CharCommand = "any_realm_character"
-	TitleCommand = "any_realm_title"
-	CharCommand = "random_realm_lord"
-	CharCommand = "random_realm_character"
-	
-	TitleCommand = "realm"
-	TitleCommand = "any_demesne_title"
-	TitleCommand = "random_demesne_title"
-	
-	# Does not seem to work
-	#ProvCommand = "any_demesne_province"
-	ProvCommand = "random_demesne_province"
-	ProvCommand = "any_realm_province"
-	ProvCommand = "random_realm_province"
-	
-	CharCommand = "random_courtier"
-	CharCommand = "any_courtier"
-	CharCommand = "host"
-	CharCommand = "employer"
-	CharCommand = "regent"
+(ContextValidator ProvTrigger) = { Members = {
+	(N N) = { Left = "ruler" Right = CharTrigger }
 
 } }
 
@@ -93,17 +28,83 @@
 	
 	(Y  ) = { Left = "independent" Right = Bool }
 	(N Y) = { Left = "overlord_of" Right = ThisChar }
+	
+	# Scopes
+	(N N) = { Left = "any_dynasty_member" Right = CharTrigger }
+	(N N) = { Left = "any_realm_lord" Right = CharTrigger }
+	(N N) = { Left = "any_realm_character" Right = CharTrigger }
+	(N N) = { Left = "any_courtier" Right = CharTrigger }
+	(N N) = { Left = "host" Right = CharTrigger }
+	(N N) = { Left = "employer" Right = CharTrigger }
+	(N N) = { Left = "regent" Right = CharTrigger }
+	
+	(N N) = { Left = "any_realm_province" Right = ProvTrigger }
+	(N N) = { Left = "any_demesne_province" Right = ProvTrigger }
+	
+	(N N) = { Left = "any_realm_title" Right = TitleTrigger }
+	(N N) = { Left = "any_demesne_title" Right = TitleTrigger }
+	(N N) = { Left = "realm" Right = TitleTrigger }
 
 } }
 
 (ContextValidator TitleTrigger) = { Members = {
 	(Y  ) = { Left = "is_independent" Right = Bool }
 	(Y  ) = { Left = "independent" Right = Bool }
+	#(N Y) = { Left = "same_realm" Right = ThisChar }
+	
+	# Scopes
+	(N N) = { Left = "any_realm_lord" Right = CharTrigger }
 } }
+(ContextValidator Command) = { Members = {
+	(N N) = { Left = "any_independent_ruler" Right = CharCommand }
+	(N N) = { Left = "random_independent_ruler" Right = CharCommand }
+	(N N) = { Left = "any_playable_ruler" Right = CharCommand }
+	(N N) = { Left = "random_playable_ruler" Right = CharCommand }
+
+} }
+
+(ContextValidator ProvCommand) = { Members = {
+	(N N) = { Left = "ruler" Right = CharCommand }
+	(N N) = { Left = "random_courtier" Right = CharCommand }
+	(N N) = { Left = "random_vassal" Right = CharCommand }
+	
+	(N N) = { Left = "realm" Right = TitleCommand }
+	
+	(N N) = { Left = "random_demesne_province" Right = ProvCommand }
+
+} }
+
+(ContextValidator CharCommand) = { Scopes = {
+
+} }
+
 
 (ContextValidator CharCommand) = { Members = {
 	(Y  ) = { Left = "dynasty" Right = { Type = ThisChar Type = OpinionClauseDefinedTypes Type = DynastyId Literal = "mother_bastard" Literal = "father_bastard" } }
 
+	# Scopes
+	(N N) = { Left = "random_dynasty_member" Right = CharCommand }
+	(N N) = { Left = "any_dynasty_member" Right = CharCommand }
+	(N N) = { Left = "any_realm_lord" Right = CharCommand }
+	(N N) = { Left = "any_realm_character" Right = CharCommand }
+	(N N) = { Left = "random_realm_lord" Right = CharCommand }
+	(N N) = { Left = "random_realm_character" Right = CharCommand }
+	(N N) = { Left = "random_courtier" Right = CharCommand }
+	(N N) = { Left = "any_courtier" Right = CharCommand }
+	(N N) = { Left = "host" Right = CharCommand }
+	(N N) = { Left = "employer" Right = CharCommand }
+	(N N) = { Left = "regent" Right = CharCommand }
+	
+	(N N) = { Left = "any_realm_title" Right = TitleCommand }
+	(N N) = { Left = "realm" Right = TitleCommand }
+	(N N) = { Left = "any_demesne_title" Right = TitleCommand }
+	(N N) = { Left = "random_demesne_title" Right = TitleCommand }
+	
+	# Does not seem to work
+	#(N N) = { Left = "any_demesne_province" Right = ProvCommand }
+	(N N) = { Left = "random_demesne_province" Right = ProvCommand }
+	(N N) = { Left = "any_realm_province" Right = ProvCommand }
+	(N N) = { Left = "random_realm_province" Right = ProvCommand }
 } }
 
 

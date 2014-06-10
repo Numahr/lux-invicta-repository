@@ -1,21 +1,16 @@
-(Validator Ideas) = {
-	Type = Default
-	FriendlyName = "Ideas"
-	(FileGroup "common\ideas" "*.txt")
-	ValidatorName = IdeasFile
-}
-
-(Type IdeasFile) = {
-	(Ch N N) = {
-		Left = { Type = String }
-		Right = IdeaGroupDef
-		(CheckKey "*" Left IfNot = NoCheckKey)
-		UniqueId = Left
+Global = {
+	(Type IdeasFile) = {
+		(Ch N N) = {
+			Left = { Type = String }
+			Right = IdeaGroupDef
+			(CheckKey "*" Left IfNot = NoCheckKey)
+			UniqueId = Left
+		}
 	}
 }
 
 (Type IdeaGroupDef) = {
-	Optional = { Left = "category" Right = Trait }
+	Inherits = BaseIdeaGroupDef
 	Single = { Left = "bonus" Right = {
 		(CheckKey "*_bonus" "^\[L]" IfNot = NoCheckKey)
 		Inherits = CountryModifierDef
@@ -26,7 +21,6 @@
 	} }
 	Optional = { Left = "trigger" Right = CountryTrigger }
 	Optional = { Left = "free" Right = Bool }
-	Optional = { Left = "ai_will_do" Right = AiWillDo }
 	Optional = { Left = "important" Right = Bool }
 	
 	(Ch N N) = {
@@ -36,7 +30,6 @@
 		(CheckKey "*" Left IfNot = NoCheckKey)
 		(CheckKey "*_desc" Left IfNot = NoCheckKey)
 	}
-
 }
 
 (Type AiWillDo) = {
@@ -54,4 +47,51 @@
 
 (Type IdeaDef) = {
 	Inherits = CountryModifierDef
+}
+
+Global = {
+	(Type PolicyFile) = {
+		(Ch N N) = { Left = { Type = String } Right = PolicyDef UniqueId = Left }
+	}
+}
+
+(Type PolicyDef) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+	(CheckKey "desc_*" Left IfNot = NoCheckKey)
+
+	Single = { Left = "monarch_power" Right = Trait }
+	Single = { Left = "potential" Right = CountryTrigger }
+	Single = { Left = "allow" Right = CountryTrigger }
+	Single = { Left = "ai_will_do" Right = AiWillDo }
+	
+	Inherits = CountryModifierDef
+}
+Global = {
+	(Type NativeIdeasFile) = {
+		(Ch N N) = {
+			Left = { Type = String }
+			Right = NativeIdeaGroupDef
+			(CheckKey "*" Left IfNot = NoCheckKey)
+			UniqueId = Left
+		}
+	}
+}
+
+(Type BaseIdeaGroupDef) = {
+	Optional = { Left = "category" Right = Trait }
+	Optional = { Left = "ai_will_do" Right = AiWillDo }
+	
+}
+
+(Type NativeIdeaGroupDef) = {
+	Inherits = BaseIdeaGroupDef
+	
+	(Ch N N) = {
+		Left = { Type = String }
+		Right = IdeaDef
+		UniqueId = Left
+		(CheckKey "*" Left IfNot = NoCheckKey)
+		(CheckKey "*_desc" Left IfNot = NoCheckKey)
+	}
+
 }

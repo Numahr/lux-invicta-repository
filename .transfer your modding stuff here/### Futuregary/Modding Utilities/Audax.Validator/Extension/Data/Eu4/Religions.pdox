@@ -1,12 +1,28 @@
-(Validator ReligionValidator) = {
-	Type = Default
-	FriendlyName = "Religions"
-	ValidatorName = ReligionFile
-	(FileGroup "common\religions" "*.txt")
+(Validator Religion) = {
+	Type = GroupValidator
+	FriendlyName = "Religion"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\religions" "*.txt")
+		ValidatorName = ReligionFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\hre_reforms" "*.txt")
+		ValidatorName = HreFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\personal_deities" "*.txt")
+		ValidatorName = PersonalDeityFile
+	}
 }
 
 (Type ReligionFile) = {
-	(Ch Y N) = { Left = { Type = String } Right = ReligionGroupDef (CheckKey "*" Left IfNot = NoCheckKey) }
+	(Ch N N) = { Left = { Type = String } Right = ReligionGroupDef (CheckKey "*" Left IfNot = NoCheckKey) UniqueId = Left }
 }
 
 (Type ReligionGroupDef) = {
@@ -19,12 +35,16 @@
 
 (Type ReligionDef) = {
 	Single = { Left = "color" Right = FloatColor }
+	Single = { Left = "icon" Right = { IconRef = "GFX_religion_icon_strip" } }
+	
 	Optional = { Left = "allowed_conversion" Right = { (PdoList Y) = { Type = Religion } } }
 	Optional = { Left = "papacy" Right = Bool }
 	Optional = { Left = "annex" Right = Bool }
 	Optional = { Left = "uses_piety" Right = Bool }
 	Optional = { Left = "has_patriarchs" Right = Bool }
 	Optional = { Left = "misguided_heretic" Right = Bool }
+	Optional = { Left = "personal_deity" Right = Bool }
+	Optional = { Left = "fervor" Right = Bool }
 	Optional = { Left = "heretic" Right = { (PdoList Y) = { Type = Key } } }
 	Optional = { Left = "on_convert" Right = CountryCommand }
 	Optional = { Left = "country" Right = CountryModifierDef }
@@ -32,4 +52,32 @@
 	Optional = { Left = "date" Right = Date }
 
 }
+
+(Type PersonalDeityFile) = {
+	(Ch N N) = { Left = { Type = String } Right = PersonalDeityDef UniqueId = Left }
+}
+
+(Type PersonalDeityDef) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+	(CheckKey "*_desc" Left IfNot = NoCheckKey)
+	
+	Single = { Left = "allow" Right = CountryTrigger }
+	Single = { Left = "ai_will_do" Right = AiWillDo }
+	Single = { Left = "sprite" Right = { IconRef = "GFX_hindu_deities_strip" } }
+	
+	Inherits = CountryModifierDef
+}
+
+(Type AiWillDo) = {
+	Optional = { Left = "factor" Right = NnDbl }
+	(Ch N Y) = { Left = "modifier" Right = Modifier }
+}
+
+(Type Modifier) = {
+	Inherits = FactorModifier
+	Optional = { Left = "factor" Right = NnDbl }
+	
+	Inherits = CountryTrigger
+}
+
 

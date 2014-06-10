@@ -1,7 +1,10 @@
-(ContextValidator Trigger) = { Scopes = {
-	CharTrigger = { Type = Trait }
 
-} }
+Global = {
+(Type CharTriggerWithCount) = {
+	Inherits = CharTrigger
+	Optional = { Left = "count" Right = PInt }
+}
+}
 
 (ContextValidator ProvTrigger) = { Scopes = {
 	ProvTrigger = "sea_zone"
@@ -74,7 +77,7 @@
 
 (ContextValidator TitleCommand) = { Scopes = {
 	CharCommand = "best_crusade_claimant"
-
+	CharCommand = "any_claimant"
 } }
 
 (ContextValidator Trigger) = { Members = {
@@ -86,6 +89,9 @@
 		Literal = "Sons of Abraham"
 		Literal = "Rajas of India"
 	} }
+	
+	(N N) = { Left = { Type = Trait } Right = CharTriggerWithCount }
+
 } }
 
 (Type DistanceDef) = {
@@ -95,10 +101,12 @@
 	Optional = { Left = "who" Right = { ThisChar } }
 	Optional = { Left = "distance" Right = NnDbl }
 	
-	AllOrNone = { where value }
-	AllOrNone = { who distance }
+	#AllOrNone = { where value }
+	#AllOrNone = { who distance }
 	AtMostOne = { where who }
+	AtMostOne = { distance value }
 	OneOf = { where who }
+	OneOf = { distance value }
 }
 
 (ContextValidator ProvTrigger) = { Members = {
@@ -228,6 +236,8 @@
 	
 	(N Y) = { Left = "is_friend" Right = ThisChar }
 	(N Y) = { Left = "is_rival" Right = ThisChar }
+	
+	(N Y) = { Left = "can_copy_personality_trait_from" Right = ThisChar }
 } }
 
 (ContextValidator TitleTrigger) = { Members = {
@@ -320,6 +330,9 @@
 	(N Y) = { Left = "add_rival" Right = ThisChar }
 	(N Y) = { Left = "remove_rival" Right = ThisChar }
 	(Y  ) = { Left = "set_reincarnation" Right = { ThisChar 0 } }
+	(Y  ) = { Left = "hold_election" Right = Yes }
+	
+	(N Y) = { Left = "copy_random_personality_trait" Right = ThisChar }
 	
 } }
 

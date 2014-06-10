@@ -1,4 +1,4 @@
-﻿Version: 1.6 RC17 [v1.6.17.0]
+﻿Version: 1.7 RC4 [v1.7.4.0]
 .NET Framework 4.0 is required. See http://www.microsoft.com/downloads/details.aspx?FamilyID=5765d7a8-7722-4888-a970-ac39b33fd8ab
 
 The Validator is a tool to scan through thousands of files and to find errors in them.
