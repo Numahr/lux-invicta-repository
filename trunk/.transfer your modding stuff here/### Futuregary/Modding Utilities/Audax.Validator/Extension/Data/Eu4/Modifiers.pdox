@@ -83,7 +83,7 @@
 }
 
 (Type OpinionModifiersFile) = {
-	(Ch Y N) = { Left = { Type = String } Right = OpinionModifierDef (CheckKey "*" Left IfNot = NoCheckKey) }
+	(Ch N N) = { Left = { Type = String } Right = OpinionModifierDef (CheckKey "*" Left IfNot = NoCheckKey) UniqueId = Left }
 }
 
 (Type OpinionModifierDef) = {
@@ -99,7 +99,7 @@
 }
 
 (Type ModifierFile) = {
-	(Ch Y N) = { 
+	(Ch N N) = { 
 		Left = { Type = String }
 		Right = {
 			Inherits = ModifierCommand
@@ -110,11 +110,12 @@
 		(If If = Modifiers.EnableModifierDescriptionCheck) = {
 			(CheckKey "desc_*" Left IfNot = NoCheckKey)
 		}
+		UniqueId = Left
 	}
 }
 
 (Type TriggeredModifierFile) = {
-	(Ch Y N) = { 
+	(Ch N N) = { 
 		Left = { Type = String }
 		Right = {
 			Inherits = ModifierCommand
@@ -127,6 +128,7 @@
 		(If If = Modifiers.EnableModifierDescriptionCheck) = {
 			(CheckKey "desc_*" Left IfNot = NoCheckKey)
 		}
+		UniqueId = Left
 	}
 }
 
@@ -154,184 +156,82 @@
 
 Global = {
 
+(Type.Enum CountryModifierDoubleKey) = { Values = {
+	global_revolt_risk	global_ship_recruit_speed	global_tax_modifier	global_manpower_modifier	global_regiment_recruit_speed
+	global_trade_income_modifier	global_missionary_strength	global_ship_cost	global_regiment_cost	global_trade_power
+	global_spy_defence	global_colonial_growth	global_prov_trade_power_modifier	global_foreign_trade_power	global_tariffs
+	global_own_trade_power	global_manpower	naval_attrition	defensiveness	reinforce_speed	land_morale	discipline
+	land_forcelimit_modifier	range	relations_decay_of_me	spy_offence	diplomatic_reputation	adm_tech_cost_modifier
+	dip_tech_cost_modifier	mil_tech_cost_modifier	inflation_reduction	inflation_action_cost	stability_cost_modifier
+	prestige	heir_chance	tolerance_own	tolerance_heretic	tolerance_heathen	advisor_pool	trade_efficiency
+	idea_cost	production_efficiency	war_exhaustion_cost	interest	possible_mercenaries	merc_maintenance_modifier
+	mercenary_cost	diplomatic_upkeep	colonist_time
+	
+	merchants	colonists	diplomats	missionaries
+	
+	artillery_cost	infantry_cost	cavalry_cost	galley_cost	light_ship_cost	heavy_ship_cost	transport_cost
+	artillery_power	infantry_power	cavalry_power	galley_power	light_ship_power	heavy_ship_power	transport_power
+	
+	land_maintenance_modifier	manpower_recovery_speed	recover_navy_morale_speed	recover_army_morale_speed
+	blockade_efficiency	leader_naval_manuever	overseas_income	build_cost	navy_tradition	naval_forcelimit_modifier
+	prestige_from_naval	naval_morale	trade_steering	trade_range_modifier	hostile_attrition	land_attrition
+	leader_siege	army_tradition	leader_land_manuever	prestige_from_land
+	unjustified_demands	core_creation	fabricate_claims_time	rebel_support_efficiency	discovered_relations_impact
+	embargo_efficiency	advisor_cost	free_leader_pool	war_exhaustion	navy_tradition_decay	army_tradition_decay
+	technology_cost	prestige_decay	enemy_core_creation	imperial_authority	legitimacy	naval_maintenance_modifier
+	vassal_income	global_garrison_growth	religious_unity	papal_influence	trade_value	ship_recruit_speed
+	naval_forcelimit	colonist_placement_chance	trade_value_modifier	land_forcelimit	republican_tradition
+	max_war_exhaustion
+	
+	global_trade_goods_size	merchant_steering_to_inland	siege_ability	leader_land_fire	leader_land_shock
+	leader_naval_fire	leader_naval_shock	ae_impact	improve_relation_modifier	privateer_efficiency
+	monthly_fervor_increase	envoy_travel_time	justify_trade_conflict_time	global_heretic_missionary_strength
+	merchant_present_inland
+} }
+
 (Type CountryModifierDef) = {
 	#ModifierUniformityCheck
+	
+	(Ch Y N) = { Left = { Type = CountryModifierDoubleKey } Right = Double }
+	(Ch Y N) = { Left = { Type = FactionInfluenceEnum } Right = Double }
 
-	Optional = { Left = "global_revolt_risk" Right = Double }
-	Optional = { Left = "global_ship_recruit_speed" Right = Double }
-	Optional = { Left = "global_tax_modifier" Right = Double }
-	Optional = { Left = "global_manpower_modifier" Right = Double }
-	Optional = { Left = "global_regiment_recruit_speed" Right = Double }
-	Optional = { Left = "global_trade_income_modifier" Right = Double }
-	Optional = { Left = "global_missionary_strength" Right = Double }
-	Optional = { Left = "global_ship_cost" Right = Double }
-	Optional = { Left = "global_regiment_cost" Right = Double }
-	Optional = { Left = "global_trade_power" Right = Double }
-	Optional = { Left = "global_spy_defence" Right = Double }
-	Optional = { Left = "global_colonial_growth" Right = Double }
-	Optional = { Left = "global_prov_trade_power_modifier" Right = Double }
-	Optional = { Left = "global_foreign_trade_power" Right = Double }
-	Optional = { Left = "global_tariffs" Right = Double }
-	Optional = { Left = "global_own_trade_power" Right = Double }
-	Optional = { Left = "global_manpower" Right = Double }
-	Optional = { Left = "naval_attrition" Right = Double }
-	Optional = { Left = "defensiveness" Right = Double }
-	Optional = { Left = "reinforce_speed" Right = Double }
-	Optional = { Left = "land_morale" Right = Double }
-	Optional = { Left = "discipline" Right = Double }
-	Optional = { Left = "land_forcelimit_modifier" Right = Double }
-	Optional = { Left = "range" Right = Double }
-	Optional = { Left = "relations_decay_of_me" Right = Double }
-	Optional = { Left = "spy_offence" Right = Double }
-	Optional = { Left = "diplomatic_reputation" Right = Double }
-	Optional = { Left = "adm_tech_cost_modifier" Right = Double }
-	Optional = { Left = "dip_tech_cost_modifier" Right = Double }
-	Optional = { Left = "mil_tech_cost_modifier" Right = Double }
-	Optional = { Left = "inflation_reduction" Right = Double }
-	Optional = { Left = "inflation_action_cost" Right = Double }
-	Optional = { Left = "stability_cost_modifier" Right = Double }
-	Optional = { Left = "prestige" Right = Double }
-	Optional = { Left = "heir_chance" Right = Double }
-	Optional = { Left = "tolerance_own" Right = Double }
-	Optional = { Left = "tolerance_heretic" Right = Double }
-	Optional = { Left = "tolerance_heathen" Right = Double }
-	Optional = { Left = "advisor_pool" Right = Double }
-	Optional = { Left = "trade_efficiency" Right = Double }
-	Optional = { Left = "idea_cost" Right = Double }
-	Optional = { Left = "production_efficiency" Right = Double }
-	Optional = { Left = "war_exhaustion_cost" Right = Double }
-	Optional = { Left = "interest" Right = Double }
-	Optional = { Left = "possible_mercenaries" Right = Double }
-	Optional = { Left = "merc_maintenance_modifier" Right = Double }
-	Optional = { Left = "mercenary_cost" Right = Double }
 	Optional = { Left = "cb_on_overseas" Right = Yes }
-	Optional = { Left = "diplomatic_upkeep" Right = Double }
-	Optional = { Left = "colonist_time" Right = Double }
-	
-	Optional = { Left = "merchants" Right = Double }
-	Optional = { Left = "colonists" Right = Double }
-	Optional = { Left = "diplomats" Right = Double }
-	Optional = { Left = "missionaries" Right = Double }
-	
-	Optional = { Left = "artillery_cost" Right = Double }
-	Optional = { Left = "infantry_cost" Right = Double }
-	Optional = { Left = "cavalry_cost" Right = Double }
-	Optional = { Left = "galley_cost" Right = Double }
-	Optional = { Left = "light_ship_cost" Right = Double }
-	Optional = { Left = "heavy_ship_cost" Right = Double }
-	
-	Optional = { Left = "artillery_power" Right = Double }
-	Optional = { Left = "light_ship_power" Right = Double }
-	Optional = { Left = "heavy_ship_power" Right = Double }
-	Optional = { Left = "cavalry_power" Right = Double }
-	Optional = { Left = "infantry_power" Right = Double }
-	Optional = { Left = "galley_power" Right = Double }
-	Optional = { Left = "transport_power" Right = Double }
-	
-	Optional = { Left = "land_maintenance_modifier" Right = Double }
-	Optional = { Left = "manpower_recovery_speed" Right = Double }
-	Optional = { Left = "recover_navy_morale_speed" Right = Double }
-	Optional = { Left = "recover_army_morale_speed" Right = Double }
 	Optional = { Left = "sea_repair" Right = Yes }
-	Optional = { Left = "blockade_efficiency" Right = Double }
-	Optional = { Left = "leader_naval_manuever" Right = Double }
-	Optional = { Left = "overseas_income" Right = Double }
 	Optional = { Left = "may_explore" Right = Yes }
 	Optional = { Left = "may_reduce_inflation" Right = Yes }
-	Optional = { Left = "build_cost" Right = Double }
-	Optional = { Left = "navy_tradition" Right = Double }
-	Optional = { Left = "naval_forcelimit_modifier" Right = Double }
-	Optional = { Left = "prestige_from_naval" Right = Double }
-	Optional = { Left = "naval_morale" Right = Double }
 	Optional = { Left = "cb_on_primitives" Right = Yes }
-	Optional = { Left = "trade_steering" Right = Double }
-	Optional = { Left = "trade_range_modifier" Right = Double }
-	Optional = { Left = "hostile_attrition" Right = Double }
-	Optional = { Left = "land_attrition" Right = Double }
-	Optional = { Left = "leader_siege" Right = Double }
-	Optional = { Left = "army_tradition" Right = Double }
 	Optional = { Left = "may_force_march" Right = Yes }
-	Optional = { Left = "leader_land_manuever" Right = Double }
-	Optional = { Left = "prestige_from_land" Right = Double }
-	Optional = { Left = "leader_fire" Right = Double }
-	Optional = { Left = "leader_shock" Right = Double }
 	Optional = { Left = "reduced_stab_impacts" Right = Yes }
-	Optional = { Left = "unjustified_demands" Right = Double }
 	Optional = { Left = "cb_on_government_enemies" Right = Yes }
-	Optional = { Left = "core_creation" Right = Double }
-	Optional = { Left = "fabricate_claims_time" Right = Double }
-	Optional = { Left = "rebel_support_efficiency" Right = Double }
 	Optional = { Left = "may_infiltrate_administration" Right = Yes }
 	Optional = { Left = "may_sow_discontent" Right = Yes }
-	Optional = { Left = "discovered_relations_impact" Right = Double }
 	Optional = { Left = "may_sabotage_reputation" Right = Yes }
-	Optional = { Left = "embargo_efficiency" Right = Double }
 	Optional = { Left = "cb_on_religious_enemies" Right = Yes }
-	Optional = { Left = "advisor_cost" Right = Double }
-	Optional = { Left = "free_leader_pool" Right = Double }
-	Optional = { Left = "war_exhaustion" Right = Double }
-	Optional = { Left = "navy_tradition_decay" Right = Double }
-	Optional = { Left = "army_tradition_decay" Right = Double }
-	Optional = { Left = "technology_cost" Right = Double }
-	Optional = { Left = "prestige_decay" Right = Double }
-	Optional = { Left = "enemy_core_creation" Right = Double }
-	Optional = { Left = "imperial_authority" Right = Double }
-	Optional = { Left = "legitimacy" Right = Double }
-	Optional = { Left = "naval_maintenance_modifier" Right = Double }
-	Optional = { Left = "vassal_income" Right = Double }
-	Optional = { Left = "global_garrison_growth" Right = Double }
-	Optional = { Left = "religious_unity" Right = Double }
 	Optional = { Left = "no_religion_penalty" Right = Yes }
-	Optional = { Left = "papal_influence" Right = Double }
 	Optional = { Left = "extra_manpower_at_religious_war" Right = Yes }
 	Optional = { Left = "reduced_native_attacks" Right = Yes }
 	Optional = { Left = "idea_claim_colonies" Right = Yes }
 	Optional = { Left = "auto_explore_adjacent_to_colony" Right = Yes }
 	Optional = { Left = "no_cost_for_reinforcing" Right = Yes }
-	Optional = { Left = "trade_value" Right = Double }
-	Optional = { Left = "ship_recruit_speed" Right = Double }
-	Optional = { Left = "naval_forcelimit" Right = Double }
-	Optional = { Left = "colonist_placement_chance" Right = Double }
-	Optional = { Left = "trade_value_modifier" Right = Double }
-	Optional = { Left = "land_forcelimit" Right = Double }
-	Optional = { Left = "transport_cost" Right = Double }
-	Optional = { Left = "republican_tradition" Right = Double }
-	Optional = { Left = "max_war_exhaustion" Right = Double }
-	
-	(Ch Y N) = { Left = { Type = FactionInfluenceEnum } Right = Double }
-
 }
+
+(Type.Enum ProvinceModifierDoubleKey) = { Values = {
+	local_tax_modifier	local_manpower_modifier	local_revolt_risk	local_production_efficiency
+	local_defensiveness	local_colonial_growth	local_missionary_strength	local_tariffs
+	local_manpower	local_spy_defence	local_colonist_placement_chance	province_trade_power_value
+	trade_goods_size	max_attrition	attrition	supply_limit	fort_level	regiment_recruit_speed
+	minimum_revolt_risk	garrison_growth	tax_income	province_trade_power_modifier
+	local_regiment_cost	local_ship_cost	local_ship_repair	local_movement_speed
+	local_hostile_attrition
+	
+	inflation_reduction_local	supply_limit_modifier
+} }
+
 (Type ProvinceModifierDef) = {
 	#ModifierUniformityCheck
 	Inherits = CountryModifierDef # Since province can also target country
 	
-	Optional = { Left = "local_tax_modifier" Right = Double }
-	Optional = { Left = "local_manpower_modifier" Right = Double }
-	Optional = { Left = "local_revolt_risk" Right = Double }
-	Optional = { Left = "local_production_efficiency" Right = Double }
-	Optional = { Left = "local_defensiveness" Right = Double }
-	Optional = { Left = "local_colonial_growth" Right = Double }
-	Optional = { Left = "local_missionary_strength" Right = Double }
-	Optional = { Left = "local_tariffs" Right = Double }
-	Optional = { Left = "local_manpower" Right = Double }
-	Optional = { Left = "local_spy_defence" Right = Double }
-	Optional = { Left = "local_colonist_placement_chance" Right = Double }
-	Optional = { Left = "province_trade_power_value" Right = Double }
-	Optional = { Left = "trade_goods_size" Right = Double }
-	Optional = { Left = "max_attrition" Right = Double }
-	Optional = { Left = "attrition" Right = Double }
-	Optional = { Left = "supply_limit" Right = Double }
-	Optional = { Left = "fort_level" Right = Double }
-	Optional = { Left = "regiment_recruit_speed" Right = Double }
-	Optional = { Left = "minimum_revolt_risk" Right = Double }
-	Optional = { Left = "garrison_growth" Right = Double }
-	Optional = { Left = "tax_income" Right = Double }
-	Optional = { Left = "province_trade_power_modifier" Right = Double }
-	Optional = { Left = "local_regiment_cost" Right = Double }
-	Optional = { Left = "local_ship_cost" Right = Double }
-	Optional = { Left = "local_ship_repair" Right = Double }
-	Optional = { Left = "local_movement_speed" Right = Double }
-	Optional = { Left = "local_hostile_attrition" Right = Double }
+	(Ch Y N) = { Left = { Type = ProvinceModifierDoubleKey } Right = Double }
 
 }
 	

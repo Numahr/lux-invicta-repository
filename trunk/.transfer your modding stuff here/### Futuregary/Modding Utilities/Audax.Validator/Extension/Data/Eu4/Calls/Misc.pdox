@@ -3,11 +3,13 @@
 	(Y  ) = { Left = "reform_desire" Right = Double }
 	(Y  ) = { Left = "hre_size" Right = PInt }
 	(Y  ) = { Left = "always" Right = Bool }
+	(Y  ) = { Left = "is_random_new_world" Right = Bool }
 	(N Y) = { Left = "has_dlc" Right = {
 		Literal = "Star and Crescent"
 		Literal = "American Dream"
 		Literal = "Purple Phoenix"
 		(Literal If = Add1) = "Conquest of Paradise"
+		Literal = "Wealth of Nations"
 	} }
 	(Y  ) = { Left = "allows_female_emperor" Right = Bool }
 	(N Y If = Broken) = { Left = "is_emperor" Right = ThisCountry }
@@ -17,6 +19,7 @@
 	(If If = Add1) = {
 		(Y  ) = { Left = "is_tutorial_active" Right = Bool }
 	}
+	(Y  ) = { Left = "hre_reform_level" Right = PInt }
 	
 } }
 
@@ -82,7 +85,7 @@
 	# ALL OF THE FOLLOWING ARE UNTESTED
 	(Y  ) = { Left = "is_looted" Right = Bool }
 	(N Y) = { Left = "range" Right = { Tag ThisCountry } }
-	(A Y) = { Left = "has_construction" Right = { Literal = "core" Literal = "culture" Literal = "building" Literal = "merchant" Literal = "diplomat" Literal = "missionary" Literal = "army" Literal = "navy" Literal = "any" } }
+	(A Y) = { Left = "has_construction" Right = { Literal = "core" Literal = "culture" Literal = "building" Literal = "merchant" Literal = "diplomat" Literal = "missionary" Literal = "army" Literal = "navy" Literal = "any" Literal = "canal" } }
 	(N Y) = { Left = "can_build" Right = Building }
 	(Y  ) = { Left = "unit_in_siege" Right = Bool }
 	(Y  ) = { Left = "tolerance_to_this" Right = Double }
@@ -92,6 +95,22 @@
 		(A Y) = { Left = "colonial_region" Right = ColonialRegion }
 	}
 	(N Y) = { Left = "country_or_vassal_holds" Right = { Tag ThisCountry } }
+	
+	(N Y) = { Left = "trade_share" Right = {
+		Single = { Left = "country" Right = ThisCountry }
+		Single = { Left = "share" Right = Double }
+	} }
+	
+	(N Y) = { Left = "privateer_power" Right = {
+		Optional = { Left = "country" Right = ThisCountry }
+		Single = { Left = "share" Right = Double }
+	} }
+	
+	(A Y) = { Left = "has_great_project" Right = GreatProject }
+	(A Y) = { Left = "has_climate" Right = Climate }
+	(Y  ) = { Left = "trade_company_size" Right = PInt }
+	(Y  ) = { Left = "is_owned_by_trade_company" Right = Bool }
+	(A Y) = { Left = "previous_owner" Right = ThisCountry }
 
 } }
 
@@ -131,7 +150,7 @@
 	(Y  ) = { Left = "has_regency" Right = Bool }
 	(Y  ) = { Left = "is_revolution_target" Right = Bool }
 	(N Y) = { Left = "advisor" Right = AdvisorType } # UNTESTED: positive form
-	(A Y) = { Left = "technology_group" Right = TechGroup }
+	(A Y) = { Left = "technology_group" Right = { TechGroup ThisCountry } }
 	(Y  ) = { Left = "is_westernising" Right = Bool }
 	(Y  ) = { Left = "years_of_income" Right = Double }
 	
@@ -204,6 +223,7 @@
 	(Y  ) = { Left = "is_tribal" Right = Bool }
 	(Y  ) = { Left = "luck" Right = Bool }
 	(Y  ) = { Left = "has_factions" Right = Bool }
+	(N Y) = { Left = "has_faction" Right = Faction } # UNTESTED
 	(Y  ) = { Left = "has_advisor" Right = { Bool } } # UNTESTED
 	(N Y) = { Left = "has_advisor" Right = { AdvisorType } } # UNTESTED
 	(Y  ) = { Left = "is_nomad" Right = Bool }
@@ -251,6 +271,7 @@
 	(Y  ) = { Left = "religious_unity" Right = Double }
 	(Y  ) = { Left = "piety" Right = Double }
 	(N Y) = { Left = "controls" Right = LandProvince }
+	(Y  ) = { Left = "land_forcelimit" Right = PInt }
 	(Y  ) = { Left = "naval_forcelimit" Right = PInt }
 	(Y  ) = { Left = "blockade" Right = Double }
 	(Y  ) = { Left = "months_of_ruling" Right = PInt }
@@ -282,10 +303,10 @@
 	(N Y) = { Left = "alliance" Right = AiStatus }
 	(N Y) = { Left = "befriend" Right = AiStatus }
 	(N Y) = { Left = "protectorate" Right = AiStatus }
-	(N Y) = { Left = "military_strength" Right = {
-		Single = { Left = "who" Right = ThisCountry }
-		Single = { Left = "value" Right = Double }
-	} }
+	#(N Y) = { Left = "military_strength" Right = {
+	#	Single = { Left = "who" Right = ThisCountry }
+	#	Single = { Left = "value" Right = Double }
+	#} }
 	(N Y) = { Left = "border_distance" Right = {
 		Single = { Left = "who" Right = ThisCountry }
 		Single = { Left = "distance" Right = Int }
@@ -335,9 +356,10 @@
 	(Y  ) = { Left = "is_vassal" Right = Bool }
 	(N Y) = { Left = "offensive_war_with" Right = { Tag ThisCountry } }
 	
-	(N Y) = { Left = "light_ship_fraction" Right = Double }
-	(N Y) = { Left = "galley_fraction" Right = Double }
-	(N Y) = { Left = "heavy_ship_fraction" Right = Double }
+	(Y  ) = { Left = "light_ship_fraction" Right = Double }
+	(Y  ) = { Left = "galley_fraction" Right = Double }
+	(Y  ) = { Left = "heavy_ship_fraction" Right = Double }
+	(Y  ) = { Left = "artillery_fraction" Right = Double }
 	
 	(N Y) = { Left = "historical_friend_with" Right = { Tag ThisCountry ThisProvince } }
 	(N Y) = { Left = "historical_rival_with" Right = { Tag ThisCountry ThisProvince } }
@@ -361,11 +383,29 @@
 	(Y  ) = { Left = "total_base_tax" Right = Double }
 	(Y  ) = { Left = "num_of_free_diplomatic_relations" Right = PInt }
 	(Y  ) = { Left = "ruler_age" Right = PInt }
+	(Y  ) = { Left = "num_of_strong_trade_companies" Right = PInt }
+	(Y  ) = { Left = "is_great_power" Right = Bool }
+	(Y  ) = { Left = "was_player" Right = Bool }
+	(N Y) = { Left = "has_unit_type" Right = SpecificUnit }
+	
+	(N Y) = { Left = "army_strength" Right = {
+		Single = { Left = "who" Right = ThisCountry }
+		Single = { Left = "value" Right = Double }
+	} }
+	(A Y) = { Left = "has_personal_deity" Right = PersonalDeity }
+	(N Y If = Debug) = { Left = "trading_bonus" Right = {
+		Single = { Left = "trade_goods" Right = TradeGood }
+		Single = { Left = "value" Right = Bool }
+	} }
+	(Y  ) = { Left = "has_privateers" Right = Bool }
+	(Y  ) = { Left = "had_recent_war" Right = PInt }
+	(Y  ) = { Left = "fervor" Right = Int }
+	(Y  ) = { Left = "has_active_fervor" Right = Bool }
 	
 } }
 
 (Type DistanceDef) = {
-	Optional = { Left = "who" Right = { ThisCountry } }
+	Optional = { Left = "who" Right = { ThisCountry Tag } }
 	Optional = { Left = "distance" Right = NnDbl }
 }
 
@@ -411,6 +451,7 @@
 	(N Y) = { Left = "rename_capital" Right = String }
 	(N Y) = { Left = "remove_claim" Right = { Tag ThisCountry } }
 	(N Y) = { Left = "discover_country" Right = { Tag ThisCountry } }
+	(N Y) = { Left = "undiscover_country" Right = { Tag ThisCountry } }
 	(Y  ) = { Left = "build_to_forcelimit" Right = {
 		OptionList = { Left = { Type = UnitType } Right = Double }
 	} }
@@ -423,6 +464,7 @@
 		Single = { Left = "speed" Right = Double }
 		Single = { Left = "cost" Right = Double }
 	} }
+	(Y  ) = { Left = "cancel_construction" Right = Bool }
 	(Y  ) = { Left = "set_in_empire" Right = Bool }
 	(Y  ) = { Left = "multiply_colonysize" Right = NnDbl }
 	(Y  ) = { Left = "add_army_tradition" Right = Int }
@@ -430,6 +472,8 @@
 	(Y  ) = { Left = "add_reform_desire" Right = Double }
 	(Y  ) = { Left = "create_pirate" Right = PInt }
 	(N N) = { Left = { Type = SpecificUnit } Right = ThisCountry }
+	(Y  ) = { Left = "add_great_project" Right = GreatProject }
+	(Y  ) = { Left = "add_construction_progress" Right = Double }
 	
 } }
 
@@ -465,16 +509,20 @@
 	} }
 	(Y  ) = { Left = "kill_heir" Right = Yes }
 	(Y  ) = { Left = "define_heir" Right = {
-		Single = { Left = "dynasty" Right = { ThisCountry String } }
-		Optional = { Left = "claim" Right = Int }
-		Optional = { Left = "name" Right = String }
-		Optional = { Left = "monarch_name" Right = String }
-		Optional = { Left = "age" Right = Int }
-		Optional = { Left = { "adm" "ADM" } Right = Int }
-		Optional = { Left = { "dip" "DIP" } Right = Int }
-		Optional = { Left = { "mil" "MIL" } Right = Int }
-		Optional = { Left = "birth_date" Right = Date }
-		Optional = { Left = "female" Right = Bool }
+		# Need this explicitly - otherwise Validator will complain
+		Type = Empty
+		Type = {
+			Optional = { Left = "dynasty" Right = { ThisCountry String } }
+			Optional = { Left = "claim" Right = Int }
+			Optional = { Left = "name" Right = String }
+			Optional = { Left = "monarch_name" Right = String }
+			Optional = { Left = "age" Right = Int }
+			Optional = { Left = { "adm" "ADM" } Right = Int }
+			Optional = { Left = { "dip" "DIP" } Right = Int }
+			Optional = { Left = { "mil" "MIL" } Right = Int }
+			Optional = { Left = "birth_date" Right = Date }
+			Optional = { Left = "female" Right = Bool }
+		}
 	} }
 	(Y  ) = { Left = "add_treasury" Right = Double }
 	(Y  ) = { Left = "add_mercantilism" Right = Double }
@@ -518,6 +566,7 @@
 			Optional = { Left = { "ADM" "adm" } Right = NnInt }
 			Optional = { Left = { "DIP" "dip" } Right = NnInt }
 			Optional = { Left = { "MIL" "mil" } Right = NnInt }
+			Optional = { Left = "age" Right = Int }
 			Optional = { Left = "rebel" Right = Bool }
 			Optional = { Left = "fixed" Right = Bool }
 			Optional = { Left = "regency" Right = Bool }
@@ -531,7 +580,7 @@
 	(Y  ) = { Left = "change_mil" Right = Int }
 	(N Y) = { Left = "form_coalition_against" Right = { Tag ThisCountry } }
 	(N Y) = { Left = "create_explorer" Right = Int }
-	(N Y) = { Left = "create_union" Right = Tag }
+	(N Y) = { Left = "create_union" Right = { Tag ThisCountry } }
 	(N Y) = { Left = "inherit" Right = { Tag ThisCountry } }
 	(N Y) = { Left = "release" Right = Tag }
 	(N Y) = { Left = "declare_war_with_cb" Right = {
@@ -542,10 +591,10 @@
 	(N Y) = { Left = "vassalize" Right = { ThisCountry Tag } }
 	(N Y) = { Left = "white_peace" Right = { Tag ThisCountry } }
 	(N Y) = { Left = "loan_size" Right = Int }
-	(N Y) = { Left = "break_union" Right = Tag }
+	(N Y) = { Left = "break_union" Right = { Tag ThisCountry } }
 	(N Y) = { Left = "disband_rebels" Right = RebelType }
 	(N Y) = { Left = "add_base_tax" Right = Int }
-	(N N) = { Left = { Type = LandUnitType } Right = { LandProvince ThisProvince } } # Apparently capital is bugged
+	(N N) = { Left = { Type = LandUnitType } Right = { LandProvince ThisProvince Capital } }
 	(N N) = { Left = { Type = SeaUnitType } Right = { Province ThisProvince } }
 	(Y  ) = { Left = "add_scaled_imperial_influence" Right = Int }
 	(Y  ) = { Left = "culture_group_union" Right = CultureGroup }
@@ -575,6 +624,8 @@
 	}
 	(Y  ) = { Left = "add_yearly_manpower" Right = Double }
 	#(Y  ) = { Left = "num_of_free_diplomatic_relations" Right = PInt }
+	(Y  ) = { Left = "change_personal_deity" Right = PersonalDeity }
+	(Y  ) = { Left = "add_fervor" Right = Double }
 	
 } }
 

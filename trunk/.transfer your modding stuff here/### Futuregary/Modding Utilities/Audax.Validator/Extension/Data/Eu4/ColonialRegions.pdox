@@ -1,36 +1,79 @@
-(Validator ColonialRegions) = {
-	Type = Default
-	FriendlyName = "Colonial regions"
-	(FileGroup "common\colonial_regions" "*.txt")
-	ValidatorName = ColonialRegions
+(Validator Empire) = {
+	Type = GroupValidator
+	FriendlyName = "Empire"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\colonial_regions" "*.txt")
+		ValidatorName = ColonialRegionsFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\powerprojection" "*.txt")
+		ValidatorName = PowerProjectionFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\trade_companies" "*.txt")
+		ValidatorName = TradeCompanyFile
+	}
 }
 
 Global = {
 	(Type.Enum ColonialRegion) = { Import = { (FileGroup "common\colonial_regions" "*.txt") SelectPath = "*\[L]" } }
 }
 
-(Type ColonialRegions) = {
-	(Ch Y N) = { Left = { Type = String } Right = ColonialRegionDef }
+(Type ColonialRegionsFile) = {
+	(Ch N N) = { Left = { Type = String } Right = ColonialRegionDef UniqueId = Left }
 }
 
 (Type ColonialRegionDef) = {
 	Single = { Left = "color" Right = Color }
-	Single = { Left = "tax_income" Right = Double }
-	Single = { Left = "native_size" Right = Double }
-	Single = { Left = "native_ferocity" Right = Double }
-	Single = { Left = "native_hostileness" Right = Double }
+	Optional = { Left = "tax_income" Right = Double }
+	Optional = { Left = "native_size" Right = Double }
+	Optional = { Left = "native_ferocity" Right = Double }
+	Optional = { Left = "native_hostileness" Right = Double }
 	
-	Single = { Left = "trade_goods" Right = { (Ch Y N) = { Left = { Type = TradeGood } Right = Double } } }
+	Optional = { Left = "trade_goods" Right = { (Ch Y N) = { Left = { Type = TradeGood } Right = Double } } }
 	Single = { Left = "provinces" Right = { (PdoList Y) = { Type = LandProvince UniqueId = Right } } }
 	(Ch N Y) = { Left = "names" Right = NameClause }
-	Single = { Left = "culture" Right = { (Ch Y N) = { Left = { Type = Culture } Right = Double } } }
-	Single = { Left = "religion" Right = { (Ch Y N) = { Left = { Type = Religion } Right = Double } } }
+	Optional = { Left = "culture" Right = { (Ch Y N) = { Left = { Type = Culture } Right = Double } } }
+	Optional = { Left = "religion" Right = { (Ch Y N) = { Left = { Type = Religion } Right = Double } } }
 	Optional = { Left = "extra_province_names" Right = { (PdoList Y) = { Type = String } } }
 }
 
 (Type NameClause) = {
 	Optional = { Left = "trigger" Right = CountryTrigger }
 	Single = { Left = "name" Right = String (CheckKey "*" Right IfNot = NoCheckKey) (CheckKey "*_ADJ" Right IfNot = NoCheckKey) }
+}
+
+(Type PowerProjectionFile) = {
+	(Ch N N) = { Left = { Type = String } Right = PowerProjectionDef UniqueId = Left }
+}
+
+(Type PowerProjectionDef) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+
+	Single = { Left = "power" Right = Double }
+	Optional = { Left = "yearly_decay" Right = Double }
+	Optional = { Left = "min" Right = Double }
+	Optional = { Left = "max" Right = Double }
+}
+
+(Type TradeCompanyFile) = {
+	(Ch N N) = { Left = { Type = String } Right = TradeCompanyDef UniqueId = Left }
+}
+
+(Type TradeCompanyDef) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+
+	Single = { Left = "color" Right = Color }
+	Single = { Left = "provinces" Right = { (PdoList N) = { Type = Province UniqueId = Right } } }
+	(Ch N N 2 2) = { Left = "names" Right = {
+		Single = { Left = "name" Right = Key }
+	} }
 }
 
 

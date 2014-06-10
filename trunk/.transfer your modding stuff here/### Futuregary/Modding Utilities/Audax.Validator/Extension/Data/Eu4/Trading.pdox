@@ -19,6 +19,12 @@
 		(FileGroup "common\prices" "*.txt")
 		ValidatorName = PriceFile
 	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\tradenodes" "*.txt")
+		ValidatorName = TradeNodeFile
+	}
 }
 
 (Type CotColorFile) = {
@@ -26,7 +32,7 @@
 }
 
 (Type TradeGoodFile) = {
-	(Ch Y N) = { Left = { Type = String } Right = TradeGoodDef (CheckKey "*" Left IfNot = NoCheckKey) (CheckKey "*DESC" Left IfNot = NoCheckKey) }
+	(Ch N N) = { Left = { Type = String } Right = TradeGoodDef (CheckKey "*" Left IfNot = NoCheckKey) (CheckKey "*DESC" Left IfNot = NoCheckKey) UniqueId = Left }
 }
 
 (Type TradeGoodDef) = {
@@ -58,6 +64,25 @@
 	
 	Inherits = ProvinceTrigger
 	
+}
+
+(Type TradeNodeFile) = {
+	(Ch N N) = { Left = { Type = String } Right = TradeNodeDef UniqueId = Left }
+}
+
+(Type TradeNodeDef) = {
+	(CheckKey "*" Left IfNot = NoCheckKey)
+	
+	Single = { Left = "location" Right = Province }
+	Single = { Left = "members" Right = { (PdoList Y) = { Type = Province } } }
+	(Ch N Y) = { Left = "outgoing" Right = {
+		Single = { Left = "name" Right = TradeNode }
+		Single = { Left = "path" Right = { (PdoList Y) = { Type = Province } } }
+		Single = { Left = "control" Right = { (PdoList N) = { Type = Double } } }
+	} }
+	Optional = { Left = "color" Right = Color }
+	Optional = { Left = "inland" Right = Bool }
+	Optional = { Left = "end" Right = Bool }
 }
 
 

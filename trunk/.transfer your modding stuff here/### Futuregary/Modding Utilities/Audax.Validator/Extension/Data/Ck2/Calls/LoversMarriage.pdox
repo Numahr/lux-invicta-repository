@@ -1,14 +1,10 @@
 (ContextValidator CharTrigger) = { Scopes = {
-	#CharTrigger = "lover"
 	CharTrigger = "spouse"
 	CharTrigger = "spouse_even_if_dead"
-	CharTrigger = "any_spouse"
-	(CharTrigger If = Add1) = "any_spouse_even_if_dead"
 
 } }
 
 (ContextValidator CharCommand) = { Scopes = {
-	#CharCommand = "lover"
 	CharCommand = "spouse"
 	CharCommand = "random_spouse"
 	CharCommand = "any_spouse"
@@ -26,6 +22,9 @@
 	(N Y) = { Left = "can_marry" Right = { ThisChar Bool } }
 	(N Y) = { Left = "is_valid_attraction" Right = ThisChar }
 	(N Y) = { Left = "is_lover" Right = ThisChar }
+	
+	(N N) = { Left = "any_spouse" Right = CharTriggerWithCount }
+	(N N) = { Left = "any_spouse_even_if_dead" Right = CharTriggerWithCount }
 
 } }
 
@@ -39,7 +38,7 @@
 	(N Y) = { Left = "add_spouse_matrilineal" Right = ThisChar }
 	(N Y) = { Left = "remove_spouse" Right = { Literal = "spouse" Type = ThisChar Type = Yes } }
 	
-	(N Y) = { Left = "add_betrothal" Right = ThisChar }
+	(N Y IfNot = "WarnOnBuggyBehavior") = { Left = "add_betrothal" Right = ThisChar }
 	(N Y) = { Left = "break_betrothal" Right = ThisChar }
 
 } }

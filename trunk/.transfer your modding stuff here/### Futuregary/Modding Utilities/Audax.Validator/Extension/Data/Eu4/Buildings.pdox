@@ -1,12 +1,22 @@
-(Validator Buildings) = {
-	Type = Default
-	FriendlyName = "Buildings"
-	(FileGroup "common\buildings" "*.txt")
-	ValidatorName = BuildingFile
+(Validator Building) = {
+	Type = GroupValidator
+	FriendlyName = "Building"
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\buildings" "*.txt")
+		ValidatorName = BuildingFile
+	}
+	
+	Validator = {
+		Type = Default
+		(FileGroup "common\great_projects" "*.txt")
+		ValidatorName = GreatProjectFile
+	}
 }
 
 (Type BuildingFile) = {
-	(Ch Y N) = { Left = { Type = String } Right = BuildingDef }
+	(Ch N N) = { Left = { Type = String } Right = BuildingDef UniqueId = Left }
 }
 
 (Type BuildingDef) = {
@@ -50,6 +60,26 @@
 (ContextValidator BuildingTrigger) = {
 	Inherits = ProvinceTrigger
 	FromTarget = Country
+}
+
+(Type GreatProjectFile) = {
+	(Ch N N) = { Left = { Type = String } Right = GreatProjectDef UniqueId = Left }
+}
+
+(Type GreatProjectDef) = {
+	(CheckKey "construct_*_title" Left IfNot = NoCheckKey)
+	(CheckKey "construct_*_desc" Left IfNot = NoCheckKey)
+	(CheckKey "cancel_*_title" Left IfNot = NoCheckKey)
+	(CheckKey "cancel_*_desc" Left IfNot = NoCheckKey)
+	(CheckKey "great_project_*" Left IfNot = NoCheckKey)
+	(CheckKey "*" Left IfNot = NoCheckKey)
+	(CheckKey "*_title" Left IfNot = NoCheckKey)
+
+	Single = { Left = "ambient_object" Right = AmbientObject }
+	Single = { Left = "province" Right = LandProvince }
+	Single = { Left = "is_canal" Right = Yes }
+	Single = { Left = "time" Right = PInt }
+	Single = { Left = "modifier" Right = ProvinceModifierDef }
 }
 
 
