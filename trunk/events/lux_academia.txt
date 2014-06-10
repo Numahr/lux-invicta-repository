@@ -17,6 +17,7 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
+		has_dlc = "The Old Gods"
 		is_landed = no
 		in_command = no
 		OR = {
@@ -31,6 +32,7 @@ character_event = {
 		NOT = { 
 			trait = scholarlystudent 
 			has_character_flag = wants_scholar
+			has_character_flag = denied_scholar
 		}
 		father = {
 			is_alive = yes
@@ -50,7 +52,7 @@ character_event = {
 		}
 	}
 	
-	weight_multiplier = {
+	mean_time_to_happen = {
 		months = 100
 		
 		modifier = {
@@ -124,6 +126,8 @@ character_event = {
 				years = 1
 				who = ROOT
 			}
+			clr_character_flag = wants_scholar
+			set_character_flag = denied_scholar
 		}
 		prestige = -100
 	}
@@ -166,20 +170,14 @@ character_event = {
 	}
 }
 
-# The Scholarch & landed neoplato priests get the teacher trait for free
+# The Scholarch gets the teacher trait for free
 character_event = {
 	id = academia.4
 	hide_window = yes
 	
 	trigger = {
-	religion_group = neoplato_group
-	OR = {
+		religion_group = neoplato_group
 		has_landed_title = d_neoplato
-		AND = {
-			demesne_size = 1
-			is_theocracy = yes	
-		}
-	}
 		NOT = { trait = scholarlyteacher }
 	}
 	
@@ -201,7 +199,7 @@ character_event = {
 		has_character_flag = serving_scholar
 	}
 	
-	weight_multiplier = {
+	mean_time_to_happen = {
 		months = 210
 		
 		modifier = {
@@ -278,7 +276,7 @@ character_event = {
 		}
 	}
 	
-	weight_multiplier = {
+	mean_time_to_happen = {
 		months = 180
 		
 		modifier = {
@@ -387,7 +385,7 @@ character_event = {
 		}
 	}
 	
-	weight_multiplier = {
+	mean_time_to_happen = {
 		months = 200
 		
 		modifier = {
@@ -518,7 +516,7 @@ character_event = {
 		NOT = { trait = zealous }
 	}
 	
-	weight_multiplier = {
+	mean_time_to_happen = {
 		months = 100
 		
 		modifier = {
@@ -561,6 +559,7 @@ character_event = {
 	option = {
 		name = EVTOPTA_ACADEMIA14
 		FROM = {
+			add_trait = zealous
 			random_list = {
 				40 = {
 						religion = neoplato
@@ -598,7 +597,7 @@ character_event = {
 		is_married = no
 	}
 	
-	weight_multiplier = {
+	mean_time_to_happen = {
 		months = 180
 		
 		modifier = {
@@ -646,20 +645,26 @@ character_event = {
 	}
 }
 
-# Father dies suddenly, Player Son is heir and returns
+# Father dies, Player Son is heir
 character_event = {
 	id = academia.17
 	desc = EVTDESC_ACADEMIA17
 	picture = GFX_evt_academy2
 	border = GFX_event_normal_frame_religion
 	
+	ai = no
+	
 	trigger = {
-		ai = no
+		has_dlc = "The Old Gods"
 		OR = {
 			has_character_flag = wants_scholar
 			has_character_flag = serving_scholar
 		}
 		father = { is_alive = no }
+	}
+	
+	mean_time_to_happen = {
+		days = 1
 	}
 	
 	immediate = {
@@ -669,17 +674,25 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_ACADEMIA17
-		prestige = 200 # Lets give the guy some reward at least
+		add_trait = scholarlystudent
+		prestige = 50
+		wealth = 50
 	}
 }
 
-# Father dies suddenly, Son is not heir and returns (hmmm... I should tweak this someday so that his career continues even if the father is dead but... anyway)
+# Father dies, Son gets Student trait
 character_event = {
 	id = academia.18
 	hide_window = yes
 	
+	min_age = 16
+	ai = yes
+	only_men = yes
+	capable_only = yes
+	prisoner = no
+	
 	trigger = {
-		ai = yes
+		has_dlc = "The Old Gods"
 		OR = {
 			has_character_flag = wants_scholar
 			has_character_flag = serving_scholar
@@ -688,11 +701,142 @@ character_event = {
 	}
 	
 	immediate = {
-		clr_character_flag = wants_scholar
+		add_trait = scholarlystudent
+		has_character_flag = wants_scholar
+		has_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son returns with advanced learning trait (Son)
+character_event = {
+	id = academia.19
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = serving_scholar
+		NOT = { trait = mastermind_theologian }
+		OR = {
+			trait = detached_priest
+			trait = scholarly_theologian
+			trait = martial_cleric
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 160
+		
+		modifier = {
+			factor = 0.5
+			trait = mystic
+		}
+		modifier = {
+			factor = 0.5
+			trait = scholar
+		}
+		modifier = {
+			factor = 0.75
+			trait = detached_priest
+		}
+		modifier = {
+			factor = 0.85
+			trait = martial_cleric
+		}
+		modifier = {
+			factor = 0.95
+			trait = scholarly_theologian
+		}
+		modifier = {
+			factor = 0.75
+			learning = 15
+		}
+		modifier = {
+			factor = 0.5
+			learning = 20
+		}
+		modifier = {
+			factor = 0.5
+			trait = genius
+		}
+		modifier = {
+			factor = 0.75
+			trait = diligent
+		}
+		modifier = {
+			factor = 0.5
+			trait = quick
+		}
+		modifier = {
+			factor = 1.5
+			trait = slow
+		}
+		modifier = {
+			factor = 1.5
+			trait = imbecile
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = academia.19 } }
 		clr_character_flag = serving_scholar
 	}
 	
 	option = {
 		name = OK
+	}
+}
+
+# Son returns with advanced learning trait (Father)
+character_event = {
+	id =  academia.20
+	desc = EVTDESC_TOG_3121
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_3121
+		if = {
+			limit = {
+				FROM = {
+					trait = detached_priest
+				}
+			}
+			FROM = {
+				hidden_tooltip = { remove_trait = detached_priest }
+				add_trait = martial_cleric
+			}
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = martial_cleric
+				}
+			}
+			FROM = {
+				hidden_tooltip = { remove_trait = martial_cleric }
+				add_trait = scholarly_theologian
+			}
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = scholarly_theologian
+				}
+			}
+			FROM = {
+				hidden_tooltip = { remove_trait = scholarly_theologian }
+				add_trait = mastermind_theologian
+			}
+		}
+		FROM = {
+			change_learning = 2
+			add_trait = scholarlystudent
+			move_character = ROOT
+		}
 	}
 }
