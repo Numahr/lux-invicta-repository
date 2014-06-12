@@ -653,7 +653,9 @@ NReligion = {
 	ELECTOR_TITLE_AT_CAPITAL_FACTOR = 100,
 	ELECTOR_FAMOUS_DYNASTY_FACTOR = 1,
 	ELECTOR_TRAITS_FACTOR = 1.0,					-- Effect of personality traits that the church likes
-	HERESY_TAKEOVER_PROVINCES = 15					-- The number of provinces a heresy needs MORE than the current norm for it to become the new Orthodoxy
+	HERESY_TAKEOVER_PROVINCES = 15,					-- The number of provinces a heresy needs MORE than the current norm for it to become the new Orthodoxy
+	PAPAL_SUCCESSION_PASS_ON_HOLDINGS = 1,			-- Set to zero if holdings shouldn't be passed on
+	PAPAL_SUCCESSION_LOSE_MINOR_TITLES = 1			-- Set to zero if minor religious titles should be lost
 },
 
 NEconomy = {
@@ -788,12 +790,13 @@ NMilitary = {
 	NAVAL_ATTRITION = 0.03,								-- Attrition taken monthly by units loaded on ships --v12 increased to 3%
 	ARMY_MOVEMENT_SPEED = 5,							-- Base movement speed of land units -v12 from 3 to 5 
 	NAVY_MOVEMENT_SPEED = 15,							-- Base movement speed of naval units --v11 from 30 to 20 v12 reduced to new vanilla levels of 15
-	ARMY_LOAD_UNLOAD_MOVE_COST = 40.0,				-- Movement cost for moving armies onto or off fleets at sea. v12 doubled movement cost
+	ARMY_LOAD_MOVE_COST = 40.0,						-- Movement cost for moving armies onto fleets at sea.
+	ARMY_UNLOAD_MOVE_COST = 40.0,					-- Movement cost for moving armies off fleets at sea.
 	OVERRUN_RATIO = 15,								-- Ratio needed for total extermination of enemy units
 	DAYS_BEFORE_DEFENDER_SALLY = 14,					-- Number of days before defenders sally in a siege where they have superior numbers -> v10 changed to 14 for a while
 	TOTAL_OCCUPATION_SCALE = 1.5,					-- The % of occupation which gives you 100% warscore v11 increased to 1 -v12 increased further to 1.5
 	ATTACKER_ASSULT_DAMAGE_FACTOR = 10,				-- Attacker damage scale factor when assaulting <- make assaults weaker < v10: earlier versions completely misunderstood this. A higher value means assault takes more damage, not gives more damage. Made to x15 <v10c rebalanced to 10
-	DEFENDER_ASSULT_DAMAGE_FACTOR = 0.555,			-- Defender damage scale factor when assaulting <- make defenders... matter. The ratio was changed from 16 to 10 essentially < v10: as above, now 0.4, ergo a damage ratio of 50 <v10c reduced to 0.3, making a total of 33.33 damage disadvantage for assaulters. v10F increased to 0.4 for a damage ratio of 25 v12c increased to 0.6 (ratio 1:18)
+	DEFENDER_ASSULT_DAMAGE_FACTOR = 0.555,				-- Defender damage scale factor when assaulting
 	DAYS_PER_FORTLEVEL_BEFORE_ASSAULT = 30,			-- Number of days until attacker can assault
 	FLANKING_DAMAGE_BONUS = 0.3,					-- Percentage bonus when flanking in combat --v12 increased to 50% v12a reverted to 30% due to some bug (getting a 450% damage modifier when dual flanking)
 	LEADER_MARTIAL_DAMAGE_BONUS = 0.03,				-- Percentage bonus to damage for each point of martial the flank leader has v12 increased effect to 7.5% v12a reduced to 3%
