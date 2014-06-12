@@ -2248,6 +2248,844 @@ character_event = {
 	}
 }
 
+# Son wants to join the Akademia (Son)
+character_event = {
+	id = TOG.3136
+	hide_window = yes
+	
+	ai = yes
+	min_age = 16
+	max_age = 40
+	only_men = yes
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		has_dlc = "The Old Gods"
+		is_landed = no
+		in_command = no
+		OR = {
+			religion_group = neoplato_group
+			religion = valentinian
+			religion = docetist
+			religion = hurufi
+			religion = ilm_islam
+			religion = marcionist
+		}
+		
+		NOT = { 
+			trait = scholarlystudent 
+			has_character_flag = wants_scholar
+			has_character_flag = denied_scholar
+		}
+		father = {
+			is_alive = yes
+			OR = {
+				religion_group = neoplato_group
+				religion = valentinian
+				religion = docetist
+				religion = hurufi
+				religion = ilm_islam
+				religion = marcionist
+			}
+			is_ruler = yes
+			is_liege_of = ROOT
+			prisoner = no
+			NOT = { trait = incapable }
+			ROOT = { host = { character = PREVPREV } }
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 100
+		
+		modifier = {
+			factor = 0.2
+			trait = genius
+		}
+		
+		modifier = {
+			factor = 0.5
+			trait = quick
+		}
+		
+		modifier = {
+			factor = 0.5
+			trait = ambitious
+		}
+		modifier = {
+			factor = 0.5
+			trait = philosophical
+		}
+		modifier = {
+			factor = 0.75
+			trait = scholar
+		}
+		modifier = {
+			factor = 1.5
+			trait = slothful
+		}
+		modifier = {
+			factor = 1.5
+			trait = content
+		}
+		modifier = {
+			factor = 1.5
+			is_primary_heir = yes
+		}
+		modifier = {
+			factor = 1.5
+			trait = imbecile
+		}
+		modifier = {
+			factor = 2.0
+			trait = slow
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = TOG.3137 } }
+		set_character_flag = wants_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son wants to join Academy (Father)
+character_event = {
+	id = TOG.3137
+	desc = EVTDESC_ACADEMIA2
+	picture = GFX_evt_academy1
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_ACADEMIA2
+		FROM = {
+			opinion = {
+				modifier = opinion_very_disappointed
+				years = 1
+				who = ROOT
+			}
+			clr_character_flag = wants_scholar
+			set_character_flag = denied_scholar
+		}
+		prestige = -100
+	}
+	option = {
+		name = EVTOPTB_ACADEMIA2
+		d_neoplato = {
+			holder_scope = {
+				FROM = {
+					move_character = PREV
+				}
+			}
+		}
+		hidden_tooltip = {
+			FROM = { 
+				character_event = { id = TOG.3138 days = 730 }
+			}
+		}
+		prestige = 100
+	}
+}
+
+# Son has studied a few years
+character_event = {
+	id = TOG.3138
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_character_flag = wants_scholar
+	}
+	
+	immediate = {
+		set_character_flag = serving_scholar
+		clr_character_flag = wants_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# The Scholarch gets the teacher trait for free
+character_event = {
+	id = TOG.3139
+	hide_window = yes
+	
+	trigger = {
+		religion_group = neoplato_group
+		has_landed_title = d_neoplato
+		NOT = { trait = scholarlyteacher }
+	}
+	
+	immediate = {
+		add_trait = scholarlyteacher
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son returns successful (best outcome, and thus, the one with higher standard MTTH)
+character_event = {
+	id = TOG.3140
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = serving_scholar
+	}
+	
+	mean_time_to_happen = {
+		months = 210
+		
+		modifier = {
+			factor = 0.75
+			trait = genius
+		}
+		modifier = {
+			factor = 0.85
+			trait = quick
+		}
+		modifier = {
+			factor = 1.5
+			trait = slothful
+		}
+		modifier = {
+			factor = 1.5
+			trait = slow
+		}
+		modifier = {
+			factor = 1.5
+			trait = imbecile
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = TOG.3141 } }
+		clr_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son returns successful (Father)
+character_event = {
+	id = TOG.3141
+	desc = EVTDESC_ACADEMIA6
+	picture = GFX_evt_academy1
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTDESC_ACADEMIA6
+		FROM = {
+			move_character = ROOT
+			add_trait = scholarlystudent
+		}
+	}
+}
+
+# Son stays in Athenas with Greek wife and quits the Academia (Son)
+character_event = {
+	id = TOG.3142
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = serving_scholar
+		is_married = no
+		NOT = {
+			OR = {
+				father = {
+					primary_title = {
+						current_heir = { character = ROOT }
+					}
+				}
+				mother = {
+					primary_title = {
+						current_heir = { character = ROOT }
+					}
+				}
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 180
+		
+		modifier = {
+			factor = 0.75
+			trait = lustful
+		}
+		modifier = {
+			factor = 0.75
+			trait = content
+		}
+		modifier = {
+			factor = 0.75
+			trait = slothful
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = TOG.3143 } }
+		d_neoplato = {
+			holder_scope = {
+				character_event = { id = TOG.3144 }
+			}
+		}
+		clr_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son stays in Athenas with Greek wife and quits the Academia (Father)
+character_event = {
+	id = TOG.3143
+	desc = EVTDESC_ACADEMIA8
+	picture = GFX_evt_greekwoman
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_ACADEMIA8
+		tooltip = {
+			d_neoplato = {
+				holder_scope = {
+					FROM = {
+						move_character = PREV
+						religion = PREV
+					}
+				}
+			}
+		}
+	}
+}
+
+# Son stays in Athenas with Greek wife and quits the Academia (Neoplatonist Scholarch)
+character_event = {
+	id = TOG.3144
+	desc = EVTDESC_ACADEMIA9
+	picture = GFX_evt_academy1
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_ACADEMIA9
+		create_character = {
+			random_traits = yes
+			dynasty = random
+			female = yes
+			age = 24
+			religion = ROOT
+			culture = greek
+		}
+		new_character = {
+			add_spouse_matrilineal = FROM
+		}
+		FROM = {
+			move_character = ROOT
+			religion = ROOT
+		}
+	}
+}
+
+# Son stays in the Academia as teacher (Son)
+character_event = {
+	id = TOG.3145
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = serving_scholar
+		is_married = no
+		NOT = {
+			OR = {
+				father = {
+					primary_title = {
+						current_heir = { character = ROOT }
+					}
+				}
+				mother = {
+					primary_title = {
+						current_heir = { character = ROOT }
+					}
+				}
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 200
+		
+		modifier = {
+			factor = 0.75
+			trait = scholar
+		}
+		modifier = {
+			factor = 0.75
+			trait = content
+		}
+		modifier = {
+			factor = 1.5
+			trait = detached_priest
+		}
+		modifier = {
+			factor = 0.95
+			trait = martial_cleric
+		}
+		modifier = {
+			factor = 0.80
+			trait = scholarly_theologian
+		}
+		modifier = {
+			factor = 0.75
+			trait = mastermind_theologian
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = TOG.3146 } }
+		d_neoplato = {
+			holder_scope = {
+				character_event = { id = TOG.3147 }
+			}
+		}
+		clr_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son stays in the Academia as teacher (Father)
+character_event = {
+	id = TOG.3146
+	desc = EVTDESC_ACADEMIA11
+	picture = GFX_evt_academy2
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTDESC_ACADEMIA11
+		recalc_succession = yes
+		tooltip = {
+			d_neoplato = {
+				holder_scope = {
+					FROM = {
+						move_character = PREV
+						religion = PREV
+					}
+				}
+			}
+		}
+		FROM = { 
+			add_trait = scholarlyteacher
+			hidden_tooltip = {
+				remove_trait = amateurish_plotter
+				remove_trait = flamboyant_schemer
+				remove_trait = intricate_webweaver
+				remove_trait = elusive_shadow
+				remove_trait = naive_appeaser
+				remove_trait = underhanded_rogue
+				remove_trait = charismatic_negotiator
+				remove_trait = grey_eminence
+				remove_trait = indulgent_wastrel
+				remove_trait = thrifty_clerk
+				remove_trait = fortune_builder
+				remove_trait = midas_touched
+				remove_trait = misguided_warrior
+				remove_trait = tough_soldier
+				remove_trait = skilled_tactician
+				remove_trait = brilliant_strategist
+				remove_trait = detached_priest
+				remove_trait = martial_cleric
+				remove_trait = scholarly_theologian
+				remove_trait = mastermind_theologian
+			}
+		random_list = {
+				25 = {add_trait= detached_priest }
+				50 = {add_trait= martial_cleric }
+				50 = {add_trait= scholarly_theologian }
+				25 = {add_trait= mastermind_theologian }
+			}
+			recalc_succession = yes
+		}
+		
+
+	}
+}
+
+# Son stays in the Academia as teacher (Neoplatonist Scholarch)
+character_event = {
+	id = TOG.3147
+	desc = EVTDESC_ACADEMIA12
+	picture = GFX_evt_academy2
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_ACADEMIA12
+		FROM = {
+			move_character = ROOT
+			religion = ROOT
+		}
+	}
+}
+
+# Son converts to random Scholarly faith (Higher chance of mainstream Neoplatonic religion due to obvious reasons)
+character_event = {
+	id = TOG.3148
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = serving_scholar
+		NOT = { trait = zealous }
+	}
+	
+	mean_time_to_happen = {
+		months = 100
+		
+		modifier = {
+			factor = 0.75
+			trait = tolerant
+		}
+		modifier = {
+			factor = 0.75
+			trait = philosophical
+		}
+		modifier = {
+			factor = 1.5
+			trait = dogmatic
+		}
+
+		modifier = {
+			factor = 1.5
+			trait = cynical
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = TOG.3149 } }
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son converts event ( for the father, also, excluded the smaller scholar religions )
+character_event = {
+	id = TOG.3149
+	desc = EVTDESC_ACADEMIA14
+	picture = GFX_evt_academy2
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_ACADEMIA14
+		FROM = {
+			add_trait = zealous
+			random_list = {
+				40 = {
+						religion = neoplato
+				}
+				10 = {
+						religion = plato_pythagorean
+					}
+				10 = {
+						religion = porphyryan
+					}
+				10 = {
+						religion = plato_christ
+					}
+				10 = {
+						religion = plato_islam
+					}
+				10 = {
+						religion = ilm_islam
+					}
+				10 = {
+						religion = valentinian
+					}
+			}
+		}
+	}
+}
+
+# Successful Son returns home with Hellen wife (Son)
+character_event = {
+	id = TOG.3150
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = serving_scholar
+		is_married = no
+	}
+	
+	mean_time_to_happen = {
+		months = 180
+		
+		modifier = {
+			factor = 0.75
+			trait = lustful
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = TOG.3151 } }
+		clr_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Successful Son returns home with Hellen wife (might make the wife of a random graeco_roman religion in the future)
+character_event = {
+	id = TOG.3151
+	desc = EVTDESC_ACADEMIA16
+	picture = GFX_evt_greekwoman
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_ACADEMIA16
+		create_character = {
+			random_traits = yes
+			dynasty = random
+			female = yes
+			age = 26
+			religion = neoplato
+			culture = greek
+		}
+		new_character = {
+			add_spouse = FROM
+		}
+		FROM = { 
+			add_trait = scholarlystudent 
+			move_character = ROOT
+		}
+	}
+}
+
+# Father dies, Player Son is heir
+character_event = {
+	id = TOG.3152
+	desc = EVTDESC_ACADEMIA17
+	picture = GFX_evt_academy2
+	border = GFX_event_normal_frame_religion
+	
+	ai = no
+	
+	trigger = {
+		has_dlc = "The Old Gods"
+		OR = {
+			has_character_flag = wants_scholar
+			has_character_flag = serving_scholar
+		}
+		father = { is_alive = no }
+	}
+	
+	mean_time_to_happen = {
+		days = 1
+	}
+	
+	immediate = {
+		clr_character_flag = wants_scholar
+		clr_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = EVTOPTA_ACADEMIA17
+		add_trait = scholarlystudent
+		prestige = 50
+		wealth = 50
+	}
+}
+
+# Father dies, Son gets Student trait
+character_event = {
+	id = TOG.3153
+	hide_window = yes
+	
+	min_age = 16
+	ai = yes
+	only_men = yes
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		has_dlc = "The Old Gods"
+		OR = {
+			has_character_flag = wants_scholar
+			has_character_flag = serving_scholar
+		}
+		father = { is_alive = no }
+	}
+	
+	immediate = {
+		add_trait = scholarlystudent
+		clr_character_flag = wants_scholar
+		clr_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son returns with advanced learning trait (Son)
+character_event = {
+	id = TOG.3154
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = serving_scholar
+		NOT = { trait = mastermind_theologian }
+		OR = {
+			trait = detached_priest
+			trait = scholarly_theologian
+			trait = martial_cleric
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 160
+		
+		modifier = {
+			factor = 0.5
+			trait = mystic
+		}
+		modifier = {
+			factor = 0.5
+			trait = scholar
+		}
+		modifier = {
+			factor = 0.75
+			trait = detached_priest
+		}
+		modifier = {
+			factor = 0.85
+			trait = martial_cleric
+		}
+		modifier = {
+			factor = 0.95
+			trait = scholarly_theologian
+		}
+		modifier = {
+			factor = 0.75
+			learning = 15
+		}
+		modifier = {
+			factor = 0.5
+			learning = 20
+		}
+		modifier = {
+			factor = 0.5
+			trait = genius
+		}
+		modifier = {
+			factor = 0.75
+			trait = diligent
+		}
+		modifier = {
+			factor = 0.5
+			trait = quick
+		}
+		modifier = {
+			factor = 1.5
+			trait = slow
+		}
+		modifier = {
+			factor = 1.5
+			trait = imbecile
+		}
+	}
+	
+	immediate = {
+		father = { character_event = { id = TOG.3155 } }
+		clr_character_flag = serving_scholar
+	}
+	
+	option = {
+		name = OK
+	}
+}
+
+# Son returns with advanced learning trait (Father)
+character_event = {
+	id =  TOG.3155
+	desc = EVTDESC_TOG_3121
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_3121
+		if = {
+			limit = {
+				FROM = {
+					trait = detached_priest
+				}
+			}
+			FROM = {
+				hidden_tooltip = { remove_trait = detached_priest }
+				add_trait = martial_cleric
+			}
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = martial_cleric
+				}
+			}
+			FROM = {
+				hidden_tooltip = { remove_trait = martial_cleric }
+				add_trait = scholarly_theologian
+			}
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = scholarly_theologian
+				}
+			}
+			FROM = {
+				hidden_tooltip = { remove_trait = scholarly_theologian }
+				add_trait = mastermind_theologian
+			}
+		}
+		FROM = {
+			change_learning = 2
+			add_trait = scholarlystudent
+			move_character = ROOT
+		}
+	}
+}
+
+
 ### Sejdr Events
 
 # Völva Appears
