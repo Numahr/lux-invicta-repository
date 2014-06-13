@@ -19,9 +19,8 @@ character_event = {
 	
 	hide_window = yes # Only fires for unplayable landless characters
 	
-	min_age = 16
-	max_age = 50
-	only_men = yes
+	min_age = 20
+	max_age = 60
 	capable_only = yes
 	prisoner = no
 	
@@ -29,6 +28,7 @@ character_event = {
 		has_dlc = "The Old Gods"
 		
 		is_ruler = no
+		NOT = { any_spouse = { is_landed = yes } }
 		
 		any_claim = {
 			has_holder = yes
@@ -55,17 +55,23 @@ character_event = {
 			}
 		}
 		
-		diplomacy = 7
+		diplomacy = 10
+		martial = 10
 		
 		health = 4
 		NOT = { trait = content }
 		NOT = { trait = craven }
+		NOT = { trait = patient }
+		NOT = { trait = temperate }
+		NOT = { trait = slow }
+		NOT = { trait = slothful }
+		NOT = { trait = imbecile }
 		
 		NOT = { has_character_modifier = planning_claimant_adventure }
 	}
 	
 	mean_time_to_happen = {
-		years = 50
+		years = 100
 		modifier = {
 			factor = 0.2
 			has_character_flag = flag_denied_title
@@ -84,7 +90,23 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.75
-			diplomacy = 12
+			diplomacy = 15
+		}
+		modifier = {
+			factor = 0.5
+			diplomacy = 20
+		}
+		modifier = {
+			factor = 0.75
+			martial = 15
+		}
+		modifier = {
+			factor = 0.5
+			martial = 20
+		}
+		modifier = {
+			factor = 0.65
+			is_heretic = yes
 		}
 		modifier = {
 			factor = 0.75
@@ -92,7 +114,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.75
-			trait = born_in_the_purple
+			trait = ruthless
 		}
 		modifier = {
 			factor = 0.85
@@ -100,7 +122,11 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.85
-			trait = sayyid
+			trait = bastard
+		}
+		modifier = {
+			factor = 0.85
+			trait = viking
 		}
 		modifier = {
 			factor = 1.5
@@ -109,6 +135,10 @@ character_event = {
 		modifier = {
 			factor = 1.5
 			trait = humble
+		}
+		modifier = {
+			factor = 1.5
+			is_female = yes
 		}
 		modifier = {
 			factor = 2.0
@@ -634,8 +664,8 @@ character_event = {
 	
 	hide_window = yes # Only fires for unplayable landless characters
 	
-	min_age = 16
-	max_age = 50
+	min_age = 20
+	max_age = 60
 	only_men = yes
 	capable_only = yes
 	prisoner = no
@@ -644,6 +674,7 @@ character_event = {
 		has_dlc = "The Old Gods"
 		
 		is_ruler = no
+		NOT = { any_spouse = { is_landed = yes } }
 		
 		diplomacy = 7
 		martial = 9
@@ -651,6 +682,11 @@ character_event = {
 		
 		NOT = { trait = content }
 		NOT = { trait = craven }
+		NOT = { trait = patient }
+		NOT = { trait = temperate }
+		NOT = { trait = slow }
+		NOT = { trait = slothful }
+		NOT = { trait = imbecile }
 		
 		NOT = { # Somewhat clunky way of checking that the character does not stand to inherit any titles
 			any_heir_title = {
@@ -708,38 +744,46 @@ character_event = {
 	}
 	
 	mean_time_to_happen = {
-		years = 100
+		years = 200
 		modifier = {
 			factor = 0.5
 			trait = ambitious
 		}
 		modifier = {
-			factor = 0.5
+			factor = 0.2
 			has_character_flag = flag_denied_title
 		}
 		modifier = {
-			factor = 0.2
-			has_character_flag = demon_child_non_pagan
+			factor = 0.75
+			diplomacy = 15
+		}
+		modifier = {
+			factor = 0.5
+			diplomacy = 20
 		}
 		modifier = {
 			factor = 0.75
-			diplomacy = 12
+			martial = 15
 		}
 		modifier = {
-			factor = 0.75
-			martial = 12
+			factor = 0.5
+			martial = 20
+		}
+		modifier = {
+			factor = 0.65
+			is_heretic = yes
 		}
 		modifier = {
 			factor = 0.75
 			trait = brave
 		}
 		modifier = {
-			factor = 0.85
-			trait = proud
+			factor = 0.75
+			trait = reckless
 		}
 		modifier = {
-			factor = 3.0
-			trait = slothful
+			factor = 0.85
+			trait = proud
 		}
 		modifier = {
 			factor = 3.0
@@ -761,18 +805,33 @@ character_event = {
 				tier = emperor
 			}
 		}
+		modifier = {
+			factor = 0.85
+			trait = bastard
+		}
 	}
 	
 	immediate = {
 		random_independent_ruler = {
 			limit = {
-				NOT = { culture = ROOT }
+				OR = {
+					culture_group = ROOT
+					religion_group = ROOT
+				}
 				is_landed = yes
 				independent = yes
 				NOT = { is_vassal_or_below = ROOT }
 				any_realm_province = {
 					OR = {
-						port = yes
+						AND = {
+							port = yes
+							NOT = {
+								distance = {
+									who = ROOT
+									value = 800
+								}
+							}
+						}
 						any_neighbor_province = {
 							owner = {
 								same_realm = ROOT
@@ -785,7 +844,15 @@ character_event = {
 			random_realm_province = {
 				limit = {
 					OR = {
-						port = yes
+						AND = {
+							port = yes
+							NOT = {
+								distance = {
+									who = ROOT
+									value = 800
+								}
+							}
+						}
 						any_neighbor_province = {
 							owner = {
 								same_realm = ROOT
@@ -857,12 +924,13 @@ character_event = {
 	
 	is_triggered_only = yes
 	
+	prisoner = no
+	capable_only = yes
+	
 	trigger = {
 		has_dlc = "The Old Gods"
 		
 		is_ruler = no
-		prisoner = no
-		NOT = { trait = incapable }
 		
 		NOT = {
 			any_heir_title = {
@@ -906,7 +974,10 @@ character_event = {
 			capital_scope = {
 				random_independent_ruler = {
 					limit = {
-						NOT = { culture = ROOT }
+						OR = {
+							culture_group = ROOT
+							religion_group = ROOT
+						}
 						is_landed = yes
 						independent = yes
 						NOT = { is_vassal_or_below = ROOT }
@@ -1014,22 +1085,15 @@ character_event = {
 			female = no
 			age = 25
 		}
-		
-		if  = {
-			limit = {
-				NOT = { culture_group = altaic }
-				NOT = { culture = hungarian }
-			}
-			
-			# Create a fleet, just to be sure
-			spawn_fleet = {
-				province = closest # closest sea zone
-				owner = ROOT
-				disband_on_peace = yes
-				troops =
-				{
-					galleys = { 200 200 }
-				}
+					
+		# Create a fleet, just to be sure
+		spawn_fleet = {
+			province = closest # closest sea zone
+			owner = ROOT
+			disband_on_peace = yes
+			troops =
+			{
+				galleys = { 200 200 }
 			}
 		}
 	}
@@ -1052,11 +1116,11 @@ character_event = {
 	}
 	
 	immediate = {
-		any_liege = {
-			character_event = {
-				id = TOG.1214
+			any_liege = {
+				character_event = {
+					id = TOG.1214
+				}
 			}
-		}
 	}
 	
 	option = {
