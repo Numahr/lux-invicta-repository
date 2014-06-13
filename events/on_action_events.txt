@@ -2701,19 +2701,21 @@ diploresponse_event = {
 	}
 }
 
-
 # On-action event: Royal Marriage Aid Duty
 character_event = {
 	id = 500
 	desc = EVTDESC500
-	picture = "GFX_evt_marriage"
+	picture = GFX_evt_marriage
 	
 	is_triggered_only = yes
 	
 	trigger = {
 		NOT = { religion_group = muslim }
 		OR = {
-			NOT = { religion = zoroastrian }
+			AND = {
+				NOT = { religion = zoroastrian }
+				NOT = { religion = messalian }
+			}
 			NOT = { new_character = { is_close_relative = FROM } }
 		}
 		OR = {
@@ -2763,9 +2765,26 @@ character_event = {
 character_event = {
 	id = 501
 	desc = EVTDESC501
-	picture = GFX_evt_marriage_zoroastrian
+	picture = GFX_evt_marriage_zoroastrian_group
 	
 	is_triggered_only = yes
+	
+	trigger = {
+		religion = zoroastrian
+		new_character = { is_close_relative = FROM }
+		OR = {
+			FROM = { character = ROOT }
+			AND = {
+				FROM = {
+					dynasty = ROOT
+					is_primary_heir = ROOT
+				}
+				new_character = {
+					NOT = { character = ROOT }
+				}
+			}
+		}
+	}
 	
 	option = {
 		name = "EVTOPTA500"
@@ -2793,84 +2812,6 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB500"
-		if = {
-			limit = { tier = EMPEROR }
-			prestige = 300
-		}
-		if = {
-			limit = { tier = KING }
-			prestige = 200
-		}
-		if = {
-			limit = { tier = DUKE }
-			prestige = 100
-		}
-		if = {
-			limit = { tier = COUNT }
-			prestige = 50
-		}
-		if = {
-			limit = { tier = BARON }
-			prestige = 25
-		}
-		
-		if = {
-			limit = { tier = EMPEROR }
-			piety = 300
-		}
-		if = {
-			limit = { tier = KING }
-			piety = 200
-		}
-		if = {
-			limit = { tier = DUKE }
-			piety = 100
-		}
-		if = {
-			limit = { tier = COUNT }
-			piety = 50
-		}
-		if = {
-			limit = { tier = BARON }
-			piety = 25
-		}
-	}
-}
-
-# On-action event: Messalian close kin marriage
-character_event = {
-	id = 502
-	desc = EVTDESC502
-	picture = GFX_evt_marriage
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = EVTOPTA500
-		scaled_wealth = 0.5
-		if = {
-			limit = { tier = EMPEROR }
-			piety = 300
-		}
-		if = {
-			limit = { tier = KING }
-			piety = 200
-		}
-		if = {
-			limit = { tier = DUKE }
-			piety = 100
-		}
-		if = {
-			limit = { tier = COUNT }
-			piety = 50
-		}
-		if = {
-			limit = { tier = BARON }
-			piety = 25
-		}
-	}
-	option = {
-		name = EVTOPTB500
 		if = {
 			limit = { tier = EMPEROR }
 			prestige = 300
@@ -3119,7 +3060,7 @@ province_event = {
 				50 = {
 					create_random_soldier = {
 						random_traits = yes
-						dynasty = none
+						dynasty = random
 						religion = prev
 						culture = prev
 						female = no
@@ -3130,7 +3071,7 @@ province_event = {
 						spawn_unit = {
 							province = prev
 							home = prev
-							scaled_by_biggest_garrison = 1.25
+							scaled_by_biggest_garrison = 1.0
 							troops = {
 								archers = { 6 6 }
 								light_cavalry = { 4 4 }
@@ -3142,7 +3083,7 @@ province_event = {
 				25 = {
 					create_random_soldier = {
 						random_traits = yes
-						dynasty = none
+						dynasty = random
 						religion = prev
 						culture = prev
 						female = no
@@ -3153,7 +3094,7 @@ province_event = {
 						spawn_unit = {
 							province = prev
 							home = prev
-							scaled_by_biggest_garrison = 1.25
+							scaled_by_biggest_garrison = 1.0
 							troops = {
 								archers = { 6 6 }
 								light_cavalry = { 3 3 }
@@ -3165,7 +3106,7 @@ province_event = {
 				25 = {
 					create_random_soldier = {
 						random_traits = yes
-						dynasty = none
+						dynasty = random
 						religion = prev
 						culture = prev
 						female = no
@@ -3176,7 +3117,7 @@ province_event = {
 						spawn_unit = {
 							province = prev
 							home = prev
-							scaled_by_biggest_garrison = 1.25
+							scaled_by_biggest_garrison = 1.0
 							troops = {
 								archers = { 6 6 }
 								light_infantry = { 14 14 }
@@ -3736,6 +3677,10 @@ narrative_event = {
 		}
 		ai_chance = {
 			factor = 50
+			modifier = {
+				factor = 0
+				has_landed_title = d_jomsvikings
+			}
 		}
 		tooltip = { religion = THIS }
 	}
@@ -3747,3 +3692,4 @@ narrative_event = {
 		}
 	}
 }
+
