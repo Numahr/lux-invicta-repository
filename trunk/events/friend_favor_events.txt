@@ -73,7 +73,8 @@ character_event = {
 		create_character = {
 			female = yes
 			random_traits = yes
-			dynasty = random
+			dynasty = none
+			culture = root
 		}
 		new_character = {
 			add_spouse = FROM
@@ -88,7 +89,7 @@ character_event = {
 	}
 	
 	option = {
-		name = "friendfavors.1.c"  # I'll find an attractive one
+		name = "friendfavors.1.c"  # I'll find an fair one
 		trigger = {
 			intrigue = 10
 			FROM = { is_female = no }
@@ -98,7 +99,8 @@ character_event = {
 		create_character = {
 			female = yes
 			random_traits = yes
-			dynasty = random
+			dynasty = none
+			culture = root
 		}
 		new_character = {
 			add_trait = fair
@@ -432,6 +434,7 @@ character_event = {
 		trigger = {
 			diplomacy = 7
 			FROM = {
+				has_ambition = obj_amass_wealth_1
 				NOT = { wealth = 300 }
 				NOT = { yearly_income = 20 }
 			}
@@ -439,7 +442,7 @@ character_event = {
 		tooltip_info = diplomacy
 		tooltip = {
 			FROM = {
-				cancel_ambition = yes
+				cancel_objective = obj_amass_wealth_1
 			}
 		}
 		hidden_tooltip = {
@@ -448,6 +451,50 @@ character_event = {
 			}
 		}
 	}
+	option = {
+		name = "friendfavors.9.e"  # Talk him out of it
+		trigger = {
+			diplomacy = 7
+			FROM = {
+				has_ambition = obj_amass_wealth_2
+				NOT = { wealth = 600 }
+				NOT = { yearly_income = 40 }
+			}
+		}
+		tooltip_info = diplomacy
+		tooltip = {
+			FROM = {
+				cancel_objective = obj_amass_wealth_2
+			}
+		}
+		hidden_tooltip = {
+			FROM = {
+				letter_event = { id = friendfavors.12 }
+			}
+		}
+	}
+	option = {
+		name = "friendfavors.9.e"  # Talk him out of it
+		trigger = {
+			diplomacy = 7
+			FROM = {
+				has_ambition = obj_amass_wealth_3
+				NOT = { wealth = 1500 }
+				NOT = { yearly_income = 100 }
+			}
+		}
+		tooltip_info = diplomacy
+		tooltip = {
+			FROM = {
+				cancel_objective = obj_amass_wealth_3
+			}
+		}
+		hidden_tooltip = {
+			FROM = {
+				letter_event = { id = friendfavors.12 }
+			}
+		}
+	}	
 }
 
 # he gave me nothing
@@ -483,8 +530,28 @@ letter_event = {
 	
 	option = {
 		name = "OK"
-		cancel_objective = obj_amass_wealth
+		trigger = {
+			has_objective = obj_amass_wealth_1
+		}
+		
+		cancel_objective = obj_amass_wealth_1
 	}
+	option = {
+		name = "OK"
+		trigger = {
+			has_objective = obj_amass_wealth_2
+		}		
+		
+		cancel_objective = obj_amass_wealth_2
+	}
+	option = {
+		name = "OK"
+		trigger = {
+			has_objective = obj_amass_wealth_3
+		}		
+		
+		cancel_objective = obj_amass_wealth_3
+	}	
 }
 
 # friend asks liege to stop war against him
@@ -527,11 +594,11 @@ character_event = {
 				who = FROM
 				years = 10
 			}
-			any_war = {
+			any_current_enemy = {
 				limit = {
-					any_defender = {character=ROOT}
+					is_attacker = yes
 				}
-				any_attacker={letter_event = { id = friendfavors.16 tooltip = attacker_forced_peace_tooltip }}
+				letter_event = { id = friendfavors.16 tooltip = attacker_forced_peace_tooltip }
 			}
 			
 			any_war = {
@@ -548,7 +615,7 @@ character_event = {
 		}
 		any_vassal = {
 			limit = {
-				NOT = { has_opinion_modifier = { who = ROOT modifier = opinion_friend } }
+				NOT = { is_friend = ROOT }
 				 higher_tier_than = BARON
 			}
 			opinion = {

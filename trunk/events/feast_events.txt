@@ -1668,10 +1668,7 @@ character_event = {
 				}
 			}
 			NOT = {
-				has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_friend
-				}
+				is_friend = ROOT
 			}
 		}
 	}
@@ -1725,17 +1722,10 @@ character_event = {
 					}
 				}
 				NOT = {
-					has_opinion_modifier = {
-						who = ROOT
-						modifier = opinion_friend
-					}
+					is_friend = ROOT
 				}
 			}
-			opinion = {
-				modifier = opinion_friend
-				who = ROOT
-				years = 100
-			}
+			add_friend = ROOT
 			character_event = {
 				id = 72026
 				tooltip = "EVTTOOLTIP72026"
@@ -1755,11 +1745,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA72026"
 		FROM = {
-			opinion = {
-				modifier = opinion_friend
-				who = ROOT
-				years = 100
-			}
+			add_friend = ROOT
 		}
 	}
 }
@@ -1815,10 +1801,7 @@ character_event = {
 					}
 				}
 				NOT = {
-					has_opinion_modifier = {
-						who = ROOT
-						modifier = opinion_friend
-					}
+					is_friend = ROOT
 				}
 			}
 		}
@@ -1879,17 +1862,10 @@ character_event = {
 						}
 					}
 					NOT = {
-						has_opinion_modifier = {
-							who = ROOT
-							modifier = opinion_friend
-						}
+						is_friend = ROOT
 					}
 				}
-				opinion = {
-					modifier = opinion_friend
-					who = ROOT
-					years = 100
-				}
+				add_friend = ROOT
 				character_event = {
 					id = 72028
 					tooltip = "EVTTOOLTIP72028"
@@ -1909,11 +1885,7 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA72028"
-		opinion = {
-			modifier = opinion_friend
-			who = FROM
-			years = 100
-		}
+		add_friend = FROM
 	}
 }
 
@@ -2655,15 +2627,22 @@ character_event = {
 		trigger = {
 			is_female = yes
 		}
-		random = {
-			chance = 25
-
-			FROM = {
-				impregnate = ROOT
-				character_event = {
-					id = 72042
-					days = 60
-					tooltip = "EVTTOOLTIP72042"
+		if = {
+			limit = {
+				fertility = 0.1
+				FROM = { fertility = 0.1 }
+				culture_group = FROM
+			}
+			random = {
+				chance = 25
+				
+				FROM = {
+					impregnate = ROOT
+					character_event = {
+						id = 72042
+						days = 60
+						tooltip = EVTTOOLTIP72042
+					}
 				}
 			}
 		}
@@ -2673,14 +2652,21 @@ character_event = {
 		trigger = {
 			is_female = no
 		}
-		random = {
-			chance = 25
-
-			impregnate = FROM
-			character_event = {
-				id = 72042
-				days = 60
-				tooltip = "EVTTOOLTIP72042"
+		if = {
+			limit = {
+				fertility = 0.1
+				FROM = { fertility = 0.1 }
+				culture_group = FROM
+			}
+			random = {
+				chance = 25
+				
+				impregnate = FROM
+				character_event = {
+					id = 72042
+					days = 60
+					tooltip = EVTTOOLTIP72042
+				}
 			}
 		}
 	}
@@ -4132,15 +4118,22 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA72076"
-		random = {
-			chance = 25
-
-			FROM = {
-				impregnate = ROOT
-				character_event = {
-					id = 72077
-					days = 60
-					tooltip = "EVTTOOLTIP72077"
+		if = {
+			limit = {
+				fertility = 0.1
+				FROM = { fertility = 0.1 }
+				culture_group = FROM
+			}
+			random = {
+				chance = 25
+				
+				FROM = {
+					impregnate = ROOT
+					character_event = {
+						id = 72077
+						days = 60
+						tooltip = EVTTOOLTIP72077
+					}
 				}
 			}
 		}
@@ -4198,10 +4191,7 @@ character_event = {
 			has_character_flag = guest_feast_started
 			NOT = { num_of_friends = 3 }
 			NOT = {
-				has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_friend
-				}
+				is_friend = ROOT
 			}
 		}
 	}
@@ -4234,17 +4224,10 @@ character_event = {
 				has_character_flag = guest_feast_started
 				NOT = { num_of_friends = 3 }
 				NOT = {
-					has_opinion_modifier = {
-						who = ROOT
-						modifier = opinion_friend
-					}
+					is_friend = ROOT
 				}
 			}
-			opinion = {
-				modifier = opinion_friend
-				who = ROOT
-				years = 100
-			}
+			add_friend = ROOT
 			character_event = {
 				id = 72081
 				tooltip = "EVTTOOLTIP72081"
@@ -4264,11 +4247,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA72081"
 		FROM = {
-			opinion = {
-				modifier = opinion_friend
-				who = ROOT
-				years = 100
-			}
+			add_friend = ROOT
 		}
 	}
 }
@@ -4482,10 +4461,6 @@ character_event = {
 			}
 			NOT = { trait = chaste }
 		}
-		OR = {
-			religion_group = christian
-			religion_group = jewish_group
-		}
 		has_lover = no
 		NOT = { trait = shy }
 		fertility = 0.4
@@ -4657,13 +4632,20 @@ character_event = {
 						is_abroad = no
 						opinion = { who = ROOT value = 20 }
 					}
-					random = {
-						chance = 25
-
-						impregnate = ROOT
-						set_character_flag = impregnated_by_root
-						ROOT = {
-							set_character_flag = impregnated_vassal_daughter
+					if = {
+						limit = {
+							fertility = 0.1
+							ROOT = { fertility = 0.1 }
+							culture_group = ROOT
+						}
+						random = {
+							chance = 25
+							
+							impregnate = ROOT
+							set_character_flag = impregnated_by_root
+							ROOT = {
+								set_character_flag = impregnated_vassal_daughter
+							}
 						}
 					}
 					add_lover = ROOT
@@ -4747,13 +4729,20 @@ character_event = {
 					is_abroad = no
 					opinion = { who = ROOT value = 20 }
 				}
-				random = {
-					chance = 25
-
-					impregnate = ROOT
-					set_character_flag = impregnated_by_root
-					ROOT = {
-						set_character_flag = impregnated_vassal_daughter
+				if = {
+					limit = {
+						fertility = 0.1
+						ROOT = { fertility = 0.1 }
+						culture_group = ROOT
+					}
+					random = {
+						chance = 25
+						
+						impregnate = ROOT
+						set_character_flag = impregnated_by_root
+						ROOT = {
+							set_character_flag = impregnated_vassal_daughter
+						}
 					}
 				}
 				add_lover = ROOT
