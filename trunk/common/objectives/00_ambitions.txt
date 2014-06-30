@@ -16,11 +16,14 @@ obj_become_chancellor = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		diplomacy = 8
-		liege = {
-			NOT = { character = ROOT }
+		independent = no
+		OR = {
+			is_female = no
+			AND = { #Add "feminist = yes" religions
+				religion = cathar 
+				liege = { religion = cathar } 
+			}
 		}
-		is_female = no
 		NOT = { trait = incapable }
 	}
 	chance = {
@@ -73,7 +76,6 @@ obj_become_chancellor = {
 				trait = grey_eminence
 			}
 		}
-		
 		modifier = {
 			factor = 1.25
 			diplomacy = 10
@@ -90,20 +92,6 @@ obj_become_chancellor = {
 			factor = 1.5
 			diplomacy = 16
 		}
-		modifier = {
-			factor = 0.5
-			diplomacy = 5
-			NOT = { diplomacy = 8 }
-		}
-		modifier = {
-			factor = 0.2
-			diplomacy = 2
-			NOT = { diplomacy = 5 }
-		}
-		modifier = {
-			factor = 0.1
-			NOT = { diplomacy = 2 }
-		}
 	}
 	success = {
 		has_job_title = job_chancellor
@@ -115,6 +103,14 @@ obj_become_chancellor = {
 				is_councillor = yes
 				NOT = { has_job_title = job_chancellor }
 			}
+			AND = { 
+				is_female = yes
+				OR = {
+					NOT = { religion = cathar }
+					NOT = { liege = { religion = cathar } }
+				}
+			}
+			trait = incapable
 		}
 	}
 	abort_effect = {
@@ -146,14 +142,9 @@ obj_become_marshal = {
 		independent = no
 		OR = {
 			is_female = no
-			AND = {
-				top_liege = {
-					OR = {
-						religion = hubal
-						religion = gurzil
-					}
-				}
-				is_pregnant = no
+			AND = { #Add "feminist = yes" religions
+				religion = cathar 
+				liege = { religion = cathar } 
 			}
 			AND = {
 				top_liege = {
@@ -193,6 +184,7 @@ obj_become_marshal = {
 		NOT = { trait = incapable }
 		martial = 8
 	}
+
 	chance = {
 		factor = 100
 		
@@ -259,20 +251,6 @@ obj_become_marshal = {
 			factor = 1.5
 			martial = 16
 		}
-		modifier = {
-			factor = 0.5
-			martial = 5
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 0.2
-			martial = 2
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 0.1
-			NOT = { martial = 2 }
-		}
 	}
 	success = {
 		has_job_title = job_marshal
@@ -284,6 +262,7 @@ obj_become_marshal = {
 				is_councillor = yes
 				NOT = { has_job_title = job_marshal }
 			}
+			trait = incapable
 		}
 	}
 	abort_effect = {
@@ -313,9 +292,14 @@ obj_become_treasurer = {
 		is_adult = yes
 		is_councillor = no
 		independent = no
-		is_female = no
+		OR = {
+			is_female = no
+			AND = { #Add "feminist = yes" religions
+				religion = cathar
+				liege = { religion = cathar }
+			}
+		}
 		NOT = { trait = incapable }
-		stewardship = 8
 	}
 	chance = {
 		factor = 100
@@ -391,20 +375,6 @@ obj_become_treasurer = {
 			factor = 1.5
 			stewardship = 16
 		}
-		modifier = {
-			factor = 0.5
-			stewardship = 5
-			NOT = { stewardship = 8 }
-		}
-		modifier = {
-			factor = 0.2
-			stewardship = 2
-			NOT = { stewardship = 5 }
-		}
-		modifier = {
-			factor = 0.1
-			NOT = { stewardship = 2 }
-		}
 	}
 	success = {
 		has_job_title = job_treasurer
@@ -416,6 +386,7 @@ obj_become_treasurer = {
 				is_councillor = yes
 				NOT = { has_job_title = job_treasurer }
 			}
+			trait = incapable
 		}
 	}
 	abort_effect = {
@@ -448,9 +419,12 @@ obj_become_spymaster = {
 			is_female = no
 			liege = { mother = { character = ROOT } }
 			liege = { spouse = { character = ROOT } }
+			AND = { #Add "feminist = yes" religions
+				religion = cathar 
+				liege = { religion = cathar }
+			}
 		}
 		NOT = { trait = incapable }
-		intrigue = 8
 	}
 	chance = {
 		factor = 100
@@ -526,20 +500,6 @@ obj_become_spymaster = {
 			factor = 1.5
 			intrigue = 16
 		}
-		modifier = {
-			factor = 0.5
-			intrigue = 5
-			NOT = { intrigue = 8 }
-		}
-		modifier = {
-			factor = 0.2
-			intrigue = 2
-			NOT = { intrigue = 5 }
-		}
-		modifier = {
-			factor = 0.1
-			NOT = { intrigue = 2 }
-		}
 	}
 	success = {
 		has_job_title = job_spymaster
@@ -551,6 +511,16 @@ obj_become_spymaster = {
 				is_councillor = yes
 				NOT = { has_job_title = job_spymaster }
 			}
+			AND = { 
+				is_female = yes
+				NOT = { liege = { mother = { character = ROOT } } }
+				NOT = { liege = { spouse = { character = ROOT } } }
+				OR = {
+					NOT = { religion = cathar }
+					NOT = { liege = { religion = cathar } }
+				}
+			}
+			trait = incapable
 		}
 	}
 	abort_effect = {
@@ -613,7 +583,6 @@ obj_become_spiritual = {
 				}
 			}
 		}
-		learning = 8
 		
 		OR = {
 			NOT = { religion_group = muslim }
@@ -633,9 +602,7 @@ obj_become_spiritual = {
 				NOT = { religion = orthodox }
 				NOT = { is_heresy_of = orthodox }
 				NOT = { religion = solomonic_christ }
-				NOT = { religion = nestorian }
-#				NOT = { religion = miaphysite }
-#				NOT = { is_heresy_of = miaphysite }
+				NOT = { is_heresy_of = solomonic_christ }
 			}
 		}
 		
@@ -706,20 +673,6 @@ obj_become_spiritual = {
 		modifier = {
 			factor = 1.5
 			learning = 16
-		}
-		modifier = {
-			factor = 0.5
-			learning = 5
-			NOT = { learning = 8 }
-		}
-		modifier = {
-			factor = 0.2
-			learning = 2
-			NOT = { learning = 5 }
-		}
-		modifier = {
-			factor = 0.1
-			NOT = { learning = 2 }
 		}
 	}
 	success = {

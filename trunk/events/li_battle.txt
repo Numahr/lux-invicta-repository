@@ -1,9 +1,10 @@
 namespace = battle_charges
-#Battle charge 2
+
+#Battle charge
 character_event = {
-	id = battle_charges.1
-	desc = "EVTDESCbattle_charges.1"
-	picture = GFX_evt_battle2
+	id = battle_charges.0
+	desc = "EVTDESCbattle_charges.0"
+	picture = GFX_evt_battle
 	border = GFX_event_normal_frame_war
 	
 	min_age = 14
@@ -13,28 +14,30 @@ character_event = {
 
 
     trigger = {
+		any_current_enemy = {
+			at_location = ROOT
+			in_command = yes
+			
+		}
 		NOT = { trait = misguided_warrior }
 		NOT = { trait = poor_warrior }
         NOT = { trait = craven }
         NOT = { trait = slothful }
-		OR = { 
-		    trait = skilled_tactician
-		    trait = brilliant_strategist
-		    martial = 12
-		}
 		in_command = yes
         in_battle = yes
+		
+		OR = {
+	    	trait = skilled_tactician
+	    	trait = brilliant_strategist
+	    	martial = 12
+		}
 	}
 
-    mean_time_to_happen = {
+    weight_multiplier = {
 		days = 1
         modifier = {
 			factor = 0.25
 			trait = craven
-		}
-        modifier = {
-			factor = 2
-			trait = knight
 		}
         modifier = {
 			factor = 0.25
@@ -107,7 +110,7 @@ character_event = {
 	}
 
 	option = {
-		name = "EVTOPTAbattle_charges.1"
+		name = "EVTOPTAbattle_charges.0"
 		ai_chance = {
 			factor = 50
 			modifier = {
@@ -135,6 +138,10 @@ character_event = {
 				trait = arbitrary
 			}
 			modifier = {
+				factor = 2
+				trait = turncloak
+			}
+			modifier = {
 				factor = 0.5
 				trait = skilled_warrior
 			}
@@ -159,22 +166,23 @@ character_event = {
 				trait = kind
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
+		custom_tooltip = { 
+		text = TOOLTIPBATTLERETREAT
 		hidden_tooltip = {
 		    prestige = -15
-            morale = -0.2 
+            morale = -0.2			
+		}
 		}
 		random = {
-			chance = 30
+			chance = 50
 			add_trait = craven
 			hidden_tooltip = {
 				character_event = { id = 38257 }
 		    }	
-	    } 
+	    }
     }
-	
 	option = {
-		name = "EVTOPTBbattle_charges.1"
+		name = "EVTOPTBbattle_charges.0"
 		ai_chance = {
 			factor = 50
 			modifier = {
@@ -194,12 +202,20 @@ character_event = {
 				trait = proud
 			}
 			modifier = {
+				factor = 1.5
+				trait = machiavellian
+			}
+			modifier = {
 				factor = 0.25
 				trait = craven
 			}
 			modifier = {
 				factor = 0.5
 				trait = arbitrary
+			}
+			modifier = {
+				factor = 0.25
+				trait = turncloak
 			}
 			modifier = {
 				factor = 2
@@ -222,16 +238,17 @@ character_event = {
 				trait = misguided_warrior
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLECHARGE
+	custom_tooltip = { 
+		text = TOOLTIPBATTLECHARGE
         hidden_tooltip = {
 		    random_list = {
-			    60 = {
+			    75 = {
 		            any_current_enemy = {
 		                limit = {
 			                at_location = ROOT
 			                in_command = yes
 			                in_battle = yes
-		 	                NOT = { any_current_enemy = { has_opinion_modifier = { who = PREV modifier = opinion_battle_duel_target } } }
+		 	                
 			            }
 			            hidden_tooltip = { 
 	          		        random_list = { 
@@ -254,1469 +271,21 @@ character_event = {
 					        }
 					    }
 				    }
-                    random = { 
-					    chance = 10
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-		            }
                     troops = 0.05
                     morale = 0.2 
 				}
-			    40 = {
-                    random = { chance = 10 death = { death_reason = death_battle } }
-                    prestige = -50
-                    troops = -0.3
-                    morale = -0.2
-				}
-			}
-		}
-	}
-}
-
-#Battle charge 3
-character_event = {
-	id = battle_charges.2
-	desc = "EVTDESCbattle_charges.2"
-	picture = GFX_evt_battle2
-	border = GFX_event_normal_frame_war
-	
-	min_age = 14
-	capable_only = yes
-	prisoner = no
-	is_triggered_only = yes
-
-
-    trigger = {
-		NOT = { trait = misguided_warrior }
-		NOT = { trait = poor_warrior }
-        NOT = { trait = craven }
-        NOT = { trait = slothful }
-		OR = { 
-		    trait = skilled_tactician
-		    trait = brilliant_strategist
-		    martial = 7
-		}
-		in_command = yes
-        in_battle = yes
-	}
-
-    mean_time_to_happen = {
-		days = 1
-        modifier = {
-			factor = 0.25
-			trait = craven
-		}
-        modifier = {
-			factor = 0
-			trait = squire
-		}
-        modifier = {
-			factor = 2
-			trait = knight
-		}
-        modifier = {
-			factor = 0.25
-			trait = slothful
-		}
-        modifier = {
-			factor = 0.05
-			trait = imbecile
-		}
-        modifier = {
-			factor = 0.25
-			trait = slow
-		}
-        modifier = {
-			factor = 0.25
-			trait = poor_warrior
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 7 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 9 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 11 }
-		}
-        modifier = {
-			factor = 1.25
-			martial = 13
-		}
-        modifier = {
-			factor = 1.25
-			martial = 15
-		}
-        modifier = {
-			factor = 1.25
-			martial = 17
-		}
-        modifier = {
-			factor = 1.25
-			martial = 19
-		}
-        modifier = {
-			factor = 1.25
-			martial = 21
-		}
-		modifier = {
-			factor = 1.25
-			trait = brave
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_tactician
-		}
-		modifier = {
-			factor = 2
-			trait = brilliant_strategist
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_warrior
-		}
-		modifier = {
-			factor = 1.35
-			trait = master_warrior
-		}
-
-	}
-
-	option = {
-		name = "EVTOPTAbattle_charges.2"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 0.25
-				trait = brave
-			}
-			modifier = {
-				factor = 1.5
-				trait = slow
-			}
-			modifier = {
-				factor = 2
-				trait = imbecile
-			}
-			modifier = {
-				factor = 1.75
-				trait = humble
-			}
-			modifier = {
-				factor = 5
-				trait = craven
-			}
-			modifier = {
-				factor = 2
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 0.5
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 1.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = misguided_warrior
-			}
-			modifier = {
-				factor = 3
-				trait = deceitful
-			}
-			modifier = {
-				factor = 3
-				trait = kind
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2 
-		}
-		random = {
-			chance = 30
-			add_trait = craven
-			hidden_tooltip = {
-				character_event = { id = 38257 }
-		    }	
-	    }
-    }
-	
-	option = {
-		name = "EVTOPTBbattle_charges.2"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 5
-				trait = brave
-			}
-			modifier = {
-				factor = 2
-				trait = brilliant_strategist
-			}
-			modifier = {
-				factor = 1.5
-				trait = skilled_tactician
-			}
-			modifier = {
-				factor = 1.5
-				trait = proud
-			}
-			modifier = {
-				factor = 0.25
-				trait = craven
-			}
-			modifier = {
-				factor = 0.5
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 2
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 0.75
-				trait = trained_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 0.25
-				trait = misguided_warrior
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLECHARGE
-        hidden_tooltip = {
-		    random_list = {
-			    60 = {
-		            any_current_enemy = {
-		                limit = {
-			                at_location = ROOT
-			                in_command = yes
-			                in_battle = yes
-		 	                NOT = { any_current_enemy = { has_opinion_modifier = { who = PREV modifier = opinion_battle_duel_target } } }
-			            }
-			            hidden_tooltip = { 
-	          		        random_list = { 
-			                    25 = { character_event = { id = battle_charges.16 } }
-	        		            25 = { character_event = { id = battle_charges.17 } }
-			                    25 = { character_event = { id = battle_charges.18 } }
-		                        25 = { character_event = { id = battle_charges.19 } }
-			                } 
-			            }
-		            }
-		            prestige = 50
-				    add_trait = brave
-				    hidden_tooltip = {
-                        if = { 
-				    	    limit = { 
-						        NOT = { trait = brave } 
-						    } 
-					        character_event = {
-						        id = 38270 #Notify Brave
-					        }
-					    }
-				    }
-                    random = { 
-					    chance = 15
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-		            }
-                    troops = 0.05
-                    morale = 0.2
-				}
-			    40 = {
-                    random = { chance = 10 death = { death_reason = death_battle } }
-                    prestige = -50
-                    troops = -0.3
-                    morale = -0.2
-				}
-			}
-		}
-	}
-}
-
-#Battle charge 4
-character_event = {
-	id = battle_charges.3
-	desc = "EVTDESCbattle_charges.3"
-	picture = GFX_evt_battle3
-	border = GFX_event_normal_frame_war
-	
-	min_age = 14
-	capable_only = yes
-	prisoner = no
-	is_triggered_only = yes
-
-
-    trigger = {
-		NOT = { trait = misguided_warrior }
-		NOT = { trait = poor_warrior }
-        NOT = { trait = craven }
-        NOT = { trait = slothful }
-		OR = { 
-		    trait = skilled_tactician
-		    trait = brilliant_strategist
-		    martial = 10
-		}
-		in_command = yes
-        in_battle = yes
-	}
-
-    mean_time_to_happen = {
-		days = 1
-        modifier = {
-			factor = 0.25
-			trait = craven
-		}
-        modifier = {
-			factor = 0
-			trait = squire
-		}
-        modifier = {
-			factor = 2
-			trait = knight
-		}
-        modifier = {
-			factor = 0.25
-			trait = slothful
-		}
-        modifier = {
-			factor = 0.05
-			trait = imbecile
-		}
-        modifier = {
-			factor = 0.25
-			trait = slow
-		}
-        modifier = {
-			factor = 0.25
-			trait = poor_warrior
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 7 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 9 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 11 }
-		}
-        modifier = {
-			factor = 1.25
-			martial = 13
-		}
-        modifier = {
-			factor = 1.25
-			martial = 15
-		}
-        modifier = {
-			factor = 1.25
-			martial = 17
-		}
-        modifier = {
-			factor = 1.25
-			martial = 19
-		}
-        modifier = {
-			factor = 1.25
-			martial = 21
-		}
-		modifier = {
-			factor = 1.25
-			trait = brave
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_tactician
-		}
-		modifier = {
-			factor = 2
-			trait = brilliant_strategist
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_warrior
-		}
-		modifier = {
-			factor = 1.35
-			trait = master_warrior
-		}
-	}
-
-	option = {
-		name = "EVTOPTAbattle_charges.3"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 0.25
-				trait = brave
-			}
-			modifier = {
-				factor = 1.5
-				trait = slow
-			}
-			modifier = {
-				factor = 2
-				trait = imbecile
-			}
-			modifier = {
-				factor = 1.75
-				trait = humble
-			}
-			modifier = {
-				factor = 5
-				trait = craven
-			}
-			modifier = {
-				factor = 2
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 0.5
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 1.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = misguided_warrior
-			}
-			modifier = {
-				factor = 3
-				trait = deceitful
-			}
-			modifier = {
-				factor = 3
-				trait = kind
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2 
-		}
-		random = {
-			chance = 50
-			add_trait = craven
-			hidden_tooltip = {
-				character_event = { id = 38257 }
-		    }	
-	    }
-    }
-
-	option = {
-		name = "EVTOPTBbattle_charges.3"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 5
-				trait = brave
-			}
-			modifier = {
-				factor = 2
-				trait = brilliant_strategist
-			}
-			modifier = {
-				factor = 1.5
-				trait = skilled_tactician
-			}
-			modifier = {
-				factor = 1.5
-				trait = proud
-			}
-			modifier = {
-				factor = 0.25
-				trait = craven
-			}
-			modifier = {
-				factor = 0.5
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 2
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 0.75
-				trait = trained_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 0.25
-				trait = misguided_warrior
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLECHARGE
-        hidden_tooltip = {
-		    random_list = {
-			    75 = {
-		            any_current_enemy = {
-		                limit = {
-			                at_location = ROOT
-			                in_command = yes
-			                in_battle = yes
-		 	                NOT = { any_current_enemy = { has_opinion_modifier = { who = PREV modifier = opinion_battle_duel_target } } }
-			            }
-			            hidden_tooltip = { 
-	          		        random_list = { 
-			                    25 = { character_event = { id = battle_charges.16 } }
-	        		            25 = { character_event = { id = battle_charges.17 } }
-			                    25 = { character_event = { id = battle_charges.18 } }
-		                        25 = { character_event = { id = battle_charges.19 } }
-			                } 
-			            }
-		            }
-		            prestige = 50
-				    add_trait = brave
-				    hidden_tooltip = {
-                        if = { 
-				    	    limit = { 
-						        NOT = { trait = brave } 
-						    } 
-					        character_event = {
-						        id = 38270 #Notify Brave
-					        }
-					    }
-				    }
-                    random = { 
-					    chance = 5
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-		            }
-                    troops = 0.15
-                    morale = 0.25 
-				}
 			    25 = {
                     random = { chance = 15 death = { death_reason = death_battle } }
                     prestige = -100
-                    troops = -0.4
+                    troops = -0.3
                     morale = -0.3
 				}
 			}
 		}
-	}
-}
-
-#Battle charge 5
-character_event = {
-	id = battle_charges.4
-	desc = "EVTDESCbattle_charges.4"
-	picture = GFX_evt_orlando
-	border = GFX_event_normal_frame_war
-	
-	min_age = 14
-	capable_only = yes
-	prisoner = no
-	is_triggered_only = yes
-
-
-    trigger = {
-		NOT = { trait = misguided_warrior }
-		NOT = { trait = poor_warrior }
-        NOT = { trait = craven }
-        NOT = { trait = slothful }
-		OR = { 
-		    trait = skilled_tactician
-		    trait = brilliant_strategist
-		    martial = 12
-		}
-		in_command = yes
-        in_battle = yes
-	}
-
-    mean_time_to_happen = {
-		days = 1
-        modifier = {
-			factor = 0.25
-			trait = craven
-		}
-        modifier = {
-			factor = 0
-			trait = squire
-		}
-        modifier = {
-			factor = 2
-			trait = knight
-		}
-        modifier = {
-			factor = 0.25
-			trait = slothful
-		}
-        modifier = {
-			factor = 0.05
-			trait = imbecile
-		}
-        modifier = {
-			factor = 0.25
-			trait = slow
-		}
-        modifier = {
-			factor = 0.25
-			trait = poor_warrior
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 7 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 9 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 11 }
-		}
-        modifier = {
-			factor = 1.25
-			martial = 13
-		}
-        modifier = {
-			factor = 1.25
-			martial = 15
-		}
-        modifier = {
-			factor = 1.25
-			martial = 17
-		}
-        modifier = {
-			factor = 1.25
-			martial = 19
-		}
-        modifier = {
-			factor = 1.25
-			martial = 21
-		}
-		modifier = {
-			factor = 1.25
-			trait = brave
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_tactician
-		}
-		modifier = {
-			factor = 2
-			trait = brilliant_strategist
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_warrior
-		}
-		modifier = {
-			factor = 1.35
-			trait = master_warrior
-		}
-	}
-
-	option = {
-		name = "EVTOPTAbattle_charges.4"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 0.25
-				trait = brave
-			}
-			modifier = {
-				factor = 1.5
-				trait = slow
-			}
-			modifier = {
-				factor = 2
-				trait = imbecile
-			}
-			modifier = {
-				factor = 1.75
-				trait = humble
-			}
-			modifier = {
-				factor = 5
-				trait = craven
-			}
-			modifier = {
-				factor = 2
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 0.5
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 1.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = misguided_warrior
-			}
-			modifier = {
-				factor = 3
-				trait = deceitful
-			}
-			modifier = {
-				factor = 3
-				trait = kind
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2 
-		}
-		random = {
-			chance = 50
-			add_trait = craven
-			hidden_tooltip = {
-				character_event = { id = 38257 }
-		    }	
-	    }
-    }
-	
-	option = {
-		name = "EVTOPTBbattle_charges.4"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 5
-				trait = brave
-			}
-			modifier = {
-				factor = 2
-				trait = brilliant_strategist
-			}
-			modifier = {
-				factor = 1.5
-				trait = skilled_tactician
-			}
-			modifier = {
-				factor = 1.5
-				trait = proud
-			}
-			modifier = {
-				factor = 0.25
-				trait = craven
-			}
-			modifier = {
-				factor = 0.5
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 2
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 0.75
-				trait = trained_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 0.25
-				trait = misguided_warrior
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLECHARGE
-        hidden_tooltip = {
-		    random_list = {
-			    75 = {
-		            any_current_enemy = {
-		                limit = {
-			                at_location = ROOT
-			                in_command = yes
-			                in_battle = yes
-		 	                NOT = { any_current_enemy = { has_opinion_modifier = { who = PREV modifier = opinion_battle_duel_target } } }
-			            }
-			            hidden_tooltip = { 
-	          		        random_list = { 
-			                    25 = { character_event = { id = battle_charges.16 } }
-	        		            25 = { character_event = { id = battle_charges.17 } }
-			                    25 = { character_event = { id = battle_charges.18 } }
-		                        25 = { character_event = { id = battle_charges.19 } }
-			                } 
-			            }
-		            }
-		            prestige = 50
-				    add_trait = brave
-				    hidden_tooltip = {
-                        if = { 
-				    	    limit = { 
-						        NOT = { trait = brave } 
-						    } 
-					        character_event = {
-						        id = 38270 #Notify Brave
-					        }
-					    }
-				    }
-                    random = { 
-					    chance = 15
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-		            }
-                    troops = 0.25
-                    morale = 0.3 
-				}
-			    25 = {
-                    random = { chance = 15 death = { death_reason = death_battle } }
-                    prestige = -100
-                    troops = -0.75
-                    morale = -0.3
-				}
-			}
 		}
 	}
 }
 
-#Battle charge 6
-character_event = {
-	id = battle_charges.5
-	desc = "EVTDESCbattle_charges.3"
-	picture = GFX_evt_orlando
-	border = GFX_event_normal_frame_war
-	
-	min_age = 14
-	capable_only = yes
-	prisoner = no
-	is_triggered_only = yes
-
-
-    trigger = {
-		NOT = { trait = misguided_warrior }
-		NOT = { trait = poor_warrior }
-        NOT = { trait = craven }
-        NOT = { trait = slothful }
-		OR = { 
-		    trait = skilled_tactician
-		    trait = brilliant_strategist
-		    martial = 6
-		}
-		in_command = yes
-        in_battle = yes
-	}
-
-    mean_time_to_happen = {
-		days = 1
-        modifier = {
-			factor = 0.25
-			trait = craven
-		}
-        modifier = {
-			factor = 0
-			trait = squire
-		}
-        modifier = {
-			factor = 2
-			trait = knight
-		}
-        modifier = {
-			factor = 0.25
-			trait = slothful
-		}
-        modifier = {
-			factor = 0.05
-			trait = imbecile
-		}
-        modifier = {
-			factor = 0.25
-			trait = slow
-		}
-        modifier = {
-			factor = 0.25
-			trait = poor_warrior
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 7 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 9 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 11 }
-		}
-        modifier = {
-			factor = 1.25
-			martial = 13
-		}
-        modifier = {
-			factor = 1.25
-			martial = 15
-		}
-        modifier = {
-			factor = 1.25
-			martial = 17
-		}
-        modifier = {
-			factor = 1.25
-			martial = 19
-		}
-        modifier = {
-			factor = 1.25
-			martial = 21
-		}
-		modifier = {
-			factor = 1.25
-			trait = brave
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_tactician
-		}
-		modifier = {
-			factor = 2
-			trait = brilliant_strategist
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_warrior
-		}
-		modifier = {
-			factor = 1.35
-			trait = master_warrior
-		}
-	}
-
-	option = {
-		name = "EVTOPTAbattle_charges.3"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 0.25
-				trait = brave
-			}
-			modifier = {
-				factor = 1.5
-				trait = slow
-			}
-			modifier = {
-				factor = 2
-				trait = imbecile
-			}
-			modifier = {
-				factor = 1.75
-				trait = humble
-			}
-			modifier = {
-				factor = 5
-				trait = craven
-			}
-			modifier = {
-				factor = 2
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 0.5
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 1.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = misguided_warrior
-			}
-			modifier = {
-				factor = 3
-				trait = deceitful
-			}
-			modifier = {
-				factor = 3
-				trait = kind
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2 
-		}
-		random = {
-			chance = 30
-			add_trait = craven
-			hidden_tooltip = {
-				character_event = { id = 38257 }
-		    }	
-	    }
-    }
-	
-	option = {
-		name = "EVTOPTBbattle_charges.3"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 5
-				trait = brave
-			}
-			modifier = {
-				factor = 2
-				trait = brilliant_strategist
-			}
-			modifier = {
-				factor = 1.5
-				trait = skilled_tactician
-			}
-			modifier = {
-				factor = 1.5
-				trait = proud
-			}
-			modifier = {
-				factor = 0.25
-				trait = craven
-			}
-			modifier = {
-				factor = 0.5
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 2
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 0.75
-				trait = trained_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 0.25
-				trait = misguided_warrior
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLECHARGE
-        hidden_tooltip = {
-		    random_list = {
-			    60 = {
-		            any_current_enemy = {
-		                limit = {
-			                at_location = ROOT
-			                in_command = yes
-			                in_battle = yes
-		 	                NOT = { any_current_enemy = { has_opinion_modifier = { who = PREV modifier = opinion_battle_duel_target } } }
-			            }
-			            hidden_tooltip = { 
-	          		        random_list = { 
-			                    25 = { character_event = { id = battle_charges.16 } }
-	        		            25 = { character_event = { id = battle_charges.17 } }
-			                    25 = { character_event = { id = battle_charges.18 } }
-		                        25 = { character_event = { id = battle_charges.19 } }
-			                } 
-			            }
-		            }
-		            prestige = 50
-				    add_trait = brave
-				    hidden_tooltip = {
-                        if = { 
-				    	    limit = { 
-						        NOT = { trait = brave } 
-						    } 
-					        character_event = {
-						        id = 38270 #Notify Brave
-					        }
-					    }
-				    }
-                    random = { 
-					    chance = 10
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-		            }
-                    troops = 0.15
-                    morale = 0.3
-				}
-			    40 = {
-                    random = { chance = 15 death = { death_reason = death_battle } }
-                    prestige = -50
-                    troops = -0.35
-                    morale = -0.2
-				}
-			}
-		}
-	}
-}
-
-#Battle charge 7
-character_event = {
-	id = battle_charges.6
-	desc = "EVTDESCbattle_charges.6"
-	picture = GFX_evt_battle4
-	border = GFX_event_normal_frame_war
-	
-	min_age = 14
-	capable_only = yes
-	prisoner = no
-	is_triggered_only = yes
-
-
-    trigger = {
-		NOT = { trait = misguided_warrior }
-		NOT = { trait = poor_warrior }
-        NOT = { trait = craven }
-        NOT = { trait = slothful }
-		OR = { 
-		    trait = skilled_tactician
-		    trait = brilliant_strategist
-		    martial = 8
-		}
-		in_command = yes
-        in_battle = yes
-	}
-
-    mean_time_to_happen = {
-		days = 1
-        modifier = {
-			factor = 0.25
-			trait = craven
-		}
-        modifier = {
-			factor = 0
-			trait = squire
-		}
-        modifier = {
-			factor = 2
-			trait = knight
-		}
-        modifier = {
-			factor = 0.25
-			trait = slothful
-		}
-        modifier = {
-			factor = 0.05
-			trait = imbecile
-		}
-        modifier = {
-			factor = 0.25
-			trait = slow
-		}
-        modifier = {
-			factor = 0.25
-			trait = poor_warrior
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 7 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 9 }
-		}
-        modifier = {
-			factor = 0.75
-			NOT = { martial = 11 }
-		}
-        modifier = {
-			factor = 1.25
-			martial = 13
-		}
-        modifier = {
-			factor = 1.25
-			martial = 15
-		}
-        modifier = {
-			factor = 1.25
-			martial = 17
-		}
-        modifier = {
-			factor = 1.25
-			martial = 19
-		}
-        modifier = {
-			factor = 1.25
-			martial = 21
-		}
-		modifier = {
-			factor = 1.25
-			trait = brave
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_tactician
-		}
-		modifier = {
-			factor = 2
-			trait = brilliant_strategist
-		}
-		modifier = {
-			factor = 1.15
-			trait = skilled_warrior
-		}
-		modifier = {
-			factor = 1.35
-			trait = master_warrior
-		}
-	}
-
-	option = {
-		name = "EVTOPTAbattle_charges.6"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 0.25
-				trait = brave
-			}
-			modifier = {
-				factor = 1.5
-				trait = slow
-			}
-			modifier = {
-				factor = 2
-				trait = imbecile
-			}
-			modifier = {
-				factor = 1.75
-				trait = humble
-			}
-			modifier = {
-				factor = 5
-				trait = craven
-			}
-			modifier = {
-				factor = 2
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 0.5
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 1.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = misguided_warrior
-			}
-			modifier = {
-				factor = 3
-				trait = deceitful
-			}
-			modifier = {
-				factor = 3
-				trait = kind
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2 
-		}
-		random = {
-			chance = 30
-			add_trait = craven
-			hidden_tooltip = {
-				character_event = { id = 38257 }
-		    }	
-	    }
-    }
-	
-	option = {
-		name = "EVTOPTBbattle_charges.6"
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 5
-				trait = brave
-			}
-			modifier = {
-				factor = 2
-				trait = brilliant_strategist
-			}
-			modifier = {
-				factor = 1.5
-				trait = skilled_tactician
-			}
-			modifier = {
-				factor = 1.5
-				trait = proud
-			}
-			modifier = {
-				factor = 0.25
-				trait = craven
-			}
-			modifier = {
-				factor = 0.5
-				trait = arbitrary
-			}
-			modifier = {
-				factor = 2
-				trait = skilled_warrior
-			}
-			modifier = {
-				factor = 2
-				trait = master_warrior
-			}
-			modifier = {
-				factor = 0.75
-				trait = trained_warrior
-			}
-			modifier = {
-				factor = 0.5
-				trait = poor_warrior
-			}
-			modifier = {
-				factor = 0.25
-				trait = misguided_warrior
-			}
-		}
-		custom_tooltip = TOOLTIPBATTLECHARGE
-        hidden_tooltip = {
-		    random_list = {
-			    75 = {
-		            any_current_enemy = {
-		                limit = {
-			                at_location = ROOT
-			                in_command = yes
-			                in_battle = yes
-		 	                NOT = { any_current_enemy = { has_opinion_modifier = { who = PREV modifier = opinion_battle_duel_target } } }
-			            }
-			            hidden_tooltip = { 
-	          		        random_list = { 
-			                    25 = { character_event = { id = battle_charges.16 } }
-	        		            25 = { character_event = { id = battle_charges.17 } }
-			                    25 = { character_event = { id = battle_charges.18 } }
-		                        25 = { character_event = { id = battle_charges.19 } }
-			                } 
-			            }
-		            }
-		            prestige = 50
-				    add_trait = brave
-				    hidden_tooltip = {
-                        if = { 
-				    	    limit = { 
-						        NOT = { trait = brave } 
-						    } 
-					        character_event = {
-						        id = 38270 #Notify Brave
-					        }
-					    }
-				    }
-                    random = { 
-					    chance = 10
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-		            }
-                    troops = 0.15
-                    morale = 0.25 
-				}
-			    40 = {
-                    random = { chance = 15 death = { death_reason = death_battle } }
-                    prestige = -50
-                    troops = -0.475
-                    morale = -0.2
-				}
-			}
-		}
-	}
-}
 
 #Battle goes wrong 1
 character_event = {
@@ -1793,11 +362,13 @@ character_event = {
 				trait = kind
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2
-            troops = -0.25 
+	custom_tooltip = { 
+		text = TOOLTIPBATTLERETREAT
+			hidden_tooltip = {
+				prestige = -15
+				morale = -0.2
+				troops = -0.25 
+			}
 		}
 		random = {
 			chance = 30
@@ -1858,44 +429,32 @@ character_event = {
 				trait = misguided_warrior
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLEFIGHTBACK
-        hidden_tooltip = {
-		    random_list = {
-			    40 = {
-		            prestige = 35
-					add_trait = brave
-				    hidden_tooltip = {
-					    if = { 
-					        limit = { 
-						        NOT = { trait = brave } 
-						    } 
-					        character_event = {
-						        id = 38270 #Notify Brave
-					        }
-					    }
-				    }
-                    random = { 
-					    chance = 10
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-			        }
-                    troops = 0.2
-                    morale = 0.35 
-		        }
-		        60 = {
-                    random = { chance = 30 death = { death_reason = death_battle killer = FROM } }
-                    prestige = -25
-                    troops = -0.55
-                    morale = -0.3
+	custom_tooltip = { 
+			text = TOOLTIPBATTLEFIGHTBACK
+			hidden_tooltip = {
+				random_list = {
+					40 = {
+						prestige = 35
+						add_trait = brave
+						hidden_tooltip = {
+							if = { 
+								limit = { 
+									NOT = { trait = brave } 
+								} 
+								character_event = {
+									id = 38270 #Notify Brave
+								}
+							}
+						}
+						troops = 0.2
+						morale = 0.35 
+					}
+					60 = {
+						random = { chance = 30 death = { death_reason = death_battle killer = FROM } }
+						prestige = -25
+						troops = -0.55
+						morale = -0.3
+					}
 				}
 			}
 		}
@@ -1915,7 +474,7 @@ character_event = {
 	desc = "EVTDESCbattle_charges.17"
 
 	is_triggered_only = yes
-	picture = "GFX_evt_battle3"
+	picture = "GFX_evt_battle"
 	border = "GFX_event_normal_frame_war"
 
 	trigger = {
@@ -1983,11 +542,13 @@ character_event = {
 				trait = kind
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2
-            troops = -0.25 
+		custom_tooltip = { 
+			text = TOOLTIPBATTLERETREAT
+			hidden_tooltip = {
+				prestige = -15
+				morale = -0.2
+				troops = -0.25 
+			}
 		}
 		random = {
 			chance = 30
@@ -2048,7 +609,8 @@ character_event = {
 				trait = misguided_warrior
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLEFIGHTBACK
+	custom_tooltip = { 
+		text = TOOLTIPBATTLEFIGHTBACK
         hidden_tooltip = {
 		    random_list = {
 		        30 = {
@@ -2064,20 +626,6 @@ character_event = {
 					        }
 					    }
 				    }
-                    random = { 
-					    chance = 10
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-			        }
                     troops = 0.25
                     morale = 0.45 
 				}
@@ -2089,6 +637,7 @@ character_event = {
 				}
 			}
 		}
+	}
 	}
 	
 	option = {
@@ -2105,7 +654,7 @@ character_event = {
 	desc = "EVTDESCbattle_charges.18"
 
 	is_triggered_only = yes
-	picture = "GFX_evt_battle2"
+	picture = "GFX_evt_battle"
 	border = "GFX_event_normal_frame_war"
 
 	trigger = {
@@ -2173,11 +722,13 @@ character_event = {
 				trait = kind
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-	    	prestige = -15
-            morale = -0.2
-            troops = -0.25 
+	custom_tooltip = { 
+			text = TOOLTIPBATTLERETREAT
+			hidden_tooltip = {
+				prestige = -15
+				morale = -0.2
+				troops = -0.25 
+			}
 		}
 		random = {
 			chance = 30
@@ -2238,44 +789,32 @@ character_event = {
 				trait = misguided_warrior
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLEFIGHTBACK
-        hidden_tooltip = {
-		    random_list = {
-			    50 = {
-		            prestige = 50
-					add_trait = brave
-				    hidden_tooltip = {
-					    if = { 
-					        limit = { 
-						        NOT = { trait = brave } 
-						    } 
-					        character_event = {
-						        id = 38270 #Notify Brave
-					        }
-					    }
-				    }
-                    random = { 
-						chance = 5
-                        add_trait = war_hero
-				        hidden_tooltip = {
-					        if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-			        }    
-                    troops = 0.2
-                    morale = 0.35 
-				}
-			    50 = {
-                    random = { chance = 20 death = { death_reason = death_battle killer = FROM } }
-                    prestige = -25
-                    troops = -0.6
-                    morale = -0.3
+	custom_tooltip = { 
+		text = TOOLTIPBATTLEFIGHTBACK
+			hidden_tooltip = {
+				random_list = {
+					50 = {
+						prestige = 50
+						add_trait = brave
+						hidden_tooltip = {
+							if = { 
+								limit = { 
+									NOT = { trait = brave } 
+								} 
+								character_event = {
+									id = 38270 #Notify Brave
+								}
+							}
+						}  
+						troops = 0.2
+						morale = 0.35 
+					}
+					50 = {
+						random = { chance = 20 death = { death_reason = death_battle killer = FROM } }
+						prestige = -25
+						troops = -0.6
+						morale = -0.3
+					}
 				}
 			}
 		}
@@ -2295,7 +834,7 @@ character_event = {
 	desc = "EVTDESCbattle_charges.19"
 
 	is_triggered_only = yes
-	picture = "GFX_evt_battle4"
+	picture = "GFX_evt_battle"
 	border = "GFX_event_normal_frame_war"
 
 	trigger = {
@@ -2363,11 +902,13 @@ character_event = {
 				trait = kind
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLERETREAT
-		hidden_tooltip = {
-		    prestige = -15
-            morale = -0.2
-            troops = -0.25 
+		custom_tooltip = { 
+			text = TOOLTIPBATTLERETREAT
+			hidden_tooltip = {
+				prestige = -15
+				morale = -0.2
+				troops = -0.25 
+			}
 		}
 		random = {
 			chance = 30
@@ -2428,7 +969,8 @@ character_event = {
 				trait = misguided_warrior
 			}
 		}
-		custom_tooltip = TOOLTIPBATTLEFIGHTBACK
+	custom_tooltip = { 
+		text = TOOLTIPBATTLEFIGHTBACK
         hidden_tooltip = {
 		    random_list = {
 			    40 = {
@@ -2444,20 +986,6 @@ character_event = {
 					        }
 					    }
 				    }
-                    random = { 
-					    chance = 15
-                        add_trait = war_hero
-				        hidden_tooltip = {
-				        	if = { 
-					            limit = { 
-						            NOT = { trait = war_hero } 
-						        } 
-					            character_event = {
-						            id = tptt_traits.94 #Notify War Hero
-					            }
-					        }
-				        }
-			        }
                     troops = 0.2
                     morale = 0.45 
 				}
@@ -2468,6 +996,7 @@ character_event = {
                     morale = -0.2
 				}
 			}
+		}
 		}
 	}
 	

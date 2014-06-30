@@ -1,0 +1,470 @@
+# # Decisions for Additional Objectives Mod - by JGCrusader
+
+# decisions = {
+	
+	# reveal_plots_dec = {
+		# potential = {
+			
+			# has_ambition = obj_uncover_plot
+				
+			# hidden_tooltip = {
+				# NOT = { has_character_modifier = plot_reveal_timer }
+			# }
+		# }
+			
+		# allow = {
+			# any_backed_character = {
+				# NOT = { is_liege_of = ROOT }
+				# NOT = { character = ROOT }
+				# OR = {
+					# has_plot = plot_gain_vassal_title
+					# has_plot = plot_kill_character
+					# has_plot = plot_kill_spouse
+					# has_plot = plot_weaken_fellow_vassal
+					# has_plot = plot_gain_liege_title
+					# has_plot = plot_gain_fellow_vassal_title
+					# has_plot = plot_seduce_liege
+					# has_plot = plot_seduce_for_men
+					# has_plot = plot_fabricate_evidence_betrayal
+					# has_plot = plot_fabricate_evidence_betrayal_same_realm
+					# has_plot = plot_fabricate_treason
+					# has_plot = plot_fabricate_treason_liege
+					# has_plot = plot_kidnap_character
+					# has_plot = plot_kidnap_liege
+					# has_plot = plot_instigate_revolt
+				# }
+				# NOT = { has_character_flag = event7040 } 
+			# }
+				
+		# }
+			
+		# effect = {
+			# any_backed_character = {
+				# if = {
+					# limit = {
+						# NOT = { is_liege_of = ROOT }
+						# NOT = { character = ROOT }
+						# OR = {
+							# has_plot = plot_gain_vassal_title
+							# has_plot = plot_kill_character
+							# has_plot = plot_kill_spouse
+							# has_plot = plot_weaken_fellow_vassal
+							# has_plot = plot_gain_liege_title
+							# has_plot = plot_gain_fellow_vassal_title
+							# has_plot = plot_seduce_liege
+							# has_plot = plot_seduce_for_men
+							# has_plot = plot_fabricate_evidence_betrayal
+							# has_plot = plot_fabricate_evidence_betrayal_same_realm
+							# has_plot = plot_fabricate_treason
+							# has_plot = plot_fabricate_treason_liege
+							# has_plot = plot_kidnap_character
+							# has_plot = plot_kidnap_liege
+							# has_plot = plot_instigate_revolt
+						# }
+						# NOT = { has_character_flag = event7040 } 
+					# }
+					
+					# opinion = {
+						# who = ROOT
+						# modifier = revealed_plot
+						# months = 120
+					# }
+			
+					# set_character_flag = event7040  # Marked a plotter as having his plot revealed
+			
+					# character_event = { id = uncoverevents.3 days = 1 tooltip = uncovered_tooltip }
+					# plot_target_char = {
+						# character_event = { id = uncoverevents.4 days = 1 tooltip = tipped_off_tooltip }
+					# }
+				# }
+			# }
+			
+			# add_trait = counterspy
+			# hidden_tooltip = {	
+				# add_character_modifier = {
+					# name = "plot_reveal_timer"
+					# duration = 20
+					# hidden = yes
+				# }
+			# }
+		# }
+			
+		# ai_will_do = {
+			# factor = 0
+		# }
+	# }
+		
+		
+	# request_legit_for_son = {
+		# potential = {
+			# has_ambition = obj_bastard_legit
+			# is_female = yes
+			# any_child = {
+				# is_female = no
+				# trait = bastard
+				# father = {
+					# is_alive = yes
+					# is_ruler = yes
+					# is_liege_of = PREV
+					# dynasty = PREV
+				# }
+			# }
+			
+			# hidden_tooltip = {
+				# NOT = { has_character_modifier = bastard_legit_request_timer }
+			# }
+		# }
+			
+		# allow = {
+			# any_child = {
+				# age = 10
+				# is_female = no
+				# trait = bastard
+				# father = {
+					# is_alive = yes
+					# is_ruler = yes
+					# is_liege_of = PREV
+					# dynasty = PREV
+				# }
+			# }
+		# }
+			
+		# effect = {
+			# any_child = {
+				# limit = {
+					# age = 10
+					# is_female = no
+					# trait = bastard
+					# father = {
+						# is_alive = yes
+						# is_ruler = yes
+						# is_liege_of = PREV
+						# dynasty = PREV
+					# }
+				# }
+				# character_event = { id = bastardevents.0 days = 1 tooltip = bastard_chain_tooltip }
+			# }
+			
+			# hidden_tooltip = {
+				# add_character_modifier = {
+					# name = "bastard_legit_request_timer"
+					# duration = 3655
+					# hidden = yes
+				# }
+			# }
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+				# modifier = {
+					# factor = 0
+					# trait = content
+				# }
+		# }
+	# }
+	
+	# #There are events for court jesters, but the AI never appoints any so...
+	# employ_court_jester = {
+		# potential = {
+			# is_ruler = yes
+			# is_feudal = yes
+			# ai = yes
+			# higher_tier_than = DUKE
+			# religion_group = christian
+			# NOT = {
+				# any_vassal = { has_minor_title = title_court_jester }
+				# any_courtier = { has_minor_title = title_court_jester }
+			# }
+		# }
+		# allow = {	
+			# wealth = 10
+		# }
+		# effect = {
+			# wealth = -10
+			# create_random_diplomat = {
+				# female = no
+				# random_traits = yes
+				# trait = content
+				# dynasty = random
+				# attributes = {
+					# diplomacy = 1
+					# martial = 1
+					# stewardship = 1
+					# intrigue = 1
+					# learning = 1
+				# }
+			# }
+			# new_character = {
+				# give_minor_title = title_court_jester
+			# }
+		# }
+		# revoke_allowed = {
+			# always = no
+		# }
+		# ai_will_do = {
+			# factor = 1
+			
+			# modifier = {
+				# factor = 0
+				# NOT = { scaled_wealth = 4.0 }
+			# }
+			
+			# modifier = {
+				# factor = 0
+				# NOT = { wealth = 150 }
+			# }
+			
+			# modifier = {
+				# factor = 0
+				# war = yes
+			# }
+		# }
+	# }
+	
+	# # Friend Favor Requests
+	# get_married_help = {
+		# potential = {
+			# has_ambition = obj_get_married
+			# # OR = {
+			# # 	tier = baron
+			# #	is_ruler = no
+			# # }
+			# liege = {
+				# OR = {
+					# has_opinion_modifier = { who = ROOT modifier = opinion_friend }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_mentor }
+				# }
+			# }
+			# NOT = { has_character_modifier = friend_help_request_timer }
+		# }
+		
+		# allow = {
+			# NOT = { trait = bastard }
+			# NOT = { has_minor_title = title_regent }
+			# is_betrothed = no
+			# liege = {
+				# NOT = { is_close_relative = ROOT }
+			# }
+			# NOT = { dynasty = 0 }
+		# }
+		
+		# effect = {
+			# character_event = { id = friendfavors.0 tooltip = friend_favor_begin_tooltip }
+			# add_character_modifier = {
+				# name = friend_help_request_timer
+				# duration = 3655
+				# hidden = yes
+			# }
+		# }
+		
+		# revoke_allowed = {
+			# always = no
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+			
+			# modifier = {
+				# random = 5
+				# factor = 0
+			# }
+		# }
+	# }
+	
+	# church_career_help = {
+		# potential = {
+			# has_ambition = obj_church_career
+			# religion = catholic
+			# liege = {
+				# OR = {
+					# has_opinion_modifier = { who = ROOT modifier = opinion_friend }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_mentor }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_lover }
+				# }
+			# }
+			# NOT = { has_character_modifier = friend_help_request_timer }
+		# }
+		
+		# allow = {
+			# liege = {
+				# religion = catholic
+				# is_heretic = no
+				# any_realm_lord = {
+					# is_priest = yes
+					# trait = incapable
+				# }
+			# }
+		# }
+		
+		# effect = {
+			# character_event = { id = friendfavors.2 tooltip = friend_favor_begin_tooltip }
+			# add_character_modifier = {
+				# name = friend_help_request_timer
+				# duration = 3655
+				# hidden = yes
+			# }
+		# }
+		
+		# revoke_allowed = {
+			# always = no
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+			
+			# modifier = {
+				# random = 15
+				# factor = 0
+			# }
+		# }
+	# }
+	
+	# mentor_child_help = {
+		# potential = {
+			# OR = {
+				# has_ambition = obj_ward_liege_child
+				# has_ambition = obj_mentor_liege_child
+			# }
+			# liege = {
+				# OR = {
+					# has_opinion_modifier = { who = ROOT modifier = opinion_friend }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_mentor }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_lover }
+				# }
+			# }
+			# NOT = { has_character_modifier = friend_help_request_timer }
+		# }
+		
+		# allow = {
+			# NOT = {
+				# any_ward = {
+					# is_alive = yes
+				# }
+			# }
+			# liege = {
+				# any_child = {
+					# age = 6
+					# NOT = { age = 16 }
+				# }
+			# }
+		# }
+		
+		# effect = {
+			# character_event = { id = friendfavors.4 tooltip = friend_favor_begin_tooltip }
+			# add_character_modifier = {
+				# name = friend_help_request_timer
+				# duration = 3655
+				# hidden = yes
+			# }
+		# }
+		
+		# revoke_allowed = {
+			# always = no
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+			
+			# modifier = {
+				# random = 10
+				# factor = 0
+			# }
+		# }
+	# }
+	
+	# amass_wealth_help = {
+		# potential = {
+			# has_ambition = obj_amass_wealth
+			# liege = {
+				# OR = {
+					# has_opinion_modifier = { who = ROOT modifier = opinion_friend }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_mentor }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_lover }
+				# }
+			# }
+			# NOT = { has_character_modifier = friend_help_request_timer }
+		# }
+		
+		# allow = {
+			# liege = {
+				# scaled_wealth = 0.5
+				# OR = {
+					# has_opinion_modifier = { who = ROOT modifier = opinion_friend }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_mentor }
+				# }
+			# }
+		# }
+		
+		# effect = {
+			# character_event = { id = friendfavors.8 tooltip = friend_favor_begin_tooltip }
+			# add_character_modifier = {
+				# name = friend_help_request_timer
+				# duration = 3655
+				# hidden = yes
+			# }
+		# }
+		
+		# revoke_allowed = {
+			# always = no
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+			
+			# modifier = {
+				# NOT = { wealth = 100 }
+				# factor = 0
+			# }
+			
+			# modifier = {
+				# random = 25
+				# factor = 0
+			# }
+		# }
+	# }
+	
+	# forced_peace_help = {
+		# potential = {
+			# war = yes
+			# independent = no
+			# liege = {
+				# OR = {
+					# has_opinion_modifier = { who = ROOT modifier = opinion_friend }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_mentor }
+					# has_opinion_modifier = { who = ROOT modifier = opinion_lover }
+				# }
+			# }
+			# NOT = { has_character_modifier = friend_help_request_timer }
+		# }
+		
+		# allow = {
+			# any_current_enemy = {
+				# same_realm = ROOT
+				# any_war={defender={character=ROOT}}
+			# }
+		# }
+		
+		# effect = {
+			# character_event = { id = friendfavors.13 tooltip = friend_favor_begin_tooltip }
+			# add_character_modifier = {
+				# name = friend_help_request_timer
+				# duration = 3655
+				# hidden = yes
+			# }
+		# }
+		
+		# revoke_allowed = {
+			# always = no
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+			
+			# modifier = {
+				# random = 5
+				# factor = 0
+			# }
+		# }
+	# }
+	
+# }
