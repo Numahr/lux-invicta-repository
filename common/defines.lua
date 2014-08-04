@@ -1065,44 +1065,44 @@ NAI =
 
 NFrontend = 
 {
-	CAMERA_LOOKAT_X = 1850.0, 			-- Rotation point in main menu v12 vanilla = 790
+	CAMERA_LOOKAT_X = 2750.0, 			-- Rotation point in main menu v12 vanilla = 790 now 1850 v15 2750 gagnes
 	CAMERA_LOOKAT_Y = 25.0,
-	CAMERA_LOOKAT_Z = 550.0, --v12 vanilla = 1000
-	CAMERA_LOOKAT_SETTINGS_X = 1280.0,  -- Rotation point in settings --v12 1280
+	CAMERA_LOOKAT_Z = 1200.0, --v12 vanilla = 1000 v15 1200
+	CAMERA_LOOKAT_SETTINGS_X = 800.0,  -- Rotation point in settings --v12 1280
 	CAMERA_LOOKAT_SETTINGS_Y = 0.0,		-- Y is height
-	CAMERA_LOOKAT_SETTINGS_Z = 850.0, --v12 648
-	CAMERA_START_X = 1900.0,				-- Initial position in main menu
+	CAMERA_LOOKAT_SETTINGS_Z = 1400.0, --v12 850, old. 648, vanilla
+	CAMERA_START_X = 2750.0,				-- Initial position in main menu v15 gagnes 2750
 	CAMERA_START_Y = 100.0,				-- Y is height
-	CAMERA_START_Z = 200.0,
-	CAMERA_END_X = 1300.0,				-- Move to position in main menu v12 790 default
+	CAMERA_START_Z = 900.0, --v15 below gagnes (1200)
+	CAMERA_END_X = 800.0,				-- Move to position in main menu v12 790 default now 1225 v15
 	CAMERA_END_Y = 200.0, --v12 500 default
-	CAMERA_END_Z = 700.0, --v12 600 default
-	CAMERA_MIN_DIST_FOR_ROTATE = 800.0, -- Controls when rotation starts. When camera is close enought it starts v12 prev 800?
-	TIME_FROZEN = 2.0,  				-- Time before initial animation starts (some deylay here so it should NOT be 0, then the animation starts before you can see it)
+	CAMERA_END_Z = 1200.0, --v12 600 default v15 1200
+	CAMERA_MIN_DIST_FOR_ROTATE = 1500.0, -- Controls when rotation starts. When camera is close enought it starts v12 prev 800?
+	TIME_FROZEN = 4.0,  				-- Time before initial animation starts (some deylay here so it should NOT be 0, then the animation starts before you can see it)
 	TIME_UNTIL_ROTATE = 2.5, 			-- Time when rotation start (from begining of time)
-	CAMERA_SPEED_START = 0.01,  			-- Initial animation speed v12 previously 0.04?
+	CAMERA_SPEED_START = 0.05,  			-- Initial animation speed v12 previously 0.04?
 	CAMERA_SPEED_ROTATE = 0.005,			-- Rotation speed
 	GUI_MOVE_SPEED = 300,				-- How fast sliding gui objects move ( pixels/s ) v12 300 default (stuff like the new game menu's)
 	
 	FADE_IN_DONE_TIME = 3, --v12  2.2 default
 	GUI_START_MOVE_TIME = 2.5,
-	CAMERA_START_MOVE_TIME = 4.0, --v12 3.0 default
+	CAMERA_START_MOVE_TIME = 5.0, --v12 3.0 default
 	
-	CAMERA_SPEED_IN_MENUS = 0.03, --v12 0.4 default - the sweeping speed
+	CAMERA_SPEED_IN_MENUS = 0.01, --v12 0.4 default - the sweeping speed
 	
-	FRONTEND_POS_X = 1425.0, -- v12 790 default
-	FRONTEND_POS_Y = 115.0, -- v12 500 default
-	FRONTEND_POS_Z = 750.0, -- v12 600 default
-	FRONTEND_LOOK_X = 1280.0,--v12 790 default
-	FRONTEND_LOOK_Y = 35.0,  --v12 0 default
-	FRONTEND_LOOK_Z = 865.0,  --v12 1000 default
+	FRONTEND_POS_X = 800.0, -- v12 790 default now 1425
+	FRONTEND_POS_Y = 200.0, -- v12 500 default now 115
+	FRONTEND_POS_Z = 1200.0, -- v12 600 default now 750
+	FRONTEND_LOOK_X = 800.0,--v12 790 default now 1280
+	FRONTEND_LOOK_Y = 35.0,  --v12 0 default no 35
+	FRONTEND_LOOK_Z = 1400.0,  --v12 1000 default now 865
 	
-	SETTINGS_POS_X = 1300.0,
-	SETTINGS_POS_Y = 200.0,
-	SETTINGS_POS_Z = 700.0,
-	SETTINGS_LOOK_X = 1280.0,
-	SETTINGS_LOOK_Y = 0.0,		
-	SETTINGS_LOOK_Z = 900.0,
+	SETTINGS_POS_X = 800.0, -- v15 vanilla 1300
+	SETTINGS_POS_Y = 200.0, -- v15 vanilla 200
+	SETTINGS_POS_Z = 1200.0, --v15 vanilla 700
+	SETTINGS_LOOK_X = 800.0, -- v15 vanilla 1280
+	SETTINGS_LOOK_Y = 35.0,		-- v15 vanilla 0
+	SETTINGS_LOOK_Z = 1400.0, -- v15 vanilla 900
 	
 	MP_OPTIONS_POS_X = 360.0,
 	MP_OPTIONS_POS_Y = 200.0,
