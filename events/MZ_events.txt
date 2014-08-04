@@ -62,17 +62,73 @@ character_event = {
 		piety = -10
 	}
 }
-
-#####Rebuild a local shrine?
-character_event = {
-	id = VIETnam.8
-	title = "EVTNAME1000094002"
-	desc = "EVTDESC1000094002"
-	picture = "GFX_evt_burning_house_muslim"
+namespace = rebuild_shrine
+#Following event chain is rewritten from VIETnam.8 single event
+#People request that local shrine be rebuilt.
+province_event = {
+	id = rebuild_shrine.1
+	hide_window = yes
 	
 	trigger = {
-		religion_group = zoroastrian_group
-		any_demesne_province = {
+		owner = {
+			religion_group = zoroastrian_group
+		}
+		OR = {
+			religion_group = bud_group
+			religion_group = indian_group
+			religion_group = indohelen_group
+			religion_group = mand_group
+			religion_group = yazd_group
+			religion = confucian
+			religion = lubu
+			religion = tao
+			religion = nestorian
+			religion = docetist
+			religion = iconoclast
+			religion = mani
+			religion = sunni
+			religion = ashari
+			religion = athari
+			religion = maturidi
+			religion = murjiah
+			religion = zahiri
+			religion = shiite
+			religion = kharijite
+			religion = qarmatian
+			religion = sufi
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 300
+		modifier = {
+			factor = 0.8
+			owner = {
+				trait = kind
+			}
+		}
+		modifier = {
+			factor = 0.7
+			owner = {
+				trait = charitable
+			}
+		}
+		modifier = {
+			factor = 0.6
+			owner = {
+				trait = tolerant
+			}
+		}
+		modifier = {
+			factor = 1.4
+			owner = {
+				trait = zealous
+			}
+		}
+	}
+	#Rebuild shrine (non-Christian, non_Muslim)
+	option = {
+		trigger = {
 			OR = {
 				religion_group = bud_group
 				religion_group = indian_group
@@ -82,33 +138,115 @@ character_event = {
 				religion = confucian
 				religion = lubu
 				religion = tao
-				religion = nestorian
-				religion = docetist
-				religion = iconoclast
 				religion = mani
 			}
 		}
-	}
-	mean_time_to_happen = {
-		months = 300
-		
-		modifier = {
-			factor = 0.8
-			trait = kind
-		}
-		modifier = {
-			factor = 0.7
-			trait = charitable
-		}
-		modifier = {
-			factor = 0.6
-			trait = tolerant
-		}
-		modifier = {
-			factor = 1.4
-			trait = zealous
+		owner = {
+			character_event = {
+				id = rebuild_shrine.2
+			}
 		}
 	}
+	#Rebuild church
+	option = {
+		trigger = {
+			OR = {
+				religion = nestorian
+				religion = docetist
+				religion = iconoclast
+			}
+		}
+		owner = {
+			character_event = {
+				id = rebuild_shrine.3
+			}
+		}
+	}
+	#Rebuild mosque
+	option = {
+		trigger = {
+			OR = {
+				religion = sunni
+				religion = ashari
+				religion = athari
+				religion = maturidi
+				religion = murjiah
+				religion = zahiri
+				religion = shiite
+				religion = kharijite
+				religion = qarmatian
+				religion = sufi
+			}
+		}
+		owner = {
+			character_event = {
+				id = rebuild_shrine.4
+			}
+		}
+	}
+}
+###Rebuild a local shrine?
+character_event = {
+	id = rebuild_shrine.2
+	title = EVTNAMErs2
+	desc = EVTDESCrs2
+	picture = GFX_evt_burning_house_zoroastrian_group
+	
+	is_triggered_only = yes
+	option = {
+		name = "EVTOPTA1000094002"
+		wealth = -75
+		piety = 20
+		add_character_modifier = {
+			name = zoroastrian_tolerance
+			duration = 365
+			}
+	}
+	option = {
+		name = "EVTOPTB1000094002"
+		random_list = {
+			80 = {}
+			20 = {
+				add_trait = cruel
+			}
+		}
+	}
+}
+###Rebuild a local church?
+character_event = {
+	id = rebuild_shrine.3
+	title = EVTNAMErs3
+	desc = EVTDESCrs3
+	picture = GFX_evt_burning_house
+	
+	is_triggered_only = yes
+	option = {
+		name = "EVTOPTA1000094002"
+		wealth = -75
+		piety = 20
+		add_character_modifier = {
+			name = zoroastrian_tolerance
+			duration = 365
+			}
+	}
+	option = {
+		name = "EVTOPTB1000094002"
+		random_list = {
+			80 = {}
+			20 = {
+				add_trait = cruel
+			}
+		}
+	}
+}
+#####Rebuild a local mosque?
+character_event = {
+	id = rebuild_shrine.4
+	title = EVTNAMErs4
+	desc = EVTDESCrs4
+	picture = GFX_evt_burning_house_muslim
+	
+	is_triggered_only = yes
 	option = {
 		name = "EVTOPTA1000094002"
 		wealth = -75
