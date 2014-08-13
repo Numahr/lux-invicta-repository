@@ -16298,7 +16298,7 @@ narrative_event = {
 	}
 	
 	mean_time_to_happen = { 
-		years = 1200
+		years = 3000
 		modifier = {
 			factor = 1.50
 			ai = no
@@ -16450,4 +16450,544 @@ narrative_event = {
 		name = "EVTOPTCluxchosen.1"
 		trigger = { not = { character = from } NOT = { religion =  FROM } }
 	}
+}
+
+namespace = lux_childhorses
+
+# Teaching a child to ride
+# Altaic child is now old enough for their first horse
+character_event = {
+	id = lux_childhorses.700
+	desc = "EVTDESCHORSES700"
+	picture = GFX_evt_altaic_camp
+	
+	is_triggered_only = yes
+	min_age = 12
+	max_age = 14
+	only_capable = yes
+	prisoner = no
+	
+	trigger = {
+		NOT = { has_character_flag = flag_first_horse }
+		culture_group = altaic
+		liege = {
+			culture_group = altaic
+			prisoner = no
+			NOT = { trait = incapable }
+			any_child = { character = ROOT }
+		}
+	}
+	
+	option = {
+		name = "EVTOPTAHORSES700"
+		set_character_flag = flag_first_horse
+		liege = { character_event = { id = lux_childhorses.701 tooltip = "EVTTOOLTIPHORSES701" } }
+	}
+}
+
+character_event = {
+	id = lux_childhorses.701
+	desc = "EVTDESCHORSES701"
+	picture = GFX_evt_altaic_camp
+	is_triggered_only = yes
+	
+	# Only the wildest stallion will do
+	option = {
+		trigger = { wealth = 25 }
+		name = "EVTOPTAHORSES701"
+		wealth = -25
+		FROM = { hidden_tooltip = { character_event = { id = lux_childhorses.702 } } }
+		ai_chance = {
+			factor = 25
+			modifier = {
+				factor = 2
+				trait = proud
+			}
+			modifier = {
+				factor = 0.5
+				trait = humble
+			}
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+			modifier = {
+				factor = 0.5
+				trait = content
+			}
+			modifier = {
+				factor = 2
+				trait = wroth
+			}
+			modifier = {
+				factor = 0.5
+				trait = patient
+			}
+			modifier = {
+				factor = 4
+				FROM = { trait = strong }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = weak }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 4
+				FROM = { trait = brave }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = craven }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = dwarf }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = clubfooted }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = hunchback }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { trait = ill }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = wounded }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = maimed }
+				NOT = { trait = lunatic }
+				NOT = { trait = cruel }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { is_female = yes }
+			}
+		}
+	}
+	
+	# A gentle mare, easily ridden
+	option = {
+		trigger = { wealth = 25 }
+		name = "EVTOPTBHORSES701"
+		FROM = { hidden_tooltip = { character_event = { id = lux_childhorses.708 } } }
+		wealth = -25
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 2
+				trait = craven
+			}
+			modifier = {
+				factor = 0.5
+				trait = brave
+			}
+			modifier = {
+				factor = 2
+				trait = patient
+			}
+			modifier = {
+				factor = 0.5
+				trait = wroth
+			}
+		}
+	}
+	
+	# A fleabitten nag
+	option = {
+		name = "EVTOPTCHORSES701"
+		FROM = {
+			opinion = { who = ROOT modifier = opinion_mad_at_guardian months = 120 }
+			hidden_tooltip = { character_event = { id = lux_childhorses.714 } }
+		}
+		prestige = -100
+		ai_chance = {
+			factor = 5
+			modifier = {
+				factor = 3
+				trait = greedy
+			}
+		}
+	}
+}
+
+# A wild stallion
+character_event = {
+	id = lux_childhorses.702
+	hide_window = yes
+	is_triggered_only = yes
+	
+	immediate = { e_rebels = { holder_scope = { character_event = { id = lux_childhorses.703 } } } }
+	
+	option = {
+		name = OK
+	}
+}
+
+character_event = {
+	id = lux_childhorses.703
+	hide_window = yes
+	is_triggered_only = yes
+	
+	trigger = { has_landed_title = e_rebels }
+	
+	# Successfully tamed the wild stallion
+	option = {
+		FROM = { FROM = { character_event = { id = lux_childhorses.704 } } }
+		ai_chance = {
+			factor = 25
+			modifier = {
+				factor = 2
+				FROM = { trait = strong }
+			}
+			 modifier = {
+				factor = 4
+				FROM = { trait = tall }
+			 }
+			modifier = {
+				factor = 2
+				FROM = { trait = brave }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = { trait = proud }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = { trait = diligent }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					OR = {
+						trait = wroth
+						trait = patient
+					}
+				}
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = dwarf }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { trait = weak }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { trait = craven }
+			}
+			modifier = {
+				factor = 0.8
+				FROM = { trait = humble }
+			}
+			modifier = {
+				factor = 0.8
+				FROM = { trait = slothful }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = clubfooted }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = hunchback }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = wounded }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { trait = ill }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = maimed }
+			}
+			modifier = {
+				factor = 0.2
+				FROM = { trait = crippled }
+			}
+		}
+	}
+	
+	option = {
+		ai_chance = { factor = 25 }
+		FROM = { FROM = { character_event = { id = lux_childhorses.706 } } }
+	}
+}
+
+# Your child has successfully tamed a wild stallion!
+character_event = {
+	id = lux_childhorses.704
+	desc = "EVTDESCHORSES704"
+	picture = GFX_evt_altaic_camp
+	is_triggered_only = yes
+	show_from_from = yes
+	
+	option = {
+		name = "EVTOPTAHORSES704"
+		prestige = 100
+		FROM = { FROM = { character_event = { id = lux_childhorses.705 tooltip = "EVTTOOLTIPHORSES705" } } }
+	}
+}
+
+character_event = {
+	id = lux_childhorses.705
+	desc = "EVTDESCHORSES705"
+	picture = GFX_evt_altaic_camp
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAHORSES705"
+		prestige = 100
+	}
+}
+
+# Your child was bucked off by the wild stallion!
+character_event = {
+	id = lux_childhorses.706
+	desc = "EVTDESCHORSES706"
+	picture = GFX_evt_altaic_struggling
+	is_triggered_only = yes
+	show_from_from = yes
+	
+	option = {
+		name = "EVTOPTAHORSES706"
+		prestige = -25
+		FROM = { FROM = { character_event = { id = lux_childhorses.707 tooltip = "EVTTOOLTIPHORSES707" } } }
+		random_list = {
+			8 = { }
+			4 = { FROM = { FROM = { add_trait = wounded } } }
+			2 = { FROM = { FROM = { add_trait = maimed } } }
+			1 = { FROM = { FROM = { death = { death_reason = death_accident } } } }
+		}
+	}
+}
+
+character_event = {
+	id = lux_childhorses.707
+	desc = "EVTDESCHORSES707"
+	picture = GFX_evt_altaic_struggling
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAHORSES707"
+		prestige = -25
+	}
+}
+
+# A gentle mare
+character_event = {
+	id = lux_childhorses.708
+	hide_window = yes
+	is_triggered_only = yes
+	
+	immediate = { e_rebels = { holder_scope = { character_event = { id = lux_childhorses.709 } } } }
+	
+	option = {
+		name = OK
+	}
+}
+
+character_event = {
+	id = lux_childhorses.709
+	hide_window = yes
+	is_triggered_only = yes
+	
+	trigger = { has_landed_title = e_rebels }
+	
+	# Successfully tamed the wild stallion
+	option = {
+		FROM = { FROM = { character_event = { id = lux_childhorses.710 } } }
+		ai_chance = {
+			factor = 90
+			modifier = {
+				factor = 2
+				FROM = { trait = strong }
+			}
+			 modifier = {
+				factor = 4
+				FROM = { trait = tall }
+			 }
+			modifier = {
+				factor = 2
+				FROM = { trait = brave }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = { trait = proud }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = { trait = diligent }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					OR = {
+						trait = wroth
+						trait = patient
+					}
+				}
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = dwarf }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { trait = weak }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { trait = craven }
+			}
+			modifier = {
+				factor = 0.8
+				FROM = { trait = humble }
+			}
+			modifier = {
+				factor = 0.8
+				FROM = { trait = slothful }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = clubfooted }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = hunchback }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = wounded }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { trait = ill }
+			}
+			modifier = {
+				factor = 0.25
+				FROM = { trait = maimed }
+			}
+			modifier = {
+				factor = 0.2
+				FROM = { trait = crippled }
+			}
+		}
+	}
+	
+	option = {
+		ai_chance = { factor = 10 }
+		FROM = { FROM = { character_event = { id = lux_childhorses.712 } } }
+	}
+}
+
+# Your child rode their first horse successfully
+character_event = {
+	id = lux_childhorses.710
+	desc = "EVTDESCHORSES710"
+	picture = GFX_evt_altaic_camp
+	is_triggered_only = yes
+	show_from_from = yes
+	
+	option = {
+		name = "EVTOPTAHORSES710"
+		prestige = 10
+		FROM = { FROM = { character_event = { id = lux_childhorses.711 tooltip = "EVTTOOLTIPHORSES711" } } }
+	}
+}
+
+character_event = {
+	id = lux_childhorses.711
+	desc = "EVTDESCHORSES711"
+	picture = GFX_evt_altaic_camp
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAHORSES711"
+		prestige = 25
+	}
+}
+
+# Your child failed to ride even the gentlest mare!
+character_event = {
+	id = lux_childhorses.712
+	desc = "EVTDESCHORSES712"
+	picture = GFX_evt_altaic_struggling
+	is_triggered_only = yes
+	show_from_from = yes
+	
+	option = {
+		name = "EVTOPTAHORSES706"
+		prestige = -100
+		FROM = { FROM = { character_event = { id = lux_childhorses.713 tooltip = "EVTTOOLTIPHORSES713" } } }
+		random_list = {
+			4 = { }
+			2 = { FROM = { FROM = { add_trait = wounded } } }
+			1 = { FROM = { FROM = { add_trait = maimed } } }
+		}
+	}
+}
+
+character_event = {
+	id = lux_childhorses.713
+	desc = "EVTDESCHORSES713"
+	picture = GFX_evt_altaic_struggling
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAHORSES707"
+		prestige = -100
+		add_trait = stressed
+	}
+}
+
+# A fleabitten nag
+character_event = {
+	id = lux_childhorses.714
+	desc = "EVTDESCHORSES714"
+	picture = GFX_evt_altaic_struggling
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTAHORSES714"
+		hidden_tooltip = { FROM = { character_event = { id = lux_childhorses.715 } } }
+		prestige = -200
+	}
+}
+
+character_event = {
+	id = lux_childhorses.715
+	desc = "EVTDESCHORSES715"
+	picture = GFX_evt_altaic_struggling
+	is_triggered_only = yes
+	
+	option = { name = "EVTOPTAHORSES715" }
 }
