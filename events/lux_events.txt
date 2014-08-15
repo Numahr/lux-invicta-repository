@@ -16454,8 +16454,8 @@ narrative_event = {
 
 namespace = lux_childhorses
 
-# Teaching a child to ride
-# Altaic child is now old enough for their first horse
+## Altaic child's first horse flavour event chain
+# Altaic child is now old enough for their first horse (Altaic culture group)
 character_event = {
 	id = lux_childhorses.700
 	desc = "EVTDESCHORSES700"
@@ -16991,3 +16991,541 @@ character_event = {
 	
 	option = { name = "EVTOPTAHORSES715" }
 }
+
+namespace = lux_holytree
+### The Sacred Tree flavour event chain (Western European Pagans)
+# Priest Finds a Sacred Tree 
+province_event = {
+	id = lux_holytree.14
+	desc = EVTDESCholytree.14
+	picture = GFX_evt_skyrim_forest_celtic
+	
+	trigger = {
+		OR = {
+			religion = allfather
+			religion = celtic_pagan
+			religion = dievas
+			religion = endovellico
+			religion = german_pagan
+			religion = irminsul
+			religion = lugh
+			religion = peckols
+			religion = perkunas
+			religion = saule
+			religion = teiwaz
+		}
+		owner = {
+			OR = {
+				religion = allfather
+				religion = celtic_pagan
+				religion = dievas
+				religion = endovellico
+				religion = german_pagan
+				religion = irminsul
+				religion = lugh
+				religion = peckols
+				religion = perkunas
+				religion = saule
+				religion = teiwaz
+			}
+		}
+		NOT = {
+			owner = {
+				any_demesne_province = {
+					has_province_modifier = holy_tree
+				}
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		years = 100
+		
+		modifier = {
+			factor = 0.8
+			owner = { religion = irminsul } #Special care for "holy trees"
+		}
+		modifier = {
+			factor = 0.9
+			owner = { learning = 21 } 
+		}
+		modifier = {
+			factor = 0.9
+			owner = { learning = 18 } 
+		}
+		modifier = {
+			factor = 0.9
+			owner = { learning = 15 } 
+		}
+		modifier = {
+			factor = 1.1
+			owner = { NOT = { learning = 3 } }
+		}
+		modifier = {
+			factor = 1.2
+			owner = { NOT = { learning = 6 } }
+		}
+		modifier = {
+			factor = 1.25
+			owner = { NOT = { learning = 9 } }
+		}
+	}
+	
+	option = {
+		name = EVTOPTAholytree.14
+		owner = {
+			piety = 50
+			cash = -150
+		}
+		add_province_modifier = {
+			name = holy_tree
+			duration = 3650
+		}
+		random_province_lord = {
+			limit = {
+				is_theocracy = yes
+			}
+			opinion = {
+				modifier = opinion_happy
+				who = ROOT
+				years = 2
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBholytree.14
+		owner = {
+			piety = -150
+		}
+		random_province_lord = {
+			limit = {
+				is_theocracy = yes
+			}
+			opinion = {
+				modifier = opinion_dislike
+				who = ROOT
+				years = 2
+			}
+		}
+	}
+}
+
+# Tree becomes a cult center
+province_event = {
+	id = lux_holytree.15
+	desc = EVTDESCholytree.15
+	picture = GFX_evt_skyrim_forest_celtic
+	
+	trigger = {
+		has_province_modifier = holy_tree
+		OR = {
+			religion = allfather
+			religion = celtic_pagan
+			religion = dievas
+			religion = endovellico
+			religion = german_pagan
+			religion = irminsul
+			religion = lugh
+			religion = peckols
+			religion = perkunas
+			religion = saule
+			religion = teiwaz
+		}
+		owner = {
+			OR = {
+				religion = allfather
+				religion = celtic_pagan
+				religion = dievas
+				religion = endovellico
+				religion = german_pagan
+				religion = irminsul
+				religion = lugh
+				religion = peckols
+				religion = perkunas
+				religion = saule
+				religion = teiwaz
+			}
+		}
+		NOT = {
+			owner = {
+				has_character_modifier = pious_ruler
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		years = 100
+	}
+	
+	option = {
+		name = EVTOPTAholytree.15
+		owner = {
+			add_character_modifier = {
+				name = pious_ruler
+				duration = 1200
+			}
+		}
+		religion_authority = {
+			modifier = holy_tree 
+			years = 20
+		}
+		add_province_modifier = {
+			name = holy_tree
+			duration = 365000
+		}
+	}
+}
+	
+# Non-pagans destroy the tree
+province_event = {
+	id = lux_holytree.16
+	desc = EVTDESCholytree.16
+	picture = GFX_evt_skyrim_forest_celtic
+	
+	trigger = {
+		any_realm_province = {
+				has_province_modifier = holy_tree
+			}
+		owner = {
+			NOT = { 			
+				OR = {
+					religion = allfather
+					religion = celtic_pagan
+					religion = dievas
+					religion = endovellico
+					religion = german_pagan
+					religion = irminsul
+					religion = lugh
+					religion = peckols
+					religion = perkunas
+					religion = saule
+					religion = teiwaz
+				} 
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		years = 100
+	}
+	
+	option = {
+		name = EVTOPTAholytree.16
+		remove_province_modifier = holy_tree
+		set_province_flag = destroyed_holy_tree
+		owner = {
+			add_character_modifier = {
+				name = pious_ruler
+				duration = 1200
+			}
+		}
+		religion_authority = {
+			modifier = destroyed_holy_tree 
+			years = 20
+		}
+	}	
+	option = {
+		name = EVTOPTBholytree.16
+		owner = {
+			piety = -150
+			}
+	}
+}
+
+# Reformists don't like the Tree
+province_event = {
+	id = lux_holytree.17
+	desc = EVTDESCholytree.17
+	picture = GFX_evt_skyrim_forest_celtic
+	
+	trigger = {
+			OR = {
+					religion = allfather
+					religion = celtic_pagan
+					religion = dievas
+					religion = endovellico
+					religion = german_pagan
+					religion = irminsul
+					religion = lugh
+					religion = peckols
+					religion = perkunas
+					religion = saule
+					religion = teiwaz
+			} 
+		any_realm_province = {
+				has_province_modifier = holy_tree
+		}
+		owner = {
+			OR = {
+					religion = baltic_pagan_reformed 
+					religion = celtic_christ_reformed
+					religion = celtic_pagan_reformed
+					religion = german_pagan_reformed 
+					religion = iberian_pagan_reformed
+					religion = teiwaz_reformed
+			} 
+		}
+	}
+	
+	mean_time_to_happen = {
+		years = 100
+	}
+	
+	option = {
+		name = EVTOPTAholytree.16
+		remove_province_modifier = holy_tree
+		set_province_flag = destroyed_holy_tree
+		owner = {
+			add_character_modifier = {
+				name = pious_ruler
+				duration = 1200
+			}
+		}
+		religion_authority = {
+			modifier = destroyed_holy_tree 
+			years = 20
+		}
+	}	
+	option = {
+		name = EVTOPTBholytree.16
+		owner = {
+			piety = -150
+		}
+	}
+}
+
+# A reminder of the old ways
+province_event = {
+	id = lux_holytree.18
+	name = EVTNAMEholytree.18
+	desc = EVTDESCholytree.18
+	picture = GFX_evt_skyrim_forest_celtic
+	
+	trigger = {
+		has_province_flag = destroyed_holy_tree
+		owner = {
+			NOT = { has_character_flag = reminder_old_ways }
+		}
+	}
+	
+	mean_time_to_happen = {
+		years = 100
+	}
+	
+	option = {
+		name = EVTOPTAholytree.18
+		owner = {
+			set_character_flag = reminder_old_ways 
+		}
+	}
+	
+}
+
+# # A reminder of the old ways
+# province_event = {
+	# id = lux_holytree.18
+	# name = EVTNAMEholytree.18
+	# desc = EVTDESCholytree.18
+	# picture = GFX_evt_skyrim_forest_celtic
+	
+	# trigger = {
+		# has_province_flag = destroyed_holy_tree
+		# owner = {
+			# NOT = { has_character_flag = reminder_old ways }
+		# }
+	# }
+	
+	# mean_time_to_happen = {
+		# years = 100
+	# }
+	# option = {
+		# name = EVTOPTAholytree.18
+		# owner = {
+			# set_character_flag = reminder_old ways
+		# }
+	# }
+# }
+###	
+namespace = lux_chinesenightmare
+## The Omen from the Heavens (Chinese group religions)
+# A terrible Dream
+character_event = {
+	id = lux_chinesenightmare.10
+	desc = EVTDESC_1000182005
+	picture = GFX_evt_dream_china
+	border = GFX_event_normal_frame_religion
+
+	min_age = 16
+	only_playable = yes
+	
+	trigger = {
+		religion_group = chinese_group
+		NOT = { has_character_flag = chinese_dream }
+	}
+	
+	mean_time_to_happen = {
+		months = 5000
+	}
+	
+	option = {
+		name = EVTOPTA_1000182005 
+		piety = -50
+		hidden_tooltip = {
+		character_event = { id = lux_chinesenightmare.20 }
+		}
+	}
+	option = {
+		name = EVTOPTB_1000182005 
+		hidden_tooltip = {
+                character_event = { id = lux_chinesenightmare.3 }
+		}
+	}
+}
+# Consulting the Taoist sorcerer
+character_event = { 
+	id = lux_chinesenightmare.20
+	desc = EVTDESC_1000182006
+	picture = GFX_evt_taoist_sorcerer
+	border = GFX_event_normal_frame_religion
+
+	min_age = 16
+	only_playable = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_1000182006 
+		piety = -50
+		random_list = {
+			20 = { character_event = { id = lux_chinesenightmare.5 } }
+			10 = { character_event = { id = lux_chinesenightmare.4 } }
+			20 = { character_event = { id = lux_chinesenightmare.6 } }
+			20 = { character_event = { id = lux_chinesenightmare.7 } }
+		}
+	}
+	option = {
+		name = EVTOPTB_1000182006 
+		hidden_tooltip = {
+			character_event = { id = lux_chinesenightmare.3 }
+		}
+	}
+}
+
+# Fall in depression
+character_event = {
+	id = lux_chinesenightmare.3
+	desc = EVTDESC_1000182007
+	picture = GFX_evt_dream_china
+	border = GFX_event_normal_frame_religion
+
+	min_age = 16
+	only_playable = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_1000182007
+		piety = -50
+		set_character_flag = chinese_dream
+		random_list = {
+			70 = { add_trait = depressed }
+			15 = { piety = -500 }
+			15 = {}
+		}
+	}
+}
+
+#Good prediction
+character_event = {
+	id = lux_chinesenightmare.4
+	desc = EVTDESC_1000182008
+	picture = GFX_evt_astrology_china
+	border = GFX_event_normal_frame_religion
+
+	min_age = 16
+	only_playable = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_1000182008 
+		set_character_flag = chinese_dream
+		random_list = {
+			70 = { add_trait = ambitious }
+			15 = { change_learning = 2 }
+			15 = {}
+		}
+	}
+}
+
+#Bad prediction
+character_event = {
+	id = lux_chinesenightmare.5
+	desc = EVTDESC_1000182009
+	picture = GFX_evt_astrology_china
+	border = GFX_event_normal_frame_religion
+
+	min_age = 16
+	only_playable = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_1000182009 
+		piety = -50
+		set_character_flag = chinese_dream
+		random_list = {
+			70 = { add_trait = depressed }
+			15 = { piety = -500 }
+			15 = {}
+		}
+	}
+}
+
+#Average prediction
+character_event = {
+	id = lux_chinesenightmare.6
+	desc = EVTDESC_1000182010
+	picture = GFX_evt_astrology_china
+	border = GFX_event_normal_frame_religion
+
+	min_age = 16
+	only_playable = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_1000182009 
+		piety = -50
+		set_character_flag = chinese_dream
+		random_list = {
+			70 = { change_learning = 2 }
+			15 = { piety = 500 }
+			15 = {}
+		}
+	}
+}
+
+#No prediction/Confucian advice
+character_event = {
+	id = lux_chinesenightmare.7
+	desc = EVTDESC_1000182011
+	picture = GFX_evt_astrology_china
+	border = GFX_event_normal_frame_religion
+
+	min_age = 16
+	only_playable = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_1000182011
+		set_character_flag = chinese_dream
+		random_list = {
+			70 = { piety = 100 } 
+			15 = {}
+			15 = {}
+		}
+	}
+}
+	
