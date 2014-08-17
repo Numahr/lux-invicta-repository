@@ -53,7 +53,6 @@ decisions = {
 					}
 				}
 				b_tella = {
-					holder_scope = {
 					any_liege = {
 						character = ROOT
 					}
@@ -272,52 +271,78 @@ decisions = {
 		}
 	}
 			
-	become_arinnitis_consort = {
+	#Go on retreat to improve chances to be accepted by Arinniti
+	go_on_luwian_retreat = {
 		is_high_prio = yes
 		potential = {
-			is_ruler = yes
-			is_adult = yes
-			is_female = no
-			religion_group = luwian_group
-			has_global_flag = chattousa_rebuilt
-			capital_scope = {
-				has_province_modifier = chattousa_temple
+			has_character_flag = arinniti_explanation_complete
+			NOT = {
+				has_character_flag = on_luwian_retreat
+				has_character_flag = awaiting_arinnitis_acceptance
+				has_character_flag = rejected_by_arinniti
+				trait = arinnitis_consort
+				trait = arinniti_in_flesh
 			}
-			NOT = { has_character_flag = rejected_by_arinniti }
-			NOT = { has_character_flag = seeking_arinnitis_favor }
 		}
 		allow = {
+			prestige = 1000
 			piety = 1000
 		}
-		success = {
-			trait = arinnits_consort
-		}
-		ai_will_do = {
-			factor = 0
+		effect = {
+			prestige = -500
+			piety = -500
+			set_character_flag = on_luwian_retreat
+			character_event = {
+				id = luwian_retreat.1
+			}
 		}
 	}
-	become_arinniti_in_flesh = {
-		is_high_prio = yes
+	#Begin the ritual to become Arinniti's Consort
+	become_arinnitis_consort = {
 		potential = {
-			is_ruler = yes
-			is_adult = yes
+			has_character_flag = arinniti_explanation_complete
 			is_female = no
-			religion_group = luwian_group
-			has_global_flag = chattousa_rebuilt
-			capital_scope = {
-				has_province_modifier = chattousa_temple
+			is_reformed_religion = yes
+			NOT = {
+				has_character_flag = rejected_by_arinniti
+				has_character_flag = awaiting_arinnitis_acceptance
+				trait = arinnitis_consort
 			}
-			NOT = { has_character_flag = rejected_by_arinniti }
-			NOT = { has_character_flag = seeking_arinnitis_favor }
 		}
 		allow = {
-			piety = 1000
+			NOT = {
+				has_character_flag = on_luwian_retreat
+			}
 		}
-		success = {
-			trait = arinniti_in_flesh
+		effect = {
+			set_character_flag = awaiting_arinnitis_acceptance
+			rightful_religious_head_scope = {
+				character_event = become_arinnitis_consort.1
+			}
 		}
-		ai_will_do = {
-			factor = 0
+	}
+	#Begin the ritual to become Arinniti in Flesh
+	become_arinnitis_in_flesh = {
+		potential = {
+			has_character_flag = arinniti_explanation_complete
+			is_female = yes
+			is_reformed_religion = yes
+			NOT = {
+				has_character_flag = rejected_by_arinniti
+				has_character_flag = awaiting_arinnitis_acceptance
+				trait = arinniti_in_flesh
+			}
+		}
+		allow = {
+			NOT = {
+				has_character_flag = on_luwian_retreat
+			}
+		}
+		effect = {
+			set_character_flag = awaiting_arinnitis_acceptance
+			rightful_religious_head_scope = {
+				character_event = become_arinnitis_consort.2
+			}
 		}
 	}
 }
