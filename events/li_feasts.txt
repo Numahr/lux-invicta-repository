@@ -1084,3 +1084,470 @@ border = GFX_event_normal_frame_intrigue
 		change_diplomacy = 2
 	}
 }
+namespace = li_mithrasfeast
+##Mithraic Feast
+# Invitations Sent (Liege)
+character_event = {
+	id = li_mithrasfeast.800
+	desc = EVTDESC_li_mithrasfeast_800
+	picture = GFX_evt_mithras
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_700
+		any_vassal = {
+			limit = {
+				age = 16
+				prisoner = no
+				war = no
+				NOT = { trait = incapable }
+			}
+			character_event = { id = li_mithrasfeast.801 tooltip = EVTTOOLTIP_li_mithrasfeast_801 }
+		}
+		job_spiritual = {
+			limit = {
+				age = 16
+				prisoner = no
+				war = no
+				NOT = { trait = incapable }
+			}
+			character_event = { id = li_mithrasfeast.801 tooltip = EVTTOOLTIP_li_mithrasfeast_801 }
+		}
+		hidden_tooltip = { character_event = { id = li_mithrasfeast.803 days = 10 } }
+	}
+}
+
+# Invitations Received (Vassals)
+character_event = {
+	id = li_mithrasfeast.801
+	desc = EVTDESC_li_mithrasfeast_801
+	picture = GFX_evt_mithras
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_701
+		trigger = {
+			religion = FROM
+		}
+		set_character_flag = attending_mithras
+		set_character_flag = do_not_disturb
+	}
+	option = {
+		name = EVTOPTB_li_mithrasfeast_701
+		trigger = {
+			NOT = {religion = FROM}
+		}
+		FROM = {
+			character_event = { id = li_mithrasfeast.802 days = 5 tooltip = DIPLOWINDOW_REJECT }
+			opinion = {
+				modifier = opinion_refused_mithras
+				who = ROOT
+			}
+		}
+	}
+}
+
+# Invitation Refused (Liege)
+character_event = {
+	id = li_mithrasfeast.802
+	desc = EVTDESC_li_mithrasfeast_802
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_702
+		tooltip = {
+			opinion = {
+				modifier = opinion_refused_mithras
+				who = FROM
+			}
+		}
+	}
+}
+
+# Rituals Begin (Liege)
+narrative_event = {
+	id = li_mithrasfeast.803
+	title = li_mithrasfeast.803.name
+	desc = EVTDESC_li_mithrasfeast_803
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_803
+		character_event  = { id = li_mithrasfeast.100 }
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_mithras }
+				character_event = { id = li_mithrasfeast.804 }
+			}
+		}
+	}
+}
+
+
+
+# Who will represent Mithras?
+narrative_event = {
+	id = li_mithrasfeast.100
+	title = li_mithrasfeast.100.name
+	desc = EVTDESC_li_mithrasfeast_100
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		trigger = {
+			job_spiritual = {
+					has_character_flag = attending_mithras
+					is_female = no
+					religion = ROOT
+			}
+		}
+		name = EVTOPTA_li_mithrasfeast_100 #The Court's Pater
+		piety = 25
+		prestige = 10
+		job_spiritual = {
+			character_event = { id = li_mithrasfeast.845 }
+		}
+		
+	}
+	
+	option = {
+		name = EVTOPTB_li_mithrasfeast_100 #The Mithraeum's Pater
+		trigger = {
+			any_vassal = {
+					has_character_flag = attending_mithras
+					is_female = no
+					religion = ROOT
+					is_theocracy = yes
+					at_location = ROOT
+			}
+		}
+		piety = 50
+		random_vassal = {
+			limit = { 
+				has_character_flag = attending_mithras
+				is_female = no
+				religion = ROOT
+				is_theocracy = yes
+				at_location = ROOT
+			}
+			character_event = { id = li_mithrasfeast.845 }
+		}
+	}
+	
+	option = {
+		name = EVTOPTC_li_mithrasfeast_100 #I will be Mithras
+		piety = -10
+		prestige = 50
+		character_event = { id = li_mithrasfeast.848 }
+	}
+	
+}
+
+# Chosen to represent Mithras
+narrative_event = {
+	id = li_mithrasfeast.845
+	title = li_mithrasfeast.845.name
+	desc = EVTDESC_li_mithrasfeast_845
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_845
+		FROM = {
+			if = {
+				limit = {
+					NOT = { trait = cynical }
+				}
+				opinion = {
+					modifier = opinion_represented_mithras
+					who = ROOT
+				}
+			}
+			any_vassal = {
+				limit = { 
+					has_character_flag = attending_mithras 
+					NOT = { character = ROOT }
+					NOT = { trait = cynical }
+				}
+				opinion = {
+					modifier = opinion_represented_mithras
+					who = ROOT
+				}
+			}
+		}
+		hidden_tooltip = {
+			FROM = {
+				character_event = { id = li_mithrasfeast.846 }
+				any_vassal = {
+					limit = { 
+						has_character_flag = attending_mithras 
+						NOT = { character = ROOT }
+					}
+					character_event = { id = li_mithrasfeast.847 }
+				}
+			}
+		}	
+	}
+}
+
+# Mithras and Sol vassal's representation (Liege)
+narrative_event = {
+	id = li_mithrasfeast.846
+	title = li_mithrasfeast.846.name
+	desc = EVTDESC_li_mithrasfeast_846
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_846
+		trigger = {
+			NOT = { trait = cynical }
+		}
+		tooltip = {
+			opinion = {
+				modifier = opinion_represented_mithras
+				who = FROM
+			}
+		}
+		character_event = { id = li_mithrasfeast.101 }
+	}
+	option = {
+		name = EVTOPTB_li_mithrasfeast_846
+		tooltip_info = cynical
+		trigger = {
+			trait = cynical
+		}
+		character_event = { id = li_mithrasfeast.101 }
+	}
+}
+
+# Mithras and Sol vassal's representation (Vassal)
+narrative_event = {
+	id = li_mithrasfeast.847
+	title = li_mithrasfeast.846.name
+	desc = EVTDESC_li_mithrasfeast_846
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_846
+		trigger = {
+			NOT = { trait = cynical }
+		}
+		tooltip = {
+			opinion = {
+				modifier = opinion_represented_mithras
+				who = FROM
+			}
+		}	
+		character_event = { id = li_mithrasfeast.101 }
+	}
+	option = {
+		name = EVTOPTB_li_mithrasfeast_846
+		tooltip_info = cynical
+		trigger = {
+			trait = cynical
+		}
+		character_event = { id = li_mithrasfeast.101 }
+	}
+}
+
+# Mithras and Sol liege's representation
+narrative_event = {
+	id = li_mithrasfeast.848
+	title = li_mithrasfeast.846.name
+	desc = EVTDESC_li_mithrasfeast_848
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_845
+		character_event = { id = li_mithrasfeast.101 }
+	}
+}
+
+#Choose Mithraic Prayer
+narrative_event = {
+	id = li_mithrasfeast.101
+	title = li_mithrasfeast.101.name
+	desc = EVTDESC_li_mithrasfeast_101
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_101 #Prayer of Defense
+		add_character_modifier = {
+			name = mithras_defense
+			duration = 912
+		}
+		hidden_tooltip = {
+			character_event = { id = li_mithrasfeast.805 days = 3 }
+		}
+	}
+	
+	option = {
+		name = EVTOPTB_li_mithrasfeast_101 #Prayer of Offense
+		add_character_modifier = {
+			name = mithras_offense
+			duration = 912
+		}
+		hidden_tooltip = {
+			character_event = { id = li_mithrasfeast.805 days = 3 }
+		}
+	}
+	
+	option = {
+		name = EVTOPTC_li_mithrasfeast_101 #Prayer of Sovereignty
+		add_character_modifier = {
+			name = mithras_sovereignty
+			duration = 912
+		}
+		hidden_tooltip = {
+			character_event = { id = li_mithrasfeast.805 days = 3 }
+		}
+	}
+	
+}
+
+# Rituals begin(Vassals)
+narrative_event = {
+	id = li_mithrasfeast.804
+	desc = EVTDESC_li_mithrasfeast_804
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_803
+		custom_tooltip = { text = mithras_deliberations }
+	}
+}
+
+# Feast Begins (Liege)
+character_event = {
+	id = li_mithrasfeast.805
+	desc = EVTDESC_li_mithrasfeast_805
+	picture = GFX_evt_mithraeum
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_705
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_mithras }
+				character_event = { id = li_mithrasfeast.806 }
+			}
+			character_event = { id = li_mithrasfeast.807 days = 25 }
+		}
+		custom_tooltip = { text = feast_begins }
+	}
+}
+
+# Feast Begins (Vassals)
+character_event = {
+	id = li_mithrasfeast.806
+	desc = EVTDESC_li_mithrasfeast_806
+	picture = GFX_evt_mithraeum
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_705
+		set_character_flag = mithras_feast_vassal
+		custom_tooltip = { text = feast_begins }
+	}
+}
+
+# Feast Ends (Liege)
+character_event = {
+	id = li_mithrasfeast.807
+	desc = EVTDESC_li_mithrasfeast_807
+	picture = GFX_evt_mithraeum
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_707
+		any_vassal = {
+			limit = { has_character_flag = attending_mithras }
+			opinion = {
+				modifier = opinion_mithras
+				who = ROOT
+			}
+		}
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_mithras }
+				character_event = { id = li_mithrasfeast.808 }
+			}
+		}
+		add_character_modifier = {
+			name = held_mithras_timer
+			duration = 1825
+		}
+		prestige = 100
+		piety = 100
+		clr_character_flag = holding_mithras
+		clr_character_flag = do_not_disturb
+	}
+}
+
+# Feast Ends (Vassals)
+character_event = {
+	id = li_mithrasfeast.808
+	desc = EVTDESC_li_mithrasfeast_808
+	picture = GFX_evt_mithraeum
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_mithrasfeast_707
+		clr_character_flag = attending_mithras
+		clr_character_flag = mithras_feast_vassal
+		clr_character_flag = do_not_disturb
+	}
+}
+
+

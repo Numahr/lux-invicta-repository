@@ -17511,7 +17511,7 @@ character_event = {
 	id = lux_chinesenightmare.7
 	desc = EVTDESC_1000182011
 	picture = GFX_evt_astrology_china
-	border = GFX_event_normal_frame_religion
+	border = GFX_event_normal_frame_war
 
 	min_age = 16
 	only_playable = yes
@@ -17528,4 +17528,135 @@ character_event = {
 		}
 	}
 }
+
+namespace = lux_lubu
+### I..I..IT'S LU BU!!!
+# Lu Bu encounter ("Lu Bu")
+character_event = {
+	id = lux_lubu.10
+	desc = EVTDESClux_lubu.10
+	picture = GFX_evt_lubu
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
 	
+	min_age = 16
+	only_playable = yes
+
+	
+	trigger = {
+		OR = {
+			religion = lubu
+			religion = lubu_reformed
+			dynasty = 7041 #Lu Bu's descendants
+		}
+		in_command = yes
+        in_battle = yes
+	}
+	
+	weight_multiplier = {
+		days = 1
+	}
+	
+	option = {
+		name = EVTOPTAlux_lubu.10
+		prestige = 100
+		any_current_enemy = {
+			limit = {
+				at_location = ROOT
+				in_command = yes
+				in_battle = yes
+			}
+			character_event = { id = lux_lubu.20 tooltip = TOOLTIPlux_lubu.21  }
+		}
+	}
+	option = {
+		name = EVTOPTBlux_lubu.10
+		prestige = -100
+		morale = -0.3
+		
+	}
+}
+# Lu Bu encounter (Enemy of "Lu Bu")
+character_event = { 
+	id = lux_lubu.20
+	desc = EVTDESClux_lubu.20
+	picture = GFX_evt_lubu
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAlux_lubu.20 
+		prestige = 100
+		set_character_flag = lubu_duel #this is the guy who faces Lu Bu
+		set_character_flag = flag_duel_to_the_death
+		FROM  = {
+			set_character_flag = lubu_duel_target #and this is Lu Bu
+			set_character_flag = flag_duel_to_the_death
+			character_event = { id = lux_lubu.21 tooltip = TOOLTIPlux_lubu.21 }
+		}
+	}
+	option = {
+		name = EVTOPTBlux_lubu.20 
+		random = { chance = 15 death = { death_reason = death_battle } }
+		prestige = -100
+		troops = -0.3
+		morale = -0.3
+	}
+}
+# Lu Bu is challenged (Calling duel engine...)
+character_event = {
+	id = lux_lubu.21
+	desc = "EVTDESClux_lubu.21"
+	picture = GFX_evt_lubu_battle
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTAlux_lubu.21"
+		e_rebels = { holder_scope = { character_event = { id = duel.1 } } }	
+	}
+}
+#Lu Bu wins
+character_event = {
+	id = lux_lubu.22
+	desc = "EVTDESClux_lubu.22"
+	picture = GFX_evt_lubu_battle
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+	show_from_from = yes
+
+	option = {
+		name = "EVTOPTAlux_lubu.22"
+		prestige = 200
+        morale = 0.5 
+		random_current_enemy = {
+			limit = { at_location = ROOT }
+			morale = -0.2
+		}
+	}
+}
+
+#Lu Bu's challenger wins
+character_event = {
+	id = lux_lubu.23
+	desc = "EVTDESClux_lubu.23"
+	picture = GFX_evt_battle
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+	show_from_from = yes
+
+	option = {
+		name = "EVTOPTAlux_lubu.23"
+		prestige = 600 #Well, he just killed Lu Bu
+        morale = 0.3
+		random_current_enemy = {
+			limit = { at_location = ROOT }
+			morale = -0.2
+		}
+	}
+}
