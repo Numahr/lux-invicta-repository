@@ -35,10 +35,10 @@ only_capable = yes
 			prisoner = no
 			age = 16
 		}
-		NOT = { has_character_flag = library_asked_permission}
+		NOT = { has_character_flag = library_asked_permili_irminsulon}
 	}
 	immediate = {
-		set_character_flag = library_asked_permission
+		set_character_flag = library_asked_permili_irminsulon
 	}
 	option = {
 		name = allow_library
@@ -1550,4 +1550,391 @@ character_event = {
 	}
 }
 
+namespace = li_irminsul
+##Irminsul (Continental German pagans)
+#Order the tree trunk carved in the likeness of one of the main gods
+character_event = {
+	id = li_irminsul.500
+	desc =EVTDESC_li_irminsul_500
+	picture = GFX_evt_oak_forest
+	border = GFX_event_normal_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	immediate = {
+		set_character_flag = raised_irminsul
+	}
+	
+	option = { # Wodanaz
+		name = EVTOPTA_li_irminsul_500
+		trigger = {
+			OR  = {
+				religion = german_pagan
+				religion = german_pagan_reformed
+				religion = allfather
+			}
+		}
+		custom_tooltip = {
+			text = carving_irminsul
+			hidden_tooltip = {
+				narrative_event = { id = li_irminsul.511 days = 60 random = 10 }
+			}
+		}
+	}
+	
+	option = { # Teiwaz
+		name = EVTOPTB_li_irminsul_500
+		trigger = {
+			OR  = {
+				religion = german_pagan
+				religion = german_pagan_reformed
+				religion = teiwaz
+			}
+		}
+		custom_tooltip = {
+			text = carving_irminsul
+			hidden_tooltip = {
+				narrative_event = { id = li_irminsul.512 days = 60 random = 10 }
+			}
+		}
+	}
+}
 
+
+#Give the trunk to the Irminsulic priests...
+character_event = {
+	id = li_irminsul.501
+	desc =EVTDESC_li_irminsul_501
+	picture = GFX_evt_germanicpriests
+	border = GFX_event_normal_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	immediate = {
+		set_character_flag = raised_irminsul
+	}
+	
+	option = { # Irminsulic
+		name = EVTOPTA_li_irminsul_501
+		custom_tooltip = {
+			text = carving_irminsul
+			hidden_tooltip = {
+				narrative_event = { id = li_irminsul.513 days = 60 random = 10 }
+			}
+		}
+	}
+}
+
+#Raising the trunk (Wodanaz)
+narrative_event = {
+	id = li_irminsul.511
+	title = EVTNAME_li_irminsul_510
+	desc =EVTDESC_li_irminsul_511
+	picture = GFX_evt_irminsul
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_irminsul_511
+		prestige = 100
+		piety = 100
+		capital_scope = {
+			add_province_modifier = {
+				name = irminsul_wodanaz
+				duration = -1
+			}
+		}
+	}
+}
+
+#Raising the trunk (Teiwaz)
+narrative_event = {
+	id = li_irminsul.512
+	title = EVTNAME_li_irminsul_510
+	desc =EVTDESC_li_irminsul_512
+	picture = GFX_evt_irminsul
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_irminsul_512
+		prestige = 100
+		piety = 100
+		capital_scope = {
+			add_province_modifier = {
+				name = irminsul_teiwaz
+				duration = -1
+			}
+		}
+	}
+}
+
+#The priests are grateful (Irminsulic)
+narrative_event = {
+	id = li_irminsul.513
+	title = EVTNAME_li_irminsul_513
+	desc =EVTDESC_li_irminsul_513
+	picture = GFX_evt_germanicpriests
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_irminsul_513
+		prestige = 50
+		piety = 150
+		capital_scope = {
+			add_province_modifier = {
+				name = irminsul_tree
+				duration = -1
+			}
+		}
+	}
+}
+#Sacrificing prisoner at the Irminsul (non-Irminsulic)
+narrative_event = {
+	id = li_irminsul.60
+	name = NAME_li_irminsul_060
+	desc =EVTDESC_li_irminsul_060
+	picture = GFX_evt_human_sacrifice
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_irminsul_060
+		prestige = 25
+		piety = 25
+	}
+}
+
+#The priests drag the prisoner away... (Iminsulic)
+narrative_event = {
+	id = li_irminsul.61
+	name = NAME_li_irminsul_060
+	desc = EVTDESC_li_irminsul_061
+	picture = GFX_evt_germanicpriests
+	border = GFX_event_normal_frame_war
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_irminsul_061
+		prestige = 25
+		piety = 25
+	}
+}
+
+#Tear down Irminsul if not Germanic pagan
+province_event = {
+	id = lux_irminsul.16
+	desc = EVTDESC_lux_irminsul.16
+	picture = GFX_evt_irminsul
+	
+	trigger = {
+		any_demesne_province = {
+				OR = {
+					has_province_modifier = irminsul_wodanaz
+					has_province_modifier = irminsul_teiwaz
+					has_province_modifier = irminsul_tree
+				}
+			}
+		NOT = { 
+			OR = {
+			religion = german_pagan
+			religion = german_pagan_reformed
+			religion = allfather
+			religion = teiwaz
+			religion = irminsul
+			} 
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 10
+	}
+	
+	option = {
+		name = EVTOPTAholytree.16
+		piety = 100
+		remove_province_modifier = irminsul_wodanaz
+		remove_province_modifier = irminsul_teiwaz
+		remove_province_modifier = irminsul_tree
+	}	
+
+}
+
+namespace = lux_graecoromanfest
+## Graeco-Roman Public Festival (Graeco-Romans, some Solars) - this is going to be a looong one...
+# Choose a god to dedicate the festival to
+character_event = {
+	id = lux_graecoromanfest.2
+	desc = "EVTDESC310004"
+	picture = GFX_evt_lunatic
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA310004" #Zeus
+		trigger = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+			}
+		}
+		set_character_flag = festival_zeus
+	}
+	
+	option = {
+		name = "EVTOPTB310004" #Ares
+		trigger = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+			}
+		}
+		set_character_flag = festival_ares
+	}
+	
+	option = {
+		name = "EVTOPTC310004" #Athena
+		trigger = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+			}
+		}
+		set_character_flag = festival_athena
+	}
+	
+	option = {
+		name = "EVTOPTD310004" #Sol Invictus
+		trigger = {
+			religion = sol
+		}
+		set_character_flag = festival_sol_invictus
+	}
+	option = {
+		name = "EVTOPTF310004" #Apollo-Helios
+		trigger = {
+			religion = sol_apollo
+		}
+		set_character_flag = festival_apollo
+	}
+	option = {
+		name = "EVTOPTG310004" #Dionysus (non-polytheist)
+		trigger = {
+			religion = dionysos
+		}
+		set_character_flag = festival_dionysos
+	}
+	option = {
+		name = "EVTOPTH310004" #Divinized Emperors
+		trigger = {
+			religion = roman_imperial
+		}
+		set_character_flag = festival_imperator
+	}
+	option = {
+		name = "EVTOPTI310004" #Megas Alexandros
+		trigger = {
+			OR = {
+				religion = alexandros
+				religion = solomon_alexandros
+			}
+		}
+		set_character_flag = festival_imperator
+	}
+	option = {
+		name = "EVTOPTJ310004" #Jupiter Optimus Maximus
+		trigger = {
+			religion = jupiter
+		}
+		set_character_flag = festival_jupiter
+	}
+	option = {
+		name = "othergods"
+		trigger = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+			}
+		}
+		character_event = { id = lux_graecoromanfest.3 }
+	}
+}
+
+
+# Choose a god to dedicate the festival to if polytheist (part 2)
+character_event = {
+	id = lux_graecoromanfest.3
+	desc = "EVTDESC310005"
+	picture = GFX_evt_lunatic
+	
+	is_triggered_only = yes
+
+	option = {
+		name = "EVTOPTA310005" #Dionysus (polytheist)
+		trigger = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+			}
+		}
+		set_character_flag = festival_dionysos
+	}
+	option = {
+		name = "EVTOPTB310005" #Aphrodite
+		trigger = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+			}
+		}
+		set_character_flag = festival_aphrodite
+	}
+	option = {
+		name = "EVTOPTC310005" #Artemis
+		trigger = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+			}
+		}
+		set_character_flag = festival_artemis
+	}
+	option = {
+		name = "othergods"
+		character_event = { id = lux_graecoromanfest.2 }
+	}
+}
+
+#Zeus festival 
+narrative_event = {
+	id = lux_graecoromanfest.10
+	title = EVTNAME_lux_graecoromanfest.10
+	desc =EVTDESC_lux_graecoromanfest.10
+	picture = GFX_evt_irminsul
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_lux_graecoromanfest.10
+		piety = 100
+	}
+}
