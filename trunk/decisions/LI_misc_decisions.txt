@@ -431,5 +431,140 @@ decisions = {
 		}
 	}
 	
+	#Raise an Irminsul
+	raise_irminsul = {
+		potential = {
+			is_ruler = yes
+			age = 16
+			prisoner = no
+			OR = {
+				religion = german_pagan
+				religion = german_pagan_reformed
+				religion = allfather
+				religion = teiwaz
+				religion = irminsul
+			}
+			NOT = {
+				any_demesne_province = {
+					OR = {
+						has_province_modifier = irminsul_wodanaz
+						has_province_modifier = irminsul_teiwaz
+						has_province_modifier = irminsul_tree
+					}
+				} 
+			}
+			NOT = {
+				has_character_flag = raised_irminsul
+			}
+		}
+		allow = {
+			wealth = 100
+			prisoner = no
+		}
+		effect = {
+			wealth = -100
+			hidden_tooltip = { 
+				if = {
+					limit = {
+						OR = {
+							religion = german_pagan
+							religion = german_pagan_reformed
+							religion = allfather
+							religion = teiwaz
+						}
+					}
+					character_event = { id = li_irminsul.500 }
+				}
+				if = {
+					limit = {
+						religion = irminsul
+					}
+					character_event = { id = li_irminsul.501 }
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { wealth = 150 }
+			}
+			modifier = {
+				factor = 0
+				trait = cynical
+			}			
+		}
+	}
+	
+	
+}
+
+vassal_decisions = {
+	#Sacrifice at Irminsul
+	sacrifice_irminsul = {
+		from_potential = {
+			OR = {
+				religion = german_pagan
+				religion = german_pagan_reformed
+				religion = allfather
+				religion = teiwaz
+				religion = irminsul
+			}
+			capital_scope = {
+				OR = {
+					has_province_modifier = irminsul_wodanaz
+					has_province_modifier = irminsul_teiwaz
+					has_province_modifier = irminsul_tree
+				}
+			}
+		}
+	
+		potential = {
+			prisoner = yes
+			host = { character = FROM }
+		}
+		
+		allow = {
+			prisoner = yes
+		}
+		
+
+		effect = {
+			hidden_tooltip = {
+				FROM = {
+					if = {
+							limit = {
+								OR = {
+									religion = german_pagan
+									religion = german_pagan_reformed
+									religion = allfather
+									religion = teiwaz
+								}
+							}
+							character_event = { id = li_irminsul.60 }
+					}
+					if = {
+						limit = {
+							religion = irminsul
+						}
+						character_event = { id = li_irminsul.61 }
+					}
+				}
+			}
+			death = {
+				death_reason = death_sacrificed
+				killer = FROM
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
 	
 }
