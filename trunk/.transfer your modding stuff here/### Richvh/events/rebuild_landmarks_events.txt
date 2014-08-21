@@ -1710,7 +1710,7 @@ narrative_event = {
 	}
 }
 namespace = become_arinnitis_consort
-#Start the ritual to become Arinniti's consort (lord spiritual)
+#Start the ritual to become Arinniti's consort (religious head)
 character_event = {
 	id = become_arinnitis_consort.1
 	hide_window = yes
@@ -1718,16 +1718,18 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		rightful_religious_head_scope = {
-			character_event = {
-				id = become_arinnitis_consort.2
-				days = 7
-				random = 3
+		FROM = {
+			job_spiritual = {
+				character_event = {
+					id = become_arinnitis_consort.2
+					days = 7
+					random = 3
+				}
 			}
 		}
 	}
 }
-#Start the ritual to become Arinniti's consort (head of religion)
+#Start the ritual to become Arinniti's consort (lord spiritual)
 character_event = {
 	id = become_arinnitis_consort.2
 	hide_window = yes
@@ -1735,7 +1737,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		FROMFROM = {
+		liege = {
 			narrative_event = {
 				id = become_arinnitis_consort.3
 			}
@@ -2203,7 +2205,7 @@ narrative_event = {
 	}
 }
 namespace = become_arinniti_in_flesh
-#Start the ritual to become Arinniti in flesh (lord spiritual)
+#Start the ritual to become Arinniti in flesh (religious head)
 character_event = {
 	id = become_arinniti_in_flesh.1
 	hide_window = yes
@@ -2211,11 +2213,13 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		rightful_religious_head_scope = {
-			character_event = {
-				id = become_arinniti_in_flesh.2
-				days = 7
-				random = 3
+		FROM = {
+			job_spiritual = {
+				character_event = {
+					id = become_arinniti_in_flesh.2
+					days = 7
+					random = 3
+				}
 			}
 		}
 	}
@@ -2228,7 +2232,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		FROMFROM = {
+		liege = {
 			narrative_event = {
 				id = become_arinniti_in_flesh.3
 			}
@@ -2693,5 +2697,97 @@ narrative_event = {
 		add_trait = rejected_by_arinniti
 		set_character_flag = rejected_by_arinniti
 		cancel_ambition = obj_become_arinniti_in_flesh
+	}
+}
+namespace = arinnitis_heritage
+#on_birth event, passing on heritage of Arinniti's consort or Arinniti in flesh
+character_event = {
+	id = arinnitis_heritage.1
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		OR = {
+			mother = {
+				OR = {
+					trait = scion_of_arinniti
+					trait = arinniti_in_flesh
+				}
+			}
+			father_even_if_dead = {
+				NOT = {
+					ROOT = {
+						real_father = {
+							always = yes
+						}
+					}
+				}
+				OR = {
+					trait = scion_of_arinniti
+					trait = arinnitis_consort
+				}
+			}
+			real_father = {
+				OR = {
+					trait = scion_of_arinniti
+					trait = arinnitis_consort
+				}
+			}
+		}
+	}
+	
+	option = {
+		trigger = {
+			mother = {
+				OR = {
+					trait = scion_of_arinniti
+					trait = arinnitis_consort
+				}
+			}
+		}
+		mother = {
+			ROOT = {
+				religion = PREV
+			}
+		}
+		add_trait = scion_of_arinniti
+	}
+	option = {
+		trigger = {
+			NOT = {
+				real_father = {
+					always = yes
+				}
+			}
+			father_even_if_dead = {
+				OR = {
+					trait = scion_of_arinniti
+					trait = arinnitis_consort
+				}
+			}
+		}
+		father_even_if_dead = {
+			ROOT = {
+				religion = PREV
+			}
+		}
+		add_trait = scion_of_arinniti
+	}
+	option = {
+		trigger = {
+			real_father = {
+				OR = {
+					trait = scion_of_arinniti
+					trait = arinnitis_consort
+				}
+			}
+		}
+		real_father = {
+			ROOT = {
+				religion = PREV
+			}
+		}
+		add_trait = scion_of_arinniti
 	}
 }
