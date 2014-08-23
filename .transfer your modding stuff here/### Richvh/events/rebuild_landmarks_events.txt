@@ -1926,6 +1926,12 @@ narrative_event = {
 		modifier = {
 			factor = 1.1
 			trait = chaste
+			is_female = no
+		}
+		modifier = {
+			factor = 1.1
+			trait = lustful
+			is_female = yes
 		}
 		modifier = {
 			factor = 1.1
@@ -2102,6 +2108,12 @@ narrative_event = {
 		modifier = {
 			factor = 1.1
 			trait = lustful
+			is_female = no
+		}
+		modifier = {
+			factor = 1.1
+			trait = chaste
+			is_female = yes
 		}
 		modifier = {
 			factor = 1.1
@@ -2421,6 +2433,12 @@ narrative_event = {
 		modifier = {
 			factor = 1.1
 			trait = lustful
+			is_female = yes
+		}
+		modifier = {
+			factor = 1.1
+			trait = chaste
+			is_female = no
 		}
 		modifier = {
 			factor = 1.1
@@ -2597,6 +2615,12 @@ narrative_event = {
 		modifier = {
 			factor = 1.1
 			trait = chaste
+			is_female = yes
+		}
+		modifier = {
+			factor = 1.1
+			trait = lustful
+			is_female = no
 		}
 		modifier = {
 			factor = 1.1
@@ -2767,5 +2791,510 @@ character_event = {
 			}
 		}
 		add_trait = scion_of_arinniti
+	}
+}
+namespace = luwian_retreat
+#Start retreat
+narrative_event = {
+	id = luwian_retreat.1
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.1
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAluwian_retreat.1
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+}
+#War interrupts retreat
+narrative_event = {
+	id = luwian_retreat.2
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.2
+	picture = GFX_evt_melee_zoroastrian_group
+	
+	trigger = {
+		war = yes
+		has_character_flag = on_luwian_retreat
+		NOT = {
+			has_character_flag = ignores_war
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 1
+	}
+	#Leaves retreat to deal with war
+	option = {
+		name = EVTOPTAluwian_retreat.2
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+	}
+	#Stays on retreat, ignores war
+	option = {
+		name = EVTOPTBluwian_retreat.2
+		set_character_flag = ignores_war
+	}
+}
+#Incapability ends retreat
+narrative_event = {
+	id = luwian_retreat.3
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.3
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	trigger = {
+		trait = incapable
+		has_character_flag = on_luwian_retreat
+	}
+	
+	mean_time_to_happen = {
+		days = 1
+	}
+	
+	option = {
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Check if a negative trait was lost
+character_event = {
+	id = luwian_retreat.4
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		random_list = {
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							trait = cynical
+						}
+					}
+					narrative_event = luwian_retreat.5 #No effect
+				}
+				if = {
+					limit = {
+						trait = cynical
+					}
+					narrative_event = luwian_retreat.6	#Lose cynical
+				}
+			}
+			10 = {
+				if = {
+					limit = {
+						is_female = yes
+					}
+					if = {
+						limit = {
+							NOT = {
+								trait = lustful
+							}
+						}
+						narrative_event = luwian_retreat.5 #No effect
+					}
+					if = {
+						limit = {
+							trait = lustful
+						}
+						narrative_event = luwian_retreat.7	#Lose lustful
+					}
+				}
+				if = {
+					limit = {
+						is_female = no
+					}
+					if = {
+						limit = {
+							NOT = {
+								trait = chaste
+							}
+						}
+						narrative_event = luwian_retreat.5 #No effect
+					}
+					if = {
+						limit = {
+							trait = chaste
+						}
+						narrative_event = luwian_retreat.8	#Lose chaste
+					}
+				}
+			}
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							trait = temperate
+						}
+					}
+					narrative_event = luwian_retreat.5 #No effect
+				}
+				if = {
+					limit = {
+						trait = temperate
+					}
+					narrative_event = luwian_retreat.9	#Lose temperate
+				}
+			}
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							trait = cheap
+						}
+					}
+					narrative_event = luwian_retreat.5 #No effect
+				}
+				if = {
+					limit = {
+						trait = cheap
+					}
+					narrative_event = luwian_retreat.10	#Lose cheap
+				}
+			}
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							trait = greedy
+						}
+					}
+					narrative_event = luwian_retreat.5 #No effect
+				}
+				if = {
+					limit = {
+						trait = greedy
+					}
+					narrative_event = luwian_retreat.11	#Lose greedy
+				}
+			}
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							trait = slothful
+						}
+					}
+					narrative_event = luwian_retreat.5 #No effect
+				}
+				if = {
+					limit = {
+						trait = slothful
+					}
+					narrative_event = luwian_retreat.12	#Lose slothful
+				}
+			}
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							trait = shy
+						}
+					}
+					narrative_event = luwian_retreat.5 #No effect
+				}
+				if = {
+					limit = {
+						trait = shy
+					}
+					narrative_event = luwian_retreat.13	#Lose shy
+				}
+			}
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							trait = humble
+						}
+					}
+					narrative_event = luwian_retreat.5 #No effect
+				}
+				if = {
+					limit = {
+						trait = humble
+					}
+					narrative_event = luwian_retreat.14	#Lose humble
+				}
+			}
+			80 = {
+				narrative_event = luwian_retreat.5
+			}
+		}
+	}
+}
+#No effect
+narrative_event = {
+	id = luwian_retreat.5
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.5
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose cynical
+narrative_event = {
+	id = luwian_retreat.6
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.6
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		remove_trait = cynical
+		piety = 25
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = cynical
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose lustful
+narrative_event = {
+	id = luwian_retreat.7
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.7
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = lustful
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = lustful
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose chaste
+narrative_event = {
+	id = luwian_retreat.8
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.8
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = chaste
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = chaste
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose temperate
+narrative_event = {
+	id = luwian_retreat.9
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.9
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = temperate
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = temperate
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose cheap
+narrative_event = {
+	id = luwian_retreat.10
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.10
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = cheap
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = cheap
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose greedy
+narrative_event = {
+	id = luwian_retreat.11
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.11
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = greedy
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = greedy
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose slothful
+narrative_event = {
+	id = luwian_retreat.12
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.12
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = slothful
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = slothful
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose shy
+narrative_event = {
+	id = luwian_retreat.13
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.13
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = shy
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = shy
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
+	}
+}
+#Lose humble
+narrative_event = {
+	id = luwian_retreat.14
+	title = EVTNAMEluwian_retreat
+	desc = EVTDESCluwian_retreat.14
+	picture = GFX_evt_monk_zoroastrian_group
+	
+	is_triggered_only = yes
+	
+	option = {		#Continue
+		name = EVTOPTAluwian_retreat.5
+		piety = 25
+		remove_trait = shy
+		character_event = {
+			id = luwian_retreat.4
+			days = 30
+		}
+	}
+	
+	option = {
+		name = EVTOPTBluwian_retreat.5
+		remove_trait = shy
+		clr_character_flag = on_luwian_retreat
+		remove_trait = traveling
+		clr_character_flag = ignores_war
 	}
 }
