@@ -3526,3 +3526,146 @@ narrative_event = {
 		clr_character_flag = ignores_war
 	}
 }
+
+namespace = rebuild_memphis
+# Memphis Restoration Part 1
+province_event = {
+	id = rebuild_memphis.1
+	title = "EVTNAME1000182319"
+	desc = "EVTDESC1000182319"
+	picture = "GFX_persepolis_ruin"
+
+	is_triggered_only = yes	
+
+	
+	option = {
+		name = "EVTOPTB1000182319" # Rebuild just the palace of Apries
+		owner = {
+			capital_scope = {
+				add_province_modifier = { name = "rebuilding_memphis_local" duration = 730 }
+			}
+			wealth = -100
+			character_event = { id = rebuild_memphis.2 days = 730 }
+		}
+	}
+
+	option = {
+		name = "EVTOPTC1000182319" # Rebuild the entire city.
+		owner = {
+			capital_scope = {
+				add_province_modifier = { name = "rebuilding_memphis_local" duration = 1460 }
+			}
+			wealth = -200
+			character_event = { id = rebuild_memphis.2 days = 1460 }
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA1000182319" # Make it the greatest city there ever was!
+		owner = {
+			capital_scope = {
+				add_province_modifier = { name = "rebuilding_memphis_local" duration = 2920 }
+			}
+			wealth = -300
+			character_event = { id = rebuild_memphis.2 days = 2920 }
+		}
+	}
+}
+
+# Memphis Restoration Part 2 - Add Memphis bonus modifier
+province_event = {
+	id = rebuild_memphis.2
+	title = "EVTNAME1000182320"
+	desc = "EVTDESC1000182320"
+	picture = "GFX_evt_memphis"
+
+	is_triggered_only = yes	
+	
+	trigger = {
+		has_global_flag = memphis_restoring
+		province_id = 1001 # Memphis
+		NOT = { has_global_flag = memphis_restored }
+	}
+
+	immediate = {
+		clr_global_flag = memphis_restoring
+		set_global_flag = memphis_restored
+	}
+	
+	option = {
+		name = "EVTOPTA1000182320" # Library
+		1001 = {
+			b_manusura = { set_name = "Memphis" }
+			add_province_modifier = { name = "memphis_library" duration = -1 }
+			}
+			prestige = 500
+			hidden_tooltip = {
+				owner = {
+					set_character_flag = event_1000182322
+					narrative_event = { id = rebuild_memphis.4 days = 7 }
+				}
+			}
+	}
+	option = {
+		name = "EVTOPTB1000182320" # Temple
+		1001 = {
+			b_manusura = { set_name = "Memphis" }
+			add_province_modifier = { name = "memphis_fanaticism" duration = -1 }
+			}
+			prestige = 500
+			hidden_tooltip = {
+				owner = {
+					set_character_flag = event_1000182322
+					narrative_event = { id = rebuild_memphis.4 days = 7 }
+				}
+			}
+	}
+	option = {
+		name = "EVTOPTC1000182320" # Palace
+		1001 = {
+			b_manusura = { set_name = "Memphis" }
+			add_province_modifier = { name = "memphis_admin" duration = -1 }
+		}
+		prestige = 500
+		hidden_tooltip = {
+			owner = {
+				set_character_flag = event_1000182322
+				narrative_event = { id = rebuild_memphis.4 days = 7 }
+			}
+		}
+	}
+}
+
+# News spread about Memphis
+narrative_event = {
+	id = rebuild_memphis.4
+	title = "EVTNAME1000182322"
+	desc = "EVTDESC1000182322"
+	picture = "GFX_evt_memphis"
+	border = "GFX_event_narrative_frame_religion"
+	
+	major = yes
+	only_rulers = yes
+	is_triggered_only = yes
+	
+	option = {
+		trigger = {
+			OR = {
+				has_character_flag = event_1000182322
+				religion_group = egyptian_group
+			}
+		}
+		if = {
+			limit = { has_character_flag = event_1000182322 }
+			clr_character_flag = event_1000182322
+		}
+		name = "OK"
+	}
+	
+	option = {
+		trigger = {
+			NOT = { has_character_flag = event_1000182322 }
+		}
+		name = "EVTOPTA1000182322"
+	}
+}
