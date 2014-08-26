@@ -1,7 +1,9 @@
-### At the moment we have a pretty basic icon system for combat tactics showing
-### the uniticon which has the biggest bonus value in the tactic.
-### This is the sprite number for each unit:
-### 1=LI 2=HI 3=PIKE 4=LC 5=KNIGHTS 6=ARCHERS 7=HORSE ARCH.
+###### ADVANCED BATTLES AND COMBAT DEPTH ESSENTIALS #####
+
+### This is the sprite number for each unit (using SixGunSouth's extended sprites)
+### GOOD 1=LI 2=HI 3=PIKE 4=LC 5=KNIGHTS 6=ARCHERS 7=HORSE ARCH.
+### Neutral 8=LI 9=HI 10=PIKE 11=LC 12=KNIGHTS 13=ARCHERS 14=HORSE ARCH.
+### Bad 15=LI 16=HI 17=PIKE 18=LC 19=KNIGHTS 20=ARCHERS 21=HORSE ARCH.
 
 # Must be first in file. This tactic will be set if anything goes wrong
 no_tactic = {
@@ -13,6 +15,10 @@ no_tactic = {
 	}
 }
 
+### notes: the modifiers are mostly bare-bones for now in favour of getting the majority of the whole system in code in first. 
+
+#####SKIRMISH PHASE#####
+
 generic_skirmish_tactic = {
 	days = 3 # tactic lasts one day
 	sprite = 4 # index of icon
@@ -20,1224 +26,4077 @@ generic_skirmish_tactic = {
 
 	trigger = {
 		phase = skirmish
+		flank_has_leader = no
+	
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 1
 	}
 
 }
-# LIBERT3 v13 (re)adjust  - multiplied almost all triggers/weights by 10x  (aside from those with single decimal places already, left them as is, with the occasional 5x only) as before
-harass_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 4
-	group = harass
+
+### Offensive Tactics ###
+
+## Cavalry Strikes ##
+
+#Mobile Swarm#
+sk_cs_mobileswarm = {
+	days = 4
+	sprite = 14
+	group = sk_cavalrystrikes
 
 	trigger = {
-		phase = skirmish 
-		light_cavalry = 0.01
+		phase = skirmish		
+		OR = {
+			horse_archers = 0.2 #left-most bell-curve trigger
+		}		
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3				
+		# bell-curve
+		modifier = {
+		factor = 1.5
+		horse_archers = 0.25
+		}
+		modifier = {
+		factor = 3
+		horse_archers = 0.3
+		}
+		modifier = {
+		factor = 0.666
+		horse_archers = 0.35
+		}
+		modifier = {
+		factor = 0.333
+		horse_archers = 0.4
+		}
+		#location  unimplemented
+	}
+
+	horse_archers_offensive = 0.5
+	horse_archers_defensive = 0.5
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.75
+	heavy_infantry_offensive = -1
+	pikemen_offensive = -1
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 0.5
+	}
+}
+
+#Rotating Swarm#
+sk_cs_rotatingswarm = {
+	days = 4
+	sprite = 7
+	group = sk_cavalrystrikes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes #required
+		OR = {
+			horse_archers = 0.4	#left-most bell-curve trigger
+		}		
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+				trait = cavalry_leader
+			}
+		}
+		#bell-curve
 		modifier = {
 			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 8
+			horse_archers = 0.5
+		}
+		modifier = {
+			factor = 3
+			horse_archers = 0.6
+		}
+		modifier = {
+			factor = 0.666
+			horse_archers = 0.7
+		}
+		modifier = {
+			factor = 0.333
+			horse_archers = 0.8
 			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.7
+		#location  unimplemented
+	}
+
+	horse_archers_offensive = 1
+	horse_archers_defensive = 1
+	archers_offensive = -0.25
+	light_infantry_offensive = -0.75
+	heavy_infantry_offensive = -1
+	pikemen_offensive = -1
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 0.5
+	}
+}
+
+#Horseman Harass#
+sk_cs_horsemanharass = {
+	days = 4
+	sprite = 11
+	group = sk_cavalrystrikes
+
+	trigger = {
+		phase = skirmish
+		OR = {
+			light_cavalry = 0.2 #left-most bell-curve trigger
+			camel_cavalry = 0.2 #left-most bell-curve trigger
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			OR = {
+			light_cavalry = 0.25
+			camel_cavalry = 0.25
 			}
 		}
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.6
+			factor = 3
+			OR = {
+			light_cavalry = 0.3
+			camel_cavalry = 0.3
 			}
 		}
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 0.666
+			OR = {
+			light_cavalry = 0.35
+			camel_cavalry = 0.35
+			}
+		}
+		modifier = {
+			factor = 0.333
+			OR = {
+			light_cavalry = 0.4
+			camel_cavalry = 0.4
+			}
+		}
+		#location  unimplemented
+	}
+
+	light_cavalry_offensive = 0.5
+	light_cavalry_defensive = 0.25
+	camel_cavalry_offensive = 0.5
+	camel_cavalry_defensive = 0.25
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.75
+	heavy_infantry_offensive = -1
+	pikemen_offensive = -1
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 0.25
+	}
+}
+
+#Cavalry Hit and Run#
+sk_cs_cavalryhitandrun =  {
+	days = 4
+	sprite = 4
+	group = sk_cavalrystrikes
+
+	trigger = {
+		phase = skirmish		
+		flank_has_leader = yes #required
+		OR = {
+			light_cavalry = 0.4
+			camel_cavalry = 0.4
+			leader = {
+			trait = cavalry_leader #bonus
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3				
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+				trait = cavalry_leader
+			}
+		}
+		# bell-curve
+		modifier = {
+		factor = 1.5
+		light_cavalry = 0.5
+		camel_cavalry = 0.5
+		}
+		modifier = {
+		factor = 3
+		light_cavalry = 0.6
+		camel_cavalry = 0.6
+		}
+		#location  unimplemented
+	}
+
+	light_cavalry_offensive = 1.5
+	light_cavalry_defensive = 0.5
+	camel_cavalry_offensive = 1.5
+	camel_cavalry_defensive = 0.5
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.75
+	heavy_infantry_offensive = -1
+	pikemen_offensive = -1
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 0.25
+	}
+}
+
+#Cavalry Raiding#
+sk_cs_cavalryraiding =  {
+	days = 4
+	sprite = 4
+	group = sk_cavalrystrikes
+
+	trigger = {
+		phase = skirmish		
+		OR = {
+			light_cavalry = 0.6
+			camel_cavalry = 0.6
+			leader = {
+			martial = 16
+			trait = cavalry_leader
+			}
+		}
+	}	
+
+	mean_time_to_happen = {
+		days = 3				
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+				trait = cavalry_leader
+			}
+		}
+		modifier = {
+			factor = 5
 			leader = {
 				martial = 16
 			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.5
-			}
 		}
+		# bell-curve
+		modifier = {
+		factor = 1.5
+		light_cavalry = 0.5
+		camel_cavalry = 0.5
+		}
+		modifier = {
+		factor = 3
+		light_cavalry = 0.6
+		camel_cavalry = 0.6
+		}
+		#location  unimplemented
 	}
 
 	light_cavalry_offensive = 3
-	horse_archers_offensive = -1.5
-	archers_offensive = -1.5
+	light_cavalry_defensive = 0.75
+	camel_cavalry_offensive = 3
+	camel_cavalry_defensive = 0.75
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.75
+	heavy_infantry_offensive = -1
+	pikemen_offensive = -1
+	
 	enemy = {
-		group = swarm
-		factor = 1
+		group = sk_shieldformations
+		factor = -0.25
 	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 0.5
+	}
+
 }
 
-volly_harass_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 4
-	group = harass
-
-	trigger = {
-		phase = skirmish 
-		light_cavalry = 0.1
-		archers = 0.1
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 8
-			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.7
-			}
-			light_troops = { 
-				who = archers
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.6
-			}
-			light_troops = { 
-				who = archers
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.5
-			}
-			light_troops = { 
-				who = archers
-				value = 0.3
-			}
-		}
-	}
-
-	light_cavalry_offensive = 2.4
-	archers_offensive = 0.6
-	horse_archers_offensive = -1.8
-	enemy = {
-		group = swarm
-		factor = 1
-	}
-}
-
-volley_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 6
-	group = volley
-
-	trigger = {
-		phase = skirmish  
-		archers = 0.1
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 8
-			}
-			light_troops = { 
-				who = archers
-				value = 0.7
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = { 
-				who = archers
-				value = 0.6
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			light_troops = { 
-				who = archers
-				value = 0.5
-			}
-		}
-	}
-
-	light_cavalry_offensive = -1.5
-	horse_archers_offensive = -1.5
-	archers_offensive = 3
-	enemy = {
-		group = harass
-		factor = 1
-	}
-}
-
-swarm_volley_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 6
-	group = volley
-
-	trigger = {
-		phase = skirmish 
-		archers = 0.1
-		horse_archers = 0.1
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 8
-			}
-			light_troops = { 
-				who = archers
-				value = 0.7
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = { 
-				who = archers
-				value = 0.6
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.3
-			}
-		}	
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			light_troops = { 
-				who = archers
-				value = 0.5
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.3
-			}
-		}	
-	}
-
-	light_cavalry_offensive = -1.8
-	horse_archers_offensive =  0.6
-	archers_offensive = 2.4	
-	enemy = {
-		group = harass
-		factor = 1
-	}
-}
-
-swarm_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
+#Swarm And Harass#
+sk_cs_swarmandharass =  {
+	days = 4
 	sprite = 7
-	group = swarm
+	group = sk_cavalrystrikes
 
 	trigger = {
-		phase = skirmish 
-		horse_archers = 0.1
+		phase = skirmish		
+		flank_has_leader = yes #required
+		OR = {
+			light_cavalry = 0.2
+			camel_cavalry = 0.2
+			leader = {
+			martial = 16
+			}
+		}
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3		
+		# commander
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 5
 			leader = {
-				martial = 8
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.7
+				trait = cavalry_leader
 			}
 		}
+		#bell-curve
 		modifier = {
 			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.6
-			}
-		}	
+			horse_archers = 0.25
+		}
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.5
-			}
-		}	
+			factor = 3
+			horse_archers = 0.3
+		}
+		#location  unimplemented
 	}
 
-	light_cavalry_offensive = -1.5
-	horse_archers_offensive = 3	
-	archers_offensive = -1.5
+	light_cavalry_offensive = 3
+	light_cavalry_defensive = 0.75
+	camel_cavalry_offensive = 3
+	camel_cavalry_defensive = 0.75
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.75
+	heavy_infantry_offensive = -1
+	pikemen_offensive = -1
+	
 	enemy = {
-		group = volley
-		factor = 1
+		group = sk_shieldformations
+		factor = -0.25
 	}
-}
-
-harras_swarm_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 7
-	group = swarm
-
-	trigger = {
-		phase = skirmish 
-		horse_archers = 0.1
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 8
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.7
-			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.6
-			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			light_troops = { 
-				who = horse_archers
-				value = 0.5
-			}
-			light_troops = { 
-				who = light_cavalry
-				value = 0.3
-			}
-		}
-	}
-
-	light_cavalry_offensive = 0.6
-	horse_archers_offensive = 2.4	
-	archers_offensive = -1.8
 	enemy = {
-		group = volley
-		factor = 1
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 0.5
 	}
 }
 
-shieldwall_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 2 # index of icon
-	group = defensive
+##Archery Strikes##
+
+#Light Volley#
+sk_as_lightvolley = {
+	days = 4
+	sprite = 14
+	group = sk_archerystrikes
 
 	trigger = {
-		phase = skirmish
-		heavy_infantry = 0.2
+		phase = skirmish		
+		OR = {
+			archers = 0.2	#left-most bell-curve trigger
+		}		
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3		
+		#bell-curve
 		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = {
-				who = archers
-				value = 0.3
-			}
+			factor = 1.5
+			archers = 0.25
 		}
 		modifier = {
 			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			heavy_troops = {
-				who = pikemen
-				value = 0.3
-			}
+			archers = 0.3
 		}
 		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			heavy_troops = {
-				who = heavy_infantry
-				value = 0.4
-			}
+			factor = 0.666
+			archers = 0.45
 		}
+		modifier = {
+			factor = 0.333
+			archers = 0.6
+			}
+		#location  unimplemented
 	}
-
-	light_infantry_defensive = 1.2
-	heavy_infantry_defensive = 3
-	pikemen_defensive = 2.4
-
-	archers_offensive = 0.6
-
-	light_cavalry_defensive = -0.5
-	knights_defensive = -0.5
-	horse_archers_defensive = -0.5
+	
+	archers_offensive = 0.5
+	
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_ambush
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.5
+	}
 }
 
-fient_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 2 # index of icon
-	group = defensive
+#Heavy Volley#
+sk_as_heavyvolley = {
+	days = 4
+	sprite = 6
+	group = sk_archerystrikes
 
 	trigger = {
-		phase = skirmish
-		heavy_infantry = 0.1
-		archers  = 0.1
+		phase = skirmish		
+		OR = {
+			archers = 0.4	#left-most bell-curve trigger
+		}		
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3	
+		# commander
 		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = {
-				who = archers
-				value = 0.3
-			}
+			factor = 5
+			flank_has_leader = yes #presence bonus
 		}
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			heavy_troops = {
-				who = heavy_infantry
-				value = 0.4
-			}
-		}
-	}
-
-	heavy_infantry_offensive = 1.8
-	archers_offensive = 1.8
-}
-
-
-
-prepare_tactic = {
-	days = 1
-	sprite = 2
-	group = defensive
 		
-	trigger = {
-		phase = skirmish
-		days = 15
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			archers = 0.5
+		}
+		modifier = {
+			factor = 3
+			archers = 0.6
+		}
+		#location  unimplemented
 	}
 	
-	mean_time_to_happen = {
-		days = 1
-		modifier = {
-			factor = 0.1
-			flank_has_leader = yes
-			leader = {
-				martial = 8
-			}
-		}
-		modifier = {
-			factor = 0.1
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-		}
-		modifier = {
-			factor = 0.1
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-		}
-	}
+	archers_offensive = 0.75
 	
-	change_phase_to = melee
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_ambush
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.5
+	}
 }
 
-charge_on_undefended_tactic = {
-	days = 2
-	sprite = 5
-	group = charge
-	
+#Indiscriminate Barrage#
+sk_as_indiscriminatebarrage = {
+	days = 4
+	sprite = 20
+	group = sk_archerystrikes
+
 	trigger = {
-		phase = skirmish
-		is_flanking = no
-		days = 3 # duration of combat >= 3 days
+		phase = skirmish		
+		OR = {
+			archers = 0.2	#left-most bell-curve trigger
+		}		
+	}
+
+	mean_time_to_happen = {
+		days = 3	
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = no #absence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+				trait = cruel
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+				trait = wroth
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			archers = 0.25
+		}
+		modifier = {
+			factor = 3
+			archers = 0.3
+		}
+		#location  unimplemented
 	}
 	
+	archers_offensive = 1.5
+	archers_defensive = -0.25
+	heavy_infantry_defensive = -0.5
+	pikemen_defensive = -0.5
+	light_infantry_defensive = -0.5
+	light_cavalry_defensive = -0.25
+	camel_cavalry_defensive = -0.25
+	knights_defensive = -0.25
+	war_elephants_defensive = -0.25
+	horse_archers_defensive = -0.25	
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_ambush
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.5
+	}
+}
+
+#Arced Arrow Assault Barrage#
+sk_as_arcedarrowassault = {
+	days = 4
+	sprite = 13
+	group = sk_archerystrikes
+
+	trigger = {
+		phase = skirmish		
+		AND = {
+		OR = {
+			archers = 0.2	#left-most bell-curve trigger
+		}		
+		OR = { # for the front
+			light_infantry = 0.35
+			heavy_infantry = 0.35			
+		}
+		}
+	}
+
 	mean_time_to_happen = {
-		days = 1
+		days = 3	
+		# commander
 		modifier = {
-			factor = 100
-			enemy = {
-				troops = {
-					who = archers
-					value = 0.6
+			factor = 5
+			flank_has_leader = yes #presence bonus
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.225
+			archers = 0.25
+		}
+		modifier = {
+			factor = 1.225
+			OR = {
+			light_infantry = 0.425
+			heavy_infantry = 0.425
+			}			
+		}
+		modifier = {
+			factor = 1.732
+			archers = 0.3
+		}
+		modifier = {
+			factor = 1.732
+			OR = {
+			light_infantry = 0.5
+			heavy_infantry = 0.5
+			}			
+		}
+		#location  unimplemented
+	}
+	
+	archers_offensive = 0.5
+	archers_defensive = 1	
+	
+	enemy = {
+		group = sk_shieldformations
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_ambush
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.25
+	}
+}
+
+#Ambush Volley#
+sk_as_ambushvolley = {
+	days = 4
+	sprite = 6
+	group = sk_archerystrikes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes #required
+		archers = 0.2	#left-most bell-curve trigger
+		leader = {
+			intrigue = 8
+		}
+		OR = {
+			AND = {
+				location = {
+				OR = {
+				terrain = forest
+				terrain = hills				
+				}
+			}
+				leader = {
+				trait = rough_terrain_leader
+				}
+			}
+			AND = {
+				location = {
+				terrain = mountain
+			}
+				leader = {
+				trait =  mountain_terrain_leader
+				}
+			}
+			AND = {
+				location = {
+				terrain = jungle
+			}
+				leader = {
+				trait = jungle_terrain_leader
 				}
 			}
 		}
 	}
+
+	mean_time_to_happen = {
+		days = 3	
+		# commander -- redundant bonus to make them trigger more likely
+		modifier = {
+			factor = 5
+			flank_has_leader = yes #presence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+				OR = {
+				trait = rough_terrain_leader
+				trait =  mountain_terrain_leader
+				trait = jungle_terrain_leader				
+				}
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			archers = 0.25
+		}
+		modifier = {
+			factor = 3
+			archers = 0.3
+		}
+		#location  unimplemented
+	}
 	
-	change_phase_to = melee
+	archers_offensive = 1.5
+	archers_defensive = 1
+	light_infantry_offensive = 1
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.75
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 0.75
+	}
 }
 
-charge_of_opportunity_tactic = {
-	days = 2 #experimental adjustments for the ABCDE project
-	sprite = 5 # index of icon
-	group = charge
-	
+##Infantry Screening##
+
+#Average Light Bait Vanguard#
+sk_is_averagelightbaitvanguard = {
+	days = 4
+	sprite = 8
+	group = sk_infantryscreening
+
 	trigger = {
 		phase = skirmish
-		is_flanking = no
-		days = 10 # duration of combat >= 10 days
+		light_infantry = 0.4 #left-most bell-curve trigger
 	}
 
 	mean_time_to_happen = {
-		days = 3 # this has nothing to do with days, it just represents relative chance of selecting this tactic, higher is better
+		days = 3		
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			light_infantry = 0.5
+		}
+		modifier = {
+			factor = 3
+			light_infantry = 0.6
+		}
+		#location  unimplemented
+	}
+	light_infantry_defensive = -0.5
+	light_infantry_offensive = 0.5
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25
+	archers_defensive = 0.25
+	light_cavalry_defensive = 0.25
+	camel_cavalry_defensive = 0.25
+	knights_defensive = 0.25
+	war_elephant_defensive = 0.25
+	archers_offensive  =-0.75
+	
+	enemy = {
+		group = sk_archerystrikes
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = 0.75
+	}
+	enemy = {
+		group = ambushes
+		factor = 0.5
 	}
 
-	change_phase_to = melee
-	
-	knights_offensive = 3
-	horse_archers_offensive = 3
-	heavy_infantry_offensive = 1.2
 }
 
-charge_tactic = {
-	days = 2 #experimental adjustments for the ABCDE project
-	sprite = 5 # index of icon
-	group = charge
-	
+#Skilled Light Bait Vanguard#
+sk_is_skilledlightbaitvanguard = {
+	days = 4
+	sprite = 1
+	group = sk_infantryscreening
+
 	trigger = {
 		phase = skirmish
-		is_flanking = no
-		days = 10 # duration of combat >= 10 days
+		flank_has_leader = yes
+		light_infantry = 0.4 #left-most bell-curve trigger
 	}
 
 	mean_time_to_happen = {
-		days = 10 # this has nothing to do with days, it just represents relative chance of selecting this tactic, higher is better
+		days = 3		
+		# commander
 		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = {
-				who = horse_archers
-				value = 0.3
-			}
+			factor = 5
+			flank_has_leader = yes #bonus
 		}
 		modifier = {
-			factor = 3
-			flank_has_leader = yes
+			factor = 5
 			leader = {
-				martial = 12
+			trait = light_foot_leader
 			}
-			heavy_troops = {
-				who = knights
-				value = 0.1
-			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			light_infantry = 0.5
 		}
 		modifier = {
 			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			heavy_troops = {
-				who = heavy_infantry
-				value = 0.1
-			}
+			light_infantry = 0.6
 		}
+		#location  unimplemented
 	}
 
-	change_phase_to = melee
-
-	knights_offensive = 3
-	horse_archers_offensive = 3
-	heavy_infantry_offensive = 1.2
-}
-
-wait_tactic = {
-	days = 1
-	sprite = 2
-	group = stand_fast
-
-	trigger = {
-		phase = melee
-	}
-
-	mean_time_to_happen = {
-		days = 1
-		modifier = {
-			factor = 0.1
-			flank_has_leader = yes
-			leader = {
-				martial = 8
-			}
-		}
-		modifier = {
-			factor = 0.1
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-		}
-		modifier = {
-			factor = 0.1
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-		}
-	}
-}
-
-advance_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 2
-	group = advance
-
-	trigger = {
-		phase = melee
-		heavy_infantry = 0.1
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 8
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.7
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.6
-			}
-		}	
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.5
-			}
-		}	
-	}
-
-	knights_offensive = -1.5
-	heavy_infantry_offensive = 3
-	pikemen_offensive = -1.5
+	light_infantry_defensive = -0.25
+	light_infantry_offensive = 0.75
+	heavy_infantry_defensive = 0.5
+	pikemen_defensive = 0.5
+	archers_defensive = 0.5
+	light_cavalry_defensive = 0.25
+	camel_cavalry_defensive = 0.5
+	knights_defensive = 0.5
+	war_elephant_defensive = 0.5
+	archers_offensive  =-0.5
+	
 	enemy = {
-		group = stand_fast
-		factor = 3
+		group = sk_archerystrikes
+		factor = -0.5
 	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = 1
+	}
+	enemy = {
+		group = ambushes
+		factor = 0.75
+	}
+
 }
 
-awesome_advance_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 2
-	group = advance
+#Heavy Advance Vanguard#
+sk_is_heavyadvancevanguard = {
+	days = 4
+	sprite = 9
+	group = sk_infantryscreening
 
 	trigger = {
-		phase = melee
-		heavy_infantry = 0.1
-		knights = 0.1
+		phase = skirmish		
+		heavy_infantry = 0.4 #left-most bell-curve trigger
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3		
+		#bell-curve
 		modifier = {
 			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 9
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.7
-			}
-			heavy_troops = {
-				who = knights 
-				value = 0.3
-			}
+			heavy_infantry = 0.5
 		}
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 13
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.6
-			}
-			heavy_troops = {
-				who = knights 
-				value = 0.3
-			}
-		}	
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 17
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.5
-			}
-			heavy_troops = {
-				who = knights 
-				value = 0.3
-			}
-		}	
+			factor = 3
+			heavy_infantry = 0.6
+		}
+		#location  unimplemented
+	}
+	heavy_infantry_defensive = -0.25
+	light_infantry_defensive = 0.5
+	light_infantry_offensive = 0.5	
+	pikemen_defensive = 0.5
+	archers_defensive = 0.5
+	light_cavalry_defensive = 0.5
+	camel_cavalry_defensive = 0.5
+	knights_defensive = 0.5
+	war_elephant_defensive = 0.5
+	archers_offensive  =-0.6
+	enemy = {
+		group = sk_archerystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = 0.75
+	}
+	enemy = {
+		group = ambushes
+		factor = 0.5
 	}
 
-	knights_offensive = 0.6
-	heavy_infantry_offensive = 2.4
-	pikemen_offensive = -1.8
+
+}
+
+#Average Light Foot Feint#
+sk_is_averagelightfootfeint = {
+	days = 4
+	sprite = 8
+	group = sk_infantryscreening
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		light_infantry = 0.25 #left-most bell-curve trigger
+		leader = {
+			martial = 16
+			}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			light_infantry = 0.325
+		}
+		modifier = {
+			factor = 3
+			light_infantry = 0.4
+		}
+		#location  unimplemented
+	}
+	light_infantry_offensive = 0.5
+	light_infantry_defensive = 0.25
+	archers_offensive = 0.5
+	
 	enemy = {
-		group = stand_fast
-		factor = 3
+		group = sk_archerystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = 0.75
+	}
+	enemy = {
+		group = ambushes
+		factor = 0.5
+	}
+
+}
+
+#Skilled Light Foot Feint#
+sk_is_skilledlightfootfeint = {
+	days = 4
+	sprite = 1
+	group = sk_infantryscreening
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		light_infantry = 0.25 #left-most bell-curve trigger
+		leader = {
+			martial = 16
+			trait = light_foot_leader
+			}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			trait = light_foot_leader
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			light_infantry = 0.325
+		}
+		modifier = {
+			factor = 3
+			light_infantry = 0.4
+		}
+		#location  unimplemented
+	}
+	light_infantry_offensive = 1
+	light_infantry_defensive = 0.5
+	archers_offensive = 1
+	enemy = {
+		group = sk_archerystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = 0.75
+	}
+	enemy = {
+		group = ambushes
+		factor = 0.5
+	}
+
+}
+
+#Heavy Foot Feint#
+sk_is_heavyfootfeint = {
+	days = 4
+	sprite = 9
+	group = sk_infantryscreening
+
+	trigger = {
+		phase = skirmish		
+		flank_has_leader = yes
+		heavy_infantry = 0.25 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			trait = heavy_infantry_leader
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			heavy_infantry = 0.325
+		}
+		modifier = {
+			factor = 3
+			heavy_infantry = 0.4
+		}
+		#location  unimplemented
+	}
+	heavy_infantry_defensive = -0.25
+	archers_offensive = 1
+	
+	enemy = {
+		group = sk_archerystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_manoeuvres
+		factor = 1
+	}
+	enemy = {
+		group = ambushes
+		factor = 0.75
+	}
+
+}
+
+###Defensive Tactics###
+
+##Shield Formations##
+
+#Weak Shield Link#
+sk_sf_weakshieldlink = {
+	days = 4
+	sprite = 9
+	group = sk_shieldformations
+
+	trigger = {
+		phase = skirmish		
+		heavy_infantry = 0.2 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = NO #absence bonus
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			heavy_infantry = 0.25
+		}
+		modifier = {
+			factor = 3
+			heavy_infantry = 0.3
+		}
+		modifier = {
+			factor = 0.666
+			heavy_infantry = 0.35
+		}
+		modifier = {
+			factor = 0.333
+			heavy_infantry = 0.4
+			}
+		#location  unimplemented
+	}
+	
+	heavy_infantry_defensive = 0.15
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.5
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.25 
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.25 
 	}
 }
 
-stand_fast_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
+#Shield Chain#
+sk_sf_shieldchain = {
+	days = 4
+	sprite = 9
+	group = sk_shieldformations
+
+	trigger = {
+		phase = skirmish		
+		heavy_infantry = 0.25 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = YES #presence bonus
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			heavy_infantry = 0.325
+		}
+		modifier = {
+			factor = 3
+			heavy_infantry = 0.4
+		}
+		modifier = {
+			factor = 0.666
+			heavy_infantry = 0.525
+		}
+		modifier = {
+			factor = 0.333
+			heavy_infantry = 0.65
+			}
+		#location  unimplemented
+	}
+	
+	heavy_infantry_defensive = 0.3
+	light_infantry_defensive = 0.3
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.5
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.25 
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.25 
+	}
+
+}
+
+#Shield  Wall#
+sk_sf_shieldwall = {
+	days = 4
+	sprite = 2
+	group = sk_shieldformations
+
+	trigger = {
+		phase = skirmish		
+		heavy_infantry = 0.4 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = YES #presence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			trait = heavy_infantry_leader
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			heavy_infantry = 0.5
+		}
+		modifier = {
+			factor = 3
+			heavy_infantry = 0.6
+		}
+		#location  unimplemented
+	}
+	
+	heavy_infantry_defensive = 0.75
+	pikemen_defensive = 0.25
+	light_infantry_defensive = 0.75
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.5
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.25 
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.5 
+	}
+
+}
+
+#Strong Shield Wall#
+sk_sf_strongshieldwall = {
+	days = 4
+	sprite = 2
+	group = sk_shieldformations
+
+	trigger = {
+		phase = skirmish		
+		heavy_infantry = 0.5 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = YES #presence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			trait = heavy_infantry_leader
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			heavy_infantry = 0.6
+		}
+		modifier = {
+			factor = 3
+			heavy_infantry = 0.6
+		}
+		#location  unimplemented
+	}
+	
+	heavy_infantry_defensive = 1
+	pikemen_defensive = 0.5
+	light_infantry_defensive = 1
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.5
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.25 
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 0.5 
+	}
+
+
+}
+
+
+#Spike Wall#
+sk_sf_spikewall = {
+	days = 4
 	sprite = 3
-	group = stand_fast
+	group = sk_shieldformations
 
 	trigger = {
-		phase = melee
-		pikemen = 0.1
+		phase = skirmish		
+		pikemen = 0.25 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = YES #presence bonus
+		}		
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			pikemen = 0.325
+		}
+		modifier = {
+			factor = 3
+			pikemen = 0.4
+		}
+		#location  unimplemented
+	}
+	
+	heavy_infantry_defensive = 1
+	pikemen_defensive = 0.5
+	light_infantry_defensive = 1
+	pikemen_offensive = 2
+	archers_offensive = -0.5
+	light_infantry_offensive = -0.5
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.25 
+	}
+	enemy = {
+		group = sk_cavalrystrikes
+		factor = 2 
+	}
+
+}
+
+##Manoeuvres
+
+#Obvious Feint#
+sk_ma_obviousfeint = {
+	days = 4
+	sprite = 15
+	group = sk_manoeuvres
+
+	trigger = {
+		phase = skirmish
+		# composition independent
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = NO #absence bonus
+		}	
+		modifier = {
+			factor = 5
+			leader = {
+			NOT = { martial = 8 }
+			}
+		}
+		# composition independent
+		#location  unimplemented
+	}
+	heavy_infantry_defensive = -0.3
+	pikemen_defensive = -0.3
+	archers_defensive = -0.3
+	horse_archers_defensive = -0.3
+	light_cavalry_defensive = -0.3
+	camel_cavalry_defensive = -0.3
+	archers_offensive = 0.1
+	light_cavalry_offensive = 0.1
+	camel_cavalry_offensive = 0.1
+	horse_archers_offensive = 0.1
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_ambushes
+		factor = 0.25
+	}
+}
+
+#Skillful Feint#
+sk_ma_skillfulfeint = {
+	days = 4
+	sprite = 8
+	group = sk_manoeuvres
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = YES
+		leader = {
+			martial = 8
+			}
+		# composition independent
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# composition independent
+		#location  unimplemented
+	}
+	heavy_infantry_defensive = -0.1
+	pikemen_defensive = -0.1
+	archers_defensive = -0.1
+	horse_archers_defensive = -0.1
+	light_cavalry_defensive = -0.1
+	camel_cavalry_defensive = -0.1
+	archers_offensive = 0.2
+	light_cavalry_offensive = 0.2
+	camel_cavalry_offensive = 0.2
+	horse_archers_offensive = 0.2
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_ambushes
+		factor = 0.5
+	}
+
+}
+
+#Misdirection#
+sk_ma_misdirection = {
+	days = 4
+	sprite = 1
+	group = sk_manoeuvres
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = YES
+		leader = {
+			martial = 16			
+			}
+		# composition independent
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		modifier = {
+			factor = 5
+			leader = {
+			OR = {
+			trait = experimenter 
+			trait = trickster 
+				}		
+			}
+		}
+		# composition independent
+		#location  unimplemented
+	}
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25
+	archers_defensive = 0.25
+	horse_archers_defensive = 0.25
+	light_cavalry_defensive = 0.25
+	camel_cavalry_defensive = 0.25
+	archers_offensive = 0.3
+	light_infantry_offensive = 0.3
+	light_cavalry_offensive = 0.3
+	camel_cavalry_offensive = 0.3
+	horse_archers_offensive = 0.3
+	
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_ambushes
+		factor = 0.75
+	}
+
+}
+
+#Obfuscation#
+sk_ma_obfuscation = {
+	days = 4
+	sprite = 1
+	group = sk_manoeuvres
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = YES
+		leader = {
+			martial = 24	
+			OR = {
+			trait = experimenter 
+			trait = trickster 
+				}
+			}
+		# composition independent
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		modifier = {
+			factor = 5
+			leader = {
+			OR = {
+			trait = experimenter 
+			trait = trickster 
+				}
+			}
+		}
+		# composition independent
+		#location  unimplemented
+	}
+	heavy_infantry_defensive = 0.5
+	pikemen_defensive = 0.5
+	knights_defensive = 0.5
+	war_elephants = 0.5
+	light_infantry_defensive = 1
+	archers_defensive = 1
+	horse_archers_defensive = 1
+	light_cavalry_defensive = 1
+	camel_cavalry_defensive = 1
+	archers_offensive = 0.5
+	light_infantry_offensive = 0.5
+	light_cavalry_offensive = 0.5
+	camel_cavalry_offensive = 0.5
+	horse_archers_offensive = 0.5
+	
+	enemy = {
+		group = sk_ambushes
+		factor = 1
+	}
+
+}
+
+##Ambushes##
+
+#Desert Ambush#
+sk_am_desertambush = {
+	days = 4
+	sprite = 11
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
 		location = {
-			terrain = forest
+		terrain = desert
+		}
+		leader = {
+		martial = 8
+		intrigue = 8
 		}
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3		
+		# commander
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 5
 			leader = {
-				martial = 8
-			}
-			heavy_troops = { 
-				who = pikemen
-				value = 0.7
+			OR = { 
+			trait = desert_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
 			}
 		}
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 5
 			leader = {
-				martial = 12
-			}
-			heavy_troops = { 
-				who = pikemen
-				value = 0.6
+			martial = 16 #bonus
 			}
 		}
+		#composition independent
+		#location
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			heavy_troops = { 
-				who = pikemen
-				value = 0.5
-			}
+			factor = 5
+			location = {
+				terrain = desert
+			}			
 		}
+	}
+	light_infantry_offensive = 0.25
+	archers_offensive = 0.25
+	light_cavalry_offensive = 0.5
+	camel_cavalry_offensive = 1
+	horse_archers_offensive = 0.5
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1
 	}
 
-	knights_offensive = -1.5
-	heavy_infantry_offensive = -1.5
-	pikemen_offensive = 3
-	enemy = {
-		group = charge
-		factor = 3
-	}
 }
 
-slow_advance_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 3
-	group = stand_fast
+#Crushing Desert Ambush#
+sk_am_crushingdesertambush = {
+	days = 4
+	sprite = 7
+	group = sk_ambushes
 
 	trigger = {
-		phase = melee
-		pikemen = 0.1
-		heavy_infantry = 0.1
-	}
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = desert
+		}
+		leader = {
+		martial = 16
+		intrigue = 8
+		OR = { 
+			trait = desert_terrain_leader 
+			trait = experimenter 
+			trait = trickster 
+				}
+			}
+		}
+	
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3		
+		# commander
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 5
 			leader = {
-				martial = 8
-			}
-			heavy_troops = { 
-				who = pikemen
-				value = 0.7
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.3
-			}
+			OR = { 
+			trait = desert_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			
+			}		
 		}
+		#composition independent
+		#location
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			heavy_troops = { 
-				who = pikemen
-				value = 0.6
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.3
-			}
+			factor = 5
+			location = {
+				terrain = desert
+			}			
 		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			heavy_troops = { 
-				who = pikemen
-				value = 0.5
-			}
-			heavy_troops = { 
-				who = heavy_infantry
-				value = 0.3
-			}
-		}
+		
+	}
+	light_infantry_offensive = 0.5
+	archers_offensive = 0.5
+	light_cavalry_offensive = 1
+	camel_cavalry_offensive = 2
+	horse_archers_offensive = 1
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1.5
 	}
 
-	knights_offensive = -1.8
-	heavy_infantry_offensive = 0.6
-	pikemen_offensive = 2.4
-	enemy = {
-		group = charge
-		factor = 3
-	}
 }
 
-awesome_charge_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 5
-	group = charge
+#Hill-side Ambush#
+sk_am_hillsideambush = {
+	days = 4
+	sprite = 13
+	group = sk_ambushes
 
 	trigger = {
-		phase = melee
-		knights = 0.1
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = hills
+		}
+		leader = {
+		martial = 8
+		intrigue = 8		
+		}
 	}
 
 	mean_time_to_happen = {
-		days = 3
+		days = 3		
+		# commander
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 5
 			leader = {
-				martial = 8
+			OR = { 
+			trait = rough_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
 			}
-			heavy_troops = { 
-				who = knights
-				value = 0.7
 			}
-		}
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 5
 			leader = {
-				martial = 12
+			martial = 16 #bonus
 			}
-			heavy_troops = { 
-				who = knights
-				value = 0.6
 			}
-		}
+		#composition independent
+		#location
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 16
-			}
-			heavy_troops = { 
-				who = knights
-				value = 0.5
-			}
+			factor = 5
+			location = {
+				terrain = hills
+			}			
 		}
+		
 	}
-
-	knights_offensive = 3
-	heavy_infantry_offensive = -1.5
-	pikemen_offensive = -1.5
+	archers_defensive = 0.3
+	light_infantry_defensive = 0.3
+	heavy_infantry_defensive = 0.3
+	pikemen_defensive = 0.3
+	archers_offensive = 0.75
+	light_infantry_offensive = 0.4
+	horse_archers_offensive = 0.4
+	knights_offensive = 0.4
+	war_elephants_offensive = 0.4
+	light_cavalry_offensive = 0.4
+	camels_offensive = 0.4
+	
 	enemy = {
-		group = advance
-		factor = 3
+		group = sk_manoeuvres
+		factor = -0.5
 	}
-}
-
-awesomer_charge_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 5
-	group = charge
-
-	trigger = {
-		phase = melee 
-		knights = 0.1
-		pikemen = 0.1
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 9
-			}
-			heavy_troops = { 
-				who = knights
-				value = 0.7
-			}
-			heavy_troops = {
-				who = pikemen
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 13
-			}
-			heavy_troops = { 
-				who = knights
-				value = 0.6
-			}
-			heavy_troops = {
-				who = pikemen
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 17
-			}
-			heavy_troops = { 
-				who = knights
-				value = 0.5
-			}
-			heavy_troops = {
-				who = pikemen
-				value = 0.3
-			}
-		}
-	}
-
-	knights_offensive = 2.4
-	heavy_infantry_offensive = -1.8
-	pikemen_offensive = 0.6
 	enemy = {
-		group = advance
-		factor = 3
-	}
-}
-
-barrage_tactic = {
-	days = 3 #experimental adjustments for the ABCDE project
-	sprite = 6 # index of icon
-	group = defensive
-
-	trigger = {
-		phase = melee
-		archers = 0.2
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = {
-				who = archers
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			light_troops = {
-				who = horse_archers
-				value = 0.3
-			}
-		}
+		group = sk_infantryscreening
+		factor = 1
 	}
 	
-	archers_offensive = 2.4
-	horse_archers_offensive = 2.4
 }
 
-raid_tactic = {
-	days = 3 #experimental adjustments for the ABCDE project
+#Crushing Hill-side Ambush#
+sk_am_crushinghillsideambush = {
+	days = 4
+	sprite = 6
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = hills
+		}
+		leader = {
+		martial = 16
+		intrigue = 8
+		OR = { 
+			trait = rough_terrain_leader 
+			trait = experimenter 
+			trait = trickster 
+				}
+			}
+		}
+	
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = rough_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			}
+		}
+		#composition independent
+		#location
+		modifier = {
+			factor = 5
+			location = {
+				terrain = hills
+			}			
+		}
+		
+	}
+	archers_defensive = 0.75
+	light_infantry_defensive = 0.75
+	heavy_infantry_defensive = 0.75
+	pikemen_defensive = 0.75
+	archers_offensive = 1.5
+	light_infantry_offensive = 1
+	horse_archers_offensive = 1
+	knights_offensive = 1
+	war_elephants_offensive = 1
+	light_cavalry_offensive = 1
+	camels_offensive = 1
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1.5
+	}
+
+}
+
+#Mountain Ambush#
+sk_am_mountainambush = {
+	days = 4
+	sprite = 9
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = mountain
+		}
+		leader = {
+		martial = 8
+		intrigue = 8
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = mountain_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			martial = 16 #bonus
+			}		
+			}
+		#composition independent
+		#location
+		modifier = {
+			factor = 5
+			location = {
+				terrain = mountain
+			}			
+		}
+		
+	}
+	archers_defensive = 0.75
+	light_infantry_defensive = 0.75
+	heavy_infantry_defensive = 1
+	pikemen_defensive = 0.5	
+	light_infantry_offensive = 0.75
+	archers_offensive = 0.75
+	horse_archers_offensive = -0.5
+	knights_offensive = -0.5
+	war_elephants_offensive = -0.5
+	light_cavalry_offensive = -0.5
+	camels_offensive = -0.5
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1
+	}
+
+}
+
+#Crushing Mountain Ambush#
+sk_am_crushingmountainambush = {
+	days = 4
+	sprite = 2
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = mountain
+		}
+		leader = {
+		martial = 16
+		intrigue = 8
+		OR = { 
+			trait = mountain_terrain_leader 
+			trait = experimenter 
+			trait = trickster 
+				}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = mountain_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			}
+		}	
+		#composition independent
+		#location
+		modifier = {
+			factor = 5
+			location = {
+				terrain = mountain
+			}			
+		}
+		
+	}
+	archers_defensive = 1.5
+	light_infantry_defensive = 1.5
+	heavy_infantry_defensive = 2
+	pikemen_defensive = 0.75	
+	light_infantry_offensive = 1.5
+	archers_offensive = 1.5
+	horse_archers_offensive = -0.5
+	knights_offensive = -0.5
+	war_elephants_offensive = -0.5
+	light_cavalry_offensive = -0.5
+	camels_offensive = -0.5
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1.5
+	}
+	
+}
+
+#Forest Ambush#
+sk_am_forestambush = {
+	days = 4
+	sprite = 8
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = forest
+		}
+		leader = {
+		martial = 8
+		intrigue = 8
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = rough_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			martial = 16 #bonus
+			}
+			}
+		#composition independent
+		#location
+		modifier = {
+			factor = 5
+			location = {
+				terrain = rough
+			}			
+		}
+		
+	}
+	archers_defensive = 0.5
+	light_infantry_defensive = 0.5
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25	
+	light_infantry_offensive = 1
+	archers_offensive = 0.75
+	horse_archers_offensive = -0.3
+	knights_offensive = -0.3
+	war_elephants_offensive = -0.3
+	light_cavalry_offensive = -0.3
+	camels_offensive = -0.3
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1
+	}
+	
+}
+
+#Crushing Forest Ambush#
+sk_am_crushingforestambush = {
+	days = 4
+	sprite = 1
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = forest
+		}
+		leader = {
+		martial = 16
+		intrigue = 8
+		OR = { 
+			trait = rough_terrain_leader 
+			trait = experimenter 
+			trait = trickster 
+				}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = rough_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			}
+		}	
+		#composition independent
+		#location
+		modifier = {
+			factor = 5
+			location = {
+				terrain = forest
+			}			
+		}
+		
+	}
+	archers_defensive = 1
+	light_infantry_defensive = 1
+	heavy_infantry_defensive  0.25
+	pikemen_defensive = 0.5	
+	light_infantry_offensive = 2
+	archers_offensive = 1.5
+	horse_archers_offensive = -0.3
+	knights_offensive = -0.3
+	war_elephants_offensive = -0.3
+	light_cavalry_offensive = -0.3
+	camels_offensive = -0.3
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1.5
+	}
+
+}
+
+#Jungle Ambush#
+sk_am_jungleambush = {
+	days = 4
+	sprite = 10
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = jungle
+		}
+		leader = {
+		martial = 8
+		intrigue = 8
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = jungle_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			martial = 16 #bonus
+			}
+		}
+		#composition independent
+		#location
+		modifier = {
+			factor = 5
+			location = {
+				terrain = jungle
+			}			
+		}		
+	}
+	archers_defensive = 0.5
+	light_infantry_defensive = 0.5
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.5	
+	light_infantry_offensive = 0.75
+	archers_offensive = 0.75
+	horse_archers_offensive = -0.3
+	knights_offensive = -0.3
+	war_elephants_offensive = -0.3
+	light_cavalry_offensive = -0.3
+	camels_offensive = -0.3
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1
+	}
+
+}
+
+#Crushing Jungle Ambush#
+sk_am_crushingjungleambush = {
+	days = 4
+	sprite = 3
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		terrain = jungle
+		}
+		leader = {
+		martial = 16
+		intrigue = 8
+		OR = { 
+			trait = jungle_terrain_leader 
+			trait = experimenter 
+			trait = trickster 
+				}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = jungle_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = trickster #bonus
+				}
+			}
+		}
+	
+		#composition independent
+		#location
+		modifier = {
+			factor = 5
+			location = {
+				terrain = jungle
+			}			
+		}
+		
+	}
+	archers_defensive = 1
+	light_infantry_defensive = 1
+	heavy_infantry_defensive = 0.5
+	pikemen_defensive = 1	
+	light_infantry_offensive = 1.5
+	archers_offensive = 1.5
+	horse_archers_offensive = -0.3
+	knights_offensive = -0.3
+	war_elephants_offensive = -0.3
+	light_cavalry_offensive = -0.3
+	camels_offensive = -0.3
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1.5
+	}
+
+}
+
+#Lure And Bait#
+sk_am_lureandbait = {
+	days = 4
+	sprite = 8
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		OR = {
+		terrain = plains
+		terrain = farmlands
+		terrain = steppe
+		}
+		}
+		leader = {
+		martial = 8
+		OR = { 
+			trait = flat_terrain_leader 
+			trait = experimenter 
+			trait = organizer 
+				}
+		}
+		OR = {
+			light_infantry = 0.25	#left-most bell-curve trigger
+			heavy_infantry = 0.25	#left-most bell-curve trigger
+			pikemen = 0.25	#left-most bell-curve trigger
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = flat_terrain_leader #bonus
+			trait = experimenter #bonus
+			trait = organizer #bonus
+				}
+			}
+		}	
+		#bell-curve
+		modifier = {
+			factor = 1.145
+			light_infantry = 0.325						
+		}
+		modifier = {
+			factor = 1.145
+			heavy_infantry = 0.325	
+		}		
+		modifier = {
+			factor = 1.145
+			pikemen = 0.325	
+		}	
+		modifier = {
+			factor = 1.26
+			light_infantry = 0.4		
+		}
+		modifier = {
+			factor = 1.26
+			heavy_infantry = 0.4
+		}		
+		modifier = {
+			factor = 1.26
+			pikemen = 0.4
+		}	
+		#location
+		modifier = {
+			factor = 5
+			OR = {
+			terrain = plains
+			terrain = farmlands
+			terrain = steppe
+		}			
+		}
+		
+	
+	}
+	light_infantry_defensive = 1
+	horse_archers_defensive = 0.75
+	pikemen_defensive = 0.75
+	heavy_infantry_defensive = 0.75
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1
+	}
+
+}
+
+#Hit And Run#
+sk_am_hitandrun = {
+	days = 4
+	sprite = 8
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		OR = {
+		terrain = plains
+		terrain = farmlands
+		terrain = steppe
+		}
+		}
+		leader = {
+		martial = 8		
+		OR = {
+			light_infantry = 0.4	#left-most bell-curve trigger
+			archers = 0.4	#left-most bell-curve trigger			
+		}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			OR = { 
+			trait = flat_terrain_leader #bonus
+			trait = organizer #bonus
+			trait = light_foot_leader #bonus
+				}
+			}
+		}
+			modifier = {
+			factor = 5
+			leader = {
+			martial = 16 #bonus
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.225
+			light_infantry = 0.5		
+		}
+		modifier = {
+			factor = 1.225
+			archers = 0.5	
+		}		
+		modifier = {
+			factor = 1.732
+			light_infantry = 0.6	
+		}
+		modifier = {
+			factor = 1.732
+			archers = 0.6	
+		}
+		#location
+		modifier = {
+			factor = 5
+			OR = {
+			terrain = plains
+			terrain = farmlands
+			terrain = steppe
+		}			
+		}		
+	
+	}	
+	archers_offensive = 1
+	light_infantry_offensive = 0.5
+	archers_defensive = -0.25
+	light_infantry_defensive = -0.25
+	
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1
+	}
+
+}
+
+#Skillful Hit And Run#
+sk_am_skillfulhitandrun = {
+	days = 4
+	sprite = 8
+	group = sk_ambushes
+
+	trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		OR = {
+		terrain = plains
+		terrain = farmlands
+		terrain = steppe
+		}
+		}
+		leader = {
+		martial = 16
+		OR = { 
+			trait = flat_terrain_leader 
+			trait = organizer 
+			trait = light_foot_leader
+				}
+		}
+		OR = {
+			light_infantry = 0.35	#left-most bell-curve trigger
+			archers = 0.35	#left-most bell-curve trigger			
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		
+		#bell-curve
+		modifier = {
+			factor = 1.225
+			light_infantry = 0.475		
+		}
+		modifier = {
+			factor = 1.225
+			archers = 0.475	
+		}		
+		modifier = {
+			factor = 1.732
+			light_infantry = 0.5
+		}
+		modifier = {
+			factor = 1.732
+			archers = 0.5
+		}
+		#location
+		modifier = {
+			factor = 5
+			OR = {
+			terrain = plains
+			terrain = farmlands
+			terrain = steppe
+		}			
+		}		
+	
+	}	
+	archers_offensive = 1.5
+	light_infantry_offensive = 1.5
+	
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1.5
+	}
+
+}
+
+#Surprise Assault#
+sk_am_Surprise Assault = {
+	days = 4
+	sprite = 2
+	group = sk_ambushes
+
+		trigger = {
+		phase = skirmish
+		flank_has_leader = yes
+		location = {
+		OR = {
+		terrain = plains
+		terrain = farmlands
+		terrain = steppe
+		}
+		}
+		leader = {
+		martial = 16
+		intrigue = 8
+		OR = { 
+			trait = cavalry_leader
+			trait = flat_terrain_leader 
+			trait = organizer 
+				}
+		}
+		OR = {
+			light_cavalry = 0.2	#left-most bell-curve trigger
+			camel_cavalry = 0.2	#left-most bell-curve trigger
+			knights = 0.2	#left-most bell-curve trigger
+			horse_archers = 0.2	#left-most bell-curve trigger			
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		
+		#bell-curve
+		modifier = {
+			factor = 1.107
+			OR = {
+			light_cavalry = 0.25
+			
+		}
+		}
+		modifier = {
+			factor = 1.107
+			OR = {
+			camel_cavalry = 0.25
+			
+		}
+		}
+		modifier = {
+			factor = 1.107
+			OR = {
+			knights = 0.25
+			
+		}
+		}
+		modifier = {
+			factor = 1.107
+			OR = {
+			horse_archers = 0.25
+		}
+		}			
+
+		modifier = {
+			factor = 1.316
+			OR = {
+			light_cavalry = 0.3
+			
+		}
+		}
+		modifier = {
+			factor = 1.316
+			OR = {
+			camel_cavalry = 0.3
+			
+		}
+		}
+		modifier = {
+			factor = 1.316
+			OR = {
+			knights = 0.3
+			
+		}
+		}
+		modifier = {
+			factor = 1.316
+			OR = {
+			horse_archers = 0.3
+		}
+		}
+		#location
+		modifier = {
+			factor = 5
+			OR = {
+			terrain = plains
+			terrain = farmlands
+			terrain = steppe
+		}			
+		}		
+	
+	}	
+	archers_offensive = -0.15
+	light_infantry_offensive = -0.15
+	knights_offensive = 2
+	war_elephants_offensive = 2
+	light_cavalry_offensive = 1
+	camel_cavalry_offensive = 1
+	horse_archers_offensive = 1
+	knights_defensive = 2
+	war_elephants_defensive = 2
+	light_cavalry_defensive = 1
+	camel_cavalry_defensive = 1
+	horse_archers_defensive = 1
+	
+	
+	enemy = {
+		group = sk_manoeuvres
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = 1.5
+	}
+
+}
+
+###Melee Transitions###
+
+##Standard Charge##
+
+#Bungled Advance#
+sk_sc_bungledadvance = {
+	days = 4
+	sprite = 17
+	group = sk_standardcharge
+
+	trigger = {
+		phase = skirmish	
+		days = 12
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = NO #absence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			NOT = { martial = 8}
+			}
+		}
+		#composition independent
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	heavy_infantry_defensive = -1.5
+	pikemen_defensive = -1.5
+	light_infantry_defensive = -0.75
+	archers_defensive = -0.75
+	
+	enemy = {
+		group = sk_defensivetraps
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_combinedarmsadvance
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_mountedcombineddefensive
+		factor = -0.75
+	}
+	enemy = {
+		group = sk_infantryscreening
+		factor = -0.5
+	}
+
+}
+
+#General Advance#
+sk_sc_generaladvance = {
+	days = 4
+	sprite = 10
+	group = sk_standardcharge
+
+	trigger = {
+		phase = skirmish	
+		days = 12
+		flank_has_leader = YES
+		leader = {
+			martial = 8
+			}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander		
+		modifier = {
+			factor = 0.25
+			leader = {
+			martial = 16
+			}
+		}
+		modifier = {
+			factor = 0.25
+			leader = {
+			martial = 24
+			}
+		#composition independent
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	heavy_infantry_defensive = -0.5
+	pikemen_defensive = -0.5
+	light_infantry_defensive = -0.25
+	archers_defensive = -0.25
+	
+	enemy = {
+		group = sk_defensivetraps
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_combinedarmsadvance
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_mountedcombineddefensive
+		factor = -0.5
+	}
+	}
+}
+
+
+#Methodical Advance#
+sk_sc_methodicaladvance = {
+	days = 4
+	sprite = 3
+	group = sk_standardcharge
+
+	trigger = {
+		phase = skirmish	
+		days = 12
+		flank_has_leader = YES
+		leader = {
+			martial = 16
+			}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander		
+		modifier = {
+			factor = 0.25
+			leader = {
+			martial = 24
+			}
+			}
+		#composition independent
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	
+	light_infantry_defensive = 0.25
+	archers_defensive = 0.25
+	
+	enemy = {
+		group = sk_defensivetraps
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_combinedarmsadvance
+		factor = -0.5
+	}
+	enemy = {
+		group = sk_mountedcombineddefensive
+		factor = -0.5
+	}
+	
+}
+
+#Intricate Complex Advance#
+sk_sc_bungledadvance = {
+	days = 4
+	sprite = 3
+	group = sk_standardcharge
+
+	trigger = {
+		phase = skirmish	
+		days = 12
+		flank_has_leader = YES
+		leader = {
+			martial = 24
+			}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander		
+		#composition independent
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	heavy_infantry_defensive = 0.75
+	pikemen_defensive = 0.75
+	light_infantry_defensive = 1.5
+	archers_defensive = 1.5
+	
+	
+	enemy = {
+		group = sk_defensivetraps
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_combinedarmsadvance
+		factor = -0.25
+	}
+	enemy = {
+		group = sk_mountedcombineddefensive
+		factor = -0.25
+	}
+
+}
+
+##Combined Arms Charge##
+
+#Supported Cavalry Charge#
+sk_ca_supportedcavalrycharge = {
+	days = 3
+	sprite = 3
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish	
+		days = 9
+		flank_has_leader = YES
+		OR = {
+			knights = 0.2 #left-most bell-curve trigger
+			light_cavalry = 0.2 #left-most bell-curve trigger
+			camel_cavalry = 0.2 #left-most bell-curve trigger
+			horse_archers = 0.2 #left-most bell-curve trigger
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander		
+		modifier = {
+			factor = 5
+			leader = {
+			martial = 16
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+				trait = cavalry_leader										
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.107
+			knights = 0.25						
+		}
+		modifier = {
+			factor = 1.107
+			light_cavalry = 0.25	
+		}		
+		modifier = {
+			factor = 1.107
+			camel_cavalry = 0.25	
+		}	
+		modifier = {
+			factor = 1.107
+			horse_archers = 0.25	
+		}	
+		modifier = {
+			factor = 1.316
+			knights = 0.3
+		}
+		modifier = {
+			factor = 1.316
+			light_cavalry = 0.3
+		}		
+		modifier = {
+			factor = 1.316
+			camel_cavalry = 0.3
+		}	
+		modifier = {
+			factor = 1.316
+			horse_archers = 0.3
+		}	
+		modifier = {
+			factor = 0.903
+			knights = 0.35						
+		}
+		modifier = {
+			factor = 0.903
+			light_cavalry = 0.35	
+		}		
+		modifier = {
+			factor = 0.903
+			camel_cavalry = 0.35	
+		}	
+		modifier = {
+			factor = 0.903
+			horse_archers = 0.35
+		}
+		modifier = {
+			factor = 0.76
+			knights = 0.4
+		}
+		modifier = {
+			factor = 0.76
+			light_cavalry = 0.4
+		}		
+		modifier = {
+			factor = 0.76
+			camel_cavalry = 0.4
+		}
+		modifier = {
+			factor = 0.76
+			horse_archers = 0.4
+		}	
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	knights_offensive = 0.5
+	war_elephants_offensive = 0.5
+	camel_cavalry = 0.5
+	light_cavalry_offensive = 0.5	
+	horse_archers_offensive = 0.5
+	
+
+}
+
+#Coordinated Cavalry Charge#
+sk_ca_coordinatedtedcavalrycharge = {
+	days = 3
+	sprite = 12
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish	
+		days = 9
+		flank_has_leader = YES
+		leader = {
+			martial = 24
+			trait = cavalry_leader
+			}
+		OR = {
+			knights = 0.4 #left-most bell-curve trigger
+			light_cavalry = 0.4 #left-most bell-curve trigger
+			camel_cavalry = 0.4 #left-most bell-curve trigger
+			horse_archers = 0.4 #left-most bell-curve trigger
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander		
+		#bell-curve
+		modifier = {
+			factor = 1.107
+			knights = 0.5						
+		}
+		modifier = {
+			factor = 1.107
+			light_cavalry = 0.5	
+		}		
+		modifier = {
+			factor = 1.107
+			camel_cavalry = 0.5	
+		}	
+		modifier = {
+			factor = 1.107
+			horse_archers = 0.5	
+		}	
+		modifier = {
+			factor = 1.316
+			knights = 0.3
+		}
+		modifier = {
+			factor = 1.316
+			light_cavalry = 0.6
+		}		
+		modifier = {
+			factor = 1.316
+			camel_cavalry = 0.6
+		}	
+		modifier = {
+			factor = 1.316
+			horse_archers = 0.6
+		}	
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	knights_offensive = 1
+	war_elephants_offensive = 1
+	camel_cavalry = 1
+	light_cavalry_offensive = 1	
+	horse_archers_offensive = 1
+}
+
+#Unsupported Cavalry Charge#
+sk_ca_unsupportedcavalrycharge = {
+	days = 3
+	sprite = 19
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish	
+		days = 9		
+		OR = {
+			knights = 0.2 #left-most bell-curve trigger
+			light_cavalry = 0.2 #left-most bell-curve trigger
+			camel_cavalry = 0.2 #left-most bell-curve trigger
+			horse_archers = 0.2  #left-most bell-curve trigger
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander		
+		modifier = {
+			factor = 5
+			flank_has_leader = NO #absence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+				NOT = { martial = 8 }										
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+				trait = wroth										
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.107
+			knights = 0.25						
+		}
+		modifier = {
+			factor = 1.107
+			light_cavalry = 0.25	
+		}		
+		modifier = {
+			factor = 1.107
+			camel_cavalry = 0.25	
+		}	
+		modifier = {
+			factor = 1.107
+			horse_archers = 0.25	
+		}	
+		modifier = {
+			factor = 1.316
+			knights = 0.3
+		}
+		modifier = {
+			factor = 1.316
+			light_cavalry = 0.3
+		}		
+		modifier = {
+			factor = 1.316
+			camel_cavalry = 0.3
+		}	
+		modifier = {
+			factor = 1.316
+			horse_archers = 0.3
+		}	
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	knights_defensive = -0.75
+	war_elephants_defensive = -0.75
+	light_cavalry_defensive = -0.75
+	horse_archers_defensive = -0.75
+	knights_offensive = 0.5
+	war_elephants_offensive = 0.5
+	camel_cavalry = 0.5
+	light_cavalry_offensive = 0.5
+	horse_archers_offensive = 0.5
+
+}
+
+#Cavalry Charge On Skirmishers#
+sk_ca_cavalrychargeonskirmishers = {
+	days = 3
+	sprite = 19
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 6		
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = NO #absence bonus
+		}
+		modifier = {
+			factor = 10
+			leader = {
+			OR = {
+			trait = wroth
+			trait = cruel
+			}
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.225
+			archers = 0.2
+		}
+		modifier = {
+			factor = 1.225
+			light_infantry = 0.2
+		}
+		modifier = {
+			factor = 1.732
+			archers = 0.3
+		}
+		modifier = {
+			factor = 1.732
+			light_infantry = 0.3
+		}
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	archers_defensive = -3
+	light_infantry_defensive = -3
+	archers_offensive = -1
+	light_infantry_offensive = -1
+	knights_offensive = 0.5
+	war_elephants_offensive = 0.5
+	light_cavalry_offensive = 0.5
+	camel_cavalry_offensive = 0.5
+	horse_archers_offensive = 0.5
+
+}
+
+#Collateral-Casualty Cavalry Charge#
+sk_ca_collateralcasualtycavalrycharge = {
+	days = 3
+	sprite = 19
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 6		
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			flank_has_leader = NO #absence bonus
+		}
+		modifier = {
+			factor = 10
+			leader = {
+			OR = {
+			trait = wroth
+			trait = cruel
+			}
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.225
+			heavy_infantry = 0.2
+		}
+		modifier = {
+			factor = 1.225
+			pikemen = 0.2
+		}
+		modifier = {
+			factor = 1.732
+			heavy_infantry = 0.3
+		}
+		modifier = {
+			factor = 1.732
+			pikemen = 0.3
+		}
+		#location  unimplemented
+	}
+	change_phase_to = melee
+	heavy_infantry_defensive = -2
+	pikemen_defensive = -2
+	knights_offensive = 0.5
+	war_elephants_offensive = 0.5
+	light_cavalry_offensive = 0.5
+	camel_cavalry_offensive = 0.5
+	horse_archers_offensive = 0.5
+
+}
+
+#Coordinated-Volley Advance#
+sk_ca_coordinatedvolleyadvance = {
+	days = 5
+	sprite = 13
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 12	
+		archers = 0.2 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			martial = 16 #bonus
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			trait = organizer
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			archers = 0.25
+		}
+		modifier = {
+			factor = 3
+			archers = 0.3
+		}
+		modifier = {
+			factor = 0.666
+			archers = 0.35
+		}
+		modifier = {
+			factor = 0.333
+			archers = 0.4
+			}
+		#location  unimplemented
+	}
+
+	change_phase_to = melee
+	archers_defensive = 2
+	archers_offensive = 1
+
+
+}
+
+#Synchronised-Volley Advance#
+sk_ca_synchronisedvolleyadvance = {
+	days = 5
+	sprite = 6
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 12	
+		flank_has_leader = YES
+		archers = 0.4 #left-most bell-curve trigger
+		leader = {
+			martial = 16
+			trait = organizer
+			} 
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			leader = {
+			martial = 24
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			archers = 0.5
+		}
+		modifier = {
+			factor = 3
+			archers = 0.6
+		}
+		#location  unimplemented
+	}
+
+	change_phase_to = melee
+	archers_defensive = 4
+	archers_offensive = 1.5
+
+}
+
+#Uncoordinated-Volley Advance#
+sk_ca_uncoordinatedvolleyadvance = {
+	days = 5
+	sprite = 20
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 12	
+		archers = 0.2 #left-most bell-curve trigger
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			has_flank_leader = NO #absence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			NOT = { martial = 8 }
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.5
+			archers = 0.25
+		}
+		modifier = {
+			factor = 3
+			archers = 0.3
+		}
+		#location  unimplemented
+	}
+
+	change_phase_to = melee
+	light_infantry_defensive = -1
+	heavy_infantry_defensive = -1
+	pikemen_defensive = -1
+	archers_defensive = 1
+	archers_offensive = 1
+	
+
+}
+
+#Infantry Rapid Advance#
+sk_ca_infantryrapidadvance = {
+	days = 2
+	sprite = 9
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 3
+		flank_has_leader = YES
+		leader = {
+		trait = aggressive_leader
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 10
+			leader = {
+			trait = aggressive_leader
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.107
+			heavy_infantry = 0.25						
+		}
+		modifier = {
+			factor = 1.107
+			pikemen = 0.25	
+		}		
+		modifier = {
+			factor = 1.107
+			light_infantry = 0.25	
+		}	
+		modifier = {
+			factor = 1.107
+			archers = 0.25	
+		}	
+		modifier = {
+			factor = 1.316
+			heavy_infantry = 0.3
+		}
+		modifier = {
+			factor = 1.316
+			pikemen = 0.3
+		}		
+		modifier = {
+			factor = 1.316
+			light_infantry = 0.3
+		}	
+		modifier = {
+			factor = 1.316
+			archers = 0.3
+		}	
+		
+		#location  unimplemented
+	}
+
+	change_phase_to = melee
+	light_infantry_defensive = -1
+	heavy_infantry_defensive = -1
+	pikemen_defensive = -1
+
+}
+
+#Fervoured Frontal Advance#
+sk_ca_fervouredfrontaladvance = {
+	days = 2
+	sprite = 2
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 3
+		flank_has_leader = YES
+		leader = {
+		OR = {
+		trait = aggressive_leader
+		trait = wroth
+		trait = zealous
+		}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 10
+			leader = {
+			trait = aggressive_leader
+			}
+		}
+		modifier = {
+			factor = 10
+			leader = {
+			trait = wroth
+			}
+		}
+		modifier = {
+			factor = 10
+			leader = {
+			trait = zealous
+			}
+		}
+		#bell-curve
+		modifier = {
+			factor = 1.107
+			knights = 0.25						
+		}
+		modifier = {
+			factor = 1.107
+			light_cavalry = 0.25	
+		}		
+		modifier = {
+			factor = 1.107
+			camel_cavalry = 0.25	
+		}	
+		modifier = {
+			factor = 1.107
+			horse_archers = 0.25	
+		}	
+		modifier = {
+			factor = 1.316
+			knights = 0.3
+		}
+		modifier = {
+			factor = 1.316
+			light_cavalry = 0.3
+		}		
+		modifier = {
+			factor = 1.316
+			camel_cavalry = 0.3
+		}	
+		modifier = {
+			factor = 1.316
+			horse_archers = 0.3
+		}	
+		
+		#location  unimplemented
+	}
+
+	change_phase_to = melee
+	light_infantry_defensive = -1
+	heavy_infantry_defensive = -1
+	pikemen_defensive = -1
+	knights_defensive = -0.5
+	war_elephants_defensive = -0.5
+	light_cavalry_defensive = -0.5
+	camel_cavalry_defensive = -0.5
+	horse_archers_defensive = -0.5
+	war_elephants_offensive = 0.5
+	light_cavalry_offensive = 0.5
+	camel_cavalry_offensive = 0.5
+	horse_archers_offensive = 0.5
+
+}
+
+#Chaotic Frontal Charge#
+sk_ca_chaoticfrontalcharge = {
+	days = 2
+	sprite = 16
+	group = sk_combinedarmscharge
+
+	trigger = {
+		phase = skirmish
+		days = 3
+	}
+
+	mean_time_to_happen = {
+		days = 3		
+		# commander
+		modifier = {
+			factor = 5
+			has_flank_leader = NO #absence bonus
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			trait = wroth
+			}
+		}
+		modifier = {
+			factor = 5
+			leader = {
+			NOT = { martial = 8 }
+			}
+		}
+		#bell-curve
+		#composition independent
+		#location  unimplemented
+	}
+
+
+}
+
+##Opportunity Attacks##
+
+
+#####SKIRMISH PHASE#####
+
+###Offensive Tactics###
+
+##Foot-Melee Advance##
+
+##Range-Melee Advance##
+
+##Cavalry-Melee Advance##
+
+##Combined Arms Advance##
+
+
+###Defensive Tactics###
+
+##Massed Infantry##
+
+##Cavalry Counter-Charge##
+
+##Ranged Combined Defensive##
+
+##Mounted Combined Defensive##
+
+###Special Tactics###
+
+##Blundered Advance##
+
+##Offensive Formations##
+
+##Defensive Traps##
+
+##Melee Avoidance##
+
+######################################################################
+##########BORROWED SIX GUN SOUTH'S BETTER ARMIES TACTICS AS FILLER##########
+######################################################################
+#### Melee Tactics ####
+good_melee_charge_tactic = {
+	days = 5
+	sprite = 5
+	group = charge
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+				culture = polish
+				culture = frankish
+				culture = occitan
+				culture = norman
+				culture = german
+				culture = breton
+				culture = bohemian
+				culture = kurdish
+				culture = armenian
+				culture = greek
+				culture = egyptian_arabic
+				culture_group = crusader_group
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.2
+			location = {
+				OR = {
+					terrain = plains
+					terrain = farmlands
+					terrain = steppe
+				}
+			}
+		}
+		modifier = {
+			factor = 1.1
+			location = {
+					terrain = desert
+			}
+		}
+		modifier = {
+			factor = 0.9
+			location = {
+				OR = {
+					terrain = forest
+					terrain = hills
+				}
+			}
+		}
+		modifier = {
+			factor = 0.8
+			location = {
+					terrain = mountain
+			}
+		}
+		modifier = {
+			factor = 0.6
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.65
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 1.3
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 26
+			}
+		}
+	}
+
+	light_infantry_offensive = 0
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0
+	light_cavalry_offensive = 0.75
+	knights_offensive = 1.50
+	archers_offensive = 0
+	horse_archers_offensive = 0.75
+	
+	light_infantry_defensive = 0.25
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25
+	light_cavalry_defensive = 0.25
+	knights_defensive = 0.25
+	archers_defensive = 0.25
+	horse_archers_defensive = 0.25
+	enemy = {
+		group = advance
+		factor = 1
+	}
+}
+
+melee_charge_tactic = {
+	days = 5
+	sprite = 12
+	group = charge
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+				culture = polish
+				culture = frankish
+				culture = occitan
+				culture = norman
+				culture = german
+				culture = breton
+				culture = bohemian
+				culture = kurdish
+				culture = armenian
+				culture = greek
+				culture = egyptian_arabic
+				culture_group = crusader_group
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.1
+			location = {
+				OR = {
+					terrain = plains
+					terrain = farmlands
+					terrain = steppe
+				}
+			}
+		}
+		modifier = {
+			factor = 0.9
+			location = {
+					terrain = mountain
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 26
+			}
+		}
+	}
+
+	light_infantry_offensive = 0
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0
+	light_cavalry_offensive = 0.5
+	knights_offensive = 1
+	archers_offensive = 0
+	horse_archers_offensive = 0.5
+	
+	light_infantry_defensive = 0
+	heavy_infantry_defensive = 0
+	pikemen_defensive = 0
+	light_cavalry_defensive = 0
+	knights_defensive = 0
+	archers_defensive = 0
+	horse_archers_defensive = 0
+	enemy = {
+		group = advance
+		factor = 1
+	}
+}
+
+bad_melee_charge_tactic = {
+	days = 5
+	sprite = 19
+	group = charge
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+				culture = polish
+				culture = frankish
+				culture = occitan
+				culture = norman
+				culture = german
+				culture = breton
+				culture = bohemian
+				culture = kurdish
+				culture = armenian
+				culture = greek
+				culture = egyptian_arabic
+				culture_group = crusader_group
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 26
+			}
+		}
+	}
+
+	light_infantry_offensive = 0
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0
+	light_cavalry_offensive = 0.25
+	knights_offensive = 0.5
+	archers_offensive = 0
+	horse_archers_offensive = 0.25
+	
+	light_infantry_defensive = -0.25
+	heavy_infantry_defensive = -0.25
+	pikemen_defensive = -0.25
+	light_cavalry_defensive = -0.25
+	knights_defensive = -0.25
+	archers_defensive = -0.25
+	horse_archers_defensive = -0.25
+	enemy = {
+		group = advance
+		factor = 1
+	}
+}
+
+good_raid_tactic = {
+	days = 5
 	sprite = 1
 	group = defensive
 	
 	trigger = {
 		phase = melee
-		light_cavalry = 0.2
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			troops = {
-				who = light_cavalry
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 12
-			}
-			troops = {
-				who = light_infantry
-				value = 0.3
-			}
-		}
-	}
-	
-	light_cavalry_offensive = 2.4
-	light_infantry_offensive = 2.4
-}
-
-pursue_tactic = {
-	days = 16 # twice minimum pursuit
-	sprite = 4
-	group = charge
-	
-	trigger = {
-		phase = pursue
-	}
-
-	mean_time_to_happen = {
-		days = 10
-	}
-}
-
-#########################
-# Combat Flavor Tactics #
-#########################
-
-# Bad Tactics
-
-reckless_charge_tactic = {
-	days = 3 #experimental adjustments for the ABCDE project
-	sprite = 5 # index of icon
-	group = charge
-	
-	trigger = {
-		phase = skirmish
-		is_flanking = no
-		days = 10 # duration of combat >= 10 days
 		flank_has_leader = yes
+		NOT = { 
 		leader = {
 			OR = {
-				trait = aggressive_leader
-				trait = wroth
-			}
-		}		
-	}
-
-	mean_time_to_happen = {
-		days = 10 # this has nothing to do with days, it just represents relative chance of selecting this tactic, higher is better
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				NOT = { martial = 7 }
-			}
-			light_troops = {
-				who = horse_archers
-				value = 0.3
-			}
-		}
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				NOT = { martial = 7 }
-			}
-			heavy_troops = {
-				who = knights
-				value = 0.1
-			}
-		}
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				NOT = { martial = 7 }
-			}
-			heavy_troops = {
-				who = heavy_infantry
-				value = 0.1
-			}
-		}
-	}
-
-	change_phase_to = melee
-
-	knights_defensive = -0.5
-	horse_archers_defensive = -0.5
-	heavy_infantry_defensive = -0.3
-	
-	knights_offensive = 1.2
-	horse_archers_offensive = 1.2
-	heavy_infantry_offensive = 0.6
-}
-
-
-timid_advance_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 2
-	group = advance
-
-	trigger = {
-		phase = melee
-		heavy_infantry = 0.1
-		flank_has_leader = yes
-		leader = {
-			OR = {
-				trait = craven
-				trait = organizer
+				culture = irish
+				culture = pommeranian
+				culture_group = baltic
+				culture_group = finno_ugric
+				}
 			}
 		}
 	}
@@ -1245,271 +4104,159 @@ timid_advance_tactic = {
 	mean_time_to_happen = {
 		days = 3
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
+			factor = 1.2
+			location = {
+					terrain = desert
+			}
+		}
+		modifier = {
+			factor = 1.1
+			location = {
+				OR = {
+					terrain = forest
+					terrain = hills
+				}
+			}
+		}
+		modifier = {
+			factor = 0.9
+			location = {
+					terrain = mountain
+			}
+		}
+		modifier = {
+			factor = 0.8
+			location = {
+				OR = {
+					terrain = plains
+					terrain = farmlands
+					terrain = steppe
+				}
+			}
+		}
+		modifier = {
+			factor = 0.6
 			leader = {
-				NOT = { martial = 7 }
+				NOT = { martial = 0 }
 			}
-			heavy_troops = {
-				who = heavy_infantry
-				value = 0.5
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 2 }
 			}
-		}	
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.65
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 1.3
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 26
+			}
+		}
 	}
-
-	knights_offensive = -2.1
-	heavy_infantry_offensive = -2.1
-	pikemen_offensive = 1.2
 	
+	light_infantry_offensive = 1.25
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0
+	light_cavalry_offensive = 1.25
+	knights_offensive = 0
+	archers_offensive = 0
+	horse_archers_offensive = 0.5
+	
+	light_infantry_defensive = 0.25
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25
+	light_cavalry_defensive = 0.25
+	knights_defensive = 0.25
+	archers_defensive = 0.25
+	horse_archers_defensive = 0.25
 	enemy = {
 		group = stand_fast
-		factor = 1.2
+		factor = 1
 	}
 }
 
-confused_orders_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 6
-	group = volley
-
-	trigger = {
-		phase = skirmish  
-		archers = 0.1
-		flank_has_leader = yes
-		leader = {
-			OR = {
-				trait = lisp
-				trait = stutter
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				NOT = { martial = 7 }
-			}
-			light_troops = { 
-				who = archers
-				value = 0.5
-			}
-		}
-	}
-
-	archers_offensive = -1.2
-	horse_archers_offensive = -1.2
-	
-	enemy = {
-		group = charge
-		factor = -1.2
-	}
-}
-
-hesitant_commander_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 3
-	group = stand_fast
-
-	trigger = {
-		phase = melee
-		flank_has_leader = yes
-		leader = {
-			OR = {
-				trait = slothful
-				trait = shy
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				NOT = { martial = 7 }
-			}
-		}
-	}
-
-	knights_offensive = -1.5
-	heavy_infantry_offensive = -1.5
-}
-
-charging_own_skirmishers_tactic = {
-	days = 3 #experimental adjustments for the ABCDE project
-	sprite = 5 # index of icon
-	group = charge
-	
-	trigger = {
-		phase = skirmish
-		is_flanking = no
-		days = 10 # duration of combat >= 10 days
-		flank_has_leader = yes
-		leader = { trait = cruel }
-	}
-
-	mean_time_to_happen = {
-		days = 10 # this has nothing to do with days, it just represents relative chance of selecting this tactic, higher is better
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				NOT = { martial = 10 }
-			}
-			heavy_troops = {
-				who = knights
-				value = 0.1
-			}
-		}
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				NOT = { martial = 10 }
-			}
-			light_troops = {
-				who = light_cavalry
-				value = 0.1
-			}
-		}
-	}
-
-	change_phase_to = melee
-
-	knights_offensive = 3
-	light_cavalry_offensive = 1.8
-	
-	archers_offensive = -4.2
-	archers_defensive = -0.5
-	horse_archers_offensive = -1.2
-	horse_archers_defensive = -0.3
-}
-
-# Good tactics
-
-inspired_defense_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 2 # index of icon
+raid_tactic = {
+	days = 5
+	sprite = 8
 	group = defensive
-
-	trigger = {
-		phase = skirmish
-		flank_has_leader = yes
-		leader = {
-			OR = {
-				trait = inspiring_leader
-				trait = defensive_leader
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 14
-			}
-		}
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 14
-				trait = defensive_leader
-			}
-		}
-	}
-
-	knights_defensive = 1.5
-	heavy_infantry_defensive = 1.5
-	light_infantry_defensive = 1.5
-	light_cavalry_defensive = 1.5
-	archers_defensive = 1.5
-	horse_archers_defensive = 1.5
-	pikemen_defensive = 1.5
 	
-	enemy = {
-		group = charge
-		factor = 1.2
-	}
-	enemy = {
-		group = advance
-		factor = 0.6
-	}
-}
-
-heroic_countercharge_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 5
-	group = charge
-
-	trigger = {
-		phase = melee 
-		knights = 0.1
-		light_cavalry = 0.1
-		flank_has_leader = yes
-		leader = {
-			OR = {
-				trait = aggressive_leader
-				trait = brave
-				trait = cavalry_leader
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		days = 3
-		modifier = {
-			factor = 3
-			flank_has_leader = yes
-			leader = {
-				martial = 14
-			}
-			heavy_troops = { 
-				who = knights
-				value = 0.1
-			}
-		}
-	}
-
-	knights_offensive = 3.6
-	light_cavalry_offensive = 3.6
-	heavy_infantry_offensive = 0.6
-	pikemen_offensive = 0.6
-
-	enemy = {
-		group = charge
-		factor = 3
-	}
-}
-
-clever_ambush_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
-	sprite = 3
-	group = stand_fast
-
 	trigger = {
 		phase = melee
-		light_cavalry = 0.1
-		light_infantry = 0.1
 		flank_has_leader = yes
+		NOT = { 
 		leader = {
 			OR = {
-				trait = trickster
-				trait = quick
-			}
-		}
-		location = {
-			OR = {
-				terrain = forest
-				terrain = hills
-				terrain = mountain
+				culture = irish
+				culture = pommeranian
+				culture_group = baltic
+				culture_group = finno_ugric
+				}
 			}
 		}
 	}
@@ -1517,84 +4264,1136 @@ clever_ambush_tactic = {
 	mean_time_to_happen = {
 		days = 3
 		modifier = {
-			factor = 1.5
-			flank_has_leader = yes
-			leader = {
-				martial = 14
-			}
-			troops = {
-				who = light_cavalry
-				value = 0.2
-			}
-			troops = {
-				who = light_infantry
-				value = 0.2
+			factor = 1.1
+			location = {
+					terrain = desert
 			}
 		}
 		modifier = {
-			factor = 3
-			flank_has_leader = yes
+			factor = 0.9
+			location = {
+				OR = {
+					terrain = plains
+					terrain = farmlands
+					terrain = steppe
+				}
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.1
 			leader = {
 				martial = 14
-				trait = trickster
 			}
-			troops = { 
-				who = light_cavalry
-				value = 0.2
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 16
 			}
-			troops = { 
-				who = light_infantry
-				value = 0.2
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 26
+			}
+		}
+	}
+	
+	light_infantry_offensive = 0.75
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0
+	light_cavalry_offensive = 0.75
+	knights_offensive = 0
+	archers_offensive = 0
+	horse_archers_offensive = 0.5
+	
+	light_infantry_defensive = 0
+	heavy_infantry_defensive = 0
+	pikemen_defensive = 0
+	light_cavalry_defensive = 0
+	knights_defensive = 0
+	archers_defensive = 0
+	horse_archers_defensive = 0
+	enemy = {
+		group = stand_fast
+		factor = 1
+	}
+}
+
+bad_raid_tactic = {
+	days = 5
+	sprite = 15
+	group = defensive
+	
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+				culture = irish
+				culture = pommeranian
+				culture_group = baltic
+				culture_group = finno_ugric
+				}
 			}
 		}
 	}
 
-	light_cavalry_offensive = 2.4
-	light_infantry_offensive = 1.2
-	horse_archers = 1.2
-	archers_offensive = 1.2
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 26
+			}
+		}
+	}
+	
+	light_infantry_offensive = 0.5
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0
+	light_cavalry_offensive = 0.5
+	knights_offensive = 0
+	archers_offensive = 0
+	horse_archers_offensive = 0
+	
+	light_infantry_defensive = -0.25
+	heavy_infantry_defensive = -0.25
+	pikemen_defensive = -0.25
+	light_cavalry_defensive = -0.25
+	knights_defensive = -0.25
+	archers_defensive = -0.25
+	horse_archers_defensive = -0.25
 	enemy = {
-		group = advance
-		factor = 3
+		group = stand_fast
+		factor = 1
 	}
 }
 
-religious_fervour_tactic = {
-	days = 4 #experimental adjustments for the ABCDE project
+good_advance_tactic = {
+	days = 5
 	sprite = 2
 	group = advance
 
 	trigger = {
 		phase = melee
 		flank_has_leader = yes
-		OR = {
+		NOT = { 
 			leader = {
-				trait = zealous
-				trait = inspiring_leader
+				OR = {
+					culture_group = north_germanic
+					culture = saxon
+					culture = english_norse
+					culture = russian
+					culture = georgian
+					culture = alan
+					culture_group = east_african
+					culture = levantine_arabic
+					culture_group = mesoamerican
+				}
 			}
-			leader = { trait = possessed }
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.2
+			location = {
+				OR = {
+					terrain = forest
+					terrain = hills
+				}
+			}
+		}
+		modifier = {
+			factor = 1.1
+			location = {
+					terrain = mountain
+			}
+		}
+		modifier = {
+			factor = 0.9
+			location = {
+				OR = {
+					terrain = plains
+					terrain = farmlands
+					terrain = steppe
+				}
+			}
+		}
+		modifier = {
+			factor = 0.8
+			location = {
+					terrain = desert
+			}
+		}
+		modifier = {
+			factor = 0.6
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.65
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 1.3
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 26
+			}
+		}
+	}
+	
+	light_infantry_offensive = 0.75
+	heavy_infantry_offensive = 1.50
+	pikemen_offensive = 0.75
+	light_cavalry_offensive = 0
+	knights_offensive = 0
+	archers_offensive = 0
+	horse_archers_offensive = 0
+	
+	light_infantry_defensive = 0.25
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25
+	light_cavalry_defensive = 0.25
+	knights_defensive = 0.25
+	archers_defensive = 0.25
+	horse_archers_defensive = 0.25
+	enemy = {
+		group = defensive
+		factor = 1
+	}
+}
+
+advance_tactic = {
+	days = 5
+	sprite = 9
+	group = advance
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+				culture_group = north_germanic
+				culture = russian
+				culture = georgian
+				culture = alan
+				culture_group = east_african
+				culture = levantine_arabic
+				culture_group = mesoamerican
+				culture = saxon
+				culture = english_norse
+				}
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.1
+			location = {
+				OR = {
+					terrain = forest
+					terrain = hills
+				}
+			}
+		}
+		modifier = {
+			factor = 0.9
+			location = {
+					terrain = desert
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 26
+			}
+		}
+	}
+	
+	light_infantry_offensive = 0.5
+	heavy_infantry_offensive = 1
+	pikemen_offensive = 0.5
+	light_cavalry_offensive = 0
+	knights_offensive = 0
+	archers_offensive = 0
+	horse_archers_offensive = 0
+	
+	light_infantry_defensive = 0
+	heavy_infantry_defensive = 0
+	pikemen_defensive = 0
+	light_cavalry_defensive = 0
+	knights_defensive = 0
+	archers_defensive = 0
+	horse_archers_defensive = 0
+	enemy = {
+		group = defensive
+		factor = 1
+	}
+}
+
+bad_advance_tactic = {
+	days = 5
+	sprite = 16
+	group = advance
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+				culture_group = north_germanic
+				culture = russian
+				culture = georgian
+				culture = alan
+				culture_group = east_african
+				culture = levantine_arabic
+				culture_group = mesoamerican
+				culture = saxon
+				culture = english_norse
+				}
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 26
+			}
+		}
+	}
+	
+	light_infantry_offensive = 0
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0
+	light_cavalry_offensive = 0
+	knights_offensive = 0
+	archers_offensive = 0
+	horse_archers_offensive = 0
+	
+	light_infantry_defensive = -0.25
+	heavy_infantry_defensive = -0.25
+	pikemen_defensive = -0.25
+	light_cavalry_defensive = -0.25
+	knights_defensive = -0.25
+	archers_defensive = -0.25
+	horse_archers_defensive = -0.25
+	enemy = {
+		group = defensive
+		factor = 1
+	}
+}
+
+good_stand_fast_tactic = {
+	days = 5
+	sprite = 3
+	group = stand_fast
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+			culture = scottish
+			culture = dutch
+			culture = italian
+			culture = maghreb_arabic
+				}
+			}
 		}
 	}
 
 	mean_time_to_happen = {
 		days = 3
 		modifier = {
-			factor = 3
-			flank_has_leader = yes
+			factor = 1.2
+			location = {
+				OR = {
+					terrain = mountain
+					terrain = hills
+				}
+			}
+		}
+		modifier = {
+			factor = 1.1
+			location = {
+				OR = {
+					terrain = plains
+					terrain = farmlands
+					terrain = steppe
+				}
+			}
+		}
+		modifier = {
+			factor = 0.9
+			location = {
+					terrain = desert
+			}
+		}
+		modifier = {
+			factor = 0.8
+			location = {
+					terrain = forest
+			}
+		}
+		modifier = {
+			factor = 0.6
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 0.7
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.65
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.75
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.2
 			leader = {
 				martial = 14
-				trait = possessed
+			}
+		}
+		modifier = {
+			factor = 1.3
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.35
+			leader = {
+				martial = 26
 			}
 		}
 	}
 
-	knights_offensive = 1.5
-	heavy_infantry_offensive = 1.5
-	light_infantry_offensive = 1.5
-	light_cavalry_offensive = 1.5
-	archers_offensive = 1.5
-	horse_archers_offensive = 1.5
+	light_infantry_offensive = 0
+	heavy_infantry_offensive = 0.75
 	pikemen_offensive = 1.5
+	light_cavalry_offensive = 0
+	knights_offensive = 0
+	archers_offensive = 0.75
+	horse_archers_offensive = 0
+	
+	light_infantry_defensive = 0.25
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25
+	light_cavalry_defensive = 0.25
+	knights_defensive = 0.25
+	archers_defensive = 0.25
+	horse_archers_defensive = 0.25
+	enemy = {
+		group = charge
+		factor = 1
+	}
+}
+
+stand_fast_tactic = {
+	days = 5
+	sprite = 10
+	group = stand_fast
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+			culture = scottish
+			culture = dutch
+			culture = italian
+			culture = maghreb_arabic
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.1
+			location = {
+				OR = {
+					terrain = mountain
+					terrain = hills
+				}
+			}
+		}
+		modifier = {
+			factor = 0.9
+			location = {
+					terrain = forest
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 0.9
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 1.1
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 1.05
+			leader = {
+				martial = 26
+			}
+		}
+	}
+
+	light_infantry_offensive = 0
+	heavy_infantry_offensive = 0.25
+	pikemen_offensive = 0.75
+	light_cavalry_offensive = 0
+	knights_offensive = 0
+	archers_offensive = 0.25
+	horse_archers_offensive = 0
+	
+	light_infantry_defensive = 0
+	heavy_infantry_defensive = 0.25
+	pikemen_defensive = 0.25
+	light_cavalry_defensive = 0
+	knights_defensive = 0
+	archers_defensive = 0.25
+	horse_archers_defensive = 0
+	enemy = {
+		group = charge
+		factor = 1
+	}
+}
+
+bad_stand_fast_tactic = {
+	days = 5
+	sprite = 17
+	group = stand_fast
+
+	trigger = {
+		phase = melee
+		flank_has_leader = yes
+		NOT = { 
+		leader = {
+			OR = {
+			culture = scottish
+			culture = dutch
+			culture = italian
+			culture = maghreb_arabic
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 0 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 2 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 4 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 6 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 8 }
+			}
+		}
+		modifier = {
+			factor = 1.2
+			leader = {
+				NOT = { martial = 10 }
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 12
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 14
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 16
+			}
+		}
+		modifier = {
+			factor = 0.95
+			leader = {
+				martial = 18
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 20
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 22
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 24
+			}
+		}
+		modifier = {
+			factor = 0.8
+			leader = {
+				martial = 26
+			}
+		}
+	}
+
+	light_infantry_offensive = 0
+	heavy_infantry_offensive = 0
+	pikemen_offensive = 0.5
+	light_cavalry_offensive = 0
+	knights_offensive = 0
+	archers_offensive = 0.25
+	horse_archers_offensive = 0
+	
+	light_infantry_defensive = -0.25
+	heavy_infantry_defensive = -0.25
+	pikemen_defensive = 0.25
+	light_cavalry_defensive = -0.25
+	knights_defensive = -0.25
+	archers_defensive = -0.25
+	horse_archers_defensive = -0.25
+	enemy = {
+		group = charge
+		factor = 1
+	}
 }
 
 ############################
@@ -2339,7 +6138,7 @@ retreat_and_ambush_tactic = {
 		leader = { 
 			OR = {
 				culture_group = altaic
-				culture = tocharian
+				culture = serindian
 				culture = saka
 				culture = parthian
 			} 
