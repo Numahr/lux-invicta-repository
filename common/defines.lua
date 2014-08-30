@@ -511,11 +511,11 @@ NCharacter = {
 	NATURAL_DEATH_CHANCE_AGE_80 = 1728,				-- Natural deaths per decade out of 10000 people: Age 80-90
 	NATURAL_DEATH_CHANCE_AGE_90 = 4000,				-- Natural deaths per decade out of 10000 people: Age 90-99
 	NATURAL_DEATH_CHANCE_AGE_100 = 8160,			-- Natural deaths per decade out of 10000 people: Age 100+
-	FERTILITY_BASE_MULT = 0.50,						-- Base fertility multiplier to adjust the base chance of impregnation
-	SECONDARY_SPOUSE_FERTILITY_MULT = 0.5,				-- Applied to fertility of secondary spouses and concubines v12b reduced as well v12c reverted
-	NOT_SPOUSE_FERTILITY_MULT = 0.25,				-- Applied to fertility when the two characters are not married
+	FERTILITY_BASE_MULT = 0.25,						-- Base fertility multiplier to adjust the base chance of impregnation v15 experimental halving
+	SECONDARY_SPOUSE_FERTILITY_MULT = 0.25,				-- Applied to fertility of secondary spouses and concubines v12b reduced as well v12c reverted v15 experimental halving
+	NOT_SPOUSE_FERTILITY_MULT = 0.125,				-- Applied to fertility when the two characters are not married v15 experimental halving
 	MARRIED_LOVERS_FERTILITY_MULT = 1.5,			-- Applied to fertility when lovers are married
-	INFANT_DEATH_CHANCE = 0.025						-- Chance of stillbirth / death at birth v12b increased from 0 to 2% v12b increased to 2.5%
+	INFANT_DEATH_CHANCE = 0.01						-- Chance of stillbirth / death at birth v12b increased from 0 to 2% v12b increased to 2.5% v15 reduced to 1%
 },
 
 NTitle = {
