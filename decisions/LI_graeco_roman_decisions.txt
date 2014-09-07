@@ -1,0 +1,68 @@
+vassal_decisions = {
+	nominate_vestalis_decision = {
+		from_potential = {
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+				religion = roman_imperial
+			}
+			NOT = { has_landed_title = c_vesta_temple }
+			c_vesta_temple = { owner = { always = yes } } # The Vestal Virgins must exist
+			c_vesta_temple = { owner = { NOT = { check_variable = { which = "num_vestales" value = 5 } } } } # The College of the Vestales has a seat open.
+		}
+		potential = {
+			age = 6
+			NOT = { age = 10 }
+			is_female = yes
+			is_landed = no
+			is_betrothed = no
+			prisoner = no
+			host = { character = FROM }
+			NOT = { has_character_flag = flag_nominated_as_vestalis }
+		}
+		allow = {
+			age = 6
+			NOT = { age = 10 }
+			is_female = yes
+			NOT = { trait = bastard }
+			NOT = { trait = legit_bastard }
+			NOT = { trait = child_of_consort }
+			OR = {
+				religion = graeco_roman
+				religion = graeco_roman_reformed
+				religion = roman_imperial
+			}
+		}
+		effect = {
+			set_character_flag = flag_nominated_as_vestalis
+			c_vesta_temple = { owner = { character_event = { id = ancrel.2124 days = 1 } } }
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.2
+			}
+			modifier = {
+				factor = 0
+				FROM = { OR = { is_primary_heir = yes is_pretender = yes } }
+			}
+			modifier = {
+				factor = 0.8
+				FROM = { trait = cynical }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = { trait = zealous }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { c_vesta_temple = { owner = { reverse_opinion = { who = FROM value = -40 } } } }
+			}
+			modifier = {
+				factor = 1.25
+				c_vesta_temple = { owner = { reverse_opinion = { who = FROM value = 40 } } }
+			}
+		}
+	}
+}
+
