@@ -1024,7 +1024,7 @@ NGraphics = {
 },
 
 NEngine = {
-	EVENT_PROCESS_OFFSET = 21, -- Events are checked every X day per character or province (1 is ideal, but CPU heavy) -- vanilla was 20, changed to 30 in v11 v12c tweaked to 25
+	EVENT_PROCESS_OFFSET = 20, -- Events are checked every X day per character or province (1 is ideal, but CPU heavy) -- vanilla was 20, changed to 30 in v11 v12c tweaked to 25
 },
 
 NAI =
