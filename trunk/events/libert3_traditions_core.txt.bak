@@ -1,0 +1,1843 @@
+#Renamed file to prevent its loading while we're using vanilla buildings.
+namespace = traditions
+
+# ## riknap: file that creates flags based on the tradition building chains ###
+# ## naming convention is traditions.xyz0
+# x = primary identifier
+# x = 1, Martial Traditions
+# x = 2, Mercantile Traditions
+# x = 3, Missionary Traditions
+# y = relevant building chain tier
+# z = secondary identifier
+# z = 0, removal event
+# z = 1, activator event
+# z = 2, information event
+# z = 3, choice event
+# z = 4, inheritance event
+# z = 5, Path A
+# z = 6, Path B
+# z = 7, Path C
+# z = 8, Path D
+# 0 = 0, province flagging event
+
+#MARTIAL TRADITIONS#
+
+#Tradition - add basic
+character_event = {
+	id = traditions.121
+	desc = "EVTDESCtraditions.121"
+	picture = "GFX_evt_battlecharge"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		capital_holding = { has_building = trad_martial_2 }
+		NOT = { 
+			OR = {
+				has_character_modifier = tradmod_martial_0 
+				has_character_modifier = tradmod_martial_6
+				has_character_modifier = tradmod_martial_7
+			}
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.121"
+		add_character_modifier = {
+			duration = -1
+			hidden = yes
+			name = tradmod_martial_0
+		}
+	}
+}
+
+#Tradition - upgrade to martial code
+character_event = {
+	id = traditions.161
+	desc = "EVTDESCtraditions.161"
+	picture = "GFX_evt_battlecharge"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		capital_holding = { has_building = trad_martial_6 }
+		has_character_modifier = tradmod_martial_0
+		NOT = { 
+			OR = {
+				has_character_modifier = tradmod_martial_6 
+				has_character_modifier = tradmod_martial_7
+			}
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.161"
+		add_character_modifier = {
+			duration = -1
+			hidden = yes
+			name = tradmod_martial_6
+		}
+		remove_character_modifier = tradmod_martial_0
+	}
+}
+
+#Tradition - upgrade to code of chivalry
+character_event = {
+	id = traditions.171
+	desc = "EVTDESCtraditions.171"
+	picture = "GFX_evt_battlecharge"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		capital_holding = { has_building = trad_martial_7 }
+		has_character_modifier = tradmod_martial_6
+		NOT = { has_character_modifier = tradmod_martial_7 }
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.171"
+		add_character_modifier = {
+			duration = -1
+			name = tradmod_martial_7
+			hidden = yes
+		}
+		remove_character_modifier = tradmod_martial_6
+	}
+}
+
+#Tradition - inform of specialization availability
+character_event = {
+id = traditions.132
+desc = "EVTDESCtraditions.132"
+picture = "GFX_evt_battlecharge"
+
+only_rulers = yes
+min_age = 16
+capable_only = yes
+
+trigger = {
+		
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_3		}
+		NOT = { 
+		OR = {
+			trait = tradtrait_martial_a1
+			trait = tradtrait_martial_a2
+			trait = tradtrait_martial_a3
+			trait = tradtrait_martial_a4
+			trait = tradtrait_martial_a5
+			trait = tradtrait_martial_b1
+			trait = tradtrait_martial_b2
+			trait = tradtrait_martial_b3
+			trait = tradtrait_martial_b4
+			trait = tradtrait_martial_b5
+			trait = tradtrait_martial_c1
+			trait = tradtrait_martial_c2
+			trait = tradtrait_martial_c3
+			trait = tradtrait_martial_c4
+			trait = tradtrait_martial_c5
+			trait = tradtrait_martial_d1
+			trait = tradtrait_martial_d2
+			trait = tradtrait_martial_d3
+			trait = tradtrait_martial_d4
+			trait = tradtrait_martial_d5
+		}
+		}
+		}
+mean_time_to_happen = { days = 1 }
+option = {
+		name = "EVTOPTtraditions.132A"
+		
+		character_event = {id = traditions.133}
+		}
+}
+
+# Tradition - specialization event
+character_event = {
+	id = traditions.133
+	desc = "EVTDESCtraditions.133"
+	picture = "GFX_evt_leader"
+
+	is_triggered_only = yes #triggered by a decision
+		
+	option = {
+		name = "EVTOPTtraditions.133A"
+		#"Valour in the offence!"
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_martial_a1 }
+					father = { trait = tradtrait_martial_a2 }
+					father = { trait = tradtrait_martial_a3 }
+					father = { trait = tradtrait_martial_a4 }
+					father = { trait = tradtrait_martial_a5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_martial_a1 }
+					mother = { trait = tradtrait_martial_a2 }
+					mother = { trait = tradtrait_martial_a3 }
+					mother = { trait = tradtrait_martial_a4 }
+					mother = { trait = tradtrait_martial_a5 }
+				}
+			}
+		}
+		add_trait = tradtrait_martial_a1
+	}
+	option = {
+		name = "EVTOPTtraditions.133B"
+		#"Fortitude in the defence!"
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_martial_b1 }
+					father = { trait = tradtrait_martial_b2 }
+					father = { trait = tradtrait_martial_b3 }
+					father = { trait = tradtrait_martial_b4 }
+					father = { trait = tradtrait_martial_b5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_martial_b1 }
+					mother = { trait = tradtrait_martial_b2 }
+					mother = { trait = tradtrait_martial_b3 }
+					mother = { trait = tradtrait_martial_b4 }
+					mother = { trait = tradtrait_martial_b5 }
+				}
+			}
+		}
+		add_trait = tradtrait_martial_b1
+	}
+	option = {
+		name = "EVTOPTtraditions.133C"
+		#"Determination to be victorious!"
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_martial_c1 }
+					father = { trait = tradtrait_martial_c2 }
+					father = { trait = tradtrait_martial_c3 }
+					father = { trait = tradtrait_martial_c4 }
+					father = { trait = tradtrait_martial_c5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_martial_c1 }
+					mother = { trait = tradtrait_martial_c2 }
+					mother = { trait = tradtrait_martial_c3 }
+					mother = { trait = tradtrait_martial_c4 }
+					mother = { trait = tradtrait_martial_c5 }
+				}
+			}
+		}
+		add_trait = tradtrait_martial_c1
+	}
+	option = {
+		name = "EVTOPTtraditions.133D"
+		#"Adaptability to change!"
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_martial_d1 }
+					father = { trait = tradtrait_martial_d2 }
+					father = { trait = tradtrait_martial_d3 }
+					father = { trait = tradtrait_martial_d4 }
+					father = { trait = tradtrait_martial_d5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_martial_d1 }
+					mother = { trait = tradtrait_martial_d2 }
+					mother = { trait = tradtrait_martial_d3 }
+					mother = { trait = tradtrait_martial_d4 }
+					mother = { trait = tradtrait_martial_d5 }
+				}
+			}
+		}
+		add_trait = tradtrait_martial_d1
+	}
+}
+
+#Valour Progression
+
+#Tradition - level up, Valour 2
+character_event = {
+	id = traditions.145
+	desc = "EVTDESCtraditions.145"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_4 }
+		trait = tradtrait_martial_a1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.145"
+		
+		add_trait = tradtrait_martial_a2
+		remove_trait = tradtrait_martial_a1
+	}
+}
+#Tradition - level up, Valour 3
+character_event = {
+	id = traditions.155
+	desc = "EVTDESCtraditions.155"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_5 }
+		trait = tradtrait_martial_a2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.155"
+		
+		add_trait = tradtrait_martial_a3
+		remove_trait = tradtrait_martial_a2
+	}
+}
+#Tradition - level up, Valour 4
+character_event = {
+	id = traditions.165
+	desc = "EVTDESCtraditions.165"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_6 }
+		trait = tradtrait_martial_a3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.165"
+		
+		add_trait = tradtrait_martial_a4
+		remove_trait = tradtrait_martial_a3
+	}
+}
+#Tradition - level up, Valour 5
+character_event = {
+	id = traditions.175
+	desc = "EVTDESCtraditions.175"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_7 }
+		trait = tradtrait_martial_a4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.175"
+		
+		add_trait = tradtrait_martial_a5
+		remove_trait = tradtrait_martial_a4
+	}
+}
+
+#Fortitude Progression
+#Tradition - level up, Fortitude 2
+character_event = {
+	id = traditions.146
+	desc = "EVTDESCtraditions.146"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_4 }
+		trait = tradtrait_martial_b1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.146"
+		
+		add_trait = tradtrait_martial_b2
+		remove_trait = tradtrait_martial_b1
+	}
+}
+#Tradition - level up, Fortitude 3
+character_event = {
+	id = traditions.156
+	desc = "EVTDESCtraditions.156"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_5 }
+		trait = tradtrait_martial_b2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.156"
+		
+		add_trait = tradtrait_martial_b3
+		remove_trait = tradtrait_martial_b2
+	}
+
+}
+#Tradition - level up, Fortitude 4
+character_event = {
+	id = traditions.166
+	desc = "EVTDESCtraditions.166"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_6 }
+		trait = tradtrait_martial_b3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.166"
+		
+		add_trait = tradtrait_martial_b4
+		remove_trait = tradtrait_martial_b3
+	}
+}
+#Tradition - level up, Fortitude 5
+character_event = {
+	id = traditions.176
+	desc = "EVTDESCtraditions.176"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_7 }
+		trait = tradtrait_martial_b4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.176"
+		
+		add_trait = tradtrait_martial_b5
+		remove_trait = tradtrait_martial_b4
+	}
+}
+
+#Determination Progression
+
+#Tradition - level up, Determination 2
+character_event = {
+	id = traditions.147
+	desc = "EVTDESCtraditions.147"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_4 }
+		trait = tradtrait_martial_c1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.147"
+		
+		add_trait = tradtrait_martial_c2
+		remove_trait = tradtrait_martial_c1
+	}
+}
+#Tradition - level up, Determination 3
+character_event = {
+	id = traditions.157
+	desc = "EVTDESCtraditions.157"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_5 }
+		trait = tradtrait_martial_c2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.157"
+		
+		add_trait = tradtrait_martial_c3
+		remove_trait = tradtrait_martial_c2
+	}
+}
+#Tradition - level up, Determination 4
+character_event = {
+	id = traditions.167
+	desc = "EVTDESCtraditions.167"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_6 }
+		trait = tradtrait_martial_c3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.167"
+		
+		add_trait = tradtrait_martial_c4
+		remove_trait = tradtrait_martial_c3
+	}
+}
+#Tradition - level up, Determination 5
+character_event = {
+	id = traditions.177
+	desc = "EVTDESCtraditions.177"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_7 }
+		trait = tradtrait_martial_c4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.177"
+		
+		add_trait = tradtrait_martial_c5
+		remove_trait = tradtrait_martial_c4
+	}
+}
+
+#Adaptability Progression
+
+#Tradition - level up, Adaptability 2
+character_event = {
+	id = traditions.148
+	desc = "EVTDESCtraditions.148"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_4 }
+		trait = tradtrait_martial_d1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.148"
+		
+		add_trait = tradtrait_martial_d2
+		remove_trait = tradtrait_martial_d1
+	}
+}
+#Tradition - level up, Adaptability 3
+character_event = {
+	id = traditions.158
+	desc = "EVTDESCtraditions.158"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_5 }
+		trait = tradtrait_martial_d2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.158"
+		
+		add_trait = tradtrait_martial_d3
+		remove_trait = tradtrait_martial_d2
+	}
+}
+#Tradition - level up, Adaptability 4
+character_event = {
+	id = traditions.168
+	desc = "EVTDESCtraditions.168"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_6 }
+		trait = tradtrait_martial_d3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.168"
+		
+		add_trait = tradtrait_martial_d4
+		remove_trait = tradtrait_martial_d3
+	}
+}
+#Tradition - level up, Adaptability 5
+character_event = {
+	id = traditions.178
+	desc = "EVTDESCtraditions.178"
+	picture = "GFX_evt_leader"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_feudal = yes
+		
+		capital_holding = { has_building = trad_martial_7 }
+		trait = tradtrait_martial_d4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.178"
+		
+		add_trait = tradtrait_martial_d5
+		remove_trait = tradtrait_martial_d4
+	}
+}
+
+#MERCANTILE TRADITIONS#
+#Tradition - add basic
+character_event = {
+	id = traditions.221
+	desc = "EVTDESCtraditions.221"
+	picture = "GFX_evt_frivolous"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		 
+		capital_holding = { has_building = trad_mercantile_2 }
+		NOT = { 
+			OR = {
+				has_character_modifier = tradmod_mercantile_0 
+				has_character_modifier = tradmod_mercantile_6
+				has_character_modifier = tradmod_mercantile_7
+			}
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.221"
+		add_character_modifier = {
+			duration = -1
+			hidden = yes
+			name = tradmod_mercantile_0
+		}
+	}
+}
+
+#Tradition - upgrade to mercantile code
+character_event = {
+	id = traditions.261
+	desc = "EVTDESCtraditions.261"
+	picture = "GFX_evt_frivolous"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_6 }
+		has_character_modifier = tradmod_mercantile_0
+		NOT = { 
+			OR = {
+				has_character_modifier = tradmod_mercantile_6 
+				has_character_modifier = tradmod_mercantile_7
+			}
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.261"
+		add_character_modifier =  {
+			duration = -1
+			hidden = yes
+			name = tradmod_mercantile_6
+		}
+		remove_character_modifier = tradmod_mercantile_0
+	}
+}
+
+#Tradition - upgrade to code of commerce
+character_event = {
+	id = traditions.271
+	desc = "EVTDESCtraditions.271"
+	picture = "GFX_evt_frivolous"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_7 }
+		has_character_modifier = tradmod_mercantile_6
+		NOT = { has_character_modifier = tradmod_mercantile_7 }
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.271"
+		add_character_modifier = {
+			duration = -1
+			hidden = yes
+			name = tradmod_mercantile_7
+		}
+		remove_character_modifier = tradmod_mercantile_6
+	}
+}
+
+#Tradition - inform of specialization availability
+character_event = {
+id = traditions.232
+desc = "EVTDESCtraditions.232"
+picture = "GFX_evt_frivolous"
+only_rulers = yes
+min_age = 16
+capable_only = yes
+trigger = {
+
+		is_republic = yes
+		capital_holding = { has_building = trad_mercantile_3		}
+		NOT = { 
+		OR = {
+			trait = tradtrait_mercantile_a1
+			trait = tradtrait_mercantile_a2
+			trait = tradtrait_mercantile_a3
+			trait = tradtrait_mercantile_a4
+			trait = tradtrait_mercantile_a5
+			trait = tradtrait_mercantile_b1
+			trait = tradtrait_mercantile_b2
+			trait = tradtrait_mercantile_b3
+			trait = tradtrait_mercantile_b4
+			trait = tradtrait_mercantile_b5
+			trait = tradtrait_mercantile_c1
+			trait = tradtrait_mercantile_c2
+			trait = tradtrait_mercantile_c3
+			trait = tradtrait_mercantile_c4
+			trait = tradtrait_mercantile_c5
+	
+		}
+		}
+		}
+mean_time_to_happen = { days = 1 }
+option = {
+		name = "EVTOPTtraditions.232A"
+		
+		character_event = {id = traditions.233}
+		}
+		}
+
+# Tradition - specialization event
+character_event = {
+	id = traditions.233
+	desc = "EVTDESCtraditions.233"
+	picture = "GFX_evt_vain"
+
+	is_triggered_only = yes #triggered by a decision
+		
+	option = {
+		name = "EVTOPTtraditions.233A"
+		#Prudence
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_mercantile_a1 }
+					father = { trait = tradtrait_mercantile_a2 }
+					father = { trait = tradtrait_mercantile_a3 }
+					father = { trait = tradtrait_mercantile_a4 }
+					father = { trait = tradtrait_mercantile_a5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_mercantile_a1 }
+					mother = { trait = tradtrait_mercantile_a2 }
+					mother = { trait = tradtrait_mercantile_a3 }
+					mother = { trait = tradtrait_mercantile_a4 }
+					mother = { trait = tradtrait_mercantile_a5 }
+				}
+			}
+		}
+		add_trait = tradtrait_mercantile_a1
+	}
+	option = {
+		name = "EVTOPTtraditions.233B"
+		#Wisdom
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_mercantile_b1 }
+					father = { trait = tradtrait_mercantile_b2 }
+					father = { trait = tradtrait_mercantile_b3 }
+					father = { trait = tradtrait_mercantile_b4 }
+					father = { trait = tradtrait_mercantile_b5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_mercantile_b1 }
+					mother = { trait = tradtrait_mercantile_b2 }
+					mother = { trait = tradtrait_mercantile_b3 }
+					mother = { trait = tradtrait_mercantile_b4 }
+					mother = { trait = tradtrait_mercantile_b5 }
+				}
+			}
+		}
+		add_trait = tradtrait_mercantile_b1
+	}
+	option = {
+		name = "EVTOPTtraditions.233C"
+		#Magnetism
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_mercantile_c1 }
+					father = { trait = tradtrait_mercantile_c2 }
+					father = { trait = tradtrait_mercantile_c3 }
+					father = { trait = tradtrait_mercantile_c4 }
+					father = { trait = tradtrait_mercantile_c5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_mercantile_c1 }
+					mother = { trait = tradtrait_mercantile_c2 }
+					mother = { trait = tradtrait_mercantile_c3 }
+					mother = { trait = tradtrait_mercantile_c4 }
+					mother = { trait = tradtrait_mercantile_c5 }
+				}
+			}
+		}
+		add_trait = tradtrait_mercantile_c1
+	}
+
+}
+
+#Prudence Progression
+
+#Tradition - level up, Prudence 2
+character_event = {
+	id = traditions.245
+	desc = "EVTDESCtraditions.245"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_4 }
+		trait = tradtrait_mercantile_a1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.245"
+		
+		add_trait = tradtrait_mercantile_a2
+		remove_trait = tradtrait_mercantile_a1
+	}
+}
+#Tradition - level up, Prudence 3
+character_event = {
+	id = traditions.255
+	desc = "EVTDESCtraditions.255"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_5 }
+		trait = tradtrait_mercantile_a2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.255"
+		
+		add_trait = tradtrait_mercantile_a3
+		remove_trait = tradtrait_mercantile_a2
+	}
+}
+#Tradition - level up, Prudence 4
+character_event = {
+	id = traditions.265
+	desc = "EVTDESCtraditions.265"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_6 }
+		trait = tradtrait_mercantile_a3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.265"
+		
+		add_trait = tradtrait_mercantile_a4
+		remove_trait = tradtrait_mercantile_a3
+	}
+}
+#Tradition - level up, Prudence 5
+character_event = {
+	id = traditions.275
+	desc = "EVTDESCtraditions.275"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_7 }
+		trait = tradtrait_mercantile_a4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.275"
+		
+		add_trait = tradtrait_mercantile_a5
+		remove_trait = tradtrait_mercantile_a4
+	}
+}
+
+#Wisdom Progression
+#Tradition - level up, Wisdom 2
+character_event = {
+	id = traditions.246
+	desc = "EVTDESCtraditions.246"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_4 }
+		trait = tradtrait_mercantile_b1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.246"
+		
+		add_trait = tradtrait_mercantile_b2
+		remove_trait = tradtrait_mercantile_b1
+	}
+}
+#Tradition - level up, Wisdom 3
+character_event = {
+	id = traditions.256
+	desc = "EVTDESCtraditions.256"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_5 }
+		trait = tradtrait_mercantile_b2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.256"
+		
+		add_trait = tradtrait_mercantile_b3
+		remove_trait = tradtrait_mercantile_b2
+	}
+}
+#Tradition - level up, Wisdom 4
+character_event = {
+	id = traditions.266
+	desc = "EVTDESCtraditions.266"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_6 }
+		trait = tradtrait_mercantile_b3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.266"
+		
+		add_trait = tradtrait_mercantile_b4
+		remove_trait = tradtrait_mercantile_b3
+	}
+}
+#Tradition - level up, Wisdom 5
+character_event = {
+	id = traditions.276
+	desc = "EVTDESCtraditions.276"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_7 }
+		trait = tradtrait_mercantile_b4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.276"
+		
+		add_trait = tradtrait_mercantile_b5
+		remove_trait = tradtrait_mercantile_b4
+	}
+}
+
+#Magnetism Progression
+
+#Tradition - level up, Magnetism 2
+character_event = {
+	id = traditions.247
+	desc = "EVTDESCtraditions.247"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_4 }
+		trait = tradtrait_mercantile_c1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.247"
+		
+		add_trait = tradtrait_mercantile_c2
+		remove_trait = tradtrait_mercantile_c1
+	}
+}
+#Tradition - level up, Magnetism 3
+character_event = {
+	id = traditions.257
+	desc = "EVTDESCtraditions.257"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_5 }
+		trait = tradtrait_mercantile_c2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.257"
+		
+		add_trait = tradtrait_mercantile_c3
+		remove_trait = tradtrait_mercantile_c2
+	}
+}
+#Tradition - level up, Magnetism 4
+character_event = {
+	id = traditions.267
+	desc = "EVTDESCtraditions.267"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_6 }
+		trait = tradtrait_mercantile_c3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.267"
+		
+		add_trait = tradtrait_mercantile_c4
+		remove_trait = tradtrait_mercantile_c3
+	}
+}
+#Tradition - level up, Magnetism 5
+character_event = {
+	id = traditions.277
+	desc = "EVTDESCtraditions.277"
+	picture = "GFX_evt_vain"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_republic = yes
+		
+		capital_holding = { has_building = trad_mercantile_7 }
+		trait = tradtrait_mercantile_c4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.277"
+		
+		add_trait = tradtrait_mercantile_c5
+		remove_trait = tradtrait_mercantile_c4
+	}
+}
+
+#MISSIONARY TRADITIONS#
+
+#Tradition - add basic
+character_event = {
+	id = traditions.321
+	desc = "EVTDESCtraditions.321"
+	picture = "GFX_evt_idealistic"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		 
+		capital_holding = { has_building = trad_missionary_2 }
+		NOT = { 
+			OR = {
+				has_character_modifier = tradmod_missionary_0 
+				has_character_modifier = tradmod_missionary_6
+				has_character_modifier = tradmod_missionary_7
+			}
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.321"
+		add_character_modifier = {
+			duration = -1
+			hidden = yes
+			name =  tradmod_missionary_0
+		}
+	}
+}
+
+#Tradition - upgrade to missionary code
+character_event = {
+	id = traditions.361
+	desc = "EVTDESCtraditions.361"
+	picture = "GFX_evt_idealistic"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_6 }
+		has_character_modifier = tradmod_missionary_0
+		NOT = { 
+			OR = {
+				has_character_modifier = tradmod_missionary_6 
+				has_character_modifier = tradmod_missionary_7
+			}
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.361"
+		add_character_modifier = {
+			duration = -1
+			hidden = yes
+			name = tradmod_missionary_6
+		}
+		remove_character_modifier = tradmod_missionary_0
+	}
+}
+
+#Tradition - upgrade to code of Clergymen
+character_event = {
+	id = traditions.371
+	desc = "EVTDESCtraditions.371"
+	picture = "GFX_evt_idealistic"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_7 }
+		has_character_modifier = tradmod_missionary_6
+		NOT = { has_character_modifier = tradmod_missionary_7 }
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.371"
+		add_character_modifier = {
+			duration = -1
+			hidden = yes
+			name = tradmod_missionary_7
+		}
+		remove_character_modifier = tradmod_missionary_6
+	}
+}
+
+#Tradition - inform of specialization availability
+character_event = {
+id = traditions.332
+desc = "EVTDESCtraditions.332"
+picture = "GFX_evt_idealistic"
+
+only_rulers = yes
+min_age = 16
+capable_only = yes
+trigger = {
+		is_theocracy = yes
+
+		
+		capital_holding = { has_building = trad_missionary_3 }
+		NOT = { 
+		OR = {
+			trait = tradtrait_missionary_a1
+			trait = tradtrait_missionary_a2
+			trait = tradtrait_missionary_a3
+			trait = tradtrait_missionary_a4
+			trait = tradtrait_missionary_a5
+			trait = tradtrait_missionary_b1
+			trait = tradtrait_missionary_b2
+			trait = tradtrait_missionary_b3
+			trait = tradtrait_missionary_b4
+			trait = tradtrait_missionary_b5
+			trait = tradtrait_missionary_c1
+			trait = tradtrait_missionary_c2
+			trait = tradtrait_missionary_c3
+			trait = tradtrait_missionary_c4
+			trait = tradtrait_missionary_c5
+			}
+		}
+		}
+mean_time_to_happen = { days = 1 }
+option = {
+		name = "EVTOPTtraditions.332A"
+		
+		character_event = {id = traditions.333}
+}
+}
+
+# Tradition - specialization event
+character_event = {
+	id = traditions.333
+	desc = "EVTDESCtraditions.333"
+	picture = "GFX_evt_planner"
+
+	is_triggered_only = yes #triggered by a decision
+		
+	option = {
+		name = "EVTOPTtraditions.333A"
+		#Fervour
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_missionary_a1 }
+					father = { trait = tradtrait_missionary_a2 }
+					father = { trait = tradtrait_missionary_a3 }
+					father = { trait = tradtrait_missionary_a4 }
+					father = { trait = tradtrait_missionary_a5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_missionary_a1 }
+					mother = { trait = tradtrait_missionary_a2 }
+					mother = { trait = tradtrait_missionary_a3 }
+					mother = { trait = tradtrait_missionary_a4 }
+					mother = { trait = tradtrait_missionary_a5 }
+				}
+			}
+		}
+		add_trait = tradtrait_missionary_a1
+	}
+	option = {
+		name = "EVTOPTtraditions.333B"
+		#Zeal
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_missionary_b1 }
+					father = { trait = tradtrait_missionary_b2 }
+					father = { trait = tradtrait_missionary_b3 }
+					father = { trait = tradtrait_missionary_b4 }
+					father = { trait = tradtrait_missionary_b5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_missionary_b1 }
+					mother = { trait = tradtrait_missionary_b2 }
+					mother = { trait = tradtrait_missionary_b3 }
+					mother = { trait = tradtrait_missionary_b4 }
+					mother = { trait = tradtrait_missionary_b5 }
+				}
+			}
+		}
+		add_trait = tradtrait_missionary_b1
+	}
+	option = {
+		name = "EVTOPTtraditions.333C"
+		#Inspiration
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 100
+				or = {
+					father = { trait = tradtrait_missionary_c1 }
+					father = { trait = tradtrait_missionary_c2 }
+					father = { trait = tradtrait_missionary_c3 }
+					father = { trait = tradtrait_missionary_c4 }
+					father = { trait = tradtrait_missionary_c5 }
+				}
+			}
+			modifier = {
+				factor = 100
+				or = {
+					mother = { trait = tradtrait_missionary_c1 }
+					mother = { trait = tradtrait_missionary_c2 }
+					mother = { trait = tradtrait_missionary_c3 }
+					mother = { trait = tradtrait_missionary_c4 }
+					mother = { trait = tradtrait_missionary_c5 }
+				}
+			}
+		}
+		add_trait = tradtrait_missionary_c1
+	}
+
+}
+
+
+
+#Fervour Progression
+
+#Tradition - level up, Fervour 2
+character_event = {
+	id = traditions.345
+	desc = "EVTDESCtraditions.345"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_4 }
+		trait = tradtrait_missionary_a1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.345"
+		
+		add_trait = tradtrait_missionary_a2
+		remove_trait = tradtrait_missionary_a1
+	}
+}
+#Tradition - level up, Fervour 3
+character_event = {
+	id = traditions.355
+	desc = "EVTDESCtraditions.355"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_5 }
+		trait = tradtrait_missionary_a2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.355"
+		
+		add_trait = tradtrait_missionary_a3
+		remove_trait = tradtrait_missionary_a2
+	}
+}
+#Tradition - level up, Fervour 4
+character_event = {
+	id = traditions.365
+	desc = "EVTDESCtraditions.365"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_6 }
+		trait = tradtrait_missionary_a3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.365"
+		
+		add_trait = tradtrait_missionary_a4
+		remove_trait = tradtrait_missionary_a3
+	}
+}
+#Tradition - level up, Fervour 5
+character_event = {
+	id = traditions.375
+	desc = "EVTDESCtraditions.375"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_7 }
+		trait = tradtrait_missionary_a4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.375"
+		
+		add_trait = tradtrait_missionary_a5
+		remove_trait = tradtrait_missionary_a4
+	}
+}
+
+#Zeal Progression
+#Tradition - level up, Zeal 2
+character_event = {
+	id = traditions.346
+	desc = "EVTDESCtraditions.346"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_4 }
+		trait = tradtrait_missionary_b1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.346"
+		
+		add_trait = tradtrait_missionary_b2
+		remove_trait = tradtrait_missionary_b1
+	}
+}
+#Tradition - level up, Zeal 3
+character_event = {
+	id = traditions.356
+	desc = "EVTDESCtraditions.356"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_5 }
+		trait = tradtrait_missionary_b2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.356"
+		
+		add_trait = tradtrait_missionary_b3
+		remove_trait = tradtrait_missionary_b2
+	}
+}
+#Tradition - level up, Zeal 4
+character_event = {
+	id = traditions.366
+	desc = "EVTDESCtraditions.366"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_6 }
+		trait = tradtrait_missionary_b3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.366"
+		
+		add_trait = tradtrait_missionary_b4
+		remove_trait = tradtrait_missionary_b3
+	}
+}
+#Tradition - level up, Zeal 5
+character_event = {
+	id = traditions.376
+	desc = "EVTDESCtraditions.376"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_7 }
+		trait = tradtrait_missionary_b4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.376"
+		
+		add_trait = tradtrait_missionary_b5
+		remove_trait = tradtrait_missionary_b4
+	}
+}
+
+#Inspiration Progression
+
+#Tradition - level up, Inspiration 2
+character_event = {
+	id = traditions.347
+	desc = "EVTDESCtraditions.347"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_4 }
+		trait = tradtrait_missionary_c1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.347"
+		
+		add_trait = tradtrait_missionary_c2
+		remove_trait = tradtrait_missionary_c1
+	}
+}
+#Tradition - level up, Inspiration 3
+character_event = {
+	id = traditions.357
+	desc = "EVTDESCtraditions.357"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_5 }
+		trait = tradtrait_missionary_c2
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.357"
+		
+		add_trait = tradtrait_missionary_c3
+		remove_trait = tradtrait_missionary_c2
+	}
+}
+#Tradition - level up, Inspiration 4
+character_event = {
+	id = traditions.367
+	desc = "EVTDESCtraditions.367"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_6 }
+		trait = tradtrait_missionary_c3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.367"
+		
+		add_trait = tradtrait_missionary_c4
+		remove_trait = tradtrait_missionary_c3
+	}
+}
+#Tradition - level up, Inspiration 5
+character_event = {
+	id = traditions.377
+	desc = "EVTDESCtraditions.377"
+	picture = "GFX_evt_planner"
+
+	only_rulers = yes
+	min_age = 16
+	capable_only = yes
+
+	trigger = {
+		is_theocracy = yes
+		
+		capital_holding = { has_building = trad_missionary_7 }
+		trait = tradtrait_missionary_c4
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = "EVTOPTtraditions.377"
+		
+		add_trait = tradtrait_missionary_c5
+		remove_trait = tradtrait_missionary_c4
+	}
+}
+
