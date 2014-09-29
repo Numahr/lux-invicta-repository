@@ -1363,13 +1363,14 @@ character_event = {
 }
 
 namespace = matribastard
-#Bastard is born to a mother who is married matrilineally, or is higher rank than her husband
+#Bastard is born to a mother who is married matrilineally, or is higher rank than her husband and the real father
 character_event = {
 	id = matribastard.300
 	hide_window = yes
 	is_triggered_only = yes
 	
 	trigger = {
+		was_conceived_a_bastard = yes
 		mother = {
 			is_married = yes
 			OR = {
@@ -1381,6 +1382,29 @@ character_event = {
 							spouse = {
 								primary_title = {
 									lower_tier_than = PREVPREVPREV
+								}
+							}
+						}
+					}
+					OR = {
+						NOT = {
+							ROOT = {
+								real_father = {
+									always = yes
+								}
+							}
+						}
+						ROOT = {
+							real_father = {
+								is_ruler = no
+							}
+						}
+						primary_title = {
+							ROOT = {
+								real_father = {
+									primary_title = {
+										lower_tier_than = PREVPREVPREV
+									}
 								}
 							}
 						}
@@ -1457,9 +1481,13 @@ character_event = {
 				trait = trusting
 			}
 		}
-		FROM = {
-			character_event = {
-				id = matribastard.303	#Husband reacts
+		hidden_tooltip = {
+			FROM = {
+				character_event = {
+					id = matribastard.303	#Husband reacts
+				}
+			}
+		}
 	}
 	option = {
 		name = EVTOPTBmb301
@@ -1474,15 +1502,17 @@ character_event = {
 				trait = arbitrary
 			}
 		}
-		FROM = {
-			character_event = {
-				id = matribastard.304
+		hidden_tooltip = {
+			FROM = {
+				character_event = {
+					id = matribastard.304	#Husband reacts
+				}
 			}
 		}
 	}
 }
 
-#Non-matrilineally married mother who outranks spouse reacts to bastard birth
+#Non-matrilineally married mother who outranks spouse and father reacts to bastard birth
 character_event = {
 	id = matribastard.302
 	desc = EVTDESCmb302
@@ -1490,10 +1520,166 @@ character_event = {
 	is_triggered_only = yes
 	option = {
 		name = EVTOPTAmb301
-		
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 0
+				trait = honest
+			}
+			modifier = {
+				factor = 2.0
+				trait = deceitful
+			}
+			modifier = {
+				factor = 1.5
+				trait = quick
+			}
+			modifier = {
+				factor = 2.0
+				trait = genius
+			}
+			modifier = {
+				factor = 1.25
+				trait = diligent
+			}
+			modifier = {
+				factor = 1.25
+				trait = patient
+			}
+			modifier = {
+				factor = 1.50
+				trait = trusting
+			}
+		}
+		hidden_tooltip = {
+			FROM = {
+				character_event = {
+					id = matribastard.307	#Husband reacts
+				}
+			}
+		}
 	}
 	option = {
 		name = EVTOPTBmb301
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 1.5
+				trait = proud
+			}
+			modifier = {
+				factor = 1.50
+				trait = arbitrary
+			}
+		}
+		hidden_tooltip = {
+			FROM = {
+				character_event = {
+					id = matribastard.304	#Husband reacts
+				}
+			}
+		}
+	}
+}
+
+#(Hidden) Husband reacts to request to recognize child as legitimate
+character_event = {
+	id = matribastard.303
+	hide_window = yes
+	is_triggered_only = yes
+	
+	option = {
+		FROM = {
+			spouse = {
+				character_event = {
+					id = matribastard.305
+				}
+			}
+		}
+	}
+}
+
+#(Hidden) Husband reacts to decision to ignore his opinion
+character_event = {
+	id = matribastard.304
+	hide_window = yes
+	is_triggered_only = yes
+	
+	option = {
+		FROM = {
+			spouse = {
+				character_event = {
+					id = matribastard.306
+				}
+			}
+		}
+	}
+}
+
+#Husband reacts to request to recognize child as legitimate
+character_event = {
+	id = matribastard.305
+	desc = EVTDESCmb305
+	picture = GFX_evt_birth
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAmb305
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 2.0
+				trait = trusting
+			}
+		}
+		
+	}
+	option = {
+		name = EVTOPTBmb305
+	}
+}
+
+#Husband reacts to decision to ignore his opinion
+character_event = {
+	id = matribastard.306
+	desc = EVTDESCmb306
+	picture = GFX_evt_birth
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAmb306
+	}
+}
+
+#(Hidden) Husband reacts to request to recognize child as legitimate
+character_event = {
+	id = matribastard.307
+	hide_window = yes
+	is_triggered_only = yes
+	
+	option = {
+		FROM = {
+			spouse = {
+				character_event = {
+					id = matribastard.308
+				}
+			}
+		}
+	}
+}
+
+#Husband reacts to request to recognize child as legitimate
+character_event = {
+	id = matribastard.308
+	desc = EVTDESCmb308
+	picture = GFX_evt_birth
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAmb308
+	}
+	option = {
+		name = EVTOPTBmb308
 	}
 }
 
