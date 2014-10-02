@@ -9,7 +9,336 @@
 
 # Written by Henrik Fåhraeus
 
+namespace = luxrevolt
 namespace = TOG
+
+## Revolt selection
+# Triggered from on_actions
+province_event = {
+	id = luxrevolt.1
+	
+	hide_window = yes
+	is_triggered_only = yes
+	
+	trigger = {
+		has_dlc = "The Old Gods"
+	}
+	
+	immediate = {
+		# add_province_modifier = { name = province_revolted duration = 1825 }
+		# Check for any ongoing revolt
+		if = { # Peasant revolt
+			limit = {
+				owner = {
+					top_liege = {
+						war = yes
+						any_war = {
+							defender = { character = PREV }
+							using_cb = peasant_revolt
+							war_title = ROOT
+						}
+					}
+				}
+			}
+			set_province_flag = ongoing_peasant_revolt
+		}
+		if = { # Heretic revolt
+			limit = {
+				owner = {
+					top_liege = {
+						war = yes
+						any_war = {
+							defender = { character = PREV }
+							using_cb = heretic_revolt
+							war_title = ROOT
+						}
+					}
+				}
+			}
+			set_province_flag = ongoing_heretic_revolt
+		}
+		if = {# Religious revolt
+			limit = {
+				owner = {
+					top_liege = {
+						war = yes
+						any_war = {
+							defender = { character = PREV }
+							using_cb = religious_revolt
+							attacker = { religion = ROOT }
+						}
+					}
+				}
+			}
+			set_province_flag = ongoing_religious_revolt
+		}
+		if = { # Nationalist revolt
+			limit = {
+				owner = {
+					top_liege = {
+						war = yes
+						any_war = {
+							defender = { character = PREV }
+							using_cb = liberation_revolt
+							thirdparty_title_scope = {
+								ROOT = {
+									kingdom = {
+										title = PREVPREV
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			set_province_flag = ongoing_nationalist_revolt
+		}
+		if = { # Slave revolt
+			limit = {
+				owner = {
+					top_liege = {
+						war = yes
+						any_war = {
+							defender = { character = PREV }
+							OR = {
+								using_cb = slave_revolt
+								using_cb = war_of_liberation
+							}
+							war_title = ROOT
+						}
+					}
+				}
+			}
+			set_province_flag = ongoing_slave_revolt
+		}
+	}
+	
+ 	# Start a new revolt
+	option = { # Start Slave revolt
+		name = OK
+		trigger = {
+			NOT = {
+				has_province_flag = ongoing_peasant_revolt
+				has_province_flag = ongoing_religious_revolt
+				has_province_flag = ongoing_nationalist_revolt
+				has_province_flag = ongoing_slave_revolt
+				has_province_flag = ongoing_heretic_revolt
+			}
+			OR = {
+				has_province_modifier = slave_modifier_1
+				has_province_modifier = slave_modifier_2
+				has_province_modifier = slave_modifier_3
+				has_province_modifier = slave_modifier_4
+				has_province_modifier = slave_modifier_5
+			}
+			kingdom = {
+				OR = {
+					has_holder = no
+					holder_scope = { any_realm_province = { province_id = ROOT } }
+				}
+			}
+		}
+		province_event = { id = TOG.106099 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 1000
+		}
+	}
+	option = { # Start nationalist revolt
+		name = OK
+		trigger = {
+			NOT = {
+				has_province_flag = ongoing_peasant_revolt
+				has_province_flag = ongoing_religious_revolt
+				has_province_flag = ongoing_nationalist_revolt
+				has_province_flag = ongoing_slave_revolt
+				has_province_flag = ongoing_heretic_revolt
+			}
+			owner = {
+				top_liege = {
+					NOT = { culture = ROOT }
+				}
+			}
+			kingdom = {
+				culture = ROOT
+				has_holder = no
+				any_previous_holder = { always = yes } # Must have had a holder in the past
+			}
+		}
+		province_event = { id = TOG.1040 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 1000
+		}
+	}
+	option = { # Start religious revolt
+		name = OK
+		trigger = {
+			NOT = {
+				has_province_flag = ongoing_peasant_revolt
+				has_province_flag = ongoing_religious_revolt
+				has_province_flag = ongoing_nationalist_revolt
+				has_province_flag = ongoing_slave_revolt
+				has_province_flag = ongoing_heretic_revolt
+			}
+			owner = {
+				top_liege = {
+					NOT = { religion_group = ROOT }
+				}
+			}
+			# NOT = { # These two religions should rather use Scoiatael revolt
+				# religion = dana_meadbh
+				# religion = dwarven
+			# }
+		}
+		province_event = { id = TOG.1060 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 100
+			# modifier = { factor = 0.1 religion = spider } # It's not really religion that would openly try to revolt 
+		}
+	}
+	option = { # Start heretic revolt
+		name = OK
+		trigger = {
+			NOT = {
+				has_province_flag = ongoing_peasant_revolt
+				has_province_flag = ongoing_religious_revolt
+				has_province_flag = ongoing_nationalist_revolt
+				has_province_flag = ongoing_slave_revolt
+				has_province_flag = ongoing_heretic_revolt
+			}
+			is_heretic = yes
+			owner = {
+				top_liege = {
+					is_parent_religion = ROOT
+				}
+			}
+		}
+		province_event = { id = TOG.1020 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 100
+		}
+	}
+	option = { # Start peasant revolt
+		name = OK
+		trigger = {
+			NOT = {
+				has_province_flag = ongoing_peasant_revolt
+				has_province_flag = ongoing_religious_revolt
+				has_province_flag = ongoing_nationalist_revolt
+				has_province_flag = ongoing_slave_revolt
+				has_province_flag = ongoing_heretic_revolt
+			}
+		}
+		province_event = { id = TOG.1000 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 10
+		}
+	}
+	# Reinforce the ongoing revolt
+	option = { # Reinforce Slave revolt
+		name = OK
+		trigger = {
+			has_province_flag = ongoing_slave_revolt
+		}
+		province_event = { id = TOG.107099 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 10000
+		}
+	}
+	option = { # Reinforce nationalist revolt
+		name = OK
+		trigger = {
+			has_province_flag = ongoing_nationalist_revolt
+		}
+		province_event = { id = TOG.1050 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 1000
+		}
+	}
+	option = { # Reinforce religious revolt
+		name = OK
+		trigger = {
+			has_province_flag = ongoing_religious_revolt
+		}
+		province_event = { id = TOG.1070 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 100
+		}
+	}
+	option = { # Reinforce peasant revolt
+		name = OK
+		trigger = {
+			has_province_flag = ongoing_peasant_revolt
+		}
+		province_event = { id = TOG.1010 }
+		clr_province_flag = ongoing_peasant_revolt
+		clr_province_flag = ongoing_religious_revolt
+		clr_province_flag = ongoing_nationalist_revolt
+		clr_province_flag = ongoing_slave_revolt
+		clr_province_flag = ongoing_heretic_revolt
+		ai_chance = {
+			factor = 10
+		}
+	}
+	# Don't revolt
+	# option = { # Do nothing
+		# name = OK
+		# clr_province_flag = ongoing_peasant_revolt
+		# clr_province_flag = ongoing_religious_revolt
+		# clr_province_flag = ongoing_nationalist_revolt
+		# clr_province_flag = ongoing_slave_revolt
+		# ai_chance = {
+			# factor = 10000
+			# modifier = {
+				# factor = 0
+				# NOT = {
+					# terrain = dryad_forest
+					# owner = { trait = dryad }
+				# }
+			# }
+		# }
+	# }
+}
+
 
 # Peasant Rebels rise up (temporary rebel title created, with a leader and a war)
 # Triggered from "on_rebel_revolt"
@@ -20,84 +349,6 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		NOT = {
-			has_province_modifier = highway_robber_band
-			has_province_modifier = smugglers_ring
-			has_province_modifier = thieves_guild
-		}
-		
-		# Heretic revolts have prio
-		OR = {
-			is_heretic = no
-			owner = {
-				top_liege = {
-					NOT = { is_parent_religion = ROOT }
-				}
-			}
-		}
-		
-		# Religious revolts have prio
-		owner = {
-			top_liege = {
-				religion_group = ROOT
-			}
-		}
-		
-		# Nationalist revolts have prio
-		OR = {
-			owner = {
-				top_liege = {
-					culture = ROOT
-				}
-			}
-			kingdom = {
-				OR = {
-					has_holder = yes
-					NOT = { culture = ROOT }
-				}
-			}
-		}
-		
-		NOT = { # Not if there is already an ongoing peasant revolt for this province
-			owner = {
-				top_liege = {
-					war = yes
-					
-					any_war = {
-						defender = { character = PREV }
-						OR = {
-							AND = {
-								using_cb = peasant_revolt
-								war_title = ROOT # The county
-							}
-							AND = {
-								using_cb = heretic_revolt
-								attacker = { religion = ROOT }
-							}
-							AND = {
-								using_cb = religious_revolt
-								attacker = { religion = ROOT }
-							}
-							AND = {
-								using_cb = liberation_revolt
-								thirdparty_title_scope = {
-									ROOT = {
-										kingdom = {
-											title = PREVPREV
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		create_character = {
@@ -606,25 +857,8 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		# There is already an ongoing peasant revolt for this province
-		owner = {
-			top_liege = {
-				war = yes
-				any_war = {
-					defender = { character = PREV }
-					using_cb = peasant_revolt
-					war_title = ROOT # The county
-				}
-			}
-		}
-	}
 	
 	immediate = {
-		
 		owner = {
 			top_liege = {
 				any_war = {
@@ -1127,43 +1361,6 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		is_heretic = yes
-		
-		owner = {
-			top_liege = {
-				is_parent_religion = ROOT
-			}
-		}
-		
-		NOT = { # Not if there is already an ongoing revolt
-			owner = {
-				top_liege = {
-					war = yes
-					any_war = {
-						defender = { character = PREV }
-						OR = {
-							AND = {
-								using_cb = peasant_revolt
-								war_title = ROOT # The county
-							}
-							AND = {
-								using_cb = heretic_revolt
-								attacker = { religion = ROOT }
-							}
-							AND = {
-								using_cb = religious_revolt
-								attacker = { religion = ROOT }
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		create_character = {
@@ -1492,29 +1689,6 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		is_heretic = yes
-		
-		owner = {
-			top_liege = {
-				is_parent_religion = ROOT
-			}
-		}
-		
-		owner = {
-			top_liege = {
-				war = yes
-				any_war = {
-					defender = { character = PREV }
-					using_cb = heretic_revolt
-					attacker = { religion = ROOT }
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		owner = {
@@ -1794,61 +1968,6 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		owner = {
-			top_liege = {
-				NOT = { culture = ROOT }
-			}
-		}
-		
-		kingdom = {
-			has_holder = no
-			culture = ROOT
-			any_previous_holder = {
-				always = yes # Must have had a holder in the past
-			}
-		}
-		
-		# Heretic revolts have prio
-		OR = { 
-			is_heretic = no
-			owner = {
-				top_liege = {
-					NOT = { is_parent_religion = ROOT }
-				}
-			}
-		}
-		
-		NOT = { # Not if there is already an ongoing revolt
-			owner = {
-				top_liege = {
-					war = yes
-					any_war = {
-						defender = { character = PREV }
-						OR = {
-							AND = {
-								using_cb = heretic_revolt
-								attacker = { religion = ROOT }
-							}
-							AND = {
-								using_cb = liberation_revolt
-								thirdparty_title_scope = {
-									ROOT = {
-										kingdom = {
-											title = PREVPREV
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		create_character = {
@@ -2067,28 +2186,6 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		# There is already an ongoing nationalist revolt for the same kingdom
-		owner = {
-			top_liege = {
-				war = yes
-				any_war = {
-					defender = { character = PREV }
-					using_cb = liberation_revolt
-					thirdparty_title_scope = {
-						ROOT = {
-							kingdom = {
-								title = PREVPREV
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		owner = {
@@ -2240,58 +2337,6 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		is_heretic = no
-		
-		owner = {
-			top_liege = {
-				NOT = { religion_group = ROOT }
-			}
-		}
-		
-		# Nationalist revolts have prio
-		OR = {
-			owner = {
-				top_liege = {
-					culture = ROOT
-				}
-			}
-			kingdom = {
-				OR = {
-					has_holder = yes
-					NOT = { culture = ROOT }
-				}
-			}
-		}
-		
-		NOT = { # Not if there is already an ongoing revolt
-			owner = {
-				top_liege = {
-					war = yes
-					any_war = {
-						defender = { character = PREV }
-						OR = {
-							AND = {
-								using_cb = peasant_revolt
-								war_title = ROOT # The county
-							}
-							AND = {
-								using_cb = heretic_revolt
-								attacker = { religion = ROOT }
-							}
-							AND = {
-								using_cb = religious_revolt
-								attacker = { religion = ROOT }
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		create_character = {
@@ -2637,29 +2682,6 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-
-	trigger = {
-		has_dlc = "The Old Gods"
-		
-		is_heretic = no
-		
-		owner = {
-			top_liege = {
-				NOT = { religion_group = ROOT }
-			}
-		}
-		
-		owner = {
-			top_liege = {
-				war = yes
-				any_war = {
-					defender = { character = PREV }
-					using_cb = religious_revolt
-					attacker = { religion = ROOT }
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		owner = {
@@ -3007,7 +3029,7 @@ character_event = {
 	}
 }
 
-namespace = luxrevolt
+
 # Messianic revolt "theocratizer" event.
 character_event = {
 	id = luxrevolt.1064
@@ -3105,38 +3127,37 @@ province_event = {
 	is_triggered_only = yes
 	hide_window = yes
 
-	trigger = {
-
-		# Requires there to be slaves in the province
-		OR = {
-			has_province_modifier = slave_modifier_1
-			has_province_modifier = slave_modifier_2
-			has_province_modifier = slave_modifier_3
-			has_province_modifier = slave_modifier_4
-			has_province_modifier = slave_modifier_5
-		}
-		kingdom = {
-			OR = {
-				has_holder = no
-				holder_scope = { any_realm_province = { province_id = ROOT } }
-			}
-		}
+	# trigger = {
+		# # Requires there to be slaves in the province
+		# OR = {
+			# has_province_modifier = slave_modifier_1
+			# has_province_modifier = slave_modifier_2
+			# has_province_modifier = slave_modifier_3
+			# has_province_modifier = slave_modifier_4
+			# has_province_modifier = slave_modifier_5
+		# }
+		# kingdom = {
+			# OR = {
+				# has_holder = no
+				# holder_scope = { any_realm_province = { province_id = ROOT } }
+			# }
+		# }
 		
-		NOT = {
-			owner = {
-				top_liege = {
-					war = yes
-					any_war = {
-						defender = { character = PREV }
-						OR = {
-							using_cb = slave_revolt
-							using_cb = war_of_liberation
-						}
-					}
-				}
-			}
-		}
-	}
+		# NOT = {
+			# owner = {
+				# top_liege = {
+					# war = yes
+					# any_war = {
+						# defender = { character = PREV }
+						# OR = {
+							# using_cb = slave_revolt
+							# using_cb = war_of_liberation
+						# }
+					# }
+				# }
+			# }
+		# }
+	# }
 	
 	immediate = {
 		set_province_flag = slave_revolt
@@ -3492,32 +3513,6 @@ province_event = {
 	
 	is_triggered_only = yes
 	hide_window = yes
-
-	trigger = {
-		
-		# There are slaves in the province
-		OR = {
-			has_province_modifier = slave_modifier_1
-			has_province_modifier = slave_modifier_2
-			has_province_modifier = slave_modifier_3
-			has_province_modifier = slave_modifier_4
-			has_province_modifier = slave_modifier_5
-		}
-		
-		# There is already an ongoing slave revolt or war of liberation
-		owner = {
-			top_liege = {
-				war = yes
-				any_war = {
-					defender = { character = PREV }
-					OR = {
-						using_cb = slave_revolt
-						using_cb = war_of_liberation
-					}
-				}
-			}
-		}
-	}
 	
 	immediate = {
 		set_province_flag = slave_revolt
