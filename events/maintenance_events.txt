@@ -156,12 +156,29 @@ character_event = {
 
 	hide_window = yes
 	
-		immediate = {
+	immediate = {
+		if = {
+			limit = { trait = slave_owner }
 			if = {
-				limit = { trait = slave_owner }
-				if = {
-					limit = { is_merchant_republic = no }
-					current_heir = {
+				limit = { is_merchant_republic = no }
+				current_heir = {
+					ROOT = {
+						any_courtier = {
+							limit = { 
+								trait = slave 
+								reverse_has_opinion_modifier = { who = ROOT modifier = opinion_my_slave }
+							}
+							reverse_opinion = { who = PREVPREV modifier = opinion_my_slave }
+							opinion = { who = PREVPREV modifier = opinion_my_owner }
+						}
+					}
+					character_event = { id = slavery.12 days = 1 }
+				}
+			}	
+			if = {
+				limit = { is_merchant_republic = yes }
+				family_palace = {
+					current_heir = { 
 						ROOT = {
 							any_courtier = {
 								limit = { 
@@ -172,30 +189,12 @@ character_event = {
 								opinion = { who = PREVPREV modifier = opinion_my_owner }
 							}
 						}
-						character_event = { id = slavery.12 days = 1 }
+						character_event = { id = slavery.12 days = 1 } 
 					}
-				}	
-				if = {
-					limit = { is_merchant_republic = yes }
-					family_palace = {
-						current_heir = { 
-							ROOT = {
-								any_courtier = {
-									limit = { 
-										trait = slave 
-										reverse_has_opinion_modifier = { who = ROOT modifier = opinion_my_slave }
-									}
-									reverse_opinion = { who = PREVPREV modifier = opinion_my_slave }
-									opinion = { who = PREVPREV modifier = opinion_my_owner }
-								}
-							}
-							character_event = { id = slavery.12 days = 1 } 
-						}
-					}
-				}	
-				
-			}
+				}
+			}	
 		}
+	}
 }
 
 #Merged scenario start event. From now on, all initialization goes here to reduce week 1 lag.
@@ -213,507 +212,663 @@ character_event = {
 
 		##Give Slavers some slaves and slaver traits
 		any_playable_ruler = {
-				if = {
-					limit = { 
-							primary_title = { is_merchant_republic = yes has_law = slavery_2 } 
-					}
-						set_dynasty_flag = flag_slaver_tradition
-						add_trait = slave_trader
-						add_trait = slave_owner
-						family_palace = {
-							add_building = fp_asoiaf_slavepit_1
-							add_building = fp_asoiaf_slavepit_2
-						}
-						character_event = { id = slavery.4004 }
-						any_vassal = {
-							limit = { is_patrician = yes }
-							set_dynasty_flag = flag_slaver_tradition
-							add_trait = slave_trader
-							add_trait = slave_owner
-							family_palace = {
-								add_building = fp_asoiaf_slavepit_1
-								add_building = fp_asoiaf_slavepit_2
-							}
-							character_event = { id = slavery.4004 }
-						}
+			if = {
+				limit = { 
+					primary_title = { is_merchant_republic = yes has_law = slavery_2 } 
 				}
-				if = {
-					limit = { 
-						primary_title = { is_feudal = yes has_law = slavery_2 } 
-					}
+				set_dynasty_flag = flag_slaver_tradition
+				add_trait = slave_trader
+				add_trait = slave_owner
+				family_palace = {
+					add_building = fp_asoiaf_slavepit_1
+					add_building = fp_asoiaf_slavepit_2
+				}
+				character_event = { id = slavery.4004 }
+				any_vassal = {
+					limit = { is_patrician = yes }
+					set_dynasty_flag = flag_slaver_tradition
+					add_trait = slave_trader
 					add_trait = slave_owner
-					capital_holding = {
-						add_building = ca_asoiaf_slavepit_1
+					family_palace = {
+						add_building = fp_asoiaf_slavepit_1
+						add_building = fp_asoiaf_slavepit_2
 					}
 					character_event = { id = slavery.4004 }
 				}
 			}
+			if = {
+				limit = { 
+					primary_title = { is_feudal = yes has_law = slavery_2 } 
+				}
+				add_trait = slave_owner
+				capital_holding = {
+					add_building = ca_asoiaf_slavepit_1
+				}
+				character_event = { id = slavery.4004 }
+			}
+		}
 
 		#Court Populator. Commented to speed things up.
 		# any_playable_ruler = {
 			# limit = {
 				# ai = yes
 			# }				
-					# create_character = {
-							# random_traits = yes
-							# female = no
-							# min_age = 16
-							# max_age = 28
-						# }
+			# create_character = {
+				# random_traits = yes
+				# female = no
+				# min_age = 16
+				# max_age = 28
+			# }
 						
-					# new_character = {
-							# dynasty = PREV
-							# health = 1.50 #A little boost...
-							 # if = {
-								# limit = { PREV = { trait = hist_alexandros } }
-								# add_trait = hist_alexandros
-							 # }
-							 # if = {
-								# limit = { PREV = { trait = hist_ptolemaios } }
-								# add_trait = hist_ptolemaios
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_gelimer } }
-								# add_trait = hist_gelimer
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_gelimer } }
-								# add_trait = hist_gelimer
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_seleukos } }
-								# add_trait = hist_seleukos
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_sassanid } }
-								# add_trait = hist_sassanid
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_julianos } }
-								# add_trait = hist_julianos
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_agiad } }
-								# add_trait = hist_agiad
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_karling } }
-								# add_trait = hist_karling
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_merovingian } }
-								# add_trait = hist_merovingian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_capet } }
-								# add_trait = hist_capet
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_barcelona } }
-								# add_trait = hist_barcelona
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_decebal } }
-								# add_trait = hist_decebal
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_brian } }
-								# add_trait = hist_brian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_oleg } }
-								# add_trait = hist_oleg
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_rurik } }
-								# add_trait = hist_rurik
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_parmenion } }
-								# add_trait = hist_parmenion
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_almaqah } }
-								# add_trait = hist_almaqah
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_artorius } }
-								# add_trait = hist_artorius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_vespasian } }
-								# add_trait = hist_vespasian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_kahina } }
-								# add_trait = hist_kahina
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_verus } }
-								# add_trait = hist_verus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_amyntas } }
-								# add_trait = hist_amyntas
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_severus } }
-								# add_trait = hist_severus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_muawiyah } }
-								# add_trait = hist_muawiyah
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_calgacus } }
-								# add_trait = hist_calgacus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_theodemir } }
-								# add_trait = hist_theodemir
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_hengist } }
-								# add_trait = hist_hengist
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aelle } }
-								# add_trait = hist_aelle
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aescwine } }
-								# add_trait = hist_aescwine
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_raedwald } }
-								# add_trait = hist_raedwald
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_oswald } }
-								# add_trait = hist_oswald
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_offa } }
-								# add_trait = hist_offa
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_urien } }
-								# add_trait = hist_urien
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_maelgwn } }
-								# add_trait = hist_maelgwn
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_mathrafal } }
-								# add_trait = hist_mathrafal
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_artgal } }
-								# add_trait = hist_artgal
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_samo } }
-								# add_trait = hist_samo
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_cerdic } }
-								# add_trait = hist_cerdic
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_wisimar } }
-								# add_trait = hist_wisimar
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_gabran } }
-								# add_trait = hist_gabran
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_findlaech } }
-								# add_trait = hist_findlaech
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_britconstantine } }
-								# add_trait = hist_britconstantine
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_ivar } }
-								# add_trait = hist_ivar
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_fergus } }
-								# add_trait = hist_fergus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_guthrum } }
-								# add_trait = hist_guthrum
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_halfdan } }
-								# add_trait = hist_halfdan
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_sweyn } }
-								# add_trait = hist_sweyn
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_rognvald } }
-								# add_trait = hist_rognvald
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_zenobia } }
-								# add_trait = hist_zenobia
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_warcislaw } }
-								# add_trait = hist_warcislaw
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_krak } }
-								# add_trait = hist_krak
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_piast } }
-								# add_trait = hist_piast
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_cech } }
-								# add_trait = hist_cech
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_rus } }
-								# add_trait = hist_rus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_attila } }
-								# add_trait = hist_attila
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_diocletian } }
-								# add_trait = hist_diocletian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_valentinian } }
-								# add_trait = hist_valentinian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aurelius } }
-								# add_trait = hist_aurelius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_augustus } }
-								# add_trait = hist_augustus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_popiel } }
-								# add_trait = hist_popiel
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_theodosius } }
-								# add_trait = hist_theodosius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aetius } }
-								# add_trait = hist_aetius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_david } }
-								# add_trait = hist_david
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_mithridates } }
-								# add_trait = hist_mithridates
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_hieron } }
-								# add_trait = hist_hieron
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_maccabeus } }
-								# add_trait = hist_maccabeus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_viriathus } }
-								# add_trait = hist_viriathus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_chlorus } }
-								# add_trait = hist_chlorus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_theodoric } }
-								# add_trait = hist_theodoric
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_arminius } }
-								# add_trait = hist_arminius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_asander } }
-								# add_trait = hist_asander
-							 # }
+			# new_character = {
+				# dynasty = PREV
+				# health = 1.50 #A little boost...
+				# if = {
+					# limit = {
+						# PREV = { 
+							# trait = hist_alexandros
 						# }
+					# }
+					# add_trait = hist_alexandros
+				# }
+				# if = {
+					# limit = {
+						# PREV = {
+							#trait = hist_ptolemaios
+						# }
+					# }
+					# add_trait = hist_ptolemaios
+				# }
+				# if = {
+					# limit = {
+						# PREV = {
+							# trait = hist_gelimer
+						# }
+					# }
+					# add_trait = hist_gelimer
+				# }
+				# if = {
+					# limit = {
+						# PREV = {
+							# trait = hist_gelimer
+						# }
+					# }
+					# add_trait = hist_gelimer
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_seleukos } }
+					# add_trait = hist_seleukos
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_sassanid } }
+					# add_trait = hist_sassanid
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_julianos } }
+					# add_trait = hist_julianos
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_agiad } }
+					# add_trait = hist_agiad
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_karling } }
+					# add_trait = hist_karling
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_merovingian } }
+					# add_trait = hist_merovingian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_capet } }
+					# add_trait = hist_capet
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_barcelona } }
+					# add_trait = hist_barcelona
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_decebal } }
+					# add_trait = hist_decebal
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_brian } }
+					# add_trait = hist_brian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_oleg } }
+					# add_trait = hist_oleg
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_rurik } }
+					# add_trait = hist_rurik
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_parmenion } }
+					# add_trait = hist_parmenion
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_almaqah } }
+					# add_trait = hist_almaqah
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_artorius } }
+					# add_trait = hist_artorius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_vespasian } }
+					# add_trait = hist_vespasian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_kahina } }
+					# add_trait = hist_kahina
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_verus } }
+					# add_trait = hist_verus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_amyntas } }
+					# add_trait = hist_amyntas
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_severus } }
+					# add_trait = hist_severus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_muawiyah } }
+					# add_trait = hist_muawiyah
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_calgacus } }
+					# add_trait = hist_calgacus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_theodemir } }
+					# add_trait = hist_theodemir
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_hengist } }
+					# add_trait = hist_hengist
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aelle } }
+					# add_trait = hist_aelle
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aescwine } }
+					# add_trait = hist_aescwine
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_raedwald } }
+					# add_trait = hist_raedwald
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_oswald } }
+					# add_trait = hist_oswald
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_offa } }
+					# add_trait = hist_offa
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_urien } }
+					# add_trait = hist_urien
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_maelgwn } }
+					# add_trait = hist_maelgwn
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_mathrafal } }
+					# add_trait = hist_mathrafal
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_artgal } }
+					# add_trait = hist_artgal
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_samo } }
+					# add_trait = hist_samo
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_cerdic } }
+					# add_trait = hist_cerdic
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_wisimar } }
+					# add_trait = hist_wisimar
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_gabran } }
+					# add_trait = hist_gabran
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_findlaech } }
+					# add_trait = hist_findlaech
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_britconstantine } }
+					# add_trait = hist_britconstantine
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_ivar } }
+					# add_trait = hist_ivar
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_fergus } }
+					# add_trait = hist_fergus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_guthrum } }
+					# add_trait = hist_guthrum
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_halfdan } }
+					# add_trait = hist_halfdan
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_sweyn } }
+					# add_trait = hist_sweyn
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_rognvald } }
+					# add_trait = hist_rognvald
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_zenobia } }
+					# add_trait = hist_zenobia
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_warcislaw } }
+					# add_trait = hist_warcislaw
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_krak } }
+					# add_trait = hist_krak
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_piast } }
+					# add_trait = hist_piast
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_cech } }
+					# add_trait = hist_cech
+					# }
+				# if = {
+					# limit = { PREV = { trait = hist_rus } }
+					# add_trait = hist_rus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_attila } }
+					# add_trait = hist_attila
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_diocletian } }
+					# add_trait = hist_diocletian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_valentinian } }
+					# add_trait = hist_valentinian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aurelius } }
+					# add_trait = hist_aurelius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_augustus } }
+					# add_trait = hist_augustus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_popiel } }
+					# add_trait = hist_popiel
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_theodosius } }
+					# add_trait = hist_theodosius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aetius } }
+					# add_trait = hist_aetius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_david } }
+					# add_trait = hist_david
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_mithridates } }
+					# add_trait = hist_mithridates
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_hieron } }
+					# add_trait = hist_hieron
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_maccabeus } }
+					# add_trait = hist_maccabeus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_viriathus } }
+					# add_trait = hist_viriathus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_chlorus } }
+					# add_trait = hist_chlorus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_theodoric } }
+					# add_trait = hist_theodoric
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_arminius } }
+					# add_trait = hist_arminius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_asander } }
+					# add_trait = hist_asander
+				# }
+			# }
 						
-					# create_character = {
-							# random_traits = yes
-							# female = yes
-							# min_age = 16
-							# max_age = 28
-						# }
+			# create_character = {
+				# random_traits = yes
+				# female = yes
+				# min_age = 16
+				# max_age = 28
+			# }
 						
-					# new_character = {
-							# dynasty = PREV
-							# health = 1.50 #A little boost...
-							 # if = {
-								# limit = { PREV = { trait = hist_alexandros } }
-								# add_trait = hist_alexandros
-							 # }
-							 # if = {
-								# limit = { PREV = { trait = hist_ptolemaios } }
-								# add_trait = hist_ptolemaios
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_gelimer } }
-								# add_trait = hist_gelimer
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_gelimer } }
-								# add_trait = hist_gelimer
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_seleukos } }
-								# add_trait = hist_seleukos
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_sassanid } }
-								# add_trait = hist_sassanid
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_julianos } }
-								# add_trait = hist_julianos
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_agiad } }
-								# add_trait = hist_agiad
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_karling } }
-								# add_trait = hist_karling
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_merovingian } }
-								# add_trait = hist_merovingian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_capet } }
-								# add_trait = hist_capet
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_barcelona } }
-								# add_trait = hist_barcelona
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_decebal } }
-								# add_trait = hist_decebal
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_brian } }
-								# add_trait = hist_brian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_oleg } }
-								# add_trait = hist_oleg
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_rurik } }
-								# add_trait = hist_rurik
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_parmenion } }
-								# add_trait = hist_parmenion
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_almaqah } }
-								# add_trait = hist_almaqah
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_artorius } }
-								# add_trait = hist_artorius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_vespasian } }
-								# add_trait = hist_vespasian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_kahina } }
-								# add_trait = hist_kahina
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_verus } }
-								# add_trait = hist_verus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_amyntas } }
-								# add_trait = hist_amyntas
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_severus } }
-								# add_trait = hist_severus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_muawiyah } }
-								# add_trait = hist_muawiyah
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_calgacus } }
-								# add_trait = hist_calgacus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_theodemir } }
-								# add_trait = hist_theodemir
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_hengist } }
-								# add_trait = hist_hengist
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aelle } }
-								# add_trait = hist_aelle
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aescwine } }
-								# add_trait = hist_aescwine
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_raedwald } }
-								# add_trait = hist_raedwald
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_oswald } }
-								# add_trait = hist_oswald
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_offa } }
-								# add_trait = hist_offa
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_urien } }
-								# add_trait = hist_urien
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_maelgwn } }
-								# add_trait = hist_maelgwn
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_mathrafal } }
-								# add_trait = hist_mathrafal
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_artgal } }
-								# add_trait = hist_artgal
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_samo } }
-								# add_trait = hist_samo
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_cerdic } }
-								# add_trait = hist_cerdic
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_wisimar } }
-								# add_trait = hist_wisimar
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_gabran } }
-								# add_trait = hist_gabran
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_findlaech } }
-								# add_trait = hist_findlaech
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_britconstantine } }
-								# add_trait = hist_britconstantine
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_ivar } }
-								# add_trait = hist_ivar
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_fergus } }
-								# add_trait = hist_fergus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_guthrum } }
-								# add_trait = hist_guthrum
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_halfdan } }
-								# add_trait = hist_halfdan
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_sweyn } }
-								# add_trait = hist_sweyn
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_rognvald } }
-								# add_trait = hist_rognvald
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_zenobia } }
-								# add_trait = hist_zenobia
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_warcislaw } }
-								# add_trait = hist_warcislaw
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_krak } }
-								# add_trait = hist_krak
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_piast } }
-								# add_trait = hist_piast
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_cech } }
-								# add_trait = hist_cech
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_rus } }
-								# add_trait = hist_rus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_attila } }
-								# add_trait = hist_attila
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_diocletian } }
-								# add_trait = hist_diocletian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_valentinian } }
-								# add_trait = hist_valentinian
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aurelius } }
-								# add_trait = hist_aurelius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_augustus } }
-								# add_trait = hist_augustus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_popiel } }
-								# add_trait = hist_popiel
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_theodosius } }
-								# add_trait = hist_theodosius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_aetius } }
-								# add_trait = hist_aetius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_david } }
-								# add_trait = hist_david
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_mithridates } }
-								# add_trait = hist_mithridates
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_hieron } }
-								# add_trait = hist_hieron
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_maccabeus } }
-								# add_trait = hist_maccabeus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_viriathus } }
-								# add_trait = hist_viriathus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_chlorus } }
-								# add_trait = hist_chlorus
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_theodoric } }
-								# add_trait = hist_theodoric
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_arminius } }
-								# add_trait = hist_arminius
-							 # }							 if = {
-								# limit = { PREV = { trait = hist_asander } }
-								# add_trait = hist_asander
-							 # }
-						# }
-				# recalc_succession = yes				
+			# new_character = {
+				# dynasty = PREV
+				# health = 1.50 #A little boost...
+				# if = {
+					# limit = { PREV = { trait = hist_alexandros } }
+					# add_trait = hist_alexandros
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_ptolemaios } }
+					# add_trait = hist_ptolemaios
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_gelimer } }
+					# add_trait = hist_gelimer
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_gelimer } }
+					# add_trait = hist_gelimer
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_seleukos } }
+					# add_trait = hist_seleukos
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_sassanid } }
+					# add_trait = hist_sassanid
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_julianos } }
+					# add_trait = hist_julianos
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_agiad } }
+					# add_trait = hist_agiad
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_karling } }
+					# add_trait = hist_karling
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_merovingian } }
+					# add_trait = hist_merovingian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_capet } }
+					# add_trait = hist_capet
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_barcelona } }
+					# add_trait = hist_barcelona
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_decebal } }
+					# add_trait = hist_decebal
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_brian } }
+					# add_trait = hist_brian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_oleg } }
+					# add_trait = hist_oleg
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_rurik } }
+					# add_trait = hist_rurik
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_parmenion } }
+					# add_trait = hist_parmenion
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_almaqah } }
+					# add_trait = hist_almaqah
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_artorius } }
+					# add_trait = hist_artorius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_vespasian } }
+					# add_trait = hist_vespasian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_kahina } }
+					# add_trait = hist_kahina
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_verus } }
+					# add_trait = hist_verus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_amyntas } }
+					# add_trait = hist_amyntas
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_severus } }
+					# add_trait = hist_severus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_muawiyah } }
+					# add_trait = hist_muawiyah
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_calgacus } }
+					# add_trait = hist_calgacus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_theodemir } }
+					# add_trait = hist_theodemir
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_hengist } }
+					# add_trait = hist_hengist
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aelle } }
+					# add_trait = hist_aelle
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aescwine } }
+					# add_trait = hist_aescwine
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_raedwald } }
+					# add_trait = hist_raedwald
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_oswald } }
+					# add_trait = hist_oswald
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_offa } }
+					# add_trait = hist_offa
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_urien } }
+					# add_trait = hist_urien
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_maelgwn } }
+					# add_trait = hist_maelgwn
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_mathrafal } }
+					# add_trait = hist_mathrafal
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_artgal } }
+					# add_trait = hist_artgal
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_samo } }
+					# add_trait = hist_samo
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_cerdic } }
+					# add_trait = hist_cerdic
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_wisimar } }
+					# add_trait = hist_wisimar
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_gabran } }
+					# add_trait = hist_gabran
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_findlaech } }
+					# add_trait = hist_findlaech
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_britconstantine } }
+					# add_trait = hist_britconstantine
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_ivar } }
+					# add_trait = hist_ivar
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_fergus } }
+					# add_trait = hist_fergus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_guthrum } }
+					# add_trait = hist_guthrum
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_halfdan } }
+					# add_trait = hist_halfdan
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_sweyn } }
+					# add_trait = hist_sweyn
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_rognvald } }
+					# add_trait = hist_rognvald
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_zenobia } }
+					# add_trait = hist_zenobia
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_warcislaw } }
+					# add_trait = hist_warcislaw
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_krak } }
+					# add_trait = hist_krak
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_piast } }
+					# add_trait = hist_piast
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_cech } }
+					# add_trait = hist_cech
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_rus } }
+					# add_trait = hist_rus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_attila } }
+					# add_trait = hist_attila
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_diocletian } }
+					# add_trait = hist_diocletian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_valentinian } }
+					# add_trait = hist_valentinian
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aurelius } }
+					# add_trait = hist_aurelius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_augustus } }
+					# add_trait = hist_augustus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_popiel } }
+					# add_trait = hist_popiel
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_theodosius } }
+					# add_trait = hist_theodosius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_aetius } }
+					# add_trait = hist_aetius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_david } }
+					# add_trait = hist_david
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_mithridates } }
+					# add_trait = hist_mithridates
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_hieron } }
+					# add_trait = hist_hieron
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_maccabeus } }
+					# add_trait = hist_maccabeus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_viriathus } }
+					# add_trait = hist_viriathus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_chlorus } }
+					# add_trait = hist_chlorus
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_theodoric } }
+					# add_trait = hist_theodoric
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_arminius } }
+					# add_trait = hist_arminius
+				# }
+				# if = {
+					# limit = { PREV = { trait = hist_asander } }
+					# add_trait = hist_asander
+				# }
+			# }
+			# recalc_succession = yes				
 
 		# }
 			
