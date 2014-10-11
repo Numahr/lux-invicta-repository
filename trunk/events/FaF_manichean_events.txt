@@ -1,0 +1,893 @@
+#################################
+#
+# MANICHEAN EVENTS
+#
+#################################
+
+namespace = manichean
+
+
+# # Manicheans must be expelled
+# character_event = {
+	# id = manichean.1000
+    # desc = manichean.1000.desc
+	# picture = GFX_evt_lunatic
+	
+	
+	
+	# trigger = {
+	    # NOT = { has_global_flag = manichean_yamag_expelled }
+	    # religion_group = muslim
+		# controls_religion = yes
+		# completely_controls = c_baghdad
+		# year = 908
+		# piety = 300
+	# }
+	
+	# mean_time_to_happen = {
+		# months = 60
+	# }
+	
+	# immediate = {
+	     # activate_title = { title = d_manichean status = no }
+		 # set_global_flag = manichean_yamag_expelled
+	# }	 
+		 
+	# option = {
+		# name = "manichean.1000.a"
+		# d_manichean = { destroy_landed_title = THIS }
+		# banish_religion = mani
+		# any_playable_ruler = {
+				# limit = { 
+					# ai = no 
+					# NOT = { character = ROOT }
+				# }
+				# narrative_event = { id = manichean.1001 }
+			# }
+    # }
+# }
+
+# # Caliph expelled the Manicheans
+# narrative_event = {
+	# id = manichean.1001
+	# title = manichean.1001.title
+    # desc = "manichean.1001.desc"
+	# picture = GFX_evt_lunatic
+	# border = GFX_event_narrative_frame_religion
+	
+	# major = yes
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = manichean.1001.a
+		# trigger = {
+			# OR = {
+				# religion = mani
+				# religion = mandaean
+			# }
+		# }
+	# }
+	# option = {
+		# name = manichean.1001.b
+		# trigger = {
+			# NOT = {
+				# OR = {
+				# religion = mani
+				# religion = mandaean
+			# }
+				# religion_group = muslim
+			# }
+		# }
+	# }
+	# option = {
+		# name = manichean.1001.c
+		# trigger = {
+			# religion_group = muslim
+		# }
+	# }
+# }
+
+# # Yamag restored in Baghdad
+# narrative_event = {
+    # id = manichean.1002
+	# title = manichean.1002.title
+    # desc = "manichean.1002.desc"
+	# picture = GFX_evt_victory_arch_byzantine
+	# border = GFX_event_narrative_frame_religion
+	
+	# major = yes 
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = manichean.1002.a
+		# trigger = {
+			# OR = {
+				# religion = mani
+				# religion = mandaean
+			# }
+		# }
+	# }
+	# option = {
+		# name = manichean.1002.b
+		# trigger = {
+			# NOT = {
+				# OR = {
+				# religion = mani
+				# religion = mandaean
+			# }
+				# religion_group = muslim
+			# }
+		# }
+	# }
+	# option = {
+		# name = manichean.1002.c
+		# trigger = {
+			# religion_group = muslim
+		# }
+	# }
+# }
+	
+	
+# Manichean Alms 
+character_event = {
+	id = manichean.1
+	desc = "manichean.1.desc"	
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+	
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.1.a"
+		FROM = {
+			character_event = { id = manichean.11 days = 3 random = 7 }
+		}
+	}
+}
+
+# Archegos Approves
+character_event = {
+	id = "manichean.11"
+	desc = manichean.11.desc
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.11.a"
+		FROM = {
+			opinion = {
+				modifier = opinion_manichean_alms
+				who = ROOT
+				years = 3
+			}
+		}
+		random = {
+	        chance = 10
+			add_trait = charitable }
+		clr_character_flag  = manichean_alms_giving	
+  }
+}
+
+
+# Bema Fest Month Begins
+character_event = {
+    id= manichean.2
+	desc = "manichean.2.desc"
+	picture = GFX_evt_manichean_bema
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.2.a"
+		hidden_tooltip = {
+			character_event = { id = manichean.21 days = 6 }
+			character_event = { id = manichean.22 days = 10 }
+			character_event = { id = manichean.24 days = 18 }
+			character_event = { id = manichean.25 days = 28 }
+			character_event = { id = manichean.30 days = 32 }
+		}
+	}
+}
+# Fasting Begins
+character_event = {
+    id = manichean.21
+	desc = "manichean.21.desc"
+	picture = GFX_evt_manichean_bema
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.21.a"
+		add_trait = zealous
+		random = {
+	        chance = 25
+			add_trait = ill }
+		    piety = 25
+	
+	}
+	
+	option = {
+		name = "manichean.21.b"
+		random = {
+	        chance = 10
+			add_trait = temperate }
+	
+	}
+	
+	option = {
+		name = "manichean.21.c"
+		tooltip_info = cynical
+		trigger = { trait = cynical }
+		prestige = 15
+		
+	}
+}	
+# Visit to local monastery
+character_event = {
+	id = manichean.22
+	desc = "manichean.22.desc"
+	picture = GFX_evt_manichean_elects
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "manichean.22.a"
+	   hidden_tooltip = {
+				random_list = {
+					25 = { character_event = { id = manichean.221 } }
+					25 = { character_event = { id = manichean.222 } }
+					50 = { character_event = { id = manichean.223 } }
+					  
+				}
+		}
+		wealth = -100
+	}
+	
+	option = {
+	    name = "manichean.22.b"
+		piety = -10
+	}
+}
+# Story #1
+character_event = {
+	id = manichean.221
+	desc = "manichean.221.desc"
+	picture = GFX_evt_manichean_elects
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "manichean.221.a"
+	   change_stewardship = 1
+
+    }
+}
+# Story #2
+character_event = {
+	id = manichean.222
+	desc = "manichean.222.desc"
+	picture = GFX_evt_manichean_elects
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "manichean.222.a"
+	   change_diplomacy = 1
+	}
+}
+# Story #3
+character_event = {
+	id = manichean.223
+	desc = "manichean.223.desc"
+	picture = GFX_evt_manichean_elects
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "manichean.223.a"
+	   prestige = 100
+	}
+}
+# Confession
+character_event = {
+    id = manichean.24
+	desc = "manichean.24.desc"
+	picture = GFX_evt_manichean_bema
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.24.a"
+		random = {
+	        chance = 20
+			add_trait = honest }
+		prestige = -10
+		piety = 10
+		
+	}
+    
+    option = {
+		name = "manichean.24.b"
+		random = {
+	        chance = 20
+			add_trait = deceitful }
+			prestige = 20
+		
+	}
+}
+# Hold Feast
+character_event = {
+	id = manichean.25
+	desc = "manichean.25.desc"
+	picture = GFX_evt_feast
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		num_of_vassals = 1
+		}
+	
+	option = {
+		name = "manichean.25.a"
+		scaled_wealth = -0.3
+		any_vassal = {
+			limit = {
+				prisoner = no
+				war = no
+			}
+			letter_event = {
+				id = manichean.26
+				
+			}
+		}
+		character_event = { id = manichean.28 days = 3 }
+	}
+	option = {
+		name = "manichean.25.b"
+	}
+}
+# Vassals invited to feast
+letter_event = {
+	id = manichean.26
+	desc = "manichean.26.desc"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.26.a"
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 2
+				opinion = { who = from value = -40 }
+			}
+			modifier  = {
+				factor = 2
+				opinion = { who = from value = -20 }
+			}
+		}
+		character_event = { id = manichean.29 days = 4 }
+		set_character_flag = attending_bema_feast
+	}
+	option = {
+		name = "manichean.26.b"
+		ai_chance = {
+			factor = 1
+			modifier  = {
+				factor = 0
+				opinion = { who = from value = 0 }
+			}
+			modifier  = {
+				factor = 2
+				NOT = { opinion = { who = from value = -60 } }
+			}
+			modifier  = {
+				factor = 2
+				NOT = { opinion = { who = from value = -80 } }
+			}
+		}
+		FROM = {
+			letter_event = { id = manichean.27 days = 1 }
+			opinion = {
+				modifier = opinion_disappointed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+# Vassal Refuses Invitation
+letter_event = {
+	id = manichean.27
+	desc = "manichean.27.desc"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.27.a"
+	}
+}
+# Host is told about Feast
+character_event = {
+	id = manichean.28
+	desc = manichean.28.desc
+	picture = GFX_evt_feast
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.28.a"
+		any_vassal = {
+			limit = { has_character_flag = attending_bema_feast }
+			opinion = {
+				modifier = opinion_impressed
+				who = ROOT
+				years = 1
+			}
+		}
+	}
+}
+# Vassal is told about Feast
+character_event = {
+	id = manichean.29
+	desc = "manichean.29.desc"
+	picture = GFX_evt_feast
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "manichean.29.a"
+		clr_character_flag = attending_bema_feast
+	}
+}
+# Bema Feast Ends
+character_event = {
+	id = manichean.30
+	desc = "manichean.30.desc"
+	picture = GFX_evt_manichean_elects
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	
+	option = {
+		name = "manichean.30.a"
+		clr_character_flag = bema_fest
+	}
+}
+# Courtier wants to become Elect
+character_event = {
+	id = manichean.3
+	
+    hide_window = yes
+
+	trigger = {
+		OR = {
+			religion = mani
+			religion = mandaean
+			religion = mandaean_reformed
+		}
+		any_courtier = {
+			age = 16
+			NOT = { trait = cynical }
+			NOT = { trait = manichean_elect }
+			NOT = { is_married = yes}
+			learning = 10
+			OR = {
+				religion = mani
+				religion = mandaean
+				religion = mandaean_reformed
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 400
+	}
+
+	immediate = {
+		random_courtier = {
+			limit = {
+				age = 16
+			    NOT = { trait = cynical }
+			    NOT = { is_married = yes}
+			    NOT = { trait = manichean_elect }
+				learning = 10
+				OR = {
+					religion = mani
+					religion = mandaean
+					religion = mandaean_reformed
+				}
+			}
+			character_event = { id = manichean.31 }
+		}
+	}
+}
+
+# Courtier asks liege for permission.
+character_event = {
+	id = manichean.31
+	
+    is_triggered_only = yes
+
+	hide_window = yes
+
+	immediate = {
+		FROM = {
+			character_event = { id = manichean.32 }
+		}
+	}
+}
+
+# Liege responds.
+character_event = {
+	id = manichean.32
+	desc = manichean.32.desc
+	
+	picture = GFX_evt_manichean_bema
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = "manichean.32.a"
+		ai_chance = {
+			factor = 0
+		}
+		FROM = {
+			add_trait = manichean_elect
+			
+			opinion = {
+				modifier = opinion_grateful
+				who = ROOT
+				years = 100
+			}
+		}
+		
+		custom_tooltip = { text = EVTTOOLTIPA_SOA_5218 }
+	}
+	option = {
+		name = "manichean.32.b"
+		ai_chance = {
+			factor = 100
+		}
+		FROM = {
+			add_trait = stressed
+			opinion = {
+				modifier = opinion_angry
+				who = ROOT
+				years = 3
+			}
+		}
+		custom_tooltip = { text = EVTTOOLTIPB_SOA_5218 }
+	}
+}
+# Elect event culture points
+character_event = {
+	id = manichean.4
+	hide_window = yes
+	
+	trigger = {
+	    liege = { NOT = { has_character_modifier = tech_points_elect } 
+		}
+		trait = manichean_elect
+		}
+	
+	
+	mean_time_to_happen = {
+		months = 60
+	}
+	
+    option = {
+	liege = {
+	  character_event = { id = manichean.42 }
+	 }
+	}	
+}
+
+# Liege gains culture points
+character_event = {
+	id = manichean.42
+	desc = manichean.42.desc
+	picture = GFX_evt_monk
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	    add_character_modifier = {
+				name = tech_points_elect
+				duration = 1500
+				hidden = yes
+		}
+	    name = "manichean.42.a"
+		culture_techpoints = 50
+		
+	}
+	option = {
+	    add_character_modifier = {
+				name = tech_points_elect
+				duration = 600
+				hidden = yes
+		}
+		name = "manichean.42.b"
+		prestige = 50
+		random = {
+	        chance = 25
+			add_trait = proud }
+			
+	}
+}
+
+# Elect event economy points
+character_event = {
+	id = manichean.5
+	hide_window = yes
+	
+	trigger = {
+	    liege = { NOT = { has_character_modifier = tech_points_elect } 
+		}
+		trait = manichean_elect
+		}
+	
+	
+	mean_time_to_happen = {
+		months = 60
+	}
+	
+    option = {
+	liege = {
+	  character_event = { id = manichean.52 }
+	 }
+	}	
+}
+
+# Liege gains economy points
+character_event = {
+	id = manichean.52
+	desc = manichean.52.desc
+	picture = GFX_evt_monk
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	    add_character_modifier = {
+				name = tech_points_elect
+				duration = 1500
+				hidden = yes
+		}
+	    name = "manichean.52.a"
+		economy_techpoints = 50
+		
+	}
+	option = {
+	    add_character_modifier = {
+				name = tech_points_elect
+				duration = 600
+				hidden = yes
+		}
+		name = "manichean.52.b"
+		prestige = 50
+		random = {
+	        chance = 25
+			add_trait = proud }
+			
+	}
+}
+
+# # Manichean Missionary arrives
+# character_event = {				
+	# id = manichean.6
+	# desc = "manichean.6.desc"
+	# picture = GFX_evt_manichean_elects
+	
+	# min_age = 16
+	# capable_only = yes
+	# prisoner = no
+	
+	# trigger = {
+		# prestige = 300
+		# higher_tier_than = count
+		# culture_group = altaic
+		# religion = tengri_pagan
+		# }
+	
+	
+	# mean_time_to_happen = {
+		# months = 800
+	# }
+	
+	# option = {
+	    # name = manichean.6.a
+		# capital_scope = {
+		 # add_province_modifier = { name = manichean_mission duration = 3650 }
+		# }
+	    # create_character = {
+				# random_traits = yes
+				# culture = ROOT
+				# religion = mani
+				# trait = manichean_elect
+				# trait = mastermind_theologian
+				# dynasty = none
+				# age = 35
+				# flag = ai_flag_refuse_conversion
+			# }
+		# ai_chance = {
+			# factor = 1 }
+	# }
+	# option = {
+	    # name = manichean.6.b
+		# piety = 50
+		
+		# ai_chance = {
+			# factor = 0 }
+    # }
+# }
+
+# # AI Character converted by Manichean Mission
+# character_event = {
+	# id = manichean.61
+	# picture = GFX_evt_heretic
+	# border = "GFX_event_normal_frame_religion"
+	
+	# min_age = 16
+	# capable_only = yes
+	# prisoner = no
+	
+	# trigger = {
+		# religion_group = pagan_group
+		# OR = {
+			# is_ruler = no
+			# is_theocracy = no
+		# }
+		# location = {
+			# has_province_modifier = manichean_mission
+		# }
+		
+		# can_change_religion = yes
+	# }
+	
+	# mean_time_to_happen = {
+		# months = 240
+		# modifier = {
+			# factor = 0.25
+			# trait = cynical
+		# }
+		# modifier = {
+			# factor = 5.0
+			# trait = zealous
+		# }
+		# modifier = {
+			# factor = 2.0
+			# religion_authority = 0.6
+		# }
+		# modifier = {
+			# factor = 2.0
+			# religion_authority = 0.8
+		# }
+		# modifier = {
+			# factor = 0.75
+			# NOT = { religion_authority = 0.2 }
+		# }
+		# modifier = {
+			# factor = 0.75
+			# NOT = { religion_authority = 0.4 }
+		# }
+	# }
+	
+	# option = {
+		# name = manichean.61.a
+		# ai_chance = { factor = 100 }
+		# religion = mani
+	# }
+	# option = {
+		# name = manichean.61.b
+		# ai_chance = { factor = 0 }
+	# }
+# }
+
+# # Manichean Missionary attempts to convert a ruler
+# character_event = {
+	# id = manichean.62
+	# picture = GFX_evt_manichean_elects
+	# border = "GFX_event_normal_frame_religion"
+	
+	# min_age = 16
+	# capable_only = yes
+	# prisoner = no
+	
+	# trigger = {
+	    # religion = mani
+		# trait = manichean_elect
+		# employer = {
+		    # age = 16
+			# NOT = { religion = ROOT }
+			# is_theocracy = no
+			# is_ruler = yes
+		# }
+	# }
+	
+	# mean_time_to_happen = {
+		# months = 120
+		# modifier = {
+			# factor = 10.0
+			# trait = cynical
+		# }
+		# modifier = {
+			# factor = 0.25
+			# trait = zealous
+		# }
+		# modifier = {
+			# factor = 0.5
+			# trait = diligent
+		# }
+		# modifier = {
+			# factor = 3.0
+			# trait = slothful
+		# }
+		# modifier = {
+			# factor = 2.0
+			# NOT = { religion_authority = 0.2 }
+		# }
+		# modifier = {
+			# factor = 2.0
+			# NOT = { religion_authority = 0.4 }
+		# }
+		# modifier = {
+			# factor = 0.75
+			# religion_authority = 0.6
+		# }
+		# modifier = {
+			# factor = 0.75
+			# religion_authority = 0.8
+		# }
+	# }
+	
+	# option = {
+		# name = manichean.62.a
+		# employer = {
+			# character_event = { id = manichean.63 tooltip = EVTTOOLTIP39021 }
+		# }
+	# }
+# }
+
+# # A manichean missionary approaches me
+# character_event = {
+	# id = manichean.63
+	# desc = manichean.63.desc
+	# picture = GFX_evt_manichean_elects
+	# border = "GFX_event_normal_frame_religion"
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = manichean.63.a # Embrace manichaeism
+		# ai_chance = {
+			# factor = 25
+			# modifier = {
+				# factor = 0.5
+				# independent = yes
+			# }
+		# }
+		# religion = FROM
+	# }
+	
+	# option = {
+		# name = manichean.63.b # Refuse
+		# piety = 50
+		# ai_chance = { factor = 25 }
+	# }
+# }

@@ -1,0 +1,319 @@
+decisions = {
+
+    manichean_alms  = {
+		potential = {
+			ai = no
+			is_ruler = yes
+			religion = mani
+			age = 16
+			demesne_size = 1
+			NOT = { has_character_flag = manichean_alms_giving }
+			is_title_active = k_mani
+			rightful_religious_head_scope = {	
+				NOT = {
+					character = ROOT
+				}
+				NOT = {
+					has_opinion_modifier = { who = ROOT modifier = opinion_manichean_alms }
+				}
+			}
+			
+		}
+		allow = {
+			scaled_wealth = 1.0
+			is_heretic = no
+			
+		}
+		effect = {
+			set_character_flag = manichean_alms_giving
+			scaled_wealth = -0.25
+			piety = 50
+			rightful_religious_head_scope = {
+				character_event = { id = manichean.1 days = 5 random = 12 tooltip = "manichean_alms_yamag" }
+			}
+			
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				ai = yes
+				OR = {
+					NOT = { scaled_wealth = 10.0 }
+					piety = 0
+				}
+			}
+		}
+	}
+	
+	# Celebrate Bema Fest
+    manichean_bema_fest = {
+		is_high_prio = yes
+		potential = {
+			is_ruler = yes
+			demesne_size = 1
+			prisoner = no
+			age = 16
+			OR = {
+				religion = mani
+				religion = mani_mithra
+				religion = mandaean
+				religion = mandaean_reformed
+			}
+			NOT = { 
+				has_character_flag = bema_fest
+				has_character_modifier = observed_bema_fest
+				trait = incapable
+			}
+		}
+		allow = {
+			war = no
+			prisoner = no
+			wealth = 50
+			month = 2
+			NOT = {
+				month = 5
+			}
+		}
+		effect = {
+			character_event = { id = manichean.2 tooltip = "begin_fast" }
+			set_character_flag = bema_fest
+			piety = 50
+			wealth = -50
+			add_character_modifier = {
+				name = observed_bema_fest
+				duration = 1900
+				hidden = no
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}  
+	
+
+   # Safe sex...
+   practice_contraception = {
+       potential = {
+	     ai = no
+	     age = 16
+			OR = {
+				religion = mani
+				religion = mani_mithra
+				religion = mandaean
+				religion = mandaean_reformed
+			}
+		 is_ruler = yes
+		 NOT = { has_character_modifier = manichean_contraception }
+		 }
+		 
+		 allow = {
+			age = 16
+			NOT = { trait = cynical }
+		}
+	   effect = {
+	     add_character_modifier =  {
+		 name = manichean_contraception
+		 duration = -1
+		 hidden = no }
+	    }
+		ai_will_do = {
+			factor = 0
+		}
+    }
+
+# # Expel Light's Justice
+    # expel_manichean_holy_order = {
+		# potential = {
+			# ai = no
+			# OR = {
+				# religion = manichean
+				# religion = mandaean
+			# }
+			# is_heretic = no
+			# higher_tier_than = DUKE
+			# independent = yes
+			# is_title_active = d_manichean_holy_order
+			# NOT = { has_character_modifier = expelled_d_manichean_holy_order }
+			
+			# any_realm_province = {
+				# any_province_lord = {
+					# d_manichean_holy_order = {
+						# holder_scope = {
+							# OR = {
+								# character = PREVPREV
+								# is_vassal_or_below = PREVPREV
+							# }
+						# }
+					# }
+				# }
+			# }
+			
+			# has_dlc = "Sons of Abraham"
+		# }
+		
+		# allow = {
+			# piety = 1000
+		# }
+		
+		# effect = {
+			# piety = -1000
+			
+			# religion_authority = {
+				# modifier = holy_order_expelled
+				# years = 20
+			# }
+			
+			# hidden_tooltip = {
+				# manichean_holy_order = {
+					# holder_scope = {
+						# character_event = {
+							# id = manicheanho.13
+						# }
+					# }
+				# }
+				# add_character_modifier = {
+					# name = expelled_d_manichean_holy_order
+					# duration = -1
+					# inherit = yes
+				# }
+			# }
+		# }
+		
+		# revoke_allowed = {
+			# always = no
+		# }
+		
+		# ai_will_do = {
+			# factor = 0
+		# }
+	# }
+	
+# # Donate money to Light's Justice	
+	# donate_money_to_the_manichean_holy_order = {
+		# potential = {
+			# OR = {
+				# religion = manichean
+				# religion = mandaean
+			# }
+			# is_heretic = no
+			
+			# is_title_active = d_manichean_holy_order
+			
+			# NOT = { has_character_modifier = expelled_d_manichean_holy_order }
+			
+			# has_dlc = "Sons of Abraham"
+			
+			# d_manichean_holy_order = {
+				# holder_scope = {
+					# liege = {
+						# NOT = { character = ROOT }
+					# }
+				# }
+			# }
+		# }
+		
+		# allow = {
+			# wealth = 300
+		# }
+		
+		# effect = {
+			# if = {
+				# limit = { 
+					# NOT = { has_character_modifier = donated_to_holy_order }
+				# }
+				# add_character_modifier = {
+					# name = donated_to_holy_order
+					# duration = -1
+				# }
+			# }
+			
+			# hidden_tooltip = {
+				# d_manichean_holy_order = {
+					# holder_scope = {
+						# character_event = {
+							# id = manicheanho.6
+						# }
+					# }
+				# }
+			# }
+			
+			# wealth = -300
+			# piety = 300
+		# }
+		
+		# revoke_allowed = {
+			# always = no
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+			# modifier = {
+				# factor = 0
+				# OR = {
+					# piety = 1000
+					# NOT = { wealth = 1000 }
+					# AND = {
+						# NOT = { controls_religion = manichean }
+						# NOT = { controls_religion = mandaean }
+					# }
+				# }
+			# }
+			# modifier = {
+				# factor = 0.002 # Slow it down
+			# }
+		# }
+	# }
+
+	
+# # Restore the Yamag in Baghdad
+    # restore_manichean_church = {
+	        # is_high_prio = yes    
+	        # potential = {
+		    # religion = manichean
+			# is_ruler = yes
+			# age = 16
+			# demesne_size = 1
+			# NOT = { is_title_active = k_mani }
+		# }
+		
+		# allow = {
+		   # completely_controls = d_baghdad
+		   # piety = 300
+		# }
+		
+		# effect = {
+		# activate_title = { title = d_manichean status = yes }
+		# clr_global_flag = manichean_yamag_expelled
+		# piety = 500
+		# prestige = 500
+		    # hidden_tooltip = {
+				# create_random_priest = {
+					# random_traits = yes
+					# religion = manichean
+					# trait = manichean_elect
+					# culture = persian
+					# dynasty = random
+					# female = no
+					# age = 41
+				# }
+				# new_character = {
+					# d_manichean = {
+						# grant_title = PREV
+					# }
+				# }
+				# any_playable_ruler = {
+				 # limit = { ai = no }
+				# narrative_event = { id = manichean.1002 }
+			    # }
+		    # }
+		# }
+		
+		# ai_will_do = {
+			# factor = 1
+		# }
+	# }
+}
