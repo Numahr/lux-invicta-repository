@@ -1939,3 +1939,528 @@ namespace = lux_graecoromanfest
 		# piety = 100
 	# }
 # }
+
+# Blot to Christ (basically... vanilla's blot but with Saint (which are actually the Norse Gods) worship and animal sacrifice instead of human sacrifice)
+namespace = li_christblot
+
+# You summon your vassals to a Blot
+character_event = {
+	id = li_christblot.600
+	desc = EVTDESC_li_christblot_600
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_christblot_600
+		any_vassal = {
+			limit = {
+				religion = norse_christ
+				religion = norse_christ_reformed
+				age = 16
+				prisoner = no
+				war = no
+				NOT = { trait = incapable }
+			}
+			character_event = { id = li_christblot.601 tooltip = EVTTOOLTIP_TOG_601 }
+			hidden_tooltip = { character_event = { id = li_christblot.605 days = 10 } }
+		}
+		any_vassal = {
+			limit = {
+				NOT = {
+					religion = norse_christ
+					religion = norse_christ_reformed
+				}
+				age = 16
+				prisoner = no
+				war = no
+				NOT = { trait = incapable }
+			}
+			character_event = { id = li_christblot.602 tooltip = EVTTOOLTIP_TOG_602 }
+		}
+		hidden_tooltip = { character_event = { id = li_christblot.604 days = 10 } }
+	}
+}
+
+# Summoned to Blot (Vassal)
+character_event = {
+	id = li_christblot.601
+	desc = EVTDESC_li_christblot_601
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_601
+		set_character_flag = attending_blot
+	}
+}
+
+# Non-Scandinavists pay to skip Blot
+character_event = {
+	id = li_christblot.602
+	desc = EVTDESC_li_christblot_602
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = { # Pay
+		name = EVTOPTA_TOG_602
+		trigger = {
+			wealth = 20
+		}
+		FROM = {
+			character_event = { id = li_christblot.603 tooltip = EVTTOOLTIP_TOG_603 }
+		}
+		wealth = -20
+	}
+	option = { # Don't pay
+		name = EVTOPTB_TOG_602
+		FROM = {
+			character_event = { id = li_christblot.636 tooltip = EVTTOOLTIP_TOG_636 }
+		}
+		tooltip = {
+			FROM = {
+				opinion = {
+					modifier = opinion_refused_blot
+					who = ROOT
+				}
+				any_vassal = {
+					limit = { has_character_flag = attending_blot }
+					opinion = {
+						modifier = opinion_refused_blot
+						who = ROOT
+					}
+				}
+			}
+		}
+	}
+}
+
+# Non-Scandinavists pay to skip Blot (Liege)
+character_event = {
+	id = li_christblot.603
+	desc = EVTDESC_TOG_603
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_603
+		wealth = 20
+	}
+}
+
+# Non-Scandinavists refuse to pay to skip Blot (Liege)
+character_event = {
+	id = li_christblot.636
+	desc = EVTDESC_li_christblot_636
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_636
+	}
+}
+
+# Blot Begins! (Liege)
+character_event = {
+	id = li_christblot.604
+	desc = EVTDESC_li_christblot_604
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_TOG_604
+		character_event = { id = li_christblot.606 days = 5 }
+		custom_tooltip = { text = jblot_begins }
+	}
+}
+
+# Blot Begins! (Vassal)
+character_event = {
+	id = li_christblot.605
+	desc = EVTDESC_li_christblot_605
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_TOG_604
+	}
+}
+
+# Choose animal to sacrifice
+character_event = {
+	id = li_christblot.606
+	desc = EVTDESC_li_christblot_606
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	
+	option = {
+		name = "EVTOPTA_li_christblot_606" # Horse
+		scaled_wealth = -1.5
+		piety = 25
+		prestige = 15
+		random = {
+			chance = 33
+			add_trait = zealous
+		}
+		character_event = { id = li_christblot.607 }
+	}
+	
+	option = {
+		name = "EVTOPTB_li_christblot_606" #Pig
+		scaled_wealth = -0.5
+		piety = 10
+		prestige = 5
+		character_event = { id = li_christblot.607 }
+	}
+	
+	option = {
+		name = "EVTOPTC_li_christblot_606" #Lamb
+		scaled_wealth = -0.1
+		random = {
+			chance = 10
+			add_trait = greedy
+		}
+		character_event = { id = li_christblot.607 }
+	}
+	
+}
+
+# Select "saint" whom to dedicate blot
+character_event = {
+	id = li_christblot.607
+	desc = EVTDESC_li_christblot_607
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_li_christblot_607"
+		scaled_wealth = -0.2
+		add_character_modifier = {
+			name = christ_blot_sttyr
+			duration = 730
+		}
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_blot }
+				character_event = { id = li_christblot.622 }
+			}
+			character_event = { id = li_christblot.610 }
+		}
+	}
+	
+	option = {
+		name = "EVTOPTB_li_christblot_607"
+		scaled_wealth = -0.2
+		add_character_modifier = {
+			name = christ_blot_stthor
+			duration = 730
+		}
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_blot }
+				character_event = { id = li_christblot.622 }
+			}
+			character_event = { id = li_christblot.610 }
+		}
+	}
+	
+	option = {
+		name = "EVTOPTC_li_christblot_607"
+		scaled_wealth = -0.2
+		add_character_modifier = {
+			name = christ_blot_stfreyja
+			duration = 730
+		}
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_blot }
+				character_event = { id = li_christblot.622 }
+			}
+			character_event = { id = li_christblot.610 }
+		}
+	}
+	
+	option = {
+		name = "EVTOPTD_li_christblot_607"
+		scaled_wealth = -0.2
+		add_character_modifier = {
+			name = christ_blot_stfrey
+			duration = 730
+		}
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_blot }
+				character_event = { id = li_christblot.622 }
+			}
+			character_event = { id = li_christblot.610 }
+		}
+	}
+	
+}
+
+
+# The Ceremony
+character_event = {
+	id = li_christblot.610
+	desc = EVTDESC_li_christblot_610
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_christblot_610
+		character_event = { id = li_christblot.640 days = 5 }
+		prestige = 25
+		piety = 15
+	}
+}
+
+# # Sacrifice to St. Thor
+# character_event = {
+	# id = li_christblot.611
+	# desc = EVTDESC_li_christblot_611
+	# picture = GFX_evt_burning_house
+	# border = GFX_event_normal_frame_religion
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = EVTOPTA_li_christblot_611
+		# character_event = { id = li_christblot.640 days = 5 }
+		# prestige = 25
+		# piety = 15
+	# }
+# }
+
+# # Sacrifice to St. Frey
+# character_event = {
+	# id = li_christblot.612
+	# desc = EVTDESC_li_christblot_612
+	# picture = GFX_evt_burning_house
+	# border = GFX_event_normal_frame_religion
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = EVTOPTA_li_christblot_612
+		# character_event = { id = li_christblot.640 days = 5 }
+		# prestige = 25
+		# piety = 15
+	# }
+# }
+
+# # Sacrifice to St. Freyja
+# character_event = {
+	# id = li_christblot.613
+	# desc = EVTDESC_li_christblot_613
+	# picture = GFX_evt_burning_house
+	# border = GFX_event_normal_frame_religion
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = EVTOPTA_li_christblot_613
+		# character_event = { id = li_christblot.640 days = 5 }
+		# prestige = 25
+		# piety = 15
+	# }
+# }
+
+
+
+# The Ceremony (Vassal)
+character_event = {
+	id = li_christblot.622
+	desc = EVTDESC_li_christblot_622
+	picture = GFX_evt_burning_house
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_li_christblot_622
+	}
+}
+
+# # Sacrifice to St. Thor (Vassal)
+# character_event = {
+	# id = li_christblot.623
+	# desc = EVTDESC_li_christblot_623
+	# picture = GFX_evt_burning_house
+	# border = GFX_event_normal_frame_religion
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = EVTOPTA_li_christblot_622
+	# }
+# }
+
+# # Sacrifice to St. Frey (Vassal)
+# character_event = {
+	# id = li_christblot.624
+	# desc = EVTDESC_li_christblot_624
+	# picture = GFX_evt_burning_house
+	# border = GFX_event_normal_frame_religion
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = EVTOPTA_li_christblot_622
+	# }
+# }
+
+# # Sacrifice to St. Freyja (Vassal)
+# character_event = {
+	# id = li_christblot.625
+	# desc = EVTDESC_li_christblot_625
+	# picture = GFX_evt_burning_house
+	# border = GFX_event_normal_frame_religion
+	
+	# is_triggered_only = yes
+	
+	# option = {
+		# name = EVTOPTA_li_christblot_622
+	# }
+# }
+
+# Feast Begins (Liege)
+character_event = {
+	id = li_christblot.640
+	desc = EVTDESC_TOG_640
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_TOG_640
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_blot }
+				character_event = { id = li_christblot.641 }
+			}
+			character_event = { id = li_christblot.642 days = 25 }
+		}
+		set_character_flag = blot_feast
+		any_vassal = {
+			limit = { has_character_flag = attending_blot }
+			opinion = {
+				modifier = opinion_held_blot
+				who = ROOT
+			}
+		}
+		custom_tooltip = { text = feast_begins }
+	}
+}
+
+# Feast Begins (Vassal)
+character_event = {
+	id =  li_christblot.641
+	desc = EVTDESC_TOG_640
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_641
+		set_character_flag = blot_feast_vassal
+		custom_tooltip = { text = feast_begins }
+	}
+}
+
+# Feast Ends (Liege)
+character_event = {
+	id = li_christblot.642
+	desc = EVTDESC_TOG_642
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_TOG_642
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_blot }
+				character_event = { id = li_christblot.643 }
+			}
+		}
+		add_character_modifier = {
+			name = held_christblot_timer
+			duration = 3285
+			hidden = yes
+		}
+		add_character_modifier = {
+			name = held_christblot_modifier
+			duration = 365
+		}
+		clr_character_flag = holding_christ_blot
+		clr_character_flag = blot_feast
+		clr_character_flag = feast_drunkard
+		clr_character_flag = feast_gluttonous
+		clr_character_flag = feast_lunatic
+		clr_character_flag = feast_lustful
+		clr_character_flag = feast_homosexual
+		clr_character_flag = do_not_disturb
+		hidden_tooltip = { character_event = { id = TOG.699 days = 50 } } # Safety catch flag clearing
+	}
+}
+
+# Feast Ends (Vassal)
+character_event = {
+	id = li_christblot.643
+	desc = EVTDESC_TOG_643
+	picture = GFX_evt_viking_throneroom_oldgods
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_642
+		clr_character_flag = attending_blot
+		clr_character_flag = blot_feast_vassal
+		clr_character_flag = feast_drunkard
+		clr_character_flag = feast_gluttonous
+		clr_character_flag = feast_lunatic
+		clr_character_flag = feast_lustful
+		clr_character_flag = feast_friendship
+		clr_character_flag = feast_homosexual
+		clr_character_flag = do_not_disturb
+		hidden_tooltip = { character_event = { id = TOG.699 days = 50 } } # Safety catch flag clearing
+	}
+}
+
+
