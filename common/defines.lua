@@ -28,16 +28,26 @@ NDiplomacy = {
 	DEMESNE_MAX_SIZE_EMPEROR_MULT = 3.0,		-- Extra Max Demesne Size from the ruler's rank v11 reduced from 4
 	DEMESNE_MAX_SIZE_GREAT_DUKE_BONUS = 1.0,	-- Extra Max Demesne Size for Dukes with more than one Duchy
 	DEMESNE_MAX_SIZE_STEWARDSHIP_MULT = 0.1,	-- Extra Max Demesne Size from ruler and spouse intrigue v11 decreased
-	DEMESNE_MAX_SIZE_LEGALISM_MULT = 1.0,		-- Extra Max Demesne Size from the level of legalism
-	DEMESNE_MAX_SIZE_PATRICIAN = 1.0,			-- Extra Max Demesne Size for Patricians
-	DEMESNE_MAX_SIZE_PATRICIAN_DOGE = 1.0,		-- Extra Max Demesne Size for a Patrician Doge (Tier effects do no not apply to Patricians!)			-- 
-	DEMESNE_BONUS_MAX_TECH_EMPEROR = 5,
-	DEMESNE_BONUS_MAX_TECH_KING = 4,
-	DEMESNE_BONUS_MAX_TECH_DUKE = 3,
-	DEMESNE_BONUS_MAX_TECH_COUNT = 2,
-	DEMESNE_BONUS_MAX_TECH_BARON = 1,
-	GAVELKIND_MAX_SIZE_BONUS = 0.50,			-- Max demesne size bonus from Gavelkind v12 increased to 50%
+	DEMESNE_MAX_SIZE_PATRICIAN = 1.0,			-- Extra Max Demesne Size for Patricians (Tier effects do no not apply to Patricians!)
+	DEMESNE_MAX_SIZE_PATRICIAN_DOGE = 1.0,		-- Extra Max Demesne Size for a Patrician Doge (Tier effects do no not apply to Patricians!)
+	GAVELKIND_MAX_SIZE_BONUS = 0.30,			-- Max demesne size bonus from Gavelkind
 	DEMESNE_MAX_SIZE_JAIN_BONUS = 3,			-- Followers of the Jain religion have extra demesne
+	DEMESNE_MAX_SIZE_TRIBAL_BONUS = 2,			-- All rulers with tribal holdings as their capital have larger demesnes
+	
+	VASSAL_BASE_LIMIT = 1.0,					-- Base Vassal Limit
+	VASSAL_LIMIT_DUKE_MULT = 10.0, 				-- Extra Vassal Limit from the ruler's rank
+	VASSAL_LIMIT_KING_MULT = 20.0, 				-- Extra Vassal Limit from the ruler's rank
+	VASSAL_LIMIT_EMPEROR_MULT = 30.0, 			-- Extra Vassal Limit from the ruler's rank
+	VASSAL_LIMIT_GREAT_DUKE_BONUS = 5.0, 		-- Extra Vassal Limit for Dukes with more than one Duchy
+	VASSAL_LIMIT_FAMILY_PRESTIGE_BONUS = 0.002,	-- Extra Vassal Limit from family prestige
+	VASSAL_LIMIT_DIPLOMACY_MULT = 0.3,			-- Extra Vasal Limit from ruler and spouse diplomacy
+	VASSAL_LIMIT_TRIBAL_BONUS = -10,			-- All rulers with tribal holdings as their capital have smaller demesnes
+	VASSAL_LIMIT_LEVY_MULTIPLIER = 1,			-- Used for levy penalty calculation for being over vassal limit.
+	VASSAL_LIMIT_LEVY_BASE = 4,					-- Used for levy penalty calculation for being over vassal limit.
+	VASSAL_LIMIT_TAX_MULTIPLIER = 1,			-- Used for tax penalty calculation for being over vassal limit.
+	VASSAL_LIMIT_TAX_BASE = 4,					-- Used for tax penalty calculation for being over vassal limit.
+	VASSAL_LIMIT_COUNT_BARONS = 0,				-- If set to 1, baron-tier vassals will also count towards vassal limit.
+	
 	DIPLO_FRIEND_OPINION_THRESHOLD = 40,		-- OBSOLETE
 	DIPLO_RIVAL_OPINION_THRESHOLD = -40,		-- OBSOLETE
 	OBJECTIVE_DISCARD_WEIGHT_THRESHOLD = 0.05,	-- AI will not pick ambitions or plots below this evaluated weight
@@ -294,6 +304,14 @@ NDiplomacy = {
 	GRANT_LANDED_TITLE_INTERACTION_THRESHOLD_FOR_YES = 0,
 	GRANT_LANDED_TITLE_INTERACTION_MUST_HAVE_COST = 1,				-- Is having prestige/piety >= cost required for this action?
 	GRANT_LANDED_TITLE_INTERACTION_ENABLED = 1,						-- Should this action be used at all?
+	
+	GRANT_VICE_ROYALTY_INTERACTION_MONEY = 0,
+	GRANT_VICE_ROYALTY_INTERACTION_PIETY = 0,
+	GRANT_VICE_ROYALTY_INTERACTION_PRESTIGE = 0,
+	GRANT_VICE_ROYALTY_INTERACTION_THRESHOLD_FOR_NO = 0,
+	GRANT_VICE_ROYALTY_INTERACTION_THRESHOLD_FOR_YES = 0,
+	GRANT_VICE_ROYALTY_INTERACTION_MUST_HAVE_COST = 1,				-- Is having prestige/piety >= cost required for this action?
+	GRANT_VICE_ROYALTY_INTERACTION_ENABLED = 1,						-- Should this action be used at all?
 
 	APPOINT_TO_OFFICE_INTERACTION_MONEY = 5,
 	APPOINT_TO_OFFICE_INTERACTION_PIETY = 0,
@@ -454,6 +472,21 @@ NDiplomacy = {
 	NOMINATE_BISHOP_TO_POPE_INTERACTION_THRESHOLD_FOR_YES = 150,
 	NOMINATE_BISHOP_TO_POPE_INTERACTION_MUST_HAVE_COST = 1,				-- Is having prestige/piety >= cost required for this action?
 	NOMINATE_BISHOP_TO_POPE_INTERACTION_ENABLED = 1,						-- Should this action be used at all?	
+	
+	LANDED_SIBLING_PRESTIGE_BONUS = 5,							-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_HALF_SIBLING_PRESTIGE_BONUS = 5,						-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_NIECE_PRESTIGE_BONUS = 2,							-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_CHILD_PRESTIGE_BONUS = 5,							-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_GRAND_CHILD_PRESTIGE_BONUS = 2,						-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_PARENT_PRESTIGE_BONUS = 5,							-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_UNCLE_AUNT_PRESTIGE_BONUS = 3,						-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_GRAND_PARENT_PRESTIGE_BONUS = 2,						-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_GREAT_GRAND_PARENT_PRESTIGE_BONUS = 2,				-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	LANDED_COUSIN_PRESTIGE_BONUS = 3,							-- For religions with landed win prestige bonus. Is multiplied with the percentage of how many of your realm they own.
+	
+	BANISH_TAKE_WEALTH_PERCENTAGE_LANDED = 0,
+	BANISH_TAKE_WEALTH_PERCENTAGE_COURTIER = 1,
+	BANISH_REALM_SIZE_CHANCE_RATIO_MODIFIER = 2,
 },
 
 NCharacter = {
@@ -515,7 +548,12 @@ NCharacter = {
 	SECONDARY_SPOUSE_FERTILITY_MULT = 0.50,				-- Applied to fertility of secondary spouses and concubines v12b reduced as well v12c reverted v15 experimental halving, Reverted to vanilla value
 	NOT_SPOUSE_FERTILITY_MULT = 0.25,				-- Applied to fertility when the two characters are not married v15 experimental halving, Reverted to vanilla value
 	MARRIED_LOVERS_FERTILITY_MULT = 1.5,			-- Applied to fertility when lovers are married
-	INFANT_DEATH_CHANCE = 0.01						-- Chance of stillbirth / death at birth v12b increased from 0 to 2% v12b increased to 2.5% v15 reduced to 1%
+	INFANT_DEATH_CHANCE = 0.1,						-- Chance of stillbirth / death at birth
+	EARLY_PORTRAIT_AND_UNIT_BEFORE_YEAR = 950,		-- Before this date, early versions of Units and Portraits will be used if available
+	LATE_PORTRAIT_AND_UNIT_AFTER_YEAR = 1250,		-- After this date, late versions of Units and Portraits will be used if available
+	TRIBAL_EMPTY_HOLDING_LEVY_MULTIPLIER = 0.5,
+	TRIBAL_EMPTY_HOLDING_GARRISON_MULTIPLIER = 0.5,
+	TRIBAL_EMPTY_HOLDING_TAX_MULTIPLIER = 0.5,
 },
 
 NTitle = {
@@ -617,7 +655,9 @@ NTitle = {
 	DEJURE_COUNTY_LIMIT_TO_CREATE = 0.5,		-- Fraction of de jure counties that you must control to create a non-imperial title v11 changed to 50% (so a 4 county duchy that doesn't currently exist can be easily made with just half)
 	DEJURE_COUNTY_LIMIT_TO_USURP = 0.75,			-- Fraction of de jure counties that you must control to usurp a non-imperial title v11 changed to 75% (so a 4 county duchy requires at 3 to be stolen)
 	EMPIRE_DEJURE_COUNTY_LIMIT_TO_CREATE = 0.6,	-- Fraction of de jure counties that you must control to create an imperial title v11 changed to 60% (so creating the empire title from de jure land still requires hegemony)
-	EMPIRE_DEJURE_COUNTY_LIMIT_TO_USURP = 0.4	-- Fraction of de jure counties that you must control to usurp an imperial title	 v11 changed to 40% (so usurping it from weakend vestigial empires is a lot easier)
+	EMPIRE_DEJURE_COUNTY_LIMIT_TO_USURP = 0.4,	-- Fraction of de jure counties that you must control to usurp an imperial title	 v11 changed to 40% (so usurping it from weakend vestigial empires is a lot easier)
+	
+	CUSTOM_TITLE_COLOR_OFFSET = 0.35					-- The offset from the base title color when creating a new title
 },
 
 NReligion = {
@@ -640,7 +680,7 @@ NReligion = {
 	AUTHORITY_FROM_IMMORAL_HEAD = -0.1,				-- Authority from having an immoral religious head
 	AUTHORITY_FROM_RELHEAD_DIPLOMACY = 0.05,		-- Authority from each 10 diplomacy of religious head
 	AUTHORITY_FROM_RELHEAD_HOLY_SITE = 0.05,		-- Authority from religious head controlling a holy site (does not stack)
-	AUTHORITY_FROM_ORG_RELIGION = 0.2,				-- Authority from being an organized religionÂ§kiÂ§
+	AUTHORITY_FROM_ORG_RELIGION = 0.2,				-- Authority from being an organized religion§ki§
 	DIVINE_BLOOD_FERTILITY_MULT = 0.25,				-- Fertility multiplier in a religious close kin marriage
 	ELECTOR_TITLE_CAMPAIGN_FUND_FACTOR = 1,			-- The effect of money in the Campaign Fund when the Pope is choosing a new Cardinal (money * factor)
 	ELECTOR_TITLE_OPINION_FACTOR = 3.5,
@@ -670,6 +710,7 @@ NEconomy = {
 	DECADENCE_PER_WEEK_OF_SIEGE = -0.015,			-- Decadence lost per 7 days of siege, for each participant in the siege v11 increased to 0.015 from 0.08
 	MUSLIM_MUSLIM_PROVINCE_TAX_MOD = -0.1,			-- Muslims get less tax from muslim provinces
 	MUSLIM_NONMUSLIM_PROVINCE_TAX_MOD = 0.25,		-- Muslims get more tax from non-muslim provinces
+	MAX_TRIBAL_LIEGE_TAX = 0.2,						-- Default max tribal liege tax income if any
 	TRADEZONE_VALUE_MULT = 0.5,						-- Multiple on trade zone value in tradezone bonus to trade posts and cities
 	TRADE_ZONE_BONUS_MULTIPLIER = 0.01,				-- Trade posts get the trade zone value * 0.1 * this as a bonus
 	TRADE_ZONE_BONUS_MULT_CITY = 0.005,				-- Cities gain similar bonus for a tradepost being in the province
@@ -744,7 +785,8 @@ NMilitary = {
 	MIN_LEVY_RAISE_OPINION_THRESHOLD = -50,			-- Below this opinion value you'll get the least amount of troops possible v11 increased to 25 v12 lowered to 0 (vanilla was -25) v12a tweaked to -50, to increase emphasis on levies
 	MAX_LEVY_RAISE_OPINION_THRESHOLD = 100,			-- Above this opinion value you'll get the max amount of troops possible
 	MIN_LEVIES_ABOVE_OPINION_THRESHOLD = 0,			-- The minimum percentage of levies that will be provided if opinion is above threshold
-	LEVY_PERCENT_BEFORE_CAN_RAISE = 10,			-- Needs at least this much % of full levy before we can raise it --v14 reduces tiny armies
+	MAX_TRIBAL_LIEGE_LEVY = 0.6,					-- Default max tribal liege levy if any
+	LEVY_PERCENT_BEFORE_CAN_RAISE = 10,			-- Needs at least this much % of full levy before we can raise it
 	SIEGE_DAMAGE = 0,								-- Siege attack values are multiplied by this value(when not doing a sally)
 	PERCENT_OF_GARRISON_DETACHED = 0.333,				-- This percent of the garrison is detached from the winning unit of a siege <-riknap: increased from 0.1 to 0.25 to minimise recapture v12 further increased to 33.3%
 	NUM_DAYS_BETWEEN_SIEGE_MORALE_LOSS = 7,		-- Number of days between morale loss for defender in a siege > v10 made to 1 week to increase pulses
@@ -822,13 +864,14 @@ NMilitary = {
 	LOOT_HOLDING_DESTRUCTION_ODDS = 200,				-- a holding with less than LOOT_HOLDING_DEST_MIN_SAFE buildings will be destroyed by looting
 	LOOT_HOLDING_BUILDING_DEST_ODDS = 1,			-- there is a 1 in this chance a random building is destroyed when looted
 	
-	RETINUE_FROM_REALMSIZE = 6.0, --RIKNAP'S VALUE: 0 - v12 changed to a negative number, so that retinuesize goes down as realmsize goes up (compensated by buildings that give retinuesize) v12a reset to zero
-	RETINUE_INCREASE_PER_TECH = 2.0, --RIKNAP'S VALUE: 0.25 - v12 decreased to 25% as higher level buildings give higher retinue points - the emphasis of source of retinuepoints is on buildings
-	RETINUE_HIRE_COST_MULTIPLIER = 0.08,				-- RIKNAP'S VALUE: 0.111 - make them matter man for man. Besides, you're paying for not only the men but their requirements as well + v6a doubled retinue sizes so halved hire cost mod -> v7c makes them cheaper to hire, 1.5x larger than vanilla level (the AI was barely hiring them, especially since base size was doubled and supply limited) - apx 150 for 1,000 LI/AR >v8 I made them into vanilla again (well, technically twice since default sizes are 1,000 each) v10n increased from 0.5 to 0.75 to balance them against mercenaries v12a standardized to 10% v12a restandardized to 1/3 of 1/3
-	RETINUE_REINFORCE_RATE = 0.05,					-- make them reinforce faster to keep them from being destroyed and thus an investment lost > v8 lowered > v10: lowered to 5% again, as in vanilla, to compensate for increased sizes
-	RETINUE_REINFORCE_COST = 1.4,					-- RIKNAP'S VALUE: 0.333 --- Retinues cost while reinforcing. <- to balance the expensive hiring. 5x smaller than vanilla -> v7c made them 2.5x cheaper to reinforce > v8 increased to 1/4 of vanilla (each man costs as much to hire as he is to rehire... I think). v10n increased along with hire cost for same reason v12a standardized to 10% v12a2 restandardized to 1/3
-	RETINUE_CONSTANT_COST = 0, 					-- RIKNAP'S VALUE: 0.333 --- Retinues cost at all times. <- ... they ARE retainers, so they do need to be paid. also to balance them vis-a-vis their bonuses -> v6a made them more expensive to keep -> v 7c made them 2.5x even more expensive to maintain > v8 increased cost  v12a standardized to 50% v12a2 re-standaradized to 1/3
-	MIN_RETINUE = 0,								--  <- riknap: loyal retainers at the start of the game, insufficient to create anything #noticed that this seems to be multiplied by something, since retinue cap seems to be at 360 instead of 1000 at start as intended. Will look into it. > v8 removed until I know what this is for anyway
+	RETINUE_FROM_REALMSIZE = 2.0,					--RIKNAP'S VALUE: 0
+	RETINUE_TITLE_MODIFIER = 0.5,					
+	RETINUE_INCREASE_PER_TECH = 1.5,
+	RETINUE_HIRE_COST_MULTIPLIER = 0.14,			--RIKNAP'S VALUE: 0.25-- Retinues are free to hire atm, but they cost alot to reinforce
+	RETINUE_REINFORCE_RATE = 0.025,
+	RETINUE_REINFORCE_COST = 3.0,					-- RIKNAP'S VALUE: 0.333 --Retinues cost while reinforcing.
+	RETINUE_CONSTANT_COST = 0.25, 					-- RIKNAP'S VALUE: 0.333 --- Retinues cost at all times.
+	MIN_RETINUE = 0,								-- Minimum retinue ( Disabled for now, can be enabled by mods )
 	
 	TERRAIN_SPEC_BONUS = 0.5,						-- Bonus to fighting in this terrain if you have that terrain as your terrain specialization ( gained through combat events in that terrain ) --v12 increased to 50%
 	
@@ -950,7 +993,10 @@ NMilitary = {
 	OUT_OF_SUPPLY_ATTRITION_BASE = 0.002,		-- The attrition a unit that is out of supply takes. -- v14 doubled
 	OUT_OF_SUPPLY_ATTRITION_INCREASE = 0.0002,	-- The increase per tick of attrition a unit that is out of supply takes. --v14 doubled
 	OUT_OF_SUPPLY_ATTRITION_TICK = 1,			-- The amount of days per tick for increase of attrition.
-	FORAGING_PILLAGE_MODIFIER = 0.15			-- Modifies how much loot the army takes when re-supplying itself in enemy territory},
+	FORAGING_PILLAGE_MODIFIER = 0.15,			-- Modifies how much loot the army takes when re-supplying itself in enemy territory},
+	
+	MONTHS_OF_UNDECIDED_WAR = 36,				-- Number of months before a war can be won by an attacker unless a major battle is won
+	MAJOR_BATTLE_WARSCORE = 5.0					-- The minium warscore gain needed for a battle to be considered major
 },
 
 NTechnology = {
@@ -1021,10 +1067,13 @@ NGraphics = {
 	CITY_SPRAWL_AMOUNT = 1, -- Size of cities, higher gives larger cities
 	CITY_SPRAWL_NUDGE_TAX_VALUE = 50, -- Debug flag
 	PROVINCE_NAME_DRAW_DISTANCE = 500.0, -- Remove province names beyond this distance
+	MILD_WINTER_VALUE = 90,
+	NORMAL_WINTER_VALUE = 145,
+	SEVERE_WINTER_VALUE = 255
 },
 
 NEngine = {
-	EVENT_PROCESS_OFFSET = 20, -- Events are checked every X day per character or province (1 is ideal, but CPU heavy) -- vanilla was 20, changed to 30 in v11 v12c tweaked to 25
+	EVENT_PROCESS_OFFSET = 20, 	-- Events are checked every X day per character or province (1 is ideal, but CPU heavy)
 },
 
 NAI =
@@ -1050,6 +1099,7 @@ NAI =
 	MAX_KING_TITLES_TO_CREATE = 0,							-- AI will not seek to create/usurp more King-level titles than this (0 for unlimited)
 	MAX_EMPIRE_TITLES_TO_CREATE = 1,						-- AI will not seek to create/usurp more Empire-level titles than this (0 for unlimited) - v11 only 1 empire max
 	AI_EMPEROR_CREATES_KINGDOMS = 1,						-- If set to 1, AI Emperors will create King-level titles --v12 turned on
+	AI_EMPEROR_CREATES_VICE_ROYALTY_KINGDOMS = 1,			-- If set to 1, AI Emperors with the kingdom viceroyalty law will create King-level titles regardless of the setting above
 	AI_ALWAYS_CREATES_DUCHIES = 0,							-- If set to 1, AI will always create Duchy titles even if it has Gavelkind etc
 	AI_ASSAULT_RATIO = 10,									-- AI will launch assaults at this ratio of attackers to defenders
 	HARD_DIFF_AI_ATTRITION = 0.5,							-- AI attrition multiplier at Hard difficulty
@@ -1058,9 +1108,19 @@ NAI =
 	BASE_AI_ARMY_SIZE = 10000,								-- Base size that AI will use when forming armies (multiplied by supply tech)
 	DESIRED_CONSORTS = 2,									-- AI will always want at least this many concubines, if they lack sons v12c increased to 1
 	RAID_MAX_REALM_SIZE = 100,								-- Realms with more holdings than this will never go on Raids
-	RAID_AGGRESSION = 666,									-- General frequency of raids. A LOWER number means more often! v14 experimentally increased this (fewer raids)
+	RAID_AGGRESSION = 18,									-- General frequency of raids. A LOWER number means more often!
 	RAID_PREP_INV_SPARE_SAME_CULTURE = 0,					-- AI of religions that allow prepared invasions will not raid provinces in their own culture group (to prevent intra-Scandinavian raids) v12c disabled
-	RAID_SPARE_ACCEPTED_RELIGIONS = 0						-- AI will not raid rulers of other religions in the same religion group, unless heresy vs parent religion v12c disabled
+	RAID_SPARE_ACCEPTED_RELIGIONS = 0,						-- AI will not raid rulers of other religions in the same religion group, unless heresy vs parent religion
+	TRIBAL_VASSAL_EXTRA_CALL_CHANCE = 40,					-- Extra AI willingness to join calls from their liege if they are tribal vassals
+	
+	TRIBAL_REPUBLIC_THRESHOLD = 60,							-- Determines if AI chooses to become republic or not
+	TRIBAL_REPUBLIC_STEWARDSHIP_MODIFIER = 5,				-- How much each stewardship counts toward the threshold above
+	TRIBAL_REPUBLIC_GREEDY_MODIFIER = 10,					-- How much the greedy trait counts toward the threshold above
+	TRIBAL_REPUBLIC_CHARITABLE_MODIFIER = -10,				-- How much the charitable trait counts toward the threshold above
+	TRIBAL_REPUBLIC_INDULGENT_WASTREL_MODIFIER = 5,			-- How much the indulgent wastrel trait counts toward the threshold above
+	TRIBAL_REPUBLIC_THRIFTY_CLERK_MODIFIER = 10,			-- How much the thrifty clerk trait counts toward the threshold above
+	TRIBAL_REPUBLIC_FORTUNE_BUILDER_MODIFIER = 15,			-- How much the fortune builder trait counts toward the threshold above
+	TRIBAL_REPUBLIC_MIDAS_TOUCHED_MODIFIER = 20,			-- How much the midas touched trait counts toward the threshold above
 },
 
 NFrontend = 
@@ -1187,15 +1247,57 @@ NRulerDesigner =
 	COST_SAME_TRAIT_OPINION = 0.5,
 	COST_SAME_RELIGION_OPINION = 0.5,
 	COST_AMBITION_OPINION = -0.25,
-	COST_GENERAL_OPINION = 2.0,
-	COST_MUSLIM_OPINION = 0.5,
-	COST_JEWISH_OPINION = 0.5,
-	COST_CHRISTIAN_OPINION = 0.5,
-    COST_ZOROASTRIAN_OPINION = 0.5,
-	COST_MORALE_OFFENCE = 100.0,
-	COST_MORALE_DEFENCE = 100.0,
-	COST_DEFENCE = 100.0,
+	COST_TRIBAL_OPINION = 0.0,
+	COST_GENERAL_OPINION = 1.0,
+	COST_MUSLIM_OPINION = 0.25,
+	COST_JEWISH_OPINION = 0.25,
+	COST_CHRISTIAN_OPINION = 0.25,
+    COST_ZOROASTRIAN_OPINION = 0.25,
+	COST_MORALE_OFFENCE = 50.0,
+	COST_MORALE_DEFENCE = 50.0,
+	COST_DEFENCE = 50.0,
 	MAX_AGE = 50
+},
+
+NLearningScenario = 
+{
+	START_YEAR = 1066,
+	START_MONTH = 8,
+	START_DAY = 14,
+	START_CHARACTER = 108500,
+	FIRST_EVENT = 107000,
+	HAS_WIFE_EVENT = 107100,
+	ANGRY_VASSAL = 108510,
+	REVOLT_PROVINCE = 192,
+	REVOLT_EVENT = 107201,
+	TOG_REVOLT_EVENT = 107200,
+	COMBAT_EVENT = 107202,
+	AFTER_REVOLT_EVENT = 107250,
+	FABRICATE_CLAIM_EVENT = 913,
+	FABRICATE_CLAIM_CHARACTER = 20842,
+	HAS_CLAIM_EVENT = 107300,
+	WAR_EVENT = 107301,
+	SIEGE_EVENT = 107306,
+	CAN_PEACE_EVENT = 107310,
+	PEACE_TRETIES_EVENT = 107311,
+	AFTER_PEACE_EVENT = 107320,
+	FIRST_INTRIGUE_CHARACTER = 107500,
+	FIRST_INTRIGUE_EVENT = 107340,
+	SECOND_INTRIGUE_CHARACTER = 109500,
+	SECOND_INTRIGUE_EVENT = 107343,
+	AFTER_INTRIGUE_EVENT = 107344,
+	FACTION_CHARACTER = 108501,
+	FACTION_EVENT = 107345,
+	OVER_DEMESNE_LIMIT_EVENT = 107325,
+	OVER_VASSAL_LIMIT_EVENT = 107326,
+	TECHNOLOGY_EVENT = 107332,
+	HAS_SON_EVENT = 107330,
+	HAS_DAUGHTER_EVENT = 107331,
+	HAS_SON_AFTER_DAUGHTER_EVENT = 107333,
+	DEATH_AGE = 40,
+	DEATH_EVENT = 107350,
+	INCAPABLE_EVENT = 107360,
+	CAN_EDUCATE_HEIR_EVENT = 107334
 }
 
 }

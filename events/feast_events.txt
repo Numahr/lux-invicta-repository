@@ -840,6 +840,7 @@ character_event = {
 	option = {
 		name = "EVTOPTC72008"
 		trigger = {
+			age = 14
 			is_female = no
 			NOT = { health_traits = 1 }
 			NOT = { trait = craven }
@@ -1028,6 +1029,11 @@ letter_event = {
 		name = "EVTOPTA72011" #Travel to the feast
 		ai_chance = {
 			factor = 1
+			modifier  = {
+				factor = 0.1
+				ai = yes
+				trait = in_hiding
+			}
 			modifier = {
 				factor = 2
 				opinion = { who = from value = -40 }
@@ -1038,6 +1044,17 @@ letter_event = {
 			}
 		}
 		set_character_flag = coming_to_feast
+		if = {
+			limit = { trait = in_hiding	}
+			remove_trait = in_hiding
+			clr_character_flag = do_not_disturb
+			add_character_modifier = {
+				name = went_out_of_hiding_timer
+				duration = 180
+				hidden = yes
+			}
+			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
+		}
 	}
 	option = {
 		name = "EVTOPTB72011" #Refuse
@@ -1046,6 +1063,7 @@ letter_event = {
 			modifier  = {
 				factor = 0
 				opinion = { who = from value = 0 }
+				NOT = { trait = in_hiding }
 			}
 			modifier  = {
 				factor = 2
@@ -1634,6 +1652,7 @@ character_event = {
 	prisoner = no
 
 	trigger = {
+		is_adult = yes
 		war = no
 		NOT = { num_of_friends = 3 }
 		has_character_flag = guest_feast_started
@@ -1745,7 +1764,11 @@ character_event = {
 	option = {
 		name = "EVTOPTA72026"
 		FROM = {
-			add_friend = ROOT
+			opinion = {
+				modifier = opinion_friend
+				who = ROOT
+				years = 100
+			}
 		}
 	}
 }
@@ -1801,7 +1824,10 @@ character_event = {
 					}
 				}
 				NOT = {
-					is_friend = ROOT
+					has_opinion_modifier = {
+						who = ROOT
+						modifier = opinion_friend
+					}
 				}
 			}
 		}
@@ -1862,10 +1888,17 @@ character_event = {
 						}
 					}
 					NOT = {
-						is_friend = ROOT
+						has_opinion_modifier = {
+							who = ROOT
+							modifier = opinion_friend
+						}
 					}
 				}
-				add_friend = ROOT
+				opinion = {
+					modifier = opinion_friend
+					who = ROOT
+					years = 100
+				}
 				character_event = {
 					id = 72028
 					tooltip = "EVTTOOLTIP72028"
@@ -1885,7 +1918,11 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA72028"
-		add_friend = FROM
+		opinion = {
+			modifier = opinion_friend
+			who = FROM
+			years = 100
+		}
 	}
 }
 
@@ -1900,6 +1937,7 @@ character_event = {
 	prisoner = no
 
 	trigger = {
+		is_adult = yes
 		war = no
 		has_character_flag = guest_feast_started
 		NOT = {
@@ -2442,6 +2480,7 @@ character_event = {
 	capable_only = yes
 
 	trigger = {
+		is_adult = yes
 		war = no
 		has_character_flag = guest_feast_started
 		is_married = yes
@@ -2708,6 +2747,7 @@ character_event = {
 	capable_only = yes
 
 	trigger = {
+		is_adult = yes
 		war = no
 		has_character_flag = guest_feast_started
 		NOT = {
@@ -2849,6 +2889,7 @@ character_event = {
 	capable_only = yes
 
 	trigger = {
+		is_adult = yes
 		war = no
 		has_character_flag = guest_feast_started
 		trait = drunkard
@@ -2936,6 +2977,7 @@ character_event = {
 	capable_only = yes
 
 	trigger = {
+		is_adult = yes
 		war = no
 		has_character_flag = guest_feast_started
 		trait = drunkard
@@ -3948,6 +3990,7 @@ character_event = {
 	capable_only = yes
 
 	trigger = {
+		is_adult = yes
 		war = no
 		has_character_flag = host_feast_started
 		has_character_modifier = holding_large_feast
@@ -4176,6 +4219,7 @@ character_event = {
 	prisoner = no
 
 	trigger = {
+		is_adult = yes
 		war = no
 		NOT = { num_of_friends = 3 }
 		has_character_flag = host_feast_started
@@ -4460,6 +4504,10 @@ character_event = {
 				is_married = no
 			}
 			NOT = { trait = chaste }
+		}
+		OR = {
+			religion_group = christian
+			religion_group = jewish_group
 		}
 		has_lover = no
 		NOT = { trait = shy }
