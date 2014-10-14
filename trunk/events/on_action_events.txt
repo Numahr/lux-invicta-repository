@@ -34,6 +34,10 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA150"
+		chronicle = {
+			entry = CHRONICLE_AVOID_IMPRISON_WAR
+			portrait = [From.GetID]
+		}
 	}
 }
 
@@ -46,6 +50,10 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA40000"
+		chronicle = {
+			entry = CHRONICLE_FAILED_IMPRISON_WAR
+			portrait = [From.GetID]
+		}
 	}
 }
 
@@ -96,7 +104,6 @@ character_event = {
 	is_triggered_only = yes 
 	
 	immediate = {
-		set_character_flag = ai_flag_refuse_conversion
 		hidden_tooltip = {
 			opinion = {
 				who = FROM
@@ -652,6 +659,19 @@ character_event = {
 	hide_FROM = yes
 	is_triggered_only = yes 
 	
+	immediate = {
+		if = {
+			limit = {
+				spouse = { character = FROM }
+				FROM = { 
+					ai = no
+					NOT = { has_character_flag = achievement_spouse_killer } 
+				}
+			}
+			FROM = { set_character_flag = achievement_spouse_killer }
+		}
+	}
+	
 	option = {
 		name = "EVTOPTA162"
 		hidden_tooltip = {
@@ -671,7 +691,6 @@ character_event = {
 	
 	hide_FROM = yes
 	is_triggered_only = yes 
-	
 
 	option = {
 		name = "EVTOPTA40009"
@@ -707,6 +726,16 @@ character_event = {
 					months = 60
 				}
 			}
+		}
+		if = {
+			limit = {
+				spouse = { character = FROM }
+				FROM = { 
+					ai = no
+					NOT = { has_character_flag = achievement_spouse_killer } 
+				}
+			}
+			FROM = { set_character_flag = achievement_spouse_killer }
 		}
 		if = {
 			limit = { 
@@ -979,7 +1008,7 @@ character_event = {
 }
 
 
-#Liege deal with inter-realm assasinations..
+# Liege deals with inter-realm assassinations..
 character_event = {
 	id = 40021
 	desc = "EVTDESC40021"
@@ -1248,10 +1277,10 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = christian }
-		#new_character = {
-		#	religion_group = muslim
-		#}
+		ROOT = { religion_group = christian }
+		new_character = {
+			religion_group = muslim
+		}
 	}
 	
 	option = {
@@ -1305,11 +1334,11 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = christian }
-		#new_character = {
-		#	NOT = { religion_group = muslim }
-		#	NOT = { religion_group = christian }
-		#}
+		ROOT = { religion_group = christian }
+		new_character = {
+			NOT = { religion_group = muslim }
+			NOT = { religion_group = christian }
+		}
 	}
 	
 	option = {
@@ -1363,10 +1392,10 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = christian }
-		#new_character = {
-		#	religion_group = christian
-		#}
+		ROOT = { religion_group = christian }
+		new_character = {
+			religion_group = christian
+		}
 	}
 	
 	option = {
@@ -1420,10 +1449,10 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = muslim }
-		#new_character = {
-		#	religion_group = christian
-		#}
+		ROOT = { religion_group = muslim }
+		new_character = {
+			religion_group = christian
+		}
 	}
 	
 	option = {
@@ -1477,11 +1506,11 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = muslim }
-		#new_character = {
-		#	NOT = { religion_group = muslim }
-		#	NOT = { religion_group = christian }
-		#}
+		ROOT = { religion_group = muslim }
+		new_character = {
+			NOT = { religion_group = muslim }
+			NOT = { religion_group = christian }
+		}
 	}
 	
 	option = {
@@ -1535,10 +1564,10 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = muslim }
-		#new_character = {
-		#	religion_group = muslim
-		#}
+		ROOT = { religion_group = muslim }
+		new_character = {
+			religion_group = muslim
+		}
 	}
 	
 	option = {
@@ -1592,10 +1621,10 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = pagan_group }
-		#new_character = {
-		#	religion_group = christian
-		#}
+		ROOT = { religion_group = pagan_group }
+		new_character = {
+			religion_group = christian
+		}
 	}
 	
 	option = {
@@ -1649,10 +1678,10 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
-		#ROOT = { religion_group = pagan_group }
-		#new_character = {
-		#	religion_group = muslim
-		#}
+		ROOT = { religion_group = pagan_group }
+		new_character = {
+			religion_group = muslim
+		}
 	}
 	
 	option = {
@@ -1706,6 +1735,11 @@ narrative_event = {
 	
 	trigger = {
 		can_call_crusade = yes
+		ROOT = { religion_group = pagan_group }
+		new_character = {
+			NOT = { religion_group = muslim }
+			NOT = { religion_group = christian }
+		}
 	}
 	
 	option = {
@@ -3611,11 +3645,25 @@ narrative_event = {
 	option = {
 		name = "EVTOPTA670" # The Reformer
 		trigger = { religion = ROOT }
+		if = {
+			limit = { ai = no }
+			chronicle = {
+				entry = CHRONICLE_PLAYER_REFORMED_RELIGION
+				portrait = [Root.GetID]
+			}
+		}
 	}
 	option = {
 		name = "EVTOPTB670" # Rulers of the old Faith - Accept
 		trigger = {
 			is_heresy_of = ROOT # The old religion has become a heresy of the Reformed one
+		}
+		if = {
+			limit = { ai = no }
+			chronicle = {
+				entry = CHRONICLE_OTHER_REFORMED_PLAYERS_RELIGION
+				portrait = [Root.GetID]
+			}
 		}
 		ai_chance = {
 			factor = 50
@@ -3675,6 +3723,13 @@ narrative_event = {
 		trigger = {
 			is_heresy_of = ROOT # The old religion has become a heresy of the Reformed one
 		}
+		if = {
+			limit = { ai = no }
+			chronicle = {
+				entry = CHRONICLE_OTHER_REFORMED_PLAYERS_RELIGION
+				portrait = [Root.GetID]
+			}
+		}
 		ai_chance = {
 			factor = 50
 #			modifier = {						#d_jomsvikings is not an LI title.
@@ -3693,3 +3748,111 @@ narrative_event = {
 	}
 }
 
+####################################################
+# Elective Gavelkind Succession:
+# Vassal Junior Heir Can Choose Independence
+####################################################
+
+character_event = {
+	id = 63103
+	desc = EVTDESC_63103
+	picture = GFX_evt_throne_room
+
+	capable_only = yes
+	prisoner = no
+	min_age = 16
+	
+	is_triggered_only = yes
+
+	trigger = {
+		has_dlc = "Charlemagne"
+	}
+	
+	option = {
+		name = EVTOPTA_63103 # Remain a vassal
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 2
+				opinion = {
+					who = FROM
+					value = 25
+				}
+			}
+			modifier = {
+				factor = 2
+				opinion = {
+					who = FROM
+					value = 50
+				}
+			}
+			modifier = {
+				factor = 4
+				trait = content
+			}
+		}
+	}
+	option = {
+		name = EVTOPTB_63103 # Go independent
+		
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 2
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -25
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -50
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+		}
+		
+		hidden_tooltip = {
+			FROM = { character_event = { id = 63104 } }
+		}
+		
+		set_defacto_liege = THIS
+		any_demesne_title = {
+			limit = {
+				OR = {
+					tier = king
+					tier = emperor
+					is_primary_holder_title_tier = yes
+				}
+			}
+			FROM = {
+				add_claim = PREV
+			}
+		}
+	}
+}
+
+# The liege is notified of the independence
+character_event = {
+	id = 63104
+	desc = EVTDESC_63104
+	picture = GFX_evt_emissary
+
+	is_triggered_only = yes
+	
+	notification = yes
+	
+	option = {
+		name = EVTOPTA_63104
+	}
+	
+}
