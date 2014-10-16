@@ -125,15 +125,6 @@ succession_laws = {
 				}
 				
 				NOT = { religion_group = muslim }
-				NOT = { religion_group = indian_group }
-				
-				OR = {
-					NOT = { religion_group = pagan_group }
-					is_reformed_religion = yes
-					religion = hellenic_pagan
-					is_patrician = yes
-				}
-				
 				OR = {
 					is_republic = no
 					is_patrician = yes
@@ -178,9 +169,9 @@ succession_laws = {
 				}
 				crownlaw_title = {
 					OR = {
-						has_law = crown_authority_2
-						has_law = crown_authority_3
-						has_law = crown_authority_4
+						has_law = centralization_2
+						has_law = centralization_3
+						has_law = centralization_4
 					}
 				}
 			}
@@ -210,12 +201,6 @@ succession_laws = {
 					}
 				}
 				NOT = { religion_group = muslim }
-				OR = {
-					NOT = { religion_group = pagan_group }
-					is_reformed_religion = yes
-					religion = hellenic_pagan
-				}
-				
 				is_merchant_republic = no
 				is_patrician = no
 			}
@@ -241,8 +226,8 @@ succession_laws = {
 				}
 				crownlaw_title = {
 					OR = {
-						has_law = crown_authority_3
-						has_law = crown_authority_4
+						has_law = centralization_3
+						has_law = centralization_4
 					}
 				}
 			}
@@ -275,12 +260,6 @@ succession_laws = {
 				NOT = { religion_group = indian_group }
 				is_merchant_republic = no
 				is_patrician = no
-				
-				OR = {
-					NOT = { religion_group = pagan_group }
-					is_reformed_religion = yes
-					religion = hellenic_pagan
-				}
 			}
 			OR = {
 				is_landless_type_title = no
@@ -298,6 +277,24 @@ succession_laws = {
 				holder_scope = { is_feudal = yes }
 			}
 		}
+
+		allow = {		# <--- Section added by Numahr to limit access for unreformed religions
+			OR = {
+				holder_scope = { is_reformed_religion = yes }
+				AND = {
+					holder_scope = { NOT = { is_reformed_religion = yes } }
+					crownlaw_title = {
+						OR = {
+							has_law = centralization_3
+							has_law = centralization_4
+							has_law = pagan_centralization_3
+							has_law = pagan_centralization_4
+						}
+					}
+				}
+			}
+		}
+
 		effect = {
 			succession = feudal_elective
 		}
@@ -324,7 +321,7 @@ succession_laws = {
 				NOT = { religion_group = muslim }
 				is_merchant_republic = no
 				is_patrician = no
-				culture_group = celtic
+#				culture_group = celtic 		# <--- commented by Numahr, open to debate - too interesting a law to be so limited IMO
 			}
 			OR = {
 				is_landless_type_title = no
@@ -342,6 +339,24 @@ succession_laws = {
 				holder_scope = { is_feudal = yes }
 			}
 		}
+
+		allow = {		# <--- Section added by Numahr to limit access for unreformed religions (I also excluded any reformed religion as I removed the limitation to only Celtic religions)
+			OR = {
+				holder_scope = { is_reformed_religion = yes }	# <--- applied anyway only to "Oriental" groups
+				AND = {
+					holder_scope = { NOT = { is_reformed_religion = yes } }
+					crownlaw_title = {
+						OR = {
+							has_law = centralization_3
+							has_law = centralization_4
+							has_law = pagan_centralization_3
+							has_law = pagan_centralization_4
+						}
+					}
+				}
+			}
+		}
+
 		effect = {
 			succession = tanistry
 		}
@@ -365,21 +380,22 @@ succession_laws = {
 						}
 					}
 				}
-				OR = {
-					culture = mongol
-					AND = {
-						NOT = { religion = norse_pagan }
-						NOT = { religion = tengri_pagan }
-						NOT = { religion = baltic_pagan }
-						NOT = { religion = finnish_pagan }
-						NOT = { religion = aztec }
-						NOT = { religion = pagan }
-						NOT = { religion = slavic_pagan }
-						NOT = { religion = west_african_pagan }
-					}
-				}
+#				OR = {
+#					culture = mongol
+#					AND = {
+#						NOT = { religion = norse_pagan }
+#						NOT = { religion = tengri_pagan }
+#						NOT = { religion = baltic_pagan }
+#						NOT = { religion = finnish_pagan }
+#						NOT = { religion = aztec }
+#						NOT = { religion = pagan }
+#						NOT = { religion = slavic_pagan }
+#						NOT = { religion = west_african_pagan }
+#					}
+#				}
 				
 				NOT = { religion_group = muslim }
+				is_reformed_religion = yes			#<--- line added by Numahr to forbid access for unreformed religions				
 				is_merchant_republic = no
 				is_patrician = no
 			}
@@ -404,7 +420,11 @@ succession_laws = {
 					has_crown_law_title = no
 				}
 				crownlaw_title = {
-					NOT = { has_law = crown_authority_0 }
+					OR = {
+						has_law = centralization_2
+						has_law = centralization_3
+						has_law = centralization_4
+					}
 				}
 			}
 		}
@@ -422,6 +442,26 @@ succession_laws = {
 #		child_opinion = 30
 #		dynasty_opinion = 10
 		potential = {
+			holder_scope = {
+				NOT = {
+					OR = {
+						religion_group = abrahamic_group 		# <--- added by Numahr, to take into account change changes introduced on the religious groups structure
+						religion_group = arabpagan_group		# <--- added by Numahr, to take into account change changes introduced on the religious groups structure
+						religion_group = berberpagan_group		# <--- added by Numahr, to take into account change changes introduced on the religious groups structure
+						religion_group = bud_group
+						religion_group = christian
+						religion_group = graecoroman_group		# <--- added by Numahr, to take into account change changes introduced on the religious groups structure
+						religion_group = indohelen_group		
+						religion_group = luwian_group			# <--- added by Numahr, to take into account change changes introduced on the religious groups structure
+						religion_group = mithra_group 			# <--- added by Numahr, to take into account change changes introduced on the religious groups structure
+						religion_group = neoplato_group
+						religion_group = palmyranpagan_group	# <--- added by Numahr, to take into account change changes introduced on the religious groups structure
+						religion_group = sol_group
+						religion_group = zoroastrian_group
+					}
+				}
+			}
+
 			OR = {
 				is_landless_type_title = no
 				is_tribal_type_title = yes
@@ -443,6 +483,20 @@ succession_laws = {
 			is_primary_type_title = no
 			is_vice_royalty = no
 		}
+		allow = {												# <--- section added by Numahr, to limit access in the case of non-muslims
+			OR = {
+				holder_scope = { religion_group = muslim }
+				AND = {
+					holder_scope = { NOT = { is_reformed_religion = yes } }
+					crownlaw_title = {
+						OR = {
+							has_law = centralization_4
+							has_law = pagan_centralization_4
+						}
+					}
+				}				
+			}
+		}
 		effect = {
 			succession = turkish_succession
 		}
@@ -450,41 +504,6 @@ succession_laws = {
 			always = no
 		}			
 	}
-	succ_papal_succession = {
-		potential = {
-			title = k_papal_state
-			is_vice_royalty = no
-		}
-		
-		effect = {
-			succession = papal_succession
-		}
-		revoke_allowed = {
-			always = no
-		}		
-	}
-	
-	# Titles revert back to the liege on death
-	succ_appointment = {
-		potential = {
-			holder_scope = {
-				is_feudal = yes
-				independent = no
-				any_liege = {
-					holy_order = yes
-				}
-				is_merchant_republic = no
-			}
-			is_vice_royalty = no
-		}
-		effect = {
-			succession = appointment
-		}
-		revoke_allowed = {
-			always = no
-		}		
-	}
-	
 	succ_open_elective = {
 		potential = {
 			NOT = { title = k_papal_state }
@@ -599,9 +618,58 @@ succession_laws = {
 			always = no
 		}			
 	}
+	succ_papal_succession = {
+		potential = {
+			title = k_papal_state
+			is_vice_royalty = no
+		}
+		
+		effect = {
+			succession = papal_succession
+		}
+		revoke_allowed = {
+			always = no
+		}		
+	}
+	
+	# Titles revert back to the liege on death
+	succ_appointment = {
+		potential = {
+			holder_scope = {
+				is_feudal = yes
+				independent = no
+				any_liege = {
+					holy_order = yes
+				}
+				is_merchant_republic = no
+			}
+			is_vice_royalty = no
+		}
+		effect = {
+			succession = appointment
+		}
+		revoke_allowed = {
+			always = no
+		}		
+	}
+	
 }
 
 gender_laws = {
+	agnatic_succession = {
+		female_dynasty_opinion = -10
+	
+		potential = {
+			always = yes
+			is_vice_royalty = no
+		}
+		effect = {
+			gender_succ = agnatic
+		}
+		revoke_allowed = {
+			always = no
+		}			
+	}
 	cognatic_succession = {
 		potential = {
 			holder_scope = {
@@ -615,8 +683,6 @@ gender_laws = {
 					is_merchant_republic = yes
 				}
 				NOT = { religion_group = muslim }
-				NOT = { religion = tengri_pagan_reformed }
-				NOT = { religion = tengri_pagan }
 				has_horde_culture = no
 				is_merchant_republic = no
 				is_patrician = no
@@ -644,28 +710,12 @@ gender_laws = {
 			always = no
 		}			
 	}
-	agnatic_succession = {
-		female_dynasty_opinion = -10
-	
-		potential = {
-			always = yes
-			is_vice_royalty = no
-		}
-		effect = {
-			gender_succ = agnatic
-		}
-		revoke_allowed = {
-			always = no
-		}			
-	}
 	true_cognatic_succession = {
 		male_dynasty_opinion = -10
 		
 		potential = {
 			holder_scope = { 
 				NOT = { religion_group = muslim }
-				NOT = { religion = tengri_pagan_reformed }
-				NOT = { religion = tengri_pagan }
 				has_horde_culture = no
 				is_merchant_republic = no
 				is_patrician = no
@@ -685,13 +735,6 @@ gender_laws = {
 			is_vice_royalty = no
 		}
 		allow = {
-			holder_scope = {
-				OR = {
-					culture = basque
-					religion = cathar
-					religion = messalian
-				}
-			}
 		}
 		effect = {
 			gender_succ = true_cognatic
@@ -706,7 +749,24 @@ gender_laws = {
 		female_dynasty_opinion = 20
 		
 		potential = {
-			always = no # For modders only
+			holder_scope = { 
+				NOT = { religion_group = muslim }
+				has_horde_culture = no
+				is_merchant_republic = no
+				is_patrician = no
+			}
+			
+			is_landless_type_title = no
+			
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			
+			is_primary_type_title = no
 			is_vice_royalty = no
 		}
 		allow = {
@@ -725,7 +785,24 @@ gender_laws = {
 		female_dynasty_opinion = 10
 		
 		potential = {
-			always = no # For modders only
+			holder_scope = { 
+				NOT = { religion_group = muslim }
+				has_horde_culture = no
+				is_merchant_republic = no
+				is_patrician = no
+			}
+			
+			is_landless_type_title = no
+			
+			OR = {
+				AND = {
+					tier = baron
+					is_feudal = yes
+				}
+				holder_scope = { is_feudal = yes }
+			}
+			
+			is_primary_type_title = no
 			is_vice_royalty = no
 		}
 		allow = {
