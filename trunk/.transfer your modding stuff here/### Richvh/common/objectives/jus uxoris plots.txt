@@ -3,16 +3,18 @@
 # Supported types:
 # character, spouse, rivals, friends, liege_titles, vassal_titles, realm_titles, realm_characters, realm_characters_plus, independent_rulers
 
-###############
+# ##############
 # PLOTS
-###############
-plot_usurp_wife = {
+# ##############
+
+# Plot to take control of your wife's realm through Jus Uxoris (wife is liege)
+plot_usurp_liege_wife = {
 	type = liege_titles
 	
 	#Plotter scope
 	potential = {
 		is_female = no
-		is_feudal = yes
+		is_patrician = no
 		prisoner = no
 		is_married = yes
 		is_primary_war_attacker = no
@@ -22,28 +24,40 @@ plot_usurp_wife = {
 		any_spouse = {
 			is_female = yes
 			is_feudal = yes
+			is_landed = yes
+			is_patrician = no
 			ROOT = {
-				any_liege = {
-					character = PREVPREV
+				OR = {
+					AND = {
+						is_landed = yes
+						any_liege = {
+							character = PREVPREV
+						}
+					}
+					employer = {
+						character = PREV
+					}
 				}
+				trait = ambitious
+				trait = gregarious
 			}
 			OR = {
 				capital_scope = {
 					culture_group = ROOT
+					religion_group = ROOT
 				}
-				culture_group = ROOT
-				ROOT = {
-					OR = {
-						any_realm_province = {
-							culture_group = ROOT
-						}
-						any_demesne_province = {
-							any_neighbor_province = {
-								culture_group = ROOT
-							}
-						}
-						trait = ambitious
-						trait = gregarious
+				AND = {
+					culture_group = ROOT
+					religion_group = ROOT
+				}
+				any_realm_province = {
+					culture_group = ROOT
+					religion_group = ROOT
+				}
+				any_demesne_province = {
+					any_neighbor_province = {
+						culture_group = ROOT
+						religion_group = ROOT
 					}
 				}
 			}
@@ -57,6 +71,7 @@ plot_usurp_wife = {
 			}
 		}
 	}
+	
 	#Target scope
 	allow = {
 		holder_scope = {
@@ -64,7 +79,9 @@ plot_usurp_wife = {
 				character = FROM
 			}
 			FROM = {
-				any_liege = PREV
+				any_liege = {
+					character = PREV
+				}
 				OR = {
 					is_ruler = no
 					demesne_efficiency = 1.0
@@ -172,39 +189,35 @@ plot_usurp_wife = {
 				}
 			}
 			NOT = {
-				AND = {
-					NOT = {
-						has_law = agnatic_succession
+				has_law = enatic_succession
+				martial = 8
+				intrigue = 8
+				OR = {
+					AND = {
+						trait = brave
+						trait = diligent
+						NOT = {
+							trait = humble
+							trait = content
+							trait = trusting
+						}
 					}
-					martial = 8
-					intrigue = 8
-					OR = {
-						AND = {
-							trait = brave
-							trait = diligent
-							NOT = {
-								trait = humble
-								trait = content
-								trait = trusting
-							}
+					AND = {
+						trait = diligent
+						trait = proud
+						NOT = {
+							trait = craven
+							trait = content
+							trait = trusting
 						}
-						AND = {
-							trait = diligent
-							trait = proud
-							NOT = {
-								trait = craven
-								trait = content
-								trait = trusting
-							}
-						}
-						AND = {
-							trait = brave
-							trait = proud
-							NOT = {
-								trait = slothful
-								trait = humble
-								trait = trusting
-							}
+					}
+					AND = {
+						trait = brave
+						trait = proud
+						NOT = {
+							trait = slothful
+							trait = humble
+							trait = trusting
 						}
 					}
 				}
@@ -218,11 +231,10 @@ plot_usurp_wife = {
 		factor = 20
 		modifier = {
 			factor = 0
-				holder_scope = {
-					reverse_opinion = {
-						who = FROM
-						value = 50
-					}
+			holder_scope = {
+				reverse_opinion = {
+					who = FROM
+					value = 50
 				}
 			}
 		}
@@ -231,13 +243,16 @@ plot_usurp_wife = {
 		holder = FROM
 	}
 	abort = {
-		FROM = {
-			is_married = no
-			trait = incapable
-		}
-		holder_scope = {
-			NOT = {
-				any_spouse = {
+		OR = {
+			FROM = {
+				is_married = no
+				trait = incapable
+			}
+			holder_scope = {
+				NOT = {
+					any_spouse = {
+						character = FROM
+					}
 					character = FROM
 				}
 			}
@@ -245,10 +260,15 @@ plot_usurp_wife = {
 	}
 	abort_effect = {
 		FROM = {
-			hidden_tooltip = {
-				add_character_modifier = {
-					name = failed_to_usurp_wife
-					days = 1825
+			if = {
+				limit = {
+					is_married = yes
+				}
+				hidden_tooltip = {
+					add_character_modifier = {
+						name = failed_to_usurp_wife
+						days = 1825
+					}
 				}
 			}
 			clr_character_flag = plot_usurp_wife_decision_taken
@@ -275,3 +295,4 @@ plot_usurp_wife = {
 		}
 	}
 }
+
