@@ -10,7 +10,7 @@ NDiplomacy = {
 	ATTACKING_SOMEONE_DEFENDING_AGAINST_OTHER_RELIGIOUS_GROUP_PIETY_COST = 350,		-- Piety hit for attacking someone who is defending against other religious group v11 increased from 200
 	ATTACKER_CALL_DECLINE_COST = 200, -- Prestige cost for refusing to join an offensive war v11 increased to 200
 	DEFENDER_CALL_DECLINE_COST = 400, -- Prestige cost for refusing to join a defensive war v11 150 to 400
-	CALL_TO_WAR_DELAY = 60, -- Months between attempts to call someone into war
+	TRIBAL_VASSAL_CALL_DECLINE_COST_FACTOR = 3.0, -- Prestige cost multiplier for tribal vassals
 	PAPAL_INVEST_PIETY_COST_MULT = 0.5, -- The effect of Papal investiture on the piety cost of the special Papal actions
 	SHORT_REIGN_YEARS_END = 10,-- notes:x-2 opinion per year v10nincreased from 9 to 15 v11 increased to 20 v12 reduced to 8 (with -5 per year) v12 increased
 	LONG_REIGN_YEARS_START = 15, --v10n decreased from 20 to 15 v11 corrected computation. Gap is 5 (vanilla 20-9=11). v11 starts at 15 (gap of 7 years) v12 start 20, gap 10 v14 start 15, gap 5
@@ -39,7 +39,6 @@ NDiplomacy = {
 	VASSAL_LIMIT_KING_MULT = 20.0, 				-- Extra Vassal Limit from the ruler's rank
 	VASSAL_LIMIT_EMPEROR_MULT = 30.0, 			-- Extra Vassal Limit from the ruler's rank
 	VASSAL_LIMIT_GREAT_DUKE_BONUS = 5.0, 		-- Extra Vassal Limit for Dukes with more than one Duchy
-	VASSAL_LIMIT_FAMILY_PRESTIGE_BONUS = 0.002,	-- Extra Vassal Limit from family prestige
 	VASSAL_LIMIT_DIPLOMACY_MULT = 0.3,			-- Extra Vasal Limit from ruler and spouse diplomacy
 	VASSAL_LIMIT_TRIBAL_BONUS = -10,			-- All rulers with tribal holdings as their capital have smaller demesnes
 	VASSAL_LIMIT_LEVY_MULTIPLIER = 1,			-- Used for levy penalty calculation for being over vassal limit.
@@ -494,6 +493,12 @@ NCharacter = {
 	NOMINATE_CROWN_BISHOP_PIETY_COST = 15, 				-- OBSOLETE
 	NOMINATE_CROWN_BISHOP_REL_AUTHORITY_CHANGE = -0.01, -- OBSOLETE
 	WRONG_GOV_FORM_TAX_MOD = -0.75,
+	WRONG_GOV_FORM_LEVY_MOD = -0.75,
+	TRIBAL_WRONG_RELIGION_REFORM_MOD = -0.10,
+	TRIBAL_WRONG_RELIGION_MOD = -0.15,
+	TRIBAL_WRONG_RELIGION_GROUP_MOD = -0.25,
+	TRIBAL_WRONG_CULTURE_MOD = -0.15,
+	TRIBAL_WRONG_CULTURE_GROUP_MOD = -0.25,
 	CHANGE_SUCC_LAW_YEARS = 10,						-- Rulers must have reigned this long before they can change succession laws
 	CHANGE_AMBITION_YEARS = 3,						-- Delay between being able to pick a new ambition of plot after cancelling
 	PRESTIGE_FROM_DYNASTY_ON_BIRTH_DIV = 50,		-- Newly born characters get the dynasty prestige of their mother and father divided by this as their starting prestige --v12 increased from 10 to 50
@@ -733,7 +738,7 @@ NEconomy = {
 	PATRICIAN_GOLD_TO_MONTHLY_PRESTIGE = 0.0005,	-- Prestige that Patricians get each month from their treasury (CFixedPoint64 to support such small numbers)
 	PATRICIAN_CITY_TAX_MULT = 0.5,					-- Patricians don't pay normal City Tax to their liege... (CFixedPoint64) v12 reduced to 33.3% v12c reverted to 50%
 	OVER_MAX_DEMESNE_TAX_PENALTY = 0.25,			-- Percent penalty per county over the limit
-	TAX_TO_LOOT_MULTIPLIER = 1,					-- Lootable gold per tax  v12 reduced from 100% to 50% to deemphasize looting for gold v14 reverted to vanilla 
+	TAX_TO_LOOT_MULTIPLIER = 1.0,					-- Lootable gold per tax  v12 reduced from 100% to 50% to deemphasize looting for gold v14 reverted to vanilla 
 	FORT_LOOT_DEFENCE_MULTIPLIER = 0.25,				-- Loot protected gold per fortlevel v12 reduced from 4 to 0.5 to make raiding easier v12(exp) to 0.2 v14 tweaked
 	LOOTABLE_GOLD_REGROWTH = 0.05,					-- Percent of max lootable gold that regrows every month  v12 reduced from 2.5% to 1% to deemphasize "farming" v14 changed approach to double of vanilla to make it recover faster
 	LOOT_PERCENT_PER_LOOTTICK = 0.07,				-- Percent of max lootable gold that is looted each loot tick v12 reduced from 4% to 1% (previously 4% per 4 days) v14 increased to 7% per week (experiment in lag reduction)
@@ -742,7 +747,7 @@ NEconomy = {
 	LOOT_PRESTIGE_MULT = 1.25,						-- Whenever you gain loot you also get prestige related to the loot v12 buffed by 50% to emphasize authority focus of raiding v14 reduced buff to 25% for a while to compensate for increased raiding rewards
 	LOOT_EVERY_X_DAYS = 7,							-- Loot every this many days v12 halved from 4 to 1 v14 increased to a week (experimental lag reduction)
 	LOOT_IDEAL_MIN_TROOPS = 100,					-- Minimum troops for maximum loot, less than this scales down the amount looted --v12 reduced from 500 to 100 to reflect smaller LI sizes
-	BUILDING_COST_MULT = -0.1,						-- Increases build cost of all buildings --v12 properly implemented the 50% discount v12a-temp: removed discount to see if it will help alleviate slowdown v12b implemented a 10% discount
+	BUILDING_COST_MULT = 0.1,						-- Increases build cost of all buildings --v12 properly implemented the 50% discount v12a-temp: removed discount to see if it will help alleviate slowdown v12b implemented a 10% discount
 },
 
 NDecadence = {
@@ -1000,6 +1005,7 @@ NMilitary = {
 },
 
 NTechnology = {
+	DONT_EXECUTE_TECH_BEFORE = 1066,				-- Set this to your earliest starting year
 	POINTS_PER_ATTRIBUTE = 0.015,				-- v12 decreased from 0.04 to 0.015 to slow down tech 
 
 	BASE_NEIGHBOUR_SPREAD_BONUS = 0.03, 		-- bonus for each neighbour with the tech
@@ -1017,41 +1023,6 @@ NTechnology = {
 	
 	PAGAN_HOME_ATTRITION_REMOVAL_LEVEL = 4.0,
 	
-	-- Used to determine tech levels when starting a new game
-	
-	START_MIL_CATHOLIC  = 0.1,
-	START_ECO_CATHOLIC  = 0.1,
-	START_CUL_CATHOLIC  = 0.1,
-	END_MIL_CATHOLIC    = 5.0,
-	END_ECO_CATHOLIC    = 5.0,
-	END_CUL_CATHOLIC    = 5.0,
-	END_REN_CLOSE       = 7.0, -- Tech level at the center of the renaissance
-	END_REN_FAR         = 6.0, -- Tech level on the fringe of the renaissance
-	REN_PROVINCE        = 328, -- Province where the Renaissance is centered
-	START_MIL_MUSLIM    = 0.1,
-	START_ECO_MUSLIM    = 0.1,
-	START_CUL_MUSLIM    = 0.1,
-	END_MIL_MUSLIM      = 4.5,
-	END_ECO_MUSLIM      = 4.5,
-	END_CUL_MUSLIM      = 4.5,
-	START_MIL_INDIAN    = 0.1,
-	START_ECO_INDIAN    = 0.1,
-	START_CUL_INDIAN    = 0.1,
-	END_MIL_INDIAN   		= 4.0,
-	END_ECO_INDIAN    	= 4.0,
-	END_CUL_INDIAN    	= 4.0,
-	START_MIL_OTHER     = 0.1,
-	START_ECO_OTHER     = 0.1,
-	START_CUL_OTHER     = 0.1,
-	END_MIL_OTHER       = 3.5,
-	END_ECO_OTHER       = 3.5,
-	END_CUL_OTHER       = 3.5,
-	START_MIL_BYZANTIUM = 0.2,
-	START_ECO_BYZANTIUM = 0.2,
-	START_CUL_BYZANTIUM = 0.2,
-	END_MIL_BYZANTIUM   = 4.5,
-	END_ECO_BYZANTIUM   = 4.5,
-	END_CUL_BYZANTIUM   = 4.5
 },  
 
 NDisease = {
