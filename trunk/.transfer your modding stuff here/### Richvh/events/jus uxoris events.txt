@@ -1,0 +1,172 @@
+namespace = jus_uxoris
+#on_death event for usurping husband - no sons by usurped wife
+character_event = {
+	id = jus_uxoris.1
+	desc = EVTDESCju.1
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_character_flag = usurped_my_wife
+		any_spouse = {
+			has_character_flag = usurped_by_husband
+			NOT = {
+				any_child = {
+					father = {
+						character = ROOT
+					}
+					is_female = no
+					is_alive = yes
+				}
+			}
+			any_claim = {
+				has_holder = yes
+				holder = {
+					character = ROOT
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		clr_character_flag = usurped_my_wife
+		any_spouse = {
+			limit = {
+				has_character_flag = usurped_by_husband
+			}
+			clr_character_flag = usurped_by_husband
+			any_claim = {
+				limit = {
+					has_holder = yes
+					holder_scope = {
+						character = ROOT
+					}
+					PREV = {
+						has_strong_claim = PREV
+					}
+				}
+				gain_title_plus_barony_if_unlanded = PREV
+				character_event = {
+					id = jus_uxoris.2		#Notify wife
+				}
+			}
+			ROOT = {
+				any_vassal = {
+					limit = {
+						has_character_flag = usurped_by_liege_husband
+					}
+					set_defacto_liege = PREVPREV
+					clr_character_flag = usurped_by_liege_husband
+					character_event = {
+						id = jus_uxoris.3	#Notify vassal
+					}
+				}
+			}
+			any_vassal = {
+				limit = {
+					has_character_flag = usurped_by_liege_husband
+				}
+				clr_character_flag = usurped_by_liege_husband
+				character_event = {
+					id = jus_uxoris.3		$Notify vassal
+				}
+			}
+		}
+	}
+	option = {
+		name = EVTOPTAju.1
+	}
+}
+
+#Notification event - wife has titles returned
+character_event = {
+	id = jus_uxoris.2
+	desc = EVTDESCju.2
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAju.2
+	}
+}
+
+#Notification event - wife has had titles returned (vassal)
+character_event = {
+	id = jus_uxoris.3
+	desc = EVTDESCju.3
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAju.3
+	}
+}
+
+#on_death event - usurped wife dies with no living sons by usurping husband
+character_event = {
+	id = jus_uxoris.4
+	desc = EVTDESCju.4
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_character_flag = usurped_by_husband
+		any_spouse = {
+			has_character_flag = usurped_my_wife
+			NOT = {
+				any_child = {
+					is_female = no
+					is_alive = yes
+					mother = {
+						character = ROOT
+					}
+				}
+			}
+			ROOT = {
+				any_claim = {
+					has_holder = yes
+					holder_scope = {
+						character = PREVPREVPREV
+					}
+				}
+			}
+		}
+	}
+	immediate = {
+		clr_character_flag = usurped_by_husband
+		any_claim = {
+			limit = {
+				has_holder = yes
+				ROOT = {
+					has_strong_claim = PREV
+				}
+				holder_scope = {
+					any_spouse = {
+						character = ROOT
+					}
+				}
+			}
+			gain_title_plus_barony_if_unlanded = ROOT
+		}
+		any_spouse = {
+			limit = {
+				has_character_flag = usurped_my_wife
+			}
+			clr_character_flag = usurped_my_wife
+			any_vassal = {
+				limit = {
+					has_character_flag = usurped_by_liege_husband
+				}
+				clr_character_flag = usurped_by_liege_husband
+				set_defacto_liege = ROOT
+			}
+			set_defacto_liege = ROOT
+		}
+	}
+	option = {
+		
+			
