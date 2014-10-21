@@ -4,190 +4,233 @@ decisions = {
 		potential = {
 			is_female = no
 			is_feudal = yes
+			is_patrician = no
+			demesne_size = 1
 			prisoner = no
 			is_primary_war_attacker = no
 			is_primary_war_defender = no
-			NOT = { has_character_modifier = failed_to_usurp_spouse }
-			NOT = { has_character_flag = usurped_my_wife }
-			OR = {
-				spouse = { capital_scope = { culture_group = ROOT } }
-				spouse = { culture_group = ROOT }
-				spouse = {
-					spouse = {
-						any_realm_province = {
-							culture_group = PREVPREVPREV
+			NOT = {
+				has_character_modifier = failed_to_usurp_spouse
+				has_character_flag = usurped_my_wife
+			}
+			any_spouse = {
+				OR = {
+					NOT = {
+						any_liege = {
+							has_landed_title = e_byzantium
 						}
-					}
-				}
-				spouse = {
-					spouse = {
-						any_demesne_province = {
-							any_neighbor_province = {
-								culture_group = PREVPREVPREVPREV
+						ROOT = {
+							any_liege = {
+								has_landed_title = e_byzantium
 							}
 						}
 					}
-				}		
-				trait = ambitious
-				trait = gregarious
-			}						
-			spouse = {
-				is_primary_war_attacker = no
-				is_primary_war_defender = no				
-				primary_title = { higher_tier_than = baron }
-				NOT = { has_law = true_cognatic_succession }
-				NOT = { has_law = enatic_cognatic_succession }
-				NOT = { has_law = enatic_succession }
-				NOT = { dynasty = ROOT }
-				is_pregnant = no # So as to not screw up potential claims
-				OR = {
-					ai = yes
-					primary_title = { higher_tier_than = count }
-				}
-				NOT = {
-					any_liege = {
-						is_close_relative = PREV
-						NOT = {
-							is_close_relative = ROOT
+					AND = {
+						any_liege = {
+							has_landed_title = e_byzantium
+						}
+						ROOT = {
+							any_liege = {
+								has_landed_title = e_byzantium
+							} 
 						}
 					}
 				}
+				OR = {
+					NOT = {
+						any_liege = {
+							has_landed_title = e_hre
+						}
+						ROOT = {
+							any_liege = {
+								has_landed_title = e_hre
+							}
+						}
+					}
+					AND = {
+						any_liege = {
+							has_landed_title = e_hre
+						} 
+						ROOT = {
+							any_liege = {
+								has_landed_title = e_hre
+							}
+						}
+					}
+				}
+				OR = {
+					capital_scope = {
+						culture_group = ROOT
+						religion_group = ROOT
+					}
+					culture_group = ROOT
+					religion_group = ROOT
+					ROOT = {
+						OR = {
+							any_realm_province = {
+								culture_group = PREVPREV
+							}
+							any_demesne_province = {
+								any_neighbor_province = {
+									culture_group = PREVPREVPREV
+								}
+							}
+							trait = ambitious
+							trait = gregarious
+						}
+					}
+				}
+				is_primary_war_attacker = no
+				is_primary_war_defender = no				
+				primary_title = {
+					higher_tier_than = baron
+				}
+				NOT = {
+					has_law = true_cognatic_succession
+					has_law = enatic_cognatic_succession
+					has_law = enatic_succession
+					dynasty = ROOT
+				}
+				is_pregnant = no # So as to not screw up potential claims
 			}
 		}
 		
 		allow = {
 			demesne_efficiency = 1.0
-			NOT = { trait = inbred }
-#			NOT = { trait = idiot }
-#			NOT = { trait = dumb }
-			NOT = { trait = weak }
-			NOT = { trait = incapable }
-			NOT = { trait = slow }
-			NOT = { trait = bastard }
-			NOT = { trait = stressed }
-			NOT = { trait = depressed }
-			NOT = { trait = imbecile }
-			NOT = { health_traits = 1 }
-			NOT = { trait = content }
-			NOT = { trait = celibate }
-			NOT = { trait = naive_appeaser }
-			NOT = { trait = detached_priest }
 			NOT = {
-				AND = {
-					NOT = { has_law = agnatic_succession }
-					OR = {
-						AND = {
+				trait = inbred
+				trait = incapable
+				trait = slow
+				trait = weak
+				trait = bastard
+				trait = stressed
+				trait = depressed
+				trait = imbecile
+				health_traits = 1
+				trait = content
+				trait = celibate
+				trait = naive_appeaser
+				trait = detached_priest
+			}
+			any_spouse = {			
+				is_female = yes
+				is_ruler = yes
+				is_feudal = yes
+				is_patrician = no
+				OR = {
+					ROOT = {
+						has_law = agnatic_succession
+					}
+					AND = {
+						trait = proud
+						ROOT = {
 							trait = humble
-							spouse = { trait = proud }
 						}
-						AND = {
+					}
+					AND = {
+						trait = brave
+						ROOT = {
 							trait = craven
-							spouse = { trait = brave }
 						}
-						AND = {
+					}
+					AND = {
+						trait = diligent
+						ROOT = {
 							trait = slothful
-							spouse = { trait = diligent }
 						}
-						AND = {
+					}
+					AND = {
+						trait = gregarious
+						ROOT = {
 							trait = shy
-							spouse = { trait = gregarious }
 						}
 					}
 				}
-			}	
-			spouse = {			
-				is_female = yes
-				primary_title = { higher_tier_than = baron }
 				OR = {
 					AND = {
-						NOT = { trait = grey_eminence }
-						OR = {
-							NOT = { trait = ambitious }
-							spouse = { trait = ambitious } 
-						}						
+						NOT = {
+							trait = grey_eminence
+						}
 						OR = {
 							NOT = {
-#								OR = {
-#									trait = brilliant
-									trait = genius
-#								}
+								trait = ambitious
 							}
-							spouse = {
-#								OR = {
-#									trait = brilliant
-									trait = genius
-#								}
-							} 
+							ROOT = {
+								trait = ambitious
+							}
+						}
+						OR = {
+							NOT = {
+								trait = genius
+							}
+							ROOT = {
+								trait = genius
+							}
 						}							
 					}
-					OR = {
-						trait = infirm
-#						trait = idiot
-#						trait = dumb
-						trait = weak
-						trait = incapable
-						trait = depressed
-						trait = blinded
-						trait = content
-						trait = drunkard
-						trait = maimed
-						trait = lunatic
-						trait = possessed
-						trait = syphilitic
-						trait = leper
-						trait = imbecile
-						trait = inbred
-						trait = slow
-						trait = trusting
-						AND = {
-							trait = shy
-							trait = craven
-						}
-						AND = {
-							trait = shy
-							trait = humble
-						}
-						AND = {
-							trait = craven
-							trait = humble
-						}
+				}
+				OR = {
+					trait = infirm
+					trait = weak
+					trait = incapable
+					trait = depressed
+					trait = blinded
+					trait = content
+					trait = drunkard
+					trait = maimed
+					trait = lunatic
+					trait = possessed
+					trait = syphilitic
+					trait = leper
+					trait = imbecile
+					trait = inbred
+					trait = slow
+					trait = trusting
+					AND = {
+						trait = shy
+						trait = craven
 					}
-				}	
-				NOT = {
-					AND = { 
-						NOT = { has_law = agnatic_succession }
-						OR = {
-							AND = {
-								trait = diligent
-								trait = brave
-								NOT = { trait = humble }
-								NOT = { trait = content }
-								NOT = { trait = trusting }
-								martial = 8
-								intrigue = 8
-								}
-							AND = {
-								trait = diligent
-								trait = proud
-								NOT = { trait = craven }
-								NOT = { trait = content }
-								NOT = { trait = trusting }						
-								martial = 8
-								intrigue = 8
-								}
-							AND = {
-								trait = brave
-								trait = proud
-								NOT = { trait = slothful }
-								NOT = { trait = humble }
-								NOT = { trait = trusting }						
-								martial = 8
-								intrigue = 8
-							}	
-						}
+					AND = {
+						trait = shy
+						trait = humble
+					}
+					AND = {
+						trait = craven
+						trait = humble
 					}
 				}
-			}	
+				NOT = {
+					martial = 8
+					intrigue = 8
+					AND = {
+						trait = diligent
+						trait = brave
+						NOT = {
+							trait = humble
+							trait = content
+							trait = trusting
+						}
+					}
+					AND = {
+						trait = diligent
+						trait = proud
+						NOT = {
+							trait = craven
+							trait = content
+							trait = trusting
+						}
+					}
+					AND = {
+						trait = brave
+						trait = proud
+						NOT = {
+							trait = slothful
+							trait = humble
+							trait = trusting
+						}						
+					}	
+				}
+			}
 			prestige = 1
 		}
 			
@@ -198,236 +241,341 @@ decisions = {
 				}
 			}	
 		}
-			
+		
 		ai_will_do = {
 			factor = 20
 		}
 	}
 	
 	
-usurp_husband = {
+	usurp_husband = {
 		is_high_prio = yes
 		potential = {
 			has_character_flag = usurped_by_husband
 			is_female = yes
 			is_alive = yes
 			prisoner = no
-			NOT = { has_law = agnatic_succession }
-			spouse = {
+			NOT = {
+				has_law = agnatic_succession
+			}
+			any_spouse = {
 				has_character_flag = usurped_my_wife
-				NOT = { dynasty = ROOT }
-				NOT = { has_law = agnatic_succession }	
+				NOT = {
+					dynasty = ROOT
+				}
+				NOT = {
+					has_law = agnatic_succession
 				}
 			}
+		}
 		
 		allow = {
-			NOT = { trait = inbred }
-#			NOT = { trait = idiot }
-#			NOT = { trait = dumb }
-			NOT = { trait = weak }
-			NOT = { trait = incapable }
-			NOT = { trait = slow }
-			NOT = { trait = stressed }
-			NOT = { trait = depressed }
-			NOT = { trait = imbecile }
-			NOT = { health_traits = 1 }
-			NOT = { trait = content }
-			NOT = { trait = celibate }
-			NOT = { trait = craven }
-			NOT = { trait = trusting }
-			NOT = { trait = naive_appeaser }
-			NOT = { trait = indulgent_wastrel }
-			NOT = { trait = amateurish_plotter }
-			NOT = { trait = detached_priest }
-			NOT = {	
+			NOT = {
+				trait = inbred
+				trait = weak
+				trait = incapable
+				trait = slow
+				trait = stressed
+				trait = depressed
+				trait = imbecile
+				health_traits = 1
+				trait = content
+				trait = celibate
+				trait = craven
+				trait = trusting
+				trait = naive_appeaser
+				trait = indulgent_wastrel
+				trait = amateurish_plotter
+				trait = detached_priest
 				any_child = {
-						is_alive = yes
-						is_female = no
-						father = { spouse = { character = ROOT } }  
-							}
-						}
-						
-				spouse = { 
-				NOT = { reverse_opinion = { who = ROOT value = 10 } }
-					OR = { 
-						trait = infirm
-						trait = incapable
-						prisoner = yes
-						AND = {
-							OR = {
-								trait = depressed
-								trait = pneumonic 
-								}
-							spouse = { trait = ambitious } }
-						}
-					NOT = { dynasty = ROOT }					
-					has_character_flag = usurped_my_wife
-					} 
-					
-				any_claim = {
-					has_holder = yes
-					holder_scope = {
-						spouse = { character = root }
-						}
-					}	
-				}
-			
-	effect = {
-			ROOT = {
-				any_claim = {
-					limit = {
-					has_holder = yes
-					ROOT = {
-						has_strong_claim = PREV }
-					holder_scope = {
-						spouse = { 
+					is_alive = yes
+					is_female = no
+					father = {
+						any_spouse = {
 							character = ROOT
-								} 
+						}
+					}  
+				}
+			}
+						
+			any_spouse = {
+				has_character_flag = usurped_my_wife
+				NOT = {
+					reverse_opinion = {
+						who = ROOT value = 10
+					}
+				}
+				OR = { 
+					trait = infirm
+					trait = incapable
+					prisoner = yes
+					AND = {
+						OR = {
+							trait = depressed
+							trait = pneumonic
+							trait = leper
+							trait = syphilitic
+							trait = lunatic
+							trait = possessed
+						}
+						ROOT = {
+							trait = ambitious
+						}
+					}
+					NOT = { dynasty = ROOT }					
+				} 
+				
+				ROOT = {
+					any_claim = {
+						has_holder = yes
+						ROOT = {
+							has_strong_claim = PREV
+						}
+						holder_scope = {
+							character = PREVPREVPREV
+						}
+					}
+				}
+			}
+		}
+			
+		effect = {
+			any_spouse = {
+				limit = {
+					has_character_flag = usurped_my_wife
+				}
+				ROOT = {
+					any_claim = {
+						limit = {
+							has_holder = yes
+							ROOT = {
+								has_strong_claim = PREV
+							}
+							holder_scope = {
+								character = PREVPREVPREV
 							} 
-					} 
-					gain_title_plus_barony_if_unlanded = ROOT
+						} 
+						gain_title_plus_barony_if_unlanded = ROOT
+					}
+				}
+				clr_character_flag = usurped_my_wife
+				character_event = {
+					id = DAMO.93
 				}
 			}
 			clr_character_flag = usurped_by_husband
-			spouse = { clr_character_flag = usurped_my_wife }
-			spouse = {
-				character_event = { id = DAMO.93}
-				}
-	}
-		
-	ai_will_do = {
-		factor = 15
+		}
+		ai_will_do = {
+			factor = 15
 		}
 	}	
 	
-usurp_wusband = {
-	is_high_prio = yes
-	
-	potential = {
-		is_female = yes
-		has_character_flag = usurped_by_husband
-		spouse = { has_character_flag = usurped_my_wife }
-		}
-	
-	allow = {
-		ROOT = {
-				has_character_flag = usurped_by_husband 
-				any_claim = {
-					has_holder = yes
-					holder_scope = { 
-						mother = { NOT = { character = ROOT } }
-						NOT = { has_character_flag = usurped_my_wife }
-						any_liege = {
-							has_character_flag = usurped_my_wife
-							spouse = {
-								character = ROOT
-								has_strong_claim = PREVPREVPREV
-								} 
-							NOT = { mother = { character = ROOT } }
-						}		
-					} 
-				}
-			}
-		}	
-		
-	effect = {
-		ROOT = {
-				any_claim = {
-					limit = {
-					has_holder = yes
-					holder_scope = { 
-						mother = { NOT = { character = ROOT } }
-						NOT = { has_character_flag = usurped_my_wife }
-						any_liege = {
-							has_character_flag = usurped_my_wife
-							spouse = {
-								character = ROOT
-								has_strong_claim = PREVPREVPREV
-								} 
-							NOT = { mother = { character = ROOT } }
-						}		
-					} 
-				}
-				gain_title_plus_barony_if_unlanded = ROOT
-			}
-		}
-	}	
-	
-ai_will_do = {
-		factor = 99
-		}	
-	}
-	
-ai_divorce = {
+	usurp_wusband = {
 		is_high_prio = yes
 		
+		potential = {
+			is_female = yes
+			has_character_flag = usurped_by_husband
+			any_spouse = {
+				has_character_flag = usurped_my_wife
+			}
+		}
+	
+		allow = {
+			any_spouse = {
+				has_character_flag = usurped_my_wife 
+				ROOT = {
+					any_claim = {
+						has_holder = yes
+						ROOT = {
+							has_strong_claim = PREV
+						}
+						holder_scope = { 
+							father = {
+								character = PREVPREVPREVPREV
+							}
+							mother = {
+								NOT = {
+									character = ROOT
+								}
+							}
+							any_liege = {
+								character = PREVPREVPREVPREV
+							}
+						}		
+					} 
+				}
+			}
+		}	
+		
+		effect = {
+			any_spouse = {
+				limit = {
+					has_character_flag = usurped_my_wife
+				}
+				ROOT = {
+					any_claim = {
+						limit = {
+							has_holder = yes
+							ROOT = {
+								has_strong_claim = PREV
+							}
+							holder_scope = { 
+								father = {
+									character = PREVPREVPREVPREV
+								}
+								mother = {
+									NOT = {
+										character = ROOT
+									}
+								}
+								any_liege = {
+									character = PREVPREVPREV
+								} 
+							}		
+						} 
+						gain_title_plus_barony_if_unlanded = ROOT
+					}
+				}
+			}
+		}
+	
+		ai_will_do = {
+			factor = 99
+		}	
+	}
+	
+	ai_divorce = {
 		potential = {
 			ai = yes
 			is_female = yes
 			is_ruler = yes
-			NOT = { has_character_flag = usurped_by_husband }
-			spouse = { 
-				NOT = { has_character_flag = usurped_my_wife } 
-				NOT = { dynasty = ROOT }
-				}
+			NOT = {
+				has_character_flag = usurped_by_husband
 			}
+			any_spouse = { 
+				NOT = {
+					has_character_flag = usurped_my_wife
+				} 
+				NOT = { dynasty = ROOT }
+			}
+		}
 			
 		allow = {
-			NOT = { health_traits = 1 }
-			NOT = { trait = craven }
-			NOT = { trait = content }
-			NOT = { trait = incapable }
-			NOT = { trait = infirm }
-			NOT = {	
+			NOT = {
+				health_traits = 1
+				trait = craven
+				trait = content
+				trait = incapable
+				trait = infirm
 				any_child = {
-						is_alive = yes
-						is_female = no
-						father = { spouse = { character = ROOT } }  
+					is_alive = yes
+					is_female = no
+					father = {
+						any_spouse = {
+							character = ROOT
 						}
 					}
-			OR  = {
-				spouse = { 
-					has_character_modifier = failed_to_usurp_spouse 
-					NOT = { reverse_opinion = { who = ROOT value = 0 } }
+				}
+			}
+			spouse = {
+				OR = {
+					AND = { 
+						has_character_modifier = failed_to_usurp_spouse 
+						NOT = {
+							reverse_opinion = {
+								who = ROOT
+								value = 0
+							}
+						}
 					}
-				spouse = {
-					spouse = { has_lover = no }
-					is_ruler = yes
-					lower_tier_than = ROOT
-					NOT = { reverse_opinion = { who = ROOT value = -50 } }
+					AND = {
+						ROOT = {
+							has_lover = no
+						}
+						is_ruler = yes
+						OR = {
+							AND = {
+								lower_tier_than = ROOT
+								NOT = {
+									reverse_opinion = {
+										who = ROOT
+										value = -50
+									} 
+								}
+							}
+							AND = {
+								tier = ROOT
+								NOT = {
+									reverse_opinion = {
+										who = ROOT
+										value = -75
+									}
+								}
+							}
+							AND = {
+								higher_tier_than = ROOT
+								NOT = {
+									reverse_opinion = {
+										who = ROOT
+										value = -99
+									}
+								}
+							}
+						}
 					}
-				spouse = {
-					spouse = { has_lover = no }				
-					is_ruler = yes
-					higher_tier_than = ROOT
-					NOT = { reverse_opinion = { who = ROOT value = -100 } }
-					}
-				spouse = {
-					spouse = { has_lover = yes }
-					is_ruler = yes
-					lower_tier_than = ROOT
-					NOT = { reverse_opinion = { who = ROOT value = -25 } }
-					}
-				spouse = {
-					spouse = { has_lover = yes }				
-					is_ruler = yes
-					higher_tier_than = ROOT
-					NOT = { reverse_opinion = { who = ROOT value = -75 } }
+					AND = {
+						ROOT = {
+							has_lover = yes
+						}
+						is_ruler = yes
+						OR = {
+							AND = {
+								lower_tier_than = ROOT
+								NOT = {
+									reverse_opinion = {
+										who = ROOT
+										value = -25
+									}
+								}
+							}
+							AND = {
+								tier = ROOT
+								NOT = {
+									reverse_opinion = {
+										who = ROOT
+										value = -50
+									}
+								}
+							}
+							AND = {
+								tier = ROOT
+								NOT = {
+									reverse_opinion = {
+										who = ROOT
+										value = -75
+									}
+								}
+							}
+						}
 					}					
 				}
 			}
+		}
 				
 		effect = { 
 			piety = -100
 			prestige = -100
 			remove_spouse = ROOT
 			spouse = {
-				character_event = { id = DAMO.94}
+				character_event = {
+					id = DAMO.94
 				}
 			}
+		}
 			
-	ai_will_do = {
-		factor = 20
+		ai_will_do = {
+			factor = 20
 		}
 	}	
 }			
