@@ -26,7 +26,7 @@ faction_succ_seniority = {
 		is_landed = yes
 		is_adult = yes
 		NOT = { trait = incapable }
-		liege = { 
+		liege = {
 			is_feudal = yes 
 			OR = {
 				year = 1350
@@ -109,6 +109,7 @@ faction_succ_seniority = {
 				}
 			}
 		}
+		is_vice_royalty = no
 	}
 	
 	# Faction member scope (ROOT = joiner, FROM = target)
@@ -684,6 +685,7 @@ faction_succ_primogeniture = {
 		}
 		
 		NOT = { has_character_modifier = faction_succ_primogeniture_ultimatum_timer }
+		is_vice_royalty = no
 	}
 	
 	# Target scope
@@ -1256,6 +1258,7 @@ faction_succ_gavelkind = {
 		}
 		
 		NOT = { has_character_modifier = faction_succ_gavelkind_ultimatum_timer }
+		is_vice_royalty = no
 	}
 	
 	# Target scope
@@ -1855,6 +1858,7 @@ faction_succ_feudal_elective = {
 		}
 		
 		NOT = { has_character_modifier = faction_succ_feudal_elective_ultimatum_timer }
+		is_vice_royalty = no
 	}
 	
 	# Target scope
@@ -2402,8 +2406,11 @@ faction_succ_feudal_elective = {
 faction_lower_crown_authority = {
 	type = liege_titles
 	
+	warning_level = 0.7 # At this level of faction power we give player an alert. Set to 0 for no alerts.
+	
 	# Plotter scope
 	potential = {
+		prisoner = no
 		is_ruler = yes
 		independent = no
 		is_landed = yes
@@ -2461,6 +2468,11 @@ faction_lower_crown_authority = {
 				NOT = { culture = ROOT }
 				NOT = { religion = ROOT }
 			}
+			NOT = {
+				any_demesne_title = {
+					temporary = yes
+				}
+			}			
 		}
 		primary_title = { higher_tier_than = BARON }
 		
@@ -2498,6 +2510,18 @@ faction_lower_crown_authority = {
 			}
 		}
 	}
+	
+	# Faction member scope (ROOT = joiner, FROM = target)
+	allow_join = {
+		ROOT = {
+			is_ruler = yes
+			independent = no
+			is_landed = yes
+			is_adult = yes
+			NOT = { trait = incapable }
+			prisoner = no
+		}
+	}		
 	
 	# AI creation weight
 	chance = {
@@ -3467,14 +3491,15 @@ faction_independence = {
 		is_landed = yes
 		is_adult = yes
 		
-		OR = {
-			ai = no
-			is_feudal = yes
-			higher_tier_than = count
-		}
 		NOT = { trait = incapable }
 		
 		higher_tier_than = BARON
+		OR = {
+			ai = yes
+			is_feudal = yes
+			is_tribal = yes
+			higher_tier_than = count
+		}
 		
 		liege = {
 			independent = yes
@@ -3487,7 +3512,7 @@ faction_independence = {
 			# Mongols and Aztecs do not have independence revolt problems before 1350
 			OR = {
 				year = 1350
-				primary_title = { is_tribal_type_title = no }
+				primary_title = { is_tribal = no }
 				NOT = { culture = ROOT }
 				NOT = { religion = ROOT }
 				NOT = {
@@ -3497,6 +3522,18 @@ faction_independence = {
 #					}
 				}
 			}			
+			# Not allowed to start factions like this if our capital borders the liege's capital
+			NOT = {
+				capital_scope = {
+					any_neighbor_province = {
+						ROOT = {
+							capital_scope = {
+								province = PREVPREV
+							}
+						}
+					}
+				}
+			}
 			NOT = {
 				any_demesne_title = {
 					temporary = yes
@@ -3716,6 +3753,16 @@ faction_independence = {
 			factor = 0.5
 			opinion = { who = LIEGE value = 50 } 
 		}
+		modifier = {
+			factor = 0
+			opinion = { who = LIEGE value = 40 } 
+			NOT = {	
+				has_opinion_modifier = {
+					who = FROM
+					modifier = opinion_coerced_into_joining_faction
+				}
+			}			
+		}
 		
 		modifier = {
 			factor = 1.5
@@ -3802,6 +3849,12 @@ faction_independence = {
 			factor = 4.0
 			trait = ambitious
 		}
+		modifier = {
+			factor = 1.5
+			primary_title = {
+				is_vice_royalty = yes
+			}
+		}
 		#People don't like being part of Empires
 		modifier = {
 			factor = 1.5
@@ -3874,6 +3927,7 @@ faction_independence = {
 			OR = {
 				prisoner = yes
 				trait = incapable
+				is_adult = no
 				is_landed = no
 				has_landed_title = k_orthodox
 				preparing_invasion = yes
@@ -4031,6 +4085,23 @@ faction_independence = {
 		}
 		
 		modifier = {
+			factor = 0
+			
+			# Won't join this type of faction if our capital borders the liege's capital
+			liege = {
+				capital_scope = {
+					any_neighbor_province = {
+						ROOT = {
+							capital_scope = {
+								province = PREVPREV
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		modifier = {
 			factor = 10000
 			has_opinion_modifier = {
 				who = FROM
@@ -4094,7 +4165,16 @@ faction_independence = {
 			factor = 0.5
 			opinion = { who = LIEGE value = 50 } 
 		}
-		
+		modifier = {
+			factor = 0
+			opinion = { who = LIEGE value = 40 } 
+			NOT = {	
+				has_opinion_modifier = {
+					who = FROM
+					modifier = opinion_coerced_into_joining_faction
+				}
+			}			
+		}
 		modifier = {
 			factor = 1.5
 			NOT = { opinion = { who = LIEGE value = 0 } } 
@@ -4317,11 +4397,14 @@ faction_claimant = {
 		is_adult = yes
 		NOT = { trait = incapable }
 		liege = {
-			is_feudal = yes
+			OR = {
+				is_feudal = yes
+				is_tribal = yes
+			}
 			OR = {
 				# Hordes should have less problems with this type of faction until ca 1350
 				year = 1350
-				primary_title = { is_tribal_type_title = no }
+				primary_title = { is_tribal = no }
 				NOT = { culture = ROOT }
 				NOT = { religion = ROOT }
 			}		
