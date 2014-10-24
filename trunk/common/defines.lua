@@ -888,6 +888,7 @@ NMilitary = {
 	LIEGE_LEVY_COST_MULTIPLIER = 0.25,				-- The vassal will pay regular maintenance * this for the liege levy
 	LIEGE_LEVY_SUBUNIT_SIZE_CUTOFF = 3000,			-- The max size of each liege levy subunit.
 	LIEGE_LEVY_SUBUNIT_SIZE_MIN = 500,				-- The min size before liege levy subunits start splitting.
+	LIEGE_LEVY_VICE_ROYALTY_MULTIPLIER = 0.8,		-- Liege levy multiplier for viceroy vassals
 	-- v14 significant rebalance. Graphical Factor also now dependent on relative "worth"
 	LIGHT_INFANTRY_MORALE = 3,
 	LIGHT_INFANTRY_MAINTENANCE = 1,
@@ -1092,6 +1093,7 @@ NAI =
 	TRIBAL_REPUBLIC_THRIFTY_CLERK_MODIFIER = 10,			-- How much the thrifty clerk trait counts toward the threshold above
 	TRIBAL_REPUBLIC_FORTUNE_BUILDER_MODIFIER = 15,			-- How much the fortune builder trait counts toward the threshold above
 	TRIBAL_REPUBLIC_MIDAS_TOUCHED_MODIFIER = 20,			-- How much the midas touched trait counts toward the threshold above
+	TRIBAL_PRESTIGE_CALL_TRESHOLD = -100, 					-- The treshold needed for the AI to start considering answering call to not take the prestige hit
 },
 
 NFrontend = 
@@ -1236,16 +1238,15 @@ NLearningScenario =
 	START_MONTH = 8,
 	START_DAY = 14,
 	START_CHARACTER = 708,
-	FIRST_EVENT = 704,
+	FIRST_EVENT = 107000,
 	HAS_WIFE_EVENT = 107100,
-	ANGRY_VASSAL = 108510,
+	ANGRY_VASSAL = 704,
 	REVOLT_PROVINCE = 192,
 	REVOLT_EVENT = 107201,
 	TOG_REVOLT_EVENT = 107200,
 	COMBAT_EVENT = 107202,
 	AFTER_REVOLT_EVENT = 107250,
 	FABRICATE_CLAIM_EVENT = 913,
-	FABRICATE_CLAIM_CHARACTER = 20842,
 	HAS_CLAIM_EVENT = 107300,
 	WAR_EVENT = 107301,
 	SIEGE_EVENT = 107306,
