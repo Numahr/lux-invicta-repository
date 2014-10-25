@@ -16,44 +16,49 @@ namespace = duel
 # duel.3	Duelist Two Round
 # duel.12	Duelist Two Round (flavour text 2)
 # duel.13	Duelist Two Round (flavour text 3)
-# duel.4	Round Resolution
-# duel.5	Winner Exploits Hole in Defense
-# duel.6	Loser Is Hit
-# duel.7	Determine Outcome
+# duel.4	Round Winner Selection > 5 or 303
+#
+
+# duel.5	Winner Attacks > 6
+# duel.6	Loser Is Hit > 7
+# duel.7	Determine Hit Outcome: wound > 111 or 306 | subdue > 105 or 309 | kill > 201 or 311
 ######################
 # YIELD OUTCOMES
 ######################
-# duel.105	Opponent At Your Mercy!
-# duel.106	Subdued! Yield Y/N?
-# duel.107	Opponent Yields! Accept Y/N?
-# duel.108	Opponent Accepts Your Yield!
-# duel.109	Opponent Refuses Your Yield!
-######################
+# duel.105	Opponent At Your Mercy! > 106
+# duel.106	Subdued! Yield Y/N? > 107 or 112
+# duel.107	Opponent Yields! Accept Y/N? > 108 or 109
+# duel.108	Opponent Accepts Your Yield! > END
+# duel.109	Opponent Refuses Your Yield! > 203, END
+#######################
 # WOUND OUTCOMES
 ######################
-# duel.110	You Roll Aside, But Are Wounded!
-# duel.111	Your Opponent Rolls Aside, But Is Wounded!
-# duel.112  You have wounded your opponent!
+# duel.110	You Roll Aside, But May Be Wounded! > 1 or 107
+# duel.111	Your Opponent Rolls Aside, But Is Wounded! > 110
+# duel.112  You have hit your opponent! > 110
 ######################
 # DEATH OUTCOMES
 ######################
-# duel.201	The final blow!
-# duel.202	Slain!
+# duel.201	The final blow! > 202
+# duel.202	Slain! > 203, END
 # duel.203	Opponent Slain!
 ######################
 # SPECIAL FLAVOR - TOURNEY	
 ######################
-# duel.301	Duelist One Round - Tourney
-# duel.302	Duelist Two Round - Tourney
-# duel.303	Winner Exploits Hole in Defense - Tourney
-# duel.304	Loser Is Hit - Tourney
-# duel.305	Opponent Wounded - Tourney
-# duel.306	Wounded - Tourney
-# duel.309	Opponent Unhorsed - Tourney
-# duel.310	Unhorsed - Tourney
+# duel.301	Duelist One Turn - Tourney > 302
+# duel.302	Duelist Two Turn - Tourney > 4
+# duel.303	Winner Attacks - Tourney > 304
+# duel.304	Loser Is Hit - Tourney > 7
+# duel.306	Wounded - Tourney > 305
+# duel.305	Opponent Wounded - Tourney > 313, END
 # duel.313  Wounded therefore Lose - Tourney
-# duel.311	The final blow! - Tourney
-# duel.312	Slain - Tourney
+# duel.306	Wounded - Tourney > 305
+# duel.309	Opponent Unhorsed - Tourney > 310, END
+# duel.310	Unhorsed - Tourney
+# duel.311	The final blow! - Tourney > 312
+# duel.312	Slain! - Tourney > 314, END
+# duel.313  Wounded therefore Lose - Tourney
+# duel.314	Opponent Slain! - Tourney
 ######################
 # How to include a duel in an event chain:
 # 1. Call an event for the first duelist, that gives them
@@ -99,7 +104,19 @@ character_event = {
 	# Nobody but the actual referee should ever get this
 	trigger = { has_landed_title = e_rebels }
 	
-	option = {
+	option = { # Selection failed - cancel
+		trigger = {
+			OR = {
+				FROMFROM = { is_alive = no }
+				FROM = { is_alive = no }
+				FROMFROM = { prisoner = yes }
+				FROM = { prisoner = yes}
+				FROM = { character = FROMFROM }
+				FROMFROM = { character = FROM }
+				FROM = { has_landed_title = e_rebels }
+				FROMFROM = { has_landed_title = e_rebels }
+			}
+		}
 		# Try to cancel if something broke in the setup/selection
 		if = { #FROMFROM is dead
 			limit = {
@@ -110,6 +127,27 @@ character_event = {
 		if = { #FROM is dead
 			limit = {
 				FROM = { is_alive = no }
+			}
+			FROMFROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT3" } } #cancel! Something broke.
+		}
+		if = { #FROMFROM is prisoner
+			limit = {
+				FROMFROM = { prisoner = yes }
+			}
+			FROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT3" } } #cancel! Something broke.
+		}
+		if = { #FROM is prisoner
+			limit = {
+				FROM = { prisoner = yes }
+			}
+			FROMFROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT3" } } #cancel! Something broke.
+		}
+		if = { #Fighting yourself
+			limit = {
+				OR = {
+					FROM = { character = FROMFROM }
+					FROMFROM = { character = FROM }
+				}
 			}
 			FROMFROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT3" } } #cancel! Something broke.
 		}
@@ -125,35 +163,60 @@ character_event = {
 			}
 			FROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT3" } } #cancel! Something broke.
 		}
+	}
+
+	option = { # Tournament jousting recovery
+		name = "AI_EVENT"
+		trigger = {
+			OR = {
+				AND = {
+					FROMFROM = { has_character_flag = flag_duel_tourney }
+					NOT = { FROM = { has_character_flag = flag_duel_tourney } }
+				}
+				AND = {
+					FROM = { has_character_flag = flag_duel_tourney }
+					NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
+				}
+			}
+		}
+		# Stuff we can probably recover from
 		if = { #FROM is jousting but FROMFROM is not
 			limit = {
 				NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
 				FROM = { has_character_flag = flag_duel_tourney }
 			}
-			FROMFROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT3" } } #cancel! Something broke.
+			FROMFROM = { set_character_flag = flag_duel_tourney	}
+			FROMFROM = { character_event = { id = duel.301 } } #cancel! Something broke.
 		}
 		if = { #FROMFROM is jousting but FROM is not
 			limit = {
 				FROMFROM = { has_character_flag = flag_duel_tourney }
 				NOT = { FROM = { has_character_flag = flag_duel_tourney } }
 			}
-			FROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT3" } } #cancel! Something broke.
+			FROM = { set_character_flag = flag_duel_tourney }
+			FROMFROM = { character_event = { id = duel.301 } } #cancel! Something broke.
 		}
-		#Tournament jousting
+	}
+	option = { # Tournament jousting
+		trigger = {
+			FROMFROM = { has_character_flag = flag_duel_tourney }
+			FROM = { has_character_flag = flag_duel_tourney }
+		}
+		FROMFROM = { character_event = { id = duel.301 } }
+	}
+	option = { # Normal dueling
+		name = "AI_EVENT" # Normal duel (pick flavour text)
+		trigger = {
+			NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
+			NOT = {	FROM = { has_character_flag = flag_duel_tourney } }
+		}
 		if = {
 			limit = {
-				FROMFROM = { has_character_flag = flag_duel_tourney }
-				FROM = { has_character_flag = flag_duel_tourney }
-			}
 			FROMFROM = { character_event = { id = duel.301 } }
 		}
 		# Normal duels
 		if = {
 			limit = {
-				NOT = {
-					FROMFROM = { has_character_flag = flag_duel_tourney }
-					FROM = { has_character_flag = flag_duel_tourney }
-				}
 				OR = {
 					NOT = { FROM = { check_variable = { which = duel_rounds value = 1 } } } #1st round
 					AND = {
@@ -167,10 +230,6 @@ character_event = {
 		}
 		if = {
 			limit = {
-				NOT = {
-					FROMFROM = { has_character_flag = flag_duel_tourney }
-					FROM = { has_character_flag = flag_duel_tourney }
-				}
 				OR = {
 					AND = {
 						FROM = { check_variable = { which = duel_rounds value = 1 } } #2nd round
@@ -186,10 +245,6 @@ character_event = {
 		}
 		if = {
 			limit = {
-				NOT = {
-					FROMFROM = { has_character_flag = flag_duel_tourney }
-					FROM = { has_character_flag = flag_duel_tourney }
-				}
 				OR = {
 					AND = {
 						FROM = { check_variable = { which = duel_rounds value = 2 } } #3rd round
@@ -341,7 +396,10 @@ character_event = {
 	}
 
 	# FROMFROM wins the round
-	option = {
+	option = { # Tourney jousting
+		trigger = {
+			FROMFROM = { has_character_flag = flag_duel_tourney }
+		}
 		ai_chance = {
 			factor = 50
 			
@@ -385,6 +443,18 @@ character_event = {
 			modifier = {
 				factor = 3
 				FROMFROM = { trait = duelist }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = agile }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = perceptive }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = absentminded }
 			}
 			
 			# Martial Skill
@@ -502,22 +572,6 @@ character_event = {
 			
 			# Body Shape Effects
 			modifier = {
-				factor = 1.5
-				FROMFROM = { trait = tall }
-			}
-			modifier = {
-				factor = 1.5
-				FROMFROM = { trait = agile }
-			}
-			modifier = {
-				factor = 1.5
-				FROMFROM = { trait = perceptive }
-			}
-			modifier = {
-				factor = 1.5
-				FROM = { trait = absentminded }
-			}
-			modifier = {
 				factor = 4
 				FROM = { trait = hunchback }
 			}
@@ -528,6 +582,10 @@ character_event = {
 			modifier = {
 				factor = 4
 				FROM = { trait = clubfooted }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = tall }
 			}
 			modifier = {
 				factor = 2
@@ -557,23 +615,236 @@ character_event = {
 				NOT = { FROM = { age = 4 } }
 			}
 		}
-		
-		if = {
-			limit = {
-				NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
-			}
-			FROMFROM = { character_event = { id = duel.5 } }
+		FROMFROM = { character_event = { id = duel.303 } }
+	}
+	option = { # Normal dueling
+		trigger = {
+			NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
 		}
-		if = {
-			limit = {
-				FROMFROM = { has_character_flag = flag_duel_tourney }
+		ai_chance = {
+			factor = 50
+			
+			# Skill-at-Arms Effects
+			modifier = {
+				factor = 3
+				FROMFROM = { trait = poor_warrior }
 			}
-			FROMFROM = { character_event = { id = duel.303 } }
+			modifier = {
+				factor = 6
+				FROMFROM = { trait = trained_warrior }
+			}
+			modifier = {
+				factor = 9
+				FROMFROM = { trait = skilled_warrior }
+			}
+			modifier = {
+				factor = 12
+				FROMFROM = { trait = master_warrior }
+			}
+			
+			# Martial Education Effects
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = misguided_warrior }
+			}
+			modifier = {
+				factor = 3
+				FROMFROM = { trait = tough_soldier }
+			}
+			modifier = {
+				factor = 4.5
+				FROMFROM = { trait = skilled_tactician }
+			}
+			modifier = {
+				factor = 6
+				FROMFROM = { trait = brilliant_strategist }
+			}
+			
+			# Various Martial Traits
+			modifier = {
+				factor = 3
+				FROMFROM = { trait = duelist }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = agile }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = perceptive }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = absentminded }
+			}
+			
+			# Martial Skill
+			modifier = {
+				factor = 1.1
+				FROMFROM = { martial = 10 }
+				NOT = { FROMFROM = { martial = 15 } }
+			}
+			modifier = {
+				factor = 1.3
+				FROMFROM = { martial = 15 }
+				NOT = { FROMFROM = { martial = 20 } }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { martial = 20 }
+			}
+			# Physical Strength Effects
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = strong }
+			}
+			modifier = {
+				factor = 2
+				FROM = { trait = weak }
+			}
+			
+			# Cunning/Intelligence Effects
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = genius }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = quick }
+			}
+
+			modifier = {
+				factor = 2
+				FROM = { trait = imbecile }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = slow }
+			}
+			
+			# Personality Effects
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = brave }
+			}
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = wroth }
+			}
+			modifier = {
+				factor = 2
+				FROM = { trait = craven }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = deceitful }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = honest }
+			}
+			
+			# Wound Effects
+			modifier = {
+				factor = 2
+				FROM = { trait = wounded }
+			}
+			modifier = {
+				factor = 4
+				FROM = { trait = maimed }
+			}
+			modifier = {
+				factor = 999999
+				FROM = { trait = incapable }
+			}
+			
+			# Health Effects
+			modifier = {
+				factor = 1.5
+				FROM = { trait = ill }
+			}
+			modifier = {
+				factor = 2
+				FROM = { trait = pneumonic }
+			}
+			modifier = {
+				factor = 8
+				FROM = { trait = leper }
+			}
+			modifier = {
+				factor = 4
+				FROM = { trait = infirm }
+			}
+			modifier = {
+				factor = 6
+				OR = {
+					FROM = { trait = has_tuberculosis }
+					FROM = { trait = has_typhoid_fever }
+					FROM = { trait = has_typhus }
+					FROM = { trait = has_bubonic_plague }
+					FROM = { trait = has_measles }
+					FROM = { trait = has_small_pox }
+					FROM = { trait = has_aztec_disease }
+				}
+			}
+			modifier = {
+				factor = 10
+				FROM = { trait = blinded }
+			}
+			
+			# Body Shape Effects
+			modifier = {
+				factor = 4
+				FROM = { trait = hunchback }
+			}
+			modifier = {
+				factor = 4
+				FROM = { trait = dwarf }
+			}
+			modifier = {
+				factor = 4
+				FROM = { trait = clubfooted }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = tall }
+			}
+			modifier = {
+				factor = 2
+				OR = {
+					FROMFROM = { trait = lefthanded }
+					FROMFROM = { trait = ambidextrous }
+				}
+				NOT = { FROM = { trait = lefthanded } }
+				NOT = { FROM = { trait = ambidextrous } }
+			}
+			
+			# Age Effects
+			modifier = {
+				factor = 2
+				NOT = { FROM = { age = 16 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { FROM = { age = 12 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { FROM = { age = 8 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { FROM = { age = 4 } }
+			}
 		}
+		FROMFROM = { character_event = { id = duel.5 } }
 	}
 	
 	# FROM wins the round
-	option = {
+	option = { # Tourney jousting
+		trigger = {
+			FROMFROM = { has_character_flag = flag_duel_tourney }
+		}
 		ai_chance = {
 			factor = 50
 			
@@ -617,6 +888,17 @@ character_event = {
 			modifier = {
 				factor = 3
 				FROM = { trait = duelist }
+			modifier = {
+				factor = 1.5
+				FROM = { trait = agile }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = perceptive }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = absentminded }
 			}
 			
 			# Martial Skill
@@ -735,22 +1017,6 @@ character_event = {
 			
 			# Body Shape Effects
 			modifier = {
-				factor = 1.5
-				FROM = { trait = tall }
-			}
-			modifier = {
-				factor = 1.5
-				FROM = { trait = agile }
-			}
-			modifier = {
-				factor = 1.5
-				FROM = { trait = perceptive }
-			}
-			modifier = {
-				factor = 1.5
-				FROMFROM = { trait = absentminded }
-			}
-			modifier = {
 				factor = 4
 				FROMFROM = { trait = hunchback }
 			}
@@ -761,6 +1027,10 @@ character_event = {
 			modifier = {
 				factor = 4
 				FROMFROM = { trait = clubfooted }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = tall }
 			}
 			modifier = {
 				factor = 2
@@ -790,18 +1060,230 @@ character_event = {
 				NOT = { FROMFROM = { age = 4 } }
 			}
 		}
-		if = {
-			limit = {
-				NOT = { FROM = { has_character_flag = flag_duel_tourney } }
-			}
-			FROM = { character_event = { id = duel.5 } }
+		FROM = { character_event = { id = duel.303 } }
+	}
+	option = { # Normal dueling
+		trigger = {
+			NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
 		}
-		if = {
-			limit = {
-				FROM = { has_character_flag = flag_duel_tourney }
+		ai_chance = {
+			factor = 50
+			
+			# Skill-at-Arms Effects
+			modifier = {
+				factor = 3
+				FROM = { trait = poor_warrior }
 			}
-			FROM = { character_event = { id = duel.303 } }
+			modifier = {
+				factor = 6
+				FROM = { trait = trained_warrior }
+			}
+			modifier = {
+				factor = 9
+				FROM = { trait = skilled_warrior }
+			}
+			modifier = {
+				factor = 12
+				FROM = { trait = master_warrior }
+			}
+			
+			# Martial Education Effects
+			modifier = {
+				factor = 1.5
+				FROM = { trait = misguided_warrior }
+			}
+			modifier = {
+				factor = 3
+				FROM = { trait = tough_soldier }
+			}
+			modifier = {
+				factor = 4.5
+				FROM = { trait = skilled_tactician }
+			}
+			modifier = {
+				factor = 6
+				FROM = { trait = brilliant_strategist }
+			}
+			
+			# Various Martial Traits
+			modifier = {
+				factor = 3
+				FROM = { trait = duelist }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = agile }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = perceptive }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = absentminded }
+			}
+			
+			# Martial Skill
+			modifier = {
+				factor = 1.1
+				FROM = { martial = 10 }
+				NOT = { FROM = { martial = 15 } }
+			}
+			modifier = {
+				factor = 1.3
+				FROM = { martial = 15 }
+				NOT = { FROM = { martial = 20 } }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { martial = 20 }
+			}
+			
+			# Physical Strength Effects
+			modifier = {
+				factor = 2
+				FROM = { trait = strong }
+			}
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = weak }
+			}
+			
+			# Cunning/Intelligence Effects
+			modifier = {
+				factor = 2
+				FROM = { trait = genius }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = quick }
+			}
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = imbecile }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = slow }
+			}
+			
+			# Personality Effects
+			modifier = {
+				factor = 2
+				FROM = { trait = brave }
+			}
+			modifier = {
+				factor = 2
+				FROM = { trait = wroth }
+			}
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = craven }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = deceitful }
+			}
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = honest }
+			}
+			
+			# Wound Effects
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = wounded }
+			}
+			modifier = {
+				factor = 4
+				FROMFROM = { trait = maimed }
+			}
+			modifier = {
+				factor = 10
+				FROMFROM = { trait = blinded }
+			}
+			modifier = {
+				factor = 999999
+				FROMFROM = { trait = incapable }
+			}
+			
+			# Health Effects
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = ill }
+			}
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = pneumonic }
+			}
+			modifier = {
+				factor = 8
+				FROMFROM = { trait = leper }
+			}
+			modifier = {
+				factor = 4
+				FROMFROM = { trait = infirm }
+			}
+			modifier = {
+				factor = 6
+				OR = {
+					FROMFROM = { trait = has_tuberculosis }
+					FROMFROM = { trait = has_typhoid_fever }
+					FROMFROM = { trait = has_typhus }
+					FROMFROM = { trait = has_bubonic_plague }
+					FROMFROM = { trait = has_measles }
+					FROMFROM = { trait = has_small_pox }
+					FROMFROM = { trait = has_aztec_disease }
+				}
+			}
+			
+			# Body Shape Effects
+			modifier = {
+				factor = 4
+				FROMFROM = { trait = hunchback }
+			}
+			modifier = {
+				factor = 4
+				FROMFROM = { trait = dwarf }
+			}
+			modifier = {
+				factor = 4
+				FROMFROM = { trait = clubfooted }
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { trait = tall }
+			}
+			modifier = {
+				factor = 2
+				OR = {
+					FROM = { trait = lefthanded }
+					FROM = { trait = ambidextrous }
+				}
+				NOT = { FROMFROM = { trait = lefthanded } }
+				NOT = { FROMFROM = { trait = ambidextrous } }
+			}
+			
+			# Age Effects
+			modifier = {
+				factor = 2
+				NOT = { FROMFROM = { age = 16 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { FROMFROM = { age = 12 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { FROMFROM = { age = 8 } }
+			}
+			modifier = {
+				factor = 2
+				NOT = { FROMFROM = { age = 4 } }
+			}
 		}
+		
+		FROM = { character_event = { id = duel.5 } }
 	}
 }
 
@@ -854,18 +1336,45 @@ character_event = {
 	# Nobody but the actual referee should ever get this
 	trigger = { has_landed_title = e_rebels }
 	
-	option = { # Wounding Blow
-		if = {
-			limit = {
-				NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
-			}
-			FROMFROM = { character_event = { id = duel.111 } }
+	# Wounding Blow
+	option = { #Tourney Joust
+		trigger = {
+			FROMFROM = { has_character_flag = flag_duel_tourney }
 		}
-		if = {
-			limit = { 
-				FROMFROM = { has_character_flag = flag_duel_tourney } 
+		ai_chance = {
+			factor = 35
+			modifier = {
+				factor = 0.01
+				FROMFROM = { has_character_flag = flag_duel_friendly }
 			}
-			FROMFROM = { character_event = { id = duel.306 } }
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = cruel }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { trait = wroth }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = { trait = brave }
+			}
+			modifier = {
+				factor = 0.8
+				FROMFROM = { trait = patient }
+			}
+			modifier = {
+				factor = 0.5
+				FROMFROM = { trait = kind }
+			}
+		}
+		
+		FROMFROM = { character_event = { id = duel.306 } }
+	}
+	option = { #Normal Duel
+		name = "AI_EVENT"
+		trigger = {
+			NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
 		}
 		ai_chance = {
 			factor = 33
@@ -894,23 +1403,16 @@ character_event = {
 				FROMFROM = { trait = kind }
 			}
 		}
+		FROMFROM = { character_event = { id = duel.111 } }
 	}
-	
-	option = { # Subdued Opponent
-		if = {
-			limit = {
-				NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
-			}
-			FROMFROM = { character_event = { id = duel.105 } }
-		}
-		if = {
-			limit = {
-				FROMFROM = { has_character_flag = flag_duel_tourney }
-			}
-			FROMFROM = { character_event = { id = duel.309 } }
+	# Subdued Opponent
+	option = { #Tourney Joust
+		trigger = {
+			FROMFROM = { has_character_flag = flag_duel_tourney }
+			NOT = { FROMFROM = { has_character_flag = flag_duel_to_the_death } }
 		}
 		ai_chance = {
-			factor = 34
+			factor = 45
 			# Needs Opponent Taken Alive
 			modifier = {
 				factor = 10
@@ -932,16 +1434,41 @@ character_event = {
 							trait = paranoid
 						}
 					}
-					NOT = { #republic feuders
-						has_dynasty_flag = the_feuders
+				}	
+			}
+			
+			# Is close kin
+			modifier = {
+				factor = 2
+				FROMFROM = { is_close_relative = FROM }
+				NOT = { FROMFROM = { trait = arbitrary } }
+			}
+			
+			# Is a rival
+			modifier = {
+				factor = 0.8
+				OR = {
+					AND = { #republic feuders
+						FROMFROM = { has_dynasty_flag = the_feuders }
 						FROM = { has_dynasty_flag = the_victims }
 					}
-					NOT = {
-						has_dynasty_flag = the_victims
+					AND = {
+						FROMFROM = { has_dynasty_flag = the_victims }
 						FROM = { has_dynasty_flag = the_feuders }
 					}
-				}	
-			}			
+					FROMFROM = { is_rival = FROM }
+				}
+				NOT = { FROMFROM = { trait = arbitrary } }
+			}
+			
+			# Is a friend
+			modifier = {
+				factor = 2
+				FROMFROM = { 
+					is_friend = FROM
+					NOT = { trait = arbitrary }
+				}
+			}
 			
 			# Personal Opinion Modifiers
 			modifier = {
@@ -1030,30 +1557,278 @@ character_event = {
 				FROMFROM = { trait = just }
 			}
 		}
+		
+		FROMFROM = { character_event = { id = duel.309 } }
 	}
-	
-	option = { # Killing Blow
-		if = {
-			limit = {
-				NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
-			}
-			FROMFROM = { character_event = { id = duel.201 } }
-		}
-		if = {
-			limit = {
-				FROMFROM = { has_character_flag = flag_duel_tourney }
-			}
-			FROMFROM = { character_event = { id = duel.311 } }
+	option = { #Normal Duel
+		name = "AI_EVENT"
+		trigger = {
+			NOT = { FROMFROM = { has_character_flag = flag_duel_tourney } }
+			NOT = { FROMFROM = { has_character_flag = flag_duel_to_the_death } }
 		}
 		ai_chance = {
-			factor = 33
+			factor = 34
+			# Needs Opponent Taken Alive
 			modifier = {
-				factor = 0.01
-				FROMFROM = { has_character_flag = flag_duel_friendly }
+				factor = 10
+				FROMFROM = {
+					OR = {
+						any_current_enemy = { character = FROM }
+						liege = { any_current_enemy = { character = FROM } }
+					}
+					NOT = {
+						OR = {
+							trait = lunatic
+							trait = possessed
+						}
+					}
+					NOT = {
+						OR = {
+							trait = wroth
+							trait = cruel
+							trait = paranoid
+						}
+					}
+				}	
+			}
+			
+			# Is close kin
+			modifier = {
+				factor = 2
+				FROMFROM = { is_close_relative = FROM }
+				NOT = { FROMFROM = { trait = arbitrary } }
+			}
+			
+			# Is a rival
+			modifier = {
+				factor = 0.8
+				OR = {
+					AND = { #republic feuders
+						FROMFROM = { has_dynasty_flag = the_feuders }
+						FROM = { has_dynasty_flag = the_victims }
+					}
+					AND = {
+						FROMFROM = { has_dynasty_flag = the_victims }
+						FROM = { has_dynasty_flag = the_feuders }
+					}
+					FROMFROM = { is_rival = FROM }
+				}
+				NOT = { FROMFROM = { trait = arbitrary } }
+			}
+			
+			# Is a friend
+			modifier = {
+				factor = 2
+				FROMFROM = { 
+					is_friend = FROM
+					NOT = { trait = arbitrary }
+				}
+			}
+			
+			# Personal Opinion Modifiers
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 10 } }
 			}
 			modifier = {
-				factor = 0.9
-				FROMFROM = { has_character_flag = flag_duel_tourney }
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 20 } }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 30 } }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 40 } }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 50 } }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 60 } } 
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 70 } }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 80 } }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 90 } }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { opinion = { who = FROM value = 100 } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -9 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -19 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -29 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -39 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -49 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -59 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -69 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -79 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -89 } } }
+			}
+			modifier = {
+				factor = 0.8
+				NOT = { FROMFROM = { opinion = { who = FROM value = -99 } } }
+			}
+			
+			modifier = {
+				factor = 2
+				FROMFROM = { trait = just }
+			}
+		}
+		FROMFROM = { character_event = { id = duel.105 } }
+	}
+	
+	# Killing Blow
+	option = { #Tourney Joust
+		trigger = {
+			FROMFROM = { has_character_flag = flag_duel_tourney }
+			NOT = { FROMFROM = { has_character_flag = flag_duel_friendly } }
+		}
+		ai_chance = {
+			factor = 20
+			
+			# Is close kin
+			modifier = {
+				factor = 0
+				FROMFROM = { is_close_relative = FROM }
+				NOT = { FROMFROM = { trait = arbitrary } }
+			}
+						
+			# Is a rival
+			modifier = {
+				factor = 5
+				OR = {
+					AND = { #republic feuders
+						FROMFROM = { has_dynasty_flag = the_feuders }
+						FROM = { has_dynasty_flag = the_victims }
+					}
+					AND = {
+						FROMFROM = { has_dynasty_flag = the_victims }
+						FROM = { has_dynasty_flag = the_feuders }
+					}
+					FROMFROM = { is_rival = FROM }
+				}
+			}
+			
+			# Is a friend
+			modifier = {
+				factor = 0
+				FROMFROM = { 
+					is_friend = FROM
+					NOT = { trait = arbitrary }
+				}
+			}
+			
+			# Is Jain
+			modifier = {
+				factor = 0
+				FROMFROM = { religion = jain }
+			}
+			
+			modifier = {
+				factor = 1.5
+				FROMFROM = { trait = cruel }
+			}
+			modifier = {
+				factor = 1.25
+				FROMFROM = { trait = wroth }
+			}
+			modifier = {
+				factor = 1.25
+				FROM = { trait = brave }
+			}
+			modifier = {
+				factor = 0.8
+				FROMFROM = { trait = patient }
+			}
+			modifier = {
+				factor = 0.5
+				FROMFROM = { trait = kind }
+			}
+		}
+		
+		FROMFROM = { character_event = { id = duel.311 } }
+	}
+	option = { #Normal Duel
+		trigger = {
+			FROMFROM = { has_character_flag = flag_duel_tourney }
+			NOT = { FROMFROM = { has_character_flag = flag_duel_friendly } }
+		}
+		ai_chance = {
+			factor = 20
+			
+			# Is close kin
+			modifier = {
+				factor = 0
+				FROMFROM = { is_close_relative = FROM }
+				NOT = { FROMFROM = { trait = arbitrary } }
+			}
+						
+			# Is a rival
+			modifier = {
+				factor = 5
+				OR = {
+					AND = { #republic feuders
+						FROMFROM = { has_dynasty_flag = the_feuders }
+						FROM = { has_dynasty_flag = the_victims }
+					}
+					AND = {
+						FROMFROM = { has_dynasty_flag = the_victims }
+						FROM = { has_dynasty_flag = the_feuders }
+					}
+					FROMFROM = { is_rival = FROM }
+				}
+			}
+			
+			# Is a friend
+			modifier = {
+				factor = 0
+				FROMFROM = { 
+					is_friend = FROM
+					NOT = { trait = arbitrary }
+				}
+			}
+			# Is Jain
+			modifier = {
+				factor = 0
+				FROMFROM = { religion = jain }
 			}
 			modifier = {
 				factor = 1.5
@@ -1076,6 +1851,7 @@ character_event = {
 				FROMFROM = { trait = kind }
 			}
 		}
+		FROMFROM = { character_event = { id = duel.201 } }
 	}
 }
 
@@ -1094,6 +1870,7 @@ character_event = {
 	}
 }
 
+# Loser may yield
 character_event = {
 	id = duel.106
 	desc = "EVTDESCDUEL106"
@@ -1101,13 +1878,7 @@ character_event = {
 	border = "GFX_event_normal_frame_war"
 	is_triggered_only = yes
 	
-	option = { #yield
-		trigger = {
-			OR = {
-				has_character_flag = flag_duel_friendly
-				NOT = { has_character_flag = flag_duel_to_the_death }
-			}
-		}
+	option = { #yield > 107
 		name = "EVTOPTADUEL106"
 		FROM = { character_event = { id = duel.107 tooltip = "EVTTOOLTIPDUEL107" } }
 		ai_chance = {
@@ -1134,6 +1905,37 @@ character_event = {
 				FROM = { trait = wounded }
 				NOT = { trait = lunatic }
 			}
+			
+			#Is close kin
+			modifier = {
+				factor = 4
+				FROM = { is_close_relative = ROOT }
+				NOT = { trait = arbitrary }
+			}
+			
+			# Is a friend
+			modifier = {
+				factor = 3
+				is_friend = ROOT
+				NOT = { trait = arbitrary }
+			}
+						
+			# Is a rival
+			modifier = {
+				factor = 0.3
+				OR = {
+					AND = { #republic feuders
+						has_dynasty_flag = the_feuders
+						FROM = { has_dynasty_flag = the_victims }
+					}
+					AND = {
+						has_dynasty_flag = the_victims
+						FROM = { has_dynasty_flag = the_feuders }
+					}
+					is_rival = FROM
+				}
+			}
+			
 			# Personality Effects
 			modifier = {
 				factor = 5
@@ -1167,17 +1969,72 @@ character_event = {
 				factor = 0.2
 				trait = wroth
 			}
+			
+			# Special case: Holmgang duel. Treat scarred as reason to stop
+			modifier = {
+				factor = 2
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = scarred_in_duel
+			}
 		}
 	}
 	
-	option = { #fight on
+	option = { #fight on > 112
 		trigger = { NOT = { has_character_flag = flag_duel_friendly } }
 		name = "EVTOPTBDUEL106"
 		FROM = { character_event = { id = duel.112 tooltip = "EVTTOOLTIPDUEL112" } }
 		ai_chance = { factor = 50 }
 	}
+	
+	option = { #run away! > 113
+		trigger = { 
+			NOT = { has_character_flag = flag_duel_to_the_death }
+			NOT = { has_character_flag = scarred_in_duel }
+			NOT = { trait = proud }
+			NOT = { trait = duelist }
+			NOT = { trait = maimed }
+			NOT = { any_current_enemy = { character = FROM } } #priority targets don't get this chance
+		}
+		name = "EVTOPTB5556001" #I need to get out of here
+		FROM = { character_event = { id = duel.113 tooltip = "EVTTOOLTIPDUEL113" } }
+		set_character_flag = ran_away_from_duel
+		
+		ai_chance = { 
+			factor = 1
+			# Nearly Beaten!
+			modifier = {
+				factor = 100
+				trait = maimed
+				NOT = { trait = lunatic }
+			}
+			modifier = {
+				factor = 50
+				trait = wounded
+				NOT = { trait = lunatic }
+			}						
+			# Is a rival
+			modifier = {
+				factor = 0
+				OR = {
+					AND = { #republic feuders
+						has_dynasty_flag = the_feuders
+						FROM = { has_dynasty_flag = the_victims }
+					}
+					AND = {
+						has_dynasty_flag = the_victims
+						FROM = { has_dynasty_flag = the_feuders }
+					}
+					is_rival = FROM
+				}
+			}
+		}
+	}
 }
 
+# Winner is told loser yields
 character_event = {
 	id = duel.107
 	desc = "EVTDESCDUEL107"
@@ -1185,7 +2042,7 @@ character_event = {
 	border = "GFX_event_normal_frame_war"
 	is_triggered_only = yes
 	
-	option = {
+	option = { # spare life > 108
 		name = "EVTOPTADUEL107"
 		prestige = 15 #win
 		set_character_flag = flag_spared_opponent
@@ -1209,14 +2066,6 @@ character_event = {
 						trait = cruel
 						trait = paranoid
 					}
-				}
-				NOT = { #republic feuders
-					has_dynasty_flag = the_feuders
-					FROM = { has_dynasty_flag = the_victims }
-				}
-				NOT = {
-					has_dynasty_flag = the_victims
-					FROM = { has_dynasty_flag = the_feuders }
 				}
 			}
 			# Nearly Beaten!
@@ -1335,6 +2184,30 @@ character_event = {
 				trait = just
 			}
 			
+			# Is a rival
+			modifier = {
+				factor = 0.5
+				OR = {
+					AND = { #republic feuders
+						has_dynasty_flag = the_feuders
+						FROM = { has_dynasty_flag = the_victims }
+					}
+					AND = {
+						has_dynasty_flag = the_victims
+						FROM = { has_dynasty_flag = the_feuders }
+					}
+					is_rival = FROM
+				}
+				NOT = { trait = arbitrary }
+			}
+			
+			# Is a friend
+			modifier = {
+				factor = 5
+				is_friend = FROM
+				NOT = { trait = arbitrary }
+			}
+			
 			# Personality Modifiers
 			modifier = {
 				factor = 5
@@ -1385,17 +2258,19 @@ character_event = {
 		}
 	}
 	
-	option = {
+	option = { # kill them > 109
+		trigger = { 
+			NOT = { has_character_flag = flag_duel_friendly }
+			NOT = { religion = jain }
+		}
 		name = "EVTOPTBDUEL107"
 		set_character_flag = flag_killed_opponent
 		set_variable = { which = duel_rounds value = 0 }
 		FROM = { character_event = { id = duel.109 tooltip = "EVTTOOLTIPDUEL109" } }
 		ai_chance = {
 			factor = 50
-			# Friendly Duels
 			modifier = {
 				factor = 0
-				has_character_flag = flag_duel_friendly
 				NOT = {
 					OR = {
 						AND = {
@@ -1420,6 +2295,7 @@ character_event = {
 							has_dynasty_flag = the_victims
 							FROM = { has_dynasty_flag = the_feuders }
 						}
+						is_rival = FROM
 						AND = {
 							OR = {
 								trait = envious
@@ -1439,6 +2315,7 @@ character_event = {
 	}
 }
 
+# Loser is told winner accepts
 character_event = {
 	id = duel.108
 	desc = "EVTDESCDUEL108"
@@ -1453,6 +2330,7 @@ character_event = {
 	}
 }
 
+# Winner is marked as having murdered his opponent
 character_event = {
 	id = duel.109
 	desc = "EVTDESCDUEL109"
@@ -1476,6 +2354,21 @@ character_event = {
 }
 
 ### WOUND OUTCOMES
+# Notify winner loser is struck > 110
+character_event = {
+	id = duel.112
+	desc = "EVTDESCDUEL112"
+	picture = GFX_evt_duel3
+	border = "GFX_event_normal_frame_war"
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTADUEL112"
+		FROMFROM = { character_event = { id = duel.110 tooltip = "EVTTOOLTIPDUEL111" } }
+	}
+}
+
+# Loser is potentially scarred/ wounded / maimed
 character_event = {
 	id = duel.110
 	desc = "EVTDESCDUEL110"
@@ -1484,32 +2377,44 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		if = { #Second wound: maimed
-			limit = { trait = wounded }
-			add_trait = maimed
-			FROMFROM = { set_character_flag = flag_maimed_opponent }
+		if = { #Next wound: maimed
+			limit = { trait = wounded }			
+			random_list = {
+				80 = { 
+					add_trait = maimed
+					FROMFROM = { set_character_flag = flag_maimed_opponent }
+					FROMFROM = { character_event = { id = duel.111 } }
+				}
+				20 = { set_character_flag = scarred_in_duel }
+			}
 		}
 		if = { #First wound: wounded
-			limit = { NOT = { trait = wounded } NOT = { trait = maimed } }
-			add_trait = wounded
-			FROMFROM = { set_character_flag = flag_wounded_opponent }
+			limit = {
+				NOT = { trait = wounded }
+				NOT = { trait = maimed }
+			}
+			random_list = {
+				80 = { 
+					add_trait = wounded
+					FROMFROM = { set_character_flag = flag_wounded_opponent }
+					FROMFROM = { character_event = { id = duel.111 } }
+				}
+				20 = { set_character_flag = scarred_in_duel }
+			}
 		}
 	}
 	
-	option = { #fight on
+	option = { #fight on > 1
 		name = "EVTOPTADUEL110"
 		trigger = { NOT = { has_character_flag = flag_duel_friendly } }
 		#FROMFROM = { character_event = { id = duel.111 tooltip = "EVTTOOLTIPDUEL111" } }
-		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
+		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } } #A new round
 		ai_chance = { factor = 70 }
 	}
-	option = { #yield!
+	option = { #yield after all > 107
 		name = "EVTOPTADUEL106"
 		trigger = {
-			OR = {
-				has_character_flag = flag_duel_friendly
-				NOT = { has_character_flag = flag_duel_to_the_death }
-			}
+			NOT = { has_character_flag = flag_duel_to_the_death }
 		}
 		prestige = -10 #loss
 		FROM = { character_event = { id = duel.107 tooltip = "EVTTOOLTIPDUEL107" } }
@@ -1566,6 +2471,7 @@ character_event = {
 	}
 }
 
+# Notify winner loser is wounded
 character_event = {
 	id = duel.111
 	desc = "EVTDESCDUEL111"
@@ -1580,20 +2486,22 @@ character_event = {
 	}
 }
 
+# Notify winner loser is running away
 character_event = {
-	id = duel.112
-	desc = "EVTDESCDUEL112"
+	id = duel.113
+	desc = "EVTDESCDUEL113"
 	picture = GFX_evt_duel3
 	border = "GFX_event_normal_frame_war"
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTADUEL112"
-		FROM = { character_event = { id = duel.110 tooltip = "EVTTOOLTIPDUEL111" } }
+		name = "EVTOPTADUEL113"
+		hidden_tooltip = { character_event = { id = duel_output.1 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
 	}
 }
 
 ### DEATH OUTCOMES
+# Winner delivers the killing blow
 character_event = {
 	id = duel.201
 	desc = "EVTDESCDUEL201"
@@ -1609,6 +2517,7 @@ character_event = {
 	}
 }
 
+# Loser is killed.
 character_event = {
 	id = duel.202
 	desc = "EVTDESCDUEL202"
@@ -1625,13 +2534,15 @@ character_event = {
 			death_reason = death_duel
 			killer = FROM
 		}
-		set_variable = { which = duel_rounds value = 0 }
+		FROM = { set_variable = { which = duel_rounds value = 0 } }
 		FROM = { set_character_flag = flag_killed_opponent }
 		FROM = { character_event = { id = duel_output.1 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
-		hidden_tooltip = { FROM = { character_event = { id = duel.203 } } }
+	#	hidden_tooltip = { FROM = { character_event = { id = duel.203 } } }
+		FROM = { prestige = 25 } # instead of the above. Too many event boxes!
 	}
 }
 
+# Winner is told loser is dead
 character_event = {
 	id = duel.203
 	desc = "EVTDESCDUEL203"
@@ -1660,21 +2571,52 @@ character_event = {
 	
 	immediate = {
 		# Set a target lock with the other duelist so that they can eventually be found via a search
-		add_trait = duel_target
+		add_trait = joust_target
 		FROMFROM = {
-			add_trait = duel_target
-			opinion = { who = ROOT modifier = opinion_duel_target }
-			reverse_opinion = { who = ROOT modifier = opinion_duel_target }
+			add_trait = joust_target
+			opinion = { who = ROOT modifier = opinion_joust_target }
+			reverse_opinion = { who = ROOT modifier = opinion_joust_target }
 		}
 	}
 	
-	option = {
+	option = { # Normal joust
 		name = "EVTOPTADUEL301"
 		hidden_tooltip = { FROMFROM = { character_event = { id = duel.302 } } }
 		ai_chance = { factor = 50 }
 	}
 	
 	option = { # Accidents can happen in jousts. Sometimes they're not really accidents.
+	option = { # Try to kill
+		name = "EVTOPTBDUEL301"
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0.5
+				trait = honest
+			}
+			modifier = {
+				factor = 0.5
+				trait = kind
+			}
+			modifier = {
+				factor = 2
+				trait = deceitful
+			}
+			modifier = {
+				factor = 2
+				trait = wroth
+			}
+			modifier = {
+				factor = 0
+				FROM = { is_close_relative = ROOT }
+				NOT = { trait = arbitrary }
+			}
+			modifier = {
+				factor = 0.01
+				FROM = { is_close_relative = ROOT }
+				trait = just
+			}
+		}
 		trigger = {
 			OR = {
 				AND = {
@@ -1714,38 +2656,9 @@ character_event = {
 			}
 			NOT = { trait = just }
 		}
-		name = "EVTOPTBDUEL301"
 		clr_character_flag = flag_duel_friendly # Fight to kill
+		set_character_flag = flag_duel_to_the_death
 		hidden_tooltip = { FROMFROM = { character_event = { id = duel.302 } } }
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 0.5
-				trait = honest
-			}
-			modifier = {
-				factor = 0.5
-				trait = kind
-			}
-			modifier = {
-				factor = 2
-				trait = deceitful
-			}
-			modifier = {
-				factor = 2
-				trait = wroth
-			}
-			modifier = {
-				factor = 0.1
-				FROM = { is_close_relative = ROOT }
-				NOT = { trait = arbitrary }
-			}
-			modifier = {
-				factor = 0.05
-				FROM = { is_close_relative = ROOT }
-				trait = just
-			}
-		}
 	}
 }
 
@@ -1756,7 +2669,7 @@ character_event = {
 	border = "GFX_event_normal_frame_war"
 	is_triggered_only = yes
 	
-	option = {
+	option = { # Normal joust
 		name = "EVTOPTADUEL302"
 		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.4 } } } }
 		ai_chance = {
@@ -1791,9 +2704,11 @@ character_event = {
 				}
 			}
 			NOT = { trait = just }
+			NOT = { has_character_flag = flag_duel_friendly }
 		}
 		name = "EVTOPTBDUEL302"
 		clr_character_flag = flag_duel_friendly # Fight to kill
+		set_character_flag = flag_duel_to_the_death
 		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.4 } } } }
 		ai_chance = {
 			factor = 50
@@ -1829,7 +2744,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTADUEL303"
-		duel_target = {
+		joust_target = {
 			limit = { has_opinion_modifier = { who = ROOT modifier = opinion_duel_target } }
 			character_event = { id = duel.304 tooltip = "EVTTOOLTIPDUEL304" }
 		}
@@ -1845,10 +2760,10 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		remove_opinion = { who = FROM modifier = opinion_duel_target }
-		reverse_remove_opinion = { who = FROM modifier = opinion_duel_target }
-		remove_trait = duel_target
-		FROM = { remove_trait = duel_target }
+		remove_opinion = { who = FROM modifier = opinion_joust_target }
+		reverse_remove_opinion = { who = FROM modifier = opinion_joust_target }
+		remove_trait = joust_target
+		FROM = { remove_trait = joust_target }
 	}
 	
 	option = {
@@ -1858,6 +2773,22 @@ character_event = {
 }
 
 ### WOUND OUTCOMES
+character_event = {
+	id = duel.306
+	desc = "EVTDESCDUEL306"
+	picture = GFX_evt_melee
+	border = "GFX_event_normal_frame_war"
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTADUEL306"
+		set_character_flag = flag_spared_opponent
+		set_variable = { which = duel_rounds value = 0 }
+		FROMFROM = { character_event = { id = duel.305 tooltip = "EVTTOOLTIPDUEL306" } }
+		#hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
+	}
+}
+
 character_event = {
 	id = duel.305
 	desc = "EVTDESCDUEL305"
@@ -1885,22 +2816,20 @@ character_event = {
 }
 
 character_event = {
-	id = duel.306
-	desc = "EVTDESCDUEL306"
-	picture = GFX_evt_melee
+	id = duel.313
+	desc = "EVTDESCDUEL313"
+	picture = GFX_evt_joust
 	border = "GFX_event_normal_frame_war"
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTADUEL306"
-		set_character_flag = flag_spared_opponent
-		set_variable = { which = duel_rounds value = 0 }
-		FROMFROM = { character_event = { id = duel.305 tooltip = "EVTTOOLTIPDUEL306" } }
-		#hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
+		name = "EVTOPTADUEL313"
+		prestige = -10 #loss
+		FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
 	}
 }
 
-### WIN OUTCOMES (opponent unhorsed or wounded)
+### WIN OUTCOME (opponent unhorsed)
 character_event = {
 	id = duel.309
 	desc = "EVTDESCDUEL309"
@@ -1932,21 +2861,7 @@ character_event = {
 	}
 }
 
-character_event = {
-	id = duel.313
-	desc = "EVTDESCDUEL313"
-	picture = GFX_evt_joust
-	border = "GFX_event_normal_frame_war"
-	is_triggered_only = yes
-	
-	option = {
-		name = "EVTOPTADUEL313"
-		prestige = -10 #loss
-		FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
-	}
-}
-
-### DEATH OUTCOMES
+### DEATH OUTCOME
 character_event = {
 	id = duel.311
 	desc = "EVTDESCDUEL311"
@@ -1958,7 +2873,6 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTADUEL311"
-		#no prestige for killing during joust
 		set_variable = { which = duel_rounds value = 0 }
 		FROMFROM = { character_event = { id = duel.312 tooltip = "EVTTOOLTIPDUEL312" } }
 	}
@@ -1980,5 +2894,17 @@ character_event = {
 		set_variable = { which = duel_rounds value = 0 }
 		FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
 		hidden_tooltip = { FROM = { character_event = { id = duel.203 } } }
+	}
+}
+
+character_event = {
+	id = duel.314
+	desc = "EVTDESCDUEL203"
+	picture = GFX_evt_joust
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTADUEL203"
+		prestige = -25 #LOSE prestige for killing opponent in joust
 	}
 }
