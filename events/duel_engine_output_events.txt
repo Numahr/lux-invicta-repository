@@ -19,9 +19,9 @@ character_event = {
 	option = {
 		name = "EVTOPTADUELOUTPUT1"
 		
-		########################
-		# Example Output Block #
-		########################
+		####################
+		# Battlefield Duel #
+		####################
 		if = {
 			##########################
 			# Find your context flags
@@ -33,13 +33,7 @@ character_event = {
 			# Call the next event in your event chain
 			# FROM will be Winner scope
 			# FROMFROM will be Loser scope
-			character_event = { id = battlefield_duel.6 tooltip = "EVTTOOLTIP5556100" }
-			##########################
-			# CLEAR YOUR CONTEXT FLAGS
-			clr_character_flag = flag_battlefield_duel
-			FROM = { clr_character_flag = flag_battlefield_duel }
-			FROMFROM = { clr_character_flag = flag_battlefield_duel }
-			###########################
+			character_event = { id = duel_be.100 tooltip = "EVTTOOLTIP5556100" }
 		}
 		if = {
 			###########################
@@ -53,15 +47,26 @@ character_event = {
 					has_character_flag = flag_maimed_opponent #Todo
 				}
 			}
-			character_event = { id = battlefield_duel.7 tooltip = "EVTTOOLTIP5556101" }
-			clr_character_flag = flag_battlefield_duel
-			FROM = { clr_character_flag = flag_battlefield_duel }
-			FROMFROM = { clr_character_flag = flag_battlefield_duel }
+			character_event = { id = duel_be.101 tooltip = "EVTTOOLTIP5556101" }
 			############################
 		}
-		# End of Example Block
+		if = {
+			###########################
+			# special case: opponent flees
+			limit = {
+				FROM = { has_character_flag = ran_away_from_duel }
+			}
+			FROM = { character_event = { id = duel_be.5 } }
+			############################
+		}
+		##########################
+		# CLEAR YOUR CONTEXT FLAGS
+		clr_character_flag = flag_battlefield_duel
+		FROM = { clr_character_flag = flag_battlefield_duel }
+		FROMFROM = { clr_character_flag = flag_battlefield_duel }
+		###########################
+		# End of battlefield duel Block
 		#############################
-			
 		###Lu Bu duel
 		if = {
 			limit = { has_character_flag = lubu_duel_target is_alive = yes  }
@@ -185,7 +190,10 @@ character_event = {
 		if = {
 			limit = {
 				has_character_flag = feast_dueller
-				has_character_flag = flag_spared_opponent
+				OR = {
+					has_character_flag = flag_spared_opponent
+					FROM = { has_character_flag = ran_away_from_duel }
+				}
 			}
 			character_event = { id = dueling.1 } #Nothing happened
 			clr_character_flag = feast_dueller
@@ -201,7 +209,7 @@ character_event = {
 					has_character_flag = flag_maimed_opponent
 				}
 			}
-			character_event = { id = dueling.2 } #feast_events.txt
+			character_event = { id = dueling.2 } #Liege reacts
 			clr_character_flag = feast_dueller
 			FROM = { clr_character_flag = feast_dueller }
 			FROMFROM = { clr_character_flag = feast_dueller }
@@ -215,7 +223,10 @@ character_event = {
 		if = {
 			limit = {
 				has_character_flag = duel_rival
-				has_character_flag = flag_spared_opponent
+				OR = {
+					has_character_flag = flag_spared_opponent
+					FROM = { has_character_flag = ran_away_from_duel }
+				}
 			}
 			character_event = { id = dueling.3 } #Nothing happened
 			clr_character_flag = duel_rival
@@ -248,7 +259,10 @@ character_event = {
 					has_character_flag = tournament_cheater_duel_accuser
 					has_character_flag = tournament_cheater_duel_accused
 				}
-				has_character_flag = flag_spared_opponent
+				OR = {
+					has_character_flag = flag_spared_opponent
+					FROM = { has_character_flag = ran_away_from_duel }
+				}
 			}
 			character_event = { id = dueling.8 } #No wound etc. = clean win for accused
 			clr_character_flag = duel_rival
@@ -285,6 +299,7 @@ character_event = {
 				OR = {
 					has_character_flag = flag_spared_opponent
 					has_character_flag = flag_wounded_opponent
+					FROM = { has_character_flag = ran_away_from_duel }
 				}
 			}
 			character_event = { id = dueling.3 } #Nothing happened or just wounded
@@ -324,7 +339,10 @@ character_event = {
 					has_character_flag = tourny_duel_defender
 					has_character_flag = tourny_duel_agressor
 				}
-				has_character_flag = flag_spared_opponent
+				OR = {
+					has_character_flag = flag_spared_opponent
+					FROM = { has_character_flag = ran_away_from_duel }
+				}
 			}
 			character_event = { id = joust.20 } #Draw
 		}
@@ -342,6 +360,137 @@ character_event = {
 		# Flags for this are cleared in the followup events since I use them to track of agressor/defender
 		# End of Tournament rival duel block
 		####################################
+		
+		##################################################################
+		# Holmgang duel oldgods_holmgang_events.txt starts with TOG.5004 #
+		##################################################################
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_spared_opponent
+				has_character_flag = scarred_in_duel
+			}
+			character_event = { id = TOG.5005 } #Wins (Scarred)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_killed_opponent
+				has_character_flag = scarred_in_duel
+			}
+			character_event = { id =  TOG.5006 } #Wins (Scarred, Opponent Dies)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_spared_opponent
+				NOT = { has_character_flag = scarred_in_duel }
+			}
+			character_event = { id =  TOG.5007 } #Wins
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_killed_opponent
+				NOT = { has_character_flag = scarred_in_duel }
+			}
+			character_event = { id =  TOG.5008 } #Wins (Opponent Dies)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				FROM = { has_character_flag = ran_away_from_duel }
+			}
+			character_event = { id =  TOG.5009 } #Wins (Opponent Flees)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_wounded_opponent
+				FROM = { has_character_flag = flag_wounded_opponent }
+			}
+			character_event = { id =  TOG.5010 } #Draw (Both Wounded)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_wounded_opponent
+				NOT = { has_character_flag = scarred_in_duel }
+			}
+			character_event = { id =  TOG.5022 } #Wins Opponent
+			FROM = { character_event = { id =  TOG.5012 } } #Loses (Wounded)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_wounded_opponent
+				has_character_flag = scarred_in_duel
+			}
+			character_event = { id =  TOG.5020 } #Wins (Scarred) Opponent
+			FROM = { character_event = { id = TOG.5012 } } #Loses (Wounded)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_maimed_opponent
+				NOT = { has_character_flag = scarred_in_duel }
+			}
+			character_event = { id =  TOG.5022 } #Wins Opponent
+			FROM = { character_event = { id =  TOG.5013 } } #Loses (Maimed)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_maimed_opponent
+				has_character_flag = scarred_in_duel
+			}
+			character_event = { id =  TOG.5020 } #Wins (Scarred) Opponent
+			FROM = { character_event = { id =  TOG.5013 } } #Loses (Maimed)
+		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = holmgang_challenger
+					has_character_flag = holmgang_target
+				}
+				has_character_flag = flag_killed_opponent
+				has_character_flag = scarred_in_duel
+			}
+			character_event = { id =  TOG.5021 } # Wins (Scarred, Opponent Dies) Opponent
+		}
+		# Flags are cleared by vanilla output events
+		# End of oldgods_holmgang_events block
+		#############################
 		
 		##########################
 		# Generic duel victory forwarder for combat trait advancement in cta.10 (PB_cta.txt)
