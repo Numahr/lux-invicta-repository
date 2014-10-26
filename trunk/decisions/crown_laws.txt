@@ -2414,13 +2414,16 @@ de_jure_laws = {
 	}
 
 # INVESTITURE LAW
+	# Papal Investiture
 	investiture_law_0 = {
 		show_as_title = yes
 		group = investiture_law
 		default = yes
 		potential = {
-			holder_scope = { NOT = { is_landed = no } } 
-			holder_scope = { religion = catholic }
+			holder_scope = {
+				religion = catholic
+				is_tribal = no
+			}
 		}
 		revoke_allowed = {
 			always = no
@@ -2439,21 +2442,37 @@ de_jure_laws = {
 			set_investiture = head
 		}
 	}
+	
+	# Free Investiture
 	investiture_law_1 = {
 		show_as_title = yes
 		rel_head_opinion = -30
 		free_invest_vassal_opinion = 10 # vassals with bishops will appreciate this law
-		temple_all_opinion = 25 # Bishops will be grateful to their liege for their appointment
+		temple_all_opinion = 10 # Bishops will tend to be more loyal to the Crown
 		group = investiture_law
 		potential = {
-			holder_scope = { NOT = { is_landed = no } } 
-			holder_scope = { religion = catholic }
+			holder_scope = {
+				religion = catholic
+
+				is_tribal = no
+			}
 		}
 		revoke_allowed = {
 			always = no
 		}			
 		ai_will_do = {
-			factor = 0
+			modifier = {
+				factor = 0.002 # Rare to do this
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					holder_scope = {
+						NOT = { trait = cynical }
+					}
+					NOT = { has_law = investiture_law_0 }
+				}
+			}
 		}
 		ai_will_revoke = {
 			factor = 0
