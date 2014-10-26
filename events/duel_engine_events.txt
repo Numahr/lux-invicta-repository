@@ -221,20 +221,6 @@ character_event = {
 					FROM = { check_variable = { which = duel_rounds value = 6 } } #7th round and later
 				}
 			}
-			FROMFROM = { character_event = { id = duel.301 } }
-		}
-		# Normal duels
-		if = {
-			limit = {
-				OR = {
-					NOT = { FROM = { check_variable = { which = duel_rounds value = 1 } } } #1st round
-					AND = {
-						FROM = { check_variable = { which = duel_rounds value = 3 } } #4th round
-						NOT = { FROM = { check_variable = { which = duel_rounds value = 4 } } }
-					}
-					FROM = { check_variable = { which = duel_rounds value = 6 } } #7th round and later
-				}
-			}
 			FROMFROM = { character_event = { id = duel.2 } } #Round one, fight!
 		}
 		if = {
@@ -1309,7 +1295,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTADUEL5"
-		duel_target = {
+		duel_target = { #checks everyone in the world with this trait!
 			limit = { has_opinion_modifier = { who = ROOT modifier = opinion_duel_target } }
 			character_event = { id = duel.6 tooltip = "EVTTOOLTIPDUEL6" }
 		}
@@ -2010,7 +1996,7 @@ character_event = {
 		}
 		name = "EVTOPTB5556001" #I need to get out of here
 		FROM = { character_event = { id = duel.113 tooltip = "EVTTOOLTIPDUEL113" } }
-		set_character_flag = ran_away_from_duel
+		hidden_tooltip = { set_character_flag = ran_away_from_duel }
 		
 		ai_chance = { 
 			factor = 1
@@ -2055,8 +2041,10 @@ character_event = {
 	option = { # spare life > 108
 		name = "EVTOPTADUEL107"
 		prestige = 15 #win
-		set_character_flag = flag_spared_opponent
-		set_variable = { which = duel_rounds value = 0 }
+		hidden_tooltip = {
+			set_character_flag = flag_spared_opponent
+			set_variable = { which = duel_rounds value = 0 }
+		}
 		FROM = { character_event = { id = duel.108 tooltip = "EVTTOOLTIPDUEL108" } }
 		ai_chance = {
 			factor = 50
@@ -2274,8 +2262,10 @@ character_event = {
 			NOT = { religion = jain }
 		}
 		name = "EVTOPTBDUEL107"
-		set_character_flag = flag_killed_opponent
-		set_variable = { which = duel_rounds value = 0 }
+		hidden_tooltip = {
+			set_character_flag = flag_killed_opponent
+			set_variable = { which = duel_rounds value = 0 }
+		}
 		FROM = { character_event = { id = duel.109 tooltip = "EVTTOOLTIPDUEL109" } }
 		ai_chance = {
 			factor = 50
@@ -2340,7 +2330,7 @@ character_event = {
 	}
 }
 
-# Winner is marked as having murdered his opponent
+# Loser is marked as having been killed by his opponent
 character_event = {
 	id = duel.109
 	desc = "EVTDESCDUEL109"
@@ -2357,7 +2347,7 @@ character_event = {
 			death_reason = death_duel
 			killer = FROM
 		}
-		set_variable = { which = duel_rounds value = 0 }
+		FROM = { set_variable = { which = duel_rounds value = 0 } }
 		FROM = { character_event = { id = duel_output.1 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
 		hidden_tooltip = { FROM = { character_event = { id = duel.203 } } }
 	}
@@ -2544,11 +2534,13 @@ character_event = {
 			death_reason = death_duel
 			killer = FROM
 		}
-		FROM = { set_variable = { which = duel_rounds value = 0 } }
-		FROM = { set_character_flag = flag_killed_opponent }
-		FROM = { character_event = { id = duel_output.1 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
-	#	hidden_tooltip = { FROM = { character_event = { id = duel.203 } } }
-		FROM = { prestige = 25 } # instead of the above. Too many event boxes!
+		hidden_tooltip = {
+			FROM = { set_variable = { which = duel_rounds value = 0 } }
+			FROM = { set_character_flag = flag_killed_opponent }
+			FROM = { character_event = { id = duel_output.1 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
+		#	FROM = { character_event = { id = duel.203 } }
+			FROM = { prestige = 25 } # instead of the above. Too many event boxes!
+		}
 	}
 }
 
@@ -2686,7 +2678,7 @@ character_event = {
 		}
 	}
 	
-	option = { # Accidents can happen in jousts. Sometimes they're not really accidents.
+	option = { # Try to kill
 		trigger = {
 			OR = {
 				AND = {
@@ -2716,8 +2708,10 @@ character_event = {
 			NOT = { has_character_flag = flag_duel_friendly }
 		}
 		name = "EVTOPTBDUEL302"
-		clr_character_flag = flag_duel_friendly # Fight to kill
-		set_character_flag = flag_duel_to_the_death
+		hidden_tooltip = {
+			clr_character_flag = flag_duel_friendly # Fight to kill
+			set_character_flag = flag_duel_to_the_death
+		}
 		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.4 } } } }
 		ai_chance = {
 			factor = 50
@@ -2754,7 +2748,7 @@ character_event = {
 	option = {
 		name = "EVTOPTADUEL303"
 		joust_target = {
-			limit = { has_opinion_modifier = { who = ROOT modifier = opinion_duel_target } }
+			limit = { has_opinion_modifier = { who = ROOT modifier = opinion_joust_target } }
 			character_event = { id = duel.304 tooltip = "EVTTOOLTIPDUEL304" }
 		}
 	}
@@ -2791,8 +2785,10 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTADUEL306"
-		set_character_flag = flag_spared_opponent
-		set_variable = { which = duel_rounds value = 0 }
+		hidden_tooltip = {
+			set_character_flag = flag_spared_opponent
+			set_variable = { which = duel_rounds value = 0 }
+		}
 		FROMFROM = { character_event = { id = duel.305 tooltip = "EVTTOOLTIPDUEL306" } }
 		#hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
 	}
@@ -2834,7 +2830,8 @@ character_event = {
 	option = {
 		name = "EVTOPTADUEL313"
 		prestige = -10 #loss
-		FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
+		#FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
+		FROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT1" } } #BROKEN!
 	}
 }
 
@@ -2850,8 +2847,10 @@ character_event = {
 	option = {
 		name = "EVTOPTADUEL309"
 		prestige = 15 #win
-		set_character_flag = flag_spared_opponent
-		set_variable = { which = duel_rounds value = 0 }
+		hidden_tooltip = {
+			set_character_flag = flag_spared_opponent
+			set_variable = { which = duel_rounds value = 0 }
+		}
 		FROMFROM = { character_event = { id = duel.310 tooltip = "EVTTOOLTIPDUEL310" } }
 	}
 }
@@ -2866,7 +2865,8 @@ character_event = {
 	option = {
 		name = "EVTOPTADUEL310"
 		prestige = -10 #loss
-		FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
+		#FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
+		FROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT1" } } #BROKEN
 	}
 }
 
@@ -2882,7 +2882,6 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTADUEL311"
-		set_variable = { which = duel_rounds value = 0 }
 		FROMFROM = { character_event = { id = duel.312 tooltip = "EVTTOOLTIPDUEL312" } }
 	}
 }
@@ -2899,10 +2898,14 @@ character_event = {
 			death_reason = death_accident #actually jousting
 			#killer = FROM
 		}
-		FROM = { set_character_flag = flag_killed_opponent }
-		set_variable = { which = duel_rounds value = 0 }
-		FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
-		hidden_tooltip = { FROM = { character_event = { id = duel.203 } } }
+		hidden_tooltip = {
+			FROM = { set_character_flag = flag_killed_opponent }
+			FROM = { set_variable = { which = duel_rounds value = 0 } }
+			#FROM = { character_event = { id = duel_output.2 tooltip = "EVTTOOLTIPDUELOUTPUT1" } }
+			FROM = { character_event = { id = duel_output.3 tooltip = "EVTTOOLTIPDUELOUTPUT1" } } #BROKEN
+		#	FROM = { character_event = { id = duel.314 } }
+			FROM = { prestige = -25 } #Instead of the above
+		}
 	}
 }
 
