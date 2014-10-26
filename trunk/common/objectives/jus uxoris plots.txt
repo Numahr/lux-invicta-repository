@@ -1,0 +1,880 @@
+# Plot tags need to start with 'plot_'
+
+# Supported types:
+# character, spouse, rivals, friends, liege_titles, vassal_titles, realm_titles, realm_characters, realm_characters_plus, independent_rulers
+
+# ##############
+# PLOTS
+# ##############
+
+# Plot to take control of your wife's realm through Jus Uxoris (wife is liege)
+plot_usurp_liege_wife = {
+	type = liege_titles
+	vassal_intrigue_plot = yes
+	intrigue_plot = yes
+	
+	#Plotter scope
+	potential = {
+		is_female = no
+		is_patrician = no
+		prisoner = no
+		is_married = yes
+		is_primary_war_attacker = no
+		is_primary_war_defender = no
+		NOT = { has_character_modifier = failed_to_usurp_wife }
+		NOT = { has_character_flag = usurped_my_wife }
+		NOT = {
+			trait = inbred
+			trait = weak
+			trait = incapable
+			trait = slow
+			trait = bastard
+			trait = stressed
+			trait = depressed
+			trait = imbecile
+			trait = content
+			trait = eunuch
+			health_traits = 1
+			trait = naive_appeaser
+			trait = detached_priest
+		}
+		prestige = 1
+	}
+	
+	#Target scope
+	allow = {
+		holder_scope = {
+			is_female = yes
+			is_feudal = yes
+			is_patrician = no
+			is_pregnant = no
+			is_primary_war_attacker = no
+			is_primary_war_defender = no
+			NOT = {
+				has_law = enatic_cognatic_succession
+				has_law = enatic_succession
+			}
+			primary_title = {
+				higher_tier_than = baron
+				title = PREVPREV
+			}
+			any_spouse = {
+				character = FROM
+			}
+			FROM = {
+				OR = {
+					AND = {
+						is_ruler = no
+						employer = {
+							character = PREVPREV
+						}
+					}
+					AND = {
+						is_landed = yes
+						is_feudal = yes
+						is_patrician = no
+						any_liege = {
+							character = PREVPREV
+						}
+						demesne_efficiency = 1.0
+					}
+				}
+			}
+			OR = {
+				AND = {
+					culture_group = FROM
+					religion_group = FROM
+				}
+				capital_scope = {
+					culture_group = FROM
+					religion_group = FROM
+				}
+				dynasty = FROM
+				FROM = {
+					is_landed = yes
+					OR = {
+						any_realm_province = {
+							culture_group = PREVPREV
+							religion_group = PREVPREV
+						}
+						any_demesne_province = {
+							any_neighbor_province = {
+								culture_group = PREVPREVPREV
+								religion_group = PREVPREVPREV
+							}
+						}
+					}
+					OR = {
+						trait = ambitious
+						trait = gregarious
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					trait = proud
+					FROM = {
+						trait = humble
+					}
+				}
+				AND = {
+					trait = brave
+					FROM = {
+						trait = craven
+					}
+				}
+				AND = {
+					trait = diligent
+					FROM = {
+						trait = slothful
+					}
+				}
+				AND = {
+					trait = gregarious
+					FROM = {
+						trait = shy
+					}
+				}
+			}
+			OR = {
+				AND = {
+					NOT = {
+						trait = grey_eminence
+					}
+					OR = {
+						NOT = {
+							trait = ambitious
+						}
+						FROM = {
+							trait = ambitious
+						}
+					}
+					OR = {
+						NOT = {
+							trait = genius
+						}
+						FROM = {
+							trait = genius
+						}
+					}
+				}
+				trait = infirm
+				trait = weak
+				trait = incapable
+				trait = depressed
+				trait = blinded
+				trait = content
+				trait = drunkard
+				trait = maimed
+				trait = lunatic
+				trait = possessed
+				trait = syphilitic
+				trait = leper
+				trait = imbecile
+				trait = inbred
+				trait = slow
+				trait = trusting
+				AND = {
+					trait = shy
+					trait = craven
+				}
+				AND = {
+					trait = shy
+					trait = humble
+				}
+				AND = {
+					trait = craven
+					trait = humble
+				}
+			}
+			OR = {
+				has_law = agnatic_succession
+				has_law = cognatic_succession
+				NOT = {
+					diplomacy = 8
+					intrigue = 8
+				}
+				AND = {
+					NOT = {
+						trait = brave
+						trait = diligent
+					}
+					OR = {
+						trait = humble
+						trait = content
+						trait = trusting
+					}
+				}
+				AND = {
+					NOT = {
+						trait = diligent
+						trait = proud
+					}
+					OR = {
+						trait = craven
+						trait = content
+						trait = trusting
+					}
+				}
+				AND = {
+					NOT = {
+						trait = brave
+						trait = proud
+					}
+					OR = {
+						trait = slothful
+						trait = humble
+						trait = trusting
+					}
+				}
+			}
+		}
+	}
+	chance = {
+		factor = 20
+		modifier = {
+			factor = 0
+			holder_scope = {
+				reverse_opinion = {
+					who = FROM
+					value = 50
+				}
+			}
+		}
+	}
+	success = {
+		holder = FROM
+	}
+	abort = {
+		OR = {
+			FROM = {
+				is_married = no
+				trait = incapable
+			}
+			holder_scope = {
+				NOT = {
+					any_spouse = {
+						character = FROM
+					}
+					character = FROM
+				}
+			}
+		}
+	}
+	abort_effect = {
+		FROM = {
+			if = {
+				limit = {
+					is_married = yes
+				}
+				hidden_tooltip = {
+					add_character_modifier = {
+						name = failed_to_usurp_wife
+						days = 1825
+						hidden = yes
+					}
+				}
+			}
+			clr_character_flag = plot_usurp_wife_decision_taken
+		}
+	}
+	effect = {
+		FROM = {
+			if = {
+				limit = {
+					NOT = {
+						intrigue = 10
+					}
+				}
+				change_intrigue = 1
+			}
+			any_plot_backer = {
+				reverse_opinion = {
+					who = FROM
+					modifier = opinion_grateful
+					years = 5
+				}
+			}
+			set_character_flag = usurped_my_wife
+		}
+	}
+}
+
+# Plot to take control of your wife's realm through Jus Uxoris (wife is in same realm, but neither liege nor vassal)
+plot_usurp_same_realm_wife = {
+	type = realm_titles
+	vassal_intrigue_plot = yes
+	intrigue_plot = yes
+	
+	#Plotter scope
+	potential = {
+		is_female = no
+		is_ruler = yes
+		is_feudal = yes
+		is_patrician = no
+		prisoner = no
+		is_married = yes
+		is_primary_war_attacker = no
+		is_primary_war_defender = no
+		NOT = { has_character_modifier = failed_to_usurp_wife }
+		NOT = { has_character_flag = usurped_my_wife }
+		NOT = {
+			trait = inbred
+			trait = weak
+			trait = incapable
+			trait = slow
+			trait = bastard
+			trait = stressed
+			trait = depressed
+			trait = imbecile
+			trait = content
+			trait = eunuch
+			health_traits = 1
+			trait = naive_appeaser
+			trait = detached_priest
+		}
+		prestige = 1
+	}
+	
+	#Target scope
+	allow = {
+		holder_scope = {
+			is_female = yes
+			is_feudal = yes
+			is_patrician = no
+			is_pregnant = no
+			is_primary_war_attacker = no
+			is_primary_war_defender = no
+			NOT = {
+				has_law = enatic_cognatic_succession
+				has_law = enatic_succession
+			}
+			primary_title = {
+				higher_tier_than = baron
+				title = PREVPREV
+			}
+			any_spouse = {
+				character = FROM
+			}
+			FROM = {
+				same_realm = PREV
+				NOT = {
+					any_liege = {
+						character = PREV
+					}
+					PREV = {
+						any_liege = {
+							character = FROM
+						}
+					}
+				}
+				demesne_efficiency = 1.0
+			}
+			OR = {
+				AND = {
+					culture_group = FROM
+					religion_group = FROM
+				}
+				capital_scope = {
+					culture_group = FROM
+					religion_group = FROM
+				}
+				dynasty = FROM
+				FROM = {
+					OR = {
+						any_realm_province = {
+							culture_group = PREVPREV
+							religion_group = PREVPREV
+						}
+						any_demesne_province = {
+							any_neighbor_province = {
+								culture_group = PREVPREVPREV
+								religion_group = PREVPREVPREV
+							}
+						}
+					}
+					OR = {
+						trait = ambitious
+						trait = gregarious
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					trait = proud
+					FROM = {
+						trait = humble
+					}
+				}
+				AND = {
+					trait = brave
+					FROM = {
+						trait = craven
+					}
+				}
+				AND = {
+					trait = diligent
+					FROM = {
+						trait = slothful
+					}
+				}
+				AND = {
+					trait = gregarious
+					FROM = {
+						trait = shy
+					}
+				}
+			}
+			OR = {
+				AND = {
+					NOT = {
+						trait = grey_eminence
+					}
+					OR = {
+						NOT = {
+							trait = ambitious
+						}
+						FROM = {
+							trait = ambitious
+						}
+					}
+					OR = {
+						NOT = {
+							trait = genius
+						}
+						FROM = {
+							trait = genius
+						}
+					}
+				}
+				trait = infirm
+				trait = weak
+				trait = incapable
+				trait = depressed
+				trait = blinded
+				trait = content
+				trait = drunkard
+				trait = maimed
+				trait = lunatic
+				trait = possessed
+				trait = syphilitic
+				trait = leper
+				trait = imbecile
+				trait = inbred
+				trait = slow
+				trait = trusting
+				AND = {
+					trait = shy
+					trait = craven
+				}
+				AND = {
+					trait = shy
+					trait = humble
+				}
+				AND = {
+					trait = craven
+					trait = humble
+				}
+			}
+			OR = {
+				has_law = agnatic_succession
+				has_law = cognatic_succession
+				NOT = {
+					diplomacy = 8
+					intrigue = 8
+				}
+				AND = {
+					NOT = {
+						trait = brave
+						trait = diligent
+					}
+					OR = {
+						trait = humble
+						trait = content
+						trait = trusting
+					}
+				}
+				AND = {
+					NOT = {
+						trait = diligent
+						trait = proud
+					}
+					OR = {
+						trait = craven
+						trait = content
+						trait = trusting
+					}
+				}
+				AND = {
+					NOT = {
+						trait = brave
+						trait = proud
+					}
+					OR = {
+						trait = slothful
+						trait = humble
+						trait = trusting
+					}
+				}
+			}
+		}
+	}
+	chance = {
+		factor = 20
+		modifier = {
+			factor = 0
+			holder_scope = {
+				reverse_opinion = {
+					who = FROM
+					value = 50
+				}
+			}
+		}
+	}
+	success = {
+		holder = FROM
+	}
+	abort = {
+		OR = {
+			FROM = {
+				is_married = no
+				trait = incapable
+			}
+			holder_scope = {
+				NOT = {
+					any_spouse = {
+						character = FROM
+					}
+					character = FROM
+				}
+			}
+		}
+	}
+	abort_effect = {
+		FROM = {
+			if = {
+				limit = {
+					is_married = yes
+				}
+				hidden_tooltip = {
+					add_character_modifier = {
+						name = failed_to_usurp_wife
+						days = 1825
+						hidden = yes
+					}
+				}
+			}
+			clr_character_flag = plot_usurp_wife_decision_taken
+		}
+	}
+	effect = {
+		FROM = {
+			if = {
+				limit = {
+					NOT = {
+						intrigue = 10
+					}
+				}
+				change_intrigue = 1
+			}
+			any_plot_backer = {
+				reverse_opinion = {
+					who = FROM
+					modifier = opinion_grateful
+					years = 5
+				}
+			}
+			set_character_flag = usurped_my_wife
+		}
+	}
+}
+# Plot to take control of your wife's realm through Jus Uxoris (wife is independent)
+plot_usurp_independent_wife = {
+	type = spouse
+	vassal_intrigue_plot = yes
+	intrigue_plot = yes
+	
+	#Plotter scope
+	potential = {
+		is_female = no
+		is_ruler = yes
+		independent = yes
+		is_feudal = yes
+		is_patrician = no
+		prisoner = no
+		is_married = yes
+		is_primary_war_attacker = no
+		is_primary_war_defender = no
+		NOT = { has_character_modifier = failed_to_usurp_wife }
+		NOT = { has_character_flag = usurped_my_wife }
+		NOT = {
+			trait = inbred
+			trait = weak
+			trait = incapable
+			trait = slow
+			trait = bastard
+			trait = stressed
+			trait = depressed
+			trait = imbecile
+			trait = content
+			trait = eunuch
+			health_traits = 1
+			trait = naive_appeaser
+			trait = detached_priest
+		}
+		prestige = 1
+	}
+	
+	#Target scope
+	allow = {
+		is_female = yes
+		is_feudal = yes
+		is_patrician = no
+		is_pregnant = no
+		independent = yes
+		is_primary_war_attacker = no
+		is_primary_war_defender = no
+		NOT = {
+			has_law = enatic_cognatic_succession
+			has_law = enatic_succession
+		}
+		primary_title = {
+			higher_tier_than = baron
+		}
+		any_spouse = {
+			character = FROM
+		}
+		FROM = {
+			NOT = {
+				same_realm = ROOT
+			}
+			demesne_efficiency = 1.0
+		}
+		OR = {
+			AND = {
+				culture_group = FROM
+				religion_group = FROM
+			}
+			capital_scope = {
+				culture_group = FROM
+				religion_group = FROM
+			}
+			dynasty = FROM
+			FROM = {
+				OR = {
+					any_realm_province = {
+						culture_group = ROOT
+						religion_group = ROOT
+					}
+					any_demesne_province = {
+						any_neighbor_province = {
+							culture_group = ROOT
+							religion_group = ROOT
+						}
+					}
+				}
+				OR = {
+					trait = ambitious
+					trait = gregarious
+				}
+			}
+		}
+		NOT = {
+			AND = {
+				trait = proud
+				FROM = {
+					trait = humble
+				}
+			}
+			AND = {
+				trait = brave
+				FROM = {
+					trait = craven
+				}
+			}
+			AND = {
+				trait = diligent
+				FROM = {
+					trait = slothful
+				}
+			}
+			AND = {
+				trait = gregarious
+				FROM = {
+					trait = shy
+				}
+			}
+		}
+		OR = {
+			AND = {
+				NOT = {
+					trait = grey_eminence
+				}
+				OR = {
+					NOT = {
+						trait = ambitious
+					}
+					FROM = {
+						trait = ambitious
+					}
+				}
+				OR = {
+					NOT = {
+						trait = genius
+					}
+					FROM = {
+						trait = genius
+					}
+				}
+			}
+			trait = infirm
+			trait = weak
+			trait = incapable
+			trait = depressed
+			trait = blinded
+			trait = content
+			trait = drunkard
+			trait = maimed
+			trait = lunatic
+			trait = possessed
+			trait = syphilitic
+			trait = leper
+			trait = imbecile
+			trait = inbred
+			trait = slow
+			trait = trusting
+			AND = {
+				trait = shy
+				trait = craven
+			}
+			AND = {
+				trait = shy
+				trait = humble
+			}
+			AND = {
+				trait = craven
+				trait = humble
+			}
+		}
+		OR = {
+			has_law = agnatic_succession
+			has_law = cognatic_succession
+			NOT = {
+				diplomacy = 8
+				intrigue = 8
+			}
+			AND = {
+				NOT = {
+					trait = brave
+					trait = diligent
+				}
+				OR = {
+					trait = humble
+					trait = content
+					trait = trusting
+				}
+			}
+			AND = {
+				NOT = {
+					trait = diligent
+					trait = proud
+				}
+				OR = {
+					trait = craven
+					trait = content
+					trait = trusting
+				}
+			}
+			AND = {
+				NOT = {
+					trait = brave
+					trait = proud
+				}
+				OR = {
+					trait = slothful
+					trait = humble
+					trait = trusting
+				}
+			}
+		}
+	}
+	chance = {
+		factor = 20
+		modifier = {
+			factor = 0
+			reverse_opinion = {
+				who = FROM
+				value = 50
+			}
+		}
+	}
+	success = {
+		ROOT = {
+			liege = {
+				character = FROM
+			}
+		}
+	}
+	abort = {
+		OR = {
+			FROM = {
+				OR = {
+					is_married = no
+					trait = incapable
+					independent = no
+				}
+			}
+			AND = {
+				independent = no
+				NOT = {
+					liege = {
+						character = FROM
+					}
+				}
+			}
+			NOT = {
+				any_spouse = {
+					character = FROM
+				}
+			}
+		}
+	}
+	abort_effect = {
+		FROM = {
+			if = {
+				limit = {
+					is_married = yes
+				}
+				hidden_tooltip = {
+					add_character_modifier = {
+						name = failed_to_usurp_wife
+						days = 1825
+						hidden = yes
+					}
+				}
+			}
+			clr_character_flag = plot_usurp_wife_decision_taken
+		}
+	}
+	effect = {
+		FROM = {
+			if = {
+				limit = {
+					NOT = {
+						intrigue = 10
+					}
+				}
+				change_intrigue = 1
+			}
+			any_plot_backer = {
+				reverse_opinion = {
+					who = FROM
+					modifier = opinion_grateful
+					years = 5
+				}
+			}
+			set_character_flag = usurped_my_wife
+			clr_character_flag = plot_usurp_wife_decision_taken
+		}
+	}
+}
