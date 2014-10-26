@@ -14,243 +14,6 @@ character_event = {
 		prestige = -100
 	}
 }
-#Husband is informed that his wife has taken back her lands and titles
-character_event = {
-	id = DAMO.93
-	desc = DAMO93EVTDESC
-	picture = "GFX_DAMO_queen"
-	
-	is_triggered_only = yes 
-
-	option = {
-		name = CURSES
-	}
-}
-#usurped wife gets lands and titles back on divorce
-character_event = {
-	id = DAMO.92
-	desc = OK
-	picture = "GFX_evt_death"
-	hide_window = yes
-	
-	trigger = {
-		has_character_flag = usurped_by_husband
-		is_married = no
-		
-		any_claim = {
-			has_holder = yes
-			holder_scope = {
-				has_character_flag = divorcing_husband
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		days = 1
-	}
-	immediate = {
-		if = {
-			limit = {
-				has_character_flag = usurped_by_husband
-				is_married = no
-				
-				any_claim = {
-					has_holder = yes
-					holder_scope = {
-						has_character_flag = divorcing_husband
-					}
-				}
-			}
-				
-			ROOT = {
-				any_claim = {
-					limit = {
-						has_holder = yes
-						ROOT = {
-							has_strong_claim = PREV
-						}
-						holder_scope = {
-							has_character_flag = divorcing_husband
-						} 
-					} 
-					holder_scope = {
-						clr_character_flag = divorcing_husband
-					}
-					gain_title_plus_barony_if_unlanded = ROOT
-				}
-			}
-			clr_character_flag = usurped_by_husband
-		}
-	}
-}
-#on_action for ASK_FOR_DIVORCE_INTERACTION_ACCEPT_EVENT: usurped wife is divorced
-character_event = {
-	id = DAMO.91
-	
-	is_triggered_only = yes 
-
-	hide_window = yes
-	
-	immediate = {
-		if = {
-			limit = {
-				has_character_flag = usurped_my_wife
-			}
-			clr_character_flag = usurped_my_wife
-			set_character_flag = divorcing_husband
-		}
-	}
-}
-
-#on_death for usurped wife/usurping husband
-	character_event = {
-	id = DAMO.90
-	
-	is_triggered_only = yes 
-
-	hide_window = yes
-	
-	trigger = {
-		OR = {
-			has_character_flag = usurped_by_husband
-			has_character_flag = usurped_my_wife
-			has_character_flag = vassal_husband
-		}
-	}
-	
-	immediate = {					
-		if = {
-			limit = {
-				has_character_flag = usurped_by_husband
-				any_spouse = {
-					has_character_flag = usurped_my_wife
-					NOT = {	
-						any_child = {
-							is_alive = yes
-							is_female = no
-							mother = {
-								character = ROOT
-							}
-						}  
-					}
-					ROOT = {
-						any_claim = {
-							has_holder = yes
-							ROOT = {
-								has_strong_claim = PREV
-							}
-							holder_scope = {
-								character = PREVPREVPREV
-							}
-						}
-					}	
-				}
-			}
-			any_spouse = {
-				limit = {
-					has_character_flag = usurped_my_wife
-				}
-				ROOT = {
-					any_claim = {
-						limit = {
-							has_holder = yes
-							ROOT = {
-								has_strong_claim = PREV
-							}
-							holder_scope = {
-								character = PREVPREVPREV
-							} 
-						} 
-						gain_title_plus_barony_if_unlanded = ROOT
-					}
-				}
-				any_vassal = {
-					limit = {
-						has_character_flag = usurped_by_liege_husband
-					} 
-					clr_character_flag = usurped_by_liege_husband					
-					set_defacto_liege = ROOT
-				}
-				clr_character_flag = usurped_my_wife
-			}
-			any_vassal = {
-				limit = {
-					has_character_flag = usurped_by_liege_husband
-				} 
-				clr_character_flag = usurped_by_liege_husband					
-			}				
-		}
-		clr_character_flag = usurped_by_husband
-		if = {
-			limit = {
-				has_character_flag = usurped_my_wife
-				
-				any_spouse = {	
-					has_character_flag = usurped_by_husband
-					NOT = {	
-						any_child = {
-							is_alive = yes
-							is_female = no
-							father = {
-								character = ROOT
-							}
-						}
-					}
-					any_claim = {
-						has_holder = yes
-						PREV = {
-							has_strong_claim = PREV
-						}
-						holder_scope = {
-							character = ROOT
-						}
-					}
-				}
-			}
-			any_spouse = {
-				limit = {
-					has_character_flag = usurped_by_husband
-				}
-				any_claim = {
-					limit = {
-						has_holder = yes
-						PREV = {
-							has_strong_claim = PREV
-						}
-						holder_scope = { 
-							character = ROOT 
-						}		
-					}
-					gain_title_plus_barony_if_unlanded = PREV
-				}
-				ROOT = {
-					any_vassal = {
-						limit = {
-							has_character_flag = usurped_by_liege_husband
-						}
-						set_defacto_liege = PREVPREV
-						clr_character_flag = usurped_by_liege_husband
-					}
-				}
-				any_vassal = {
-					limit = {
-						has_character_flag = usurped_by_liege_husband
-					}
-					clr_character_flag = usurped_by_liege_husband
-				}
-				clr_character_flag = usurped_by_husband
-			}
-			clr_character_flag = usurped_my_wife
-		}	
-		if = {
-			limit = { 
-				has_character_flag = vassal_husband 
-			}
-			set_defacto_liege = ROOT
-			clr_character_flag = vassal_husband
-		}		
-	}
-}		
 #Husband decides to usurp; wife is ROOT, husband is FROM
 character_event = {
 	id = DAMO.100
@@ -713,7 +476,126 @@ character_event = {
 			}
 		}
 	}	
-		
+	
+	option = {
+		name = DAMO100OPTFDESC	#Friend
+		ai_chance = {
+			factor = 25
+		}
+		trigger = {
+			any_friend = {
+				NOT = {
+					character = FROM
+					any_lover = {
+						character = ROOT
+					}
+				}
+				is_female = no
+				is_alive = yes
+				is_adult = yes
+				is_councillor = yes
+				prisoner = no
+				opinion = {
+					who = ROOT
+					value = 70
+				}						
+				NOT = {
+					trait = incapable
+					trait = craven
+					health_traits = 1
+				}
+			}
+		}
+		random_friend = {
+			limit = {
+				NOT = {
+					character = FROM
+					any_lover = {
+						character = ROOT
+					}
+				}						
+				is_councillor = yes
+				is_female = no
+				is_alive = yes
+				is_adult = yes
+				prisoner = no
+				opinion = {
+					who = ROOT
+					value = 70
+				}						
+				NOT = {
+					trait = incapable
+					trait = craven
+					health_traits = 1
+				}
+			}
+			character_event = {
+				id = DAMO.236
+				tooltip = DAMO236TP
+			}
+		}
+	}
+	
+	option = {
+		name = DAMO100OPTGDESC	#Husband's rival
+		ai_chance = {
+			factor = 25
+		}
+		trigger = {
+			FROM = {
+				any_rival = {
+					is_female = no
+					is_alive = yes
+					is_adult = yes
+					is_councillor = yes
+					prisoner = no
+					opinion = {
+						who = ROOT
+						value = 25
+					}
+					NOT = {
+						opinion = {
+							who = FROM
+							value = -50
+						}
+						trait = incapable
+						trait = craven
+						health_traits = 1
+					}
+				}
+			}
+		}
+		random_friend = {
+			limit = {
+				FROM = {
+					any_rival = {
+						is_female = no
+						is_alive = yes
+						is_adult = yes
+						is_councillor = yes
+						prisoner = no
+						opinion = {
+							who = ROOT
+							value = 25
+						}
+						NOT = {
+							opinion = {
+								who = FROM
+								value = -50
+							}
+							trait = incapable
+							trait = craven
+							health_traits = 1
+						}
+					}
+				}
+			}
+			character_event = {
+				id = DAMO.237
+				tooltip = DAMO237TP
+			}
+		}
+	}
 			
 	option = {
 		name = DAMO100OPTEDESC
@@ -1556,7 +1438,7 @@ character_event = {
 	}
 }		
 	
-#Councilor is asked to help. Councilor is ROOT, wife is FROM, husband is FROMFROMFROM
+#Councilor is asked to help. Councilor is ROOT, wife is FROM, husband is FROMFROM
 character_event = {
 	id = DAMO.209
 	desc = DAMO209EVTDESC
@@ -1754,7 +1636,7 @@ character_event = {
 	}
 }
 
-#Lover/councilor/unlanded family member acts as lone knight. Wife is ROOT, lone knight is FROM, husband is FROMFROMFROM
+#Lover/councilor/unlanded family member/friend acts as lone knight. Wife is ROOT, lone knight is FROM, husband is FROMFROMFROM
 character_event = {
 	id = DAMO.214 # lone knight arrives
 	desc = DAMO214EVTDESC
@@ -2993,40 +2875,6 @@ character_event = {
 	option = {
 		name = EXCELLENT
 		
-		set_character_flag = usurped_my_wife
-				
-		trigger = {
-			FROM = {
-				ai = yes
-			}
-			NOT = {
-				higher_tier_than = FROM
-			}
-		}
-			
-		FROM = {
-			any_vassal = {
-				set_character_flag = usurped_by_liege_husband
-				FROM = {
-					primary_title = {
-						FROM = {
-							any_demesne_title = {
-								limit = {
-									tier = PREVPREV
-								}
-								usurp_title_plus_barony_if_unlanded = ROOT
-							}
-						}
-					}
-				}
-				set_defacto_liege = ROOT
-			}
-		}
-	}
-	
-	option = {
-		name = EXCELLENT
-		
 		set_character_flag = usurped_my_wife		
 				
 		trigger = {
@@ -3043,31 +2891,42 @@ character_event = {
 		set_character_flag = usurped_my_wife		
 		
 		trigger = {
-			FROM = {
-				ai = no
-			}
 			NOT = {
 				higher_tier_than = FROM
 			}
 		}
 			
 		FROM = {
-			any_vassal = {
-				set_character_flag = usurped_by_liege_husband
-				FROM = {
+			primary_title = {
+				ROOT = {
 					primary_title = {
 						FROM = {
+							any_vassal = {
+								set_character_flag = usurped_by_liege_husband
+								set_defacto_liege = ROOT
+							}
 							any_demesne_title = {
 								limit = {
-									tier = PREVPREV
+									tier = PREVPREVPREVPREV
+									NOT = {
+										title = PREVPREVPREVPREV
+									}
 								}
 								usurp_title_plus_barony_if_unlanded = ROOT
+							}
+							primary_title = {
+								copy_title_laws = PREVPREVPREVPREV
+							}
+						}
+						ROOT = {
+							primary_title = {
+								copy_title_laws = PREVPREV
 							}
 						}
 					}
 				}
-				set_defacto_liege = ROOT
 			}
+			set_defacto_liege = ROOT
 		}
 	}
 }
@@ -3092,30 +2951,40 @@ character_event = {
 	option = {
 		name = EXCELLENT
 		trigger = {
-			FROM = {
-				ai = yes
-			}
 			NOT = { higher_tier_than = FROM }
 		}
 		FROM = {
-			any_vassal = {
-				set_character_flag = usurped_by_liege_husband
-				FROM = {
+			primary_title = {
+				ROOT = {
 					primary_title = {
 						FROM = {
+							any_vassal = {
+								set_character_flag = usurped_by_liege_husband
+								set_defacto_liege = ROOT
+							}
 							any_demesne_title = {
 								limit = {
-									tier = PREVPREV
+									tier = PREVPREVPREVPREV
+									NOT = {
+										title = PREVPREVPREVPREV
+									}
 								}
 								usurp_title_plus_barony_if_unlanded = ROOT
+							}
+							primary_title = {
+								copy_title_laws = PREVPREVPREVPREV
 							}
 						}
 					}
 				}
-				set_defacto_liege = ROOT
+				ROOT = {
+					primary_title = {
+						copy_title_laws = PREVPREV
+					}
+				}
 			}
+			set_defacto_liege = ROOT
 		}
-		set_character_flag = usurped_my_wife
 	}
 	
 	option = {
@@ -3133,38 +3002,6 @@ character_event = {
 		}
 	}	
 
-	option = {
-		name = EXCELLENT
-		
-		trigger = {
-			FROM = {
-				ai = no
-			}
-			NOT = {
-				higher_tier_than = FROM
-			}
-		}
-		set_character_flag = usurped_my_wife		
-		
-		FROM = {
-			any_vassal = {
-				set_character_flag = usurped_by_liege_husband
-				FROM = {
-					primary_title = {
-						FROM = {
-							any_demesne_title = {
-								limit = {
-									tier = PREVPREV
-								}
-								usurp_title_plus_barony_if_unlanded = ROOT
-							}
-						}
-					}
-				}
-				set_defacto_liege = ROOT
-			}
-		}
-	}
 }
 #Player character is informed of relative's being usurped. Wife is FROM
 character_event = {
@@ -3244,7 +3081,6 @@ character_event = {
 				trait = brave
 				trait = ambitious
 				trait = strong
-				trait = imposing
 				trait = genius
 				trait = quick
 				trait = cruel
@@ -3254,9 +3090,6 @@ character_event = {
 				trait = tough_soldier
 				trait = skilled_tactician
 				trait = brilliant_strategist
-				trait = skilled_warrior
-				trait = master_warrior
-				trait = trained_warrior
 				trait = greedy
 				trait = envious
 				trait = lunatic
@@ -3498,7 +3331,6 @@ character_event = {
 				trait = underhanded_rogue
 				trait = paranoid
 				trait = craven
-				trait = perceptive
 			}
 		}	
 	
@@ -3741,7 +3573,6 @@ character_event = {
 				trait = dwarf
 				trait = harelip
 				trait = ugly
-				trait = imbecile
 				trait = greedy
 				trait = clubfooted
 				trait = bastard
@@ -3751,14 +3582,10 @@ character_event = {
 			OR = {
 				trait = ambitious
 				trait = scholar
-				trait = calm_voice
-				trait = powerful_voice
 				trait = genius
 				trait = quick
 				trait = strong
-				trait = tall
 				trait = fair
-				trait = imposing
 				trait = just
 				trait = kind
 				trait = charitable
@@ -4150,9 +3977,7 @@ character_event = {
 				martial = 9
 			}
 			trait = tough_soldier
-			trait = veteran
 			trait = scarred
-			trait = skilled_warrior
 		}
 		FROMFROM = {
 			character_event = {
@@ -4624,3 +4449,58 @@ character_event = {
 		}		
 	}
 }
+#Friend is asked to aid wife. Friend is ROOT, wife is FROM, husband is FROMFROM
+character_event = {
+	id = DAMO.236
+	desc = DAMO236EVTDESC
+	picture = GFX_DAMO_content_wife
+	border = GFX_event_normal_frame_intrigue
+	is_triggered_only = yes
+	
+	option = {
+		name = DAMO236OPTADESC
+		trigger = {
+			lower_tier_than = count
+		}
+		character_event = {
+			id = DAMO.214	#Act as lone knight
+		}
+	}
+	option = {
+		name = DAMO236OPTBDESC
+		trigger = {
+			higher_tier_than = baron
+		}
+		character_event = {
+			id = DAMO.210
+		}
+	}
+}
+#Husband's rival is asked to aid wife. Rival is ROOT, wife is FROM, husband is FROMFROM
+character_event = {
+	id = DAMO.237
+	desc = DAMO237EVTDESC
+	picture = GFX_DAMO_content_wife
+	border = GFX_event_normal_frame_intrigue
+	is_triggered_only = yes
+	
+	option = {
+		name = DAMO237OPTADESC
+		trigger = {
+			lower_tier_than = count
+		}
+		character_event = {
+			id = DAMO.214	#Act as lone knight
+		}
+	}
+	option = {
+		name = DAMO237OPTBDESC
+		trigger = {
+			higher_tier_than = baron
+		}
+		character_event = {
+			id = DAMO.210
+		}
+	}
+}
+	 

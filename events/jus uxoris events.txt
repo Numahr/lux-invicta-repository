@@ -1,0 +1,424 @@
+namespace = jus_uxoris
+#jus_uxoris.1 through .8 - on_death events and notifications
+#jus_uxoris.20 through .23 - divorce approval event and notifications
+#jus_uxoris.50 through .?? - Decision to usurp chain
+#jus_uxoris.100 through .?? - Lover intervenes chain
+#jus_uxoris.150 through .?? - Landed close relative intervenes
+
+#on_death event for usurping husband - no sons by usurped wife
+character_event = {
+	id = jus_uxoris.1
+	desc = EVTDESCju.1
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_character_flag = usurped_my_wife
+		any_spouse = {
+			has_character_flag = usurped_by_husband
+			NOT = {
+				any_child = {
+					father = {
+						character = ROOT
+					}
+					is_female = no
+					is_alive = yes
+				}
+			}
+			any_claim = {
+				has_holder = yes
+				holder_scope = {
+					character = ROOT
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		clr_character_flag = usurped_my_wife
+		primary_title = {
+			ROOT = {
+				any_spouse = {
+					limit = {
+						has_character_flag = usurped_by_husband
+					}
+					clr_character_flag = usurped_by_husband
+					primary_title = {
+						PREV = {
+							any_claim = {
+								limit = {
+									has_holder = yes
+									holder_scope = {
+										character = ROOT
+									}
+									PREV = {
+										has_strong_claim = PREV
+									}
+								}
+								ROOT = {
+									if = {
+										limit = {
+											NOT = {
+												primary_title = {
+													title = PREVPREV
+												}
+											}
+										}
+										PREV = {
+											gain_title_plus_barony_if_unlanded = PREVPREVPREV
+										}
+									}
+									if = {
+										limit = {
+											primary_title = {
+												title = PREVPREV
+											}
+										}
+										PREV = {
+											gain_title_plus_barony_if_unlanded = PREVPREVPREV
+										}
+										primary_title = {
+											copy_title_laws = PREVPREV
+										}
+									}
+								}
+								copy_title_history = PREVPREV
+							}
+							character_event = {
+								id = jus_uxoris.2		#Notify wife
+							}
+						}
+					}
+					ROOT = {
+						any_vassal = {
+							limit = {
+								has_character_flag = usurped_by_liege_husband
+							}
+							set_defacto_liege = PREVPREV
+							clr_character_flag = usurped_by_liege_husband
+							character_event = {
+								id = jus_uxoris.3	#Notify vassal
+							}
+						}
+						if = {
+							limit = {
+								has_character_flag = vassal_husband
+							}
+							set_defacto_liege = PREV
+						}
+					}
+					any_vassal = {
+						limit = {
+							has_character_flag = usurped_by_liege_husband
+						}
+						clr_character_flag = usurped_by_liege_husband
+						character_event = {
+							id = jus_uxoris.3		#Notify vassal
+						}
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = ALAS
+	}
+}
+
+#Notification event - wife has titles returned
+character_event = {
+	id = jus_uxoris.2
+	desc = EVTDESCju.2
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = PRAISEGOD
+	}
+}
+
+#Notification event - wife has had titles returned (vassal)
+character_event = {
+	id = jus_uxoris.3
+	desc = EVTDESCju.3
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ISEE
+	}
+}
+
+#on_death event - usurped wife dies with no living sons by usurping husband
+character_event = {
+	id = jus_uxoris.4
+	desc = EVTDESCju.4
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		has_character_flag = usurped_by_husband
+		any_spouse = {
+			has_character_flag = usurped_my_wife
+			NOT = {
+				any_child = {
+					is_female = no
+					is_alive = yes
+					mother = {
+						character = ROOT
+					}
+				}
+			}
+			ROOT = {
+				any_claim = {
+					has_holder = yes
+					holder_scope = {
+						character = PREVPREVPREV
+					}
+				}
+			}
+		}
+	}
+	immediate = {
+		clr_character_flag = usurped_by_husband
+		any_spouse = {
+			limit = {
+				has_character_flag = usurped_my_wife
+			}
+			ROOT = {
+				primary_title = {
+					PREVPREV = {
+						primary_title = {
+							ROOT = {
+								any_claim = {
+									limit = {
+										has_holder = yes
+										ROOT = {
+											has_strong_claim = PREV
+										}
+										holder_scope = {
+											character = PREVPREVPREVPREV
+										}
+									}
+									PREVPREVPREV = {
+										if = {
+											limit = {
+												NOT = {
+													primary_title = {
+														title = PREVPREV
+													}
+												}
+											}
+											PREV = {
+												gain_title_plus_barony_if_unlanded = ROOT
+											}
+										}
+										if = {
+											limit = {
+												primary_title = {
+													title = PREVPREV
+												}
+											}
+											PREV = {
+												gain_title_plus_barony_if_unlanded = ROOT
+											}
+											primary_title = {
+												copy_title_laws = PREVPREV
+											}
+										}
+									}
+									copy_title_laws = PREVPREV
+								}
+								any_spouse = {
+									limit = {
+										has_character_flag = usurped_my_wife
+									}
+									clr_character_flag = usurped_my_wife
+									character_event = {
+										id = jus_uxoris.5	#Notify husband of return of titles
+									}
+									any_vassal = {
+										limit = {
+											has_character_flag = usurped_by_liege_husband
+										}
+										clr_character_flag = usurped_by_liege_husband
+										set_defacto_liege = ROOT
+										character_event = {
+											id = jus_uxoris.6
+										}
+									}
+									if = {
+										limit = {
+											has_character_flag = vassal_husband
+										}
+										set_defacto_liege = ROOT
+									}
+								}
+								any_vassal = {
+									limit = {
+										has_character_flag = usurped_by_liege_husband
+									}
+									clr_character_flag = usurped_by_liege_husband
+									character_event = {
+										id = jus_uxoris.6
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = PRAISEGOD
+	}
+}
+#Notify husband - lands have been passed to wife's heir
+character_event = {
+	id = jus_uxoris.5
+	desc = EVTDESCju.5
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ALAS
+	}
+}
+#Notify vassals - lands have been passed to wife's heir
+character_event = {
+	id = jus_uxoris.6
+	desc = EVTDESCju.6
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = ISEE
+}
+#ASK_FOR_DIVORCE_INTERACTION_ACCEPT_EVENT for husband divorcing usurped wife
+character_event = {
+	id = jus_uxoris.20
+	desc = EVTDESCju.20
+	picture = GFX_evt_quarrel
+	
+	trigger =  {
+		has_character_flag = usurped_my_wife
+	}
+	option = {
+		name = ALAS
+		clr_character_flag = usurped_my_wife
+		any_realm_character = {
+			limit = {
+				has_opinion_modifier = {
+					modifier = husband_usurped_me
+					who = ROOT
+				}
+			}
+			character_event = {
+				id = jus_uxoris.21
+				days = 1
+				tooltip = EVTTOOLTIPju.21
+			}
+		}
+	}
+}
+#Usurped wife regains titles on divorce
+character_event = {
+	id = jus_uxoris.21
+	desc = EVTDESCju.21
+	picture = GFX_evt_quarrel
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = PRAISEGOD
+		clr_character_flag = usurped_by_husband
+		custom_tooltip = {
+			text = CUSTOMTOOLTIPju.22
+		}
+		primary_title = {
+			FROM = {
+				primary_title = {
+					ROOT = {
+						any_claim = {
+							limit = {
+								has_holder = yes
+								holder_scope = {
+									character = FROM
+								}
+								ROOT = {
+									has_strong_claim = PREV
+								}
+							}
+							PREVPREV = {
+								if = {
+									limit = {
+										NOT = {
+											title = PREV
+										}
+									}
+									gain_title_plus_barony_if_unlanded = ROOT
+								}
+								if = {
+									limit = {
+										title = PREV
+									}
+									gain_title_plus_barony_if_unlanded = ROOT
+									copy_title_laws = PREV
+								}
+							}
+						}
+						FROM = {
+							any_vassal = {
+								limit = {
+									has_character_flag = usurped_by_liege_husband
+								}
+								clr_character_flag = usurped_by_liege_husband
+								set_defacto_liege = ROOT
+								hidden_tooltip = {
+									character_event = {
+										id = jus_uxoris.22	#Notify vassal
+									}
+								}
+							}
+							if = {
+								limit = {
+									has_character_flag = vassal_husband
+								}
+								set_defacto_liege = ROOT
+							}
+						}
+						any_vassal = {
+							limit = {
+								has_character_flag = usurped_by_liege_husband
+							}
+							clr_character_flag = usurped_by_liege_husband
+							set_defacto_liege = ROOT
+							character_event = {
+								id = jus_uxoris.22	#Notify vassal
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+#Vassals are informed
+character_event = {
+	id = jus_uxoris.22
+	desc = EVTDESCju.22
+	picture = GFX_evt_quarrel
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ISEE
+	}
+}
+
