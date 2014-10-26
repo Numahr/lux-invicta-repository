@@ -9697,6 +9697,10 @@ character_event = {
 		
 		modifier = {
 			factor = 0.5
+			trait = duelist
+		}
+		modifier = {
+			factor = 0.5
 			trait = just
 		}
 		modifier = {
@@ -9721,15 +9725,15 @@ character_event = {
 			
 			modifier = {
 				factor = 5
+				trait = duelist
+			}
+			modifier = {
+				factor = 5
 				trait = brave
 			}
 			modifier = {
 				factor = 5
 				trait = just
-			}
-			modifier = {
-				factor = 5
-				trait = duelist
 			}
 			
 			modifier = {
@@ -9757,14 +9761,6 @@ character_event = {
 			}
 			set_character_flag = duel_rival
 			set_character_flag = flag_duel_friendly
-			custom_tooltip = {
-				text = EVTTOOLTIPA100411
-				hidden_tooltip = {
-					character_event = {
-						id = rivals_duel.1
-					}
-				}
-			}
 		}
 		liege = {
 			character_event = {
@@ -9894,12 +9890,14 @@ character_event = {
 				years = 5
 			}
 		}
-		#duel begin
 		random_rival = {
 			limit = {
 				has_character_flag = duel_rival
 			}
-			character_event = { id = rival_duel.1 }	#Inform rival
+			character_event = {
+				id = 100416 #New
+				tooltip = EVTTOOLTIPA100411
+			}
 		}
 	}
 	option = {
@@ -9912,19 +9910,6 @@ character_event = {
 				years = 5
 			}
 		}
-	}
-}
-
-namespace = rival_duel
-character_event = {
-	id = rival_duel.1
-	desc = EVTDESCrival_duel.1
-	picture = GFX_evt_melee
-	is_triggered_only = yes
-
-	option = {	#start duel
-		name = EVTOPTArival_duel.1
-		e_rebels = { holder_scope = { character_event = { id = duel.1 } } }
 	}
 }
 
@@ -9997,18 +9982,93 @@ character_event = {
 	}
 }
 
-#Your rival is asking permission to duel you.
-
-namespace = rivals_duel
+#Your rival wants to duel you and your liege allows it
 character_event = {
-	id = rivals_duel.1
+	id = 100416
 	desc = "EVTDESC100416"
 	picture = GFX_evt_emissary
 	
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA100416"
+		name = EVTOPTA100416
+		ai_chance = {
+			factor = 10
+			
+			modifier = {
+				factor = 5
+				trait = duelist
+			}
+			modifier = {
+				factor = 5
+				trait = brave
+			}
+			modifier = {
+				factor = 5
+				trait = just
+			}
+			
+			modifier = {
+				factor = 0.01
+				trait = kind
+			}
+		}
+		set_character_flag = flag_duel_friendly
+		hidden_tooltip = {	#duel begin
+			e_rebels = { holder_scope = { character_event = { id = duel.1 } } }
+		}
+	}
+	option = {
+		name = EVTOPTB100416
+		if = {
+			limit = {
+				NOT = {
+					num_of_traits = 5
+				}
+				NOT = {
+					trait = craven
+				}
+			}
+			random = {
+				chance = 25
+				add_trait = craven
+				hidden_tooltip = {
+					character_event = {
+						id = 38257 #Notify Craven
+					}
+				}
+			}
+		}
+		prestige = -5
+		hidden_tooltip = {
+			clr_character_flag = duel_rival
+			clr_character_flag = flag_duel_friendly
+		}
+		FROM = {
+			character_event = {
+				id = 100417
+				tooltip = EVTTOOLTIPB100416
+			}
+			hidden_tooltip = {
+				clr_character_flag = duel_rival
+				clr_character_flag = flag_duel_friendly
+			}
+		}
+	}
+}
+
+
+#Your rival is too afraid to duel you
+character_event = {
+	id = 100417
+	desc = "EVTDESC100417"
+	picture = GFX_evt_emissary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA100417"
+		prestige = 5
 	}
 }
 
