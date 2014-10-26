@@ -577,6 +577,164 @@ decisions = {
 			}
 		}
 	}
+	
+	#Support the Silk Route Merchants
+	support_silk_road = {
+		is_high_prio = yes
+		potential = {
+			NOT = { has_character_modifier = supporting_silkroad }
+			NOT = { has_global_flag = silk_road_level_0 }
+			capital_scope = {
+				OR = {
+					empire = { title = e_serindia }
+					empire = { title = e_sassanid }
+				}
+			}
+		}
+		allow = {
+			independent = yes
+		}
+		effect = {
+			custom_tooltip = {
+				text = support_silkroad_on
+					hidden_tooltip = {
+						add_character_modifier = {
+								name = supporting_silkroad
+								duration = -1
+						}
+					}
+			}
+		}
+		
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.1
+			}
+		}
+	}
+	
+	#Stop supporting the Silk Route Merchants
+	stop_support_silk_road = {
+		is_high_prio = yes
+		potential = {
+			has_character_modifier = supporting_silkroad
+			NOT = { has_global_flag = silk_road_level_0 }
+			capital_scope = {
+				OR = {
+					empire = { title = e_serindia }
+					empire = { title = e_sassanid }
+				}
+			}
+		}
+		allow = {
+			independent = yes
+		}
+		effect = {
+			custom_tooltip = {
+				text = support_silkroad_off
+					hidden_tooltip = {
+						remove_character_modifier = supporting_silkroad
+					}
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+	#Celebrate Nowruz
+	celebrate_nowruz = {
+		potential = {
+			is_ruler = yes
+			culture_group = iranian
+			NOT = { has_character_modifier = VIET_celebrating_nowruz }
+			NOT = { has_character_modifier = VIET_nowruz_timer }
+		}
+		allow = {
+			month = 3
+			NOT = {
+				month = 6
+			}
+			war = no
+			in_command = no
+			any_demesne_title = {
+				is_occupied = no
+			}
+			prisoner = no
+			scaled_wealth = 0.2
+			age = 16
+			NOT = { has_character_flag = do_not_disturb }
+			NOT = { has_character_flag = VIET_nowruz }
+			custom_tooltip = {
+				text = health_travel_condition
+				hidden_tooltip = {
+					NOT = {	trait = pregnant }
+					NOT = {	trait = incapable }
+					NOT = {	trait = blinded }
+					NOT = {	trait = has_tuberculosis }
+					NOT = {	trait = has_typhoid_fever }
+					NOT = {	trait = has_typhus }
+					NOT = {	trait = has_bubonic_plague }
+					NOT = {	trait = has_measles }
+					NOT = {	trait = has_small_pox }
+					NOT = {	trait = has_aztec_disease }
+				}
+			}
+		}
+		effect = {
+			scaled_wealth = -0.2
+			hidden_tooltip = {
+				character_event = { 
+					id = silkroad.300
+				}
+			}
+			set_character_flag = do_not_disturb
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0.05         # Reduce chances of happening
+			modifier = {
+				factor = 2
+				trait = drunkard
+			}
+			modifier = {
+				factor = 2
+				trait = gregarious
+			}
+			modifier = {
+				factor = 0.5
+				trait = shy
+			}
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+			modifier = {
+				factor = 0.5
+				trait = content
+			}
+			modifier = {
+				factor = 2
+				trait = charitable
+			}
+			modifier = {
+				factor = 0.5
+				trait = greedy
+			}
+			modifier = {
+				factor = 0.5
+				religion_group = muslim
+			}
+			modifier = {
+				factor = 0.5
+				religion_group = muslim
+				trait = zealous
+			}
+		}
+	}
 }
 
 vassal_decisions = {
