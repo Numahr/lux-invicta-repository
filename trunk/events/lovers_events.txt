@@ -4301,7 +4301,7 @@ character_event = {
 		has_lover = no
 		spouse = {
 			NOT = {
-				traid = incapable
+				trait = incapable
 			}
 			is_alive = yes
 			is_abroad = no
@@ -5039,4 +5039,398 @@ character_event = {
 			impregnate_cuckoo = ROOT
 		}
 	}
+}
+
+character_event = {
+	id = 64200
+	picture = GFX_evt_lovers
+
+	capable_only = yes
+
+	trigger = {
+		is_married = yes
+		has_lover = no
+		OR = {
+			is_female = no
+			is_ruler = yes
+		}	
+		OR = {
+			spouse = { is_ruler = no }
+			is_ruler = yes
+		}
+		OR = {
+			ai = no
+			spouse = { ai = yes }
+		}
+		spouse = {
+			has_lover = no
+			NOT = {
+				OR = {
+					has_opinion_modifier = {
+						who = ROOT
+						modifier = opinion_former_lover
+					}
+					has_opinion_modifier = {
+						who = ROOT
+						modifier = opinion_spurned
+					}
+					trait = homosexual
+					trait = infirm
+					trait = incapable
+					trait = celibate
+					trait = eunuch
+				}
+			}
+			opinion = { who = ROOT value = -20 }
+			reverse_opinion = { who = ROOT value = -20 }
+		}	
+		NOT = {
+			OR = {
+				trait = homosexual
+				trait = infirm
+				trait = celibate
+				trait = eunuch
+			}
+		}
+	}
+		
+	desc = "EVTDESC64200"
+	
+	mean_time_to_happen = {
+		months = 300
+		modifier = {
+			factor = 0.5
+			spouse = { NOT = { age = 20 } }
+		}
+		modifier = {
+			factor = 2.0
+			spouse = { age = 30 }
+		}
+		modifier = {
+			factor = 0.33
+			has_ambition = obj_find_love
+		}
+		modifier = {
+			factor = 0.1
+			trait = chaste
+		}
+		modifier = {
+			factor = 0.1
+			spouse = { trait = chaste }
+		}		
+		modifier = {
+			factor = 10.0
+			trait = hedonist
+		}
+		modifier = {
+			factor = 10.0
+			spouse = { trait = hedonist }
+		}		
+		modifier = {
+			factor = 10.0
+			trait = lustful
+		}
+		modifier = {
+			factor = 10.0
+			spouse = { trait = lustful }
+		}
+		modifier = {
+			factor = 0.5
+			trait = fair
+		}
+		modifier = {
+			factor = 0.5
+			spouse = { trait = fair }
+		}	
+		modifier = {
+			factor = 2.0
+			trait = ugly
+		}
+		modifier = {
+			factor = 2.0
+			spouse = { trait = ugly }
+		}		
+		modifier = {
+			factor = 4.0
+			spouse = { NOT = { opinion = { who = ROOT value = 0 } } }
+		}	
+		modifier = {
+			factor = 4.0
+			spouse = { NOT = { reverse_opinion = { who = ROOT value = 0 } } }
+		}			
+		modifier = {
+			factor = 4.0
+			spouse = { NOT = { opinion = { who = ROOT value = 25 } } }
+		}	
+		modifier = {
+			factor = 4.0
+			spouse = { NOT = { reverse_opinion = { who = ROOT value = 25 } } }
+		}			
+		modifier = {
+			factor = 0.25
+			spouse = { opinion = { who = ROOT value = 50 } }
+		}
+		modifier = {
+			factor = 0.25
+			spouse = { reverse_opinion = { who = ROOT value = 50 } }
+		}
+		modifier = {
+			factor = 0.25
+			spouse = { opinion = { who = ROOT value = 75 } }
+		}
+		modifier = {
+			factor = 0.25
+			spouse = { reverse_opinion = { who = ROOT value = 75 } }
+		}
+		modifier = {
+			factor = 10.0
+			any_child = { trait = bastard }
+		}
+		modifier = {
+			factor = 10.0
+			spouse = {
+				any_child = {
+					trait = bastard
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "EVTOPTA64200"
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 10.0
+				trait = chaste
+			}
+			modifier = {
+				factor = 10.0
+				trait = celibate
+			}			
+		}
+		spouse = {
+			add_lover = ROOT
+			fertility = 0.1
+		}
+		if = {
+			limit = {
+				NOT = {
+					OR = {
+						trait = chaste
+						trait = lustful
+					}
+				}
+			}
+			add_trait = chaste
+			hidden_tooltip = {
+				character_event = {
+					id = 38274 #Notify Chaste
+				}
+			}				
+		}		
+	}
+	
+	option = {
+		name = "EVTOPTD64200"
+		ai_chance = {
+			factor = 100			
+		}		
+		spouse = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_spurned
+				years = 5
+			}		
+		}
+	}	
+	
+	option = {
+		name = "EVTOPTB64200"
+		ai_chance = {
+			factor = 25	
+			modifier = {
+				factor = 10.0
+				trait = lustful
+			}
+			modifier = {
+				factor = 10.0
+				trait = hedonist
+			}			
+		}		
+		trigger = {
+			is_female = no
+		}
+		if = {
+			limit = {
+				NOT = { trait = chaste }
+				NOT = { trait = lustful }
+			}
+			add_trait = lustful
+		}
+		spouse = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_spurned
+				multiplier = 2
+				years = 10
+			}		
+		}
+	}
+	
+	option = {
+		name = "EVTOPTC64200"
+		ai_chance = {
+			factor = 25
+			modifier = {
+				factor = 0.1
+				trait = chaste
+			}
+			modifier = {
+				factor = 0.1
+				trait = celibate
+			}			
+		}		
+		trigger = {
+			is_female = yes
+		}
+		if = {
+			limit = {
+				NOT = { trait = chaste }
+				NOT = { trait = lustful }
+			}
+			add_trait = lustful
+		}
+		spouse = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_spurned
+				multiplier = 2
+				years = 10
+			}		
+		}
+	}	
+}
+
+character_event = {
+	id = 64201
+	picture = GFX_evt_lovers
+	is_triggered_only = yes
+
+	desc = "EVTDESC64200"
+	
+	option = {
+		name = "EVTOPTA64200"
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 10.0
+				trait = chaste
+			}
+			modifier = {
+				factor = 10.0
+				trait = celibate
+			}			
+		}
+		spouse = {
+			add_lover = ROOT
+			fertility = 0.1
+		}
+		if = {
+			limit = {
+				NOT = {
+					OR = {
+						trait = chaste
+						trait = lustful
+					}
+				}
+			}
+			add_trait = chaste
+			hidden_tooltip = {
+				character_event = {
+					id = 38274 #Notify Chaste
+				}
+			}				
+		}		
+	}
+	
+	option = {
+		name = "EVTOPTD64200"
+		ai_chance = {
+			factor = 100			
+		}		
+		spouse = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_spurned
+				years = 5
+			}		
+		}
+	}	
+	
+	option = {
+		name = "EVTOPTB64200"
+		ai_chance = {
+			factor = 25	
+			modifier = {
+				factor = 10.0
+				trait = lustful
+			}
+			modifier = {
+				factor = 10.0
+				trait = hedonist
+			}			
+		}		
+		trigger = {
+			is_female = no
+		}
+		if = {
+			limit = {
+				NOT = { trait = chaste }
+				NOT = { trait = lustful }
+			}
+			add_trait = lustful
+		}
+		spouse = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_spurned
+				multiplier = 2
+				years = 10
+			}		
+		}
+	}
+	
+	option = {
+		name = "EVTOPTC64200"
+		ai_chance = {
+			factor = 25
+			modifier = {
+				factor = 0.1
+				trait = chaste
+			}
+			modifier = {
+				factor = 0.1
+				trait = celibate
+			}			
+		}		
+		trigger = {
+			is_female = yes
+		}
+		if = {
+			limit = {
+				NOT = { trait = chaste }
+				NOT = { trait = lustful }
+			}
+			add_trait = lustful
+		}
+		spouse = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_spurned
+				multiplier = 2
+				years = 10
+			}		
+		}
+	}	
 }
