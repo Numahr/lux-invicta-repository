@@ -591,9 +591,15 @@ obj_become_regent = {
 			has_minor_title = title_ruler_consort
 			has_minor_title = title_queen_mother
 		}
-		host = { character = liege }
+		OR = {
+			host = { character = liege }
+			is_landed = yes
+		}
 		
-		NOT = { has_minor_title = title_regent }
+		OR = {
+			NOT = { has_minor_title = title_regent }
+			NOT = { has_minor_title = title_appointed_regent }
+		}
 		
 		liege = {
 			OR = {
@@ -650,19 +656,33 @@ obj_become_regent = {
 			factor = 0.01
 			trait = content
 		}
+		modifier = {
+			factor = 2.0
+			liege = {
+				is_close_relative = ROOT
+			}
+		}
+		modifier = {
+			factor = 2.0
+			liege = {
+				religion_head = {
+					character = ROOT
+				}
+			}
+		}
 		
 	}
 	success = {
-		has_minor_title = title_regent 
+		OR = {
+			has_minor_title = title_regent 
+			has_minor_title = title_appointed_regent
+		}
 	}
 	
 	abort = {
-		liege = {
-				age = 16
-				prisoner = no
-			    NOT = { trait = incapable }
-			}
-		}
+		trait = incapable
+		independent = yes
+	}
 		
 	abort_effect = {
 	}

@@ -2,6 +2,10 @@ namespace = regentevents
 
 # Events for Become Regent Ambition
 # 0 - Character with become regent obj thinks he should be regent
+#
+# 1 - Character with become regent obj petitions liege to be appointed designated regent if there is none
+# 2 - Liege responds to petition
+# 3 - Petitioner receives response
 
 # character with become regent obj thinks he should be regent
 character_event = {
@@ -12,13 +16,22 @@ character_event = {
 	min_age = 16
 	prisoner = no
 	capable_only = yes
-	only_men = yes
 	
 	trigger = {
 		has_ambition = obj_become_regent
 		war = no
 		in_command = no
-		is_ill = no
+		OR = {
+			NOT = {
+				health_traits = 1
+			}
+			AND = {
+				trait = drunkard
+				NOT = {
+					health_traits = 2
+				}
+			}
+		}
 		OR = {
 			liege = {
 				age = 1
@@ -60,12 +73,35 @@ character_event = {
 			factor = 0.75
 			host = { character = liege }
 		}
+		modifier = {
+			factor = 0.5
+			liege = {
+				is_close_relative = ROOT
+			}
+		}
+		modifier = {
+			factor = 0.5
+			liege = {
+				religion_head = {
+					character = ROOT
+				}
+			}
+		}
 	}
 	
 	option = { # Challenge to duel
 		name = "EVTOPTA61215"
 		ai_chance = { factor = 60 }
-		trigger = { trait = duelist }
+		trigger = {
+			trait = duelist
+			is_female = no
+			liege = {
+				any_courtier = {
+					has_minor_title = title_regent
+					is_female = no
+				}
+			}
+		}
 		liege = {
 			random_courtier = {
 				limit = { has_minor_title = title_regent }
@@ -100,5 +136,163 @@ character_event = {
 				}
 			}
 		}
+	}
+}
+
+character_event = {
+	id = regentevents.1
+	desc = regentevents.1.desc
+	picture = GFX_evt_emissary
+	
+	trigger = {
+		has_ambition = obj_become_regent
+		has_regent = no
+		OR = {
+			NOT = {
+				health_traits = 1
+			}
+			AND = {
+				trait = drunkard
+				NOT = {
+					health_traits = 2
+				}
+			}
+		}
+		liege = {
+			is_adult = yes
+			has_regent = no
+			NOT = {
+				any_courtier = {
+					has_minor_title = appointed_regent
+				}
+				any_vassal = {
+					has_minor_title = appointed_regent
+				}
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 220
+		modifier = {
+			factor = 0.25
+			trait = ambitious
+		}
+		modifier = {
+			factor = 0.5
+			trait = envious
+		}
+		modifier = {
+			factor = 0.75
+			trait = diligent
+		}
+		modifier = {
+			factor = 2.0
+			trait = shy
+		}
+		modifier = {
+			factor = 3.0
+			trait = slothful
+		}
+		modifier = {
+			factor = 4.0
+			trait = content
+		}
+		modifier = {
+			factor = 0.75
+			host = { character = liege }
+		}
+		modifier = {
+			factor = 0.5
+			liege = {
+				is_close_relative = ROOT
+			}
+		}
+		modifier = {
+			factor = 0.5
+			liege = {
+				religion_head = {
+					character = ROOT
+				}
+			}
+		}
+	}
+	option = {
+		name = regentevents.1.a
+		liege = {
+			letter_event = {
+				id = regentevents.2
+				days = 7
+				random = 3
+				tooltip = regentevents.2.tip
+			}
+		}
+	}
+	option = {
+		name = regentevents.1.b
+	}
+}
+
+letter_event = {
+	id = regentevents.2
+	desc = regentevents.2.desc
+	picture = GFX_evt_emissary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = regentevents.2.a
+		FROM = {
+			give_minor_title = title_appointed_regent
+			opinion = {
+				who = ROOT
+				modifier = granted_appointed_regent
+				years = 5
+			}
+			letter_event = {
+				id = regentevents.3
+				days = 7
+				random = 3
+				tooltip = regentevents.3.tip
+			}
+		}
+	}
+	option = {
+		name = regentevents.2.b
+		FROM = {
+			opinion = {
+				who = ROOT
+				modifier = denied_appointed_regent
+				years = 5
+			}
+			letter_event = {
+				id = regentevents.4
+				days = 7
+				random = 3
+				tooltip = regentevents.4.tip
+			}
+		}
+	}
+}
+
+letter_event = {
+	id = regentevents.3
+	desc = regentevents.3.desc
+	picture = GFX_evt_emissary
+	is_triggered_only = yes
+	
+	option = {
+		name = EXCELLENT
+	}
+}
+
+letter_event = {
+	id = regentevents.4
+	desc = regentevents.4.desc
+	picture = GFX_evt_emissary
+	is_triggered_only = yes
+	
+	option = {
+		name = CURSES
 	}
 }
