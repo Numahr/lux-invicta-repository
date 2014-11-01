@@ -1368,6 +1368,7 @@ character_event = {
 
 namespace = matribastard
 #On-action event: Bastard is born to a mother who is married matrilineally, or is higher rank than her husband and the real father
+#ROOT is child
 character_event = {
 	id = matribastard.300
 	hide_window = yes
@@ -1446,6 +1447,7 @@ character_event = {
 }
 
 #Matrilineally married mother reacts to bastard birth
+#ROOT is mother, FROM is child
 character_event = {
 	id = matribastard.301
 	desc = EVTDESCmb301
@@ -1521,6 +1523,7 @@ character_event = {
 }
 
 #Non-matrilineally married mother who outranks spouse and father reacts to bastard birth
+#ROOT is mother, FROM is child
 character_event = {
 	id = matribastard.302
 	desc = EVTDESCmb302
@@ -1604,6 +1607,7 @@ character_event = {
 }
 
 #(Hidden) Matrilineally married husband reacts to request to recognize child as legitimate
+#ROOT is child, FROM is mother
 character_event = {
 	id = matribastard.303
 	hide_window = yes
@@ -1621,6 +1625,7 @@ character_event = {
 }
 
 #(Hidden) Matrilineally married husband reacts to decision to ignore his opinion
+#ROOT is child, FROM is mother
 character_event = {
 	id = matribastard.304
 	hide_window = yes
@@ -1638,6 +1643,7 @@ character_event = {
 }
 
 #Matrilineally married husband reacts to request to recognize child as legitimate
+#ROOT is husband, FROM is child, FROMFROM is mother
 character_event = {
 	id = matribastard.305
 	desc = EVTDESCmb305
@@ -1714,6 +1720,7 @@ character_event = {
 }
 
 #Matrilineally married husband reacts to decision to ignore his opinion
+#ROOT is husband, FROM is child, FROMFROM is mother
 character_event = {
 	id = matribastard.306
 	desc = EVTDESCmb306
@@ -1735,6 +1742,7 @@ character_event = {
 }
 
 #(Hidden) Lower ranking husband reacts to request to recognize child as legitimate
+#ROOT is child, FROM is mother
 character_event = {
 	id = matribastard.307
 	hide_window = yes
@@ -1752,6 +1760,7 @@ character_event = {
 }
 
 #Lower ranking husband reacts to request to recognize child as legitimate
+#ROOT is husband, FROM is child, FROMFROM is mother
 character_event = {
 	id = matribastard.308
 	desc = EVTDESCmb308
@@ -1837,6 +1846,7 @@ character_event = {
 }
 
 #Mother reacts: husband acknowledges child as his own.
+#ROOT is mother, FROM is husband, FROMFROM is child
 character_event = {
 	id = matribastard.309
 	desc = EVTDESCmb309
@@ -1853,13 +1863,27 @@ character_event = {
 				years = 10
 			}
 		}
-		FROMFROM = {
-			dynasty = FROM
+		if = {
+			limit = {
+				is_married_matrilineally = yes
+			}
+			FROMFROM = {
+				dynasty = ROOT
+			}
+		}
+		if = {
+			limit = {
+				is_married_matrilineally = no
+			}
+			FROMFROM = {
+				dynasty = FROM
+			}
 		}
 	}
 }
 
 #Mother reacts: Husband refused request to acknowledge child
+#ROOT is mother, FROM is husband, FROMFROM is child
 character_event = {
 	id = matribastard.310
 	desc = EVTDESCmb310
@@ -1871,17 +1895,74 @@ character_event = {
 		FROMFROM = {
 			dynasty = ROOT
 			add_trait = legit_bastard
+			if = {
+				limit = {
+					NOT = {
+						real_father = {
+							always = yes
+						}
+					}
+				}
+				father = 0
+			}
+			if = {
+				limit = {
+					real_father = {
+						always = yes
+					}
+				}
+				real_father = {
+					FROMFROM = {
+						father = PREV
+						character_event = {
+							id = matribastard.311
+							days = 3
+						}
+					}
+				}
+			}
 		}
 		opinion = {
 			who = FROM
 			modifier = denounced_child
 			years = 10
 		}
+		FROM = {
+			character_event = {
+				id = matribastard.312
+				days = 3
+			}
+		}
 	}
 }
-		
 
-# On-action event: Birth complications
+#Real father is informed of lover's child taking her dynasty
+#ROOT is real father, FROM is mother, FROMFROM is husband, FROMFROMFROM is child
+character_event = {
+	id = matribastard.311
+	desc = EVTDESCmb311
+	picture = GFX_evt_birth
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTDESCmb311
+	}
+}
+
+#Husband reacts to wife publicly cuckolding him
+#ROOT is husband, FROM is mother, FROMFROM is husband, FROMFROMFROM is child
+character_event = {
+	id = matribastard.312
+	desc = EVTDESCmb312
+	picture = GFX_evt_quarrel
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTDESCmb312
+	}
+}
+
+# On-action event: Birth complication
 character_event = {
 	id = 313
 	desc = OK
