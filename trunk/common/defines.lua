@@ -1126,10 +1126,10 @@ NFrontend =
 	
 	FRONTEND_POS_X = 800.0, -- v12 790 default now 1425
 	FRONTEND_POS_Y = 200.0, -- v12 500 default now 115
-	FRONTEND_POS_Z = 1200.0, -- v12 600 default now 750
+	FRONTEND_POS_Z = 2100.0, -- v12 600 default now 750
 	FRONTEND_LOOK_X = 850.0,--v12 790 default now 1280
 	FRONTEND_LOOK_Y = 35.0,  --v12 0 default no 35
-	FRONTEND_LOOK_Z = 1400.0,  --v12 1000 default now 865
+	FRONTEND_LOOK_Z = 4000.0,  --v12 1000 default now 865
 	
 	SETTINGS_POS_X = 800.0, -- v15 vanilla 1300
 	SETTINGS_POS_Y = 200.0, -- v15 vanilla 200
