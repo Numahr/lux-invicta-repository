@@ -111,15 +111,13 @@ letter_event = { # vassal receives event
 				is_primary_heir = yes
 			}
 		}
-		FROM = {
-			FROM = {
-				opinion = {
-					who = ROOT
-					modifier = refused_championing
-					years = 5
-				}
-				letter_event = { id = trial_by_combat.3 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.3 }	
+		FROMFROM = {
+			opinion = {
+				who = ROOT
+				modifier = refused_championing
+				years = 5
 			}
+			letter_event = { id = trial_by_combat.3 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.3 }	
 		}	
 	}
 }
@@ -168,7 +166,7 @@ letter_event = { # inform reject
 		set_character_flag = select_champion
 	}
 }
-#Called from tbc_fight_personally decision and event trial_by_combat.27. Host is ROOT, champion is FROM
+#Called from tbc_fight_personally decision and event trial_by_combat.27. Host of prisoner is ROOT, prisoner's champion is FROM
 character_event = { #elijo champion
 	id = trial_by_combat.4
 	desc = "EVTDESCtrial_by_combat.4"
@@ -192,7 +190,6 @@ character_event = { #elijo champion
 	
 	immediate = {
 		FROM = {
-			opinion = { who = ROOT modifier = host_of_prisoner years = 100 }
 			set_character_flag = demmanded_trial_by_combat
 			clr_character_flag = choosing_champion
 		}
@@ -223,14 +220,78 @@ character_event = { #elijo champion
 			}
 		}
 		trigger = { 
-			any_child = { 
-				is_female = no
+			any_courtier = { 
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				age = 16
 				OR = {
 					trait = poor_warrior
 					trait = trained_warrior
 					trait = skilled_warrior
 					trait = master_warrior
+					trait = duelist
 				}	
 				prisoner = no
 				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
@@ -239,6 +300,7 @@ character_event = { #elijo champion
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -288,7 +350,70 @@ character_event = { #elijo champion
 		}
 		trigger = { 			
 			any_courtier = { 
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				age = 16
 				OR = {
 					trait = poor_warrior
@@ -306,6 +431,7 @@ character_event = { #elijo champion
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -374,6 +500,7 @@ character_event = { #elijo champion
 					trait = trained_warrior
 					trait = skilled_warrior
 					trait = master_warrior
+					trait = duelist
 				}	
 				age = 16
 				is_ill = no
@@ -381,12 +508,73 @@ character_event = { #elijo champion
 				NOT = { trait = incapable }
 				OR = {
 					is_female = no
-					trait = brave
-					trait = strong
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
 				}
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
+					trait = duelist
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -397,7 +585,11 @@ character_event = { #elijo champion
 			#set_character_flag = flag_duel_to_the_death
 			any_courtier = { 
 				limit = { 
-					has_opinion_modifier = { who = ROOT modifier = host_of_prisoner }
+					prisoner = yes
+					host = {
+						character = ROOT
+					}
+					has_character_flag = demmanded_trial_by_combat
 				}
 				hidden_tooltip = {
 					character_event = { 
@@ -449,13 +641,16 @@ character_event = { #elijo champion
 				}
 			}
 			any_courtier = { 
-				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
+				limit = {
+					prisoner = yes
+					host = {
+						character = ROOT
+					}
+					has_character_flag = demmanded_trial_by_combat
+				}
 				hidden_tooltip = {
 					clr_character_flag = demmanded_trial_by_combat
 					add_character_modifier = { name = getting_justice duration = 365 }
-					remove_opinion = {
-						who = ROOT modifier = host_of_prisoner 
-					}
 				}	
 				opinion = {
 					who = ROOT modifier = denied_trial_by_combat  years = 5
@@ -574,7 +769,70 @@ character_event = { #elijo champion
 		trigger = {
 			NOT = { 
 				any_courtier = { 
-					is_female = no
+					OR = {
+						is_female = no
+						AND = {
+							is_pregnant = no
+							OR = {
+								religion = hubal
+								religion = gurzil
+								religion_group = zoroastrian_group
+								culture_group = iranian
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_allowed
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									martial = 20
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_accepted
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									martial = 12
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									independent = no
+									top_liege = {
+										has_character_modifier = female_marshals_approved
+									}
+								}
+								AND = {
+									independent = yes
+									has_character_modifier = female_marshals_approved
+								}
+							}
+						}
+					}
 					age = 16
 					OR = {
 						trait = poor_warrior
@@ -589,6 +847,7 @@ character_event = { #elijo champion
 					OR = {
 						NOT = { trait = dwarf }
 						trait = skilled_warrior
+						trait = master_warrior
 					}	
 					NOT = { trait = clubfooted }
 					NOT = { trait = hunchback }
@@ -597,13 +856,77 @@ character_event = { #elijo champion
 			} 
 			any_courtier = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				prisoner = no
 				NOT = { trait = incapable }
 				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -613,7 +936,70 @@ character_event = { #elijo champion
 		random_courtier = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				prisoner = no
 				NOT = { trait = incapable }
 				NOT = { trait = crippled }
@@ -621,6 +1007,7 @@ character_event = { #elijo champion
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -630,6 +1017,8 @@ character_event = { #elijo champion
 		}	
 	}
 }
+#Called from trial_by_combat.4 option E and trial_by_combat.13 option E
+#ROOT is prisoner's champion, FROM is host of prisoner
 character_event = { # inform reject
 	id = trial_by_combat.5
 	desc = "EVTDESCtrial_by_combat.5"
@@ -651,6 +1040,8 @@ character_event = { # inform reject
 		}	
 	}
 }
+#Choose host's champion. Called from trial_by_combat.4, trial_by_combat.13 and trial_by_combat.27
+#ROOT and FROM is host, FROMFROM is prisoner's champion.
 character_event = { #select champion
 	id = trial_by_combat.6
 	desc = "EVTDESCtrial_by_combat.6"
@@ -660,11 +1051,82 @@ character_event = { #select champion
 	is_triggered_only = yes
 	
 	immediate = {
+		if = {
+			limit = {
+				NOT = {
+					
 		random_courtier = {
 			limit = {
-				is_female = no
-				age = 16
-				trait = master_warrior
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
 				OR = {
 					NOT = { is_child_of = ROOT }
 					FROM = { has_character_flag = sons_can_fight }
@@ -676,6 +1138,7 @@ character_event = { #select champion
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -685,9 +1148,77 @@ character_event = { #select champion
 		}
 		random_courtier = {
 			limit = {
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				age = 16
-				trait = master_warrior
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
 				OR = {
 					NOT = { is_child_of = ROOT }
 					FROM = { has_character_flag = sons_can_fight }
@@ -700,6 +1231,7 @@ character_event = { #select champion
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -710,9 +1242,77 @@ character_event = { #select champion
 		}
 		random_courtier = {
 			limit = {
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				age = 16
-				trait = master_warrior
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
 				OR = {
 					NOT = { is_child_of = ROOT }
 					FROM = { has_character_flag = sons_can_fight }
@@ -726,6 +1326,7 @@ character_event = { #select champion
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -736,9 +1337,77 @@ character_event = { #select champion
 		}
 		random_courtier = {
 			limit = {
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				age = 16
-				trait = master_warrior
+				OR = {
+					trait = poor_warrior
+					trait = trained_warrior
+					trait = skilled_warrior
+					trait = master_warrior
+				}	
 				OR = {
 					NOT = { is_child_of = ROOT }
 					FROM = { has_character_flag = sons_can_fight }
@@ -753,389 +1422,12 @@ character_event = { #select champion
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
 				is_ruler = no
 				
-			}
-			set_character_flag = champion_4
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = skilled_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_1
-						} 
-					}
-				}
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_1
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = skilled_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_2
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_2
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = skilled_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_3
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				NOT = { has_character_flag = champion_2 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_3
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = skilled_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_4
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				NOT = { has_character_flag = champion_2 }
-				NOT = { has_character_flag = champion_3 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_4
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = trained_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_1
-						} 
-					}
-				}
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_1
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = trained_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_2
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_2
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = trained_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_3
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				NOT = { has_character_flag = champion_2 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_3
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = trained_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_4
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				NOT = { has_character_flag = champion_2 }
-				NOT = { has_character_flag = champion_3 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_4
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = poor_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_1
-						} 
-					}
-				}
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_1
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = poor_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_2
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_2
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = poor_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_3
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				NOT = { has_character_flag = champion_2 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
-			}
-			set_character_flag = champion_3
-		}
-		random_courtier = {
-			limit = {
-				is_female = no
-				age = 16
-				trait = poor_warrior
-				OR = {
-					NOT = { is_child_of = ROOT }
-					FROM = { has_character_flag = sons_can_fight }
-				}	
-				NOT = { reverse_has_opinion_modifier = { who = FROMFROM modifier = champion_of_relative } }
-				NOT = {
-					FROM = {
-						any_courtier = {
-							has_character_flag = champion_4
-						} 
-					}
-				}
-				NOT = { has_character_flag = champion_1 }
-				NOT = { has_character_flag = champion_2 }
-				NOT = { has_character_flag = champion_3 }
-				prisoner = no
-				NOT = { trait = incapable }
-				NOT = { trait = crippled }
-				OR = {
-					NOT = { trait = dwarf }
-					trait = skilled_warrior
-				}	
-				NOT = { trait = clubfooted }
-				NOT = { trait = hunchback }
-				is_ruler = no
 			}
 			set_character_flag = champion_4
 		}
@@ -1266,7 +1558,8 @@ character_event = { #select champion
 	}
 
 }
-
+#Host's champion has been chosen. Called from trial_by_combat.4, trial_by_combat.6, trial_by_combat.13
+#ROOT is host's champion, FROM is host
 character_event = { 
 	id = trial_by_combat.7
 	desc = "EVTDESCtrial_by_combat.7"
@@ -1284,50 +1577,55 @@ character_event = {
 		}
 	}
 }
-
+#Called from trial_by_combat.7. ROOT is host, FROM is host's champion.
 character_event = { # Host selection / Prisoner fights
-		id = trial_by_combat.8
-		desc = "EVTDESCtrial_by_combat.8"
-		picture = "GFX_trial_by_combat"
-	
-		is_triggered_only = yes
+	id = trial_by_combat.8
+	desc = "EVTDESCtrial_by_combat.8"
+	picture = "GFX_trial_by_combat"
+
+	is_triggered_only = yes
 		
-		immediate = {
-			clr_character_flag = elected_champion
-			clr_character_flag = has_champion
-		}
+	immediate = {
+		clr_character_flag = elected_champion
+		clr_character_flag = has_champion
+	}
 		
-		option = {  # 
-			name = "EVTOPTAtrial_by_combat.8" 
-			prestige = 25
-			any_courtier = { 
-				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
-				custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST_CHAMP }
-				hidden_tooltip = {
-					character_event = { 
-						id = trial_by_combat.9 
-					} 
-				}	
+	option = {  # 
+		name = "EVTOPTAtrial_by_combat.8" 
+		prestige = 25
+		any_courtier = { 
+			limit = {
+				prisoner = yes
+				host = {
+					character = ROOT
+				}
+				has_character_flag = demmanded_trial_by_combat
 			}
-			if = { 
-				limit = { has_character_flag = lunatic_trial }
-				custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST_CHAMP }
-				hidden_tooltip = {
-					character_event = { 
-						id = trial_by_combat.9 
-					} 
-					# any_realm_lord = {
-						# character_event = { 
-							# id = 6461
-						# } 
-					# }
-				}	
-			}
+			custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST_CHAMP }
+			hidden_tooltip = {
+				character_event = { 
+					id = trial_by_combat.9 
+				} 
+			}	
 		}
-	
+		if = { 
+			limit = { has_character_flag = lunatic_trial }
+			custom_tooltip = { text = TOOLTIPFIGHTTHISPERSON_HOST_CHAMP }
+			hidden_tooltip = {
+				character_event = { 
+					id = trial_by_combat.9 
+				} 
+				# any_realm_lord = {
+					# character_event = { 
+						# id = 6461
+					# } 
+				# }
+			}	
+		}
+	}
 }
 
-
+#Called from trial_by_combat.8. ROOT is prisoner, FROM is host, FROMFROM is host's champion
 character_event = { # fight takes place / prisoner fights
 	id = trial_by_combat.9
 	desc = "EVTDESCtrial_by_combat.9"
@@ -1400,9 +1698,6 @@ character_event = {
 		clr_character_flag = lunatic_trial
 		FROMFROM = { 
 			clr_character_flag = elected_champion 
-			remove_opinion = {
-				who = ROOT modifier = host_of_prisoner 
-			} 
 		}	
 	}
 	
@@ -1578,9 +1873,6 @@ character_event = {
 				}
 			}
 		}
-		reverse_remove_opinion = {
-			who = FROM modifier = host_of_prisoner 
-		}
 		clr_character_flag = lunatic_trial
 	}
 	
@@ -1652,7 +1944,6 @@ character_event = { #choosing champion / prisoner doesn't fight
 	
 	immediate = {
 		FROM = {
-			opinion = { who = ROOT modifier = host_of_prisoner years = 100 }
 			set_character_flag = demmanded_trial_by_combat
 			clr_character_flag = choosing_champion
 		}
@@ -1685,13 +1976,77 @@ character_event = { #choosing champion / prisoner doesn't fight
 		}
 		trigger = { 
 			any_courtier = { 
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				age = 16
 				OR = {
 					trait = poor_warrior
 					trait = trained_warrior
 					trait = skilled_warrior
 					trait = master_warrior
+					trait = duelist
 				}	
 				prisoner = no
 				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
@@ -1699,6 +2054,7 @@ character_event = { #choosing champion / prisoner doesn't fight
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -1753,13 +2109,77 @@ character_event = { #choosing champion / prisoner doesn't fight
 		}
 		trigger = { 					
 			any_courtier = { 
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				age = 16
 				OR = {
 					trait = poor_warrior
 					trait = trained_warrior
 					trait = skilled_warrior
 					trait = master_warrior
+					trait = duelist
 				}	
 				is_child_of = ROOT
 				prisoner = no
@@ -1768,6 +2188,7 @@ character_event = { #choosing champion / prisoner doesn't fight
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -1841,17 +2262,78 @@ character_event = { #choosing champion / prisoner doesn't fight
 				trait = trained_warrior
 				trait = skilled_warrior
 				trait = master_warrior
+				trait = duelist
 			}	
 			age = 16
 			is_ill = no
 			OR = {
 				is_female = no
-				trait = brave
-				trait = strong
+				AND = {
+					is_pregnant = no
+					OR = {
+						religion = hubal
+						religion = gurzil
+						religion_group = zoroastrian_group
+						culture_group = iranian
+						AND = {
+							OR = {
+								AND = {
+									independent = no
+									top_liege = {
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								AND = {
+									independent = yes
+									has_character_modifier = female_marshals_allowed
+								}
+							}
+							martial = 20
+							OR = {
+								trait = misguided_warrior
+								trait = tough_soldier
+								trait = skilled_tactician
+								trait = brilliant_strategist
+							}
+						}
+						AND = {
+							OR = {
+								AND = {
+									independent = no
+									top_liege = {
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								AND = {
+									independent = yes
+									has_character_modifier = female_marshals_accepted
+								}
+							}
+							martial = 12
+							OR = {
+								trait = misguided_warrior
+								trait = tough_soldier
+								trait = skilled_tactician
+								trait = brilliant_strategist
+							}
+						}
+						AND = {
+							independent = no
+							top_liege = {
+								has_character_modifier = female_marshals_approved
+							}
+						}
+						AND = {
+							independent = yes
+							has_character_modifier = female_marshals_approved
+						}
+					}
+				}
 			}
 			OR = {
 				NOT = { trait = dwarf }
 				trait = skilled_warrior
+				trait = master_warrior
 			}	
 			NOT = { trait = clubfooted }
 			NOT = { trait = hunchback }
@@ -1867,7 +2349,11 @@ character_event = { #choosing champion / prisoner doesn't fight
 		#set_character_flag = flag_duel_to_the_death
 		any_courtier = { 
 			limit = { 
-				has_opinion_modifier = { who = ROOT modifier = host_of_prisoner }
+				prisoner = yes
+				host = {
+					character = ROOT
+				}
+				has_character_flag = demmanded_trial_by_combat
 			}
 			character_event = { 
 				id = trial_by_combat.17 days = 1
@@ -1876,65 +2362,68 @@ character_event = { #choosing champion / prisoner doesn't fight
 	}			
 
 	option = {
-			name = "EVTOPTEtrial_by_combat.4" # Denied
-			ai_chance = {
-				factor = 20
-				modifier = {
-					factor = 0.5
-					trait = just
-				}
-				modifier = {
-					factor = 2
-					trait = arbitrary
-				}
-				modifier = {
-					factor = 0.75
-					trait = kind
-				}
-				modifier = {
-					factor = 1.5
-					trait = wroth
-				}
-				modifier = {
-					factor = 0.5
-					trait = honest
-				}
-				modifier = {
-					factor = 2
-					trait = deceitful
-				}
-				modifier = {
-					factor = 0.5
-					trait = zealous
-				}
-				modifier = {
-					factor = 2
-					trait = cynical
-				}
+		name = "EVTOPTEtrial_by_combat.4" # Denied
+		ai_chance = {
+			factor = 20
+			modifier = {
+				factor = 0.5
+				trait = just
 			}
-			any_courtier = { 
-				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
-				hidden_tooltip = {
-					clr_character_flag = demmanded_trial_by_combat
-					remove_opinion = {
-						who = ROOT modifier = host_of_prisoner 
-					}
-				}	
-				opinion = {
-					who = ROOT modifier = denied_trial_by_combat  years = 5
-				}
-				character_event = { id = trial_by_combat.5 tooltip = "TOOLTIPtrial_by_combat.5" }
-				#inform champion
+			modifier = {
+				factor = 2
+				trait = arbitrary
 			}
-			FROM = {
-				tooltip = {
-					 FROM = { }
-				}
+			modifier = {
+				factor = 0.75
+				trait = kind
 			}
-			clr_character_flag = trial_by_combat
-			hidden_tooltip = { remove_character_modifier = giving_justice }
-			prestige = -100
+			modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+			modifier = {
+				factor = 0.5
+				trait = honest
+			}
+			modifier = {
+				factor = 2
+				trait = deceitful
+			}
+			modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+			modifier = {
+				factor = 2
+				trait = cynical
+			}
 		}
+		any_courtier = { 
+			limit = {
+				prisoner = yes
+				host = {
+					character = ROOT
+				}
+				has_character_flag = demmanded_trial_by_combat
+			}
+			hidden_tooltip = {
+				clr_character_flag = demmanded_trial_by_combat
+			}	
+			opinion = {
+				who = ROOT modifier = denied_trial_by_combat  years = 5
+			}
+			character_event = { id = trial_by_combat.5 tooltip = "TOOLTIPtrial_by_combat.5" }
+			#inform champion
+		}
+		FROM = {
+			tooltip = {
+				 FROM = { }
+			}
+		}
+		clr_character_flag = trial_by_combat
+		hidden_tooltip = { remove_character_modifier = giving_justice }
+		prestige = -100
+	}
 		
 	option = { # My god will be my champion
 		name = "EVTOPTFtrial_by_combat.4" 
@@ -1982,66 +2471,64 @@ character_event = { #choosing champion / prisoner doesn't fight
 		FROM = { 
 			character_event = { id=trial_by_combat.26 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.26 } 
 		} 
-		FROM = {
-			FROM = { 
-				character_event = { id=trial_by_combat.24 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.24 } 
-				if = { 
-					limit = { 
-						father = { 
-							NOT = { character = ROOT } 
-							is_alive = yes	
-						}			
-					}
-					father = {
-						opinion = {
-							modifier = opinion_killed_close_kin
-							who = ROOT
-							years = 25
-						}	
-					}	
-				}
-				if = { 
-					limit = { 
-						mother = { 
-							NOT = { character = ROOT } 
-							is_alive = yes	
-						}			
-					}
-					mother = { 
-						opinion = {
-							modifier = opinion_killed_close_kin
-							who = ROOT
-							years = 25
-						}	
-					}	
-				}
-				if = { 
-					limit = { 
-						spouse = { 
-							NOT = { character = ROOT } 
-							is_alive = yes	
-						}			
-					}
-					spouse = { 
-						opinion = {
-							modifier = opinion_killed_close_kin
-							who = ROOT
-							years = 25
-						}	
-					}	
-				}
-				any_dynasty_member = {
-					limit = { 
+		FROMFROM = { 
+			character_event = { id=trial_by_combat.24 days = 1 tooltip = EVTTOOLTIPtrial_by_combat.24 } 
+			if = { 
+				limit = { 
+					father = { 
 						NOT = { character = ROOT } 
-						is_close_relative = PREV
-					}
+						is_alive = yes	
+					}			
+				}
+				father = {
 					opinion = {
 						modifier = opinion_killed_close_kin
 						who = ROOT
 						years = 25
 					}	
+				}	
+			}
+			if = { 
+				limit = { 
+					mother = { 
+						NOT = { character = ROOT } 
+						is_alive = yes	
+					}			
 				}
-			} 
+				mother = { 
+					opinion = {
+						modifier = opinion_killed_close_kin
+						who = ROOT
+						years = 25
+					}	
+				}	
+			}
+			if = { 
+				limit = { 
+					spouse = { 
+						NOT = { character = ROOT } 
+						is_alive = yes	
+					}			
+				}
+				spouse = { 
+					opinion = {
+						modifier = opinion_killed_close_kin
+						who = ROOT
+						years = 25
+					}	
+				}	
+			}
+			any_dynasty_member = {
+				limit = { 
+					NOT = { character = ROOT } 
+					is_close_relative = PREV
+				}
+				opinion = {
+					modifier = opinion_killed_close_kin
+					who = ROOT
+					years = 25
+				}	
+			}
 		}	
 	}
 	
@@ -2053,7 +2540,70 @@ character_event = { #choosing champion / prisoner doesn't fight
 		trigger = {
 			NOT = { 
 				any_courtier = { 
-					is_female = no
+					OR = {
+						is_female = no
+						AND = {
+							is_pregnant = no
+							OR = {
+								religion = hubal
+								religion = gurzil
+								religion_group = zoroastrian_group
+								culture_group = iranian
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_allowed
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									martial = 20
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_accepted
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									martial = 12
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									independent = no
+									top_liege = {
+										has_character_modifier = female_marshals_approved
+									}
+								}
+								AND = {
+									independent = yes
+									has_character_modifier = female_marshals_approved
+								}
+							}
+						}
+					}
 					age = 16
 					OR = {
 						trait = poor_warrior
@@ -2067,6 +2617,7 @@ character_event = { #choosing champion / prisoner doesn't fight
 					OR = {
 						NOT = { trait = dwarf }
 						trait = skilled_warrior
+						trait = master_warrior
 					}	
 					NOT = { trait = clubfooted }
 					NOT = { trait = hunchback }
@@ -2075,13 +2626,77 @@ character_event = { #choosing champion / prisoner doesn't fight
 			} 
 			any_courtier = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				prisoner = no
 				NOT = { trait = incapable }
 				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -2096,13 +2711,77 @@ character_event = { #choosing champion / prisoner doesn't fight
 		random_courtier = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				prisoner = no
 				NOT = { trait = incapable }
 				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = champion_of_relative } }
 				OR = {
 					NOT = { trait = dwarf }
 					trait = skilled_warrior
+					trait = master_warrior
 				}	
 				NOT = { trait = clubfooted }
 				NOT = { trait = hunchback }
@@ -2131,29 +2810,33 @@ character_event = {
 }
 
 character_event = { # Host selection / champion of prisoner fights
-		id = trial_by_combat.15
-		desc = "EVTDESCtrial_by_combat.15"
-		picture = "GFX_trial_by_combat"
-	
-		is_triggered_only = yes
+	id = trial_by_combat.15
+	desc = "EVTDESCtrial_by_combat.15"
+	picture = "GFX_trial_by_combat"
+
+	is_triggered_only = yes
 			
-		immediate = {
-			clr_character_flag = elected_champion
-			clr_character_flag = has_champion
-		}
+	immediate = {
+		clr_character_flag = elected_champion
+		clr_character_flag = has_champion
+	}
 		
-		option = {  # 
-			name = "EVTOPTAtrial_by_combat.15" 
-			prestige = 25
-			any_courtier = { 
-				limit = { has_opinion_modifier = { who = ROOT modifier = host_of_prisoner } }
-				character_event = { 
-					id = trial_by_combat.16
-				} 
+	option = {  # 
+		name = "EVTOPTAtrial_by_combat.15" 
+		prestige = 25
+		any_courtier = { 
+			limit = {
+				prisoner = yes
+				host = {
+					character = ROOT
+				}
+				has_character_flag = demmanded_trial_by_combat
 			}
+			character_event = { 
+				id = trial_by_combat.16
+			} 
 		}
-		
-	
+	}
 }
 
 character_event = { # prisoner is readied to spectate trial
@@ -2289,9 +2972,6 @@ character_event = { # inform host, choose punishment
 		clr_character_flag = self_elected_champion_b
 		FROM = { 
 			clr_character_flag = elected_champion 
-			remove_opinion = {
-				who = ROOT modifier = host_of_prisoner 
-			}
 		} 
 	}
 	
@@ -2636,9 +3316,6 @@ character_event = { # inform host death of his own champ
 		clr_character_flag = self_elected_champion_b
 		FROM = { 
 			clr_character_flag = elected_champion 
-			remove_opinion = {
-				who = ROOT modifier = host_of_prisoner 
-			}
 			if = {
 				limit = { any_claim = { tier = EMPEROR holder_scope = { character = ROOT } } }
 				clr_character_flag = exiled_royal_family
@@ -2806,7 +3483,70 @@ character_event = { #ai prisoner selects champion
 		random_dynasty_member = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				is_close_relative = ROOT
 				ROOT = { NOT = { host = { character = PREVPREV } } }
 				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
@@ -2830,7 +3570,70 @@ character_event = { #ai prisoner selects champion
 		random_dynasty_member = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				is_close_relative = ROOT
 				ROOT = { NOT = { host = { character = PREVPREV } } }
 				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
@@ -2862,7 +3665,70 @@ character_event = { #ai prisoner selects champion
 		random_dynasty_member = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				is_close_relative = ROOT
 				ROOT = { NOT = { host = { character = PREVPREV } } }
 				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
@@ -2887,7 +3753,70 @@ character_event = { #ai prisoner selects champion
 		random_dynasty_member = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				is_close_relative = ROOT
 				ROOT = { NOT = { host = { character = PREVPREV } } }
 				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
@@ -2920,7 +3849,70 @@ character_event = { #ai prisoner selects champion
 		random_dynasty_member = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				is_close_relative = ROOT
 				ROOT = { NOT = { host = { character = PREVPREV } } }
 				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
@@ -2946,7 +3938,70 @@ character_event = { #ai prisoner selects champion
 		random_dynasty_member = {
 			limit = {
 				age = 16
-				is_female = no
+				OR = {
+					is_female = no
+					AND = {
+						is_pregnant = no
+						OR = {
+							religion = hubal
+							religion = gurzil
+							religion_group = zoroastrian_group
+							culture_group = iranian
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_allowed
+									}
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								OR = {
+									AND = {
+										independent = no
+										top_liege = {
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									AND = {
+										independent = yes
+										has_character_modifier = female_marshals_accepted
+									}
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								independent = no
+								top_liege = {
+									has_character_modifier = female_marshals_approved
+								}
+							}
+							AND = {
+								independent = yes
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+				}
 				is_close_relative = ROOT
 				ROOT = { NOT = { host = { character = PREVPREV } } }
 				NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
@@ -2992,7 +4047,70 @@ character_event = { #ai prisoner selects champion
 				limit = {
 					NOT = { trait = incapable }
 					age = 16
-					is_female = no
+					OR = {
+						is_female = no
+						AND = {
+							is_pregnant = no
+							OR = {
+								religion = hubal
+								religion = gurzil
+								religion_group = zoroastrian_group
+								culture_group = iranian
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_allowed
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									martial = 20
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_accepted
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									martial = 12
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									independent = no
+									top_liege = {
+										has_character_modifier = female_marshals_approved
+									}
+								}
+								AND = {
+									independent = yes
+									has_character_modifier = female_marshals_approved
+								}
+							}
+						}
+					}
 					ROOT = { NOT = { host = { character = PREVPREV } } }
 					NOT = { ROOT = { host = { any_child = { character = PREVPREVPREV } } } }
 				}
@@ -3356,12 +4474,72 @@ character_event = { #ai prisoner selects champion
 					is_ill = no
 					OR = {
 						is_female = no
-						trait = brave
-						trait = strong
+						AND = {
+							is_pregnant = no
+							OR = {
+								religion = hubal
+								religion = gurzil
+								religion_group = zoroastrian_group
+								culture_group = iranian
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_allowed
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_allowed
+										}
+									}
+									martial = 20
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									OR = {
+										AND = {
+											independent = no
+											top_liege = {
+												has_character_modifier = female_marshals_accepted
+											}
+										}
+										AND = {
+											independent = yes
+											has_character_modifier = female_marshals_accepted
+										}
+									}
+									martial = 12
+									OR = {
+										trait = misguided_warrior
+										trait = tough_soldier
+										trait = skilled_tactician
+										trait = brilliant_strategist
+									}
+								}
+								AND = {
+									independent = no
+									top_liege = {
+										has_character_modifier = female_marshals_approved
+									}
+								}
+								AND = {
+									independent = yes
+									has_character_modifier = female_marshals_approved
+								}
+							}
+						}
 					}
 					OR = {
 						NOT = { trait = dwarf }
 						trait = skilled_warrior
+						trait = master_warrior
 					}	
 					NOT = { trait = clubfooted }
 					NOT = { trait = hunchback }
