@@ -1,0 +1,1659 @@
+namespace = relf
+
+#tolerant kingdom trait gained
+character_event = {
+	id = relf.0001
+	desc = EVTDESCrelf0001
+	picture = "GFX_evt_church_council"
+	
+	#is_triggered_only = yes
+
+	mean_time_to_happen = { days = 1 }
+
+	trigger = {
+		NOT = { trait = tolerant_ruler }
+		primary_title = { has_law = cosmo_realm_2 }
+		
+	}
+
+	option = {
+		name = EVTOPTArelf.1
+		trigger = { trait = zealous }
+		tooltip_info = zealous
+		hidden_tooltip = { decadence = -2 }
+		crown_law_title = {
+			if = {
+				limit = {
+					OR = {
+						has_holder = no
+						has_law = centralization_2 
+						has_law = centralization_3
+						has_law = centralization_4
+						has_law = pagan_centralization_2 
+						has_law = pagan_centralization_3
+						has_law = pagan_centralization_4
+					}
+				}
+				add_law = cosmo_realm_0 
+			} 
+			if = {
+				limit = {
+					has_holder = yes
+					OR = {
+						has_law = centralization_0 
+						has_law = centralization_1
+						has_law = pagan_centralization_0 
+						has_law = pagan_centralization_1
+					}
+				}
+				add_law = cosmo_realm_1 
+			} 
+		}
+		ai_chance = {
+			factor = 65			 
+			modifier = {
+				factor = 2
+				religion_group = christian
+			}
+			modifier = {
+				factor = 2
+				religion_group = muslim
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBrelf.1
+		if = {
+			limit = {
+				trait = zealous
+			}
+			remove_trait = zealous
+		}
+		hidden_tooltip = {
+			decadence = 5
+		}
+		add_trait = tolerant_ruler
+		
+		#all independent ruler of the same faith may hate you if they are zealous or if they belong to the universalist religions and are not cynical
+		#your religious head will always hate you unless it is already cynical or has sympathies
+
+		hidden_tooltip = {
+			any_independent_ruler = {
+				limit = {
+					NOT = {
+						ROOT = {
+							rightful_religious_head_scope = {
+								character = PREVPREV
+							}
+						}
+					}
+					religion_group = ROOT
+					OR = {
+						AND = {
+							OR = {
+								religion_group = christian
+								religion_group = muslim
+							}
+							NOT = {
+								trait = cynical
+								trait = tolerant_ruler
+								trait = excommunicated
+							}
+						}
+						trait = zealous
+					}
+				}
+				opinion = {
+					who = ROOT
+					modifier = opinion_blasphemous_ruler
+					years = 25
+				}
+			 } #closesanyruler
+
+			rightful_religious_head_scope = {
+				limit = {
+					religion = ROOT
+					NOT = {
+						trait = cynical
+						trait = tolerant_ruler
+						character = ROOT
+					}
+				}
+				opinion = {
+					who = ROOT
+					modifier = opinion_blasphemous_apostate
+					years = 25
+				}
+				if = {
+					limit = {
+						k_papal_state = {		#Beware the Pope
+							holder_scope = {
+								character = PREVPREV
+							}
+						}
+					}
+					character_event = {
+						id = relf.4
+						days = 150
+					}
+				}
+			}
+		} #closes hiddentooltip
+		ai_chance = {
+			factor = 35
+			modifier = {
+				factor = 0.25
+				controls_religion = yes
+			}
+			modifier = {
+				factor = 2
+				religion_group = graeco_roman_group
+			}
+			modifier = {
+				factor = 2
+				religion_group = zoroastrian_group
+			}
+			modifier = {
+				factor = 2
+				religion_group = indian_group
+			}
+			modifier = {
+				factor = 2
+				religion_group = bud_group
+			}
+			modifier = {
+				factor = 1.5
+				liege = {
+					trait = tolerant_ruler
+				}
+				opinion = {
+					who = liege
+					value = 50
+				} #vassal kings and viceroys follow the good example
+			}
+			modifier = {
+				factor = 1.75
+				trait = kind
+			}
+			modifier = {
+				factor = 1.25
+				trait = content
+			}
+			modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+#			modifier = {
+#				factor = 1.25
+#				capital_scope = { kingdom = { title = k_sicily } }
+#			}
+#			modifier = {
+#				factor = 1.75
+#				capital_scope = { empire = { title = e_mali } }
+#			}
+#			modifier = {
+#				factor = 2
+#				capital_scope = { kingdom = { title = k_egypt } }
+#			}
+#			modifier = {
+#				factor = 1.75
+#				capital_scope = { empire = { title = e_persia } }
+#			}
+#			modifier = {
+#				factor = 2
+#				capital_scope = { empire = { title = e_spain } }
+#			}
+#			modifier = {
+#				factor = 0.75
+#				capital_scope = { empire = { title = e_france } }
+#			}
+#			modifier = {
+#				factor = 0.5
+#				capital_scope = { empire = { title = e_hre } } #less likely to become tolerant just because of slavs & norse provinces
+#			}
+		}
+	}
+}
+
+# Tolerant Trait Lost
+character_event = {
+	id = relf.0002
+	desc = EVTDESCrelf0002
+	picture = "GFX_evt_church_council"
+	
+	trigger = {
+		trait = tolerant_ruler
+		primary_title = {
+			NOT = {
+				has_law = cosmo_realm_2
+			}
+		}
+	}
+	
+	option = {
+		name = EVTOPTArelf.2
+		remove_trait = tolerant_ruler
+		hidden_tooltip = {
+			decadence = -2
+		}
+		primary_title = {
+			add_law = cosmo_realm_1
+		}
+	}
+}
+
+# Zealous Tolerant mix-up
+character_event = {
+	id = relf.0003
+	desc = EVTDESCrelf0003
+	picture = "GFX_evt_church_council"
+	
+	trigger = {
+		trait = tolerant_ruler
+		trait = zealous
+	}
+	
+	option = {
+		name = EVTOPTArelf.3
+		remove_trait = zealous
+		hidden_tooltip = { decadence = 5 }
+		hidden_tooltip = {
+			any_independent_ruler = {
+				limit = {
+					religion_group = ROOT
+					NOT = {
+						ROOT = {
+							rightful_religious_head_scope = {
+								character = PREVPREV
+							}
+						}
+					}
+					OR = {
+						AND = {
+							OR = {
+								religion_group = christian
+								religion_group = muslim
+							}
+							NOT = {
+								trait = cynical
+								trait = tolerant_ruler
+								trait = excommunicated
+							}
+						}
+						trait = zealous
+					}
+				}
+				opinion = {
+					who = ROOT
+					modifier = opinion_blasphemous_ruler
+					years = 25
+				}
+			} #closesanyruler
+
+			rightful_religious_head_scope = {
+				limit = {
+					religion = ROOT
+					NOT = {
+						trait = cynical
+						trait = tolerant_ruler
+						character = ROOT
+					}
+				}
+				opinion = {
+					who = ROOT
+					modifier = opinion_blasphemous_apostate
+					years = 25
+				}
+				if = {
+					limit = {
+						k_papal_state = {
+							holder_scope = {
+								character = PREVPREV
+							}
+						}
+					}
+					character_event = {
+						id = relf.4
+						days = 150
+					}
+				}
+			} #closesrelhead
+		} #closes hiddentooltip
+		ai_chance = {
+			factor = 30
+			modifier = {
+				factor = 0.25
+				controls_religion = yes
+			}
+			modifier = {
+				factor = 1.5
+				liege = {
+					trait = tolerant_ruler
+				}
+				opinion = {
+					who = liege
+					value = 50
+				} #vassal kings and viceroys follow the good example
+			}
+			modifier = {
+				factor = 1.75
+				trait = kind
+			}
+			modifier = {
+				factor = 1.25
+				trait = content
+			}
+			modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+#			modifier = {
+#				factor = 1.25
+#				capital_scope = { kingdom = { title = k_sicily } }
+#			}
+#			modifier = {
+#				factor = 1.75
+#				capital_scope = { empire = { title = e_mali } }
+#			}
+#			modifier = {
+#				factor = 2
+#				capital_scope = { kingdom = { title = k_egypt } }
+#			}
+#			modifier = {
+#				factor = 1.75
+#				capital_scope = { empire = { title = e_persia } }
+#			}
+#			modifier = {
+#				factor = 2
+#				capital_scope = { empire = { title = e_spain } }
+#			}
+#			modifier = {
+#				factor = 0.75
+#				capital_scope = { empire = { title = e_france } }
+#			}
+#			modifier = {
+#				factor = 0.5
+#				capital_scope = { empire = { title = e_hre } } #less likely to become tolerant just because of slavs & norse provinces
+#			}
+		}
+	}
+	option = {
+		name = EVTOPTBrelf.3
+		crown_law_title = {
+			if = {
+				limit = {
+					OR = {
+						has_holder = no
+						has_law = centralization_2 
+						has_law = centralization_3
+						has_law = centralization_4
+						has_law = pagan_centralization_2
+						has_law = pagan_centralization_3
+						has_law = pagan_centralization_4
+					}
+				}
+				add_law = cosmo_realm_0 
+			} 
+			if = {
+				limit = {
+					has_holder = yes
+					OR = {
+						has_law = centralization_0 
+						has_law = centralization_1
+						has_law = pagan_centralization_0
+						has_law = pagan_centralization_1
+					}
+				}
+				add_law = cosmo_realm_1 
+			} 
+		}
+		remove_trait = tolerant_ruler
+		hidden_tooltip = { decadence = -2 }
+		ai_chance = { factor = 70 
+			modifier = {
+				factor = 0
+				has_character_flag = passed_tolerant_law 	#to stop flip-flopping AI
+			}
+			modifier = {
+				factor = 2
+				religion_group = christian
+			}
+			modifier = {
+				factor = 2
+				religion_group = muslim
+			}
+			modifier = {
+				factor = 0.5
+				religion = graeco_roman_group
+			}
+			modifier = {
+				factor = 0.5
+				religion_group = zoroastrian_group
+			}
+			modifier = {
+				factor = 0.5
+				religion_group = bud_group
+			}
+			modifier = {
+				factor = 0.1
+				liege = {
+					trait = tolerant_ruler
+				}
+				opinion = {
+					who = liege
+					value = 50
+				} #vassal kings and viceroys follow the good example
+			}
+			modifier = {
+				factor = 1.25
+				trait = wroth
+			}
+			modifier = {
+				factor = 1.75
+				trait = proud
+			}
+		}
+	}
+}
+
+# The Pope receives word of a tolerant Catholic Emperor
+character_event = {
+	id = relf.0004
+	desc = EVTDESCrelf0004
+	picture = "GFX_evt_church_council"
+	
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = {
+			NOT = {
+				trait = excommunicated
+			}
+			religion = catholic
+			NOT = {
+				has_character_flag = tolerant_vs_pope
+			}
+		}
+		NOT = {
+			character = FROM
+		}
+	}
+
+	option = {
+		name = EVTOPTArelf.4
+		FROM = {
+			character_event = {
+				id = relf.0005
+			}
+			set_character_flag = tolerant_vs_pope
+		}
+		ai_chance = {
+			factor = 50 
+			modifier = {
+				factor = 0
+				trait = tolerant_ruler
+			}
+			modifier = {
+				factor = 2
+				NOT = {
+					distance = {
+						who = FROM
+						value = 75
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				opinion = {
+					who = FROM
+					value = 75
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = 50
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = 30
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = 10
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = 0
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -20
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -40
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -60
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -80
+					}
+				}
+			}
+			modifier = {
+				factor = 1.5
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -99
+					}
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = cynical
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = possessed
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = lunatic
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = proud
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = lustful
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = slothful
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = greedy
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = gluttonous
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = wroth
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = envious
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = deceitful
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = hedonist
+				}
+			}
+#			modifier = {
+#				factor = 1.25
+#				FROM = { has_landed_title = e_hre } #made up that title for a reason, goddamit!
+#			}
+#			modifier = {
+#				factor = 0.75
+#				FROM = { capital_scope = { empire = { title = e_spain } } } #it's complicate
+#			}
+#			modifier = {
+#				factor = 1.15
+#				FROM = { capital_scope = { kingdom = { title = k_sicily } } } #too bloody close
+#			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					NOT = {
+						piety = 250
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					NOT = {
+						piety = 0
+					}
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					NOT = {
+						piety = -150
+					}
+				}
+			}
+
+			modifier = {
+				factor = 1.15
+				trait = envious
+			}
+			modifier = {
+				factor = 1.15
+				trait = wroth
+			}
+			modifier = {
+				factor = 2
+				trait = zealous
+			}
+			modifier = {
+				factor = 1.15
+				trait = greedy
+			}
+			modifier = {
+				factor = 2
+				trait = crusader
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBrelf.4
+		FROM = {
+			character_event = {
+				id = relf.0006
+			} 
+			set_character_flag = tolerant_vs_pope
+		}
+		ai_chance = {
+			factor = 50 
+			modifier = {
+				factor = 1.5
+				distance = {
+					who = FROM
+					value = 100
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -75
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				opinion = {
+					who = FROM
+					value = 50
+				}
+			}
+			modifier = {
+				factor = 1.25
+				opinion = {
+					who = FROM
+					value = 70
+				}
+			}
+			modifier = {
+				factor = 1.25
+				opinion = {
+					who = FROM
+					value = 90
+				}
+			}
+			modifier = {
+				factor = 2
+				opinion = {
+					who = FROM
+					value = 100
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = scholarly_theologian
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = mastermind_theologian
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = scholar
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = crusader
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					trait = pilgrim
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = humble
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = diligent
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = charitable
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = temperate
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = patient
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = kind
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = honest
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					trait = chaste
+				}
+			}
+			modifier = {
+				factor = 1.15
+				FROM = {
+					piety = 250
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					piety = 500
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					piety = 1000
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					piety = 1500
+				}
+			}
+			modifier = {
+				factor = 1.25
+				FROM = {
+					piety = 2000
+				}
+			}
+			modifier = {
+				factor = 1.15
+				trait = kind
+			}
+			modifier = {
+				factor = 1.15
+				trait = patient
+			}
+			modifier = {
+				factor = 2
+				trait = cynical
+			}
+			modifier = {
+				factor = 1.15
+				trait = charitable
+			}
+		}
+	}
+}
+
+# The Pope is not happy
+character_event = {
+	id = relf.0005
+	desc = EVTDESCrelf0005
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.5
+		trigger = {
+			wealth = 500
+		}
+		wealth = -500
+		FROM = {
+			character_event = {
+				id = relf.0007 days = 90
+			}
+		}
+		add_trait = excommunicated
+		ai_chance = {
+			factor = 40 
+			modifier = {
+				factor = 1.5
+				trait = deceitful
+			}
+			modifier = {
+				factor = 1.5
+				trait = cynical
+			}
+			modifier = {
+				factor = 1.25
+				trait = charitable
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBrelf.5
+		add_trait = excommunicated
+		ai_chance = {
+			factor = 30 
+			modifier = {
+				factor = 1.5
+				trait = proud
+			}
+			modifier = {
+				factor = 1.5
+				trait = cynical
+			}
+			modifier = {
+				factor = 1.25
+				trait = wroth
+			}
+			modifier = {
+				factor = 1.25
+				trait = proud
+			}
+		}
+	}
+	option = {
+		name = EVTOPTCrelf.5
+		remove_trait = tolerant_ruler
+		primary_title = {
+			add_law = cosmo_realm_1
+		} #You are not certain, thus you don't go all the way to One Faith in one go
+		hidden_tooltip = {
+			character_event = {
+				id = relf.0010
+				days = 90
+			}
+		}
+		ai_chance = {
+			factor = 30 
+			modifier = {
+				factor = 1.5
+				trait = craven
+			}
+			modifier = {
+				factor = 1.5
+				trait = shy
+			}
+			modifier = {
+				factor = 1.25
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 1.25
+				trait = humble
+			}
+		}
+	}
+}
+
+# The Pope is fine
+character_event = {
+	id = relf.0006
+	desc = EVTDESCrelf0006
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.8
+	}
+}
+
+# The Pope receives donation
+character_event = {
+	id = relf.0007
+	desc = EVTDESCrelf0007
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.7
+		wealth = 500
+		FROM = {
+			character_event = {
+				id = relf.0008
+			}
+		}
+		ai_chance = {
+			factor = 50 
+			modifier = {
+				factor = 1.5
+				trait = greedy
+			}
+			modifier = {
+				factor = 1.5
+				trait = cynical
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBrelf.7
+		wealth = 500
+		FROM = {
+			character_event = {
+				id = relf.0009
+			}
+		}
+		ai_chance = {
+			factor = 50 
+			modifier = {
+				factor = 1.5
+				trait = charitable
+			}
+			modifier = {
+				factor = 1.5
+				trait = zealous
+			}
+		}
+	}
+}
+
+# The Pope accepts the donation
+character_event = {
+	id = relf.0008
+	desc = EVTDESCrelf0008
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.8
+		remove_trait = excommunicated
+	}
+}
+
+# The Pope does not accept the donation
+character_event = {
+	id = relf.0009
+	desc = EVTDESCrelf0009
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.9
+		piety = -250
+	}
+}
+
+# The Pope appreciates your backpedaling cowardice
+character_event = {
+	id = relf.0010
+	desc = EVTDESCrelf0010
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.10
+		remove_trait = excommunicated
+		piety = 50
+	}
+}
+
+# The Pope is being bullied. What does he do?
+character_event = {
+	id = relf.0011
+	desc = EVTDESCrelf0011
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = { name = EVTOPTArelf.11
+		piety = -250
+		any_independent_ruler = {
+			limit = {
+				k_papal_state = {
+					holder_scope = {
+						NOT = {
+							character = PREVPREV
+						}
+					}
+				}
+			}
+			remove_opinion = {
+				who = ROOT
+				modifier = pope_under_attack
+			}
+		}
+
+		FROM = {
+			character_event = {
+				id = relf.0012
+			}
+		}
+		ai_chance = {
+			factor = 50 
+			modifier = {
+				factor = 1.5
+				trait = charitable
+			}
+			modifier = {
+				factor = 1.5
+				trait = cynical
+			}
+			modifier = {
+				factor = 2
+				trait = craven
+			}
+			modifier = {
+				factor = 1.5
+				trait = shy
+			}
+			modifier = {
+				factor = 1.5
+				trait = content
+			}
+			modifier = {
+				factor = 1.5
+				trait = slothful
+			}
+			modifier = {
+				factor = 1.5
+				trait = hedonist
+			}
+			modifier = {
+				factor = 1.5
+				trait = humble
+			}
+		}
+	}
+	option = { name = EVTOPTBrelf.11
+		piety = 1000
+		prestige = 500
+		FROM = {
+			character_event = {
+				id = relf.0013
+			}
+		}
+		any_independent_ruler = {
+			limit = {
+				k_papal_state = {
+					holder_scope = {
+						NOT = {
+							character = PREVPREV
+						}
+					}
+				}
+			}
+			remove_opinion = {
+				who = ROOT
+				modifier = pope_under_attack
+			}
+		}
+		ai_chance = { factor = 50 
+			modifier = {
+				factor = 1.5
+				trait = greedy
+				}
+			modifier = {
+				factor = 1.5
+				trait = proud
+				}
+			modifier = {
+				factor = 1.5
+				trait = wroth
+				}
+			modifier = {
+				factor = 2.
+				trait = zealous
+				}
+			modifier = {
+				factor = 2.5
+				trait = brave
+				}
+			modifier = {
+				factor = 4
+				trait = crusader
+				}
+			modifier = {
+				factor = 2
+				trait = just
+				}
+			modifier = {
+				factor = 1.5
+				trait = ambitious
+				}
+			modifier = {
+				factor = 1.5
+				trait = diligent
+				}
+			modifier = {
+				factor = 1.5
+				trait = celibate
+				}
+			modifier = {
+				factor = 1.25
+				has_character_flag = stubborn_pope
+				}
+			}
+	}
+}
+
+# The Pope has been bullied into submission
+character_event = {
+	id = relf.0012
+	desc = EVTDESCrelf0012
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.12
+		remove_trait = excommunicated
+		excommunicate = no
+	}
+}
+
+# The Pope doesn't take any of the above
+character_event = {
+	id = relf.0013
+	desc = EVTDESCrelf0013
+	picture = "GFX_evt_pope"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.13
+		trigger = {
+			FROM = {
+				has_character_flag = stubborn_pope
+			}
+		}
+		piety = -500
+		prestige = -500
+		FROM = {
+			current_heir = {
+				opinion = {
+					who = ROOT
+					modifier = opinion_killed_predecessor
+				}
+			}
+		}
+		FROM = {
+			death = {
+				death_reason = death_execution
+				killer = ROOT
+			}
+		} 
+		ai_chance = {
+			factor = 1 
+			modifier = {
+				factor = 50
+				trait = proud
+			}
+			modifier = {
+				factor = 50
+				trait = wroth
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBrelf.13
+		piety = -500
+		prestige = -500
+		FROM = {
+			set_character_flag = stubborn_pope
+		} 
+		ai_chance = {
+			factor = 60
+		}
+	}
+}
+
+# Pinging event on ending of war
+character_event = {
+	id = relf.0014
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		k_papal_state = {
+			holder_scope = {
+				piety = -500
+				prestige = -250
+				character_event = {
+					id = relf.0011
+				} #the Pope receives the ultimatum
+			}
+		}
+	}
+}
+
+
+# Pinging for other rulers, the pope is under attack!
+character_event = {
+	id = relf.0015
+	hide_window = yes
+	
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		any_independent_ruler = {
+			limit = {
+				religion = ROOT
+			 	NOT = {
+					k_papal_state = {
+						holder_scope = {
+							character = PREVPREV
+						}
+					}
+					trait = cynical
+					trait = tolerant_ruler
+					trait = excommunicated
+				}
+			}
+			opinion = {
+				who = ROOT
+				modifier = attacked_the_pope 
+				years = 4
+			}
+		} #closesanyruler
+		k_papal_state = {
+			holder_scope = {
+				character_event = {
+					id = relf.0016
+				}
+			}
+		}
+	}
+}
+
+# Pope warned
+character_event = {
+	id = relf.0016
+	desc = EVTDESCrelf0016
+	picture = "GFX_evt_pope"
+	
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.16
+		any_independent_ruler = {
+			limit = {
+				religion = ROOT
+				NOT = {
+					trait = cynical
+					trait = tolerant_ruler
+					trait = excommunicated
+				}
+			}
+			opinion = {
+				who = ROOT
+				modifier = pope_under_attack
+				years = 1
+			}
+			if = {
+				limit = {
+					higher_tier_than = DUKE
+				}
+				character_event = {
+					id = relf.0017
+					days = 50
+				}
+			}
+		}
+	}
+}
+
+#catholic rulers informed
+character_event = {
+	id = relf.0017
+	desc = EVTDESCrelf0017
+	picture = "GFX_evt_heresy"
+	
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTArelf.17
+		piety = 150
+		join_defender_wars = FROM
+		ai_chance = {
+			factor = 40
+			modifier = {
+				factor = 2
+				trait = crusader
+			}
+			modifier = {
+				factor = 2
+				trait = zealous
+			}
+			modifier = {
+				factor = 1.5
+				trait = just
+			}
+			modifier = {
+				factor = 1.5
+				trait = brave
+			}
+			modifier = {
+				factor = 1.5
+				trait = pilgrim
+			}
+			modifier = {
+				factor = 1.25
+				trait = honest
+			}
+			modifier = {
+				factor = 1.5
+				trait = wroth
+			}
+			modifier = {
+				factor = 1.25
+				trait = diligent
+			}
+			modifier = {
+				factor = 0.75
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -75
+					}
+				}
+			}
+			modifier = {
+				factor = 0.75
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -50
+					}
+				}
+			}
+			modifier = {
+				factor = 0.75
+				NOT = {
+					opinion = {
+						who = FROM
+						value = 0
+					}
+				}
+			}
+			modifier = {
+				factor = 1.15
+				opinion = {
+					who = FROM
+					value = 50
+				}
+			}
+			modifier = {
+				factor = 1.5
+				opinion = {
+					who = FROM
+					value = 70
+				}
+			}
+			modifier = {
+				factor = 1.5
+				opinion = {
+					who = FROM
+					value = 90
+				}
+			}
+			modifier = {
+				factor = 1.5
+				NOT = {
+					opinion = {
+						who = FROMFROM
+						value = -75
+					}
+				}
+			}
+			modifier = {
+				factor = 1.25
+				NOT = {
+					opinion = {
+						who = FROMFROM
+						value = -50
+					}
+				}
+			}
+			modifier = {
+				factor = 1.25
+				NOT = {
+					opinion = {
+						who = FROMFROM
+						value = 0
+					}
+				}
+			}
+			modifier = {
+				factor = 0.95
+				opinion = {
+					who = FROMFROM
+					value = 50
+				}
+			}
+			modifier = {
+				factor = 0.75
+				opinion = {
+					who = FROMFROM
+					value = 70
+				}
+			}
+			modifier = {
+				factor = 0.75
+				opinion = {
+					who = FROMFROM
+					value = 90
+				}
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBrelf.17
+		piety = -150
+		ai_chance = {
+			factor = 60
+			modifier = {
+				factor = 0
+				trait = incapable
+			}
+			modifier = {
+				factor = 0.25
+				NOT = { age = 16 }
+			}
+			modifier = {
+				factor = 5
+				trait = cynical
+			}
+			modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+			modifier = {
+				factor = 1.5
+				trait = slothful
+			}
+			modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 1.5
+				trait = craven
+			}
+			modifier = {
+				factor = 1.5
+				trait = content
+			}
+			modifier = {
+				factor = 1.25
+				trait = deceitful
+			}
+			modifier = {
+				factor = 1.5
+				trait = patient
+			}
+			modifier = {
+				factor = 2
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -75
+					}
+				}
+			}
+			modifier = {
+				factor = 1.5
+				NOT = {
+					opinion = {
+						who = FROM
+						value = -50
+					}
+				}
+			}
+			modifier = {
+				factor = 1.25
+				NOT = {
+					opinion = {
+						who = FROM
+						value = 0
+					}
+				}
+			}
+			modifier = {
+				factor = 0.75
+				NOT = {
+					opinion = {
+						who = FROMFROM
+						value = -75
+					}
+				}
+			}
+			modifier = {
+				factor = 0.75
+				NOT = {
+					opinion = {
+						who = FROMFROM
+						value = -50
+					}
+				}
+			}
+			modifier = {
+				factor = 0.95
+				NOT = {
+					opinion = {
+						who = FROMFROM
+						value = 0
+					}
+				}
+			}
+		}
+	}
+}
