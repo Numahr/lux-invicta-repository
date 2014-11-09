@@ -170,6 +170,7 @@ action_study_technology = {
 	attribute = intrigue
 	
 	trigger = {
+		has_higher_tech_than = FROM
 		any_province_lord = {
 			NOT = { is_liege_or_above = FROM }
 			NOT = { character = FROM }
@@ -190,6 +191,7 @@ action_organize_spies = {
 		is_within_diplo_range = FROM
 	}
 	
+	plot_power_modifier = 0.005
 #	assassinate_chance_modifier = 0.003
 	arrest_chance_modifier = 0.003
 	local_revolt_risk = -0.003
@@ -279,8 +281,29 @@ action_inquisition = {
 	attribute = learning
 	
 	trigger = {
+		FROM = {
+			NOT = {
+				trait = tolerant_ruler
+			}
+			liege = {
+				NOT = {
+					trait = tolerant_ruler
+				}
+			}
+			top_liege = {
+				OR = {
+					NOT = {
+						trait = tolerant_ruler
+					}
+					NOT = {
+						religion_group = FROM
+					}
+				}
+			} #allows foreign vassals to spread their different faiths but not the main religion's ones to overwrite them 
+		}
 		OR = {
 			owner = {
+				independent = yes
 				NOT = { religion = FROM }
 				OR = { # Religions that can be proselytized to ("Pagans")
 					religion = allfather
@@ -554,6 +577,38 @@ action_advance_cul_tech = {
 	tech_growth_modifier_culture = 0.1
 	
 	events = { 926 927 }
+}
+
+action_build_zeal = {
+	attribute = learning
+
+	potential = {
+		FROM = {
+			is_tribal = yes
+			is_adult = yes
+			NOT = { trait = incapable }
+			NOT = { trait = tolerant_ruler }
+			liege = { NOT = { trait = tolerant_ruler } }
+			top_liege = {
+				OR = {
+					NOT = { trait = tolerant_ruler }
+					NOT = { religion_group = FROM }
+				}
+			}
+		}
+	}
+
+	trigger = {
+		FROM = {
+			capital_scope = {
+				province = ROOT
+			}
+		}
+	}
+	
+	monthly_character_piety = 0.05
+	
+	events = { 20218 }
 }
 
 # Lord Spiritual (Muslim only)
@@ -991,29 +1046,5 @@ action_martial_training = { #Martial
 	}
 	
 	events = { }
-}
-
-action_build_zeal = {
-	attribute = learning
-
-	potential = {
-		FROM = {
-			is_tribal = yes
-			is_adult = yes
-			NOT = { trait = incapable }
-		}
-	}
-
-	trigger = {
-		FROM = {
-			capital_scope = {
-				province = ROOT
-			}
-		}
-	}
-	
-	monthly_character_piety = 0.05
-	
-	events = { 20218 }
 }
 
