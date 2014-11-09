@@ -101,7 +101,7 @@ antitolerant_ruler = {
 
 		FROM = {
 			remove_trait = tolerant_ruler
-			any_demesne_title = { add_law = cosmo_realm_1 }
+			any_demesne_title = { add_law = tolerance_1 }
 			prestige = -200
 			abdicate = yes
 		}
@@ -177,7 +177,7 @@ antitolerant_ruler = {
 			}
 		modifier = {
 			factor = 0.5
-			ROOT = { religion = hellenic_pagan }
+			ROOT = { religion_group = graecoroman_group }
 			}
 		modifier = {
 			factor = 0.5
@@ -199,9 +199,9 @@ ambitious_tolerant = {
 
 	can_use = {
 		ROOT = {
-			NOT = { religion_group = pagan_group }
+#			NOT = { religion_group = pagan_group }	#To do: determine appropriate religions
 			NOT = { pacifist = yes }
-			NOT = { religion = buddhist }
+			NOT = { religion_group = bud_group }
 			trait = tolerant_ruler
 			trait = ambitious
 			OR = { trait = cynical
@@ -309,9 +309,9 @@ ambitious_tolerant = {
 
 	is_valid = {
 		ROOT = {
-			NOT = { religion_group = pagan_group }
+#			NOT = { religion_group = pagan_group }	#To do: determine appropriate religions
 			NOT = { pacifist = yes }
-			NOT = { religion = buddhist }
+			NOT = { religion_group = bud_group }
 			NOT = { same_realm = FROM }
 			OR = {
 				NOT = { religion_group = FROM }
@@ -506,66 +506,6 @@ ambitious_tolerant = {
 	ai_will_do = { 
 		factor = 1
 		
-		# Try to guide the Hordes in the right direction
-		modifier = {
-			factor = 0.1
-			ROOT = {
-				OR = {
-					dynasty = 613 # Seljuks
-					dynasty = 800 # Timurids
-					primary_title = { title = e_il-khanate }
-				}
-			}
-			OR = {
-				empire = {
-					NOT = {
-						OR = {
-							title = e_persia
-							title = e_byzantium
-							title = e_arabia
-						}
-					}
-				}
-				FROM = {
-					primary_title = { title = e_golden_horde }
-					NOT = { year = 1300 }
-				}
-			}
-		}
-		modifier = {
-			factor = 0.1
-			ROOT = {
-				primary_title = { title = e_golden_horde }
-			}
-			OR = {
-				empire = {
-					OR = {
-						title = e_persia
-						title = e_byzantium
-						title = e_arabia
-					}
-				}
-				FROM = {
-					primary_title = { title = e_il-khanate }
-					NOT = { year = 1300 }
-				}
-			}
-		}
-		modifier = {
-			factor = 2.0
-			OR = {
-				culture = persian
-				culture = baloch
-				culture = afghan
-				culture = turkish
-			}
-			empire = {
-				OR = {
-					title = e_persia
-					title = e_rajastan
-				}
-			}
-		}
 	}
 }
 
@@ -603,10 +543,6 @@ ambitious_tolerant_pagan = {
 				religion = baltic_pagan_reformed
 				religion = slavic_pagan_reformed
 				religion = finnish_pagan_reformed
-				religion = aztec_reformed
-				religion = aztec
-				religion = west_african_pagan_reformed
-				religion = zun_pagan_reformed
 			}
 			NOT = { same_realm = FROM }
 			NOT = { religion = FROM }
@@ -681,10 +617,7 @@ ambitious_tolerant_pagan = {
 				religion = baltic_pagan_reformed
 				religion = slavic_pagan_reformed
 				religion = finnish_pagan_reformed
-				religion = aztec_reformed
 				religion = aztec
-				religion = west_african_pagan_reformed
-				religion = zun_pagan_reformed
 			}
 			NOT = { same_realm = FROM }
 			NOT = { religion = FROM }
@@ -845,17 +778,11 @@ ambitious_tolerant_pagan = {
 			ROOT = {
 				culture = hungarian
 				primary_title = {
-					OR = {
-						title = k_hungary
-						title = e_carpathia
-					}
+					title = k_hungary
 				}
 			}
 			empire = {
-				OR = {
-					title = e_tartaria
-					title = e_russia
-				}
+				title = e_russia
 			}
 		}
 	}
@@ -876,16 +803,22 @@ ambitious_tolerant_buddhist = {
 		ROOT = {
 			trait = tolerant_ruler
 			trait = ambitious
-			OR = { trait = cynical
+			OR = {
+				trait = cynical
 				trait = arbitrary
 				trait = lunatic
-				trait = possessed }
-			religion = buddhist
-			NOT = { same_realm = FROM }
-			NOT = { religion_group = FROM }
+				trait = possessed
+			}
+			religion_group = bud_group
+			NOT = {
+				same_realm = FROM
+				religion_group = FROM
+			}
 			top_liege = {
 				religion_group = ROOT
-				NOT = { religion = FROM }
+				NOT = {
+					religion = FROM
+				}
 			}
 		}
 	}
@@ -940,7 +873,7 @@ ambitious_tolerant_buddhist = {
 
 	is_valid = {
 		ROOT = {
-			religion = buddhist
+			religion_group = bud_group
 			NOT = { same_realm = FROM }
 			NOT = { religion_group = FROM }
 			top_liege = {
@@ -1090,7 +1023,7 @@ lift_excommunication = {
 		FROM = { controls_religion = yes }
 	}
 	
-	on_add = { ROOT = { character_event = { id = relf.0015 } }
+	on_add = { ROOT = { character_event = { id = relf.15 } }
 		}
 	on_success = {
 		any_attacker = {
@@ -1117,7 +1050,7 @@ lift_excommunication = {
 					modifier = opinion_forced_lifting
 				}
 			}
-			character_event = { id = relf.0014 } #the Pope receives the ultimatum
+			character_event = { id = relf.14 } #the Pope receives the ultimatum
 		}
 		
 		FROM = { 
