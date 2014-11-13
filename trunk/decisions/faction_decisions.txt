@@ -34,6 +34,9 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_succ_seniority
+						}
 					}
 					letter_event = { id = lux_regency.1 days = 3 tooltip = EVTTOOLTIP8005 }
 				}
@@ -151,6 +154,9 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_succ_primogeniture
+						}
 					}
 					letter_event = { id = lux_regency.2 days = 3 tooltip = EVTTOOLTIP8005 }
 				}
@@ -268,6 +274,9 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_succ_feudal_elective
+						}
 					}
 					letter_event = { id = lux_regency.3 days = 3 tooltip = EVTTOOLTIP8005 }
 				}
@@ -384,6 +393,9 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_succ_gavelkind
+						}
 					}
 					letter_event = { id = lux_regency.4 days = 3 tooltip = EVTTOOLTIP8005 }
 				}
@@ -504,6 +516,9 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_loosen_clan_control
+						}
 					}
 					letter_event = { id = lux.8026 days = 3 tooltip = EVTTOOLTIP8005 }
 				}
@@ -598,6 +613,9 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_lower_crown_authority
+						}
 					}
 					letter_event = { id = 8026 days = 3 tooltip = EVTTOOLTIP8005 }
 				}
@@ -718,6 +736,9 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_independence
+						}
 					}
 					letter_event = { id = lux_regency.5 days = 3 tooltip = "EVTTOOLTIP8005" }
 				}
@@ -857,6 +878,16 @@ plot_decisions = {
 				if = {
 					limit = {
 						has_regent = yes
+						regent = {
+							in_faction = faction_claimant
+						}
+						supported_claimant = {
+							ROOT = {
+								supported_claimant = {
+									character = PREVPREV
+								}
+							}
+						}
 					}
 					letter_event = { id = lux_regency.6 days = 3 tooltip = EVTTOOLTIP8005 }
 				}
@@ -1118,6 +1149,606 @@ plot_decisions = {
 		}
 	}
 
+	faction_agnatic_succession_ultimatum = {
+		is_high_prio = yes
+		
+		potential = {
+			leads_faction = faction_agnatic_succession
+			OR = {
+				NOT = { has_character_flag = faction_agnatic_succession_ultimatum_taken}
+				had_character_flag = { flag = faction_agnatic_succession_ultimatum_taken days = 7 }
+			}
+		}
+		allow = {
+			war = no
+			prisoner = no
+			liege = {
+				NOT = { war_with = ROOT }
+				NOT = { reverse_has_truce = ROOT }
+			}
+			capital_holding = {
+				controller = {
+					character = ROOT
+				}
+			}
+		}
+		effect = {
+			liege = {
+				if = {
+					limit = {
+						has_regent = no
+					}
+					letter_event = { id = gender_faction.105 days = 3 tooltip = "EVTTOOLTIP8005" }
+				}
+				if = {
+					limit = {
+						has_regent = yes
+						regent = {
+							in_faction = faction_agnatic_succession
+						}
+					}
+					letter_event = { id = lux_regency.101 days = 3 tooltip = EVTTOOLTIP8005 }
+				}
+			}
+			hidden_tooltip = {
+				set_character_flag = faction_agnatic_succession_ultimatum_taken
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.5 # Slow it down a bit
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_agnatic_succession
+						power = 0.75
+					}
+				}
+			}			
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_agnatic_succession
+						power = 1.0
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_agnatic_succession
+						power = 1.5
+					}
+				}
+			}			
+			
+			modifier = {
+				factor = 0
+				liege = {
+					any_war = {
+						OR = {
+							AND = {
+								defender = { character = PREV }
+								NOT = { using_cb = depose_liege }
+								NOT = { using_cb = overthrow_ruler }
+								NOT = { using_cb = overthrow_ruler_no_calls }
+								NOT = { using_cb = succession_on_liege }
+								NOT = { using_cb = other_succession_on_liege }
+							}
+							AND = {
+								attacker = { character = PREV }
+								OR = {
+									using_cb = invasion
+									using_cb = religious
+									using_cb = tribal_invasion
+#									using_cb = muslim_invasion
+									using_cb = viking_invasion
+									using_cb = claim_all
+									using_cb = claim
+									using_cb = other_claim
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	faction_agnatic_cognatic_succession_ultimatum = {
+		is_high_prio = yes
+		
+		potential = {
+			leads_faction = faction_agnatic_cognatic_succession
+			OR = {
+				NOT = { has_character_flag = faction_agnatic_cognatic_succession_ultimatum_taken}
+				had_character_flag = { flag = faction_agnatic_cognatic_succession_ultimatum_taken days = 7 }
+			}
+		}
+		allow = {
+			war = no
+			prisoner = no
+			liege = {
+				NOT = { war_with = ROOT }
+				NOT = { reverse_has_truce = ROOT }
+			}
+			capital_holding = {
+				controller = {
+					character = ROOT
+				}
+			}
+		}
+		effect = {
+			liege = {
+				if = {
+					limit = {
+						has_regent = no
+					}
+					letter_event = { id = gender_faction.205 days = 3 tooltip = "EVTTOOLTIP8005" }
+				}
+				if = {
+					limit = {
+						has_regent = yes
+						regent = {
+							in_faction = faction_agnatic_cognatic_succession
+						}
+					}
+					letter_event = { id = lux_regency.201 days = 3 tooltip = EVTTOOLTIP8005 }
+				}
+			}
+			hidden_tooltip = {
+				set_character_flag = faction_agnatic_cognatic_succession_ultimatum_taken
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.5 # Slow it down a bit
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_agnatic_cognatic_succession
+						power = 0.75
+					}
+				}
+			}			
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_agnatic_cognatic_succession
+						power = 1.0
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_agnatic_cognatic_succession
+						power = 1.5
+					}
+				}
+			}			
+			
+			modifier = {
+				factor = 0
+				liege = {
+					any_war = {
+						OR = {
+							AND = {
+								defender = { character = PREV }
+								NOT = { using_cb = depose_liege }
+								NOT = { using_cb = overthrow_ruler }
+								NOT = { using_cb = overthrow_ruler_no_calls }
+								NOT = { using_cb = succession_on_liege }
+								NOT = { using_cb = other_succession_on_liege }
+							}
+							AND = {
+								attacker = { character = PREV }
+								OR = {
+									using_cb = invasion
+									using_cb = religious
+									using_cb = tribal_invasion
+#									using_cb = muslim_invasion
+									using_cb = viking_invasion
+									using_cb = claim_all
+									using_cb = claim
+									using_cb = other_claim
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	faction_cognatic_succession_ultimatum = {
+		is_high_prio = yes
+		
+		potential = {
+			leads_faction = faction_succ_seniority
+			OR = {
+				NOT = { has_character_flag = faction_cognatic_succession_ultimatum_taken}
+				had_character_flag = { flag = faction_cognatic_succession_ultimatum_taken days = 7 }
+			}
+		}
+		allow = {
+			war = no
+			prisoner = no
+			liege = {
+				NOT = { war_with = ROOT }
+				NOT = { reverse_has_truce = ROOT }
+			}
+			capital_holding = {
+				controller = {
+					character = ROOT
+				}
+			}
+		}
+		effect = {
+			liege = {
+				if = {
+					limit = {
+						has_regent = no
+					}
+					letter_event = { id = gender_faction.305 days = 3 tooltip = "EVTTOOLTIP8005" }
+				}
+				if = {
+					limit = {
+						has_regent = yes
+						regent = {
+							in_faction = faction_cognatic_succession
+						}
+					}
+					letter_event = { id = lux_regency.301 days = 3 tooltip = EVTTOOLTIP8005 }
+				}
+			}
+			hidden_tooltip = {
+				set_character_flag = faction_cognatic_succession_ultimatum_taken
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.5 # Slow it down a bit
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_cognatic_succession
+						power = 0.75
+					}
+				}
+			}			
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_cognatic_succession
+						power = 1.0
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_cognatic_succession
+						power = 1.5
+					}
+				}
+			}			
+			
+			modifier = {
+				factor = 0
+				liege = {
+					any_war = {
+						OR = {
+							AND = {
+								defender = { character = PREV }
+								NOT = { using_cb = depose_liege }
+								NOT = { using_cb = overthrow_ruler }
+								NOT = { using_cb = overthrow_ruler_no_calls }
+								NOT = { using_cb = succession_on_liege }
+								NOT = { using_cb = other_succession_on_liege }
+							}
+							AND = {
+								attacker = { character = PREV }
+								OR = {
+									using_cb = invasion
+									using_cb = religious
+									using_cb = tribal_invasion
+#									using_cb = muslim_invasion
+									using_cb = viking_invasion
+									using_cb = claim_all
+									using_cb = claim
+									using_cb = other_claim
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	faction_enatic_cognatic_succession_ultimatum = {
+		is_high_prio = yes
+		
+		potential = {
+			leads_faction = faction_succ_seniority
+			OR = {
+				NOT = { has_character_flag = faction_enatic_cognatic_succession_ultimatum_taken}
+				had_character_flag = { flag = faction_enatic_cognatic_succession_ultimatum_taken days = 7 }
+			}
+		}
+		allow = {
+			war = no
+			prisoner = no
+			liege = {
+				NOT = { war_with = ROOT }
+				NOT = { reverse_has_truce = ROOT }
+			}
+			capital_holding = {
+				controller = {
+					character = ROOT
+				}
+			}
+		}
+		effect = {
+			liege = {
+				if = {
+					limit = {
+						has_regent = no
+					}
+					letter_event = { id = gender_faction.405 days = 3 tooltip = "EVTTOOLTIP8005" }
+				}
+				if = {
+					limit = {
+						has_regent = yes
+						regent = {
+							in_faction = faction_enatic_cognatic_succession
+						}
+					}
+					letter_event = { id = lux_regency.401 days = 3 tooltip = EVTTOOLTIP8005 }
+				}
+			}
+			hidden_tooltip = {
+				set_character_flag = faction_enatic_cognatic_succession_ultimatum_taken
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.5 # Slow it down a bit
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_enatic_cognatic_succession
+						power = 0.75
+					}
+				}
+			}			
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_enatic_cognatic_succession
+						power = 1.0
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_enatic_cognatic_succession
+						power = 1.5
+					}
+				}
+			}			
+			
+			modifier = {
+				factor = 0
+				liege = {
+					any_war = {
+						OR = {
+							AND = {
+								defender = { character = PREV }
+								NOT = { using_cb = depose_liege }
+								NOT = { using_cb = overthrow_ruler }
+								NOT = { using_cb = overthrow_ruler_no_calls }
+								NOT = { using_cb = succession_on_liege }
+								NOT = { using_cb = other_succession_on_liege }
+							}
+							AND = {
+								attacker = { character = PREV }
+								OR = {
+									using_cb = invasion
+									using_cb = religious
+									using_cb = tribal_invasion
+#									using_cb = muslim_invasion
+									using_cb = viking_invasion
+									using_cb = claim_all
+									using_cb = claim
+									using_cb = other_claim
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	faction_enatic_succession_ultimatum = {
+		is_high_prio = yes
+		
+		potential = {
+			leads_faction = faction_enatic_succession
+			OR = {
+				NOT = { has_character_flag = faction_enatic_succession_ultimatum_taken}
+				had_character_flag = { flag = faction_enatic_succession_ultimatum_taken days = 7 }
+			}
+		}
+		allow = {
+			war = no
+			prisoner = no
+			liege = {
+				NOT = { war_with = ROOT }
+				NOT = { reverse_has_truce = ROOT }
+			}
+			capital_holding = {
+				controller = {
+					character = ROOT
+				}
+			}
+		}
+		effect = {
+			liege = {
+				if = {
+					limit = {
+						has_regent = no
+					}
+					letter_event = { id = gender_faction.505 days = 3 tooltip = "EVTTOOLTIP8005" }
+				}
+				if = {
+					limit = {
+						has_regent = yes
+						regent = {
+							in_faction = faction_enatic_succession
+						}
+					}
+					letter_event = { id = lux_regency.501 days = 3 tooltip = EVTTOOLTIP8005 }
+				}
+			}
+			hidden_tooltip = {
+				set_character_flag = faction_enatic_succession_ultimatum_taken
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.5 # Slow it down a bit
+			}
+			
+			modifier = {
+				factor = 0
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_enatic_succession
+						power = 0.75
+					}
+				}
+			}			
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_enatic_succession
+						power = 1.0
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { 
+					faction_power = 
+					{
+						faction = faction_enatic_succession
+						power = 1.5
+					}
+				}
+			}			
+			
+			modifier = {
+				factor = 0
+				liege = {
+					any_war = {
+						OR = {
+							AND = {
+								defender = { character = PREV }
+								NOT = { using_cb = depose_liege }
+								NOT = { using_cb = overthrow_ruler }
+								NOT = { using_cb = overthrow_ruler_no_calls }
+								NOT = { using_cb = succession_on_liege }
+								NOT = { using_cb = other_succession_on_liege }
+							}
+							AND = {
+								attacker = { character = PREV }
+								OR = {
+									using_cb = invasion
+									using_cb = religious
+									using_cb = tribal_invasion
+#									using_cb = muslim_invasion
+									using_cb = viking_invasion
+									using_cb = claim_all
+									using_cb = claim
+									using_cb = other_claim
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
 }
 
 
