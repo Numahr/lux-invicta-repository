@@ -1103,13 +1103,13 @@ NFrontend =
 	CAMERA_LOOKAT_Y = 25.0,
 	CAMERA_LOOKAT_Z = 1200.0, --v12 vanilla = 1000 v15 1200
 	CAMERA_LOOKAT_SETTINGS_X = 850.0,  -- Rotation point in settings --v12 1280
-	CAMERA_LOOKAT_SETTINGS_Y = 35.0,		-- Y is height v15 vanilla 0
+	CAMERA_LOOKAT_SETTINGS_Y = 5.0,		-- Y is height v15 vanilla 0
 	CAMERA_LOOKAT_SETTINGS_Z = 1400.0, --v12 850, old. 648, vanilla
 	CAMERA_START_X = 2750.0,				-- Initial position in main menu v15 gange 2750
 	CAMERA_START_Y = 100.0,				-- Y is height
 	CAMERA_START_Z = 900.0, --v15 below gange (1200)
 	CAMERA_END_X = 800.0,				-- Move to position in main menu v12 790 default now 1225 v15
-	CAMERA_END_Y = 200.0, --v12 500 default
+	CAMERA_END_Y = 50.0, --v12 500 default
 	CAMERA_END_Z = 1200.0, --v12 600 default v15 1200
 	CAMERA_MIN_DIST_FOR_ROTATE = 1500.0, -- Controls when rotation starts. When camera is close enought it starts v12 prev 800?
 	TIME_FROZEN = 4.0,  				-- Time before initial animation starts (some deylay here so it should NOT be 0, then the animation starts before you can see it)
