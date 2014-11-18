@@ -765,9 +765,9 @@ NDecadence = {
 
 NMilitary = {
 	CONTROLLER_MONTHS_BEFORE_OWNER_CHANGE = 120,	-- Number of months before ownership change of province, for certain cb:s that have contested titles
-	MORALE_COLLAPSE_THRESHOLD = 0.1,				-- Threshold before unit runs away --v12 reduced to 10%
+	MORALE_COLLAPSE_THRESHOLD = 0.2,				-- Threshold before unit runs away --v12 reduced to 10% v15 increased to 20% (vanilla 25)
 	TROOP_KILL_FACTOR = 0.01,						-- Affects the death rate in combats(higher gives bigger losses) > v10 increased from 1.5 to 2  v12 reduced to .01 v12a reduced to .005 (vanilla 0.15) v12c increased to .009 v14 rebalanced to .01
-	MORALELOSS_FACTOR = 3,							-- Affects the morale loss rate in combats(higher gives bigger losses) >v10 reduced to 5 v12a reduced to 3 (vanilla 6)
+	MORALELOSS_FACTOR = 4,							-- Affects the morale loss rate in combats(higher gives bigger losses) >v10 reduced to 5 v12a reduced to 3 (vanilla 6) v15 increased to 4%
 	MIN_COMBAT_DAYS = 8,							-- Minimum number of days in combat
 	NUMBER_OF_RETREAT_DAYS = 8,						-- Number of days before you retreat successfully --v12 doubled
 	NUMBER_OF_TROOPS_PER_GALLEY = 100,				-- Number of men each galley can hold
