@@ -1,18 +1,16 @@
-##################Zoroastrian events by Maestro Ugo
-#########Random events
-#########Navjote ceremony
+namespace = li_zoroastrian
 
-#####Help in fighting the local bandits
+# Help in fighting the local bandits
 character_event = {
-	id = VIETnam.7
-	title = "EVTNAME1000094001"
-	desc = "EVTDESC1000094001"
+	id = li_zoroastrian.200
+	desc = "EVTDESC_li_zoroastrian_200"
 	picture = "GFX_evt_bandits"
 	
 	min_age = 16
 	prisoner = no
 	only_playable = yes
 	capable_only = yes
+	only_men = yes
 	
 	trigger = {
 		war = no
@@ -26,38 +24,39 @@ character_event = {
 				revolt_risk = 3
 			}
 		}
+		NOT = { trait = in_hiding }
 	}
+	
 	mean_time_to_happen = {
-		months = 36
-		
+		months = 36	
 		modifier = {
 			factor = 0.8
 			trait = diligent
 		}
-		
 		modifier = {
 			factor = 0.6
 			realm_learning = 30
 		}
 	}
+	
 	option = {
-		name = "EVTOPTA1000094001"
-		wealth = -30
-		piety = 50
-		random_list = {
-			85 = {}
-			15 = {
-				add_trait = wounded
-			}
+		name = "EVTOPTA_li_zoroastrian_200" #Hunt them down yourself
+		piety = 10
+		random = {
+			chance = 15
+			add_trait = wounded
 		}
 	}
 	option = {
-		name = "EVTOPTB1000094001"
-		wealth = -50
+		name = "EVTOPTB_li_zoroastrian_200" #Send a squad of guards
+		trigger = {
+			scaled_wealth = 0.15
+		}
+		scaled_wealth = -0.15
 		prestige = 20
 	}
 	option = {
-		name = "EVTOPTC1000094001"
+		name = "EVTOPTC_li_zoroastrian_200" #Let the locals handle it
 		prestige = -10
 		piety = -10
 	}
@@ -267,191 +266,392 @@ character_event = {
 	}
 }
 
-#####Sedreh Pushi ritual - child's event - moved
-#####Sedreh Pushi ritual - fathher's event
+
+# Sedreh Pushi ritual - child's event
 character_event = {
-	id = VIETnam.10
-	title = "EVTNAME1000094004"
-	desc = "EVTDESC1000094004"
-	picture = "GFX_evt_guardian"
+	id = li_zoroastrian.202
+	desc = "EVTDESC_li_zoroastrian_202"
+	picture = GFX_evt_child_bully
+	
+	min_age = 7
+	max_age = 15
+	prisoner = no
+	capable_only = yes
+
+	trigger = {
+		religion_group = zoroastrian_group
+		NOT = {
+			religion = zor_angra
+			religion = zor_angra_reformed
+		}
+		father = {
+			is_alive = yes
+			NOT = { trait = incapable }
+			NOT = { trait = in_hiding }
+			prisoner = no
+			war = no
+		}
+		NOT = { has_character_flag = had_sedreh_pushi }
+		NOT = { trait = in_hiding }
+	}
+	
+	mean_time_to_happen = {
+		months = 12
+		modifier = {
+			factor = 0.5
+			age = 11
+		}
+		modifier = {
+			factor = 0.5
+			age = 12
+		}
+		modifier = {
+			factor = 0.5
+			age = 13
+		}
+		modifier = {
+			factor = 0.1
+			age = 14
+		}
+	}
+	
+	option = {
+		name = "EVTOPTA_li_zoroastrian_202" #Ask my father for advice
+		set_character_flag = had_sedreh_pushi
+		hidden_tooltip = {
+			if = {
+				limit = { 
+					father = {
+						is_alive = yes
+						any_child = {
+							character = ROOT
+							mother = { 
+								OR = {
+									is_alive = no
+									NOT = { higher_tier_than = PREVPREV } 
+								}
+							}
+						}
+					}
+				}
+			father = { character_event = { id = li_zoroastrian.203 days = 3 } }			
+			}
+			if = {
+				limit = { 
+					mother = { 
+						is_alive = yes
+						any_child = {
+							character = ROOT
+							father = { 
+								OR = {
+									is_alive = no
+									lower_tier_than = PREVPREV 
+								}
+							}
+						}
+					}
+				}
+				mother = { character_event = { id = li_zoroastrian.203 days = 3 } }			
+			}
+		}
+	}
+}
+
+# Sedreh Pushi ritual - father's event
+character_event = {
+	id = li_zoroastrian.203
+	desc = "EVTDESC_li_zoroastrian_203"
+	picture = GFX_evt_guardian
 	
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA1000094004" # Talk to him about Asha – righteousness
+		name = "EVTOPTA_li_zoroastrian_203" # Talk to him about Asha – righteousness
 		trigger = {
 			OR = {
 				trait = just
 				trait = kind
 			}
 		}
-		FROM = { piety = 10}
-		FROM = { change_intrigue = -1}
-		FROM = { change_learning = 2}
+		FROM = { piety = 10 }
+		FROM = { change_intrigue = -1 }
+		FROM = { change_learning = 2 }
 	}
-
 	option = {
-		name = "EVTOPTB1000094004" # Talk to him about Khshatr – divine power.
+		name = "EVTOPTB_li_zoroastrian_203" # Talk to him about Khshatr – divine power.
 		trigger = {
 			OR = {
 				trait = brave
 				trait = strong
 			}
 		}
-		FROM = {prestige = 20}
-		FROM = { change_intrigue = -1}
-		FROM = { change_martial = 1}
+		FROM = { prestige = 20 }
+		FROM = { change_intrigue = -1 }
+		FROM = { change_martial = 1 }
 	}
-
 	option = {
-		name = "EVTOPTC1000094004" # Talk to him about  Armaiti – devotion.
+		name = "EVTOPTC_li_zoroastrian_203" # Talk to him about  Armaiti – devotion.
 		trigger = {
 			OR = {
 				trait = zealous
 				piety = 400
 			}
 		}
-		FROM = {piety = 30}
-		FROM = { change_intrigue = -1}
-		FROM = { change_diplomacy = 1}
+		FROM = { piety = 30 }
+		FROM = { change_intrigue = -1 }
+		FROM = { change_diplomacy = 1 }
 	}
-	
 	option = {
-		name = "EVTOPTD1000094004" # Talk to him about Vohu Manah – holy spirit.
+		name = "EVTOPTD_li_zoroastrian_203" # Talk to him about Vohu Manah – holy spirit.
 		trigger = {
 			OR = {
 				trait = diligent
 				piety = 800
 			}
 		}
-		FROM = {piety = 10	prestige = 10}
-		FROM = { change_intrigue = -1}
-		FROM = { change_stewardship = 1}
+		FROM = { piety = 10	prestige = 10 }
+		FROM = { change_intrigue = -1 }
+		FROM = { change_stewardship = 1 }
 	}
-	
 	option = {
-		name = "EVTOPTE1000094004" # I have nothing to teach him.
+		name = "EVTOPTE_li_zoroastrian_203" # I have nothing to teach him.
 		random_list = {
-			50 = {	FROM = { change_learning = 1} }
-			50 = {	FROM = { change_learning = -1} }
+			50 = { FROM = { change_learning = 1 } }
+			50 = { FROM = { change_learning = -1 } }
 		}
 	}
 }
 
-####Rebuild Persepolis
-province_event = {
-	id = VIETnam.11
-	title = "EVTNAME1000094010"
-	desc = "EVTDESC1000094010"
+### Rebuilding Persepolis
+
+# Rebuild Persepolis Phase 1 - Laying the foundation
+character_event = {
+	id = li_zoroastrian.205 #formerly 1000182065
+	desc = "EVTDESC_li_zoroastrian_205"
 	picture = "GFX_persepolis_ruin"
-	
+
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA1000094010" # Rebuild just the royal palace.
-		add_province_modifier = { name = "rebuilding_persepolis_local" duration = 730 }
-		owner = {
-			wealth = -100
+		name = "EVTOPTC_li_zoroastrian_205" # Make it the greatest city there ever was!
+		add_character_modifier = {
+			name = is_rebuilding_persepolis
+			duration = -1
+			hidden = yes
+			inherit = yes
 		}
-		province_event = { id = VIETnam.12 days = 730 }
-	}
-
-	option = {
-		name = "EVTOPTB1000094010" # Rebuild the entire city.
-		add_province_modifier = { name = "rebuilding_persepolis_local" duration = 1460 }
-		owner = {
-			wealth = -200
-		}
-		province_event = { id = VIETnam.12 days = 1460 }
-	}
-
-	option = {
-		name = "EVTOPTC1000094010" # Make it the greatest city there ever was!
-		add_province_modifier = { name = "rebuilding_persepolis_local" duration = 2920 }
-		owner = {
-			wealth = -300
-		}
-		province_event = { id = VIETnam.12 days = 2920 }
 	}
 }
 
-####Rebuild Persepolis 2
+# Rebuild Persepolis Phase 2 - Add Spahan bonus modifier ~3 years
 province_event = {
-	id = VIETnam.12
-	title = "EVTNAME1000094011"
-	desc = "EVTDESC1000094011"
+	id = li_zoroastrian.206 #formerly 1000182066
+	title = "EVTNAME_li_zoroastrian_206"
+	desc = "EVTDESC_li_zoroastrian_206"
+	picture = "GFX_persepolis_built"
+
+	trigger = {
+		province_id = 666 # Spahan
+		has_global_flag = rebuilding_persepolis
+		NOT = { has_global_flag = persepolis_rebuilt }
+		had_province_flag = { flag = reb_pers_1 days = 1095 random = 365 }
+		NOT = { has_province_flag = reb_pers_2 }
+	}
+
+	immediate = {
+		set_province_flag = reb_pers_2
+	}
+	
+	mean_time_to_happen = {
+		days = 7
+	}
+	
+	option = {
+		name = "EVTOPTA_li_zoroastrian_206" #Library
+		add_province_modifier = { name = persepolis_library duration = -1 }
+	}
+	option = {
+		name = "EVTOPTB_li_zoroastrian_206" #Irrigation system
+		add_province_modifier = { name = persepolis_irrigation duration = -1 }
+	}
+	option = {
+		name = "EVTOPTC_li_zoroastrian_206" #Gate of all nations
+		add_province_modifier = { name = persepolis_gate duration = -1 }
+	}
+}
+
+# Rebuild Persepolis Phase 3
+province_event = {
+	id = li_zoroastrian.207 #formerly 1000182067
+	title = "EVTNAME_li_zoroastrian_207"
+	desc = "EVTDESC_li_zoroastrian_207"
 	picture = "GFX_persepolis_built"
 	
-	is_triggered_only = yes
+	trigger = {
+		province_id = 666 # Spahan
+		has_global_flag = rebuilding_persepolis
+		NOT = { has_global_flag = persepolis_rebuilt }
+		had_province_flag = { flag = reb_pers_2 days = 638 random = 92 }		
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
 	
-	option = {
-		name = "EVTOPTA1000094011" #Library
-		owner = {
-			prestige = 500
-		}
+	immediate = {
+		owner = { remove_character_modifier = is_rebuilding_persepolis }
+		clr_global_flag = rebuilding_persepolis
 		set_global_flag = persepolis_rebuilt
-		b_perozabad = { set_name = Persepolis }
-		add_province_modifier = { name = "persepolis_library" duration = -1 }
+		clr_province_flag = reb_pers_1
+		clr_province_flag = reb_pers_2
 	}
+
 	option = {
-		name = "EVTOPTB1000094011" #Irrigation system
+		name = "EVTOPTA_li_zoroastrian_207"
 		owner = {
 			prestige = 500
+			666 = {
+				b_esfahan = {
+					set_name = "New Persepolis"
+				}
+			}
 		}
-		set_global_flag = persepolis_rebuilt
-		b_perozabad = { set_name = Persepolis }
-		add_province_modifier = { name = "persepolis_irrigation" duration = -1 }
-	}
-	option = {
-		name = "EVTOPTC1000094011" #Gate of all nations
-		owner = {
-			prestige = 500
+		hidden_tooltip = {
+			owner = {
+				set_character_flag = event_1000182067
+				narrative_event = { id = li_zoroastrian.210 days = 7 }
+			}
 		}
-		set_global_flag = persepolis_rebuilt
-		b_perozabad = { set_name = Persepolis }
-		add_province_modifier = { name = "persepolis_gate" duration = -1 }
 	}
 }
 
+# Spahan owned by someone else before Persepolis is rebuilt
+province_event = {
+	id = li_zoroastrian.208
+	
+	hide_window = yes
+	
+	trigger = {
+		province_id = 666 # Spahan
+		has_global_flag = rebuilding_persepolis
+		NOT = { has_global_flag = persepolis_rebuilt }
+		owner = {
+			NOT = { has_character_modifier = is_rebuilding_persepolis }
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 1
+	}
+	
+	immediate = {
+		clr_global_flag = rebuilding_persepolis
+		clr_province_flag = reb_pers_1
+		clr_province_flag = reb_pers_2
+		remove_province_modifier = persepolis_library
+		remove_province_modifier = persepolis_irrigation
+		remove_province_modifier = persepolis_gate
+		any_independent_ruler = {
+			remove_character_modifier = is_rebuilding_persepolis
+			any_realm_character = {
+				remove_character_modifier = is_rebuilding_persepolis
+			}
+		}
+	}
+}
 
-# On-action event: Zoroastrian Marriage
-#character_event = {
-#	id = 1000094008
-#	desc = "EVTDESC1000094008"
-#	picture = "GFX_evt_marriage"
-#	
-#	is_triggered_only = yes
-#	
-#	trigger = {
-#		religion_group = zoroastrian_group
-#		OR = {
-#			FROM = { character = ROOT }
-#			FROM = {
-#				dynasty = ROOT
-#				is_primary_heir = ROOT
-#			}
-#		}
-#	}
-#
-#	immediate = {
-#		hidden_tooltip = {
-#			if = {
-#				limit = { ai = no }
-#				set_character_flag = achievement_get_married
-#			}
-#		}
-#	}
-#	
-#	option = {
-#		name = "EVTOPTA1000094008"
-#		piety = 20		
-#		scaled_wealth = 0.5
-#		
-#	}
-#	option = {
-#		name = "EVTOPTB1000094008"
-#		piety = 20
-#		prestige = 50
-#	}
-#}
+# News spread about New Persepolis
+narrative_event = {
+	id = li_zoroastrian.210 #formerly 1000182068
+	title = "EVTNAME_li_zoroastrian_210"
+	desc = "EVTDESC_li_zoroastrian_210"
+	picture = "GFX_persepolis_built"
+	border = "GFX_event_narrative_frame_religion"
+	
+	major = yes
+	only_rulers = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = "EXCELLENT"
+		trigger = {
+			has_character_flag = event_1000182067
+		}
+		clr_character_flag = event_1000182067
+	}
+	
+	option = {
+		name = "EVTOPTA_li_zoroastrian_210"
+		trigger = {
+			NOT = { has_character_flag = event_1000182067 }
+		}
+	}
+}
 
+# Great Sacrifice event
+character_event = {
+	id = li_zoroastrian.220 #formerly 1000182159
+	title = "EVTNAME_li_zoroastrian_220"
+	desc = "EVTDESC_li_zoroastrian_220"
+	picture = "GFX_evt_zoroastrian_fire"
+	
+	is_triggered_only = yes
+	hide_from = yes	
+	
+	option = {
+		name = "EVTOPTA_li_zoroastrian_220" #To Mithra (War)
+		scaled_wealth = -0.3
+		piety = -30
+		add_character_modifier = {
+			name = zoroastrian_sacrifice_mithra
+			duration = 365
+		}
+	}
+	option = {
+		name = "EVTOPTB_li_zoroastrian_220" #To Parendi (Riches)
+		scaled_wealth = -0.3
+		piety = -30
+		add_character_modifier = {
+			name = zoroastrian_sacrifice_parendi
+			duration = 365
+		}
+	}
+	option = {
+		name = "EVTOPTC_li_zoroastrian_220" #To Chisti (Wisdom)
+		scaled_wealth = -0.3
+		piety = -30
+		add_character_modifier = {
+			name = zoroastrian_sacrifice_chisti
+			duration = 365
+		}
+	}
+	option = {
+		name = "EVTOPTD_li_zoroastrian_220" #To none of them
+		trigger = {
+			ai = no
+		}
+		hidden_tooltip = {
+			clr_character_flag = made_sacrifice_1
+		}
+	}
+}
+
+# Cleansing Ritual event
+character_event = {
+	id = li_zoroastrian.225 #formerly 1000182160
+	title = "EVTNAME_li_zoroastrian_225"
+	desc = "EVTDESC_li_zoroastrian_225"
+	picture = "GFX_evt_holy_light_zoroastrian_group"
+	
+	is_triggered_only = yes
+	hide_from = yes	
+	
+	option = {
+		name = "EVTOPTA_li_zoroastrian_225"
+		piety = 25
+		add_character_modifier = {
+			name = zoroastrian_cleansing
+			duration = 365
+		}
+	}
+}
