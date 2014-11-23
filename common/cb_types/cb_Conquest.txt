@@ -20,7 +20,7 @@
 #
 
 # Conquest CB:
-# availability: all, with 100% annual income stockpiled
+# availability: all, with 100% annual income stockpiled / Not all, as Clerical, Martial, Traditional -soul religions have special variations / Not Scholarly, those have a claim fabrication bonus instead
 county_conquest = {
 	name = CB_NAME_COUNTY_CONQUEST
 	war_name = WAR_NAME_COUNTY_CONQUEST
@@ -113,7 +113,7 @@ county_conquest = {
 					religion = jud_ark_reformed
 					religion = muslim_sufi_reformed
 					religion = yazdanism_reformed
-					# Holy Expansion War ( All Martial, commented out religions already excluded due to having access to Expansion )
+					# Holy Conquest War ( All Martial, commented out religions already excluded due to having access to Expansion )
 #					religion = alexandros
 #					religion = amanai
 					religion = anansi
@@ -157,7 +157,69 @@ county_conquest = {
 					religion = teiwaz_reformed
 					religion = zande_pagan_reformed
 					religion = zulu_pagan_reformed
-
+					# Sacred Conquest War ( All Clerical, commented out 1 religion already excluded due to having access to Expansion )
+					religion = adoptionist
+					religion = almaqah
+					religion = apollinarist
+					religion = ashari
+					religion = athari
+					religion = bud_sthaviravada
+					religion = catholic
+					religion = cybele
+					religion = haruri
+					religion = iconoclast
+					religion = ilmatar
+					religion = imana
+					religion = irminsul
+					religion = isis
+					religion = judaism
+					religion = maturidi
+					religion = melkite
+					religion = monophysite
+					religion = monothelite
+					religion = montanist
+					religion = mutazil
+					religion = nyasaye
+#					religion = peckols
+					religion = pelagian
+					religion = sabellianist 
+					religion = saule
+					religion = semipelagian
+					religion = shams
+					religion = slavic_christian
+					religion = tengri_bud
+					religion = yoruba
+					religion = zahiri
+					religion = zoroastrian
+					religion = zurvanism
+					religion = bon_reformed
+					religion = bud_zen_reformed
+					religion = cathar_reformed
+					religion = inuit_pagan_reformed
+					religion = isis_reformed
+					religion = mari_christ_reformed
+					religion = priscillian_reformed
+					religion = slavic_christian_reformed
+					religion = tengri_bud_reformed
+					religion = tengri_confucian_reformed
+					religion = tengri_mani_reformed
+					religion = vidharma_reformed
+					religion = zurvanism_reformed
+					# All Scholarly, those have a claim fabrication bonus instead
+					religion = bud_bahusrutiya
+					religion = confucian
+					religion = docetist
+					religion = hurufi
+					religion = ilm_islam
+					religion = kothar
+					religion = marcionist 
+					religion = neoplato
+					religion = plato_christ
+					religion = plato_islam
+					religion = plato_pythagorean
+					religion = porphyryan
+					religion = tengri_confucian
+					religion = valentinian 
 				}
 			}
 		}
@@ -959,8 +1021,8 @@ pagan_county_conquest = {
 # Holy Conquest War
 # availability: Martial
 martial_county_conquest = {
-	name = CB_NAME_COUNTY_CONQUEST
-	war_name = WAR_NAME_COUNTY_CONQUEST
+	name = CB_NAME_COUNTY_CONQUEST_MARTIAL
+	war_name = WAR_NAME_COUNTY_CONQUEST_MARTIAL
 	sprite = 16
 	truce_days = 1825
 	hostile_against_others = yes
@@ -1214,6 +1276,357 @@ martial_county_conquest = {
 		ROOT = {
 			prestige = -350
 			piety = -50
+			wealth = -50
+			transfer_scaled_wealth = {
+				to = FROM
+				value = 5.0
+			}
+			religion_authority = {
+				modifier = lost_county_conquest
+			}
+		}
+		FROM = {
+			wealth = 50
+			}
+		any_defender = {
+			limit = { character = FROM }
+			participation_scaled_prestige = 100
+			participation_scaled_piety = 50
+		}
+		any_defender = {
+			limit = { NOT = { character = FROM } }
+			hidden_tooltip = {
+				participation_scaled_prestige = 100 
+				participation_scaled_piety = 50
+			}
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
+
+# Sacred Conquest War
+# availability: Clerical
+clerical_county_conquest = {
+	name = CB_NAME_COUNTY_CONQUEST_CLERICAL
+	war_name = WAR_NAME_COUNTY_CONQUEST_CLERICAL
+	sprite = 16
+	truce_days = 1825
+	hostile_against_others = yes
+	is_permanent = yes
+	check_all_titles = yes # if permanent, setting this to true will check against all of someones titles, including vassal held titles
+	press_claim = yes
+	can_ask_to_join_war = no
+	
+	allow_distant = yes
+	
+	can_use = {
+		ROOT = {
+			NOT = {
+				has_character_flag = do_not_disturb
+			}
+			OR = { # All Clerical
+				religion = adoptionist
+				religion = almaqah
+				religion = apollinarist
+				religion = ashari
+				religion = athari
+				religion = bud_sthaviravada
+				religion = catholic
+				religion = cybele
+				religion = haruri
+				religion = iconoclast
+				religion = ilmatar
+				religion = imana
+				religion = irminsul
+				religion = isis
+				religion = judaism
+				religion = maturidi
+				religion = melkite
+				religion = monophysite
+				religion = monothelite
+				religion = montanist
+				religion = mutazil
+				religion = nyasaye
+				religion = peckols
+				religion = pelagian
+				religion = sabellianist 
+				religion = saule
+				religion = semipelagian
+				religion = shams
+				religion = slavic_christian
+				religion = tengri_bud
+				religion = yoruba
+				religion = zahiri
+				religion = zoroastrian
+				religion = zurvanism
+				religion = bon_reformed
+				religion = bud_zen_reformed
+				religion = cathar_reformed
+				religion = inuit_pagan_reformed
+				religion = isis_reformed
+				religion = mari_christ_reformed
+				religion = priscillian_reformed
+				religion = slavic_christian_reformed
+				religion = tengri_bud_reformed
+				religion = tengri_confucian_reformed
+				religion = tengri_mani_reformed
+				religion = vidharma_reformed
+				religion = zurvanism_reformed
+			}
+			NOT = { same_realm = FROM }
+		}
+		FROM = {
+			NOT = { religion_group = ROOT }
+		}
+	}
+	can_use_gui = {
+		ROOT = {
+			piety = 150
+			prestige = 100
+			scaled_wealth = 0.5
+		}
+	}
+	can_use_title = {
+		tier = count
+		OR = {
+			FROM = {
+				has_landed_title = PREV
+			}
+			holder_scope = {
+				is_liege_or_above = FROM
+				NOT = { same_realm = ROOT }
+			}
+		}
+		NOT = {
+			OR = {
+				ROOT = {
+					has_landed_title = PREV
+				}
+				holder_scope = {
+					is_liege_or_above = ROOT
+				}
+			}
+		}
+		OR = {
+			AND = {
+				ROOT = {
+					OR = {# Expansion War (selected religions ? )
+						religion = alexandros
+						religion = amanai
+						religion = attar
+						religion = dazhbog
+						religion = ghazi_islam
+						religion = gurzil
+						religion = jud_sabaoth
+						religion = maher
+						religion = mani_mithra
+						religion = mithra
+						religion = mithra_christ
+						religion = mithra_sol
+						religion = norse_war
+						religion = perun
+						religion = sol_tsahay
+						religion = svetovid
+						religion = tarhunt
+						religion = teiwaz
+						religion = zal
+						religion = zal_christ
+						religion = zal_mani	
+					}
+				}
+				location = {
+					port = yes
+				}
+			}
+			location = {
+				any_neighbor_province = {
+					owner = {
+						OR = {
+							character = ROOT
+							is_liege_or_above = ROOT
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_valid_title = {
+		ROOT = {
+			OR = { # All Clerical 
+				religion = adoptionist
+				religion = almaqah
+				religion = apollinarist
+				religion = ashari
+				religion = athari
+				religion = bud_sthaviravada
+				religion = catholic
+				religion = cybele
+				religion = haruri
+				religion = iconoclast
+				religion = ilmatar
+				religion = imana
+				religion = irminsul
+				religion = isis
+				religion = judaism
+				religion = maturidi
+				religion = melkite
+				religion = monophysite
+				religion = monothelite
+				religion = montanist
+				religion = mutazil
+				religion = nyasaye
+				religion = peckols
+				religion = pelagian
+				religion = sabellianist 
+				religion = saule
+				religion = semipelagian
+				religion = shams
+				religion = slavic_christian
+				religion = tengri_bud
+				religion = yoruba
+				religion = zahiri
+				religion = zoroastrian
+				religion = zurvanism
+				religion = bon_reformed
+				religion = bud_zen_reformed
+				religion = cathar_reformed
+				religion = inuit_pagan_reformed
+				religion = isis_reformed
+				religion = mari_christ_reformed
+				religion = priscillian_reformed
+				religion = slavic_christian_reformed
+				religion = tengri_bud_reformed
+				religion = tengri_confucian_reformed
+				religion = tengri_mani_reformed
+				religion = vidharma_reformed
+				religion = zurvanism_reformed
+			}
+			NOT = { same_realm = FROM }
+		}
+		FROM = {
+			NOT = { religion = ROOT }
+		}
+	
+		OR = {
+			FROM = {
+				has_landed_title = PREV
+			}
+			holder_scope = {
+				is_liege_or_above = FROM
+			}
+		}
+	}
+	on_add = {
+		ROOT = {
+			scaled_wealth = -0.5
+			piety = -100
+			prestige = -50
+		}
+	}
+	on_success = {
+		ROOT = {
+			prestige = 150
+			piety = 200
+			religion_authority = {
+				modifier = won_county_conquest
+			}
+		}
+	}
+	on_success_title = {
+		if = {
+			limit = {
+				higher_tier_than = BARON
+				NOT = { culture = ROOT }
+			}
+			hidden_tooltip = { conquest_culture = ROOT }
+		}
+
+		if = {
+			limit = {
+				holder_scope = {
+					tier = count
+					NOT = { num_of_count_titles = 2 }
+					lower_tier_than = ROOT
+				}
+			}
+			holder_scope = {
+				set_defacto_liege = ROOT
+			}
+		}
+		if = {
+			limit = {
+				holder_scope = {
+					OR = {
+						higher_tier_than = count
+						num_of_count_titles = 2
+						NOT = { lower_tier_than = ROOT }
+					}
+				}
+			}
+			usurp_title_plus_barony_if_unlanded = ROOT
+			any_de_jure_vassal_title = { # take all baronies under the one we're fighting for
+				limit = {
+					has_holder = yes
+					NOT = {
+						de_facto_liege = PREV
+					}
+					holder_scope = {
+						OR = {
+							character = FROM
+							is_liege_or_above = FROM
+						}
+					}
+				}
+				usurp_title_plus_barony_if_unlanded = ROOT
+			}
+		}
+		any_attacker = {
+			limit = { NOT = { character = ROOT } }
+			hidden_tooltip = { 
+				participation_scaled_prestige = 50 
+				participation_scaled_piety = 150
+			}
+		}
+	}
+
+	on_fail_title = {
+		ROOT = {
+			piety = -150
+			prestige = -50
+			#religion_authority = {
+			#	modifier = lost_county_conquest
+			#}
+		}
+		any_defender = {
+			limit = { character = FROM }
+			participation_scaled_prestige = 50
+		}
+		any_defender = {
+			limit = { NOT = { character = FROM } }
+			hidden_tooltip = { participation_scaled_prestige = 50 }
+		}
+	}
+
+	on_reverse_demand = {
+		ROOT = {
+			prestige = -100
+			piety = -300
 			wealth = -50
 			transfer_scaled_wealth = {
 				to = FROM
