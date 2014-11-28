@@ -236,6 +236,8 @@ religious = {
 							title = PREV
 							enemy = FROM
 							same_religion = yes # Only vassalize rulers of my religion
+							is_religious = yes
+							type = holy_war
 						}
 					}
 				}
@@ -722,10 +724,12 @@ crusade = {
 					title = PREV
 					enemy = FROM
 					is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
+					type = holy_war
 				}
 			}
 		}
 		
+		# Should we give the seized land to a claimant of our faith?
 		if = {
 			limit = {
 				OR = {
@@ -736,32 +740,104 @@ crusade = {
 						}
 					}
 				}
+				best_crusade_claimant = {
+					always = yes # There is a "best" claimant
+				}
+			}
+			
+			# Claimants must be of ROOT's religion, and are ranked by strength of claim and actual contribution to the war
+			best_crusade_claimant = {
+				if  = {
+					limit = {
+						PREV = { has_holder = no }
+						OR = {
+							independent = yes
+							is_ruler = no
+							liege = {
+								tier = EMPEROR
+							}
+						}
+					}
+					usurp_title = { target = PREV type = holy_war }
+				}
+				gain_settlements_under_title = {
+					title = PREV
+					enemy = FROM
+					is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
+					type = holy_war
+				}
+		# Give the seized land to the main contributor of the Crusade
+		if = {
+			limit = {
+				OR = {
+					has_holder = no
+					NOT = {
+						holder_scope = {
+							religion = ROOT
+						}
+					}
+				}
+				NOT = {
+					best_crusade_claimant = {
+						always = yes
+					}
+				}
 			}
 			
 			most_participating_attacker = {
 				gain_settlements_under_title = {
 					title = PREV
 					enemy = FROM
+					type = holy_war
 				}
 				if  = {
 					limit = {
 						primary_title = { is_primary_type_title = no } # Mercs, the Pope, Holy Orders, etc
 						PREV = { has_holder = no }
+						NOT = { character = ROOT }
 						OR = {
-							NOT = { character = ROOT }
 							independent = yes
 							liege = {
 								tier = EMPEROR
 							}
 						}
 					}
-					usurp_title = PREV
+					usurp_title = { target = PREV type = holy_war }
 					
 					if = {
 						limit = {
 							NOT = { culture = PREV }
 						}
 						hidden_tooltip = { PREV = { conquest_culture = THIS } }
+					}
+				}
+				hidden_tooltip = {
+					if = {
+						limit = {
+							has_nickname = no
+						}
+						random_list = {
+							10 = {
+								modifier = {
+									factor = 0
+									NOT = { religion_group = christian }
+								}
+								give_nickname = nick_the_crusader
+							}
+							10 = { give_nickname = nick_the_holy }
+							10 = { give_nickname = nick_the_glorious }
+							10 = { give_nickname = nick_the_lionheart }
+							10 = { give_nickname = nick_the_great }
+							10 = { give_nickname = nick_the_hammer }
+							10 = { give_nickname = nick_the_pilgrim }
+							40 = {
+								modifier = {
+									factor = 0
+									religion_group = christian
+								}
+								give_nickname = nick_the_sword_of_god
+							}
+						}
 					}
 				}
 			}
@@ -862,6 +938,28 @@ crusade = {
 				}
 				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
 			}
+			
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_holy }
+						10 = { give_nickname = nick_the_glorious }
+						10 = { give_nickname = nick_the_lionheart }
+						10 = { give_nickname = nick_the_great }
+						10 = { give_nickname = nick_the_hammer }
+						20 = {
+							modifier = {
+								factor = 0
+								religion_group = christian
+							}
+							give_nickname = nick_the_sword_of_god
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -915,6 +1013,27 @@ crusade = {
 					}
 				}
 				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
+			}
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_holy }
+						10 = { give_nickname = nick_the_glorious }
+						10 = { give_nickname = nick_the_lionheart }
+						10 = { give_nickname = nick_the_great }
+						10 = { give_nickname = nick_the_hammer }
+						20 = {
+							modifier = {
+								factor = 0
+								religion_group = christian
+							}
+							give_nickname = nick_the_sword_of_god
+						}
+					}
+				}
 			}
 		}
 		any_defender = {

@@ -223,6 +223,8 @@ character_event = {
 						casus_belli = decadence_invasion
 					}
 					clr_character_flag = decadence_invader
+					
+					log = "91000: Decadence revolt in [Root.PrimaryTitle.GetName]!"
 				}
 			}
 		}
@@ -1295,7 +1297,7 @@ character_event = {
 	option = {
 		name = EVTOPTA91240 # Remain loyal
 		ai_chance = {
-			factor = 10
+			factor = 100
 			modifier = {
 				factor = 10
 				trait = content
@@ -1314,21 +1316,21 @@ character_event = {
 	option = {
 		name = EVTOPTB91240 # Declare independence
 		ai_chance = {
-			factor = 3
+			factor = 50
 			modifier = {
 				factor = 3
 				trait = ambitious
 			}
 			modifier = {
-				factor = 100
+				factor = 1000
 				in_faction = faction_independence
 			}
 			modifier = {
-				factor = 10
+				factor = 20
 				tier = KING
 			}
 			modifier = {
-				factor = 10
+				factor = 100
 				liege = {
 					NOT = { religion_group = ROOT }
 				}
@@ -1356,21 +1358,22 @@ character_event = {
 		}
 		liege = {
 			ROOT = {
-				any_demesne_title = {
-					limit = {
-						higher_tier_than = COUNT
-					}
-					remove_claim = PREVPREV
-					add_weak_claim = PREVPREV
-				}
+				set_defacto_liege = ROOT
 			}
 			opinion = {
 				modifier = opinion_traitor 
 				who = ROOT
 				months = 240
 			}
+			
+			log = "91240: [Root.GetTitledName] declares independence from [This.GetTitledName] after a decadence revolt"
+		
+			ROOT = {
+				any_demesne_title = {
+					remove_claim = PREVPREV
+				}
+			}
 		}
-		set_defacto_liege = ROOT
 	}
 }
 
@@ -1396,12 +1399,12 @@ character_event = {
 		lower_tier_than = KING
 		biggest_realm_size_relative = {
 			NOT = { character = PREV }
-			realm_size = 7
+			realm_size = 5
 		}
 	}
 	
 	mean_time_to_happen = {
-		months = 90
+		months = 70
 		
 		modifier = {
 			factor = 0.5
@@ -1505,6 +1508,18 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.5
+			highest_ranked_relative = {
+				tier = KING
+			}
+		}
+		modifier = {
+			factor = 0.5
+			highest_ranked_relative = {
+				tier = EMPEROR
+			}
+		}
+		modifier = {
+			factor = 0.5
 			biggest_realm_size_relative = {
 				realm_size = 150
 			}
@@ -1512,7 +1527,7 @@ character_event = {
 		modifier = {
 			factor = 0.5
 			biggest_realm_size_relative = {
-				realm_size = 350
+				realm_size = 250
 			}
 		}
 	}
