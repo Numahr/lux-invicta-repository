@@ -560,6 +560,8 @@ NCharacter = {
 	TRIBAL_EMPTY_HOLDING_LEVY_MULTIPLIER = 0.5,
 	TRIBAL_EMPTY_HOLDING_GARRISON_MULTIPLIER = 0.5,
 	TRIBAL_EMPTY_HOLDING_TAX_MULTIPLIER = 0.5,
+	MALE_ATTRACTION_CUTOFF = 65,					-- After this age, the sex appeal of traits no longer have any effect
+	FEMALE_ATTRACTION_CUTOFF = 45					-- After this age, the sex appeal of traits no longer have any effect
 },
 
 NTitle = {
@@ -643,6 +645,7 @@ NTitle = {
 	CLAIM_VASSAL_TITLE_COST_MOD = 0.75,
 	CLAIM_DE_JURE_TITLE_COST_MOD = 0.5,
 	NORMAL_LAW_CHANGE_MONTHS = 60,
+	MAX_CROWN_LAW_CHANGES = 5,
 	TITLE_USURP_COOLDOWN_MONTHS = 60,
 	DE_JURE_ASSIMILATION_YEARS = 150,			-- Duchies a under the de facto control of another kingdom will change de jure liege after this many years v11 increased by 2.5x v12 modified to 150 years
 	EMPIRE_DE_JURE_ASSIMILATION_YEARS = 50,		-- Kingdoms under the de facto control of another empire will change de jure liege after this many years v11 increased 2x v12 reduced to 50 years
@@ -709,8 +712,8 @@ NEconomy = {
 	REPUBLIC_CITY_TAX_BONUS = 0.15,					-- Republics (at least Count tier) receive a tax bonus for all cities in their realm
 	REPUBLIC_COASTAL_CITY_TAX_BONUS = 0.25,			-- Republics (at least Count tier) receive a tax bonus for all coastal cities in their realm
 	REPUBLIC_CAPITAL_CITY_TAX_BONUS = 1.5,			-- Duke or above tier Republics receive a tax bonus for their capital city v11 increased from 1
-	BISHOP_TAX_TO_POPE_FACTOR = 0.5,				-- Bishops only pay half the tax to the Pope if they are loyal to him
-	BISHOP_TAX_TO_ANTI_POPE_FACTOR = 0.25,			-- Bishops only pay a quarter taxes to an Anti-Pope if they are loyal to him	
+	BISHOP_TAX_TO_POPE_FACTOR = 0.1,				-- Bishops only pay half the tax to the Pope if they are loyal to him
+	BISHOP_TAX_TO_ANTI_POPE_FACTOR = 0.05,			-- Bishops only pay a quarter taxes to an Anti-Pope if they are loyal to him	
 	DECADENCE_MODIFIER = 0.5,						-- Maximum effect of decadence, positive for low dec, negative for high v11 increased to 50%
 	DECADENCE_PER_WEEK_OF_COMBAT = -0.075,			-- Decadence lost per 7 days of combat, for each participant in the combat v11 increased to 0.075 from 0.04
 	DECADENCE_PER_WEEK_OF_SIEGE = -0.015,			-- Decadence lost per 7 days of siege, for each participant in the siege v11 increased to 0.015 from 0.08
@@ -752,13 +755,13 @@ NEconomy = {
 },
 
 NDecadence = {
-	BASE_EMPEROR_GAIN = 0.05,
-	BASE_KING_GAIN = 0.04,
-	BASE_DUKE_GAIN = 0.03,
-	BASE_COUNT_GAIN = 0.02,
-	BASE_BARON_GAIN = 0.01,
-	BASE_UNLANDED_GAIN = 0.005,
-	REALM_SIZE_MULTIPLIER = 0.01,
+	BASE_EMPEROR_GAIN = 0.45,
+	BASE_KING_GAIN = 0.36,
+	BASE_DUKE_GAIN = 0.24,
+	BASE_COUNT_GAIN = 0.18,
+	BASE_BARON_GAIN = 0.09,
+	BASE_UNLANDED_GAIN = 0.045,
+	REALM_SIZE_MULTIPLIER = 0.005,
 	DEMESNE_FRACTION_MULT_POS = 0.5,
 	DEMESNE_FRACTION_MULT_NEG = -0.8,
 }, 

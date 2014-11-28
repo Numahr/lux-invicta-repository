@@ -76,9 +76,19 @@ invasion = {
 			ROOT = {
 				occupy_minors_of_occupied_settlements = FROM
 				gain_all_occupied_titles = FROM
-				give_nickname = nick_the_conqueror
-			}
-			ROOT = {
+				
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_great }
+						10 = { give_nickname = nick_the_victorious }
+						10 = { give_nickname = nick_the_bold }
+						10 = { give_nickname = nick_the_conqueror }
+					}
+				}
+				
 				if = {
 					limit = {
 						has_dlc = "Legacy of Rome"
@@ -114,7 +124,7 @@ invasion = {
 					text = invasion_succ_tip
 
 					hidden_tooltip = {
-						usurp_title_plus_barony_if_unlanded = ROOT
+						usurp_title_plus_barony_if_unlanded = { target = ROOT type = invasion }
 						FROM = { set_defacto_liege = ROOT }
 						if = {
 							limit = {
@@ -311,7 +321,21 @@ tribal_invasion = {
 		hidden_tooltip = {
 			ROOT = {
 				occupy_minors_of_occupied_settlements = FROM
-				gain_all_occupied_titles = FROM
+				gain_all_occupied_titles = { who = FROM type = invasion }
+				
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_great }
+						10 = { give_nickname = nick_the_victorious }
+						10 = { give_nickname = nick_the_conqueror }
+						10 = { give_nickname = nick_the_brave }
+						10 = { give_nickname = nick_the_dragon }
+						10 = { give_nickname = nick_the_terrible }
+					}
+				}
 			}
 		}
 	}
@@ -325,6 +349,7 @@ tribal_invasion = {
 						title = PREV
 						enemy = FROM
 						is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
+						type = invasion
 					}
 				}
 			}
@@ -334,6 +359,21 @@ tribal_invasion = {
 	on_fail = {
 		FROM = {
 			prestige = 250
+			
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_great }
+						10 = { give_nickname = nick_the_hammer }
+						10 = { give_nickname = nick_the_avenger }
+						10 = { give_nickname = nick_the_lion }
+						10 = { give_nickname = nick_the_bold }
+					}
+				}
+			}
 		}
 		any_defender = {
 			limit = { character = FROM }
@@ -360,6 +400,21 @@ tribal_invasion = {
 		FROM = {
 			wealth = 150
 			prestige = 500
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_great }
+						10 = { give_nickname = nick_the_hammer }
+						10 = { give_nickname = nick_the_avenger }
+						10 = { give_nickname = nick_the_lion }
+						10 = { give_nickname = nick_the_bold }
+					}
+				}
+			}
+			
 		}
 		FROM = {
 			if = {
@@ -409,6 +464,13 @@ tribal_invasion = {
 
 	defender_ai_defeat_worth = {
 		factor = 100
+	}
+	ai_will_do = { 
+		factor = 1
+		
+		modifier = {
+			factor = 0.9 # Prefer using CB's without on_add costs
+		}
 	}
 }
 
@@ -550,7 +612,7 @@ glorious_conquest = {
 				}
 				NOT = { ROOT = { tier = EMPEROR } }
 			}
-			ROOT = { usurp_title = PREV }
+			ROOT = { usurp_title = { target = PREV type = invasion } }
 		}
 
 		if = {
@@ -569,7 +631,7 @@ glorious_conquest = {
 							de_jure_liege_or_above = PREVPREV
 						}
 					}
-					ROOT = { usurp_title = PREV }
+					ROOT = { usurp_title = { target = PREV type = invasion } }
 				}
 			}
 		}
@@ -756,6 +818,24 @@ viking_invasion = {
 			religion_authority = {
 				modifier = won_viking_invasion
 			}
+			
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_great }
+						10 = { give_nickname = nick_the_victorious }
+						10 = { give_nickname = nick_the_fearless }
+						10 = { give_nickname = nick_the_brave }
+						10 = { give_nickname = nick_haardraade }
+						10 = { give_nickname = nick_the_viking }
+						10 = { give_nickname = nick_the_dragon }
+						10 = { give_nickname = nick_the_ironside }
+					}
+				}
+			}
 		}
 		any_attacker = {
 			limit = { character = ROOT }
@@ -789,10 +869,11 @@ viking_invasion = {
 					}
 					ROOT = {
 						occupy_minors_of_occupied_settlements = FROM
-						gain_all_occupied_titles = FROM
+						gain_all_occupied_titles = { who = FROM type = invasion }
 						vassalize_or_take_under_title_destroy_duchies = {
 							title = PREV
 							enemy = FROM
+							type = invasion
 						}
 
 						# Settle the special invasion forces
@@ -1103,7 +1184,7 @@ pagan_subjugation = {
 				}
 				NOT = { ROOT = { tier = EMPEROR } }
 			}
-			ROOT = { usurp_title = PREV }
+			ROOT = { usurp_title = { target = PREV type = invasion } }
 		}
 
 		if = {
@@ -1122,7 +1203,7 @@ pagan_subjugation = {
 							de_jure_liege_or_above = PREVPREV
 						}
 					}
-					ROOT = { usurp_title = PREV }
+					ROOT = { usurp_title = { target = PREV type = invasion } }
 				}
 			}
 		}
@@ -1267,7 +1348,7 @@ decadence_invasion = {
 			prestige = 500
 			piety = 250
 			occupy_minors_of_occupied_settlements = FROM
-			gain_all_occupied_titles = FROM
+			gain_all_occupied_titles = { who = FROM type = revolt }
 			give_nickname = nick_the_conqueror
 		}
 		any_attacker = {
@@ -1291,7 +1372,7 @@ decadence_invasion = {
 						limit = {
 							tier = PREVPREV
 						}
-						usurp_title_plus_barony_if_unlanded = ROOT
+						usurp_title_plus_barony_if_unlanded = { target = ROOT type = revolt }
 
 						if = {
 							limit = {
@@ -1306,6 +1387,19 @@ decadence_invasion = {
 
 			set_defacto_liege = ROOT
 			imprison = ROOT
+			
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_nickname = no
+					}
+					random_list = {
+						10 = { give_nickname = nick_the_decadent }
+						10 = { give_nickname = nick_the_unready }
+						10 = { give_nickname = nick_the_ill_ruler }
+					}
+				}
+			}
 		}
 
 		hidden_tooltip = {
