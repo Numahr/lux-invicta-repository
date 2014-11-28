@@ -870,13 +870,13 @@ NMilitary = {
 	LOOT_HOLDING_DESTRUCTION_ODDS = 200,				-- a holding with less than LOOT_HOLDING_DEST_MIN_SAFE buildings will be destroyed by looting
 	LOOT_HOLDING_BUILDING_DEST_ODDS = 1,			-- there is a 1 in this chance a random building is destroyed when looted
 	
-	RETINUE_FROM_REALMSIZE = 2.0,					--RIKNAP'S VALUE: 0
+	RETINUE_FROM_REALMSIZE = 0,					--RIKNAP'S VALUE: 0
 	RETINUE_TITLE_MODIFIER = 0.5,					
 	RETINUE_INCREASE_PER_TECH = 1.5,
-	RETINUE_HIRE_COST_MULTIPLIER = 0.14,			--RIKNAP'S VALUE: 0.25-- Retinues are free to hire atm, but they cost alot to reinforce
+	RETINUE_HIRE_COST_MULTIPLIER = 0.25,			--RIKNAP'S VALUE: 0.25-- Retinues are free to hire atm, but they cost alot to reinforce
 	RETINUE_REINFORCE_RATE = 0.025,
-	RETINUE_REINFORCE_COST = 3.0,					-- RIKNAP'S VALUE: 0.333 --Retinues cost while reinforcing.
-	RETINUE_CONSTANT_COST = 0.25, 					-- RIKNAP'S VALUE: 0.333 --- Retinues cost at all times.
+	RETINUE_REINFORCE_COST = 0.333,					-- RIKNAP'S VALUE: 0.333 --Retinues cost while reinforcing.
+	RETINUE_CONSTANT_COST = 0.333, 					-- RIKNAP'S VALUE: 0.333 --- Retinues cost at all times.
 	MIN_RETINUE = 0,								-- Minimum retinue ( Disabled for now, can be enabled by mods )
 	
 	TERRAIN_SPEC_BONUS = 0.5,						-- Bonus to fighting in this terrain if you have that terrain as your terrain specialization ( gained through combat events in that terrain ) --v12 increased to 50%
@@ -1081,7 +1081,7 @@ NAI =
 	BASE_AI_ARMY_SIZE = 10000,								-- Base size that AI will use when forming armies (multiplied by supply tech)
 	DESIRED_CONSORTS = 2,									-- AI will always want at least this many concubines, if they lack sons v12c increased to 1
 	RAID_MAX_REALM_SIZE = 100,								-- Realms with more holdings than this will never go on Raids
-	RAID_AGGRESSION = 999,									-- General frequency of raids. A LOWER number means more often!
+	RAID_AGGRESSION = 15,									-- General frequency of raids. A LOWER number means more often!
 	RAID_PREP_INV_SPARE_SAME_CULTURE = 0,					-- AI of religions that allow prepared invasions will not raid provinces in their own culture group (to prevent intra-Scandinavian raids) v12c disabled
 	RAID_SPARE_ACCEPTED_RELIGIONS = 0,						-- AI will not raid rulers of other religions in the same religion group, unless heresy vs parent religion
 	TRIBAL_VASSAL_EXTRA_CALL_CHANCE = 40,					-- Extra AI willingness to join calls from their liege if they are tribal vassals

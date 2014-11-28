@@ -32,7 +32,6 @@ character_event = {
 character_event = {
 	id = slavery.1
 	desc = "EVTDESCSLAVERY1"
-	picture = GFX_evt_slavery
 	is_triggered_only = yes
 	
 	option = {
@@ -43,7 +42,6 @@ character_event = {
 character_event = {
 	id = slavery.2
 	desc = "EVTDESCSLAVERY2"
-	picture = GFX_evt_slavery
 	is_triggered_only = yes
 	
 	option = {
@@ -71,10 +69,7 @@ character_event = {
 			}
 			OR = {
 				NOT = { has_character_flag = flag_selling_slave_to_trader }
-				had_character_flag = {
-					flag = flag_selling_slave_to_trader
-					days = 365
-				}
+				had_character_flag = { flag = flag_selling_slave_to_trader days = 150 }
 			}
 		}
 		ai_chance = {
@@ -795,7 +790,7 @@ character_event = {
 			character_event = { id = LoR.833 tooltip = "EVTTOOLTIPLoR.833" }
 			add_trait = eunuch
 			if = {
-				limit = { NOT = { age = 6 } }
+				limit = { age = 6 }
 				opinion = {
 					modifier = opinion_castrated_me
 					who = ROOT
@@ -828,18 +823,18 @@ character_event = {
 		}
 		piety = -30
 		hidden_tooltip = {
-			father = { opinion = { who = FROM modifier = opinion_castrated_family } }
-			mother = { opinion = { who = FROM modifier = opinion_castrated_family } }
+			father = { opinion = { who = FROM modifier = opinion_castrated_son } }
+			mother = { opinion = { who = FROM modifier = opinion_castrated_son } }
 			any_dynasty_member = {
 				limit = {
 					is_close_relative = ROOT
 					NOT = { any_child = { character = ROOT } } 
 				}
-				opinion = { who = FROM modifier = opinion_castrated_family }
+				opinion = { who = FROM modifier = opinion_castrated_kin }
 			}
 			any_spouse = {
 				limit = { opinion = { who = ROOT value = -25 } }
-				opinion = { who = FROM modifier = opinion_castrated_family }
+				opinion = { who = FROM modifier = opinion_castrated_spouse }
 			}
 		}
 	}
@@ -1140,7 +1135,6 @@ character_event = {
 character_event = { #Set Slave scope when changing page
 	id = slavery.3
 	is_triggered_only = yes
-	hide_window = yes
 	
 	immediate = {
 		FROM = { character_event = { id = slavery.2 } }
@@ -1153,14 +1147,14 @@ character_event = { #Set Slave scope when changing page
 ###Ai slavery action event###
 character_event = {
 	id = slavery.299
-	#AI SLAVERY AUCTION
-	hide_window = yes
+	desc = "AI SLAVERY ACTION"
+	
 	is_triggered_only = yes
 	only_rulers = yes
 	ai = yes
 	
 	option = {
-		#ENTER SLAVE TRADE
+		name = "ENTER SLAVE TRADE"
 		trigger = {
 			is_patrician = yes # Only patricians can be slave traders
 			NOT = { trait = slave_trader } # Obviously, can't do this when already a slave trader
@@ -1337,7 +1331,7 @@ character_event = {
 		set_dynasty_flag = flag_slaver_tradition
 	}	
 	option = {
-		#LEAVE SLAVE TRADE
+		name = "LEAVE SLAVE TRADE"
 		trigger = {
 			trait = slave_trader
 		}
@@ -1476,7 +1470,7 @@ character_event = {
 		#clr_dynasty_flag = flag_slaver_tradition
 	}
 	option = {
-		#BUY SLAVE
+		name = "BUY SLAVE"
 		trigger = {
 			crownlaw_title = {
 				OR = {
@@ -1590,7 +1584,7 @@ character_event = {
 		character_event = { id = slavery.200 days = 50 random = 25 }
 	}
 	option = {
-		#BUY BULK SLAVES
+		name = "BUY BULK SLAVES"
 		trigger = {
 			demesne_size = 1
 			crownlaw_title = { has_law = slavery_2 }		
@@ -1771,13 +1765,15 @@ character_event = {
 				trait = slave_trader
 				NOT = { trait = humble }
 				OR = { #More likely to buy slaves to train unsullied
-					capital_holding = {
-						OR = {
-							has_building = ca_asoiaf_slavepit_2
-							has_building = ct_asoiaf_slavepit_2						
+					OR = {
+						capital_holding = {
+							OR = {
+								has_building = ca_asoiaf_slavepit_2
+								has_building = ct_asoiaf_slavepit_2						
+							}
 						}
+						family_palace = { has_building = fp_asoiaf_slavepit_2 }
 					}
-					family_palace = { has_building = fp_asoiaf_slavepit_2 }
 				}
 			}
 			modifier = {
@@ -1808,7 +1804,7 @@ character_event = {
 		set_character_flag = flag_buying_bulk_slaves
 	}
 	option = {
-		#SELL BULK SLAVES
+		name = "SELL BULK SLAVES"
 		trigger = {
 			crownlaw_title = { has_law = slavery_2 }	
 			OR = {
@@ -1892,7 +1888,7 @@ character_event = {
 		set_character_flag = flag_selling_bulk_slaves
 	}
 	option = {
-		#FREE BULK SLAVES
+		name = "FREE BULK SLAVES"
 		trigger = {
 			OR = {
 				capital_holding = {
@@ -2072,7 +2068,7 @@ character_event = {
 		if = {
 			limit = {
 				OR = {
-						religion = adoptionist
+							religion = adoptionist
 							religion = antinomian 
 							religion = apollinarist
 							religion = arian
@@ -2179,7 +2175,7 @@ character_event = {
 		set_character_flag = flag_freed_bulk_slaves
 	}
 	option = {
-		#NEVERMIND
+		name = "NEVERMIND"
 		ai_chance = {
 			factor = 1
 		}
@@ -2350,7 +2346,6 @@ character_event = { #Character who owns no slaves has slave owner trait
 character_event = {
 	id = slavery.15
 	desc = "EVTDESCSLAVERY15"
-	picture = GFX_evt_slavery
 	
 	only_rulers = yes
 	is_triggered_only = yes
@@ -3092,7 +3087,7 @@ character_event = {
 
 character_event = {
 	id = slavery.302
-	hide_window = yes
+	#hide_window = yes
 	is_triggered_only = yes
 	
 	option = {
@@ -3341,7 +3336,7 @@ character_event = {
 
 character_event = {
 	id = slavery.305
-	hide_window = yes
+	#hide_window = yes
 	is_triggered_only = yes
 	
 	option = {
@@ -3636,58 +3631,63 @@ character_event = {
 		}
 	}
 	
-	option = {
-		trigger = {
-			fertility = 0.75
-			spouse = { fertility = 0.75 }
-		}
-		random = {
-			chance = 80
-			spouse = { ROOT = { impregnate = PREV } }
-		}
-	}
-	option = {
-		trigger = {
-			OR = {
-				NOT = { fertility = 0.75 }
-				NOT = { spouse = { fertility = 0.75 } }
+	immediate = {
+		if = {
+			limit = {
+				fertility = 0.75
+				spouse = { fertility = 0.75 }
 			}
-			fertility = 0.5
-			spouse = { fertility = 0.5 }
-		}
-		random = {
-			chance = 55
-			spouse = { ROOT = { impregnate = PREV } }
-		}	
-	}
-	option = {
-		trigger = {
-			OR = {
-				NOT = { fertility = 0.5 }
-				NOT = { spouse = { fertility = 0.5 } }
-			}
-			fertility = 0.2
-			spouse = { fertility = 0.2 }
-		}
-		random = {
-			chance = 30
-			spouse = { ROOT = { impregnate = PREV } }
-		}	
-	}
-	option = {
-		trigger = {
-			OR = {
-				NOT = { fertility = 0.2 }
-				NOT = { spouse = { fertility = 0.2 } }
+			random = {
+				chance = 80
+				spouse = { ROOT = { impregnate = PREV } }
 			}
 		}
-		random = {
-			chance = 15
-			spouse = { ROOT = { impregnate = PREV } }
-		}	
+		if = {
+			limit = {
+				OR = {
+					NOT = { fertility = 0.75 }
+					NOT = { spouse = { fertility = 0.75 } }
+				}
+				fertility = 0.5
+				spouse = { fertility = 0.5 }
+			}
+			random = {
+				chance = 55
+				spouse = { ROOT = { impregnate = PREV } }
+			}	
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { fertility = 0.5 }
+					NOT = { spouse = { fertility = 0.5 } }
+				}
+				fertility = 0.2
+				spouse = { fertility = 0.2 }
+			}
+			random = {
+				chance = 30
+				spouse = { ROOT = { impregnate = PREV } }
+			}	
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { fertility = 0.2 }
+					NOT = { spouse = { fertility = 0.2 } }
+				}
+			}
+			random = {
+				chance = 15
+				spouse = { ROOT = { impregnate = PREV } }
+			}	
+		}
+	}
+	
+	option = {
+		name = OK
 	}
 }
-
 
 # Under chattel slavery, slavery is inherited from the mother
 character_event = {
@@ -6003,6 +6003,7 @@ character_event = {
 					capital_scope = {
 						trade_post_owner = {
 							NOT = { character = ROOT }
+							is_alive = yes
 							trait = slave_trader
 							OR = {
 								capital_holding = {
@@ -6021,6 +6022,7 @@ character_event = {
 			slave_trader = {
 				limit = {
 					NOT = { character = ROOT }
+					is_alive = yes
 					OR = {
 						capital_holding = {
 							OR = {
@@ -6163,6 +6165,7 @@ character_event = {
 		name = "EVTOPTASLAVERY1203"
 		trigger = {
 			slave_trader = {
+				is_alive = yes
 				NOT = { character = ROOT }
 				NOT = { character = FROM }
 				any_demesne_title = { has_building = fp_asoiaf_slavepit_1 }
@@ -6170,11 +6173,10 @@ character_event = {
 		}
 		slave_trader = {
 			limit = {
-				slave_trader = {
-					NOT = { character = ROOT }
-					NOT = { character = FROM }
-					any_demesne_title = { has_building = fp_asoiaf_slavepit_1 }
-				}
+				is_alive = yes
+				NOT = { character = ROOT }
+				NOT = { character = FROM }
+				any_demesne_title = { has_building = fp_asoiaf_slavepit_1 }
 			}
 			character_event = { id = slavery.1201 tooltip = "EVTTOOLTIPSLAVERY1201" }
 		}
@@ -6237,6 +6239,7 @@ character_event = {
 			slave_trader = {
 				limit = {
 					NOT = { character = ROOT }
+					is_alive = yes
 					NOT = { any_demesne_title = { has_building = fp_asoiaf_slavepit_5 } }
 					OR = {
 						wealth = 400
@@ -6396,6 +6399,7 @@ character_event = {
 			slave_trader = {
 				NOT = { character = ROOT }
 				NOT = { character = FROM }
+				is_alive = yes
 				NOT = { family_palace = { has_building = fp_asoiaf_slavepit_5 } }
 				OR = {
 					wealth = 400
@@ -6418,6 +6422,7 @@ character_event = {
 			limit = {
 				NOT = { character = ROOT }
 				NOT = { character = FROM }
+				is_alive = yes
 				NOT = { family_palace = { has_building = fp_asoiaf_slavepit_5 } }
 				OR = {
 					wealth = 400
@@ -6889,106 +6894,14 @@ character_event = {
 			# Religious Conviction
 			AND = {
 				trait = zealous
-								OR = {
-									religion = adoptionist
-									religion = antinomian 
-									religion = apollinarist
-									religion = arian
-									religion = audianist 
-									religion = bogomilist
-									religion = bud_bahusrutiya
-									religion = bud_mahayana
-									religion = bud_pratyeka
-									religion = bud_pureland
-									religion = bud_sthaviravada
-									religion = bud_vajrayana
-									religion = bud_zen
-									religion = bud_zor
-									religion = cathar
-									religion = catholic
-									religion = confucian
-									religion = dionysos
-									religion = docetist
-									religion = donatist 
-									religion = fraticelli
-									religion = hindu
-									religion = hurufi
-									religion = iconoclast
-									religion = ilm_islam
-									religion = jain
-									religion = jud_ark
-									religion = jud_sabaoth
-									religion = jud_zion
-									religion = judaism
-									religion = kharijite
-									religion = kothar
-									religion = kubera
-									religion = mand_ruha
-									religion = mandaean
-									religion = mani
-									religion = mani_ahriman
-									religion = mani_germanic
-									religion = mani_mithra
-									religion = mani_slavic
-									religion = marcionist 
-									religion = mari_christ
-									religion = mazdakism
-									religion = melkite
-									religion = mithra
-									religion = mithra_christ
-									religion = monophysite
-									religion = monothelite
-									religion = montanist
-									religion = murugan
-									religion = nasrani
-									religion = neoplato
-									religion = nestorian
-									religion = orthodox
-									religion = pelagian
-									religion = plato_christ
-									religion = plato_islam
-									religion = plato_pythagorean
-									religion = porphyryan
-									religion = priscillian 
-									religion = sabellianist 
-									religion = saura
-									religion = semipelagian
-									religion = sethian
-									religion = slavic_christian
-									religion = sol_mani
-									religion = solomonic_christ
-									religion = tao
-									religion = tengri_confucian
-									religion = unctionist
-									religion = valentinian 
-									religion = vidharma
-									religion = waldensian
-									religion = yahyanism
-									religion = zor_hindu
-									religion = ahriman_reformed
-									religion = bud_zen_reformed
-									religion = bud_zor_reformed 
-									religion = cathar_reformed
-									religion = christian_populist_reformed 
-									religion = jud_ark_reformed
-									religion = judaism_reformed 
-									religion = kubera_reformed
-									religion = mand_ruha_reformed
-									religion = mandaean_reformed
-									religion = mani_germanic_reformed
-									religion = mani_slavic_reformed
-									religion = mari_christ_reformed
-									religion = montanist_reformed
-									religion = murugan_reformed
-									religion = nasrani_reformed
-									religion = priscillian_reformed
-									religion = saura_reformed
-									religion = sethian_reformed
-									religion = slavic_christian_reformed
-									religion = tengri_bud_reformed
-									religion = tengri_mani_reformed
-									religion = vidharma_reformed
-								}
+				OR = {
+					religion_group = westerosi_religion
+					religion_group = summer_rel_group
+					religion = moonsingers
+					religion = father_of_waters
+					religion = rhoynar_pagan
+					religion = great_shepherd
+				}
 			}
 			# Sympathy
 			AND = {
@@ -7098,210 +7011,26 @@ character_event = {
 		# Religious Effects
 		modifier = {
 			factor = 0.5
-								OR = {
-									religion = adoptionist
-									religion = antinomian 
-									religion = apollinarist
-									religion = arian
-									religion = audianist 
-									religion = bogomilist
-									religion = bud_bahusrutiya
-									religion = bud_mahayana
-									religion = bud_pratyeka
-									religion = bud_pureland
-									religion = bud_sthaviravada
-									religion = bud_vajrayana
-									religion = bud_zen
-									religion = bud_zor
-									religion = cathar
-									religion = catholic
-									religion = confucian
-									religion = dionysos
-									religion = docetist
-									religion = donatist 
-									religion = fraticelli
-									religion = hindu
-									religion = hurufi
-									religion = iconoclast
-									religion = ilm_islam
-									religion = jain
-									religion = jud_ark
-									religion = jud_sabaoth
-									religion = jud_zion
-									religion = judaism
-									religion = kharijite
-									religion = kothar
-									religion = kubera
-									religion = mand_ruha
-									religion = mandaean
-									religion = mani
-									religion = mani_ahriman
-									religion = mani_germanic
-									religion = mani_mithra
-									religion = mani_slavic
-									religion = marcionist 
-									religion = mari_christ
-									religion = mazdakism
-									religion = melkite
-									religion = mithra
-									religion = mithra_christ
-									religion = monophysite
-									religion = monothelite
-									religion = montanist
-									religion = murugan
-									religion = nasrani
-									religion = neoplato
-									religion = nestorian
-									religion = orthodox
-									religion = pelagian
-									religion = plato_christ
-									religion = plato_islam
-									religion = plato_pythagorean
-									religion = porphyryan
-									religion = priscillian 
-									religion = sabellianist 
-									religion = saura
-									religion = semipelagian
-									religion = sethian
-									religion = slavic_christian
-									religion = sol_mani
-									religion = solomonic_christ
-									religion = tao
-									religion = tengri_confucian
-									religion = unctionist
-									religion = valentinian 
-									religion = vidharma
-									religion = waldensian
-									religion = yahyanism
-									religion = zor_hindu
-									religion = ahriman_reformed
-									religion = bud_zen_reformed
-									religion = bud_zor_reformed 
-									religion = cathar_reformed
-									religion = christian_populist_reformed 
-									religion = jud_ark_reformed
-									religion = judaism_reformed 
-									religion = kubera_reformed
-									religion = mand_ruha_reformed
-									religion = mandaean_reformed
-									religion = mani_germanic_reformed
-									religion = mani_slavic_reformed
-									religion = mari_christ_reformed
-									religion = montanist_reformed
-									religion = murugan_reformed
-									religion = nasrani_reformed
-									religion = priscillian_reformed
-									religion = saura_reformed
-									religion = sethian_reformed
-									religion = slavic_christian_reformed
-									religion = tengri_bud_reformed
-									religion = tengri_mani_reformed
-									religion = vidharma_reformed
-								}
+			OR = {
+				religion_group = westerosi_religion
+				religion_group = summer_rel_group
+				religion = moonsingers
+				religion = father_of_waters
+				religion = rhoynar_pagan
+				religion = great_shepherd
+			}
 			NOT = { trait = cynical }
 		}
 		modifier = {
 			factor = 0.5
-								OR = {
-									religion = adoptionist
-									religion = antinomian 
-									religion = apollinarist
-									religion = arian
-									religion = audianist 
-									religion = bogomilist
-									religion = bud_bahusrutiya
-									religion = bud_mahayana
-									religion = bud_pratyeka
-									religion = bud_pureland
-									religion = bud_sthaviravada
-									religion = bud_vajrayana
-									religion = bud_zen
-									religion = bud_zor
-									religion = cathar
-									religion = catholic
-									religion = confucian
-									religion = dionysos
-									religion = docetist
-									religion = donatist 
-									religion = fraticelli
-									religion = hindu
-									religion = hurufi
-									religion = iconoclast
-									religion = ilm_islam
-									religion = jain
-									religion = jud_ark
-									religion = jud_sabaoth
-									religion = jud_zion
-									religion = judaism
-									religion = kharijite
-									religion = kothar
-									religion = kubera
-									religion = mand_ruha
-									religion = mandaean
-									religion = mani
-									religion = mani_ahriman
-									religion = mani_germanic
-									religion = mani_mithra
-									religion = mani_slavic
-									religion = marcionist 
-									religion = mari_christ
-									religion = mazdakism
-									religion = melkite
-									religion = mithra
-									religion = mithra_christ
-									religion = monophysite
-									religion = monothelite
-									religion = montanist
-									religion = murugan
-									religion = nasrani
-									religion = neoplato
-									religion = nestorian
-									religion = orthodox
-									religion = pelagian
-									religion = plato_christ
-									religion = plato_islam
-									religion = plato_pythagorean
-									religion = porphyryan
-									religion = priscillian 
-									religion = sabellianist 
-									religion = saura
-									religion = semipelagian
-									religion = sethian
-									religion = slavic_christian
-									religion = sol_mani
-									religion = solomonic_christ
-									religion = tao
-									religion = tengri_confucian
-									religion = unctionist
-									religion = valentinian 
-									religion = vidharma
-									religion = waldensian
-									religion = yahyanism
-									religion = zor_hindu
-									religion = ahriman_reformed
-									religion = bud_zen_reformed
-									religion = bud_zor_reformed 
-									religion = cathar_reformed
-									religion = christian_populist_reformed 
-									religion = jud_ark_reformed
-									religion = judaism_reformed 
-									religion = kubera_reformed
-									religion = mand_ruha_reformed
-									religion = mandaean_reformed
-									religion = mani_germanic_reformed
-									religion = mani_slavic_reformed
-									religion = mari_christ_reformed
-									religion = montanist_reformed
-									religion = murugan_reformed
-									religion = nasrani_reformed
-									religion = priscillian_reformed
-									religion = saura_reformed
-									religion = sethian_reformed
-									religion = slavic_christian_reformed
-									religion = tengri_bud_reformed
-									religion = tengri_mani_reformed
-									religion = vidharma_reformed
-								}
+			OR = {
+				religion_group = westerosi_religion
+				religion_group = summer_rel_group
+				religion = moonsingers
+				religion = father_of_waters
+				religion = rhoynar_pagan
+				religion = great_shepherd
+			}
 			trait = zealous
 		}
 		
@@ -7309,318 +7038,49 @@ character_event = {
 		modifier = {
 			factor = 2
 			NOT = { trait = arbitrary }
-				NOT = {
-								OR = {
-									religion = adoptionist
-									religion = antinomian 
-									religion = apollinarist
-									religion = arian
-									religion = audianist 
-									religion = bogomilist
-									religion = bud_bahusrutiya
-									religion = bud_mahayana
-									religion = bud_pratyeka
-									religion = bud_pureland
-									religion = bud_sthaviravada
-									religion = bud_vajrayana
-									religion = bud_zen
-									religion = bud_zor
-									religion = cathar
-									religion = catholic
-									religion = confucian
-									religion = dionysos
-									religion = docetist
-									religion = donatist 
-									religion = fraticelli
-									religion = hindu
-									religion = hurufi
-									religion = iconoclast
-									religion = ilm_islam
-									religion = jain
-									religion = jud_ark
-									religion = jud_sabaoth
-									religion = jud_zion
-									religion = judaism
-									religion = kharijite
-									religion = kothar
-									religion = kubera
-									religion = mand_ruha
-									religion = mandaean
-									religion = mani
-									religion = mani_ahriman
-									religion = mani_germanic
-									religion = mani_mithra
-									religion = mani_slavic
-									religion = marcionist 
-									religion = mari_christ
-									religion = mazdakism
-									religion = melkite
-									religion = mithra
-									religion = mithra_christ
-									religion = monophysite
-									religion = monothelite
-									religion = montanist
-									religion = murugan
-									religion = nasrani
-									religion = neoplato
-									religion = nestorian
-									religion = orthodox
-									religion = pelagian
-									religion = plato_christ
-									religion = plato_islam
-									religion = plato_pythagorean
-									religion = porphyryan
-									religion = priscillian 
-									religion = sabellianist 
-									religion = saura
-									religion = semipelagian
-									religion = sethian
-									religion = slavic_christian
-									religion = sol_mani
-									religion = solomonic_christ
-									religion = tao
-									religion = tengri_confucian
-									religion = unctionist
-									religion = valentinian 
-									religion = vidharma
-									religion = waldensian
-									religion = yahyanism
-									religion = zor_hindu
-									religion = ahriman_reformed
-									religion = bud_zen_reformed
-									religion = bud_zor_reformed 
-									religion = cathar_reformed
-									religion = christian_populist_reformed 
-									religion = jud_ark_reformed
-									religion = judaism_reformed 
-									religion = kubera_reformed
-									religion = mand_ruha_reformed
-									religion = mandaean_reformed
-									religion = mani_germanic_reformed
-									religion = mani_slavic_reformed
-									religion = mari_christ_reformed
-									religion = montanist_reformed
-									religion = murugan_reformed
-									religion = nasrani_reformed
-									religion = priscillian_reformed
-									religion = saura_reformed
-									religion = sethian_reformed
-									religion = slavic_christian_reformed
-									religion = tengri_bud_reformed
-									religion = tengri_mani_reformed
-									religion = vidharma_reformed
+			OR = {
+				culture_group = iron_isles_culture
+				culture_group = ghiscari_group
+				culture_group = valyrian
+				AND = {
+					culture_group = free_cities
+					NOT = { culture = braavosi }
 				}
+				trait = pirate
+				culture = dothraki
+				religion = lady_of_the_waves
+				culture_group = yi_ti_group
+				culture = qartheen
 			}
 		}
 		modifier = {
 			factor = 2
 			trait = just
-				NOT = {
-								OR = {
-									religion = adoptionist
-									religion = antinomian 
-									religion = apollinarist
-									religion = arian
-									religion = audianist 
-									religion = bogomilist
-									religion = bud_bahusrutiya
-									religion = bud_mahayana
-									religion = bud_pratyeka
-									religion = bud_pureland
-									religion = bud_sthaviravada
-									religion = bud_vajrayana
-									religion = bud_zen
-									religion = bud_zor
-									religion = cathar
-									religion = catholic
-									religion = confucian
-									religion = dionysos
-									religion = docetist
-									religion = donatist 
-									religion = fraticelli
-									religion = hindu
-									religion = hurufi
-									religion = iconoclast
-									religion = ilm_islam
-									religion = jain
-									religion = jud_ark
-									religion = jud_sabaoth
-									religion = jud_zion
-									religion = judaism
-									religion = kharijite
-									religion = kothar
-									religion = kubera
-									religion = mand_ruha
-									religion = mandaean
-									religion = mani
-									religion = mani_ahriman
-									religion = mani_germanic
-									religion = mani_mithra
-									religion = mani_slavic
-									religion = marcionist 
-									religion = mari_christ
-									religion = mazdakism
-									religion = melkite
-									religion = mithra
-									religion = mithra_christ
-									religion = monophysite
-									religion = monothelite
-									religion = montanist
-									religion = murugan
-									religion = nasrani
-									religion = neoplato
-									religion = nestorian
-									religion = orthodox
-									religion = pelagian
-									religion = plato_christ
-									religion = plato_islam
-									religion = plato_pythagorean
-									religion = porphyryan
-									religion = priscillian 
-									religion = sabellianist 
-									religion = saura
-									religion = semipelagian
-									religion = sethian
-									religion = slavic_christian
-									religion = sol_mani
-									religion = solomonic_christ
-									religion = tao
-									religion = tengri_confucian
-									religion = unctionist
-									religion = valentinian 
-									religion = vidharma
-									religion = waldensian
-									religion = yahyanism
-									religion = zor_hindu
-									religion = ahriman_reformed
-									religion = bud_zen_reformed
-									religion = bud_zor_reformed 
-									religion = cathar_reformed
-									religion = christian_populist_reformed 
-									religion = jud_ark_reformed
-									religion = judaism_reformed 
-									religion = kubera_reformed
-									religion = mand_ruha_reformed
-									religion = mandaean_reformed
-									religion = mani_germanic_reformed
-									religion = mani_slavic_reformed
-									religion = mari_christ_reformed
-									religion = montanist_reformed
-									religion = murugan_reformed
-									religion = nasrani_reformed
-									religion = priscillian_reformed
-									religion = saura_reformed
-									religion = sethian_reformed
-									religion = slavic_christian_reformed
-									religion = tengri_bud_reformed
-									religion = tengri_mani_reformed
-									religion = vidharma_reformed
-								}
+			OR = {
+				culture_group = iron_isles_culture
+				culture_group = ghiscari_group
+				culture_group = valyrian
+				AND = {
+					culture_group = free_cities
+					NOT = { culture = braavosi }
 				}
+				trait = pirate
+				culture = dothraki
+				religion = lady_of_the_waves
+				culture_group = yi_ti_group
+				culture = qartheen
+			}
 		}
 		modifier = {
 			factor = 0.5
 			NOT = { trait = arbitrary }
-								OR = {
-									religion = adoptionist
-									religion = antinomian 
-									religion = apollinarist
-									religion = arian
-									religion = audianist 
-									religion = bogomilist
-									religion = bud_bahusrutiya
-									religion = bud_mahayana
-									religion = bud_pratyeka
-									religion = bud_pureland
-									religion = bud_sthaviravada
-									religion = bud_vajrayana
-									religion = bud_zen
-									religion = bud_zor
-									religion = cathar
-									religion = catholic
-									religion = confucian
-									religion = dionysos
-									religion = docetist
-									religion = donatist 
-									religion = fraticelli
-									religion = hindu
-									religion = hurufi
-									religion = iconoclast
-									religion = ilm_islam
-									religion = jain
-									religion = jud_ark
-									religion = jud_sabaoth
-									religion = jud_zion
-									religion = judaism
-									religion = kharijite
-									religion = kothar
-									religion = kubera
-									religion = mand_ruha
-									religion = mandaean
-									religion = mani
-									religion = mani_ahriman
-									religion = mani_germanic
-									religion = mani_mithra
-									religion = mani_slavic
-									religion = marcionist 
-									religion = mari_christ
-									religion = mazdakism
-									religion = melkite
-									religion = mithra
-									religion = mithra_christ
-									religion = monophysite
-									religion = monothelite
-									religion = montanist
-									religion = murugan
-									religion = nasrani
-									religion = neoplato
-									religion = nestorian
-									religion = orthodox
-									religion = pelagian
-									religion = plato_christ
-									religion = plato_islam
-									religion = plato_pythagorean
-									religion = porphyryan
-									religion = priscillian 
-									religion = sabellianist 
-									religion = saura
-									religion = semipelagian
-									religion = sethian
-									religion = slavic_christian
-									religion = sol_mani
-									religion = solomonic_christ
-									religion = tao
-									religion = tengri_confucian
-									religion = unctionist
-									religion = valentinian 
-									religion = vidharma
-									religion = waldensian
-									religion = yahyanism
-									religion = zor_hindu
-									religion = ahriman_reformed
-									religion = bud_zen_reformed
-									religion = bud_zor_reformed 
-									religion = cathar_reformed
-									religion = christian_populist_reformed 
-									religion = jud_ark_reformed
-									religion = judaism_reformed 
-									religion = kubera_reformed
-									religion = mand_ruha_reformed
-									religion = mandaean_reformed
-									religion = mani_germanic_reformed
-									religion = mani_slavic_reformed
-									religion = mari_christ_reformed
-									religion = montanist_reformed
-									religion = murugan_reformed
-									religion = nasrani_reformed
-									religion = priscillian_reformed
-									religion = saura_reformed
-									religion = sethian_reformed
-									religion = slavic_christian_reformed
-									religion = tengri_bud_reformed
-									religion = tengri_mani_reformed
-									religion = vidharma_reformed
-								}
+			OR = {
+				culture_group = andal
+				culture_group = first_men
+				culture_group = dornish
+				culture_group = free_folk
+				culture = braavosi
+			}
 		}
 		
 		# Influences
