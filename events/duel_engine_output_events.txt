@@ -15,6 +15,16 @@ character_event = {
 	picture = GFX_evt_duel0
 	
 	is_triggered_only = yes
+
+	immediate = {
+		##########################
+		# Generic duel victory forwarder for combat trait advancement in cta.10 (PB_cta.txt)
+		#
+		# Bounce the loser scope into FROM via cta.11 so that cta.10's potential child events
+		# will have access to the loser in the FROMFROM scope like duel_output's children.
+		
+		event_target:round_loser = { character_event = { id = cta.11 } }
+	}
 	
 	option = {
 		name = "EVTOPTADUELOUTPUT1"
@@ -63,17 +73,27 @@ character_event = {
 		##########################
 		# CLEAR YOUR CONTEXT FLAGS
 		clr_character_flag = flag_battlefield_duel
-		event_target:round_loser = {
-			clr_character_flag = flag_battlefield_duel
-			clr_character_flag = ran_away_from_duel
-		}
-		clear_event_target = duel_challenger
-		clear_event_target = duel_challenged
-		#event targets round_loser and round_winner will be cleared by the battlefield duel routines
 		clr_character_flag = flag_spared_opponent
 		clr_character_flag = flag_wounded_opponent
 		clr_character_flag = flag_maimed_opponent
 		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
+		event_target:round_loser = {
+			clr_character_flag = flag_battlefield_duel
+			clr_character_flag = ran_away_from_duel
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
+		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		#event targets round_loser and round_winner will be cleared by the battlefield duel routines
 		###########################
 		# End of battlefield duel Block
 		#############################
@@ -97,17 +117,26 @@ character_event = {
 			character_event = { id = lux_lubu.23 }
 			clr_character_flag = lubu_duel
 		}
-		clear_event_target = duel_challenger
-		clear_event_target = duel_challenged
-		clear_event_target = round_winner
-		event_target:round_loser = {
-			clr_character_flag = ran_away_from_duel
-		}
-		clear_event_target = round_loser
 		clr_character_flag = flag_spared_opponent
 		clr_character_flag = flag_wounded_opponent
 		clr_character_flag = flag_maimed_opponent
 		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
+		event_target:round_loser = {
+			clr_character_flag = ran_away_from_duel
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
+		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		#round_winner and round_loser will be cleared by the called events
 	}
 	option = {
 		###Trial by Combat block
@@ -197,17 +226,27 @@ character_event = {
 			clr_character_flag = demanded_trial_by_combat
 			character_event = { id = trial_by_combat.12 }
 		}
+		clr_character_flag = flag_spared_opponent
+		clr_character_flag = flag_wounded_opponent
+		clr_character_flag = flag_maimed_opponent
+		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
 		clear_event_target = duel_challenger
 		clear_event_target = duel_challenged
 		clear_event_target = round_winner
 		event_target:round_loser = {
 			clr_character_flag = ran_away_from_duel
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
 		}
 		clear_event_target = round_loser
-		clr_character_flag = flag_spared_opponent
-		clr_character_flag = flag_wounded_opponent
-		clr_character_flag = flag_maimed_opponent
-		clr_character_flag = flag_killed_opponent
 		clear_event_target = prisoner_demanding_trial
 	}
 	option = {
@@ -261,18 +300,28 @@ character_event = {
 			character_event = { id = dueling.2 } #Liege reacts
 		}
 		clr_character_flag = feast_dueller
+		clr_character_flag = flag_spared_opponent
+		clr_character_flag = flag_wounded_opponent
+		clr_character_flag = flag_maimed_opponent
+		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
 		event_target:round_loser = {
 			clr_character_flag = feast_dueller
 			clr_character_flag = ran_away_from_duel
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
 		}
 		clear_event_target = duel_challenger
 		clear_event_target = duel_challenged
 		clear_event_target = round_winner
 		clear_event_target = round_loser
-		clr_character_flag = flag_spared_opponent
-		clr_character_flag = flag_wounded_opponent
-		clr_character_flag = flag_maimed_opponent
-		clr_character_flag = flag_killed_opponent
 		# End of feast_events block
 		#############################
 	}
@@ -304,18 +353,28 @@ character_event = {
 			character_event = { id = dueling.4 } #Killed, wounded, or maimed rival
 		}
 		clr_character_flag = duel_rival
+		clr_character_flag = flag_spared_opponent
+		clr_character_flag = flag_wounded_opponent
+		clr_character_flag = flag_maimed_opponent
+		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
 		event_target:round_loser = {
 			clr_character_flag = duel_rival
 			clr_character_flag = ran_away_from_duel
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
 		}
 		clear_event_target = duel_challenger
 		clear_event_target = duel_challenged
 		clear_event_target = round_winner
 		clear_event_target = round_loser
-		clr_character_flag = flag_spared_opponent
-		clr_character_flag = flag_wounded_opponent
-		clr_character_flag = flag_maimed_opponent
-		clr_character_flag = flag_killed_opponent
 		# End of friends_rivals_events block
 		#############################
 	}
@@ -339,7 +398,6 @@ character_event = {
 			}
 			character_event = { id = dueling.8 } #No wound etc. = clean win for accused
 		}
-		}
 		if = {
 			limit = {
 				OR = {
@@ -356,19 +414,29 @@ character_event = {
 		}
 		clr_character_flag = duel_rival
 		#winner's flags used to give proper flavour text so not cleared here
+		clr_character_flag = flag_spared_opponent
+		clr_character_flag = flag_wounded_opponent
+		clr_character_flag = flag_maimed_opponent
+		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
 		event_target:round_loser = {
 			clr_character_flag = tournament_cheater_duel_accuser
 			clr_character_flag = tournament_cheater_duel_accused
 			clr_character_flag = ran_away_from_duel
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
 		}
 		clear_event_target = duel_challenger
 		clear_event_target = duel_challenged
 		clear_event_target = round_winner
 		clear_event_target = round_loser
-		clr_character_flag = flag_spared_opponent
-		clr_character_flag = flag_wounded_opponent
-		clr_character_flag = flag_maimed_opponent
-		clr_character_flag = flag_killed_opponent
 		# End of friends_rivals_events block
 		#############################
 	}
@@ -403,18 +471,28 @@ character_event = {
 			character_event = { id = dueling.7 } #Killed
 		}
 		clr_character_flag = duelist_courtier
+		clr_character_flag = flag_spared_opponent
+		clr_character_flag = flag_wounded_opponent
+		clr_character_flag = flag_maimed_opponent
+		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
 		event_target:round_loser = {
 			clr_character_flag = duelist_courtier
 			clr_character_flag = ran_away_from_duel
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
 		}
 		clear_event_target = duel_challenger
 		clear_event_target = duel_challenged
 		clear_event_target = round_winner
 		clear_event_target = round_loser
-		clr_character_flag = flag_spared_opponent
-		clr_character_flag = flag_wounded_opponent
-		clr_character_flag = flag_maimed_opponent
-		clr_character_flag = flag_killed_opponent
 		# End of regency_events block
 		#############################
 	}
@@ -448,14 +526,26 @@ character_event = {
 			}
 			character_event = { id = joust.21 } #Killed, wounded, or maimed rival
 		}
-		clear_event_target = duel_challenger
-		clear_event_target = duel_challenged
-		clear_event_target = round_winner
-		clear_event_target = round_loser
 		clr_character_flag = flag_spared_opponent
 		clr_character_flag = flag_wounded_opponent
 		clr_character_flag = flag_maimed_opponent
 		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
+		event_target:round_loser = {
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
+		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = round_winner
+		clear_event_target = round_loser
 		# Flags for this are cleared in the followup events since I use them to track of agressor/defender
 		# End of Tournament rival duel block
 		####################################
@@ -501,14 +591,14 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = { has_character_flag = ran_away_from_duel }
+				event_target:round_loser = { has_character_flag = ran_away_from_duel }
 			}
 			character_event = { id =  TOG.5009 } #Wins (Opponent Flees)
 		}
 		if = {
 			limit = {
 				has_character_flag = flag_wounded_opponent
-				FROM = { has_character_flag = flag_wounded_opponent }
+				event_target:round_loser = { has_character_flag = flag_wounded_opponent }
 			}
 			character_event = { id =  TOG.5010 } #Draw (Both Wounded)
 		}
@@ -518,7 +608,7 @@ character_event = {
 				NOT = { has_character_flag = scarred_in_duel }
 			}
 			character_event = { id =  TOG.5022 } #Wins Opponent
-			FROM = { character_event = { id =  TOG.5012 } } #Loses (Wounded)
+			event_target:round_loser = { character_event = { id =  TOG.5012 } } #Loses (Wounded)
 		}
 		if = {
 			limit = {
@@ -526,7 +616,7 @@ character_event = {
 				has_character_flag = scarred_in_duel
 			}
 			character_event = { id =  TOG.5020 } #Wins (Scarred) Opponent
-			FROM = { character_event = { id = TOG.5012 } } #Loses (Wounded)
+			event_target:round_loser = { character_event = { id = TOG.5012 } } #Loses (Wounded)
 		}
 		if = {
 			limit = {
@@ -534,7 +624,7 @@ character_event = {
 				NOT = { has_character_flag = scarred_in_duel }
 			}
 			character_event = { id =  TOG.5022 } #Wins Opponent
-			FROM = { character_event = { id =  TOG.5013 } } #Loses (Maimed)
+			event_target:round_loser = { character_event = { id =  TOG.5013 } } #Loses (Maimed)
 		}
 		if = {
 			limit = {
@@ -542,7 +632,7 @@ character_event = {
 				has_character_flag = scarred_in_duel
 			}
 			character_event = { id =  TOG.5020 } #Wins (Scarred) Opponent
-			FROM = { character_event = { id =  TOG.5013 } } #Loses (Maimed)
+			event_target:round_loser = { character_event = { id =  TOG.5013 } } #Loses (Maimed)
 		}
 		if = {
 			limit = {
@@ -554,35 +644,26 @@ character_event = {
 		# Flags are cleared by vanilla output events
 		# End of oldgods_holmgang_events block
 		#############################
-		
-		##########################
-		# Generic duel victory forwarder for combat trait advancement in cta.10 (PB_cta.txt)
-		#
-		# Bounce the loser scope into FROM via cta.11 so that cta.10's potential child events
-		# will have access to the loser in the FROMFROM scope like duel_output's children.
-		
-		FROM = { character_event = { id = cta.11 } }
-		
-		
-		#############################
-		# Special Context Flag Cleanup
-		#############################
-		clr_character_flag = flag_duel_friendly
-		FROM = { clr_character_flag = flag_duel_friendly }
-		clr_character_flag = flag_duel_to_the_death
-		FROM = { clr_character_flag = flag_duel_to_the_death }
-		clr_character_flag = flag_duel_tourney
-		FROM = { clr_character_flag = flag_duel_tourney }
-		#############################
-		# Clear kill/mercy flags
-		clr_character_flag = flag_killed_opponent
-		FROM = { clr_character_flag = flag_killed_opponent }
-		clr_character_flag = flag_wounded_opponent
-		FROM = { clr_character_flag = flag_wounded_opponent }
-		clr_character_flag = flag_maimed_opponent
-		FROM = { clr_character_flag = flag_maimed_opponent }
 		clr_character_flag = flag_spared_opponent
-		FROM = { clr_character_flag = flag_spared_opponent }
+		clr_character_flag = flag_wounded_opponent
+		clr_character_flag = flag_maimed_opponent
+		clr_character_flag = flag_killed_opponent
+		clr_character_flag = flag_duel_friendly
+		clr_character_flag = flag_duel_to_the_death
+		clr_character_flag = flag_duel_tourney
+		event_target:round_loser = {
+			clr_character_flag = flag_spared_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
+		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = round_winner
+		clear_event_target = round_loser
 	}
 }
 
@@ -595,55 +676,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = {
-		name = "EVTOPTADUELOUTPUT1"
-				
-		#####################
-		# Tournament Jousts #
-		#####################
-		if = {
-			limit = {
-				has_character_flag = tournament_jouster
-				has_character_flag = flag_spared_opponent
-			}
-			character_event = { id = joust.10 } #Clean win
-			clr_character_flag = duelist_courtier
-			FROM = { clr_character_flag = tournament_jouster }
-			FROMFROM = { clr_character_flag = tournament_jouster }
-		}
-		if = {
-			limit = {
-				has_character_flag = tournament_jouster
-				has_character_flag = flag_wounded_opponent
-			}
-			character_event = { id = joust.11 } #Wounded loser
-			clr_character_flag = duelist_courtier
-			FROM = { clr_character_flag = tournament_jouster }
-			FROMFROM = { clr_character_flag = tournament_jouster }
-		}
-		if = {
-			limit = {
-				has_character_flag = tournament_jouster
-				has_character_flag = flag_maimed_opponent
-			}
-			character_event = { id = joust.12 } #Maimed loser
-			clr_character_flag = tournament_jouster
-			FROM = { clr_character_flag = tournament_jouster }
-			FROMFROM = { clr_character_flag = tournament_jouster }
-		}
-		if = {
-			limit = {
-				has_character_flag = tournament_jouster
-				has_character_flag = flag_killed_opponent
-			}
-			character_event = { id = joust.13 } #Killed loser
-			clr_character_flag = tournament_jouster
-			FROM = { clr_character_flag = tournament_jouster }
-			FROMFROM = { clr_character_flag = tournament_jouster }
-		}
-		# End of tournament jousts block
-		################################
-		
+	immediate = {
 		##########################
 		# Generic duel victory forwarder for combat trait advancement in cta.10 (PB_cta.txt)
 		#
@@ -655,27 +688,60 @@ character_event = {
 		#             tournament_events.txt / joust.*, that appears to be the case).
 		
 		FROM = { character_event = { id = cta.11 } }
-		
-		
-		#############################
-		# Special Context Flag Cleanup
-		#############################
+	}
+	option = {
+		name = "EVTOPTADUELOUTPUT1"
+				
+		#####################
+		# Tournament Jousts #
+		#####################
+		trigger = {
+			has_character_flag = tournament_jouster
+		}
+		if = {
+			limit = {
+				has_character_flag = flag_spared_opponent
+			}
+			character_event = { id = joust.10 } #Clean win
+		}
+		if = {
+			limit = {
+				has_character_flag = flag_wounded_opponent
+			}
+			character_event = { id = joust.11 } #Wounded loser
+		}
+		if = {
+			limit = {
+				has_character_flag = flag_maimed_opponent
+			}
+			character_event = { id = joust.12 } #Maimed loser
+		}
+		if = {
+			limit = {
+				has_character_flag = flag_killed_opponent
+			}
+			character_event = { id = joust.13 } #Killed loser
+		}
+		# End of tournament jousts block
+		################################
+		clr_character_flag = tournament_jouster
 		clr_character_flag = flag_duel_friendly
-		FROM = { clr_character_flag = flag_duel_friendly }
 		clr_character_flag = flag_duel_to_the_death
-		FROM = { clr_character_flag = flag_duel_to_the_death }
 		clr_character_flag = flag_duel_tourney
-		FROM = { clr_character_flag = flag_duel_tourney }
-		#############################
-		# Clear kill/mercy flags
 		clr_character_flag = flag_killed_opponent
-		FROM = { clr_character_flag = flag_killed_opponent }
 		clr_character_flag = flag_wounded_opponent
-		FROM = { clr_character_flag = flag_wounded_opponent }
 		clr_character_flag = flag_maimed_opponent
-		FROM = { clr_character_flag = flag_maimed_opponent }
 		clr_character_flag = flag_spared_opponent
-		FROM = { clr_character_flag = flag_spared_opponent }
+		event_target:round_loser = {
+			clr_character_flag = tournament_jouster
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_spared_opponent
+		}
 	}
 }
 
@@ -695,21 +761,27 @@ character_event = {
 		#############################
 		# Special Context Flag Cleanup
 		#############################
-		clr_character_flag = flag_duel_friendly
-		FROM = { clr_character_flag = flag_duel_friendly }
-		clr_character_flag = flag_duel_to_the_death
-		FROM = { clr_character_flag = flag_duel_to_the_death }
-		clr_character_flag = flag_duel_tourney
-		FROM = { clr_character_flag = flag_duel_tourney }
-		#############################
-		# Clear kill/mercy flags
-		clr_character_flag = flag_killed_opponent
-		FROM = { clr_character_flag = flag_killed_opponent }
-		clr_character_flag = flag_wounded_opponent
-		FROM = { clr_character_flag = flag_wounded_opponent }
-		clr_character_flag = flag_maimed_opponent
-		FROM = { clr_character_flag = flag_maimed_opponent }
-		clr_character_flag = flag_spared_opponent
-		FROM = { clr_character_flag = flag_spared_opponent }
+		event_target:duel_challenger = {
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_spared_opponent
+		}
+		event_target:duel_challenged = {
+			clr_character_flag = flag_duel_friendly
+			clr_character_flag = flag_duel_to_the_death
+			clr_character_flag = flag_duel_tourney
+			clr_character_flag = flag_killed_opponent
+			clr_character_flag = flag_wounded_opponent
+			clr_character_flag = flag_maimed_opponent
+			clr_character_flag = flag_spared_opponent
+		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = round_winner
+		clear_event_target = round_loser
 	}
 }
