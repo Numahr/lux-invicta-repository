@@ -10097,6 +10097,28 @@ character_event = {
 			has_character_flag = attending_tournament
 		}
 	}
+	immediate = {
+		save_event_target_as = duel_challenger
+		random_rival = {
+			limit = {
+				war = no
+				in_command = no
+				is_female = no
+				same_liege = ROOT
+				prisoner = no
+				NOT = {
+					liege = {
+						character = ROOT
+					}
+				}
+				has_character_flag = attending_tournament
+			}
+			save_event_target_as = duel_challenged
+		}
+		liege = {
+			save_event_target_as = rival_duel_liege
+		}
+	}
 	
 	mean_time_to_happen = {
 		months = 200
@@ -10138,22 +10160,10 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA100420
-		random_rival = {
-			limit = {
-				war = no
-				in_command = no
-				same_liege = ROOT
-				prisoner = no
-				NOT = {
-					liege = {
-						character = ROOT
-					}
-				}
-				has_character_flag = attending_tournament
-			}
+		event_target:duel_challenged = {
 			set_character_flag = tournament_cheater
 		}
-		liege = {
+		event_target:rival_duel_liege = {
 			character_event = {
 				id = 100421
 				days = 2
@@ -10164,19 +10174,7 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB100420
-		random_rival = {
-			limit = {
-				war = no
-				in_command = no
-				same_liege = ROOT
-				prisoner = no
-				NOT = {
-					liege = {
-						character = ROOT
-					}
-				}
-				has_character_flag = attending_tournament
-			}
+		event_target:duel_challenged = {
 			opinion = {
 				modifier = opinion_angry
 				who = ROOT
@@ -10192,25 +10190,13 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTC100420
-		random_rival = {
-			limit = {
-				war = no
-				in_command = no
-				same_liege = ROOT
-				prisoner = no
-				NOT = {
-					liege = {
-						character = ROOT
-					}
-				}
-				has_character_flag = attending_tournament
-			}
+		event_target:duel_challenged = {
 			reverse_opinion = {
 				modifier = opinion_disgraceful
 				who = ROOT
 				years = 10
 			}
-			liege = {
+			event_target:rival_duel_liege = {
 				any_vassal = {
 					limit = {
 						prisoner = no
@@ -10241,6 +10227,9 @@ character_event = {
 	option = {
 		name = EVTOPTD100420
 		prestige = -10
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = rival_duel_liege
 	}
 }
 
@@ -10273,19 +10262,16 @@ character_event = {
 				}
 			}
 		}
-		FROM = {
-			random_rival = {
-				limit = {
-					has_character_flag = tournament_cheater
-				}
-				clr_character_flag = tournament_cheater
-				clr_character_flag = attending_tournament
-				imprison = ROOT
-				character_event = {
-					id = 100424
-					tooltip = EVTTOOLTIP100424
-				}
+		event_target:duel_challenged = {
+			clr_character_flag = tournament_cheater
+			clr_character_flag = attending_tournament
+			imprison = ROOT
+			character_event = {
+				id = 100424
+				tooltip = EVTTOOLTIP100424
 			}
+		}
+		event_target:duel_challenger = {
 			set_character_flag = rival_imprisoned
 			hidden_tooltip = {
 				character_event = {
@@ -10298,19 +10284,16 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB100421
-		FROM = {
-			random_rival = {
-				limit = {
-					has_character_flag = tournament_cheater
-				}
-				clr_character_flag = tournament_cheater
-				clr_character_flag = attending_tournament
-				banish = yes
-				character_event = {
-					id = 100425
-					tooltip = EVTTOOLTIP100425
-				}
+		event_target:duel_challenged = {
+			clr_character_flag = tournament_cheater
+			clr_character_flag = attending_tournament
+			banish = yes
+			character_event = {
+				id = 100425
+				tooltip = EVTTOOLTIP100425
 			}
+		}
+		event_target:duel_challenger = {
 			set_character_flag = rival_banished
 			hidden_tooltip = {
 				character_event = {
@@ -10342,7 +10325,7 @@ character_event = {
 				}
 			}
 		}
-		FROM = {
+		event_target:duel_challenger = {
 			opinion = {
 				modifier = opinion_disappointed
 				who = ROOT
@@ -10372,7 +10355,7 @@ character_event = {
 		tooltip = {
 			opinion = {
 				modifier = opinion_angry
-				who = FROM
+				who = event_target:duel_challenger
 				years = 10
 			}
 		}
@@ -10382,14 +10365,14 @@ character_event = {
 		tooltip = {
 			opinion = {
 				modifier = opinion_angry
-				who = FROM
+				who = event_target:duel_challenger
 				years = 10
 			}
 		}
 		set_character_flag = tournament_cheater_duel_accused
 		set_character_flag = flag_duel_friendly
-		FROM = { set_character_flag = tournament_cheater_duel_accuser }
-		FROM = { set_character_flag = flag_duel_friendly }
+		event_target:duel_challenger = { set_character_flag = tournament_cheater_duel_accuser }
+		event_target:duel_challenger = { set_character_flag = flag_duel_friendly }
 		character_event = {
 			id = 100427
 			days = 2
@@ -10410,7 +10393,7 @@ character_event = {
 	option = {
 		name = EVTOPTA100423
 		scaled_wealth = -0.25
-		liege = {
+		event_target:rival_duel_liege = {
 			any_vassal = {
 				limit = {
 					prisoner = no
@@ -10419,6 +10402,9 @@ character_event = {
 				remove_opinion = { who = ROOT modifier = opinion_disgraceful }
 			}
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = rival_duel_liege
 	}
 	option = {
 		name = EVTOPTB100423
@@ -10437,11 +10423,11 @@ character_event = {
 	option = {
 		name = EVTOPTA100424
 		tooltip = {
-			imprison = FROM
+			imprison = event_target:rival_duel_liege
 		}
 		opinion = {
 			modifier = opinion_revenge_seeker
-			who = FROMFROM
+			who = event_target:duel_challenger
 			years = 10
 		}
 	}
@@ -10462,7 +10448,7 @@ character_event = {
 		}
 		opinion = {
 			modifier = opinion_furious
-			who = FROMFROM
+			who = event_target:duel_challenger
 			years = 10
 		}		
 	}
@@ -10488,9 +10474,12 @@ character_event = {
 		}
 		opinion = {
 			modifier = opinion_disappointed
-			who = FROM
+			who = event_target:rival_duel_liege
 			years = 5
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = rival_duel_liege
 	}
 	option = {
 		name = EVTOPTB100426
@@ -10503,9 +10492,12 @@ character_event = {
 		clr_character_flag = rival_imprisoned
 		opinion = {
 			modifier = opinion_glad
-			who = FROM
+			who = event_target:rival_duel_liege
 			years = 5
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = rival_duel_liege
 	}
 	option = {
 		name = EVTOPTC100426
@@ -10518,9 +10510,12 @@ character_event = {
 		clr_character_flag = rival_banished
 		opinion = {
 			modifier = opinion_glad
-			who = FROM
+			who = event_target:rival_duel_liege
 			years = 5
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = rival_duel_liege
 	}
 }
 
@@ -10542,10 +10537,10 @@ character_event = {
 		prestige = -20
 		reverse_opinion = {
 			modifier = opinion_coward
-			who = FROM
+			who = event_target:duel_challenger
 			years = 10
 		}
-		FROM = {
+		event_target:duel_challenger = {
 			character_event = {
 				id = 100429
 				tooltip = EVTTOOLTIP100429
@@ -10562,6 +10557,9 @@ character_event = {
 			}
 			add_trait = craven
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = rival_duel_liege
 	}
 }
 
