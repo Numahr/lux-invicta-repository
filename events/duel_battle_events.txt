@@ -51,15 +51,15 @@ character_event = { # Battlefield Duel Start
             trait = craven
         }
     }
-   trigger = {
+	trigger = {
 		# Avoid crossing targets
-       FROM = {
-            liege = {
-                OR = {
-                    any_realm_character = {
-                        in_battle = yes
-                        at_location = ROOT
-                        NOT = { has_character_modifier = battlefield_fight }
+		FROM = {
+			liege = {
+				OR = {
+					any_realm_character = {
+						in_battle = yes
+						at_location = ROOT
+						NOT = { has_character_modifier = battlefield_fight }
 						# Restrict to Heroic cultures
 						OR = {
 							culture = irish
@@ -113,7 +113,7 @@ character_event = { # Battlefield Duel Start
 							religion = teiwaz_reformed 
 							religion = zande_pagan_reformed
 						}
-                   }
+					}
 					AND = {
 						in_battle = yes
 						at_location = ROOT
@@ -172,9 +172,9 @@ character_event = { # Battlefield Duel Start
 							religion = zande_pagan_reformed
 						}
 					}
-                }
-            }
-        }
+				}
+			}
+		}
 		OR = {
 			culture = irish
 			culture = norsegael
@@ -228,16 +228,16 @@ character_event = { # Battlefield Duel Start
 			religion = zande_pagan_reformed
 		}
 		NOT = { has_character_modifier = battlefield_fight }
-		NOT = { trait = duel_target }
 	}
 	
 	immediate = {
-        # Target lock
+		# Target lock
 		add_character_modifier = {
 			name = battlefield_fight
 			duration = 20
 		}
-        FROM = {
+		save_event_target_as = duel_challenger
+		FROM = {
             liege = {
                 if = {
                     limit = {
@@ -245,15 +245,13 @@ character_event = { # Battlefield Duel Start
                             in_battle = yes
                             at_location = ROOT
                             NOT = { has_character_modifier = battlefield_fight }
-							NOT = { trait = duel_target }
-                        }
+                       }
 						any_realm_character = {
 							in_battle = yes
 							at_location = ROOT
 							prisoner = no
 							is_alive = yes		
 							NOT = { has_character_modifier = battlefield_fight }
-							NOT = { trait = duel_target }
 						}
 					}
 					random_realm_character = {
@@ -287,8 +285,7 @@ character_event = { # Battlefield Duel Start
 								}
 							}
                         }
-                        opinion = { who = ROOT modifier = opinion_battle_duel_target }
-                        reverse_opinion = { who = ROOT modifier = opinion_battle_duel_target }
+                        save_event_target_as = duel_challenged
                         add_character_modifier = {
                             name = battlefield_fight
                             duration = 20
@@ -299,20 +296,12 @@ character_event = { # Battlefield Duel Start
                 if = {
                     limit = {
                         NOT = {
-                            any_realm_character = {
-                                in_battle = yes
-                                at_location = ROOT
-                                NOT = { has_character_modifier = battlefield_fight }
-								NOT = { trait = duel_target }
-                            }
-                        }
-						in_battle = yes
-						at_location = ROOT
-						NOT = { has_character_modifier = battlefield_fight }
-						NOT = { trait = duel_target }
-                    }
-                    opinion = { who = ROOT modifier = opinion_battle_duel_target }
-                    reverse_opinion = { who = ROOT modifier = opinion_battle_duel_target }
+                            event_target:duel_challenged = {
+								always = yes
+							}
+						}
+					}
+                    save_event_target_as = duel_challenged
                     add_character_modifier = {
                         name = battlefield_fight
                         duration = 20
@@ -321,26 +310,23 @@ character_event = { # Battlefield Duel Start
                 }
                 if = {
                     limit = {
-						NOT = { ROOT = { has_character_flag = duel_engaged } }
+						NOT = { event_target:duel_challenged = { always = yes } }
 						any_realm_character = {
 							in_battle = yes
 							at_location = ROOT
 							prisoner = no
 							is_alive = yes		
 							NOT = { has_character_modifier = battlefield_fight }
-							NOT = { trait = duel_target }
 						}
 						in_battle = yes
 						at_location = ROOT
 						prisoner = no
 						is_alive = yes		
 						NOT = { has_character_modifier = battlefield_fight }
-						NOT = { trait = duel_target }
 					}
                     random_list = {
                         10 = {
-							opinion = { who = ROOT modifier = opinion_battle_duel_target }
-							reverse_opinion = { who = ROOT modifier = opinion_battle_duel_target }
+							save_event_target_as = duel_challenged
                             add_character_modifier = {
                                 name = battlefield_fight
                                 duration = 20
@@ -352,10 +338,8 @@ character_event = { # Battlefield Duel Start
                                     in_battle = yes
                                     at_location = ROOT
                                     NOT = { has_character_modifier = battlefield_fight }
-									NOT = { trait = duel_target }
                                 }
-                                opinion = { who = ROOT modifier = opinion_battle_duel_target }
-								reverse_opinion = { who = ROOT modifier = opinion_battle_duel_target }
+                                save_event_target_as = duel_challenged
                                 add_character_modifier = {
                                     name = battlefield_fight
                                     duration = 20
@@ -371,19 +355,10 @@ character_event = { # Battlefield Duel Start
 	
 	option = {
 		name = "EVTOPTA5556000"
-        FROM = {
-            liege = {
-                random_realm_character = {
-                    limit = { has_opinion_modifier = { who = ROOT modifier = opinion_battle_duel_target } }
-					hidden_tooltip = { character_event = { id = duel_be.1 } }
-                }
-                if = {
-                    limit = { has_opinion_modifier = { who = ROOT modifier = opinion_battle_duel_target } }
-                    hidden_tooltip = { character_event = { id = duel_be.1 } }
-                }
-            }
-        }
-    }
+        event_target:duel_challenged = {
+			hidden_tooltip = { character_event = { id = duel_be.1 } }
+		}
+	}
 }
 
 character_event = {
@@ -393,15 +368,9 @@ character_event = {
 	border = "GFX_event_normal_frame_war"
 	is_triggered_only = yes
 	
-	immediate = {
-		# Remove targeting information
-		remove_opinion = { who = FROM modifier = opinion_battle_duel_target }
-		reverse_remove_opinion = { who = FROM modifier = opinion_battle_duel_target }
-	}
-	
 	option = {
 		name = "EVTOPTA5556001"
-		FROM = { character_event = { id = duel_be.2 tooltip = "EVTTOOLTIP5556002" } }
+		event_target:duel_challenger = { character_event = { id = duel_be.2 tooltip = "EVTTOOLTIP5556002" } }
 		ai_chance = {
 			factor = 100
 			modifier = {
@@ -445,10 +414,10 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTB5556001"
-		hidden_tooltip = { FROM = { character_event = { id = duel_be.3 } } }
+		hidden_tooltip = { event_target:duel_challenger = { character_event = { id = duel_be.3 } } }
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenger = {
 					NOT = { trait = poor_warrior }
 					NOT = { trait = trained_warrior }
 					NOT = { trait = skilled_warrior }
@@ -463,7 +432,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenger = {
 					trait = poor_warrior
 				}
 				NOT = { trait = craven }
@@ -475,7 +444,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenger = {
 					trait = trained_warrior
 				}
 				NOT = { trait = craven }
@@ -487,7 +456,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenger = {
 					trait = skilled_warrior
 				}
 				NOT = { trait = craven }
@@ -499,7 +468,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenger = {
 					trait = master_warrior
 				}
 				NOT = { trait = craven }
@@ -514,27 +483,27 @@ character_event = {
 			factor = 100
 			modifier = {
 				factor = 2
-				FROM = { trait = poor_warrior }
+				event_target:duel_challenger = { trait = poor_warrior }
 			}
 			modifier = {
 				factor = 3
-				FROM = { trait = trained_warrior }
+				event_target:duel_challenger = { trait = trained_warrior }
 			}
 			modifier = {
 				factor = 4
-				FROM = { trait = skilled_warrior }
+				event_target:duel_challenger = { trait = skilled_warrior }
 			}
 			modifier = {
 				factor = 5
-				FROM = { trait = master_warrior }
+				event_target:duel_challenger = { trait = master_warrior }
 			}
 			modifier = {
 				factor = 3
-				FROM = { trait = duelist }
+				event_target:duel_challenger = { trait = duelist }
 			}
 			modifier = {
 				factor = 2
-				FROM = { trait = strong }
+				event_target:duel_challenger = { trait = strong }
 			}
 			modifier = {
 				factor = 10
@@ -601,7 +570,7 @@ character_event = {
 		
 		# Set context flags for duel
 		set_character_flag = flag_battlefield_duel
-		FROM = { set_character_flag = flag_battlefield_duel }
+		event_target:duel_challenged = { set_character_flag = flag_battlefield_duel }
 		
 		# Begin duel
 		hidden_tooltip = { e_rebels = { holder_scope = { character_event = { id = duel.1 } } } }
@@ -648,10 +617,10 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTB5556002"
-		hidden_tooltip = { FROM = { character_event = { id = duel_be.4 } } }
+		hidden_tooltip = { event_target:duel_challenged = { character_event = { id = duel_be.4 } } }
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenged = {
 					NOT = { trait = poor_warrior }
 					NOT = { trait = trained_warrior }
 					NOT = { trait = skilled_warrior }
@@ -666,7 +635,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenged = {
 					trait = poor_warrior
 				}
 				NOT = { trait = craven }
@@ -678,7 +647,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenged = {
 					trait = trained_warrior
 				}
 				NOT = { trait = craven }
@@ -690,7 +659,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenged = {
 					trait = skilled_warrior
 				}
 				NOT = { trait = craven }
@@ -702,7 +671,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:duel_challenged = {
 					trait = master_warrior
 				}
 				NOT = { trait = craven }
@@ -801,6 +770,8 @@ character_event = {
 	option = {
 		name = "EVTOPTA5556003"
 		morale = 0.1
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
 	}
 }
 
@@ -814,6 +785,8 @@ character_event = {
 	option = {
 		name = "EVTOPTA5556004"
 		morale = 0.1
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
 	}
 }
 
@@ -828,7 +801,7 @@ character_event = {
 		name = "EVTOPTA5556005"
 		if = {
 			limit = {
-				FROM = {
+				event_target:round_winner = {
 					NOT = { trait = poor_warrior }
 					NOT = { trait = trained_warrior }
 					NOT = { trait = skilled_warrior }
@@ -843,7 +816,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:round_winner = {
 					trait = poor_warrior
 				}
 				NOT = { trait = craven }
@@ -855,7 +828,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:round_winner = {
 					trait = trained_warrior
 				}
 				NOT = { trait = craven }
@@ -867,7 +840,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:round_winner = {
 					trait = skilled_warrior
 				}
 				NOT = { trait = craven }
@@ -879,7 +852,7 @@ character_event = {
 		}
 		if = {
 			limit = {
-				FROM = {
+				event_target:round_winner = {
 					trait = master_warrior
 				}
 				NOT = { trait = craven }
@@ -890,6 +863,8 @@ character_event = {
 			}
 		}
 		morale = -0.1
+		clear_event_target = round_winner
+		clear_event_target = round_loser
 	}
 }
 
@@ -903,10 +878,11 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA5556100"
-		random_current_enemy = {
-			limit = { at_location = ROOT }
+		event_target:round_loser = {
 			morale = -0.2
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
 	}
 }
 
@@ -920,7 +896,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA5556101"
 		hidden_tooltip = {
-			FROMFROM = { character_event = { id = duel_be.102 } }
+			event_target:round_loser = { character_event = { id = duel_be.102 } }
 		}
 	}
 }
@@ -934,14 +910,16 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA5556102"
-		imprison = FROM
+		imprison = event_target:round_winner
 		set_character_flag = captured_in_battle
 		hidden_tooltip = {
-			FROM = {
+			event_target:round_winner = {
 				character_event = { 
 					id = 50020 # "imprisoned_events.txt"
 				}
 			}
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
 	}
 }
