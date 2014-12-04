@@ -17489,6 +17489,11 @@ character_event = {
 		}
 		in_command = yes
         in_battle = yes
+		any_current_enemy = {
+			at_location = ROOT
+			in_command = yes
+			in_battle = yes
+		}
 	}
 	
 	weight_multiplier = {
@@ -17498,12 +17503,14 @@ character_event = {
 	option = {
 		name = EVTOPTAlux_lubu.10
 		prestige = 100
+		save_event_target_as = duel_challenger
 		any_current_enemy = {
 			limit = {
 				at_location = ROOT
 				in_command = yes
 				in_battle = yes
 			}
+			save_event_target_as = duel_challenged
 			character_event = { id = lux_lubu.20 }
 		}
 	}
@@ -17528,7 +17535,7 @@ character_event = {
 		prestige = 100
 		set_character_flag = lubu_duel #this is the guy who faces Lu Bu
 		set_character_flag = flag_duel_to_the_death
-		FROM  = {
+		event_target:duel_challenger  = {
 			set_character_flag = lubu_duel_target #and this is Lu Bu
 			set_character_flag = flag_duel_to_the_death
 			character_event = { id = lux_lubu.21 }
@@ -17540,6 +17547,8 @@ character_event = {
 		prestige = -100
 		troops = -0.3
 		morale = -0.3
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
 	}
 }
 # Lu Bu is challenged (Calling duel engine...)
@@ -17570,10 +17579,11 @@ character_event = {
 		name = "EVTOPTAlux_lubu.22"
 		prestige = 200
         morale = 0.5 
-		random_current_enemy = {
-			limit = { at_location = ROOT }
+		event_target:round_loser = {
 			morale = -0.2
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
 	}
 }
 
@@ -17591,8 +17601,7 @@ character_event = {
 		name = "EVTOPTAlux_lubu.23"
 		prestige = 600 #Well, he just killed Lu Bu
         morale = 0.3
-		random_current_enemy = {
-			limit = { at_location = ROOT }
+		event_target:round_loser = {
 			morale = -0.2
 		}
 	}
