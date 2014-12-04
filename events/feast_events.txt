@@ -2026,11 +2026,13 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA72030"
+		save_event_target_as = duel_challenger
 		any_liege = {
 			limit = {
 				has_character_flag = host_feast_started
 				has_character_modifier = holding_large_feast
 			}
+			save_event_target_as = feast_duel_host
 			set_character_flag = feast_duel
 			random_vassal = {
 				limit = {
@@ -2053,6 +2055,7 @@ character_event = {
 						trait = maimed
 					}
 				}
+				save_event_target_as = duel_challenged
 				character_event = {
 					id = 72031
 					tooltip = "EVTTOOLTIP72031"
@@ -2208,20 +2211,16 @@ character_event = {
 		}
 
 		hidden_tooltip = {
-			FROM = {
-				any_liege = {
-					limit = {
-						has_character_flag = host_feast_started
-						has_character_modifier = holding_large_feast
-						has_character_flag = feast_duel
-					}
-					character_event = {
-						id = 72039
-						days = 1
-					}
+			event_target:feast_duel_host = {
+				character_event = {
+					id = 72039
+					days = 1
 				}
 			}
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = feast_duel_host
 	}
 }
 
@@ -2238,15 +2237,10 @@ character_event = {
 		trigger = {
 			has_character_flag = wounded_opponent
 		}
-		FROM = {
-			clr_character_flag = wounded_opponent
-			clr_character_flag = maimed_opponent
-		}
-		any_liege = {
-			limit = {
-				has_character_flag = host_feast_started
-				has_character_modifier = holding_large_feast
-			}
+		clr_character_flag = wounded_opponent
+		clr_character_flag = maimed_opponent
+		clr_character_flag = killed_opponent
+		event_target:feast_duel_host = {
 			character_event = {
 				id = 72036
 				tooltip = "EVTTOOLTIP72036"
@@ -2261,21 +2255,13 @@ character_event = {
 		trigger = {
 			has_character_flag = maimed_opponent
 		}
-		FROM = {
-			clr_character_flag = wounded_opponent
-			clr_character_flag = maimed_opponent
-		}
-		any_liege = {
-			limit = {
-				has_character_flag = host_feast_started
-				has_character_modifier = holding_large_feast
-			}
+		clr_character_flag = maimed_opponent
+		event_target:feast_duel_host = {
 			character_event = {
 				id = 72037
 				tooltip = "EVTTOOLTIP72037"
 			}
 		}
-		clr_character_flag = maimed_opponent
 		change_martial = 2
 	}
 
@@ -2286,11 +2272,7 @@ character_event = {
 		}
 		clr_character_flag = killed_opponent
 		change_martial = 3
-		any_liege = {
-			limit = {
-				has_character_flag = host_feast_started
-				has_character_modifier = holding_large_feast
-			}
+		event_target:feast_duel_host = {
 			character_event = {
 				id = 72035
 				tooltip = "EVTTOOLTIP72035"
@@ -2299,7 +2281,7 @@ character_event = {
 	}
 }
 
-#Duel: The End
+#Duel: The End (No harm)
 character_event = {
 	id = 72034
 	desc = "EVTDESC72034"
@@ -2311,22 +2293,21 @@ character_event = {
 		name = "EVTOPTA72034"
 		opinion = {
 			modifier = opinion_dislike
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
-		FROM = {
-			FROM = {
-				reverse_opinion = {
-					modifier = opinion_dislike
-					who = Root
-					years = 10
-				}
-			}
+		reverse_opinion = {
+			modifier = opinion_dislike
+			who = event_target:round_winner
+			years = 10
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = feast_duel_host
 	}
 }
 
-#Duel: The End
+#Duel: The End (loser killed)
 character_event = {
 	id = 72035
 	desc = "EVTDESC72035"
@@ -2338,25 +2319,34 @@ character_event = {
 		name = "EVTOPTA72035"
 		opinion = {
 			modifier = opinion_dislike
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = feast_duel_host
 	}
 	option = {
 		name = "EVTOPTB72035"
 		opinion = {
 			modifier = opinion_satisfied
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = feast_duel_host
 	}
 	option = {
 		name = "EVTOPTC72035"
 		reverse_opinion = {
 			modifier = opinion_dislike
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = feast_duel_host
 	}
 }
 
@@ -2372,25 +2362,34 @@ character_event = {
 		name = "EVTOPTA72036"
 		opinion = {
 			modifier = opinion_dislike
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = feast_duel_host
 	}
 	option = {
 		name = "EVTOPTB72036"
 		opinion = {
 			modifier = opinion_satisfied
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = feast_duel_host
 	}
 	option = {
 		name = "EVTOPTC72036"
 		reverse_opinion = {
 			modifier = opinion_dislike
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = feast_duel_host
 	}
 }
 
@@ -2406,7 +2405,7 @@ character_event = {
 		name = "EVTOPTA72037"
 		opinion = {
 			modifier = opinion_dislike
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
 	}
@@ -2414,7 +2413,7 @@ character_event = {
 		name = "EVTOPTB72037"
 		opinion = {
 			modifier = opinion_satisfied
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
 	}
@@ -2422,7 +2421,7 @@ character_event = {
 		name = "EVTOPTC72037"
 		reverse_opinion = {
 			modifier = opinion_dislike
-			who = FROM
+			who = event_target:round_winner
 			years = 10
 		}
 	}
