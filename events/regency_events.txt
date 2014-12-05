@@ -1842,6 +1842,16 @@ character_event = {
 		is_ill = no
 	}
 	
+	immediate = {
+		save_event_target_as = duel_challenger
+		liege = {
+			save_event_target_as = regency_duel_liege
+			regent = {
+				save_event_target_as = duel_challenged
+			}
+		}
+	}
+	
 	mean_time_to_happen = {
 		months = 480
 		modifier = {
@@ -1875,38 +1885,29 @@ character_event = {
 		tooltip_info = duelist
 		trigger = { trait = duelist }
 		ai_chance = { factor = 60 }
-		liege = {
-			random_courtier = {
-				limit = { has_minor_title = title_regent }
-				character_event = {	
-					id = 61221 
-					tooltip = EVTTOOLTIP61221
-					days = 2
-				}
+		event_target:duel_challenged = {
+			character_event = {	
+				id = 61221 
+				tooltip = EVTTOOLTIP61221
+				days = 2
 			}
 		}
 	}
 	option = { # Try to grab Regency
 		name = EVTOPTB61215
 		ai_chance = { factor = 30 }
-		liege = {
-			random_courtier = {
-				limit = { has_minor_title = title_regent }
-				character_event = {	id = 61216 tooltip = EVTTOOLTIP61216 }
-			}
+		event_target:duel_challenged = {
+			character_event = {	id = 61216 tooltip = EVTTOOLTIP61216 }
 		}
 	}
 	option = { # Never mind
 		name = EVTOPTC61215
 		ai_chance = { factor = 10 }
-		liege = {
-			random_courtier = {
-				limit = { has_minor_title = title_regent }
-				opinion = {
-					who = ROOT
-					modifier = opinion_glad
-					years = 2
-				}
+		event_target:duel_challenged = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_glad
+				years = 2
 			}
 		}
 	}
@@ -1927,7 +1928,7 @@ character_event = {
 		ai_chance = {
 			factor = 80
 		}
-		FROM = {
+		event_target:duel_challenger = {
 			character_event = {	id = 61222 tooltip = EVTTOOLTIP61221 }
 		}
 	}
@@ -1940,7 +1941,7 @@ character_event = {
 			50 = { # Remains Regent
 				character_event = {	id = 61219 tooltip = EVTTOOLTIP61219 }
 				hidden_tooltip = {
-					FROM = {
+					event_target:duel_challenger = {
 						character_event = {	id = 61218 }
 					}
 				}
@@ -1948,21 +1949,27 @@ character_event = {
 			50 = { # Loses Regency
 				character_event = {	id = 61220 tooltip = EVTTOOLTIP61220 }
 				hidden_tooltip = {
-					FROM = {
+					event_target:duel_challenger = {
 						character_event = {	id = 61217 }
 					}
 				}
 			}
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = regency_duel_liege
 	}
 	option = {
 		name = EVTOPTC61216
 		ai_chance = {
 			factor = 0
 		}
-		FROM = {
+		event_target:duel_challenger = {
 			character_event = {	id = 61217 tooltip = EVTTOOLTIP61217 }
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = regency_duel_liege
 	}
 }
 
@@ -1978,7 +1985,7 @@ character_event = {
 		name = EVTOPTA61217
 		give_minor_title = title_regent
 		hidden_tooltip = {
-			liege = {
+			event_target:regency_duel_liege = {
 				character_event = {	id = 61236 }
 			}
 		}
@@ -1996,16 +2003,16 @@ character_event = {
 	option = {
 		name = EVTOPTA61218
 		prestige = -40
-		liege = {
-			random_courtier = {
-				limit = { has_minor_title = title_regent }
-				opinion = {
-					who = ROOT
-					modifier = opinion_angry
-					years = 3
-				}
+		duel_challenged = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_angry
+				years = 3
 			}
 		}
+		clear_event_target = duel_challenger
+		clear_event_target = duel_challenged
+		clear_event_target = regency_duel_liege
 	}
 }
 
@@ -2048,7 +2055,7 @@ character_event = {
 	option = { # Accept
 		name = EVTOPTA61221
 		ai_chance = { factor = 80 }
-		FROM = {
+		event_target:duel_challenger = {
 			set_character_flag = duelist_courtier
 		}
 		set_character_flag = duelist_courtier
@@ -2069,7 +2076,7 @@ character_event = {
 			}
 		}
 		hidden_tooltip = {
-			FROM = {
+			event_target:duel_challenger = {
 				character_event = {	id = 61245 }
 			}
 		}
@@ -2078,9 +2085,9 @@ character_event = {
 		name = EVTOPTC61221
 		ai_chance = { factor = 20 }
 		prestige = -20
-		FROM = { give_minor_title = title_regent }
+		event_target:duel_challenger = { give_minor_title = title_regent }
 		hidden_tooltip = {
-			FROM = {
+			event_target:duel_challenger = {
 				character_event = {	id = 61246 }
 			}
 		}
@@ -2100,11 +2107,8 @@ character_event = {
 		ai_chance = { factor = 100 }
 		set_character_flag = duelist_courtier
 		set_character_flag = flag_duel_to_the_death
-		liege = {
-			random_courtier = {
-				limit = { has_minor_title = title_regent }
-				set_character_flag = duelist_courtier
-			}
+		duel_challenged = {
+			set_character_flag = duelist_courtier
 		}
 		e_rebels = { holder_scope = { character_event = { id = duel.1 } } }
 	}
@@ -2125,12 +2129,9 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA61225
-		liege = {
-			random_courtier = {
-				limit = { has_character_flag = duelist_courtier }
-				character_event = {	id = 61232 tooltip = EVTTOOLTIP61232 }
-				clr_character_flag = duelist_courtier
-			}
+		event_target:round_loser = {
+			character_event = {	id = 61232 tooltip = EVTTOOLTIP61232 }
+			clr_character_flag = duelist_courtier
 		}
 		prestige = 20
 	}
@@ -2147,24 +2148,18 @@ character_event = {
 	option = {
 		name = EVTOPTA61226 #Spare opponent
 		ai_chance = { factor = 80 }
-		liege = {
-			random_courtier = {
-				limit = { has_character_flag = duelist_courtier }
-				character_event = {	id = 61230 tooltip = EVTTOOLTIP61230 }
-				clr_character_flag = duelist_courtier
-			}
+		event_target:round_loser = {
+			character_event = {	id = 61230 tooltip = EVTTOOLTIP61230 }
+			clr_character_flag = duelist_courtier
 		}
 		piety = 40
 	}
 	option = {
 		name = EVTOPTB61226 #Kill opponent
 		ai_chance = { factor = 20 }
-		liege = {
-			random_courtier = {
-				limit = { has_character_flag = duelist_courtier }
-				character_event = {	id = 61232 tooltip = EVTTOOLTIP61232 }
-				clr_character_flag = duelist_courtier
-			}
+		event_target:round_loser = {
+			character_event = {	id = 61232 tooltip = EVTTOOLTIP61232 }
+			clr_character_flag = duelist_courtier
 		}
 		prestige = 20
 	}
@@ -2270,6 +2265,9 @@ character_event = {
 		name = EVTOPTA61230
 		add_trait = maimed
 		prestige = -20
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = regency_duel_liege
 	}
 }
 
@@ -2287,6 +2285,9 @@ character_event = {
 			death_reason = death_duel
 			killer = FROM
 		}
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = regency_duel_liege
 	}
 }
 
@@ -2327,6 +2328,9 @@ character_event = {
 	option = {
 		name = EVTOPTA61245
 		prestige = 20
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = regency_duel_liege
 	}
 }
 
@@ -2341,6 +2345,9 @@ character_event = {
 	option = {
 		name = EVTOPTA61246
 		prestige = 20
+		clear_event_target = round_winner
+		clear_event_target = round_loser
+		clear_event_target = regency_duel_liege
 	}
 }
 
