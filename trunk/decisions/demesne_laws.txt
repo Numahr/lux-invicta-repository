@@ -1,6 +1,1668 @@
 # Demesne type (de facto) laws (set for the PRIMARY title in a demesne but affects the whole demesne)
 # credits: PB for the Slider/Obligation laws, NM for the Disposition laws
 laws = {
+
+# Revised Centralization (general)
+	centralization_0 = {
+		show_as_title = yes
+		group = centralization
+		#default = yes
+
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+					OR = { #Clanic Authority religions
+						religion = celtic_christ
+						religion = inuit_pagan
+						religion = norse_christ
+						religion = sol_norse
+						religion = sol_slav
+						AND = {
+							is_reformed_religion = no
+							OR = {
+								religion_group = norsegerman_group
+								religion_group = celtic_group
+								religion_group = finnish_group
+								religion_group = slavic_group
+								religion_group = baltic_group
+								religion_group = tengri_group
+								AND = {
+									religion_group = serer_group
+									NOT = {
+										religion = yoruba
+									}
+								}
+								AND = {
+									religion_group = bantu_group
+									NOT = {
+										religion = nyau
+										religion = mwari
+									}
+								}
+							}
+						}
+					}	
+				}
+			}
+		}
+		allow = {
+			has_law = centralization_1
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.8
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					OR = {
+						AND = {
+							has_law = centralization_1
+							over_vassal_limit = -1
+							over_max_demesne_size = -1
+						}
+						AND = {
+							has_law = centralization_2
+							over_vassal_limit = -6
+							over_max_demesne_size = -2
+						}
+						AND = {
+							has_law = centralization_3
+							over_vassal_limit = -11
+							over_max_demesne_size = -3
+						}
+						AND = {
+							has_law = centralization_4
+							over_vassal_limit = -16
+							over_max_demesne_size = -4
+						}					
+					}
+				}
+			}
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		effect = {
+			hidden_tooltip = {
+				revoke_law = centralization_0
+				revoke_law = centralization_1
+				revoke_law = centralization_2
+				revoke_law = centralization_3
+				revoke_law = centralization_4
+				if = {
+					limit = {
+						has_law = tolerance_2
+					}
+					revoke_law = tolerance_2
+					add_law = tolerance_1
+				}
+			}
+#			set_appoint_regents = no
+			set_the_kings_peace = no
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = no
+#			set_allow_free_infidel_revokation = no
+#			set_allow_free_revokation = no
+		}
+			
+		vassal_limit = 10
+		set_appoint_generals = yes #enabled by default 
+		city_vassal_max_levy = -0.3
+		castle_vassal_max_levy = -0.3
+		temple_vassal_max_levy = -0.3
+		feudal_opinion = 5
+		city_opinion = 5
+		temple_opinion = 5
+		city_vassal_tax_modifier = -0.2
+		castle_vassal_tax_modifier = -0.2
+		temple_vassal_tax_modifier = -0.2
+	}
+	centralization_1 = {
+		show_as_title = yes
+		group = centralization
+		default = yes
+		
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+					OR = { #Clanic Authority religions
+						religion = celtic_christ
+						religion = inuit_pagan
+						religion = norse_christ
+						religion = sol_norse
+						religion = sol_slav
+						AND = {
+							is_reformed_religion = no
+							OR = {
+								religion_group = norsegerman_group
+								religion_group = celtic_group
+								religion_group = finnish_group
+								religion_group = slavic_group
+								religion_group = baltic_group
+								religion_group = tengri_group
+								AND = {
+									religion_group = serer_group
+									NOT = {
+										religion = yoruba
+									}
+								}
+								AND = {
+									religion_group = bantu_group
+									NOT = {
+										religion = nyau
+										religion = mwari
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		allow = {
+			OR = {
+				has_law = centralization_2		
+				AND = {
+					has_law = centralization_0	
+					holder_scope = {
+						OR = {
+							trait = ambitious
+							trait = diligent
+							trait = scholar
+							trait = just
+							trait = hardworking
+							trait = restless
+							trait = gregarious
+							trait = magnetic
+							trait = practical
+							trait = authoritative
+							trait = noblespirit
+							trait = naturalleader
+							trait = rebellious
+						}
+						NOT = { 
+							trait = slothful 
+							trait = content
+							trait = gullible
+							trait = oldfashioned
+							trait = cautious
+							#trait = callous
+							trait = submissive
+							trait = weakwilled
+						}
+						prestige = 1000
+						wealth = 100	
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { has_law = centralization_0 }
+			}
+			modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = centralization_0
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+			hidden_tooltip = {
+				revoke_law = centralization_0
+				revoke_law = centralization_1
+				revoke_law = centralization_2
+				revoke_law = centralization_3
+				revoke_law = centralization_4
+				if = {
+					limit = {
+						has_law = tolerance_2
+					}
+					revoke_law = tolerance_2
+					add_law = tolerance_1
+				}
+			}
+			vassal_limit = 5
+			demesne_size = 1
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = no
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = no
+#			set_allow_free_revokation = no
+		}
+			
+		vassal_limit = 5
+		demesne_size = 1
+		city_vassal_max_levy = -0.15
+		castle_vassal_max_levy = -0.15
+		temple_vassal_max_levy = -0.15
+		feudal_opinion = -5
+		city_opinion = -5
+		temple_opinion = -5
+		city_vassal_tax_modifier = -0.1
+		castle_vassal_tax_modifier = -0.1
+		temple_vassal_tax_modifier = -0.1
+	}
+	centralization_2 = {
+		show_as_title = yes
+		group = centralization
+		
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+					OR = { #Clanic Authority religions
+						religion = celtic_christ
+						religion = inuit_pagan
+						religion = norse_christ
+						religion = sol_norse
+						religion = sol_slav
+						AND = {
+							is_reformed_religion = no
+							OR = {
+								religion_group = norsegerman_group
+								religion_group = celtic_group
+								religion_group = finnish_group
+								religion_group = slavic_group
+								religion_group = baltic_group
+								religion_group = tengri_group
+								AND = {
+									religion_group = serer_group
+									NOT = {
+										religion = yoruba
+									}
+								}
+								AND = {
+									religion_group = bantu_group
+									NOT = {
+										religion = nyau
+										religion = mwari
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		allow = {
+			OR = {
+				AND = {
+					has_law = centralization_1
+					holder_scope = {
+						OR = {
+							trait = ambitious
+							trait = diligent
+							trait = scholar
+							trait = just
+							trait = hardworking
+							trait = restless
+							trait = gregarious
+							trait = magnetic
+							trait = practical
+							trait = authoritative
+							trait = noblespirit
+							trait = naturalleader
+							trait = rebellious
+						}
+						NOT = { 
+							trait = slothful 
+							trait = content
+							trait = gullible
+							trait = oldfashioned
+							trait = cautious
+							#trait = callous
+							trait = submissive
+							trait = weakwilled
+						}
+						prestige = 1000
+						wealth = 100
+					}
+				}
+				has_law = centralization_3
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = {
+					OR = {
+						AND = {
+							has_law = centralization_0
+							over_vassal_limit = -6
+							over_max_demesne_size = 2
+						}
+						AND = {
+							has_law = centralization_1
+							over_vassal_limit = -1
+							over_max_demesne_size = 1
+						}
+						AND = {
+							has_law = centralization_3
+							over_vassal_limit = 1
+							over_max_demesne_size = -1
+						}
+						AND = {
+							has_law = centralization_4
+							over_vassal_limit = 6
+							over_max_demesne_size = -2
+						}					
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = centralization_1
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+			hidden_tooltip = {
+				revoke_law = centralization_0
+				revoke_law = centralization_1
+				revoke_law = centralization_2
+				revoke_law = centralization_3
+				revoke_law = centralization_4
+			}
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = no
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default 
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = yes
+#			set_allow_free_revokation = no
+		}
+		vassal_limit = 0
+		demesne_size = 2
+		city_vassal_max_levy = -0.05
+		castle_vassal_max_levy = -0.05
+		temple_vassal_max_levy = -0.05
+		feudal_opinion = -10
+		city_opinion = -10
+		temple_opinion = -10
+		#city_vassal_tax_modifier = -0.1
+		#castle_vassal_tax_modifier = -0.1
+		#temple_vassal_tax_modifier = -0.1
+
+	}
+	centralization_3 = {
+		show_as_title = yes
+		group = centralization
+
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+					OR = { #Clanic Authority religions
+						religion = celtic_christ
+						religion = inuit_pagan
+						religion = norse_christ
+						religion = sol_norse
+						religion = sol_slav
+						AND = {
+							is_reformed_religion = no
+							OR = {
+								religion_group = norsegerman_group
+								religion_group = celtic_group
+								religion_group = finnish_group
+								religion_group = slavic_group
+								religion_group = baltic_group
+								religion_group = tengri_group
+								AND = {
+									religion_group = serer_group
+									NOT = {
+										religion = yoruba
+									}
+								}
+								AND = {
+									religion_group = bantu_group
+									NOT = {
+										religion = nyau
+										religion = mwari
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		allow = {
+			OR = {
+				AND = {
+					has_law = centralization_2
+					holder_scope = {
+						OR = {
+							trait = ambitious
+							trait = authoritative
+						}
+						NOT = { 
+							trait = slothful 
+							trait = content
+							trait = gullible
+							trait = oldfashioned
+							trait = cautious
+							#trait = callous
+							trait = submissive
+							trait = weakwilled
+							trait = practical
+							trait = noblespirit
+							trait = naturalleader
+							trait = just
+							trait = kind
+							trait = temperate
+							trait = patient
+							trait = humble
+							trait = charitable
+						}
+						prestige = 2000
+						wealth = 100
+					}
+				}
+				has_law = centralization_4
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = {
+					OR = {
+						AND = {
+							has_law = centralization_0
+							over_vassal_limit = -11
+							over_max_demesne_size = 3
+						}
+						AND = {
+							has_law = centralization_1
+							over_vassal_limit = -6
+							over_max_demesne_size = 2
+						}
+						AND = {
+							has_law = centralization_2
+							over_vassal_limit = -1
+							over_max_demesne_size = 1
+						}
+						AND = {
+							has_law = centralization_4
+							over_vassal_limit = 1
+							over_max_demesne_size = -1
+						}					
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = centralization_2
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+		
+			hidden_tooltip = {
+				revoke_law = centralization_0
+				revoke_law = centralization_1
+				revoke_law = centralization_2
+				revoke_law = centralization_3
+				revoke_law = centralization_4
+			}
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = yes
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = yes
+#			set_allow_free_revokation = no
+		}
+		
+		vassal_limit = -5
+		demesne_size = 3
+		city_vassal_max_levy = 0.05
+		castle_vassal_max_levy = 0.05
+		temple_vassal_max_levy = 0.05
+		city_vassal_min_levy = 0.05
+		castle_vassal_min_levy = 0.05
+		temple_vassal_min_levy = 0.05
+		feudal_opinion = -25
+		city_opinion = -25
+		temple_opinion = -25
+		city_vassal_tax_modifier = 0.05
+		castle_vassal_tax_modifier = 0.05
+		temple_vassal_tax_modifier = 0.05
+
+	}
+	centralization_4 = {
+		show_as_title = yes
+		group = centralization
+
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+					OR = { #Clanic Authority religions
+						religion = celtic_christ
+						religion = inuit_pagan
+						religion = norse_christ
+						religion = sol_norse
+						religion = sol_slav
+						AND = {
+							is_reformed_religion = no
+							OR = {
+								religion_group = norsegerman_group
+								religion_group = celtic_group
+								religion_group = finnish_group
+								religion_group = slavic_group
+								religion_group = baltic_group
+								religion_group = tengri_group
+								AND = {
+									religion_group = serer_group
+									NOT = {
+										religion = yoruba
+									}
+								}
+								AND = {
+									religion_group = bantu_group
+									NOT = {
+										religion = nyau
+										religion = mwari
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		allow = {
+			has_law = centralization_3
+			holder_scope = {
+				OR = {
+					trait = ambitious
+					trait = authoritative
+				}
+				NOT = { 
+					trait = slothful 
+					trait = content
+					trait = gullible
+					trait = oldfashioned
+					trait = cautious
+					#trait = callous
+					trait = submissive
+					trait = weakwilled
+					trait = practical
+					trait = noblespirit
+					trait = naturalleader
+					trait = just
+					trait = kind
+					trait = temperate
+					trait = patient
+					trait = humble
+					trait = charitable
+				}
+				prestige = 3000
+				wealth = 100
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = {
+					OR = {
+						AND = {
+							has_law = centralization_0
+							over_vassal_limit = -16
+							over_max_demesne_size = 4
+						}
+						AND = {
+							has_law = centralization_1
+							over_vassal_limit = -11
+							over_max_demesne_size = 3
+						}
+						AND = {
+							has_law = centralization_2
+							over_vassal_limit = -6
+							over_max_demesne_size = 2
+						}
+						AND = {
+							has_law = centralization_3
+							over_vassal_limit = -1
+							over_max_demesne_size = 1
+						}					
+					}
+				}
+			}
+		modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = centralization_3
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+			hidden_tooltip = {
+				revoke_law = centralization_0
+				revoke_law = centralization_1
+				revoke_law = centralization_2
+				revoke_law = centralization_3
+				revoke_law = centralization_4
+			}
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = yes
+			set_the_kings_full_peace = yes
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = yes
+#			set_allow_free_revokation = no
+		}
+		
+		vassal_limit = -10
+		demesne_size = 4
+		city_vassal_max_levy = 0.15
+		castle_vassal_max_levy = 0.15
+		temple_vassal_max_levy = 0.15
+		city_vassal_min_levy = 0.15
+		castle_vassal_min_levy = 0.15
+		temple_vassal_min_levy = 0.15
+		castle_vassal_tax_modifier = 0.1
+		city_vassal_tax_modifier = 0.1
+		temple_vassal_tax_modifier = 0.1
+		feudal_opinion = -40
+		city_opinion = -40
+		temple_opinion = -40
+	}
+
+# Revised Control Policy ("Clanic")
+	clanic_centralization_0 = {
+		show_as_title = yes
+		group = clanic_centralization
+		#default = yes
+
+		potential = {
+			holder_scope = { NOT = { is_landed = no } } 
+			holder_scope = {
+				OR = {
+					is_tribal = yes
+					#Clanic Authority religions
+					religion = celtic_christ
+					religion = inuit_pagan
+					religion = norse_christ
+					religion = sol_norse
+					religion = sol_slav
+					AND = {
+						is_reformed_religion = no
+						OR = {
+							religion_group = norsegerman_group
+							religion_group = celtic_group
+							religion_group = finnish_group
+							religion_group = slavic_group
+							religion_group = baltic_group
+							religion_group = tengri_group
+							AND = {
+								religion_group = serer_group
+								NOT = {
+									religion = yoruba
+								}
+							}
+							AND = {
+								religion_group = bantu_group
+								NOT = {
+									religion = nyau
+									religion = mwari
+								}
+							}
+						}
+					}
+				}
+			}
+		}		
+		
+		allow = {
+			has_law = clanic_centralization_1
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.8
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					OR = {
+						AND = {
+							has_law = centralization_1
+							over_vassal_limit = -1
+							over_max_demesne_size = -1
+						}
+						AND = {
+							has_law = centralization_2
+							over_vassal_limit = -6
+							over_max_demesne_size = -2
+						}
+						AND = {
+							has_law = centralization_3
+							over_vassal_limit = -11
+							over_max_demesne_size = -3
+						}
+						AND = {
+							has_law = centralization_4
+							over_vassal_limit = -16
+							over_max_demesne_size = -4
+						}					
+					}
+				}
+			}
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clanic_centralization_0
+				revoke_law = clanic_centralization_1
+				revoke_law = clanic_centralization_2
+				revoke_law = clanic_centralization_3
+				revoke_law = clanic_centralization_4
+				if = {
+					limit = {
+						has_law = tolerance_2
+					}
+					revoke_law = tolerance_2
+					add_law = tolerance_1
+				}
+			}
+			set_appoint_generals = yes  #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = no
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = no
+#			set_allow_free_infidel_revokation = no
+#			set_allow_free_revokation = no
+		}
+			
+		vassal_limit = 15
+		demesne_size = -1
+		city_vassal_max_levy = -0.3
+		castle_vassal_max_levy = -0.3
+		temple_vassal_max_levy = -0.3
+		feudal_opinion = 5 
+		city_opinion = 5
+		temple_opinion = 5
+		city_vassal_tax_modifier = -0.2
+		castle_vassal_tax_modifier = -0.2
+		temple_vassal_tax_modifier = -0.2
+	}
+	clanic_centralization_1 = {
+		show_as_title = yes
+		group = clanic_centralization
+		default = yes
+
+		potential = {
+			holder_scope = { NOT = { is_landed = no } } 
+			holder_scope = {
+				OR = {
+					is_tribal = yes
+					#Clanic Authority religions:
+					religion = celtic_christ
+					religion = inuit_pagan
+					religion = norse_christ
+					religion = sol_norse
+					religion = sol_slav
+					AND = {
+						is_reformed_religion = no
+						OR = {
+							religion_group = norsegerman_group
+							religion_group = celtic_group
+							religion_group = finnish_group
+							religion_group = slavic_group
+							religion_group = baltic_group
+							religion_group = tengri_group
+							AND = {
+								religion_group = serer_group
+								NOT = {
+									religion = yoruba
+								}
+							}
+							AND = {
+								religion_group = bantu_group
+								NOT = {
+									religion = nyau
+									religion = mwari
+								}
+							}
+						}
+					}
+				}
+			}
+		}		
+		
+		allow = {
+			OR = {
+				has_law = clanic_centralization_2
+				AND = {
+					has_law = clanic_centralization_0	
+					OR = {
+					has_law = clanic_castle_control_3
+					has_law = clanic_castle_control_4
+					}
+					OR = {
+					has_law = clanic_city_control_3
+					has_law = clanic_city_control_4
+					}
+					OR = {
+					has_law = clanic_temple_control_3
+					has_law = clanic_temple_control_4
+					}
+					holder_scope = {
+						OR = {
+							trait = ambitious
+							trait = diligent
+							trait = scholar
+							trait = just
+							trait = hardworking
+							trait = restless
+							trait = gregarious
+							trait = magnetic
+							trait = practical
+							trait = authoritative
+							trait = noblespirit
+							trait = naturalleader
+							trait = rebellious
+						}
+						NOT = { 
+							trait = slothful 
+							trait = content
+							trait = gullible
+							trait = oldfashioned
+							trait = cautious
+							#trait = callous
+							trait = submissive
+							trait = weakwilled
+						}
+						prestige = 1000
+						wealth = 100
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { has_law = clanic_centralization_0 }
+			}
+			modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = clanic_centralization_0
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clanic_centralization_0
+				revoke_law = clanic_centralization_1
+				revoke_law = clanic_centralization_2
+				revoke_law = clanic_centralization_3
+				revoke_law = clanic_centralization_4
+				if = {
+					limit = {
+						has_law = tolerance_2
+					}
+					revoke_law = tolerance_2
+					add_law = tolerance_1
+				}
+			}
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = no
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = no
+#			set_allow_free_revokation = no
+		}
+		vassal_limit = 10
+		city_vassal_max_levy = -0.15
+		castle_vassal_max_levy = -0.15
+		temple_vassal_max_levy = -0.15
+# set at = 0		feudal_opinion = -5
+# set at = 0		city_opinion = -5
+# set at = 0		temple_opinion = -5
+		city_vassal_tax_modifier = -0.1
+		castle_vassal_tax_modifier = -0.1
+		temple_vassal_tax_modifier = -0.1
+	}
+	clanic_centralization_2 = {
+		show_as_title = yes
+		group = clanic_centralization
+		
+		potential = {
+			holder_scope = { NOT = { is_landed = no } } 
+			holder_scope = {
+				OR = {
+					is_tribal = yes
+					#Clanic Authority religions:
+					religion = celtic_christ
+					religion = inuit_pagan
+					religion = norse_christ
+					religion = sol_norse
+					religion = sol_slav
+					AND = {
+						is_reformed_religion = no
+						OR = {
+							religion_group = norsegerman_group
+							religion_group = celtic_group
+							religion_group = finnish_group
+							religion_group = slavic_group
+							religion_group = baltic_group
+							religion_group = tengri_group
+							AND = {
+								religion_group = serer_group
+								NOT = {
+									religion = yoruba
+								}
+							}
+							AND = {
+								religion_group = bantu_group
+								NOT = {
+									religion = nyau
+									religion = mwari
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		allow = {
+			OR = {
+				has_law = clanic_centralization_3
+				AND = {
+					has_law = clanic_centralization_1			
+					OR = {
+					has_law = clanic_castle_control_3
+					has_law = clanic_castle_control_4
+					}
+					OR = {
+					has_law = clanic_city_control_3
+					has_law = clanic_city_control_4
+					}
+					OR = {
+					has_law = clanic_temple_control_3
+					has_law = clanic_temple_control_4
+					}
+					holder_scope = {
+						OR = {
+							trait = ambitious
+							trait = diligent
+							trait = scholar
+							trait = just
+							trait = hardworking
+							trait = restless
+							trait = gregarious
+							trait = magnetic
+							trait = practical
+							trait = authoritative
+							trait = noblespirit
+							trait = naturalleader
+							trait = rebellious
+						}
+						NOT = { 
+							trait = slothful 
+							trait = content
+							trait = gullible
+							trait = oldfashioned
+							trait = cautious
+							#trait = callous
+							trait = submissive
+							trait = weakwilled
+						}
+						prestige = 1500
+						wealth = 100
+					}
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { has_law = clanic_centralization_1 }
+			}
+			modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = clanic_centralization_1
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clanic_centralization_0
+				revoke_law = clanic_centralization_1
+				revoke_law = clanic_centralization_2
+				revoke_law = clanic_centralization_3
+				revoke_law = clanic_centralization_4
+			}
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = no
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = yes
+#			set_allow_free_revokation = no
+		}
+		vassal_limit = 5
+		demesne_size = 1
+		city_vassal_max_levy = -0.05
+		castle_vassal_max_levy = -0.05
+		temple_vassal_max_levy = -0.05
+		feudal_opinion = -5
+		city_opinion = -5
+		temple_opinion = -5
+		#city_vassal_tax_modifier = -0.1
+		#castle_vassal_tax_modifier = -0.1
+		#temple_vassal_tax_modifier = -0.1
+
+	}
+	clanic_centralization_3 = {
+		show_as_title = yes
+		group = clanic_centralization
+		
+		potential = {
+			holder_scope = { NOT = { is_landed = no } } 
+			holder_scope = {
+				OR = {
+					is_tribal = yes
+					#Clanic Authority religions:
+					religion = celtic_christ
+					religion = inuit_pagan
+					religion = norse_christ
+					religion = sol_norse
+					religion = sol_slav
+					AND = {
+						is_reformed_religion = no
+						OR = {
+							religion_group = norsegerman_group
+							religion_group = celtic_group
+							religion_group = finnish_group
+							religion_group = slavic_group
+							religion_group = baltic_group
+							religion_group = tengri_group
+							AND = {
+								religion_group = serer_group
+								NOT = {
+									religion = yoruba
+								}
+							}
+							AND = {
+								religion_group = bantu_group
+								NOT = {
+									religion = nyau
+									religion = mwari
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		allow = {
+			OR = {
+				AND = {
+					has_law = clanic_centralization_2
+					has_law = clanic_castle_control_4
+					has_law = clanic_city_control_4
+					has_law = clanic_temple_control_4
+					holder_scope = {
+						OR = {
+							trait = ambitious
+							trait = authoritative
+						}
+						NOT = { 
+							trait = slothful 
+							trait = content
+							trait = gullible
+							trait = oldfashioned
+							trait = cautious
+							#trait = callous
+							trait = submissive
+							trait = weakwilled
+							trait = practical
+							trait = noblespirit
+							trait = naturalleader
+							trait = just
+							trait = kind
+							trait = temperate
+							trait = patient
+							trait = humble
+							trait = charitable
+						}
+						prestige = 2000
+						wealth = 100
+					}
+				}
+				has_law = clanic_centralization_4
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { has_law = clanic_centralization_2 }
+			}
+			modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}			
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = clanic_centralization_2
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+		
+			hidden_tooltip = {
+				revoke_law = clanic_centralization_0
+				revoke_law = clanic_centralization_1
+				revoke_law = clanic_centralization_2
+				revoke_law = clanic_centralization_3
+				revoke_law = clanic_centralization_4
+			}
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = yes
+			set_the_kings_full_peace = no
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = yes
+#			set_allow_free_revokation = no
+		}
+		demesne_size = 2
+		city_vassal_max_levy = 0.05
+		castle_vassal_max_levy = 0.05
+		temple_vassal_max_levy = 0.05
+		city_vassal_min_levy = 0.05
+		castle_vassal_min_levy = 0.05
+		temple_vassal_min_levy = 0.05
+		feudal_opinion = -10
+		city_opinion = -10
+		temple_opinion = -10
+		city_vassal_tax_modifier = 0.5
+		castle_vassal_tax_modifier = 0.5
+		temple_vassal_tax_modifier = 0.5
+
+	}
+	clanic_centralization_4 = {
+		show_as_title = yes
+		group = clanic_centralization
+		
+		potential = {
+			holder_scope = { NOT = { is_landed = no } } 
+			holder_scope = {
+				OR = {
+					is_tribal = yes
+					#Clanic Authority religions:
+					religion = celtic_christ
+					religion = inuit_pagan
+					religion = norse_christ
+					religion = sol_norse
+					religion = sol_slav
+					AND = {
+						is_reformed_religion = no
+						OR = {
+							religion_group = norsegerman_group
+							religion_group = celtic_group
+							religion_group = finnish_group
+							religion_group = slavic_group
+							religion_group = baltic_group
+							religion_group = tengri_group
+							AND = {
+								religion_group = serer_group
+								NOT = {
+									religion = yoruba
+								}
+							}
+							AND = {
+								religion_group = bantu_group
+								NOT = {
+									religion = nyau
+									religion = mwari
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		allow = {
+			has_law = clanic_centralization_3
+			has_law = clanic_castle_control_4
+			has_law = clanic_city_control_4
+			has_law = clanic_temple_control_4
+			holder_scope = {
+				OR = {
+					trait = ambitious
+					trait = authoritative
+				}
+				NOT = { 
+					trait = slothful 
+					trait = content
+					trait = gullible
+					trait = oldfashioned
+					trait = cautious
+					#trait = callous
+					trait = submissive
+					trait = weakwilled
+					trait = practical
+					trait = noblespirit
+					trait = naturalleader
+					trait = just
+					trait = kind
+					trait = temperate
+					trait = patient
+					trait = humble
+					trait = charitable
+				}
+                prestige = 2500
+				wealth = 100
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				NOT = { has_law = clanic_centralization_3 }
+			}
+			modifier = {
+				factor = 2
+				holder_scope = { 
+					OR = {
+						trait = amateurish_plotter
+						trait = flamboyant_schemer
+						trait = intricate_webweaver
+						trait = elusive_shadow
+						trait = naive_appeaser
+						trait = underhanded_rogue
+						trait = charismatic_negotiator
+						trait = grey_eminence
+					}
+				}
+			}			
+		}
+		
+		ai_will_revoke = {
+			factor = 0
+		}
+		
+		pass_effect = {
+			hidden_tooltip = {
+				if = { 
+					limit = {
+						has_law = clanic_centralization_3
+					}
+					any_de_jure_vassal = {
+						limit = {
+							OR = {
+								religion = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
+						opinion = {
+							who = ROOT
+							modifier = opinion_increased_authority
+							months = 60
+						}
+					}
+				}
+			}
+		}
+		
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clanic_centralization_0
+				revoke_law = clanic_centralization_1
+				revoke_law = clanic_centralization_2
+				revoke_law = clanic_centralization_3
+				revoke_law = clanic_centralization_4
+			}
+			set_appoint_generals = yes #enabled by default
+#			set_appoint_regents = no
+			set_the_kings_peace = yes
+			set_the_kings_full_peace = yes
+			set_protected_inheritance = yes #enabled by default
+			set_allow_title_revokation = yes
+#			set_allow_free_infidel_revokation = yes
+#			set_allow_free_revokation = no
+		}
+		vassal_limit = -5
+		demesne_size = 3
+		city_vassal_max_levy = 0.15
+		castle_vassal_max_levy = 0.15
+		temple_vassal_max_levy = 0.15
+		city_vassal_min_levy = 0.15
+		castle_vassal_min_levy = 0.15
+		temple_vassal_min_levy = 0.15
+		castle_vassal_tax_modifier = 0.1
+		city_vassal_tax_modifier = 0.1
+		temple_vassal_tax_modifier = 0.1
+		feudal_opinion = -15
+		city_opinion = -15
+		temple_opinion = -15
+	}
+
+
 	### RELIGIOUS TOLERANCE ###
 	## Also, at the conversion job action, intolerants have higher chance to convert and tolerants lower ##
 	tolerance_0 = {		#Tolerant
@@ -5364,19 +7026,22 @@ laws = {
 	}
 	
 	
-	#PAGAN LAWS#
+	#CLANIC LAWS#
 
 	# Martial Disposition
 	##############################
-	li_pagan_castle_control_0 = {
-		group = li_pagan_castle_control
+	clanic_castle_control_0 = {
+		group = clanic_castle_control
 		default = yes
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5413,7 +7078,7 @@ laws = {
 		
 		allow = {
 			OR = { # added to attempt to fix
-				has_law = li_pagan_castle_control_0
+				has_law = clanic_castle_control_0
 				prestige = 0 # milestone markers
 				#has_character_flag = martial_disposition_0
 			}
@@ -5429,27 +7094,30 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_castle_control_0
-				revoke_law = li_pagan_castle_control_1
-				revoke_law = li_pagan_castle_control_2
-				revoke_law = li_pagan_castle_control_3
-				revoke_law = li_pagan_castle_control_4
+				revoke_law = clanic_castle_control_0
+				revoke_law = clanic_castle_control_1
+				revoke_law = clanic_castle_control_2
+				revoke_law = clanic_castle_control_3
+				revoke_law = clanic_castle_control_4
 			}
 		}
 		castle_vassal_max_levy = -0.3
+		castle_vassal_min_levy = -0.5
 		castle_vassal_tax_modifier = -0.4
 		feudal_opinion = -20
-		#this doesn't work#castle_levy_size = -0.25
 		levy_reinforce_rate = -0.25
 	}
-	li_pagan_castle_control_1 = {
-		group = li_pagan_castle_control
+	clanic_castle_control_1 = {
+		group = clanic_castle_control
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5486,8 +7154,9 @@ laws = {
 				
 
 		allow = {
-			has_law = li_pagan_castle_control_1
+			has_law = clanic_castle_control_1
 			prestige = 500 # milestone markers
+			martial = 10
 			#has_character_flag = martial_disposition_1
 		}
 		revoke_allowed = {
@@ -5501,27 +7170,36 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_castle_control_0
-				revoke_law = li_pagan_castle_control_1
-				revoke_law = li_pagan_castle_control_2
-				revoke_law = li_pagan_castle_control_3
-				revoke_law = li_pagan_castle_control_4
+				revoke_law = clanic_castle_control_0
+				revoke_law = clanic_castle_control_1
+				revoke_law = clanic_castle_control_2
+				revoke_law = clanic_castle_control_3
+				revoke_law = clanic_castle_control_4
 			}
 		}
 		castle_vassal_max_levy = -0.15
+		castle_vassal_min_levy = -0.15
 		castle_vassal_tax_modifier = -0.2
 		feudal_opinion = -10
-		#this doesn't work#castle_levy_size = -0.1
-		levy_reinforce_rate = -0.1		
+		levy_reinforce_rate = -0.1
 	}
-	li_pagan_castle_control_2 = {
-		group = li_pagan_castle_control
+	clanic_castle_control_2 = {
+		group = clanic_castle_control
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
+			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
+			}
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5557,8 +7235,9 @@ laws = {
 		}
 				
 		allow = {
-			has_law = li_pagan_castle_control_2
+			has_law = clanic_castle_control_2
 			prestige = 1000 # milestone markers
+			martial = 12
 			#has_character_flag = martial_disposition_2
 		}
 		revoke_allowed = {
@@ -5572,28 +7251,30 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_castle_control_0
-				revoke_law = li_pagan_castle_control_1
-				revoke_law = li_pagan_castle_control_2
-				revoke_law = li_pagan_castle_control_3
-				revoke_law = li_pagan_castle_control_4
+				revoke_law = clanic_castle_control_0
+				revoke_law = clanic_castle_control_1
+				revoke_law = clanic_castle_control_2
+				revoke_law = clanic_castle_control_3
+				revoke_law = clanic_castle_control_4
 			}
 		}
 		castle_vassal_max_levy = 0.15		
 		castle_vassal_min_levy = 0.15
 		castle_vassal_tax_modifier = 0.1
 		feudal_opinion = 10
-		#this doesn't work#castle_levy_size = 0.1
 		levy_reinforce_rate = 0.1		
 	}
-	li_pagan_castle_control_3 = {
-		group = li_pagan_castle_control
+	clanic_castle_control_3 = {
+		group = clanic_castle_control
 	
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5629,8 +7310,9 @@ laws = {
 		}
 				
 		allow = {
-			has_law = li_pagan_castle_control_3
+			has_law = clanic_castle_control_3
 			prestige = 2000 # milestone markers
+			martial = 14
 			#has_character_flag = martial_disposition_3
 		}
 		revoke_allowed = {
@@ -5644,28 +7326,30 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_castle_control_0
-				revoke_law = li_pagan_castle_control_1
-				revoke_law = li_pagan_castle_control_2
-				revoke_law = li_pagan_castle_control_3
-				revoke_law = li_pagan_castle_control_4
+				revoke_law = clanic_castle_control_0
+				revoke_law = clanic_castle_control_1
+				revoke_law = clanic_castle_control_2
+				revoke_law = clanic_castle_control_3
+				revoke_law = clanic_castle_control_4
 			}
 		}
 		castle_vassal_max_levy = 0.25
 		castle_vassal_min_levy = 0.25
 		castle_vassal_tax_modifier = 0.2
 		feudal_opinion = 20
-		#this doesn't work#castle_levy_size = 0.25
 		levy_reinforce_rate = 0.25
 	}
-	li_pagan_castle_control_4 = {
-		group = li_pagan_castle_control
+	clanic_castle_control_4 = {
+		group = clanic_castle_control
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5701,8 +7385,9 @@ laws = {
 		}
 			
 		allow = {
-			has_law = li_pagan_castle_control_4
+			has_law = clanic_castle_control_4
 			prestige = 3000 # milestone markers
+			martial = 16
 		#	has_character_flag = martial_disposition_4
 		}
 		revoke_allowed = {
@@ -5716,32 +7401,34 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_castle_control_0
-				revoke_law = li_pagan_castle_control_1
-				revoke_law = li_pagan_castle_control_2
-				revoke_law = li_pagan_castle_control_3
-				revoke_law = li_pagan_castle_control_4
+				revoke_law = clanic_castle_control_0
+				revoke_law = clanic_castle_control_1
+				revoke_law = clanic_castle_control_2
+				revoke_law = clanic_castle_control_3
+				revoke_law = clanic_castle_control_4
 			}
 		}
 		castle_vassal_max_levy = 0.5		
 		castle_vassal_min_levy = 0.5
 		castle_vassal_tax_modifier = 0.4
 		feudal_opinion = 40
-		#this doesn't work#castle_levy_size = 0.5
 		levy_reinforce_rate = 0.5
 	}
 	
 	# Mercantile Disposition
 	##############################	
-	li_pagan_city_control_0 = {
-		group = li_pagan_city_control
+	clanic_city_control_0 = {
+		group = clanic_city_control
 		default = yes
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5777,9 +7464,8 @@ laws = {
 		}
 			
 		allow = {
-			has_law = li_pagan_city_control_0
-			prestige = 0 # milestone markers
-			
+			has_law = clanic_city_control_0
+			prestige = 0 # milestone markers		
 		}
 		revoke_allowed = {
 			always = no
@@ -5792,31 +7478,28 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_city_control_0
-				revoke_law = li_pagan_city_control_1
-				revoke_law = li_pagan_city_control_2
-				revoke_law = li_pagan_city_control_3
-				revoke_law = li_pagan_city_control_4
+				revoke_law = clanic_city_control_0
+				revoke_law = clanic_city_control_1
+				revoke_law = clanic_city_control_2
+				revoke_law = clanic_city_control_3
+				revoke_law = clanic_city_control_4
 			}
 		}
 		city_vassal_max_levy = -0.4
 		city_vassal_tax_modifier = -0.3
 		city_opinion = -20
-#Pretty sure garrison_growth and garrison_size are only valid
-# in buildings (i.e., holding scope, not province scope) 
-#Commenting out these lines. Come up with an alternative method to affect garrison size
-# and growth (custom building perhaps)
-#		garrison_size = -0.25
-#		garrison_growth = -0.25
 	}
-	li_pagan_city_control_1 = {
-		group = li_pagan_city_control
+	clanic_city_control_1 = {
+		group = clanic_city_control
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5852,8 +7535,9 @@ laws = {
 		}
 			
 		allow = {
-			has_law = li_pagan_city_control_1
+			has_law = clanic_city_control_1
 			prestige = 500 # milestone markers
+			stewardship = 8
 			#has_character_flag = mercantile_disposition_1
 		}
 		revoke_allowed = {
@@ -5867,27 +7551,28 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_city_control_0
-				revoke_law = li_pagan_city_control_1
-				revoke_law = li_pagan_city_control_2
-				revoke_law = li_pagan_city_control_3				
-				revoke_law = li_pagan_city_control_4
+				revoke_law = clanic_city_control_0
+				revoke_law = clanic_city_control_1
+				revoke_law = clanic_city_control_2
+				revoke_law = clanic_city_control_3				
+				revoke_law = clanic_city_control_4
 			}
 		}
 		city_vassal_max_levy = -0.2
 		city_vassal_tax_modifier = -0.15
 		city_opinion = -10
-#		garrison_size = -0.1
-#		garrison_growth = -0.1
 	}
-	li_pagan_city_control_2 = {
-		group = li_pagan_city_control
+	clanic_city_control_2 = {
+		group = clanic_city_control
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5923,8 +7608,9 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_city_control_2			
+			has_law = clanic_city_control_2			
 			prestige = 1000 # milestone markers
+			stewardship = 10
 			#has_character_flag = mercantile_disposition_2
 		}
 		revoke_allowed = {
@@ -5938,28 +7624,29 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_city_control_0
-				revoke_law = li_pagan_city_control_1
-				revoke_law = li_pagan_city_control_2
-				revoke_law = li_pagan_city_control_3
-				revoke_law = li_pagan_city_control_4
+				revoke_law = clanic_city_control_0
+				revoke_law = clanic_city_control_1
+				revoke_law = clanic_city_control_2
+				revoke_law = clanic_city_control_3
+				revoke_law = clanic_city_control_4
 			}
 		}
 		city_vassal_max_levy = 0.1
 		city_vassal_min_levy = 0.1
 		city_vassal_tax_modifier = 0.15
 		city_opinion = 10
-#		garrison_size = 0.1
-#		garrison_growth = 0.1
 	}
-	li_pagan_city_control_3 = {
-		group = li_pagan_city_control
+	clanic_city_control_3 = {
+		group = clanic_city_control
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -5995,8 +7682,9 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_city_control_3
+			has_law = clanic_city_control_3
 			prestige = 2000 # milestone markers
+			stewardship = 12
 			#has_character_flag = mercantile_disposition_3
 		}
 		revoke_allowed = {
@@ -6010,28 +7698,29 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_city_control_0
-				revoke_law = li_pagan_city_control_1
-				revoke_law = li_pagan_city_control_2
-				revoke_law = li_pagan_city_control_3
-				revoke_law = li_pagan_city_control_4
+				revoke_law = clanic_city_control_0
+				revoke_law = clanic_city_control_1
+				revoke_law = clanic_city_control_2
+				revoke_law = clanic_city_control_3
+				revoke_law = clanic_city_control_4
 			}
 		}
 		city_vassal_max_levy = 0.2
 		city_vassal_min_levy = 0.2
 		city_vassal_tax_modifier = 0.25
 		city_opinion = 20
-#		garrison_size = 0.25
-#		garrison_growth = 0.25
 	}
-	li_pagan_city_control_4 = {
-		group = li_pagan_city_control
+	clanic_city_control_4 = {
+		group = clanic_city_control
 	
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -6067,8 +7756,9 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_city_control_4
+			has_law = clanic_city_control_4
 			prestige = 3000 # milestone markers
+			stewardship = 14
 			#has_character_flag = mercantile_disposition_4
 		}
 		revoke_allowed = {
@@ -6082,32 +7772,33 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_city_control_0
-				revoke_law = li_pagan_city_control_1
-				revoke_law = li_pagan_city_control_2
-				revoke_law = li_pagan_city_control_3
-				revoke_law = li_pagan_city_control_4
+				revoke_law = clanic_city_control_0
+				revoke_law = clanic_city_control_1
+				revoke_law = clanic_city_control_2
+				revoke_law = clanic_city_control_3
+				revoke_law = clanic_city_control_4
 			}
 		}
 		city_vassal_max_levy = 0.4
 		city_vassal_min_levy = 0.4
 		city_vassal_tax_modifier = 0.5
 		city_opinion = 40
-#		garrison_size = 0.5
-#		garrison_growth = 0.5
 	}
 
-	# Missionary Disposition
+	# Clerical Disposition
 	##############################
-	li_pagan_temple_control_0 = {
-		group = li_pagan_temple_control
+	clanic_temple_control_0 = {
+		group = clanic_temple_control
 		default = yes
 
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -6143,7 +7834,7 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_temple_control_0
+			has_law = clanic_temple_control_0
 			prestige = 0 # milestone markers
 		}
 		revoke_allowed = {
@@ -6157,11 +7848,11 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_temple_control_0
-				revoke_law = li_pagan_temple_control_1
-				revoke_law = li_pagan_temple_control_2
-				revoke_law = li_pagan_temple_control_3
-				revoke_law = li_pagan_temple_control_4
+				revoke_law = clanic_temple_control_0
+				revoke_law = clanic_temple_control_1
+				revoke_law = clanic_temple_control_2
+				revoke_law = clanic_temple_control_3
+				revoke_law = clanic_temple_control_4
 			}
 		}
 		temple_vassal_max_levy = -0.3
@@ -6170,14 +7861,17 @@ laws = {
 		land_morale = -0.25
 		land_organisation = -0.25
 	}
-	li_pagan_temple_control_1 = {
-		group = li_pagan_temple_control
+	clanic_temple_control_1 = {
+		group = clanic_temple_control
 
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -6213,8 +7907,9 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_temple_control_1
+			has_law = clanic_temple_control_1
 			prestige = 500 # milestone markers
+			piety = 50
 			#has_character_flag = missionary_disposition_1
 		}
 		revoke_allowed = {
@@ -6228,11 +7923,11 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_temple_control_0
-				revoke_law = li_pagan_temple_control_1
-				revoke_law = li_pagan_temple_control_2
-				revoke_law = li_pagan_temple_control_3
-				revoke_law = li_pagan_temple_control_4
+				revoke_law = clanic_temple_control_0
+				revoke_law = clanic_temple_control_1
+				revoke_law = clanic_temple_control_2
+				revoke_law = clanic_temple_control_3
+				revoke_law = clanic_temple_control_4
 			}
 		}
 		temple_vassal_max_levy = -0.15
@@ -6241,14 +7936,17 @@ laws = {
 		land_morale = -0.1
 		land_organisation = -0.1
 	}
-	li_pagan_temple_control_2 = {
-		group = li_pagan_temple_control
+	clanic_temple_control_2 = {
+		group = clanic_temple_control
 	
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -6284,8 +7982,9 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_temple_control_2
+			has_law = clanic_temple_control_2
 			prestige = 1000 # milestone markers
+			piety = 100
 			#has_character_flag = missionary_disposition_2
 		}
 		revoke_allowed = {
@@ -6299,11 +7998,11 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_temple_control_0
-				revoke_law = li_pagan_temple_control_1
-				revoke_law = li_pagan_temple_control_2
-				revoke_law = li_pagan_temple_control_3
-				revoke_law = li_pagan_temple_control_4
+				revoke_law = clanic_temple_control_0
+				revoke_law = clanic_temple_control_1
+				revoke_law = clanic_temple_control_2
+				revoke_law = clanic_temple_control_3
+				revoke_law = clanic_temple_control_4
 			}
 		}
 		temple_vassal_max_levy = 0.1
@@ -6313,14 +8012,17 @@ laws = {
 		land_morale = 0.1
 		land_organisation = 0.1
 	}
-	li_pagan_temple_control_3 = {
-		group = li_pagan_temple_control
+	clanic_temple_control_3 = {
+		group = clanic_temple_control
 		
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -6356,8 +8058,9 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_temple_control_3			
+			has_law = clanic_temple_control_3			
 			prestige = 2000 # milestone markers
+			piety = 200
 			#has_character_flag = missionary_disposition_3
 		}
 		revoke_allowed = {
@@ -6371,11 +8074,11 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_temple_control_0
-				revoke_law = li_pagan_temple_control_1
-				revoke_law = li_pagan_temple_control_2
-				revoke_law = li_pagan_temple_control_3
-				revoke_law = li_pagan_temple_control_4
+				revoke_law = clanic_temple_control_0
+				revoke_law = clanic_temple_control_1
+				revoke_law = clanic_temple_control_2
+				revoke_law = clanic_temple_control_3
+				revoke_law = clanic_temple_control_4
 			}
 		}
 		temple_vassal_max_levy = 0.2
@@ -6385,14 +8088,17 @@ laws = {
 		land_morale = 0.25
 		land_organisation = 0.25
 	}
-	li_pagan_temple_control_4 = {
-		group = li_pagan_temple_control
+	clanic_temple_control_4 = {
+		group = clanic_temple_control
 
 		potential = {
 			temporary = no
-			holder_scope = { NOT = { is_landed = no } } 
 			NOT = { tier = baron }
 			holder_scope = {
+				NOT = {
+					is_landed = no
+					is_tribal = yes
+				}
 				OR = {
 					religion = celtic_christ
 					religion = inuit_pagan
@@ -6428,8 +8134,9 @@ laws = {
 		}
 	
 		allow = {
-			has_law = li_pagan_temple_control_4
+			has_law = clanic_temple_control_4
 			prestige = 3000 # milestone markers
+			piety = 300
 			#has_character_flag = missionary_disposition_4
 		}
 		revoke_allowed = {
@@ -6443,11 +8150,11 @@ laws = {
 		}
 		effect = {
 			hidden_tooltip = {
-				revoke_law = li_pagan_temple_control_0
-				revoke_law = li_pagan_temple_control_1
-				revoke_law = li_pagan_temple_control_2
-				revoke_law = li_pagan_temple_control_3
-				revoke_law = li_pagan_temple_control_4
+				revoke_law = clanic_temple_control_0
+				revoke_law = clanic_temple_control_1
+				revoke_law = clanic_temple_control_2
+				revoke_law = clanic_temple_control_3
+				revoke_law = clanic_temple_control_4
 			}
 		}
 		temple_vassal_max_levy = 0.4
