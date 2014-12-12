@@ -200,7 +200,7 @@ character_event = {
 #Merged scenario start event. From now on, all initialization goes here to reduce week 1 lag.
 character_event = {
 	id = maint.1
-	is_triggered_only = yes #Triggered from early pope entries.
+	is_triggered_only = yes #Triggered from "on_startup" at on_action
 	hide_window = yes
 	
 	trigger = {
@@ -981,8 +981,63 @@ character_event = {
 				add_trait = poor_warrior
 			}
 			set_variable = { which = "combat_skill" value = 0 }
-		}		
-			
+		}
+		
+		#Ensure every Indian character gets the correct Caste
+		any_playable_ruler = {		
+			if = {
+				limit = {
+					religion_group = indian_group
+				}
+				if = {
+					limit = {
+						OR = {
+							is_feudal = yes
+							is_tribal = yes
+						}
+						OR = {
+							trait = vaishya
+							trait = brahmin
+						}
+					}
+					remove_trait = vaishya
+					remove_trait = brahmin
+					add_trait = kshatriya
+				}
+				if = {
+					limit = {
+						is_feudal = no
+						is_tribal = no
+						OR = {
+							is_theocracy = yes
+							is_priest = yes
+						}
+						OR = {
+							trait = vaishya
+							trait = kshatriya
+						}
+					}
+					remove_trait = vaishya
+					add_trait = brahmin
+					remove_trait = kshatriya
+				}
+				if = {
+					limit = {
+						is_feudal = no
+						is_tribal = no
+						is_theocracy = no
+						is_priest = no
+						OR = {
+							trait = brahmin
+							trait = kshatriya
+						}
+					}
+					add_trait = vaishya
+					remove_trait = brahmin
+					remove_trait = kshatriya
+				}
+			}
+		}
 		set_global_flag = scenario_initialised
 	}
 }
@@ -1044,42 +1099,244 @@ character_event = {
 	}
 }
 
-# #Automatically give one of the Islamic branches if of either Islamic sect
-# character_event = {
-	# id = maint.5
-	# desc = OK
-	# hide_window = yes
+#Female temple startup (on_startup)
+character_event = {
+	id = maint.5
 	
-	# only_rulers = yes
+	hide_window = yes
+	is_triggered_only = yes
 	
-	# trigger = {
-		# higher_tier_than = baron
+	only_men = yes
+	only_rulers = yes
+
+	trigger = {
+		is_theocracy = yes
 		# OR = {
-			# religion = ashari
-			# religion = mutazil
+			religion = mari_christ
+			# religion = isis
 		# }
-		# NOT = {
-			# OR = {
-				# trait = ashari
-				# trait = mutazilite
+	}
+	
+	option = {
+		name = OK
+		if = {
+			limit = { religion = mari_christ }
+			random_list = {
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = mari_christ
+						female = yes
+						age = 30
+					} 
+				}
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = mari_christ
+						female = yes
+						age = 35
+					} 
+				}
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = mari_christ
+						female = yes
+						age = 40
+					} 
+				}
+				20 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = mari_christ
+						female = yes
+						age = 45
+					} 
+				}
+				20 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = mari_christ
+						female = yes
+						age = 50
+					} 
+				}
+				20 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = mari_christ
+						female = yes
+						age = 55
+					} 
+				}
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = mari_christ
+						female = yes
+						age = 60
+					} 
+				}
+			}
+		}
+		# if = {
+			# limit = { religion = isis }
+			# random_list = {
+				# 10 = {
+					# create_random_priest = {
+						# random_traits = yes
+						# religion = isis
+						# female = yes
+						# age = 30
+					# } 
+				# }
+				# 10 = {
+					# create_random_priest = {
+						# random_traits = yes
+						# religion = isis
+						# female = yes
+						# age = 35
+					# } 
+				# }
+				# 10 = {
+					# create_random_priest = {
+						# random_traits = yes
+						# religion = isis
+						# female = yes
+						# age = 40
+					# } 
+				# }
+				# 20 = {
+					# create_random_priest = {
+						# random_traits = yes
+						# religion = isis
+						# female = yes
+						# age = 45
+					# } 
+				# }
+				# 20 = {
+					# create_random_priest = {
+						# random_traits = yes
+						# religion = isis
+						# female = yes
+						# age = 50
+					# } 
+				# }
+				# 20 = {
+					# create_random_priest = {
+						# random_traits = yes
+						# religion = isis
+						# female = yes
+						# age = 55
+					# } 
+				# }
+				# 10 = {
+					# create_random_priest = {
+						# random_traits = yes
+						# religion = isis
+						# female = yes
+						# age = 60
+					# } 
+				# }
 			# }
 		# }
-	# }
+		new_character = {
+			ROOT = {
+				any_demesne_title = {
+					gain_title = PREVPREV
+				}
+			}
+		}
+		death = yes
+	}
+}
+
+#Female temple succession (on_death)
+character_event = {
+	id = maint.6
+	is_triggered_only = yes
+	hide_window = yes
 	
-	# immediate = {
-		# if = {
-			# limit = { religion = ashari } #Ashari if Ashari
-			# add_trait = ashari
-			# character_event = { id = SoA.601 tooltip = EVTTOOLTIP_SoA_601 }
-		# }
-		# if = {
-			# limit = { religion = mutazil }#Mu'tazili if Mu'tazil
-			# add_trait = mutazilite
-			# character_event = { id = SoA.600 tooltip = EVTTOOLTIP_SoA_600 }
-		# }
-	# }
+	trigger = {
+		OR = {
+			is_theocracy = yes
+			has_landed_title = d_mari_christ_reformed
+		}
+		OR = {
+			religion = mari_christ
+			religion = mari_christ_reformed
+			# religion = isis
+			# religion = isis_reformed
+		 }
+	}
 	
-	# option = {
-		# name = OK
-	# }
-# }
+	option = {
+			random_list = {
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = ROOT
+						female = yes
+						age = 30
+					} 
+				}
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = ROOT
+						female = yes
+						age = 35
+					} 
+				}
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = ROOT
+						female = yes
+						age = 40
+					} 
+				}
+				20 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = ROOT
+						female = yes
+						age = 45
+					} 
+				}
+				20 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = ROOT
+						female = yes
+						age = 50
+					} 
+				}
+				20 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = ROOT
+						female = yes
+						age = 55
+					} 
+				}
+				10 = {
+					create_random_priest = {
+						random_traits = yes
+						religion = ROOT
+						female = yes
+						age = 60
+					} 
+				}
+			}
+		
+		new_character = {
+			ROOT = {
+				any_demesne_title = {
+					gain_title = PREVPREV
+				}
+			}
+		}
+	}
+}
