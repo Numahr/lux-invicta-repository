@@ -175,75 +175,6 @@ character_event = {
 	}
 }
 
-character_event = {
-	id = CM.6004
-	desc = EVTDESC_CM_6002
-	picture = GFX_evt_spymaster
-	border = GFX_event_normal_frame_intrigue
-	
-	is_triggered_only = yes
-	
-	ai = no
-	
-	option = {
-		name = EVTOPTA_CM_6002
-		trigger = {
-			NOT = { FROMFROM = { is_plot_target_of = ROOT } }
-			NOT = {	FROMFROM = { any_known_plotter = { any_plot_backer = { character = ROOT }	} }	}
-			FROMFROM = {
-				NOT = { is_rival = ROOT }
-			}
-		}
-		tooltip = { FROMFROM = { add_trait = in_hiding } }
-	}
-	option = {
-		name = EVTOPTB_CM_6002
-		trigger = {
-			OR = {
-				FROMFROM = { is_plot_target_of = ROOT }
-				FROMFROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } }
-				FROMFROM = { is_rival = ROOT }
-			}
-		}
-		tooltip = { FROMFROM = { add_trait = in_hiding } }
-	}
-}
-
-# Notify that character has taken spouse or child out of hiding
-character_event = {
-	id = CM.6005
-	desc = EVTDESC_CM_6003
-	picture = GFX_evt_spymaster
-	border = GFX_event_normal_frame_intrigue
-	
-	is_triggered_only = yes
-	
-	ai = no
-	
-	option = {
-		name = EVTOPTA_CM_6003
-		trigger = {
-			NOT = { FROMFROM = { is_plot_target_of = ROOT } }
-			NOT = {	FROMFROM = { any_known_plotter = { any_plot_backer = { character = ROOT }	} }	}
-			FROMFROM = {
-				NOT = { is_rival = ROOT }
-			}
-		}
-		tooltip = { FROMFROM = { remove_trait = in_hiding } }
-	}
-	option = {
-		name = EVTOPTB_CM_6003
-		trigger = {
-			OR = {
-				FROMFROM = { is_plot_target_of = ROOT }
-				FROMFROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } }
-				FROMFROM = { is_rival = ROOT }
-			}
-		}
-		tooltip = { FROMFROM = { remove_trait = in_hiding } }
-	}
-}
-
 # To trigger notification events when a player comes out of hiding through event, for example when accepting a feast or tournament invitation
 character_event = {
 	id = CM.6400
@@ -253,22 +184,20 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {                    # Notify player and close family and plotters
-		ROOT = {
-			any_plotter = {
-				target = ROOT
-				limit = {
-					OR = {
-						has_plot = plot_kill_character
-						has_plot = plot_kill_spouse
-					}
+		any_plotter = {
+			target = ROOT
+			limit = {
+				OR = {
+					has_plot = plot_kill_character
+					has_plot = plot_kill_spouse
 				}
-				character_event = { id = CM.6001 }
 			}
+			character_event = { id = CM.6001 }
 		}
 		any_spouse = {
 			limit = {
 				ROOT = {
-					NOT = { is_plot_target_of = THIS }
+					NOT = { is_plot_target_of = PREV }
 				}
 			}
 			character_event = { id = CM.6001 }
@@ -276,7 +205,7 @@ character_event = {
 		any_child = {
 			limit = {
 				ROOT = {
-					NOT = { is_plot_target_of = THIS }
+					NOT = { is_plot_target_of = PREV }
 				}
 			}
 			character_event = { id = CM.6001 }
@@ -284,7 +213,7 @@ character_event = {
 		any_lover = {
 			limit = {
 				ROOT = {
-					NOT = { is_plot_target_of = THIS }
+					NOT = { is_plot_target_of = PREV }
 				}
 				NOT = { spouse = { character = ROOT } }
 			}
@@ -293,7 +222,7 @@ character_event = {
 		any_sibling = {
 			limit = {
 				ROOT = {
-					NOT = { is_plot_target_of = THIS }
+					NOT = { is_plot_target_of = PREV }
 				}
 			}
 			character_event = { id = CM.6001 }
@@ -301,7 +230,7 @@ character_event = {
 		any_rival = {
 			limit = {
 				ROOT = {
-					NOT = { is_plot_target_of = THIS }
+					NOT = { is_plot_target_of = PREV }
 				}
 			}
 			character_event = { id = CM.6001 }
@@ -695,6 +624,7 @@ character_event = {
 	trigger = {
 		trait = in_hiding
 		NOT = { lifestyle_traits = 1 }
+		NOT = { has_dlc = "Way of Life" }
 		age = 14
 	}
 	
@@ -715,6 +645,7 @@ character_event = {
 	trigger = {
 		trait = in_hiding
 		NOT = { lifestyle_traits = 1 }
+		NOT = { has_dlc = "Way of Life" }
 		age = 10
 	}
 	
@@ -735,6 +666,7 @@ character_event = {
 	trigger = {
 		trait = in_hiding
 		NOT = { lifestyle_traits = 1 }
+		NOT = { has_dlc = "Way of Life" }
 		age = 13
 	}
 	
@@ -754,7 +686,7 @@ character_event = {
 
 	trigger = {
 		trait = in_hiding
-		NOT = { lifestyle_traits = 1 }
+		NOT = { trait = poet }
 		age = 13
 	}
 	
@@ -1902,47 +1834,6 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_CM_6316
-		tooltip = {
-			FROM = {
-				opinion = {
-					who = ROOT
-					modifier = opinion_murder_attempt
-					months = 120
-				}
-				any_dynasty_member = {
-					limit = {
-						is_alive = yes
-						NOT = { character = ROOT }
-					}
-					opinion = {
-						who = ROOT
-						modifier = opinion_dishonorable
-						months = 60
-					}
-				}
-				top_liege = {
-					opinion = {
-						who = ROOT
-						modifier = opinion_dishonorable
-						months = 60
-					}
-					any_realm_lord = {
-						opinion = {
-							who = ROOT
-							modifier = opinion_dishonorable
-							months = 60
-						}
-					}
-				}
-				religion_head = {
-					opinion = {
-						who = ROOT
-						modifier = opinion_dishonorable
-						months = 60
-					}
-				}
-			}
-		}
 	}
 }
 
@@ -2022,6 +1913,9 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_CM_63199
+		tooltip = {
+			reveal_plot = yes
+		}
 	}
 }
 
@@ -2657,6 +2551,9 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_CM_63399
+		tooltip = {
+			reveal_plot = yes
+		}
 	}
 }
 
@@ -2972,6 +2869,9 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_CM_63499
+		tooltip = {
+			reveal_plot = yes
+		}
 	}
 }
 
@@ -3288,5 +3188,8 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_CM_63599
+		tooltip = {
+			reveal_plot = yes
+		}
 	}
 }
