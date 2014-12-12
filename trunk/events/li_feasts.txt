@@ -1,1089 +1,3 @@
-namespace = percas
-character_event = {
-id = percas.0
-desc = "EVTDESCPERCAS0"
-picture = GFX_event_personal_library
-border = GFX_event_normal_frame_diplomacy
-
-only_rulers = yes
-prisoner = no
-min_age = 16
-only_capable = yes
-
-	mean_time_to_happen = {
-		months = 1000 
-	}
-	trigger = {
-		OR = {
-			religion = bud_bahusrutiya
-			religion = confucian
-			religion = docetist
-			religion = hurufi
-			religion = ilm_islam
-			religion = kothar
-			religion = marcionist 
-			religion = neoplato
-			religion = plato_christ
-			religion = plato_islam
-			religion = plato_pythagorean
-			religion = porphyryan
-			religion = tengri_confucian
-			religion = valentinian
-		}
-		any_courtier = {
-			learning = 8
-			prisoner = no
-			age = 16
-		}
-		NOT = { has_character_flag = library_asked_permission}
-	}
-	immediate = {
-		set_character_flag = library_asked_permission
-	}
-	option = {
-		name = allow_library
-		economy_techpoints = 15
-		culture_techpoints = 15
-		military_techpoints = 15
-		any_courtier = {
-			limit = {
-				learning = 8
-				prisoner = no
-				age = 16
-			}
-			opinion = {
-				modifier = library_pos
-				who = ROOT
-				years = 2
-			}
-		
-		}
-	}
-	option = {
-		name = dont_allow_library
-		add_trait = proud
-		any_courtier = {
-			limit = {
-				learning = 8
-				prisoner = no
-				age = 16
-			}
-			opinion = {
-				modifier = library_neg
-				who = ROOT
-				years = 2
-			}
-		}
-	}
-
-}
-
-character_event = {
-id = percas.1
-desc = "EVTDESCPERCAS1"
-picture = GFX_event_personal_library
-border = GFX_event_normal_frame_religion
-
-only_rulers = yes
-prisoner = no
-min_age = 16
-only_capable = yes
-
-	mean_time_to_happen = {
-		months = 1000 
-	}
-	trigger = {
-		OR = {
-			religion = bud_bahusrutiya
-			religion = confucian
-			religion = docetist
-			religion = hurufi
-			religion = ilm_islam
-			religion = kothar
-			religion = marcionist 
-			religion = neoplato
-			religion = plato_christ
-			religion = plato_islam
-			religion = plato_pythagorean
-			religion = porphyryan
-			religion = tengri_confucian
-			religion = valentinian
-		}
-		NOT = { has_character_flag = library_wander_wonder }
-	}
-	immediate = {
-		set_character_flag = library_wander_wonder
-	}
-	option = {
-		name = use_library_much
-		tooltip_info = learning
-		change_learning = 2
-		fertility = -0.10
-		trigger = {
-			OR ={
-				learning = 7
-				trait = scholarly_theologian
-				trait = mastermind_theologian
-				trait = detached_priest
-				trait = martial_cleric
-				trait = scholar
-			}
-		}
-	}
-	option = {
-		name = use_library_some
-		change_learning = 1
-	}
-	option = {
-		name = use_library_wrong
-		tooltip_info = lunatic
-		custom_tooltip = { text = throw_book_tooltip }
-		trigger = {
-			trait = lunatic
-		}
-		random_courtier = {
-			limit = {
-				learning = 3
-				prisoner = no
-			}
-			opinion = {
-				modifier = throw_book_neg
-				who = ROOT
-				years = 5
-			}
-		}
-	}
-	option = {
-		name = use_library_wrong
-		custom_tooltip = { text = throw_book_tooltip_stupid }
-		trigger = {
-			OR = {
-				trait = inbred
-				trait = imbecile
-				trait = slow
-			}
-			NOT = { trait = lunatic }
-		}
-		random_courtier = {
-			limit = {
-				prisoner = no
-			}
-			opinion = {
-				modifier = throw_book_neg
-				who = ROOT
-				years = 5
-			}
-		}
-	}
-}
-character_event = {
-id = percas.2
-desc = "EVTDESCPERCAS102"
-picture = GFX_study_window
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-
-	option = {
-		name = writing_a_book
-		trigger = {
-			ai = no
-			NOT = { 
-				has_character_flag = nothing_to_write
-			}
-		} 
-		hidden_tooltip = { character_event = { id = percas.3 } }
-	}
-	option = {
-		name = learn_techs
-		hidden_tooltip = {
-			character_event = { id = studyt.1 }
-		}
-		clr_character_flag = nothing_to_write
-	}
-}
-character_event = {
-id = percas.3
-desc = "EVTDESCPERCAS103"
-picture = GFX_event_write
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = write_biography
-		hidden_tooltip = { character_event = { id = percas.4 days = 180 random = 40 } }
-		custom_tooltip = { text = bio_reg }
-		trigger = {
-			NOT = { has_character_flag = wrote_biography }
-			age = 25
-		}
-	}
-	option = {
-		name = write_poem
-		set_character_flag = writing_poem
-		custom_tooltip = { text = poem_reg }
-		trigger = {
-			NOT = { has_character_flag = wrote_poem }
-			is_married = yes
-		}
-	}	
-	option = {
-		name = write_bible
-		hidden_tooltip = { character_event = { id = percas.5 days = 180 random = 60 } }
-		trigger = {
-			NOT = { has_character_flag = wrote_bible }
-		}
-		ai_chance = {
-			factor = 0
-		}
-	}
-	option = {
-		trigger = {
-			has_character_flag = wrote_bible
-		}
-		name = nothing_write
-		set_character_flag = nothing_to_write
-		hidden_tooltip = { character_event = {id = percas.2} }
-	}
-}
-character_event = {
-id = percas.4
-desc = "PERCAS4"
-picture = GFX_event_write
-border = GFX_event_normal_frame_diplomacy
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = bio_ready
-		set_character_flag = writing_biography
-		set_character_flag = wrote_biography
-		clr_character_flag = do_not_disturb
-	}
-}
-character_event = {
-id = percas.5
-desc = "PERCAS5"
-picture = GFX_event_write
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = bible_ready
-		set_character_flag = bible_writing
-		set_character_flag = wrote_bible
-		clr_character_flag = do_not_disturb
-	}
-}
-namespace = casper
-character_event = {
-id = casper.6
-desc = "EVTDESCPERCAS106"
-picture = GFX_evt_emissary
-border = GFX_event_normal_frame_diplomacy
-
-	ai = no
-	only_rulers = yes
-
-	trigger = {
-		has_character_flag = writing_biography
-	}
-	mean_time_to_happen = {
-		years = 7
-		modifier = {
-			factor = 0.5
-			learning = 7
-		}
-		modifier = {
-			factor = 0.6
-			age = 50
-		}
-		modifier = {
-			factor = 0.5
-			prestige = 400
-		}
-	}
-	option = {
-		name = accept_success
-		prestige = 150
-		wealth = 75
-		any_dynasty_member = {
-			opinion = {
-				modifier = bio_pos
-				who = ROOT
-				years = 5
-			}
-		}
-		clr_character_flag = writing_biography
-	}
-}
-character_event = {
-id = casper.7
-desc = "EVTDESCPERCAS107"
-picture = GFX_evt_bad_news
-border = GFX_event_normal_frame_diplomacy
-	
-	ai = no
-	only_rulers = yes
-	
-	trigger = {
-		NOT = {
-			prestige = 1000
-		}
-		has_character_flag = writing_biography
-	}
-	mean_time_to_happen = {
-		years = 7
-		modifier = {
-			factor = 5
-			trait = humble
-		}
-		modifier = {
-			factor = 0.5
-			trait = proud
-		}
-		modifier = {
-			factor = 5
-			trait = content
-		}
-		modifier = {
-			factor = 0.5
-			trait = slow
-		}
-		modifier = {
-			factor = 0.5
-			trait = imbecile
-		}
-		modifier = {
-			factor = 0.5
-			trait = inbred
-		}
-		modifier = {
-			factor = 0.5
-			trait = lunatic
-		}
-	}
-	option = {
-		name = accept_failure
-		prestige = -50
-		add_trait = depressed
-		any_dynasty_member = {
-			opinion = {
-				modifier = bio_neg
-				who = ROOT
-				years = 5
-			}
-		}
-		clr_character_flag = writing_biography
-	}
-}
-character_event = {
-id = casper.8
-desc = "EVTDESCPERCAS108"
-picture = GFX_event_write
-border = GFX_event_normal_frame_diplomacy
-	
-	ai = no
-	only_rulers = yes
-	
-	trigger = {
-		has_character_flag = writing_biography
-	}
-	mean_time_to_happen = {
-		years = 7
-	}
-	option = {
-		name = accept_meh
-		change_learning = 1
-		clr_character_flag = writing_biography
-	}
-}
-character_event = {
-id = casper.9
-desc = "EVTDESCPERCAS109"
-picture = GFX_event_poem
-border = GFX_event_normal_frame_religion
-	
-	ai = no
-	only_rulers = yes
-
-	trigger = {
-		has_character_flag = writing_poem
-	}
-	mean_time_to_happen = {
-		months = 2
-	}
-	immediate = {
-		set_character_flag = wrote_poem
-		clr_character_flag = writing_poem
-		clr_character_flag = do_not_disturb
-	}
-	option = {
-		name = poem_no
-		custom_tooltip = { text = poem_no_reg }
-	}
-	option = {
-		name = poem_yes
-		custom_tooltip = {
-			text = poem_yes_reg
-			hidden_tooltip = {
-				spouse = { character_event = { id = casper.15 } }
-			}
-		}
-	}
-}
-character_event = {
-id = casper.15
-hide_window = yes
-
-	is_triggered_only = yes
-	
-	immediate = {
-		spouse = {
-			character_event = { id = casper.10 }
-		}
-	}
-	option = {
-		name = OK
-	}
-}		
-character_event = {
-id = casper.10
-desc = "EVTDESCPERCAS110"
-picture = GFX_event_poem
-border = GFX_event_normal_frame_religion
-
-	is_triggered_only = yes
-	
-	option = {
-		custom_tooltip = { text = good_poem_reg }
-		trigger = {
-			OR = { 
-				trait = poet
-				trait = lustful
-				trait = charismatic_negotiator
-				trait = grey_eminence						
-			}
-		}
-		name = read_good_poem
-		random_list = {
-			90 = {
-				custom_tooltip = { text = poem_success }
-				hidden_tooltip = {
-					spouse = {
-						character_event = { id = casper.13 }
-					}
-				}
-			}
-			10 = {
-				custom_tooltip = { text = poem_failure }
-				hidden_tooltip = {
-					spouse = {
-						character_event = { id = casper.14 }
-					}
-				}
-			}
-		}
-	}
-	option = {
-		custom_tooltip = { text = meh_poem_reg }
-		trigger = {
-			NOT = { 
-				trait = poet
-				trait = lustful
-				trait = charismatic_negotiator
-				trait = grey_eminence
-				trait = slow
-				trait = lunatic
-				trait = imbecile
-				trait = inbred						
-			}
-		}
-		name = read_meh_poem
-		random_list = {
-			50 = {	
-				custom_tooltip = { text = poem_success }
-				hidden_tooltip = {
-					spouse = {
-						character_event = { id = casper.13 }
-					}
-				}
-			}
-			50 = {
-				custom_tooltip = { text = poem_failure }
-				hidden_tooltip = {
-					spouse = {
-						character_event = { id = casper.14 }
-					}
-				}
-			}
-		}
-	}
-	option = {
-		custom_tooltip = { text = bad_poem_reg }
-		trigger = {
-			OR = {
-				trait = slow
-				trait = lunatic
-				trait = imbecile
-				trait = inbred
-			}
-			NOT = { 
-				trait = poet
-				trait = lustful
-				trait = charismatic_negotiator
-				trait = grey_eminence						
-			}
-		}
-		name = read_bad_poem
-		random_list = {
-			10 = {	
-				custom_tooltip = { text = poem_success }
-				hidden_tooltip = {
-					spouse = {
-						character_event = { id = casper.13 }
-					}
-				}
-			}
-			90 = {
-				custom_tooltip = { text = poem_failure }
-				hidden_tooltip = {
-					spouse = {
-						character_event = { id = casper.14 }
-					}
-				}
-			}
-		}
-	}
-}
-character_event = {
-id = casper.13
-hide_window = yes
-	
-	is_triggered_only = yes
-	
-	immediate = {
-		spouse = {
-			character_event = { id = casper.11 }
-		}
-	}
-	option = {
-		name = OK
-	}
-}
-character_event = {
-id = casper.14
-hide_window = yes
-	
-	is_triggered_only = yes
-	
-	immediate = {
-		spouse = {
-			character_event = { id = casper.12 }
-		}
-	}
-	option = {
-		name = OK
-	}
-}
-character_event = {
-id = casper.11
-desc = "EVTDESCPERCAS111"
-picture = GFX_evt_lovers
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = poem_read_success
-		add_trait = poet
-		spouse = {
-			opinion = {
-				modifier = poem_pos
-				who = ROOT
-				years = 4
-			}
-		}
-	}
-}
-character_event = {
-id = casper.12
-desc = "EVTDESCPERCAS112"
-picture = GFX_evt_quarrel
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = poem_read_failure
-		spouse = {
-			opinion = {
-				modifier = poem_neg
-				who = ROOT
-				years = 2
-			}
-		}
-	}
-}
-namespace = bibler
-character_event = {
-id = bibler.1
-desc = "EVTDESCPERCAS116"
-picture = GFX_evt_library
-border = GFX_event_normal_frame_religion
-	
-	ai = no
-	only_rulers = yes
-	
-	trigger = {
-		has_character_flag = bible_writing
-	}
-	immediate = {
-		clr_character_flag = bible_writing
-	}
-	option = {
-		trigger = { 
-			is_heretic = no
-			has_heresies = yes
-		}
-		name = stay_stronk
-		become_heretic = yes
-		add_trait = honest
-	}
-	option = {
-		trigger = { 
-			is_heretic = yes
-		}
-		name = stay_stronk
-		add_trait = mystic
-	}
-	option = {
-		trigger = { 
-			is_heretic = no
-			has_heresies = no
-		}
-		name = stay_stronk
-		add_trait = mystic
-	}
-	option = {
-		name = bible_bad_idea
-		custom_tooltip = { text = bible_bad_reg }
-	}
-	option = {
-		trigger = { 
-			any_courtier = {
-				has_job_title = job_spiritual 
-			}
-		}
-		name = discuss_bible_chaplain
-		custom_tooltip = { text = discuss_bible_reg }
-		random_courtier = {
-			limit = { has_job_title = job_spiritual }
-			hidden_tooltip = { character_event = { id = bibler.2 } }
-		}
-	}
-}
-character_event = {
-id = bibler.2
-desc = "evtdescbibler2"
-picture = GFX_evt_quarrel
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = discuss_bible
-		liege = {
-			character_event = { id = bibler.3 }
-		}
-	}
-}
-character_event = {
-id = bibler.3
-desc = "evtdescbibler3"
-picture = GFX_evt_quarrel
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = accept_bible_discuss
-		piety = 50
-	}
-	option = {
-		name = decline_bible_discuss
-		piety = -10
-		random_courtier = {
-			limit = { has_job_title = job_spiritual }
-			opinion = {
-				modifier = discuss_bible_neg
-				who = ROOT
-				years = 1
-			}
-		}
-	}
-}
-namespace = studyt
-character_event = {
-id = studyt.1
-desc = "EVTDESCSTUDYT1"
-picture = GFX_event_write
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	immediate = {
-		add_character_modifier = {
-			name = studying_hard
-			duration = 500
-		}
-	}
-	option = {
-		name = study_war
-			capital_scope = {
-				add_province_modifier = {
-					name = studied_war_capital
-					duration = 500
-				}
-			}
-		hidden_tooltip = { character_event = { id = studyt.2 days = 500} }
-	}
-	option = {
-		name = study_art
-		capital_scope = {
-			add_province_modifier = {
-				name = studied_art_capital
-				duration = 500
-			}
-		}
-		hidden_tooltip = { character_event = { id = studyt.3 days = 500} }
-	}
-	option = {
-		name = study_economy
-		capital_scope = {
-			add_province_modifier = {
-				name = studied_economy_capital
-				duration = 500
-			}
-		}
-		hidden_tooltip = { character_event = { id = studyt.4 days = 500} }
-	}
-	option = {
-		trigger = {
-			trait = lunatic
-			NOT = {
-				has_character_flag = mastered_flight
-			}
-		}
-		name = study_nuts
-		tooltip_info = lunatic
-		custom_tooltip = { text = study_nuts_reg }
-		hidden_tooltip = { character_event = { id = studyt.5 days = 150 random = 20} }
-	}
-}
-character_event = {
-id = studyt.2
-desc = "EVTDESCSTUDYT2"
-picture = GFX_event_write
-border = GFX_event_normal_frame_war
-	
-	is_triggered_only = yes
-	
-	immediate = {
-		clr_character_flag = do_not_disturb
-	}
-	option = {
-		name = study_done
-		trigger = {
-			NOT = {
-				martial = 6
-			}
-		}
-		custom_tooltip = { text = studylow }
-		add_character_modifier = {
-			name = studied_war
-			duration = 250
-		}
-	}				
-	option = {
-		name = study_done
-		trigger = {
-			martial = 6
-			NOT = {
-				martial = 11
-			}
-		}
-		custom_tooltip = { text = studyfairlylow }
-		add_character_modifier = {
-			name = studied_war
-			duration = 250
-		}
-	}
-	option = {
-		name = study_done
-		trigger = {
-			martial = 11
-			NOT = {
-				martial = 15
-			}
-		}
-		custom_tooltip = { text = studymedium }
-		military_techpoints = 5
-		add_character_modifier = {
-			name = studied_war
-			duration = 250
-		}
-	}		
-	option = {
-		name = study_done
-		trigger = {
-			martial = 15
-			NOT = {
-				martial = 20
-			}
-		}
-		custom_tooltip = { text = studyhigh }
-		military_techpoints = 10
-		add_character_modifier = {
-			name = studied_war
-			duration = 250
-		}
-	}		
-	option = {
-		name = study_done
-		trigger = {
-			martial = 20
-		}
-		custom_tooltip = { text = studyveryhigh }
-		military_techpoints = 15
-		add_character_modifier = {
-			name = studied_war
-			duration = 250
-		}
-	}	
-}
-character_event = {
-id = studyt.3
-desc = "EVTDESCSTUDYT3"
-picture = GFX_event_write
-border = GFX_event_normal_frame_religion
-	
-	is_triggered_only = yes
-	
-	immediate = {
-		clr_character_flag = do_not_disturb
-	}
-	option = {
-		name = study_done
-		trigger = {
-			NOT = {
-				diplomacy = 6
-			}
-		}
-		custom_tooltip = { text = studylow }
-		add_character_modifier = {
-			name = studied_art
-			duration = 250
-		}
-	}				
-	option = {
-		name = study_done
-		trigger = {
-			diplomacy = 6
-			NOT = {
-				diplomacy = 11
-			}
-		}
-		custom_tooltip = { text = studyfairlylow }
-		add_character_modifier = {
-			name = studied_art
-			duration = 250
-		}
-	}
-	option = {
-		name = study_done
-		trigger = {
-			diplomacy = 11
-			NOT = {
-				diplomacy = 15
-			}
-		}
-		custom_tooltip = { text = studymedium }
-		culture_techpoints = 5
-		add_character_modifier = {
-			name = studied_art
-			duration = 250
-		}
-	}		
-	option = {
-		name = study_done
-		trigger = {
-			diplomacy = 15
-				NOT = {
-					diplomacy = 20
-				}
-		}
-		custom_tooltip = { text = studyhigh }
-		culture_techpoints = 10
-		add_character_modifier = {
-			name = studied_art
-			duration = 250
-		}
-	}		
-	option = {
-		name = study_done
-		trigger = {
-			diplomacy = 20
-		}
-		custom_tooltip = { text = studyveryhigh }
-		culture_techpoints = 15
-		add_character_modifier = {
-			name = studied_art
-			duration = 250
-		}
-	}	
-}
-character_event = {
-id = studyt.4
-desc = "EVTDESCSTUDYT4"
-picture = GFX_event_write
-border = GFX_event_normal_frame_economy
-	
-	is_triggered_only = yes
-	
-	immediate = {
-		clr_character_flag = do_not_disturb
-	}
-	option = {
-		name = study_done
-		trigger = {
-			NOT = {
-				stewardship = 6
-			}
-		}
-		custom_tooltip = { text = studylow }
-		add_character_modifier = {
-			name = studied_economy
-			duration = 250
-		}
-	}				
-	option = {
-		name = study_done
-		trigger = {
-			stewardship = 6
-			NOT = {
-				stewardship = 11
-			}
-		}
-		custom_tooltip = { text = studyfairlylow }
-		add_character_modifier = {
-			name = studied_economy
-			duration = 250
-		}
-	}
-	option = {
-		name = study_done
-		trigger = {
-			stewardship = 11
-			NOT = {
-				stewardship = 15
-			}
-		}
-		custom_tooltip = { text = studymedium }
-		economy_techpoints = 5
-		add_character_modifier = {
-			name = studied_economy
-			duration = 250
-		}
-	}		
-	option = {
-		name = study_done
-		trigger = {
-			stewardship = 15
-			NOT = {
-				stewardship = 20
-			}
-		}
-		custom_tooltip = { text = studyhigh }
-		economy_techpoints = 10
-		add_character_modifier = {
-			name = studied_economy
-			duration = 250
-		}
-	}		
-	option = {
-		name = study_done
-		trigger = {
-			stewardship = 20
-		}
-		custom_tooltip = { text = studyveryhigh }
-		economy_techpoints = 15
-		add_character_modifier = {
-			name = studied_economy
-			duration = 250
-		}
-	}	
-}
-character_event = {
-id = studyt.5
-desc = "EVTDESCSTUDYT5"
-picture = GFX_flying_machine
-border = GFX_event_normal_frame_intrigue
-	
-	is_triggered_only = yes
-	
-	immediate = {
-		clr_character_flag = do_not_disturb
-		set_character_flag = mastered_flight
-		remove_character_modifier = studying_hard
-	}
-	option = {
-		name = fly_away
-		custom_tooltip = { text = jump_away }
-		hidden_tooltip = { character_event = { id = studyt.6 } }
-	}
-}
-character_event = {
-id = studyt.6
-desc = "EVTDESCSTUDYT6"
-picture = GFX_evt_castle_construction
-border = GFX_event_normal_frame_intrigue
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = cluck
-		random_list = {
-			50 = {	
-				custom_tooltip = { text = flight_failure }
-				death = {
-					death_reason = death_accident
-				}
-			}
-			50 = {
-				custom_tooltip = { text = flight_success }
-				hidden_tooltip = { character_event = { id = studyt.7 } }
-			}
-		}
-	}
-}			
-character_event = {
-id = studyt.7
-desc = "EVTDESCSTUDYT7"
-picture = GFX_flying_machine
-border = GFX_event_normal_frame_intrigue
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = fly_success
-		give_nickname = nick_the_cuckoo
-		prestige = 500
-		change_diplomacy = 2
-	}
-}
 namespace = li_mithrasfeast
 ##Mithraic Feast
 #Invitations Sent (Liege)
@@ -1602,6 +516,38 @@ character_event = {
 			}
 		}
 	}
+	
+	option = { # Frijjo
+		name = EVTOPTC_li_irminsul_500
+		trigger = {
+			OR  = {
+				religion = german_pagan
+				religion = german_pagan_reformed
+			}
+		}
+		custom_tooltip = {
+			text = carving_irminsul
+			hidden_tooltip = {
+				narrative_event = { id = li_irminsul.514 days = 60 random = 10 }
+			}
+		}
+	}
+	
+	option = { # Thunraz
+		name = EVTOPTC_li_irminsul_500
+		trigger = {
+			OR  = {
+				religion = german_pagan
+				religion = german_pagan_reformed
+			}
+		}
+		custom_tooltip = {
+			text = carving_irminsul
+			hidden_tooltip = {
+				narrative_event = { id = li_irminsul.515 days = 60 random = 10 }
+			}
+		}
+	}
 }
 
 
@@ -1636,7 +582,7 @@ narrative_event = {
 	id = li_irminsul.511
 	title = EVTNAME_li_irminsul_510
 	desc =EVTDESC_li_irminsul_511
-	picture = GFX_evt_irminsul
+	picture = GFX_evt_irminsul_shrine
 	border = GFX_event_narrative_frame_diplomacy
 	
 	is_triggered_only = yes
@@ -1661,7 +607,7 @@ narrative_event = {
 	id = li_irminsul.512
 	title = EVTNAME_li_irminsul_510
 	desc =EVTDESC_li_irminsul_512
-	picture = GFX_evt_irminsul
+	picture = GFX_evt_irminsul_shrine
 	border = GFX_event_narrative_frame_diplomacy
 	
 	is_triggered_only = yes
@@ -1675,7 +621,7 @@ narrative_event = {
 		capital_scope = {
 			add_province_modifier = {
 				name = irminsul_teiwaz
-				duration = -1
+				duration = 1826
 			}
 		}
 	}
@@ -1700,12 +646,63 @@ narrative_event = {
 		capital_scope = {
 			add_province_modifier = {
 				name = irminsul_tree
-				duration = -1
+				duration = 1826
 			}
 		}
 	}
 }
-#Sacrificing prisoner at the Irminsul (non-Irminsulic)
+
+#Raising the trunk (Frijjo)
+narrative_event = {
+	id = li_irminsul.514
+	title = EVTNAME_li_irminsul_510
+	desc =EVTDESC_li_irminsul_514
+	picture = GFX_evt_irminsul_shrine
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_irminsul_514
+		prestige = 100
+		piety = 100
+		capital_scope = {
+			add_province_modifier = {
+				name = irminsul_frijjo
+				duration = 1826
+			}
+		}
+	}
+}
+
+#Raising the trunk (Thunraz)
+narrative_event = {
+	id = li_irminsul.515
+	title = EVTNAME_li_irminsul_510
+	desc =EVTDESC_li_irminsul_515
+	picture = GFX_evt_irminsul_shrine
+	border = GFX_event_narrative_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_irminsul_515
+		prestige = 100
+		piety = 100
+		capital_scope = {
+			add_province_modifier = {
+				name = irminsul_thunraz
+				duration = 1826
+			}
+		}
+	}
+}
+
+#Sacrificing prisoner at the Sacred Grove ( non-Iminsulic )
 narrative_event = {
 	id = li_irminsul.60
 	title = NAME_li_irminsul_060
@@ -1743,12 +740,14 @@ narrative_event = {
 province_event = {
 	id = li_irminsul.16
 	desc = EVTDESC_li_irminsul.16
-	picture = GFX_evt_irminsul
+	picture = GFX_evt_irminsul_burning
 	
 	trigger = {
 		OR = {
 			has_province_modifier = irminsul_wodanaz
 			has_province_modifier = irminsul_teiwaz
+			has_province_modifier = irminsul_frijjo
+			has_province_modifier = irminsul_thunraz
 			has_province_modifier = irminsul_tree
 		}
 		owner = {
@@ -1775,6 +774,8 @@ province_event = {
 		}
 		remove_province_modifier = irminsul_wodanaz
 		remove_province_modifier = irminsul_teiwaz
+		remove_province_modifier = irminsul_frijjo
+		remove_province_modifier = irminsul_thunraz
 		remove_province_modifier = irminsul_tree
 	}
 }
@@ -1952,7 +953,7 @@ character_event = {
 character_event = {
 	id = li_christblot.606
 	desc = EVTDESC_li_christblot_606
-	picture = GFX_evt_burning_house
+	picture = GFX_evt_viking_throneroom_oldgods
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
@@ -1994,7 +995,7 @@ character_event = {
 character_event = {
 	id = li_christblot.607
 	desc = EVTDESC_li_christblot_607
-	picture = GFX_evt_burning_house
+	picture = GFX_evt_viking_throneroom_oldgods
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
@@ -2070,7 +1071,7 @@ character_event = {
 character_event = {
 	id = li_christblot.610
 	desc = EVTDESC_li_christblot_610
-	picture = GFX_evt_burning_house
+	picture = GFX_evt_viking_throneroom_oldgods
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
@@ -2140,7 +1141,7 @@ character_event = {
 character_event = {
 	id = li_christblot.622
 	desc = EVTDESC_li_christblot_622
-	picture = GFX_evt_burning_house
+	picture = GFX_evt_viking_throneroom_oldgods
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
@@ -2304,4 +1305,417 @@ character_event = {
 	}
 }
 
+# Solar triumph/procession (Solar-Imperials, don't know if it would fit any of the other Solar religions)
+namespace = li_solarprocession
+# How much to spend on the procession?
+character_event = {
+	id = li_solarprocession.1
+	desc = EVTDESC_li_solarprocession_1
+	picture = GFX_evt_throne_room
+	border = GFX_event_normal_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_li_solarprocession_1" #High spend
+		scaled_wealth = -1.0
+		piety = 100
+		prestige = 100
+		random = {
+			chance = 33
+			add_trait = zealous
+		}
+		narrative_event = { id = li_solarprocession.5 }
+	}
+	
+	option = {
+		name = "EVTOPTB_li_solarprocession_1" #Moderate spend
+		scaled_wealth = -0.5
+		piety = 50
+		prestige = 50
+		narrative_event = { id = li_solarprocession.5 }
+	}
+	
+	option = {
+		name = "EVTOPTC_li_solarprocession_1" #Low spend
+		scaled_wealth = -0.1
+		random = {
+			chance = 10
+			add_trait = greedy
+		}
+		narrative_event = { id = li_solarprocession.5 }
+	}	
+}
 
+# The Procession of Sol Invictus 
+narrative_event = {
+	id = li_solarprocession.5
+	title = EVTNAME_li_solarprocession_5
+	desc = EVTDESC_li_solarprocession_5
+	picture = GFX_evt_mithraic_ritual
+	border = GFX_event_narrative_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPT_li_solarprocession_5
+		character_event  = { id = li_solarprocession.20 }
+	}
+}
+
+# Give speech
+character_event = {
+	id = li_solarprocession.20
+	title = EVTNAME_li_solarprocession_20
+	desc = EVTDESC_li_solarprocession_20
+	picture = GFX_evt_mithraic_ritual
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPT_solar_speech
+		hidden_tooltip = { character_event = { id = li_solarprocession.100 } }
+		custom_tooltip = { text = sol_choose_speech }
+		ai_chance = { factor = 10 }
+	}
+}
+
+#Select speech type to give
+character_event = {
+	id = li_solarprocession.100
+	desc = EVTDESC_li_solarprocession_100
+	picture = GFX_evt_irminsul
+	border = GFX_event_character_frame_diplomacy
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	#Expansionist speech ( +opinion with castle vassals )
+	option = {
+		name = EVTOPTA_li_solarprocession_100
+		custom_tooltip = {
+			text = GIVESPEECH
+			hidden_tooltip = {
+				set_character_flag = milspeech
+				random_list = {
+					50 = { narrative_event = { id = li_solarprocession.101 } }
+					50 = { narrative_event = { id = li_solarprocession.102 } }		  
+				}
+			}
+			
+		}
+	}
+	
+	#Economic speech ( +opinion with city vassals )
+	option = {
+		name = EVTOPTB_li_solarprocession_100
+		custom_tooltip = {
+			text = GIVESPEECH
+			hidden_tooltip = {
+				set_character_flag = ecospeech
+				random_list = {
+					50 = { narrative_event = { id = li_solarprocession.101 } }
+					50 = { narrative_event = { id = li_solarprocession.102 } }		  
+				}
+			}
+		}
+	}
+	
+	#Religious speech ( +opinion with temple vassals )
+	option = {
+		name = EVTOPTC_li_solarprocession_100
+		custom_tooltip = {
+			text = GIVESPEECH
+			hidden_tooltip = {
+				set_character_flag = relspeech
+				random_list = {
+					50 = { narrative_event = { id = li_solarprocession.101 } }
+					50 = { narrative_event = { id = li_solarprocession.102 } }		  
+				}
+			}
+		}
+	}
+}
+
+#Good speech
+narrative_event = {
+	id = li_solarprocession.101
+	picture = GFX_evt_irminsul
+	border = GFX_event_character_frame_diplomacy
+	
+	desc = {
+		text = EVTDESCGOODSPEECH_MIL
+		trigger = {
+			ROOT = {
+				has_character_flag = milspeech
+			}
+		}
+	}
+	
+	desc = {
+		text = EVTDESCGOODSPEECH_ECO
+		trigger = {
+			ROOT = {
+				has_character_flag = ecospeech
+			}
+		}
+	}
+	
+	
+	desc = {
+		text = EVTDESCGOODSPEECH_REL
+		trigger = {
+			ROOT = {
+				has_character_flag = relspeech
+			}
+		}
+	}
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_lux_graecoromanfest.101
+		prestige = 100
+		random = {
+			chance = 33
+			add_trait = gregarious
+		}
+		character_event = { id = li_solarprocession.500 } 
+	}
+}
+
+#Bad speech
+narrative_event = {
+	id = li_solarprocession.102
+	picture = GFX_evt_irminsul
+	border = GFX_event_character_frame_diplomacy
+	
+	desc = {
+		text = EVTDESCBADSPEECH_MIL
+		trigger = {
+			ROOT = {
+				has_character_flag = milspeech
+			}
+		}
+	}
+	
+	desc = {
+		text = EVTDESCBADSPEECH_ECO
+		trigger = {
+			ROOT = {
+				has_character_flag = ecospeech
+			}
+		}
+	}
+	
+	
+	desc = {
+		text = EVTDESCBADSPEECH_REL
+		trigger = {
+			ROOT = {
+				has_character_flag = relspeech
+			}
+		}
+	}
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_lux_graecoromanfest.102
+		prestige = -50
+		character_event = { id = li_solarprocession.500 } 
+		
+	}
+}
+
+# Procession ends
+character_event = {
+	id = li_solarprocession.500
+	desc = EVTDESC_li_solarprocession_500
+	picture = GFX_evt_mithraeum
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_li_solarprocession_500
+		add_character_modifier = {
+			name = held_solar_procession
+			duration = 1825
+		}
+		prestige = 100
+		piety = 100
+		clr_character_flag = do_not_disturb
+		clr_character_flag = milspeech
+		clr_character_flag = ecospeech
+		clr_character_flag = relspeech
+	}
+}
+
+#Sacrifice to Sol Invictus (Solar-Imperials, again, don't know if it would be applicable to other Solars)
+namespace = li_solinvsacrifice
+#Sacrifice selection (prisoners or cattle hecatomb)
+character_event = {
+	id = li_solinvsacrifice.199
+	title = EVTNAME_li_solinvsacrifice_199
+	desc = EVTDESC_li_solinvsacrifice_199
+	picture = GFX_evt_mictlantec_sacrifice
+	
+	is_triggered_only = yes
+	
+	option = {
+		trigger = {
+			any_courtier = {
+					prisoner = yes
+					host = { character = ROOT }
+			}
+		}
+		name = EVTOPT_solar_sacrifice_prisoner
+		hidden_tooltip = {
+			random_courtier = {
+					limit = { 
+						NOT = { character = ROOT }
+						prisoner = yes 
+						host = { character = ROOT }
+					}
+					narrative_event = { id = li_solinvsacrifice.200 } #Inform prisoner of his sacrifice
+			}
+		}
+		custom_tooltip = { text = SOL_sac_prisoner }
+		ai_chance = { factor = 10 }
+	}
+	
+	option = {
+		name = EVTOPT_solar_sacrifice_hecatomb
+		hidden_tooltip = {
+				narrative_event = { id = li_solinvsacrifice.215 } #Sacrifice cattle
+		}
+		scaled_wealth = -0.1
+		custom_tooltip = { text = SOL_sac_hecatomb }
+		ai_chance = { factor = 10 }
+	}
+}
+
+
+
+#Inform the Sacrifice (And catch them for the next event as FROM!)
+narrative_event = {
+	id = li_solinvsacrifice.200
+	title = EVTNAME_li_solinvsacrifice_200
+	desc = EVTDESC_li_solinvsacrifice_200
+	picture = GFX_evt_mictlantec_sacrifice
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPT_sol_sacrifice_victim
+		FROM = { narrative_event = { id = li_solinvsacrifice.201 } }
+	}
+}
+
+#Sacrifice the prisoner ( Extra prestige and piety if sacrificing an Emperor and humongous piety and rel. authority modifier if sacrificing a religious head )
+narrative_event = {
+	id = li_solinvsacrifice.201
+	title = EVTNAME_li_solinvsacrifice_201
+	desc = EVTDESC_li_solinvsacrifice_201
+	picture = GFX_evt_mictlantec_sacrifice
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPT_solar_sac_emperor
+		trigger = {
+			FROM = { primary_title = { higher_tier_than = KING } }
+		}
+		set_character_flag = solar_sac_emperor
+		prestige = 700
+		piety = 200
+		custom_tooltip = { text = TXT_sacrifice_emperor }
+		hidden_tooltip = {
+			FROM = { narrative_event = { id = li_solinvsacrifice.213 } }
+		}
+		ai_chance = { factor = 1000 }
+	}
+	
+	option = {
+		name = EVTOPT_solar_sac_rel_head
+		trigger = {
+			FROM = { 
+				controls_religion = yes
+				NOT = { religion = ROOT }
+			}
+		}
+		set_character_flag = solar_sac_rel_head
+		piety = 800
+		custom_tooltip = { text = TXT_sacrifice_rel_head }
+		religion_authority = {
+			modifier = sacrificed_enemy_rel_head
+		}
+		hidden_tooltip = {
+		
+			FROM = { narrative_event = { id = li_solinvsacrifice.213 } }
+		}
+		ai_chance = { factor = 1000 }
+	}
+	
+	option = {
+		name = EVTOPT_solar_sac_normal
+		trigger = {
+			OR = {
+				FROM = { is_ruler = no }
+				FROM = { primary_title = { lower_tier_than = KING } }
+			}
+		}
+		set_character_flag = solar_sac_other
+		piety = 50
+		hidden_tooltip = {
+			FROM = { narrative_event = { id = li_solinvsacrifice.213 } }
+		}
+		ai_chance = { factor = 50 }
+	}
+}
+
+#Sacrifice to Sol Invictus (Victim)
+narrative_event = {
+	id = li_solinvsacrifice.213
+	title = EVTNAME_li_solinvsacrifice_213
+	desc = EVTDESC_li_solinvsacrifice_213
+	picture = GFX_evt_mictlantec_sacrifice
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = OK
+		if = {
+			limit = { is_close_relative = FROM }
+			FROM = { add_trait = kinslayer }
+		}
+		death = { death_reason = death_sacrificed killer = FROM }
+	}
+}
+
+#Sacrifice to Sol Invictus (Hecatomb of cattle)
+narrative_event = {
+	id = li_solinvsacrifice.215
+	title = EVTNAME_li_solinvsacrifice_215
+	desc = EVTDESC_li_solinvsacrifice_215
+	picture = GFX_evt_mictlantec_sacrifice
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = OK
+		piety = 100
+	}
+}
