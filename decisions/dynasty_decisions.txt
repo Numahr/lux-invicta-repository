@@ -8,6 +8,7 @@
 #	sub_realm: all characters below the AI's employer
 #	realm: all characters in the same top realm as the AI
 #	dynasty: all members of the same dynasty
+#	rivals: your rivals plus any character you have an opinion modifier with 'crime = yes' set (the same set of characters the 'is_foe' trigger evaluates)
 #	all: all living characters (Avoid if possible. VERY CPU-HEAVY!)
 #	
 
@@ -37,8 +38,6 @@ targetted_decisions = {
 	}
 
 	legitimize_bastard = {
-		is_high_prio = yes
-	
 		filter = dynasty
 		ai_target_filter = dynasty
 	
@@ -54,7 +53,9 @@ targetted_decisions = {
 			is_liege_or_above = FROM
 		}
 		allow = {
-			FROM = { piety = 20 }
+			FROM = {
+				piety = 20
+			}
 		}
 		effect = {
 			dynasty = FROM
@@ -121,6 +122,7 @@ targetted_decisions = {
 	convince_to_straighten_up = {
 		filter = dynasty
 		ai_target_filter = dynasty
+	
 		hide_in_decisions_list = yes # This decision is shown in the Religion View for each decadent character
 		
 		from_potential = {
@@ -161,8 +163,6 @@ targetted_decisions = {
 			}
 			
 			FROM = { piety = -100 }
-			
-			character_event = {	id = 91371 days = 3650}
 		}
 		
 		revoke_allowed = {
@@ -192,11 +192,15 @@ targetted_decisions = {
 				}
 			}
 		}
+		
 		potential = {
 			is_ruler = no
 			liege = { character = FROM }
 			NOT = { is_plot_target_of = FROM }
-			is_child_of = FROM
+			OR = {
+				father = { character = FROM }
+				mother = { character = FROM }
+			}
 			OR = {
 				is_female = no
 				is_primary_heir = yes
@@ -226,7 +230,6 @@ targetted_decisions = {
 				}
 			}
 			NOT = {
-				trait = in_hiding
 				has_character_modifier = went_out_of_hiding_timer
 				has_character_flag = do_not_disturb
 			}
@@ -246,13 +249,10 @@ targetted_decisions = {
 						has_character_modifier = suspected_murder_plot
 						FROM = {
 							any_known_plotter = {
-								plot_target_char = {
-									character = PREVPREV
-								}
+								target = PREV
 								OR = {
 									has_plot = plot_kill_character
 									has_plot = plot_kill_spouse
-									
 								}
 							}
 						}
@@ -280,11 +280,12 @@ targetted_decisions = {
 							OR = {
 								has_plot = plot_kill_character
 								has_plot = plot_kill_spouse
-							
 							}
 						}
 						character_event = { id = CM.6004 }
 					}
+				}
+				ROOT = {
 					any_plotter = {
 						target = ROOT
 						limit = {
@@ -296,6 +297,8 @@ targetted_decisions = {
 						}
 						character_event = { id = CM.6180 }
 					}
+				}
+				ROOT = {
 					any_plotter = {
 						target = ROOT
 						limit = {
@@ -363,7 +366,7 @@ targetted_decisions = {
 				NOT = { 
 					FROM = { 
 						trait = in_hiding 
-					}
+					} 
 				}
 			}
 			modifier = {
@@ -408,7 +411,10 @@ targetted_decisions = {
 			trait = in_hiding
 			is_ruler = no
 			liege = { character = FROM }
-			is_child_of = FROM
+			OR = {
+				father = { character = FROM }
+				mother = { character = FROM }
+			}
 			prisoner = no
 		}
 		
@@ -457,8 +463,7 @@ targetted_decisions = {
 				any_sibling = {
 					limit = {
 						ROOT = {
-							NOT = {
-								is_plot_target_of = THIS
+							NOT = { is_plot_target_of = THIS }
 						}
 					}
 					character_event = { id = CM.6005 }
@@ -1111,13 +1116,11 @@ targetted_decisions = {
 									has_plot = plot_kill_character
 									has_plot = plot_kill_spouse
 								}
-
 							}
 						}
 					}
 				}
 			}			
-
 		}
 	}
 	

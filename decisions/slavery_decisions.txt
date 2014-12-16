@@ -86,7 +86,46 @@ decisions = {
 			factor = 0
 		}
 	}
+	
+	# Close Slave Markets (Stop receiving offers)
+	close_slave_markets = {
+		potential = { 
+			is_ruler = yes
+			ai = no #Only for annoyed players
+			trait = slave_trader 
+			NOT = { has_character_flag = slave_markets_closed }
+			has_character_flag = flag_slave_management_menu_open
+			
+		}
+		allow = { always = yes }
+		effect = {
+			set_character_flag = slave_markets_closed 
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+	# Close Slave Markets (Start receiving offers again)
+	open_slave_markets = {
+		potential = { 
+			is_ruler = yes
+			ai = no #Only for annoyed players
+			trait = slave_trader 
+			has_character_flag = slave_markets_closed
+			has_character_flag = flag_slave_management_menu_open
+		}
+		allow = { always = yes }
+		effect = {
+			clr_character_flag = slave_markets_closed 
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
 	buy_slave = {
+		#is_high_prio = yes
 		potential = {
 			is_ruler = yes
 			ai = no #Ai uses yearly event slavery.299
@@ -115,7 +154,10 @@ decisions = {
 			}
 			has_character_flag = flag_slave_management_menu_open
 		}
-		allow = { wealth = 40 }
+		allow = { 
+			wealth = 40 
+			NOT = { trait = in_hiding }
+		}
 		effect = {
 			set_character_flag = flag_slave_action
 			character_event = { id = slavery.200 }			
@@ -155,6 +197,7 @@ decisions = {
 				hidden_tooltip = {
 					slave_trader = {
 						NOT = { character = ROOT }
+						is_alive = yes
 						OR = {
 							capital_holding = {
 								OR = {
@@ -179,6 +222,7 @@ decisions = {
 					# NOT = { has_character_flag = offended_moneylenders }
 				# }
 			#}	
+			NOT = { trait = in_hiding }
 		}
 		effect = {
 			character_event = { id = slavery.1200 tooltip = "EVTTOOLTIPSLAVERY1200" }
@@ -191,6 +235,7 @@ decisions = {
 		}
 	}
 	sell_bulk_slaves = {
+		#is_high_prio = yes
 		potential = {
 			is_ruler = yes
 			ai = no #Ai uses yearly event slavery.299
@@ -220,6 +265,7 @@ decisions = {
 				hidden_tooltip = {
 					slave_trader = {
 						NOT = { character = ROOT }
+						is_alive = yes
 						NOT = { family_palace = { has_building = fp_asoiaf_slavepit_5 } }
 						OR = {
 							wealth = 400
@@ -239,6 +285,7 @@ decisions = {
 					}
 				}	
 			}
+			NOT = { trait = in_hiding }
 		}
 		effect = {
 			character_event = { id = slavery.1300 tooltip = "EVENTTOOLTIPSLAVERY1300" }
@@ -251,6 +298,7 @@ decisions = {
 		}
 	}
 	free_bulk_slaves = {
+		#is_high_prio = yes
 		potential = {
 			is_ruler = yes
 			ai = no #Ai uses yearly event slavery.299
@@ -393,6 +441,7 @@ decisions = {
 		}
 	}
 	demand_relatives_freed = {
+		is_high_prio = yes
 		potential = {
 			is_ruler = yes
 			any_realm_lord = {
@@ -453,20 +502,21 @@ decisions = {
 	}
 }
 
-targetted_decisions = {
+vassal_decisions = {
 	manage_slave = {
-		ai_target_filter = home_court
+		#is_high_prio = yes
 		from_potential = {
 			is_ruler = yes
+			ai = yes #The AI uses now this decision, for optimisation reasons
 			trait = slave_owner
 			OR = {
 				NOT = { has_character_flag = flag_slave_action }
 				had_character_flag = { flag = flag_slave_action days = 150 }
 			}	
-			OR = {
-				ai = yes
-				has_character_flag = flag_slave_management_menu_open
-			}
+			# OR = {
+				# ai = yes
+				# has_character_flag = flag_slave_management_menu_open
+			# }
 		}
 		potential = {
 			trait = slave
@@ -496,339 +546,485 @@ targetted_decisions = {
 			}
 		}
 	}
-	
-	# Enslave a prisoner
-	enslave_prisoner = {
+}	
+targetted_decisions = {	
+	sell_slave = {
 		ai_target_filter = home_court
-		from_potential = {
-			is_ruler = yes
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner
 			OR = {
-				crownlaw_title = { has_law = slavery_2 }
-				crownlaw_title = { has_law = slavery_3 }
-			}
-			NOT = { trait = liberator }
+				NOT = { has_character_flag = flag_slave_action }
+				had_character_flag = { flag = flag_slave_action days = 150 }
+			}			
 		}
 		potential = {
-			prisoner = yes
-			host = { character = FROM }
-			is_ruler = no # Cannot enslave rulers
-			OR = {
-				NOT = { trait = slave }
-				NOT = { has_opinion_modifier = { who = FROM modifier = opinion_my_owner } }
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }		
+		}
+		allow = {
+			# There must exist at least one possible slave trader to sell to
+			slave_trader = {
+				wealth = 40
+				is_alive = yes
+				NOT = { character = FROM }
 			}	
-			NOT = {
+			FROM = {
 				OR = {
-					any_spouse = { character = FROM }
-					dynasty = FROM
-					is_close_relative = FROM
+					crownlaw_title = { has_law = slavery_2 }
+					trait = greedy
+					trait = cruel
+					NOT = { wealth = -40 }
+				}
+				OR = {
+					crownlaw_title = { has_law = slavery_2 }
+					NOT = { trait = just }
+				}
+				OR = {
+					NOT = { has_character_flag = flag_selling_slave_to_trader }
+					had_character_flag = { flag = flag_selling_slave_to_trader days = 150 }
 				}
 			}	
 		}
+		effect = {
+			FROM = { set_character_flag = flag_selling_slave_to_trader }
+			character_event = { id = slavery.152 tooltip = "EVTTOOLTIPSLAVERY152" }
+			FROM = {
+				if = {
+					limit = {
+						NOT = { crownlaw_title = { has_law = slavery_2 } }
+					}
+					custom_tooltip = { text = TOOLTIPSLAVEILEGALSLAVERYWARNING }
+				}
+			}	
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	mark_not_for_sale = {
+		ai_target_filter = home_court
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner
+			trait = slave_trader			
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
+			NOT = { has_character_flag = flag_not_for_sale }			
+		}
 		allow = {
-			OR = {	
-				NOT = { FROM = { crownlaw_title = { has_law = slavery_3 } } } # Thralldom only allows enslaving prisoners of war
-				FROM = { trait = arbitrary }
-				custom_tooltip = {
-					text = TOOLTIPPOW
-					OR = {
-						has_character_flag = captured_in_battle
-						has_character_flag = captured
+		}
+		effect = {
+			custom_tooltip = { text = NOTFORSALETOOLTIP }
+			set_character_flag = flag_not_for_sale
+			set_character_flag = flag_decision_not_for_sale
+			clr_character_flag = flag_councillor_not_for_sale
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	mark_for_sale = {
+		ai_target_filter = home_court
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner
+			trait = slave_trader			
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
+			has_character_flag = flag_not_for_sale			
+		}
+		allow = {
+		}
+		effect = {
+			custom_tooltip = { text = FORSALETOOLTIP }
+			clr_character_flag = flag_not_for_sale
+			clr_character_flag = flag_decision_not_for_sale
+			clr_character_flag = flag_councillor_not_for_sale
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	breed_slave = {
+		ai_target_filter = home_court
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner				
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }		
+		}
+		allow = {
+			FROM = { crownlaw_title = { has_law = slavery_2 } }
+			# Must be at least theoretically capable of breeding
+			NOT = { trait = incapable }
+			NOT = { trait = eunuch }
+			is_married = no
+			age = 16
+			is_consort = no	
+			any_courtier = {
+				trait = slave
+				has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
+				NOT = { character = ROOT }
+				is_married = no
+				OR = {
+					AND = {
+						is_female = yes
+						NOT = { age = 40 }
+						ROOT = { is_female = no }
+					}
+					AND = {
+						is_female = no
+						ROOT = { is_female = yes }
 					}
 				}	
+				NOT = { trait = incapable }
+				NOT = { trait = eunuch }
+				age = 16
+				is_consort = no
 			}
 		}
 		effect = {
-			add_trait = slave
-			opinion = { who = FROM modifier = opinion_enslaved_me }			
-			hidden_tooltip = {	
-				any_spouse = {
-					limit = { opinion = { who = ROOT value = -25 } }
-					opinion = { who = FROM modifier = opinion_enslaved_close_relative }
+			FROM = { set_character_flag = flag_slave_action } 
+			character_event = { id = slavery.300 tooltip = "EVTTOOLTIPSLAVERY300" }
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	stop_breeding_slave = {
+		ai_target_filter = home_court
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner	
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
+			is_married = yes
+			spouse = { trait = slave }		
+		}
+		allow = {
+		}
+		effect = {
+			remove_spouse = spouse
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	lash_slave = {
+		ai_target_filter = home_court
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner	
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }	
+		}
+		allow = {
+			FROM = {
+				NOT = { trait = kind }
+				NOT = { trait = just }
+				NOT = { trait = honorable }
+			}
+		}
+		effect = {
+			FROM = {
+				piety = -25
+				if = {
+					limit = { 
+						NOT = { trait = cruel } 
+						NOT = { trait = kind }
+					} 
+					add_trait = cruel # Beating your slaves without provocation is always unjust!
 				}
-				any_spouse = {
-					opinion = { who = ROOT modifier = opinion_my_abducted_spouse years = 100 }
+				if = {
+					limit = { trait = kind }
+					remove_trait = kind # Beating your slaves without provocation is always unjust!
 				}
-				prisoner = no
-				remove_spouse = spouse
-				remove_trait = former_slave
-				#give_minor_title = title_slave
-				clr_character_flag = captured_in_battle
-				clr_character_flag = lost_trial_by_combat
-				clr_character_flag = imprisoned_for_relatives_crimes
-				move_character = FROM
-				opinion = { who = FROM modifier = opinion_my_owner }
-				reverse_opinion = { who = FROM modifier = opinion_my_slave }
-				FROM = { add_trait = slave_owner }
-				FROM = {
-					remove_opinion = { who = ROOT modifier = opinion_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_rebel_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_dishonorable }
-#					remove_opinion = { who = ROOT modifier = opinion_joined_rebellion }
-#					remove_opinion = { who = ROOT modifier = opinion_traitor_AGOT }
-					remove_opinion = { who = ROOT modifier = devious_plotter }
-					remove_opinion = { who = ROOT modifier = attempted_kidnapping }
-					remove_opinion = { who = ROOT modifier = attempted_kidnapping_of_kin }
-					remove_opinion = { who = ROOT modifier = attempted_kidnapping_of_vassal }
-					remove_opinion = { who = ROOT modifier = attempted_murder_of_close_kin }
-					remove_opinion = { who = ROOT modifier = killed_vassal }
-#					remove_opinion = { who = ROOT modifier = opinion_vengeance }
+				clr_character_flag = flag_lashed_slaves
+				set_character_flag = flag_lashed_slaves # Keep the AI from doing this nonstop	
+			}	
+			character_event = { id = slavery.500 tooltip = "EVTTOOLTIPSLAVERY500" }			
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	concubine_slave = {
+		ai_target_filter = home_court
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner
+			is_female = no	
+			#Concubine religions
+			OR = {
+				religion = aglibol
+				religion = allat
+				religion = allfather
+				religion = almaqah
+				religion = amanai
+				religion = amun
+				religion = aten
+				religion = attar
+				religion = beelshamen
+				religion = berber_pagan
+				religion = chumbylat
+				religion = dazhbog
+				religion = dievas
+				religion = finnish_pagan
+				religion = german_pagan
+				religion = gurzil
+				religion = horus_re
+				religion = hubal
+				religion = illuyanka
+				religion = ilmatar
+				religion = irminsul
+				religion = isis
+				religion = jumala
+				religion = luwian
+				religion = maher
+				religion = malakbel
+				religion = mande_pagan
+				religion = mazdakism
+				religion = norse_christ
+				religion = norse_pagan
+				religion = norse_war
+				religion = palmyran_pagan
+				religion = peckols
+				religion = perkunas
+				religion = perun
+				religion = ragnarok
+				religion = rod
+				religion = saule
+				religion = set
+				religion = shams
+				religion = slavic_pagan
+				religion = sol_norse
+				religion = sol_sahara
+				religion = sol_slav
+				religion = sol_tsahay
+				religion = sowilo
+				religion = svaroh
+				religion = svetovid
+				religion = talab
+				religion = tarhunt
+				religion = teiwaz
+				religion = tengri_ahriman
+				religion = tengri_bud
+				religion = tengri_mani
+				religion = tengri_pagan
+				religion = tengri_rod
+				religion = vattisenyaly
+				religion = veles
+				religion = voipel
+				religion = yazdanism
+				religion = yazidism
+				religion = yoruba
+				religion = zande_pagan
+				religion = zor_angra
+				religion = zoroastrian
+				religion = zurvanism
+				religion = amun_reformed
+				religion = arab_pagan_reformed
+				religion = aten_reformed
+				religion = baal_monotheistic_reformed
+				religion = baltic_pagan_reformed 
+				religion = berber_pagan_reformed
+				religion = celtic_christ_reformed
+				religion = celtic_pagan_reformed
+				religion = chumbylat_reformed 
+				religion = ethiopian_war_reformed
+				religion = finnish_pagan_reformed 
+				religion = german_pagan_reformed 
+				religion = illuyanka_reformed
+				religion = mazdakism_reformed
+				religion = norse_christ_reformed
+				religion = norse_pagan_reformed
+				religion = northern_sun_reformed 
+				religion = ragnarok_reformed
+				religion = serer_reformed 
+				religion = set_reformed
+				religion = slavic_pagan_reformed 
+				religion = tarhunt_reformed 
+				religion = teiwaz_reformed 
+				religion = tengri_mani_reformed 
+				religion = tengri_pagan_reformed
+				religion = tengri_rod_reformed
+				religion = vattisenyaly_reformed
+				religion = voipel_reformed
+				religion = yazdanism_reformed
+				religion = zande_pagan_reformed
+				religion = zor_angra_reformed
+				religion = zurvanism_reformed
+			}		
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
+			is_female = yes
+			is_consort = no					
+		}
+		allow = {
+			age = 14
+			OR = {
+				FROM = { ai = no }
+				NOT = { has_opinion_modifier = { who = FROM modifier = opinion_set_aside } }
+			}
+		}
+		effect = {
+			add_consort = FROM
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	eunuch_slave = {
+		ai_target_filter = home_court
+		filter = home_court
+		from_potential = {		
+			ai = no #ai uses management menu
+			is_ruler = yes		
+			trait = slave_owner			
+		}
+		potential = {
+			trait = slave
+			has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
+			is_female = no
+			NOT = { trait = eunuch }			
+		}
+		allow = {
+		}
+		effect = {
+			character_event = { id = LoR.833 tooltip = "EVTTOOLTIPLoR.833" }
+			add_trait = eunuch
+			if = {
+				limit = { age = 6 }
+				opinion = {
+					modifier = opinion_castrated_me
+					who = ROOT
 				}
-				father = { opinion = { who = FROM modifier = opinion_enslaved_close_relative } }
-				mother = { opinion = { who = FROM modifier = opinion_enslaved_close_relative } }
+			}	
+			hidden_tooltip = {
+				if = {
+					limit = { age = 16}
+					FROM = {
+						character_event = { id = LoR.832 }
+					}
+				}
+				if = {
+					limit = { NOT = { age = 16 } }
+					FROM = {
+						character_event = { id = LoR.834 }
+					}
+				}
+			}	
+			FROM = {
+				if = {
+					limit = { NOT = { trait = cruel } }
+					random = {
+						chance = 25
+						add_trait = cruel
+						hidden_tooltip = {
+							character_event = { id = 38259 }
+						}
+					}
+				}
+				piety = -30
+			}	
+			hidden_tooltip = {
+				father = { opinion = { who = FROM modifier = opinion_castrated_son } }
+				mother = { opinion = { who = FROM modifier = opinion_castrated_son } }
 				any_dynasty_member = {
 					limit = {
 						is_close_relative = ROOT
-						NOT = { character = ROOT }
 						NOT = { any_child = { character = ROOT } } 
 					}
-					opinion = { who = FROM modifier = opinion_enslaved_close_relative }
-				}			
+					opinion = { who = FROM modifier = opinion_castrated_kin }
+				}
+				any_spouse = {
+					limit = { opinion = { who = ROOT value = -25 } }
+					opinion = { who = FROM modifier = opinion_castrated_spouse }
+				}
 			}
 		}
 		ai_will_do = {
-			factor = 1
-			
-			modifier = {
-				factor = 0.05
-			}	
-			modifier = {
-				factor = 0
+			factor = 0
+		}	
+	}
+	
+	buy_slave_offer = {
+		ai_target_filter = all
+		filter = all
+		from_potential = {
+			ai = no
+			crownlaw_title = {
 				OR = {
-					any_liege = { character = FROM }
-					liege_before_war = { character = FROM }
-					any_liege = { liege_before_war = { character = FROM } }
-				}
-				FROM = {
-					NOT = { trait = arbitrary }
-					NOT = { trait = ruthless }
-					NOT = { trait = cruel }
+					has_law = slavery_1
+					has_law = slavery_2
 				}
 			}
-			
-			modifier = {
-				factor = 0
-				reverse_opinion = { who = FROM value = 0 }
-				FROM = {
-					NOT = { trait = arbitrary }
-					NOT = { trait = ruthless }
-					NOT = { trait = cruel }
-				}
+		}
+		potential = {
+			trait = slave		
+			NOT = { has_opinion_modifier = { who = FROM modifier = opinion_my_owner } }
+			slave_owner = {
+				NOT = { character = FROM }
+				has_opinion_modifier = { who = ROOT modifier = opinion_my_slave }
 			}
-			modifier = {
-				factor = 0
-				reverse_opinion = { who = FROM value = 50 }
-				FROM = {
-					NOT = {
-						AND = {
-							OR = {
-								trait = ambitious
-								trait = greedy
-								trait = slave_trader
-							}
-							OR = {
-								trait = arbitrary
-								trait = ruthless
-								trait = cruel
-							}
-						}
-					}
-				}
+		}
+		allow = {
+			NOT = { has_character_flag = flag_not_for_sale }
+			NOT = { reverse_has_opinion_modifier = { who = FROM modifier = opinion_rejected_slave } }
+			slave_owner = {
+				has_opinion_modifier = { who = ROOT modifier = opinion_my_slave }
+				is_within_diplo_range = FROM
 			}
-			modifier = {
-				factor = 0
-				OR = {
-					is_close_relative = FROM
-					spouse = { character = FROM }
-					dynasty = FROM
-					FROM = { spouse = { is_close_relative = PREVPREV } }
-					FROM = { spouse = { dynasty = PREV } }
-				}
-				FROM = {
-					OR = {
-						trait = just
-						NOT = { trait = ruthless }
-					}
-				}
+		}
+		effect = {
+			slave_owner = {
+				limit = {
+					NOT = { character = FROM }
+					has_opinion_modifier = { who = PREV modifier = opinion_my_slave }
+				}	
+				custom_tooltip = { text = TOOLTIPEVTOPTE20800000 }
 			}
-			modifier = {
-				factor = 0
-				any_lover = { character = FROM }
-			}
-			modifier = {
-				factor = 0
-				FROM = { any_current_enemy = { character = ROOT } }
-			}
-			modifier = {
-				factor = 0
-				FROM = {
-					any_current_enemy = { primary_title = { current_heir = { character = ROOT } } }
-					NOT = { trait = wroth }
-				}
-			}
-			modifier = {
-				factor = 0
-				FROM = {
-					OR = {
-						religion = adoptionist
-						religion = antinomian 
-						religion = apollinarist
-						religion = arian
-						religion = audianist 
-						religion = bogomilist
-						religion = bud_bahusrutiya
-						religion = bud_mahayana
-						religion = bud_pratyeka
-						religion = bud_pureland
-						religion = bud_sthaviravada
-						religion = bud_vajrayana
-						religion = bud_zen
-						religion = bud_zor
-						religion = cathar
-						religion = catholic
-						religion = confucian
-						religion = dionysos
-						religion = docetist
-						religion = donatist 
-						religion = fraticelli
-						religion = hindu
-						religion = hurufi
-						religion = iconoclast
-						religion = ilm_islam
-						religion = jain
-						religion = jud_ark
-						religion = jud_sabaoth
-						religion = jud_zion
-						religion = judaism
-						religion = kharijite
-						religion = kothar
-						religion = kubera
-						religion = mand_ruha
-						religion = mandaean
-						religion = mani
-						religion = mani_ahriman
-						religion = mani_germanic
-						religion = mani_mithra
-						religion = mani_slavic
-						religion = marcionist 
-						religion = mari_christ
-						religion = mazdakism
-						religion = melkite
-						religion = mithra
-						religion = mithra_christ
-						religion = monophysite
-						religion = monothelite
-						religion = montanist
-						religion = murugan
-						religion = nasrani
-						religion = neoplato
-						religion = nestorian
-						religion = orthodox
-						religion = pelagian
-						religion = plato_christ
-						religion = plato_islam
-						religion = plato_pythagorean
-						religion = porphyryan
-						religion = priscillian 
-						religion = sabellianist 
-						religion = saura
-						religion = semipelagian
-						religion = sethian
-						religion = slavic_christian
-						religion = sol_mani
-						religion = solomonic_christ
-						religion = tao
-						religion = tengri_confucian
-						religion = unctionist
-						religion = valentinian 
-						religion = vidharma
-						religion = waldensian
-						religion = yahyanism
-						religion = zor_hindu
-						religion = ahriman_reformed
-						religion = bud_zen_reformed
-						religion = bud_zor_reformed 
-						religion = cathar_reformed
-						religion = christian_populist_reformed 
-						religion = jud_ark_reformed
-						religion = judaism_reformed 
-						religion = kubera_reformed
-						religion = mand_ruha_reformed
-						religion = mandaean_reformed
-						religion = mani_germanic_reformed
-						religion = mani_slavic_reformed
-						religion = mari_christ_reformed
-						religion = montanist_reformed
-						religion = murugan_reformed
-						religion = nasrani_reformed
-						religion = priscillian_reformed
-						religion = saura_reformed
-						religion = sethian_reformed
-						religion = slavic_christian_reformed
-						religion = tengri_bud_reformed
-						religion = tengri_mani_reformed
-						religion = vidharma_reformed
-					}
-					NOT = { trait = cynical }
-					NOT = { trait = arbitrary }
-					NOT = { trait = slave_trader }
-				}
-			}
-			modifier = {
-				factor = 0
-				FROM = {
-					OR = {
-						trait = kind
-						trait = honorable
-					}
-					NOT = { trait = slave_trader }
-				}
-			}
-			modifier = {
-				factor = 0
-				FROM = {
-					trait = content
-					NOT = { trait = slave_trader }
-				}
-			}
-			modifier = {
-				factor = 0
-				reverse_opinion = { who = FROM value = 1 }
-				FROM = {
-					NOT = { trait = greedy }
-					NOT = { trait = selfish }
-					NOT = { trait = ruthless }
-				}
-			}
-			modifier = {
-				factor = 0
-				NOT = { liege = { character = FROM } }
-				FROM = {
-					OR = {
-						NOT = {
-							OR = {
-								trait = ruthless
-								trait = arbitrary
-							}
-						}
-						trait = honorable
-						trait = just
-					}
-				}
-			}
-			modifier = {
-				factor = 0
-				FROM = {
-					NOT = { trait = slave_trader }
-					NOT = { trait = greedy }
-					NOT = { trait = cruel }
-				}
-			}
+			hidden_tooltip = { FROM = { character_event = { id = slavery.249 } } }
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
 		}
 	}
 	
 	# Sell a prisoner into slavery
 	sell_prisoner = {
 		ai_target_filter = home_court
+		filter = home_court
 		from_potential = {
 			is_ruler = yes
 			NOT = { trait = liberator }
@@ -848,10 +1044,7 @@ targetted_decisions = {
 			}
 			OR = {
 				NOT = { has_character_flag = flag_selling_prisoner_into_slavery }
-				had_character_flag = {
-					flag = flag_selling_prisoner_into_slavery
-					days = 150
-				}
+				had_character_flag = { flag = flag_selling_prisoner_into_slavery days = 150 }
 			}
 		}
 		potential = {
@@ -874,6 +1067,7 @@ targetted_decisions = {
 		}
 		allow = {
 			prisoner = yes
+			NOT = { trait = in_hiding }
 		}
 		effect = {
 			character_event = { id = slavery.150 tooltip = "EVTTOOLTIPSLAVERY150" }
@@ -1167,10 +1361,6 @@ plot_decisions = {
 			
 			modifier = {
 				factor = 0.3
-			}
-			modifier = {
-				factor = 0	
-				NOT = { trait = wroth }
 			}
 			modifier = {
 				factor = 0

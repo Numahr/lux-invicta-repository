@@ -32,7 +32,6 @@ character_event = {
 character_event = {
 	id = slavery.1
 	desc = "EVTDESCSLAVERY1"
-	picture = GFX_evt_slave_market
 	is_triggered_only = yes
 	
 	option = {
@@ -43,7 +42,6 @@ character_event = {
 character_event = {
 	id = slavery.2
 	desc = "EVTDESCSLAVERY2"
-	picture = GFX_evt_slave_market
 	is_triggered_only = yes
 	
 	option = {
@@ -1137,28 +1135,25 @@ character_event = {
 character_event = { #Set Slave scope when changing page
 	id = slavery.3
 	is_triggered_only = yes
-	hide_window = yes
 	
 	immediate = {
 		FROM = { character_event = { id = slavery.2 } }
 	}
 	
-#	option = {
-#		name = OK
-#	}
+	option = {
+		name = OK
+	}
 }
 ###Ai slavery action event###
 character_event = {
 	id = slavery.299
-	hide_window = yes
-#	desc = "AI SLAVERY ACTION"
 	
 	is_triggered_only = yes
 	only_rulers = yes
 	ai = yes
 	
 	option = {
-#		name = "ENTER SLAVE TRADE"
+		name = "OK"
 		trigger = {
 			is_patrician = yes # Only patricians can be slave traders
 			NOT = { trait = slave_trader } # Obviously, can't do this when already a slave trader
@@ -1187,7 +1182,7 @@ character_event = {
 			modifier = {
 				factor = 0
 				OR = {
-					religion = adoptionist
+					religion_group = westerosi_religion
 					religion = antinomian 
 					religion = apollinarist
 					religion = arian
@@ -1474,7 +1469,7 @@ character_event = {
 		#clr_dynasty_flag = flag_slaver_tradition
 	}
 	option = {
-#		name = "BUY SLAVE"
+		name = "OK"
 		trigger = {
 			crownlaw_title = {
 				OR = {
@@ -1487,6 +1482,7 @@ character_event = {
 				OR = {
 					ai = yes
 					NOT = { has_character_flag = slave_trade_cooldown }
+					NOT = { has_character_flag = slave_markets_closed }
 					had_character_flag = { flag = slave_trade_cooldown days = 365 }
 				}
 				slave = {
@@ -1525,7 +1521,7 @@ character_event = {
 						job_chancellor = { NOT = { diplomacy = 12 } } #My councillor is rubbish
 						job_treasurer = { NOT = { stewardship = 12 } }
 						job_spymaster = { NOT = { intrigue = 12 } }
-						job_spiritual = { NOT = { learning = 12 } }
+						job_spiritual = { NOT = { learning = 12 } NOT = { trait = maester } }
 						AND = { #I have much cash
 							wealth = 450
 							NOT = { has_character_modifier = loan_timer }
@@ -1588,7 +1584,7 @@ character_event = {
 		character_event = { id = slavery.200 days = 50 random = 25 }
 	}
 	option = {
-#		name = "BUY BULK SLAVES"
+		name = "OK"
 		trigger = {
 			demesne_size = 1
 			crownlaw_title = { has_law = slavery_2 }		
@@ -1806,7 +1802,7 @@ character_event = {
 		set_character_flag = flag_buying_bulk_slaves
 	}
 	option = {
-#		name = "SELL BULK SLAVES"
+		name = "OK"
 		trigger = {
 			crownlaw_title = { has_law = slavery_2 }	
 			OR = {
@@ -1890,7 +1886,7 @@ character_event = {
 		set_character_flag = flag_selling_bulk_slaves
 	}
 	option = {
-#		name = "FREE BULK SLAVES"
+		name = "OK"
 		trigger = {
 			OR = {
 				capital_holding = {
@@ -2348,7 +2344,6 @@ character_event = { #Character who owns no slaves has slave owner trait
 character_event = {
 	id = slavery.15
 	desc = "EVTDESCSLAVERY15"
-	picture = GFX_evt_slave_market
 	
 	only_rulers = yes
 	is_triggered_only = yes
@@ -3775,35 +3770,6 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTASLAVERY403"
-		# Keep the child in slavery
-		FROM = {
-			set_father = 0
-			add_trait = slave
-			#give_minor_title = title_slave
-			if = {
-				limit = { NOT = { dynasty = 0 } }
-				dynasty = mother_bastard
-			}	
-		}
-		if = {
-			limit = { 
-				NOT = { trait = ruthless } 
-				NOT = { trait = honorable }
-			}
-			random = {
-				chance = 25
-				add_trait = ruthless
-				hidden_tooltip = { character_event = { id = lux_trait_events.19 } }
-			}	
-		}	
-		hidden_tooltip = {
-			FROM = { 
-				move_character = ROOT 
-				set_real_father = ROOT
-			}
-			opinion = { who = FROM modifier = opinion_my_slave }
-			reverse_opinion = { who = FROM modifier = opinion_my_owner }
-		}
 		ai_chance = {
 			factor = 100
 			modifier = {
@@ -3855,36 +3821,58 @@ character_event = {
 				trait = familyperson
 			}
 		}
+		# Keep the child in slavery
+		FROM = {
+			set_father = 0
+			add_trait = slave
+			#give_minor_title = title_slave
+			if = {
+				limit = { NOT = { dynasty = 0 } }
+				dynasty = mother_bastard
+			}	
+		if = {
+			limit = { 
+				NOT = { trait = ruthless } 
+				NOT = { trait = honorable }
+			}
+			random = {
+				chance = 25
+				add_trait = ruthless
+				hidden_tooltip = { character_event = { id = 4200026 } }
+			}	
+		}	
+		hidden_tooltip = {
+			FROM = { 
+				move_character = ROOT 
+				set_real_father = ROOT
+			}
+			opinion = { who = FROM modifier = opinion_my_slave }
+			reverse_opinion = { who = FROM modifier = opinion_my_owner }
+		}
 	}
 	option = {
 		# Free the child but leave it illegitimate
 		name = "EVTOPTBSLAVERY403"
+		trigger = {
+			NOT = { #no concept of bastardry
+				AND = {
+					culture = dothraki 
+					OR = {
+						is_ruler = yes
+						liege = { culture = dothraki }
+					}
+				}
+			}	
+		}
+		ai_chance = { factor = 100 }
 		FROM = {
 			character_event = { id = 306 tooltip = EVTTOOLTIP306 } # The child gets the father's dynasty, but is not legitimized.
 		}
-		prestige = -75
-		ai_chance = { factor = 100 }
+		prestige = -75	
 	}
 	option = {
 		# Free the child and its mother and legitimize it
 		name = "EVTOPTCSLAVERY404"
-		FROM = {
-			character_event = { id = 302 tooltip = EVTTOOLTIP302 } # The child gets the father's dynasty
-			mother = { character_event = { id = slavery.0 tooltip = "EVTTOOLTIPSLAVERY0" } }
-		}
-		prestige = -200
-		any_child = {
-			limit = {
-				NOT = { character = FROM }
-				dynasty = ROOT
-				NOT = { trait = bastard }
-			}
-			opinion = {
-				who = ROOT
-				modifier = legitimized_bastard
-				months = 60
-			}
-		}
 		ai_chance = {
 			factor = 50
 			modifier = {
@@ -3916,6 +3904,26 @@ character_event = {
 				trait = greedy
 			}
 		}
+		FROM = {
+			character_event = { id = 302 tooltip = EVTTOOLTIP302 } # The child gets the father's dynasty
+			mother = { character_event = { id = slavery.0 tooltip = "EVTTOOLTIPSLAVERY0" } }
+		}
+		prestige = -200
+		if = {
+			limit = { ROOT = { NOT = { culture = summer_islander } } }#Promiscious culture does not care
+			any_child = {
+				limit = {
+					NOT = { character = FROM }
+					dynasty = ROOT
+					NOT = { trait = bastard }
+				}
+				opinion = {
+					who = ROOT
+					modifier = legitimized_bastard
+					months = 60
+				}
+			}
+		}	
 	}
 }
 
