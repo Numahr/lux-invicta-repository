@@ -183,7 +183,7 @@ NDiplomacy = {
 	SEND_ASSASSIN_INTERACTION_THRESHOLD_FOR_NO = 0,
 	SEND_ASSASSIN_INTERACTION_THRESHOLD_FOR_YES = 0,
 	SEND_ASSASSIN_INTERACTION_MUST_HAVE_COST = 1,				-- Is having prestige/piety >= cost required for this action?
-	SEND_ASSASSIN_INTERACTION_ENABLED = 1,						-- Should this action be used at all?
+	SEND_ASSASSIN_INTERACTION_ENABLED = 0,						-- Should this action be used at all?
 	
 	DECLARE_WAR_INTERACTION_MONEY = 0,
 	DECLARE_WAR_INTERACTION_PIETY = 0,
