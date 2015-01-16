@@ -841,6 +841,140 @@ decisions = {
 			}	
 		}
 	}
+	
+	#Hold a Tawusgeran festival ( "Circulation of the Peacock" ) - Yazidi group religions
+	hold_tawusgeran = {
+		potential = {
+			is_ruler = yes
+			age = 16
+			prisoner = no
+            religion_group = yazd_group
+			NOT = { has_character_modifier = held_tawusgeran_timer }
+			NOT = {	has_character_flag = holding_tawusgeran }
+			NOT = {	has_character_flag = do_not_disturb }
+		}
+		allow = {
+			war = no
+			any_demesne_title = {
+				is_occupied = no
+			}
+			AND = {
+				NOT = { month = 11 }
+				month = 8
+			}
+			wealth = 50
+			prisoner = no
+			NOT = { trait = in_hiding }
+		}
+		effect = {
+			wealth = -50
+			set_character_flag = holding_tawusgeran
+			set_character_flag = recent_minor_decision
+			set_character_flag = do_not_disturb
+			hidden_tooltip = { character_event = { id = TOG.899 days = 150 } } # Safety catch flag clearing
+				hidden_tooltip = { 
+					character_event = { id = luxyazd.10124 } 
+				}
+			}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0
+				NOT = {
+					wealth = 300
+				}
+			}
+			modifier = {
+				factor = 0
+				trait = shy
+			}
+			modifier = {
+				factor = 0
+				NOT = { diplomacy = 10 }
+			}	
+			modifier = {
+				factor = 0
+				has_character_flag = recent_minor_decision
+				NOT = {
+					had_character_flag = {
+						flag = recent_minor_decision
+						days = 730
+					}
+				}
+			}
+		}
+	}
+	
+	#Pilgrimage to Sheik Adi's Tomb - Yazidi group religions
+    yazidi_pilgrimage = {
+		potential = {
+			is_ruler = yes
+			religion_group = yazd_group
+			NOT = { trait = pilgrim }
+			NOT = { has_character_flag = do_not_disturb }
+		}
+		allow = {
+			war = no
+			in_command = no
+			any_demesne_title = {
+				is_occupied = no
+			}
+			prisoner = no
+			NOT = { trait = in_hiding }
+			scaled_wealth = 0.2
+			age = 16
+			custom_tooltip = {
+				text = health_travel_condition
+				hidden_tooltip = {
+					NOT = {	trait = pregnant }
+					NOT = {	trait = incapable }
+					NOT = {	trait = blinded }
+					NOT = {	trait = has_tuberculosis }
+					NOT = {	trait = has_typhoid_fever }
+					NOT = {	trait = has_typhus }
+					NOT = {	trait = has_bubonic_plague }
+					NOT = {	trait = has_measles }
+					NOT = {	trait = has_small_pox }
+					NOT = {	trait = has_aztec_disease }
+				}
+			}
+		}
+		effect = {
+			scaled_wealth = -0.2
+			set_character_flag = activated_pilgrimage
+			set_character_flag = do_not_disturb
+			hidden_tooltip = {
+				character_event = { id = luxyazd.10163 }
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0.001             # Only a small minority of Yazidis ever go on a pilgrimage
+			}
+			modifier = {
+				factor = 3
+				trait = zealous
+			}
+			modifier = {
+				factor = 0
+				NOT = { wealth = 200 }
+			}			
+			modifier = {
+				factor = 0
+				NOT = { age = 30 }
+			}
+		}
+	}
+	
 }
 
 targetted_decisions = {

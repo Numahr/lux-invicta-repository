@@ -1,0 +1,917 @@
+namespace = luxyazd
+
+# # Peacock's Feather - Moved to the Yazidi Pilgrimage
+
+# narrative_event = {
+	# id = luxyazd.10123
+    # title = EVTNAMEluxyazd.10123
+	# desc = EVTDESCluxyazd.10123
+	# picture = GFX_evt_monk_muslim
+
+	# min_age = 16
+
+        # trigger = {
+                # is_ruler = yes
+				# religion_group = yazd_group
+                # NOT = { has_character_modifier = peacocks_feather }
+
+        # }
+
+	# mean_time_to_happen = {
+		# months = 2400
+	# }
+
+        # option = {
+                # name = EVTOPTAluxyazd.10123
+				# add_character_modifier = {
+					# name = peacocks_feather
+					# duration = -1
+				# }
+	# }
+# }
+
+### Yazidi Tawusgeran
+
+# Holy Idols
+character_event = {
+	id = luxyazd.10124
+	desc = EVTDESCluxyazd.10124
+	picture = GFX_evt_imam
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAluxyazd.10124
+		#decadence = -5
+		piety = 50
+		wealth = 50
+		hidden_tooltip = { 
+			character_event = { id = luxyazd.10125 }
+		}
+	}
+}
+
+# Invitations Sent (Liege)
+character_event = {
+	id = luxyazd.10125
+	desc = EVTDESCluxyazd.10125
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_TOG_700
+		any_vassal = {
+			limit = {
+				age = 16
+				prisoner = no
+				war = no
+				NOT = { trait = incapable }
+			}
+			character_event = { id = luxyazd.10127 tooltip = EVTTOOLTIPluxyazd.10127 }
+		}
+		hidden_tooltip = { character_event = { id = luxyazd.10129 days = 10 } }
+	}
+}
+
+# Invitations Received (Vassals)
+character_event = {
+	id = luxyazd.10127
+	desc = EVTDESCluxyazd.10127
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_701
+		trigger = {
+			religion = ROOT
+		}
+		set_character_flag = attending_tawusgeran
+		set_character_flag = do_not_disturb
+		hidden_tooltip = { character_event = { id = TOG.899 days = 100 } } # Safety catch flag clearing
+		if = {
+			limit = { trait = in_hiding	}
+			remove_trait = in_hiding
+			add_character_modifier = {
+				name = went_out_of_hiding_timer
+				duration = 180
+				hidden = yes
+			}
+			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
+		}
+	}
+	option = {
+		name = EVTOPTB_TOG_701
+		trigger = {
+			NOT = {
+				religion = ROOT
+			}
+		}
+		FROM = {
+			character_event = { id = luxyazd.10128 days = 5 tooltip = DIPLOWINDOW_REJECT }
+			opinion = {
+				modifier = opinion_refused_tawusgeran
+				who = ROOT
+			}
+		}
+	}
+}
+
+# Invitation Refused (Liege)
+character_event = {
+	id = luxyazd.10128
+	desc = EVTDESCluxyazd.10128
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_702
+		tooltip = {
+			opinion = {
+				modifier = opinion_refused_tawusgeran
+				who = FROM
+			}
+		}
+	}
+}
+
+# Celebration Begins (Liege)
+character_event = {
+	id = luxyazd.10129
+	desc = EVTDESCluxyazd.10129
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTAluxyazd.10129
+		custom_tooltip = {
+			text = tawusgeran_begins
+			hidden_tooltip = {
+				any_vassal = {
+					limit = { has_character_flag = attending_tawusgeran }
+					character_event = { id = luxyazd.10130 }
+				}
+				random_list = {
+					25 = { character_event = { id = luxyazd.221 } }
+					25 = { character_event = { id = luxyazd.222 } }
+					50 = { character_event = { id = luxyazd.223 } }
+					10 = { character_event = { id = luxyazd.224 } }  
+				}
+				character_event = { id = luxyazd.10131 days = 28 }
+			}
+		}
+	}
+}
+
+# Character becomes zealous
+character_event = {
+	id = luxyazd.221
+	desc = "luxyazd.221.desc"
+	picture = GFX_evt_icon_yazd_group
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "luxyazd.221.a"
+	   add_trait = zealous
+
+    }
+}
+# Character becomes wiser
+character_event = {
+	id = luxyazd.222
+	desc = "luxyazd.222.desc"
+	picture = GFX_evt_icon_yazd_group
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "luxyazd.221.a"
+	   change_learning = 1
+	}
+}
+# Character gets possessed
+character_event = {
+	id = luxyazd.223
+	desc = "luxyazd.223.desc"
+	picture = GFX_evt_icon_yazd_group
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "luxyazd.221.a"
+	   add_trait = possessed
+	}
+}
+
+# Character is healed by idols
+character_event = {
+	id = luxyazd.224
+	desc = "luxyazd.224.desc"
+	picture = GFX_evt_icon_yazd_group
+	border =  GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+	   name = "luxyazd.221.a"
+		remove_trait = ill
+		remove_trait = pneumonic
+		remove_trait = infirm
+		remove_trait = has_tuberculosis
+		remove_trait = has_typhoid_fever
+		remove_trait = has_typhus
+		remove_trait = has_bubonic_plague
+		remove_trait = has_measles
+		remove_trait = has_small_pox
+		remove_trait = syphilitic
+		remove_trait = leper
+	}
+}
+
+# Celebration Begins (Vassals)
+character_event = {
+	id = luxyazd.10130
+	desc = EVTDESCluxyazd.10130
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTAluxyazd.10129
+		custom_tooltip = { text = tawusgeran_begins }
+	}
+}
+
+# Feast Begins (Liege)
+character_event = {
+	id = luxyazd.10131
+	desc = EVTDESCluxyazd.10131
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_TOG_705
+		
+		custom_tooltip = {
+			text = feast_begins
+			hidden_tooltip = {
+				any_vassal = {
+					limit = { has_character_flag = attending_tawusgeran }
+					character_event = { id = luxyazd.10132 }
+				}
+				character_event = { id = luxyazd.10133 days = 25 }
+				# random_list = {
+					# 10 = { character_event = { id = luxyazd.10156 days = 3 } } 
+					# 10 = { character_event = { id = luxyazd.10157 days = 3 } }
+					# 10 = { character_event = { id = luxyazd.10158 days = 3 } }
+					# 10 = { character_event = { id = luxyazd.10159 days = 3 } }
+					# 10 = { character_event = { id = luxyazd.10160 days = 3 } }
+					# 10 = { character_event = { id = luxyazd.10161 days = 3 } }
+					# 10 = { character_event = { id = luxyazd.10162 days = 3 } }
+				# }
+				# random_list = {
+					# 10 = { character_event = { id = luxyazd.10156 days = 8 } } 
+					# 10 = { character_event = { id = luxyazd.10157 days = 8 } }
+					# 10 = { character_event = { id = luxyazd.10158 days = 8 } }
+					# 10 = { character_event = { id = luxyazd.10159 days = 8 } }
+					# 10 = { character_event = { id = luxyazd.10160 days = 8 } }
+					# 10 = { character_event = { id = luxyazd.10161 days = 8 } }
+					# 10 = { character_event = { id = luxyazd.10162 days = 8 } }
+				# }
+				# random_list = {
+					# 10 = { character_event = { id = luxyazd.10156 days = 13 } } 
+					# 10 = { character_event = { id = luxyazd.10157 days = 13 } }
+					# 10 = { character_event = { id = luxyazd.10158 days = 13 } }
+					# 10 = { character_event = { id = luxyazd.10159 days = 13 } }
+					# 10 = { character_event = { id = luxyazd.10160 days = 13 } }
+					# 10 = { character_event = { id = luxyazd.10161 days = 13 } }
+					# 10 = { character_event = { id = luxyazd.10162 days = 13 } }
+				# }
+				# random_list = {
+					# 10 = { character_event = { id = luxyazd.10156 days = 18 } } 
+					# 10 = { character_event = { id = luxyazd.10157 days = 18 } }
+					# 10 = { character_event = { id = luxyazd.10158 days = 18 } }
+					# 10 = { character_event = { id = luxyazd.10159 days = 18 } }
+					# 10 = { character_event = { id = luxyazd.10160 days = 18 } }
+					# 10 = { character_event = { id = luxyazd.10161 days = 18 } }
+					# 10 = { character_event = { id = luxyazd.10162 days = 18 } }
+				# }
+			}
+		}
+	}
+}
+
+# Feast Begins (Vassals)
+character_event = {
+	id = luxyazd.10132
+	desc = EVTDESCluxyazd.10132
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_705
+		set_character_flag = tawusgeran_feast_vassal
+		custom_tooltip = { text = feast_begins }
+	}
+}
+
+# Feast Ends (Liege)
+character_event = {
+	id = luxyazd.10133
+	desc = EVTDESCluxyazd.10133
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	hide_from = yes
+	
+	option = {
+		name = EVTOPTA_TOG_707
+		any_vassal = {
+			limit = { has_character_flag = attending_tawusgeran }
+			opinion = {
+				modifier = opinion_tawusgeran
+				who = ROOT
+			}
+		}
+		hidden_tooltip = {
+			any_vassal = {
+				limit = { has_character_flag = attending_tawusgeran }
+				character_event = { id = luxyazd.10134 }
+			}
+		}
+		add_character_modifier = {
+			name = held_tawusgeran_timer
+			duration = 1825
+		}
+		prestige = 100
+		piety = 100
+		clr_character_flag = holding_tawusgeran
+		clr_character_flag = feast_drunkard
+		clr_character_flag = feast_gluttonous
+		clr_character_flag = feast_lunatic
+		clr_character_flag = feast_lustful
+		clr_character_flag = feast_homosexual
+		clr_character_flag = do_not_disturb
+	}
+}
+
+# Feast Ends (Vassals)
+character_event = {
+	id = luxyazd.10134
+	desc = EVTDESCluxyazd.10134
+	picture = GFX_evt_feast
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_TOG_707
+		clr_character_flag = attending_tawusgeran
+		clr_character_flag = tawusgeran_feast_vassal
+		clr_character_flag = feast_drunkard
+		clr_character_flag = feast_gluttonous
+		clr_character_flag = feast_lunatic
+		clr_character_flag = feast_lustful
+		clr_character_flag = feast_friendship
+		clr_character_flag = feast_homosexual
+		clr_character_flag = do_not_disturb
+	}
+}
+
+# Yazidi Pilgrimage
+
+character_event = {
+	id = luxyazd.10163
+	desc = EVTDESCluxyazd.10163
+	picture = GFX_evt_merchant_caravan
+
+        is_triggered_only = yes
+
+        option = {
+                name = EVTOPTAluxyazd.10163
+                hidden_tooltip = {
+					character_event = { id = luxyazd.10164 }
+                }
+	}
+}
+
+
+# Sheikh's Tomb
+
+character_event = {
+	id = luxyazd.10164
+	desc = EVTDESCluxyazd.10164
+	picture = GFX_evt_merchant_caravan
+
+        is_triggered_only = yes
+
+        option = {
+                 name = EVTOPTAluxyazd.10164
+                hidden_tooltip = {
+					set_character_flag = yazidi_pilgrimage
+                }
+	}
+}	
+
+# Good Arrival
+
+narrative_event = {
+	id = luxyazd.10165
+        title = EVTNAMEluxyazd.10165
+	desc = EVTDESCluxyazd.10165
+	picture = GFX_evt_carriage
+
+        trigger = {
+	        has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = bad_yazidi_pilgrimage }
+        }
+
+	mean_time_to_happen = {
+		months = 3
+	}
+
+        option = {
+                name = EVTOPTAluxyazd.10124
+                hidden_tooltip = {
+						clr_character_flag = yazidi_pilgrimage
+                        set_character_flag = good_yazidi_pilgrimage
+                        character_event = { id = luxyazd.10167 days = 10 }
+                }
+	}
+}
+
+# Bad Arrival
+
+narrative_event = {
+	id = luxyazd.10166
+        title = EVTNAMEluxyazd.10166
+	desc = EVTDESCluxyazd.10166
+	picture = GFX_evt_market
+
+        trigger = {
+				has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = good_yazidi_pilgrimage }
+        }
+
+	mean_time_to_happen = {
+		months = 4
+	}
+
+        option = {
+                name = EVTOPTAluxyazd.10166
+                hidden_tooltip = {
+						clr_character_flag = yazidi_pilgrimage
+                        set_character_flag = bad_yazidi_pilgrimage
+                        character_event = { id = luxyazd.10168 days = 10 }
+                }
+	}
+}
+
+# Good Journey
+
+character_event = {
+	id = luxyazd.10167
+	desc = EVTDESCluxyazd.10167
+	picture = GFX_evt_imam
+
+        is_triggered_only = yes
+
+        option = {
+                name = EVTOPTAluxyazd.10167
+                add_trait = pilgrim
+				#decadence = -5
+                piety = 100
+                }
+	}
+
+# Bad Journey
+
+character_event = {
+	id = luxyazd.10168
+	desc = EVTDESCluxyazd.10168
+	picture = GFX_evt_imam
+
+        is_triggered_only = yes
+
+        option = {
+                name = EVTOPTAluxyazd.10166
+                add_trait = pilgrim
+				#decadence = 5
+                piety = -100
+        }
+	}
+
+# Pilgrimage Bandits
+
+character_event = {
+	id = luxyazd.10169
+	desc = EVTDESCluxyazd.10169
+	picture = GFX_evt_moors
+
+        trigger = {
+	        has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = pilgrimage_bandits }
+        }
+
+	mean_time_to_happen = {
+		months = 8
+	}
+
+    option = {
+                name = EVTOPTAluxyazd.10169
+                set_character_flag = pilgrimage_bandits
+                ai_chance = { 
+					factor = 5
+					modifier = {
+						factor = 5
+						trait = brave
+					}
+					modifier = {
+						factor = 0
+						trait = craven
+					}			
+				}
+            random_list = {
+				50 = { hidden_tooltip = { character_event = { id = luxyazd.10170 } } }
+				30 = {	add_trait = brave hidden_tooltip = { ROOT = { character_event = { id = luxyazd.10170 } } } }
+				20 = {	death = { death_reason = death_battle } }
+			}		
+	}
+    option = {
+		name = EVTOPTBluxyazd.10169
+		set_character_flag = pilgrimage_bandits
+		ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 0
+				trait = brave
+			}
+			modifier = {
+				factor = 5
+				trait = craven
+			}
+		}			
+		random_list = {
+			70 = { hidden_tooltip = { character_event = { id = luxyazd.10171 } } }
+			30 = { add_trait = craven hidden_tooltip = { ROOT = { character_event = { id = luxyazd.10171 } } }	
+			}			
+		}
+    }
+}
+
+
+character_event = {
+	id = luxyazd.10170
+	desc = EVTDESCluxyazd.10170
+	picture = GFX_evt_melee
+
+        is_triggered_only = yes
+
+        option = {
+                name = EVTOPTAluxyazd.10170
+                prestige = 50
+                }
+	}
+
+
+character_event = {
+	id = luxyazd.10171
+	desc = EVTDESCluxyazd.10171
+	picture = GFX_evt_moors
+
+        is_triggered_only = yes
+
+        option = {
+                name = EVTOPTAluxyazd.10171
+                prestige = -50
+                }
+	}
+
+# Pilgrimage Oasis
+
+character_event = {
+	id = luxyazd.10172
+	desc = EVTDESCluxyazd.10172
+	picture = GFX_evt_fishing
+
+        trigger = {
+	        has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = pilgrimage_oasis }
+        }
+
+	mean_time_to_happen = {
+		months = 5
+	}
+
+        option = {
+                name = EVTOPTAluxyazd.10172
+                set_character_flag = pilgrimage_oasis
+                add_character_modifier = {
+                        name = desert_heat
+                        duration = 30
+                }
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = strong
+			}
+			modifier = {
+				factor = 0
+				trait = ill
+			}
+        }			
+	}
+        option = {
+                name = EVTOPTBluxyazd.10172
+                set_character_flag = pilgrimage_oasis
+                add_character_modifier = {
+                        name = fresh_water
+                        duration = 30
+                }
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = ill
+			}
+			modifier = {
+				factor = 0
+				trait = strong
+			}	
+        }						
+	}
+}	 
+
+
+# Pilgrimage Peacock
+
+character_event = {
+	id = luxyazd.10173
+	desc = EVTDESCluxyazd.10173
+	picture = GFX_evt_desert
+
+        trigger = {
+				has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = pilgrimage_peacock }
+        }
+
+	mean_time_to_happen = {
+		months = 10
+	}
+
+        option = {
+                name = EVTOPTAluxyazd.10173
+                set_character_flag = pilgrimage_peacock
+                custom_tooltip = {
+                       name = approach_peacock
+                }
+                hidden_tooltip = { 
+                        character_event = { id = luxyazd.10174 } 
+                }
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = zealous
+			}
+			modifier = {
+				factor = 0
+				trait = cynical
+			}
+        }			
+	}
+        option = {
+                name = EVTOPTBluxyazd.10173
+                set_character_flag = pilgrimage_peacock
+                custom_tooltip = {
+                       name =  confront_peacock
+                }
+                hidden_tooltip = { 
+                        character_event = { id = luxyazd.10175 } 
+                }
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = cynical
+			}
+			modifier = {
+				factor = 0
+				trait = zealous
+			}	
+        }						
+	}
+}  
+	
+
+character_event = {
+	id = luxyazd.10174
+	desc = EVTDESCluxyazd.10174
+	picture = GFX_evt_desert
+
+        is_triggered_only = yes
+
+        option = {
+                name = EVTOPTAluxyazd.10124
+                add_character_modifier = {
+                name = peacocks_feather
+                duration = -1
+                }
+        }
+}
+
+character_event = {
+	id = luxyazd.10175
+	desc = EVTDESCluxyazd.10175
+	picture = GFX_evt_melee
+
+        is_triggered_only = yes
+
+        option = {
+                name = EVTOPTAluxyazd.10166
+                piety = -100
+                }
+	}
+
+# Pilgrimage Samaritan
+
+character_event = {
+	id = luxyazd.10176
+	desc = EVTDESCluxyazd.10176
+	picture = GFX_evt_bloody_man
+
+        trigger = {
+	        has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = pilgrimage_samaritan }
+        }
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+        option = {
+                name = EVTOPTAluxyazd.10176
+                set_character_flag = pilgrimage_samaritan
+				#decadence = -1
+                piety = 20
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = kind
+			}
+			modifier = {
+				factor = 0
+				trait = cruel
+			}
+        }			
+	}
+        option = {
+                name = EVTOPTBluxyazd.10176
+                set_character_flag = pilgrimage_samaritan
+				#decadence = 1
+                piety = -20
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = cruel
+			}
+			modifier = {
+				factor = 0
+				trait = kind
+			}	
+        }						
+	}
+} 
+
+# Pilgrimage Beggar
+
+character_event = {
+	id = luxyazd.10177
+	desc = EVTDESCluxyazd.10177
+	picture = GFX_evt_market
+        trigger = {
+	        has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = pilgrimage_beggar }
+        }
+
+	mean_time_to_happen = {
+		months = 2
+	}
+
+        option = {
+                name = EVTOPTAluxyazd.10177
+                set_character_flag = pilgrimage_beggar		
+				#decadence = -1				
+                piety = 20
+                wealth = -10
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = kind
+			}
+			modifier = {
+				factor = 0
+				trait = cruel
+			}
+        }			
+	}
+        option = {
+                name = EVTOPTBluxyazd.10177
+                set_character_flag = pilgrimage_beggar
+				#decadence = 1
+                prestige = 20
+                piety = -20
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = cruel
+			}
+			modifier = {
+				factor = 0
+				trait = kind
+			}	
+        }						
+	}
+}  
+
+# Pilgrimage Lost
+
+character_event = {
+	id = luxyazd.10178
+	desc = EVTDESCluxyazd.10178
+	picture = GFX_evt_desert
+        trigger = {
+	        has_character_flag = yazidi_pilgrimage
+                NOT = { has_character_flag = pilgrimage_lost_lalish }
+        }
+
+	mean_time_to_happen = {
+		months = 3
+	}
+
+        option = {
+                name = EVTOPTAluxyazd.10178
+                set_character_flag = pilgrimage_lost_lalish
+                prestige = -20
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = patient
+			}
+			modifier = {
+				factor = 0
+				trait = wroth
+			}
+        }			
+	}
+        option = {
+                name = EVTOPTBluxyazd.10178
+                set_character_flag = pilgrimage_lost_lalish
+                add_character_modifier = {
+                        name = desert_heat
+                        duration = 30
+                }
+                ai_chance = { 
+			factor = 5
+			modifier = {
+				factor = 5
+				trait = wroth
+			}
+			modifier = {
+				factor = 0
+				trait = patient
+			}	
+        }						
+	}
+}  
