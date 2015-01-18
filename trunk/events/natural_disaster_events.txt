@@ -5,8 +5,8 @@
 # Not fired from on actions
 #
 # Reserved ID Spaces:
-# 0-49 Meteor
-# 50-99 Earthquakes
+# 0-19 Meteor
+# 20-39 Volcano
 #
 #####################################################
 
@@ -312,3 +312,185 @@ character_event = {
 		name = VIETdisaster.14.a
 	}
 }
+
+
+########################################################################################
+# Volcano - rare, and tends to happen in certain locations
+########################################################################################
+
+# Set-up event
+province_event = {
+	id = VIETdisaster.20
+	desc = VIETdisaster.20.desc
+	picture = "GFX_evt_volcanic_eruption"
+	
+	trigger = {
+		NOT = { has_global_flag = VIET_no_natural_disasters }
+		OR = {
+			empire = { title = e_kush }
+			empire = { title = e_aksum }
+			empire = { title = e_scandinavia }
+			empire = { title = e_byzantium }
+			empire = { title = e_roman }
+			empire = { title = e_arabia }
+			empire = { title = e_gallia }
+			empire = { title = e_francia }
+
+			empire = { title = e_persia }
+			empire = { title = e_turk }
+			kingdom = { title = k_siracusa }
+			kingdom = { title = k_africa }
+			kingdom = { title = k_mauretania }
+			kingdom = { title = k_armenia }
+			kingdom = { title = k_georgia }
+			kingdom = { title = k_egypt }
+			duchy = { title = d_iceland }
+			duchy = { title = d_krete }
+			duchy = { title = d_canarias }
+			county = { title = c_canarias }
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 100000
+		modifier = {
+			factor = 100
+			has_global_flag = volcano_erupted
+		}
+		modifier = { #Most likely suspects
+			factor = 50
+			NOT = {
+				OR = {
+					kingdom = { title = k_siracusa }
+					kingdom = { title = k_armenia }
+					kingdom = { title = k_georgia }
+					duchy = { title = d_iceland }
+					duchy = { title = d_krete }
+					duchy = { title = d_canarias }
+					county = { title = c_canarias }					
+				}			
+			}
+		}
+	}
+	
+	immediate = {
+		set_global_flag = volcano_erupted
+	}
+	
+	option = {
+		name = VIETdisaster.20.a
+		save_event_target_as = VIET_volcano_victim
+		add_province_modifier = {
+			name = VIET_center_volcanic_eruption
+			duration = 3650
+		}
+		custom_tooltip = { text = VIET_got_volcanic_eruption }
+		hidden_tooltip = {
+			owner = {
+				narrative_event = { id = VIETdisaster.21 }
+			}
+			any_province_character = {
+				random_list = {
+					10 = { character_event = { id = VIETdisaster.25 } }
+					40 = { character_event = { id = VIETdisaster.23 } }
+					50 = { character_event = { id = VIETdisaster.24 } }
+				}
+			}
+			any_neighbor_province = {
+				limit = {
+					NOT = { has_province_modifier = VIET_center_volcanic_eruption }
+				}
+				random_list = {
+					70 = { province_event = { id = VIETdisaster.22 days = 1 } }
+					30 = { }
+				}
+			}
+		}
+	}
+	
+}
+
+#omfg
+narrative_event = {
+	id = VIETdisaster.21
+	title = VIETdisaster.21.title
+	desc = VIETdisaster.21.desc
+	picture = "GFX_evt_volcanic_eruption"
+	
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = VIETdisaster.21.a
+	}	
+}
+
+#Smoke spreads
+province_event = {
+	id = VIETdisaster.22
+	desc = VIETdisaster.22.desc
+	picture = "GFX_evt_volcanic_eruption"
+	
+	is_triggered_only = yes
+	
+	option = { #ok
+		name = VIETdisaster.22.a
+		add_province_modifier = {
+			name = VIET_near_volcanic_eruption
+			duration = 1825
+		}
+	}
+}
+
+#wound
+character_event = {
+	id = VIETdisaster.23
+	desc = VIETdisaster.23.desc
+	picture = "GFX_evt_volcanic_eruption"
+	
+	is_triggered_only = yes
+	
+	option = { #run for it
+		name = VIETdisaster.23.a
+		random_list = {
+			25 = { add_trait = maimed }
+			75 = { add_trait = wounded }
+		}
+	}
+		
+}
+
+#escape!
+character_event = {
+	id = VIETdisaster.24
+	desc = VIETdisaster.24.desc
+	picture = "GFX_evt_volcanic_eruption"
+	
+	is_triggered_only = yes
+	
+	option = { #run for it
+		name = VIETdisaster.24.a
+	}
+}
+
+#death!
+character_event = {
+	id = VIETdisaster.25
+	desc = VIETdisaster.25.desc
+	picture = "GFX_evt_volcanic_eruption"
+	
+	is_triggered_only = yes
+	
+	option = { #run for it
+		name = VIETdisaster.25.a
+		death = {
+			death_reason = death_accident
+		}
+	}
+}
+
+
+
+
+
