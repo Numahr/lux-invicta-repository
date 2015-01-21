@@ -1540,15 +1540,11 @@ county_liberation = {
 			}
 		}
 	}
-	can_use_gui = {
-		ROOT = {
-			OR = {
-				has_law = people_control_0
-				has_law = people_control_1
-			}
-			piety = 50
-		}
-	}
+#	can_use_gui = {
+#		ROOT = {
+#			piety = 50
+#		}
+#	}
 	can_use_title = {
 		tier = count
 		OR = {
@@ -1621,57 +1617,56 @@ county_liberation = {
 		}
 	}
 	on_success_title = {
-		set_title_flag = liberated
-		add_province_modifier = {
-			name = province_liberated
-			duration = 1825
-		}
-		FROM = {
-			create_random_soldier = {
-				random_traits = yes
-				culture = FROM
-				religion = ROOT
-				dynasty = none
-				female = no
-			}
-			new_character = {
-				set_character_flag = liberation_ruler
-				add_trait = ambitious
-				prestige = 50
-				piety = 80
-				random_realm_title = {
-					limit = { has_title_flag = liberated }
-					grant_title = PREV
-				}
-				set_defacto_liege = THIS
-				capital_scope = {
-					holder_scope = {
-						spawn_unit = {
-							province = PREV
-							home = PREV
-							owner = THIS
-							leader = THIS
-							troops = {
-								archers = { 120 120 }
-								light_infantry = { 450 450 }
-								heavy_infantry = { 20 20 }
-								light_cavalry = { 10 10 }
+		custom_tooltip = {
+				text = county_liberation_tooltip
+				hidden_tooltip = {
+					set_title_flag = liberated
+					add_province_modifier = {
+						name = province_liberated
+						duration = 1825
+					}
+					FROM = {
+						create_random_soldier = {
+							random_traits = yes
+							culture = FROM
+							religion = ROOT
+							dynasty = none
+							female = no
+						}
+						new_character = {
+							set_character_flag = liberation_ruler
+							add_trait = ambitious
+							prestige = 50
+							piety = 80
+							random_realm_title = {
+								limit = { has_title_flag = liberated }
+								grant_title = PREV
 							}
-							attrition = 0.25
-							maintenance_multiplier = 0.1
+							set_defacto_liege = THIS
+							capital_scope = {
+								holder_scope = {
+									spawn_unit = {
+										province = PREV
+										home = PREV
+										owner = THIS
+										leader = THIS
+										troops = {
+											archers = { 120 120 }
+											light_infantry = { 450 450 }
+											heavy_infantry = { 20 20 }
+											light_cavalry = { 10 10 }
+										}
+										attrition = 0.25
+										maintenance_multiplier = 0.1
+									}
+								}
+							}
+							clr_character_flag = liberation_ruler
 						}
 					}
 				}
-				clr_character_flag = liberation_ruler
 			}
-		}
-		any_attacker = {
-			limit = { NOT = { character = ROOT } }
-			hidden_tooltip = { participation_scaled_prestige = 70 }
-		}
-		clr_title_flag = liberated
 	}
-
 	on_fail_title = {
 		any_defender = {
 			limit = { character = FROM }
@@ -1686,9 +1681,10 @@ county_liberation = {
 	on_reverse_demand = {
 		ROOT = {
 			prestige = -20
+			wealth = -50
 			transfer_scaled_wealth = {
 				to = FROM
-				value = 0.2
+				value = 0.5
 			}
 		}
 		any_defender = {
@@ -1717,7 +1713,6 @@ county_liberation = {
 		factor = 100
 	}
 }
-
 # Religious Subjugation
 # availability: head of faith [christian/muslim/zoroastrian/reformed?), with 500 authority 100 piety 50% annual income stockpiled
 # temporarily removed, transferred to cb_Religion_appendix.txt in my locker
