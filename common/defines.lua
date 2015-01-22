@@ -12,9 +12,9 @@ NDiplomacy = {
 	DEFENDER_CALL_DECLINE_COST = 400, -- Prestige cost for refusing to join a defensive war v11 150 to 400
 	TRIBAL_VASSAL_CALL_DECLINE_COST_FACTOR = 3.0, -- Prestige cost multiplier for tribal vassals
 	PAPAL_INVEST_PIETY_COST_MULT = 0.5, -- The effect of Papal investiture on the piety cost of the special Papal actions
-	SHORT_REIGN_YEARS_END = 10,-- notes:x-2 opinion per year v10nincreased from 9 to 15 v11 increased to 20 v12 reduced to 8 (with -5 per year) v12 increased
+	SHORT_REIGN_YEARS_END = 8,-- notes:x-2 opinion per year v10nincreased from 9 to 15 v11 increased to 20 v12 reduced to 8 (with -5 per year) v12 increased / Numahr: decreased to 8 based on user feedback
 	LONG_REIGN_YEARS_START = 15, --v10n decreased from 20 to 15 v11 corrected computation. Gap is 5 (vanilla 20-9=11). v11 starts at 15 (gap of 7 years) v12 start 20, gap 10 v14 start 15, gap 5
-	SHORT_REIGN_OPINION_MULT = 4, -- v12 (-5 x 8 per year with DivineRight = 0) v14 reduced to 4
+	SHORT_REIGN_OPINION_MULT = 4, -- v12 (-5 x 8 per year with DivineRight = 0) v14 reduced to 4 / Numahr: increased back to 5 as all SELIN metrics are based on this
 	DOW_ON_ALLY_PRESTIGE_COST = 500, --v11 increased from 150 to 500
 	MINIMUM_SEND_GIFT_COST = 20,
 	SEND_GIFT_INCOME_SCALEFACTOR = 24, 
