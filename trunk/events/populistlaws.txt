@@ -1,12 +1,153 @@
 namespace = populist_laws
+
+# Design note: these events are not voluntary, but the ruler-ship style still "naturally" affects their MTTH.
+
+# PROVINCES
+### naming convention is populist_province.xy
+# x = law tier
+# y = secondary identifier
+# y = 0, increase (to)
+# y = 1, reduction (from)
+
+# level-down events
+
+province_event = {
+	id = populist_province.11
+	desc = "EVTDESCpopulist_province.11"
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+	
+	trigger = {
+	    holder_scope = {
+			has_law = people_control_0
+		}
+		OR = {
+			has_province_modifier = people_control_province_1
+			AND = {
+				NOT = { has_province_modifier = people_control_province_0 }
+				NOT = { has_province_modifier = people_control_province_1 }
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 2 #test value, change it to 90 later
+		# modifiers here
+	}
+	
+	option = {
+		name = "EVTOPTpopulist_province.11"
+		add_province_modifier = {
+			name = people_control_province_0
+			duration = -1
+		}
+		hidden_tooltip = {
+				remove_province_modifier = people_control_province_1
+		}
+	}
+}
+
+province_event = {
+	id = populist_province.21
+	desc = "EVTDESCpopulist_province.21"
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+	
+	trigger = {
+	    holder_scope = {
+			has_law = people_control_1
+		}
+		AND = {
+			NOT = { has_province_modifier = people_control_province_0 }
+			NOT = { has_province_modifier = people_control_province_1 }
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 2 #test value, change it to 90 later
+		# modifiers here
+	}
+	
+	option = {
+		name = "EVTOPTpopulist_province.21"
+		add_province_modifier = {
+			name = people_control_province_1
+			duration = -1
+		}
+	}
+}
+
+# level-up events
+
+province_event = {
+	id = populist_province.10
+	desc = "EVTDESCpopulist_province.10"
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+	
+	trigger = {
+	    holder_scope = {
+			has_law = people_control_1
+		}
+		has_province_modifier = people_control_province_0
+	}
+	
+	mean_time_to_happen = {
+		days = 2 #test value, change it to 90 later
+		# modifiers here
+	}
+	
+	option = {
+		name = "EVTOPTpopulist_province.10"
+		hidden_tooltip = {
+			remove_province_modifier = people_control_province_0
+		}
+		add_province_modifier = {
+			name = people_control_province_1
+			duration = -1
+		}
+	}
+}
+
+province_event = {
+	id = populist_province.20
+	desc = "EVTDESCpopulist_province.20"
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+	
+	trigger = {
+	    holder_scope = {
+			OR = {
+				has_law = people_control_2
+				has_law = people_control_3
+				has_law = people_control_4
+			}
+		}
+		OR = {
+			has_province_modifier = people_control_province_0
+			has_province_modifier = people_control_province_1
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 2 #test value, change it to 90 later
+		# modifiers here
+	}
+	
+	option = {
+		name = "EVTOPTpopulist_province.20"
+		remove_province_modifier = people_control_province_0
+		remove_province_modifier = people_control_province_1
+	}
+}
+
+
+# LAWS
 ### naming convention is populist_laws.xy
 # x = law tier
 # y = secondary identifier
 # y = 0, increase (to)
 # y = 1, reduction (from)
-# y = 2, misc events
-
-# Design note: these events are not voluntary, but the ruler-ship style still "naturally" affects their MTTH.
 
 # level-up events
 
@@ -738,7 +879,7 @@ character_event = {
 			tier = BARON 
 			has_law = people_control_2
 		}
-		NOT = { prestige = 200 }
+		NOT = { prestige = 500 }
 		primary_title = { has_law = people_control_3 }
 	}
 	mean_time_to_happen = {
@@ -904,7 +1045,7 @@ character_event = {
 			has_law = people_control_3
 		}
 		OR = {
-			NOT = { prestige = 500 }
+			NOT = { prestige = 1000 }
 			NOT = { intrigue = 10 }
 			NOT = { diplomacy = 10 }
 		}
