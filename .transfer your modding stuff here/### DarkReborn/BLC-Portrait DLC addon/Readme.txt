@@ -2,31 +2,39 @@ REQUIREMENT NOTES: YOU NEED ALL THE PORTRAIT DLCs (UPDATED TO THEIR LATEST VERSI
 ADDENDUM NOTES: IF YOU ARE EXPERIENCING RUNTIME ERRORS OR CRASHES WITH LI-BLC ENABLED, EITHER a) DISABLE LI-BLC OR b) DISABLE NON-ESSENTIAL DLC'S OR c) REFER TOT HE FIRST POST OF THE FAQS [CLAIRVOYANCE CORNER]. THIS IS CAUSED BY A MEMORY ISSUE DUE TO THE SCALE OF LI-BLC.
 
 LATEST CHANGELOG
-v8d12+08
-new headgear for Mithraic priests (again)n clothes
-turkish portrait fix
-updated BLC-DLC for indiangfx and turkishgfx (BLC-DLC now also requires Rajas of India and the Turkish Faces pack)
-Added indiangfxcultures to graphicalculturetype.
-Updated ancient semitic headgear (it should look more Canaanite right now... maybe it needs a bit more of Tyrian purple)
-Integrated mongols face pack into BLC-DLC
-Cutted down a lot of useless portrait slots down to size, from 20 headgears and 18 clothing to 15 of both (Christian priest clothings removed, emperor clothings have been merged with the first clothing slot and noble clothings 4 has been eliminated). This may result in a (honestly unnoticeable) more limited wardrobe but it's a huge performance improvement, both speed and RAM usage wise.
-Filtered and dropped shadows on some pieces (they should look much better now)
-New Hellengfx culture (basically, a ton of white exomis + linothoraxes for the military. Oh, and Megas Alexandros' Herakles lion scalp helmet for Emperors)
-New Eastasiangfx culture, using a lighter variation of the most Asian looking parts of Crackdtoothgrin's steppe faces, with lighter skin tone, and a mix of my own work and rain005's on clothing and headgear, I'd say it looks pretty cool!! (Only sinohellenic+sinitic group cultures use it for now)
-complete set of latin clothes, better quality latin headgear (New military headgear for Latingfx and better looking laurel wreaths for them)
-Adapted the Turkish and Indian portrait packs in the BLC-DLC addon
-Central Asian gfx culture; for Huns, Uyghurs and Bodpa.
-Misc minor updates, mainly related to religious localizations and a fix to the northmangfx behind frames.
-made a makeshift frontend_title and modified load_0 (the pre-load screen) until we get an artist to do an actual nice looking one. or we keep this if somehow people like it.
-fixed northmangfx portraits' positioning. the damn 2.1.2 patch messing with my setup!
-changes to chinese portraits
-eliminated useless beards
-all the southern (levantine, andalusian, oldbyzantine) gfx cultures now use modified versions of the muslim eyes for each of them to further differentiate them from northern (frankish, german, celtic, etc...) gfx cultures.
-returned latin/mediterranean eyes to their former selves
-Made the eastasiangfx eyes more Asian to further differentiate from Altaic and Turkish gfx cultures.
-andalusiangfx (and persian, ancient semitic, etc...) females should look less spray-on tan and more natural tan.
+v8d12+09
+- Central Asian and Chinese portraits back to use non-DLC portraits
+- Integrated the latest facepacks (Greek and Iberian/Italian) into BLC. Greeks used by the Hellens, Indohellens, Armenians and Ancient Levantine (Phoenicians, Nabateans, Hebrews).   Iberian/Italian used by Romans, Italians, Catalans, Andalusians and Occitans,
+- Catalans now use the Iberian facepack
+- Occitan now Western faces + Iberian hair
+- GFXCultures that can use early portraits and units do use them now if available 
 
 Older Logs:
+
+v8d12+08
+- new headgear for Mithraic priests (again)n clothes
+- turkish portrait fix
+- updated BLC-DLC for indiangfx and turkishgfx (BLC-DLC now also requires Rajas of India and the Turkish Faces pack)
+- Added indiangfxcultures to graphicalculturetype.
+- Updated ancient semitic headgear (it should look more Canaanite right now... maybe it needs a bit more of Tyrian purple)
+- Integrated mongols face pack into BLC-DLC
+- Cutted down a lot of useless portrait slots down to size, from 20 headgears and 18 clothing to 15 of both (Christian priest clothings removed, emperor clothings have been merged with the first clothing slot and noble clothings 4 has been eliminated). This may result in a (honestly unnoticeable) more limited wardrobe but it's a huge performance improvement, both speed and RAM usage wise.
+- Filtered and dropped shadows on some pieces (they should look much better now)
+- New Hellengfx culture (basically, a ton of white exomis + linothoraxes for the military. Oh, and Megas Alexandros' Herakles lion scalp helmet for Emperors)
+- New Eastasiangfx culture, using a lighter variation of the most Asian looking parts of Crackdtoothgrin's steppe faces, with lighter skin tone, and a mix of my own work and rain005's on clothing and headgear, I'd say it looks pretty cool!! (Only sinohellenic+sinitic group cultures use it for now)
+- complete set of latin clothes, better quality latin headgear (New military headgear for Latingfx and better looking laurel wreaths for them)
+- Adapted the Turkish and Indian portrait packs in the BLC-DLC addon
+- Central Asian gfx culture; for Huns, Uyghurs and Bodpa.
+- Misc minor updates, mainly related to religious localizations and a fix to the northmangfx behind frames.
+- made a makeshift frontend_title and modified load_0 (the pre-load screen) until we get an artist to do an actual nice looking one. or we keep this if somehow people like it.
+- fixed northmangfx portraits' positioning. the damn 2.1.2 patch messing with my setup!
+- changes to chinese portraits
+- eliminated useless beards
+- all the southern (levantine, andalusian, oldbyzantine) gfx cultures now use modified versions of the muslim eyes for each of them to further differentiate them from northern (frankish, german, celtic, etc...) gfx cultures.
+- returned latin/mediterranean eyes to their former selves
+- Made the eastasiangfx eyes more Asian to further differentiate from Altaic and Turkish gfx cultures.
+- andalusiangfx (and persian, ancient semitic, etc...) females should look less spray-on tan and more natural tan.
+
 v8d12+07
 - Added secondary graphical culture to some cultures so that they use the unit pack DLCs in case the player owns them.
 - Added stepperomangfx for non-DLC Sarmatae (not as awesome as the BLC-DLC culture, but looks cool enough)
