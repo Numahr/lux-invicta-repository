@@ -118,7 +118,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = EVTOPTA64002
+		name = EVTOPTA64002 # Refuse
 		FROM = {
 			reverse_opinion = {
 				modifier = opinion_angry
@@ -128,7 +128,7 @@ character_event = {
 		}
 	}
 	option = {
-		name = EVTOPTB64002
+		name = EVTOPTB64002 # Break up
 		FROM = {
 			spouse = {
 				character_event = {
@@ -144,7 +144,7 @@ character_event = {
 		}
 	}
 	option = {
-		name = EVTOPTC64002
+		name = EVTOPTC64002 # I will claw your eyes out!
 		tooltip_info = martial
 		trigger = {
 			martial = 10
@@ -171,7 +171,7 @@ character_event = {
 		}
 	}
 	option = {
-		name = EVTOPTD64002
+		name = EVTOPTD64002 # Your meddling will cost you dearly
 		tooltip_info = intrigue
 		trigger = {
 			intrigue = 10
@@ -1402,13 +1402,7 @@ character_event = {
 					is_alive = yes
 					prisoner = no
 					is_abroad = no
-					ROOT = {
-						any_lover = {
-							NOT = {
-								character = PREV
-							}
-						}
-					}
+					NOT = { any_lover = { character = ROOT } }
 				}
 			}
 			spouse = {
@@ -1493,6 +1487,26 @@ character_event = {
 		scaled_wealth = -0.1
 		prestige = 10
 		add_trait = charitable
+		if = {
+			limit = {
+				is_married = no
+			}
+			piety = -5
+			any_vassal = {
+				limit = {
+					OR = {
+						piety = 50
+						trait = zealous
+						is_theocracy = yes
+					}
+				}
+				opinion = {
+					modifier = opinion_angry
+					who = ROOT
+					years = 2
+				}
+			}
+		}
 		random_lover = {
 			limit = {
 				is_female = yes
@@ -1515,32 +1529,6 @@ character_event = {
 				}
 			}
 			prestige = 20
-			if = {
-				limit = {
-					NOT = {
-						any_spouse = {
-							character = ROOT
-						}
-					}
-				}
-				ROOT = {
-					piety = -5
-					any_vassal = {
-						limit = {
-							OR = {
-								piety = 50
-								trait = zealous
-								is_theocracy = yes
-							}
-						}
-						opinion = {
-							modifier = opinion_angry
-							who = ROOT
-							years = 2
-						}
-					}
-				}
-			}
 		}
 	}
 	option = {
@@ -1606,7 +1594,7 @@ character_event = {
 	}
 }
 
-#Ruler confront cheating spouse
+# Ruler confronts cheating spouse
 character_event = {
 	id = 64040
 	desc = EVTDESC64040
@@ -3641,16 +3629,15 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA64105
-		opinion = {
-			modifier = opinion_furious
-			who = FROM
-			years = 5
-		}
-		if = {
-			limit = {
-				is_lover = FROM
+		spouse = {
+			add_rival = ROOT
+			ROOT = {
+				opinion = {
+					modifier = grievously_offended
+					who = PREV
+					years = 10
+				}
 			}
-			remove_lover = FROM
 		}
 	}
 }

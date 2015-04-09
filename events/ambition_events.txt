@@ -504,12 +504,38 @@ character_event = {
 	}
 }
 
-### Alexander the Great
+### Alexander/Ashoka the Great
 character_event = {
 	id = 94018
-	desc = EVTDESC94018
 	picture = GFX_evt_library
 	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC94018
+		trigger = {
+			capital_scope = {
+				empire = {
+					NOT = {
+						title = e_south_india
+						title = e_india
+					}
+				}
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC94018_india
+		trigger = {
+			capital_scope = {
+				empire = {
+					OR = {
+						title = e_south_india
+						title = e_india
+					}
+				}
+			}
+		}
+	}
 	
 	capable_only = yes
 	prisoner = no
@@ -519,27 +545,134 @@ character_event = {
 			AND = {
 				has_focus = focus_war
 				NOT = { martial = 8 }
+				NOT = { has_character_flag = toy_army }
+				NOT = { has_character_flag = street_ruffians }
+				NOT = { has_character_flag = warrior_mentor }
+				NOT = { has_character_modifier = student_of_strategy }
+				NOT = { has_character_modifier = adept_of_strategy }
+				NOT = { trait = strategist }
+			}
+			AND = {
+				has_focus = focus_war
+				NOT = { lifestyle_traits = 1 }
+				NOT = { has_character_modifier = student_of_strategy }
+				NOT = { has_character_modifier = adept_of_strategy }
 			}
 			has_ambition = obj_improve_martial
-		}
-		NOT = { has_character_flag = toy_army }
-		NOT = { has_character_flag = street_ruffians }
-		NOT = { has_character_flag = warrior_mentor }
-		capital_scope = {
-			NOT = { empire = { title = e_india } }
-			NOT = { empire = { title = e_south_india } }
-			NOT = { empire = { title = e_sassanid } }
-			
 		}
 	}
 	
 	mean_time_to_happen = {
 		months = 280
+
+		modifier = {
+			factor = 0.1
+			has_focus = focus_war
+			NOT = { lifestyle_traits = 1 }
+			NOT = { has_character_modifier = student_of_strategy }
+			NOT = { has_character_modifier = adept_of_strategy }
+		}
 	}
 	
 	option = {
 		name = EVTOPTA94018
+		trigger = {
+			capital_scope = {
+				NOT = { empire = { title = e_rajastan } }
+				NOT = { empire = { title = e_bengal } }
+				NOT = { empire = { title = e_deccan } }
+				NOT = { empire = { title = e_india } }
+			}
+			OR = {
+				has_ambition = obj_improve_martial
+				NOT = { martial = 8 }
+			}
+		}
 		change_martial = 1
+	}
+	option = {
+		name = EVTOPTB_94018
+		trigger = {
+			capital_scope = {
+				OR = {
+					empire = { title = e_rajastan }
+					empire = { title = e_bengal } 
+					empire = { title = e_deccan } 
+					empire = { title = e_india }
+				}
+			}
+			OR = {
+				has_ambition = obj_improve_martial
+				NOT = { martial = 8 }
+			}
+		}
+		change_martial = 1
+	}
+	option = {
+		name = EVTOPTC_94018     # Study further
+		trigger = {
+			has_focus = focus_war
+		}
+		add_character_modifier = {
+			modifier = student_of_strategy
+			duration = -1
+		}
+		custom_tooltip = { text = studying_strategy_tooltip }
+		hidden_tooltip = { character_event = { id = 94019 days = 300 random = 400 } }
+	}
+}
+
+# Further studies in strategy
+character_event = {
+	id = 94019
+	picture = GFX_evt_library
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		text = EVTDESC_94019
+		trigger = {
+			capital_scope = {
+				empire = {
+					NOT = {
+						title = e_south_india
+						title = e_india
+					}
+				}
+			}
+		} 
+	}
+	desc = {
+		text = EVTDESC_94019_india
+		trigger = {
+			capital_scope = {
+				empire = {
+					OR = {
+						title = e_south_india
+						title = e_india
+					}
+				}
+			}
+		}
+	}
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_94019
+		trigger = {
+			has_focus = focus_war
+			NOT = { lifestyle_traits = 1 }
+		}
+		remove_character_modifier = student_of_strategy
+		add_trait = strategist
+	}
+	option = {
+		name = EVTOPTB_94019
+		remove_character_modifier = student_of_strategy
+		add_character_modifier = {
+			modifier = adept_of_strategy
+			duration = -1
+		}
 	}
 }
 
