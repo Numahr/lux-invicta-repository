@@ -404,6 +404,106 @@ decisions = {
 		}
 	}
 	
+	restore_roman_empire = {
+		is_high_prio = yes
+		potential = {
+			has_dlc = "Legacy of Rome"
+			age = 16
+			prisoner = no
+			NOT = { trait = incapable }
+			NOT = { has_global_flag = rome_restored }
+			OR = {
+				culture = roman
+				culture = galloroman
+				culture = romanobrython
+				culture = greek #IDK about the Rhomaion
+			}
+		}
+		allow = {
+			has_landed_title = e_byzantium
+			has_landed_title = e_roman
+			prestige = 3000
+		}
+		effect = {
+			wealth = -500
+			prestige = 500
+			activate_title = { title = e_roman_empire status = yes }
+			hidden_tooltip = {
+				k_italy = { de_jure_liege = e_roman_empire }
+				k_siracusa = { de_jure_liege = e_roman_empire }
+				k_sicily = { de_jure_liege = e_roman_empire }
+				k_lombardia = { de_jure_liege = e_roman_empire }
+				k_venice = { de_jure_liege = e_roman_empire }
+				k_byzantium = { de_jure_liege = e_roman_empire }
+				k_macedonia = { de_jure_liege = e_roman_empire }
+				k_greece = { de_jure_liege = e_roman_empire }
+				k_sparta = { de_jure_liege = e_roman_empire }
+				k_krete = { de_jure_liege = e_roman_empire }
+				k_pergamon = { de_jure_liege = e_roman_empire }
+				k_cyprus = { de_jure_liege = e_roman_empire }
+				k_epirus = { de_jure_liege = e_roman_empire }
+				k_isauria = { de_jure_liege = e_roman_empire }
+				k_galatia = { de_jure_liege = e_roman_empire }
+				k_armenia = { de_jure_liege = e_roman_empire }
+				k_cilicia = { de_jure_liege = e_roman_empire }
+				k_bulgaria = { de_jure_liege = e_roman_empire }
+				k_serbia = { de_jure_liege = e_roman_empire }
+				k_croatia = { de_jure_liege = e_roman_empire }
+				if = {
+					limit = { has_landed_title = e_byzantium }
+					e_byzantium = {
+						any_direct_de_jure_vassal_title = {
+							de_jure_liege = e_roman_empire
+						}
+					}
+				}
+				if = {
+					limit = { has_landed_title = e_roman }
+					e_roman = {
+						any_direct_de_jure_vassal_title = {
+							de_jure_liege = e_roman_empire
+						}
+					}
+				}
+			}
+			primary_title = {
+				e_roman_empire = {
+					grant_title = ROOT
+					copy_title_laws = PREV
+					copy_title_history = PREV
+				}
+			}
+			hidden_tooltip = { e_roman_empire = { make_primary_title = yes } }
+			if = {
+				limit = {
+					OR = {
+						has_landed_title = e_byzantium
+						e_byzantium = { has_holder = no }
+					}
+				}
+				e_byzantium = { destroy_landed_title = THIS }
+				activate_title = { title = e_byzantium status = no }
+			}
+			if = {
+				limit = {
+					OR = {
+						has_landed_title = e_roman
+						e_roman = { has_holder = no }
+					}
+				}
+				e_roman = { destroy_landed_title = THIS }
+				activate_title = { title = e_roman status = no }
+			}
+			set_global_flag = rome_restored
+			narrative_event = { id = LoR.20 tooltip = EVTTOOLTIPLoR.20 }
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
 	
 	claim_constantinople = {
 		is_high_prio = yes

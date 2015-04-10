@@ -26,12 +26,7 @@ action_fabricate_claims = {
 	
 	trigger = {
 		any_province_lord = {
-			NOT = { character = FROM }	#won't be sent to fabricate claim on liege's title
-			FROM = {
-				job_chancellor = {
-					NOT = { character = PREVPREV } #won't fabricate claim on own title
-				}
-			}
+			NOT = { character = FROM }
 		}
 		is_within_diplo_range = FROM
 	}
@@ -135,16 +130,12 @@ action_build_legend = {
 	potential = {
 		FROM = {
 			is_tribal = yes
-			is_adult = yes
-			NOT = { trait = incapable }
 		}
 	}
 
 	trigger = {
 		FROM = {
-			capital_scope = {
-				province = ROOT
-			}
+			is_capital = PREV
 		}
 	}
 	
@@ -231,16 +222,12 @@ action_organize_raid = {
 	potential = {
 		FROM = {
 			is_tribal = yes
-			is_adult = yes
-			NOT = { trait = incapable }
 		}
 	}
 
 	trigger = {
 		FROM = {
-			capital_scope = {
-				province = ROOT
-			}
+			is_capital = PREV
 		}
 	}
 	
@@ -364,6 +351,11 @@ action_inquisition = {
 					religion = zande_pagan
 					religion = zulu_pagan
 				}
+				is_reformed_religion = no
+				capital_scope = {
+					province = ROOT
+				}
+				controls_religion = no
 				FROM = {
 					higher_tier_than = COUNT
 					OR = {
@@ -524,15 +516,8 @@ action_inquisition = {
 						religion = shaytana
 					}
 				}
-				capital_scope = {
-					province = ROOT
-				}
-				controls_religion = no
 				NOT = {
-					has_opinion_modifier = {
-						who = FROM
-						modifier = opinion_sent_preacher
-					}
+					has_opinion_modifier = { who = FROM modifier = opinion_sent_preacher }
 				}
 				is_within_diplo_range = FROM
 			}
@@ -571,6 +556,12 @@ action_improve_rel_relations = {
 action_advance_cul_tech = {
 	attribute = learning
 	
+	potential = {
+		FROM = {
+			is_tribal = no
+		}
+	}
+	
 	trigger = {
 		any_province_lord = {
 			OR = {
@@ -580,7 +571,7 @@ action_advance_cul_tech = {
 		}
 	}
 	
-	tech_growth_modifier_culture = 0.1
+	tech_growth_modifier_culture = 0.05
 	
 	events = { 926 927 }
 }
@@ -591,8 +582,6 @@ action_build_zeal = {
 	potential = {
 		FROM = {
 			is_tribal = yes
-			is_adult = yes
-			NOT = { trait = incapable }
 			NOT = { trait = tolerant_ruler }
 			liege = { NOT = { trait = tolerant_ruler } }
 			top_liege = {
@@ -606,9 +595,7 @@ action_build_zeal = {
 
 	trigger = {
 		FROM = {
-			capital_scope = {
-				province = ROOT
-			}
+			is_capital = PREV
 		}
 	}
 	
@@ -635,422 +622,3 @@ action_charity = {
 	
 	events = { 20040 20043 20048 20050 }
 }
-
-# Lord Spiritual (SELIN Actions)
-action_academic_conference = { #Scholarly
-	attribute = learning
-	
-	potential = {
-		FROM = {
-			is_tribal = no
-			OR = {
-				religion = bud_bahusrutiya
-				religion = confucian
-				religion = docetist
-				religion = hurufi
-				religion = ilm_islam
-				religion = kothar
-				religion = marcionist 
-				religion = neoplato
-				religion = plato_christ
-				religion = plato_islam
-				religion = plato_pythagorean
-				religion = porphyryan
-				religion = tengri_confucian
-				religion = valentinian 
-			}
-		}
-	}
-	
-	trigger = {
-		any_province_lord = {
-			character = FROM
-		}
-	}
-	
-	tech_growth_modifier_culture = 0.05
-	tech_growth_modifier_economy = 0.05
-	tech_growth_modifier_military = 0.05
-	
-	events = { 312410 312412 312414 }
-}
-action_divine = { #Traditional
-	attribute = learning
-	
-	potential = {
-		FROM = {
-			OR = {
-				religion = allat
-				religion = allfather
-				religion = audianist
-				religion = berber_pagan
-				religion = bon
-				religion = bud_zor
-				religion = celtic_christ
-				religion = celtic_pagan
-				religion = chumbylat
-				religion = dievas
-				religion = donatist 
-				religion = druze
-				religion = erlik
-				religion = finnish_pagan
-				religion = german_pagan
-				religion = graeco_roman
-				religion = hindu
-				religion = hubal
-				religion = ibadi
-				religion = illuyanka
-				religion = indohelen
-				religion = inuit_pagan
-				religion = jud_ark
-				religion = jumala
-				religion = makonde_pagan
-				religion = malakbel
-				religion = mand_ruha
-				religion = mandaean
-				religion = mande_pagan
-				religion = marabout
-				religion = mari_christ
-				religion = mwari
-				religion = nasrani
-				religion = norse_pagan
-				religion = nyame
-				religion = palmyran_pagan
-				religion = perkunas
-				religion = rod
-				religion = saura
-				religion = sethian
-				religion = slavic_pagan
-				religion = sufi
-				religion = tengri_mani
-				religion = tengri_pagan
-				religion = vattisenyaly
-				religion = veles
-				religion = waaq
-				religion = yazdanism
-				religion = yazidism
-				religion = jud_ark_reformed
-				religion = muslim_sufi_reformed
-				religion = yazdanism_reformed
-			}
-		}
-	}
-	
-	trigger = {
-		any_province_lord = {
-			character = FROM
-		}
-	}
-	
-	events = { 999100 999102 999104 999106 }
-}
-action_state_rituals = { #Statist
-	attribute = learning
-	
-	potential = {
-		FROM = {
-			OR = {
-				religion = amun
-				religion = arian
-				religion = batembuzi
-				religion = beelshamen
-				religion = bud_pratyeka
-				religion = bud_zen
-				religion = indoh_bud
-				religion = indoh_confucian
-				religion = indoh_hindu
-				religion = indoh_zor
-				religion = jupiter
-				religion = kintu
-				religion = kubera
-				religion = luwian
-				religion = mani_germanic
-				religion = murjiah
-				religion = norse_christ
-				religion = orthodox
-				religion = roman_imperial
-				religion = sol
-				religion = sol_apollo
-				religion = sol_boreas
-				religion = sol_christ
-				religion = sol_islam
-				religion = sol_mani
-				religion = sol_norse
-				religion = sol_slav
-				religion = solomonic_christ
-				religion = sowilo
-				religion = sunni
-				religion = svaroh
-				religion = tengri_rod
-				religion = unctionist
-				religion = vidharma
-				religion = zor_hindu
-				religion = amun_reformed
-				religion = arab_pagan_reformed
-				religion = baal_monotheistic_reformed
-				religion = baltic_pagan_reformed
-				religion = bantu_pagan_reformed
-				religion = bud_zor_reformed
-				religion = celtic_christ_reformed
-				religion = celtic_pagan_reformed
-				religion = chumbylat_reformed
-				religion = druze_reformed
-				religion = finnish_pagan_reformed
-				religion = german_pagan_reformed
-				religion = graeco_roman_reformed
-				religion = iberian_pagan_reformed
-				religion = indohelen_reformed
-				religion = judaism_reformed
-				religion = kubera_reformed
-				religion = mani_germanic_reformed
-				religion = mani_slavic_reformed
-				religion = montanist_reformed
-				religion = nasrani_reformed
-				religion = norse_christ_reformed
-				religion = norse_pagan_reformed
-				religion = northern_sun_reformed
-				religion = nyakalagan_reformed
-				religion = saura_reformed
-				religion = serer_reformed
-				religion = sethian_reformed
-				religion = slavic_pagan_reformed
-				religion = sol_boreas_reformed
-				religion = sol_islam_reformed
-				religion = sol_sahara_reformed
-				religion = tarhunt_reformed
-				religion = tengri_pagan_reformed
-				religion = tengri_rod_reformed
-				religion = vattisenyaly_reformed
-			}
-		}
-	}
-	
-	local_tax_modifier = 0.025
-	local_revolt_risk = -0.003
-	
-	trigger = {
-		any_province_lord = {
-			character = FROM
-		}
-	}
-	
-	events = { 312418 312416 }
-}
-action_doctrinal_council = { #Clerical
-	attribute = learning
-	
-	potential = {
-		FROM = {
-			OR = {
-				religion = adoptionist
-				religion = almaqah
-				religion = apollinarist
-				religion = ashari
-				religion = athari
-				religion = bud_sthaviravada
-				religion = catholic
-				religion = cybele
-				religion = haruri
-				religion = iconoclast
-				religion = ilmatar
-				religion = imana
-				religion = irminsul
-				religion = isis
-				religion = judaism
-				religion = maturidi
-				religion = melkite
-				religion = monophysite
-				religion = monothelite
-				religion = montanist
-				religion = mutazil
-				religion = nyasaye
-				religion = peckols
-				religion = pelagian
-				religion = sabellianist 
-				religion = saule
-				religion = semipelagian
-				religion = shams
-				religion = slavic_christian
-				religion = tengri_bud
-				religion = yoruba
-				religion = zahiri
-				religion = zoroastrian
-				religion = zurvanism
-				religion = bon_reformed
-				religion = bud_zen_reformed
-				religion = cathar_reformed
-				religion = inuit_pagan_reformed
-				religion = isis_reformed
-				religion = mari_christ_reformed
-				religion = priscillian_reformed
-				religion = slavic_christian_reformed
-				religion = tengri_bud_reformed
-				religion = tengri_confucian_reformed
-				religion = tengri_mani_reformed
-				religion = vidharma_reformed
-				religion = zurvanism_reformed
-			}
-		}
-	}
-	
-	trigger = {
-		any_province_lord = {
-			character = FROM
-		}
-	}
-	
-	events = { 312510 312512 312514 }
-}
-action_populist_rally = { #Populist
-	attribute = learning
-	
-	potential = {
-		FROM = {
-			OR = {
-				religion = antinomian 
-				religion = bogomilist
-				religion = cathar
-				religion = dionysos
-				religion = fraticelli
-				religion = jud_zion
-				religion = kharijite
-				religion = mani_slavic
-				religion = mazdakism
-				religion = tao
-				religion = waldensian
-			}
-		}
-	}
-	
-	local_revolt_risk = -0.003
-	levy_size = 0.025
-	
-	trigger = {
-		any_province_lord = {
-			character = FROM
-		}
-	}
-	
-	events = { 312610 312612 312614 }
-} 
-action_milenarian_mobilization = { #Messianic
-	attribute = learning
-	
-	potential = {
-		FROM = {
-			OR = {
-				religion = aglibol
-				religion = bud_mahayana
-				religion = bud_pureland
-				religion = bud_vajrayana
-				religion = horus_re
-				religion = jain
-				religion = lugh
-				religion = mani
-				religion = mani_ahriman
-				religion = nestorian
-				religion = nott
-				religion = nyau
-				religion = priscillian 
-				religion = qarmatian
-				religion = ragnarok
-				religion = set
-				religion = shiite
-				religion = sol_sahara
-				religion = talab
-				religion = tengri_ahriman
-				religion = voipel
-				religion = yahyanism
-				religion = zor_angra
-				religion = ahriman_reformed
-				religion = christian_populist_reformed
-				religion = illuyanka_reformed
-				religion = mand_ruha_reformed
-				religion = mandaean_reformed
-				religion = mazdakism_reformed
-				religion = muslim_aliite_reformed
-				religion = ragnarok_reformed
-				religion = tao_reformed
-				religion = voipel_reformed
-				religion = zor_angra_reformed
-				religion = shaytana
-			}
-		}
-	}
-	
-	trigger = {
-		any_province_lord = {
-			character = FROM
-		}
-	}
-	
-	local_revolt_risk = -0.003
-	levy_size = 0.025
-	
-	events = { 312616 }
-}
-action_martial_training = { #Martial
-	attribute = learning
-	
-	potential = {
-		FROM = {
-			OR = {
-				religion = alexandros
-				religion = amanai
-				religion = anansi
-				religion = aten
-				religion = attar
-				religion = aztec
-				religion = dazhbog
-				religion = endovellico
-				religion = ghazi_islam
-				religion = gurzil
-				religion = hadad
-				religion = jud_sabaoth
-				religion = lubu
-				religion = maher
-				religion = mani_mithra
-				religion = mithra
-				religion = mithra_christ
-				religion = mithra_sol
-				religion = murugan
-				religion = norse_war
-				religion = perun
-				religion = sol_tsahay
-				religion = solomonic_alexandros
-				religion = svetovid
-				religion = tarhunt
-				religion = teiwaz
-				religion = zal
-				religion = zal_christ
-				religion = zal_mani
-				religion = zande_pagan
-				religion = zulu_pagan
-				religion = aten_reformed
-				religion = berber_pagan_reformed
-				religion = cybele_reformed
-				religion = erlik_reformed
-				religion = ethiopian_war_reformed
-				religion = lubu_reformed
-				religion = murugan_reformed
-				religion = muslim_domination_reformed
-				religion = set_reformed
-				religion = teiwaz_reformed
-				religion = zande_pagan_reformed
-				religion = zulu_pagan_reformed
-			}
-		}
-	}
-	
-	levy_reinforce_rate = 0.05
-	local_revolt_risk = -0.003
-	
-	trigger = {
-		any_province_lord = {
-			character = FROM
-		}
-	}
-	
-	events = { }
-}
-

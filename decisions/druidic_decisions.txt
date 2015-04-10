@@ -1,16 +1,32 @@
 decisions = {
 	hold_divination = {
+		is_high_prio = yes
 		potential = {
 			has_dlc = "The Old Gods"
 			is_ruler = yes
 			age = 16
 			prisoner = no
-			religion_group = celtic_group
+			OR = {
+				religion = celtic_pagan
+				religion = celtic_pagan_reformed
+				religion = lugh
+			}
 			NOT = {	has_character_flag = holding_divination }
 			NOT = {	has_character_modifier = held_divination_timer }
 		}
 		allow = {
 			war = no
+			any_demesne_title = {
+				is_occupied = no
+			}
+			OR = {
+				any_vassal = {
+					has_minor_title = title_court_druid
+				}
+				any_courtier = {
+					has_minor_title = title_court_druid
+				}
+			}
 			month = 5
 			NOT = { month = 11 }
 			scaled_wealth = 0.20
@@ -50,22 +66,22 @@ decisions = {
 	}	
 	invite_druid_to_court = { #Invite a Druid to court
 		potential = {
-			religion_group = celtic_group
+			OR = {
+				religion = celtic_pagan
+				religion = celtic_pagan_reformed
+				religion = lugh
+			}
 		}
 		allow = {
 			NOT = { has_character_modifier = new_druid_in_court }
 			NOT = { has_character_flag = inviting_druid_over }
 			primary_title = { higher_tier_than = BARON }
 			NOT = {
-				any_vassal = {
-					has_minor_title = title_court_druid
-				}
-			}
-			NOT = {
 				any_courtier = {
 					has_minor_title = title_court_druid
 				}
 			}
+			scaled_wealth = 0.5
 		}
 		effect = {
 			scaled_wealth = -0.5
@@ -74,7 +90,7 @@ decisions = {
 
 			hidden_tooltip = {
 				character_event = {
-					id = ancrel.0246
+					id = ancrel.0155
 					days = 3
 				}
 			}
@@ -86,21 +102,7 @@ decisions = {
 				factor = 0.3 #Decrease chance AI will do this
 			}
 			modifier = {
-				factor = 0
-				OR = {
-					any_vassal = {
-						has_minor_title = title_court_druid
-					}
-					any_courtier = {
-						has_minor_title = title_court_druid
-					}
-				}
-			}
-			modifier = {
 				factor = 0.1
-				any_vassal = {
-					trait = druid
-				}
 				any_courtier = {
 					trait = druid
 				}
@@ -142,7 +144,11 @@ decisions = {
 	assign_druid = { # For the AI, because they are dumb enough not to hand out minor titles
 		potential = {
 			ai = yes
-			religion_group = celtic_group
+			OR = {
+				religion = celtic_pagan
+				religion = celtic_pagan_reformed
+				religion = lugh
+			}
 			NOT = { 
 				any_courtier = {
 					has_minor_title = title_court_druid
@@ -153,7 +159,6 @@ decisions = {
 			primary_title = { higher_tier_than = BARON }
 			any_courtier = {
 				trait = druid
-				trait = scholar
 				is_female = no
 				is_adult = yes
 			}
@@ -164,7 +169,6 @@ decisions = {
 					is_adult = yes
 					is_female = no
 					trait = druid
-					trait = scholar
 				}
 				give_minor_title = title_court_druid
 			}
@@ -180,7 +184,11 @@ decisions = {
 	assign_bard = { # For the AI, because they are dumb enough not to hand out minor titles
 		potential = {
 			ai = yes
-			religion_group = celtic_group
+			OR = {
+				religion = celtic_pagan
+				religion = celtic_pagan_reformed
+				religion = lugh
+			}
 			NOT = { 
 				any_courtier = {
 					has_minor_title = title_court_bard

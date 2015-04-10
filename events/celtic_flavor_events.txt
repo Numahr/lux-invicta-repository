@@ -3,7 +3,10 @@
 # ANCIENT RELIGIONS
 # - Celtic Flavor Events
 #
-# Event ID ancrel.0150 - 0151, ancrel.1252 - 1253 and ancrel.0208 - 0210
+# Event IDs ancrel.0150 - 0151 
+#			ancrel.1252 - 1253
+#			ancrel.0208 - 0210
+#			ancrel.0256
 #
 ###################################
 
@@ -19,7 +22,13 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 		trigger = {
-			religion_group = celtic_group
+		OR = {
+			religion = celtic_pagan
+			religion = celtic_pagan_reformed
+			religion = lugh
+			religion = endovellico
+			religion = iberian_pagan_reformed
+		}
 		is_landed = yes
 		is_abroad = no
 		}
@@ -92,7 +101,13 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 		trigger = {
-		religion_group = celtic_group
+		OR = {
+			religion = celtic_pagan
+			religion = celtic_pagan_reformed
+			religion = lugh
+			religion = endovellico
+			religion = iberian_pagan_reformed
+		}
 		is_abroad = no
 		}
 	
@@ -167,7 +182,13 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 		trigger = {
-		religion_group = celtic_group
+		OR = {
+			religion = celtic_pagan
+			religion = celtic_pagan_reformed
+			religion = lugh
+			religion = endovellico
+			religion = iberian_pagan_reformed
+		}
 		is_landed = yes
 		is_abroad = no
 		}
@@ -252,7 +273,13 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 		trigger = {
-		religion_group = celtic_group
+		OR = {
+			religion = celtic_pagan
+			religion = celtic_pagan_reformed
+			religion = lugh
+			religion = endovellico
+			religion = iberian_pagan_reformed
+		}
 		is_landed = yes
 		is_abroad = no
 		}
@@ -314,20 +341,19 @@ character_event = {
 	picture = GFX_evt_whispering_in_ear
 	border = GFX_event_normal_frame_religion
 
-	ai = no
 	min_age = 16
 	prisoner = no
-	only_rulers = yes
-	
-	
+
 	trigger = {
 		has_dlc = "The Old Gods"
+		is_ruler = yes
 		is_ill = yes
 		OR = {
 			has_landed_title = c_innse_gall  
-			any_vassal = {has_landed_title = c_innse_gall }
+			any_vassal = { has_landed_title = c_innse_gall }
 		}
 		NOT = { religion_group = celtic_group }
+		culture_group = celtic
 	}
 
 	mean_time_to_happen = {
@@ -340,10 +366,10 @@ character_event = {
 			factor = 2.0
 			trait = zealous
 		}
-#		modifier = {
-#			factor = 0.7
-#			trait = sympathy_for_pagans
-#		}
+		modifier = {
+			factor = 0.7
+			trait = sympathy_pagans
+		}
 	}
 
 	option = {
@@ -353,7 +379,7 @@ character_event = {
 		}
 		custom_tooltip = {
 			text = travel_island
-			character_event = { id = ancrel.0209 days=5}
+			character_event = { id = ancrel.0209 days = 5 }
 		}
 	}
 	option = {
@@ -384,7 +410,7 @@ character_event = {
 			factor = 50
 		}
 		hidden_tooltip = {
-			character_event = { id = ancrel.0210 days=2}
+			character_event = { id = ancrel.0210 days = 2 }
 		}
 	}
 	option = {
@@ -436,14 +462,18 @@ character_event = {
 #
 # - First Celtic Emperor
 #
-#######################################
+########################################
 
-#Founder of an Empire gets nickname
+# Y Mab Darogan
 narrative_event = {
 	id = ancrel.0256
-	title = ancrel.0256.name
+	title = EVTNAMEancrel.0256
 	desc = EVTDESCancrel.0256
 	picture = GFX_event_y_mab_darogan
+
+	major = yes
+	show_ROOT = yes
+	hide_from = yes
 	
 	only_rulers = yes
 
@@ -451,7 +481,18 @@ narrative_event = {
 		NOT = {
 			has_character_flag = first_brythonic_emperor
 		}
-		has_landed_title =  e_britannia 
+		OR = {
+			religion = celtic_pagan
+			religion = celtic_pagan_reformed
+			religion = lugh
+		}
+		OR = {
+				culture = welsh
+				culture = breton
+				culture = sarmatobrython
+				culture = brython
+		}
+		has_landed_title = e_britannia
 		primary_title = { 
 			any_previous_holder = { #Will not fire if Kingdom is usurped by someone else or reformed
 				NOT = {
@@ -464,12 +505,36 @@ narrative_event = {
 	mean_time_to_happen = {
 		days = 1
 	}
-	
-	option = {
-		name = EVTOPTAancrel.0256 #Ok
+	immediate = {
 		give_nickname = nick_pendragon
 		set_character_flag = first_brythonic_emperor
 		prestige = 200
 		piety = 100
+	}
+	option = {
+		trigger = {
+			OR = {
+				religion = celtic_pagan
+				religion = celtic_pagan_reformed
+				religion = lugh
+				religion = endovellico
+				religion = iberian_pagan_reformed
+			}
+		}
+		name = EVTOPTAancrel.0256 #Ok
+	}
+	option = {
+		trigger = {
+		NOT = {
+			OR = {
+				religion = celtic_pagan
+				religion = celtic_pagan_reformed
+				religion = lugh
+				religion = endovellico
+				religion = iberian_pagan_reformed
+			}
+			}
+		}
+		name = EVTOPTBancrel.0256
 	}
 }
