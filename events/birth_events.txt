@@ -585,6 +585,7 @@ character_event = {
 		
 		has_lover = no
 		is_pregnant = no
+		is_ill = no
 		
 		liege = {
 			OR = {
@@ -605,6 +606,15 @@ character_event = {
 			trait = deceitful
 			spouse = {
 				NOT = { reverse_opinion = { who = ROOT value = 50 } }
+			}
+		}
+		OR = {
+			is_consort = no
+			trait = lustful
+			trait = deceitful
+			trait = arbitrary
+			consort = {
+				NOT = { reverse_opinion = { who = ROOT value = 0 } }
 			}
 		}
 	}
@@ -686,30 +696,13 @@ character_event = {
 						AND = {
 							NOT = { trait = homosexual }
 							ROOT = { NOT = { trait = homosexual } }
-							OR = {
-								AND = {
-									is_female = no
-									ROOT = { is_female = yes }
-								}
-								AND = {
-									is_female = yes
-									ROOT = { is_female = no }
-								}
-							}
+							NOT = {
+								same_sex = ROOT
 						}
 						AND = {
 							trait = homosexual
 							ROOT = { trait = homosexual }
-							OR = {
-								AND = {
-									is_female = no
-									ROOT = { is_female = no }
-								}
-								AND = {
-									is_female = yes
-									ROOT = { is_female = yes }
-								}
-							}
+							same_sex = ROOT
 						}
 					}
 					OR = {
@@ -723,6 +716,7 @@ character_event = {
 					NOT = { trait = incapable }
 					NOT = { trait = celibate }
 					NOT = { trait = eunuch }
+					NOT = { trait = chaste }
 					OR = {
 						ROOT = {
 							OR = {
@@ -749,15 +743,20 @@ character_event = {
 						is_married = no
 						trait = lustful
 						trait = deceitful
+						trait = arbitrary
 						spouse = {
 							NOT = { reverse_opinion = { who = PREV value = 50 } }
 						}
 					}
-				}
-				add_character_modifier = {
-					name = lustful_affair_timer
-					duration = 365
-					hidden = yes
+					OR = {
+						is_consort = no
+						trait = lustful
+						trait = deceitful
+						trait = arbitrary
+						consort = {
+							NOT = { reverse_opinion = { who = PREV value = 0 } }
+						}
+					}
 				}
 				character_event = { id = 457 }
 			}
@@ -792,6 +791,12 @@ character_event = {
 		}
 		
 		add_lover = FROM
+		
+		add_character_modifier = {
+			name = lustful_affair_timer
+			duration = 2190
+			hidden = yes
+		}
 		
 #		log = "457: [From.GetBestName] tumbles [Root.GetBestName]"
 		
