@@ -70,6 +70,7 @@ job_chancellor = {
 	
 	action = action_improve_relations
 	action = action_fabricate_claims
+	action = action_clan_sentiment # Replaces Fabricate Claims for Nomads
 	action = action_sow_dissent
 
 	lift_fow = yes
@@ -227,6 +228,7 @@ job_treasurer = {
 	}
 	
 	action = action_squeeze_peasants
+	action = action_collect_tribute # Replaces action_squeeze_peasants for Nomads
 	action = action_settle_tribe # Replaces action_squeeze_peasants for Tribes
 	action = action_oversee_construction
 	action = action_advance_eco_tech
@@ -362,8 +364,21 @@ job_spiritual = {
 			}
 			liege = { religion_group = muslim }
 			AND = {
+				clan = yes
+				liege = {
+					is_nomadic = yes
+				}
+			}
+			AND = {
 				is_ruler = no
 				has_autocephaly = no
+			}
+			AND = {
+				has_autocephaly = yes
+				is_ruler = no
+				NOT = {
+					any_vassal = { is_theocracy = yes }
+				}
 			}
 		}
 		
@@ -392,7 +407,12 @@ job_spiritual = {
 		opinion = { who = FROM modifier = opinion_fired_from_council }
 	}
 	dismiss_trigger = {
-		NOT = { FROM = { religion_group = muslim } }
+		FROM = {
+			OR = {
+				NOT = { religion_group = muslim }
+				NOT = { religion = ROOT }
+			}
+		}
 	}
 	
 	action = action_inquisition
