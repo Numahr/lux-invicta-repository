@@ -30,13 +30,6 @@ succession_laws = {
 			}
 			rebel = no
 			OR = {
-				AND = {
-					tier = baron
-					OR = {
-						is_feudal = yes
-						is_tribal = yes
-					}
-				}
 				holder_scope = { is_feudal = yes }
 				holder_scope = { is_tribal = yes }
 			}
@@ -64,6 +57,7 @@ succession_laws = {
 	
 		potential = {
 			holder_scope = {
+				is_nomadic = no
 				OR = {
 					independent = yes
 					NOT = {
@@ -84,20 +78,10 @@ succession_laws = {
 			}
 			rebel = no
 			OR = {
-				AND = {
-					tier = baron
-					OR = {
-						is_feudal = yes
-						is_tribal = yes
-					}
-				}
 				holder_scope = { is_feudal = yes }
 				holder_scope = { is_tribal = yes }
 			}
 			is_primary_type_title = no
-		}
-		allow = {
-			holder_scope = { is_tribal = yes }
 		}
 		effect = {
 			succession = elective_gavelkind
@@ -201,39 +185,50 @@ succession_laws = {
 		dynasty_opinion = -5
 		potential = {
 			holder_scope = {
-				OR = {
-					independent = yes
-					NOT = {
-						any_liege = {
-							holy_order = yes
-						}
-					}
-				}
 				NOT = { religion_group = muslim }
 				is_merchant_republic = no
 				is_patrician = no
 				NOT = { has_law = people_control_0 }
 			}
 			OR = {
-				is_landless_type_title = no
-				is_tribal_type_title = yes
-				temporary = yes
-			}
-			is_primary_type_title = no
-			OR = {
-				AND = {
-					tier = baron
-					is_feudal = yes
+				holder_scope = { # Viceroyalties can always have primogeniture if not muslim
+					any_demesne_title = {
+						is_vice_royalty = yes
+					}
 				}
-				holder_scope = { is_feudal = yes }
+				AND = {
+					holder_scope = {
+						OR = {
+							independent = yes
+							NOT = {
+								any_liege = {
+									holy_order = yes
+								}
+							}
+						}
+					}
+					OR = {
+						is_landless_type_title = no
+						is_tribal_type_title = yes
+						temporary = yes
+					}
+					is_primary_type_title = no
+					OR = {
+						AND = {
+							tier = baron
+							is_feudal = yes
+						}
+						holder_scope = { is_feudal = yes }
+					}
+				}
 			}
 		}
 		allow = {
-			OR = {
-				hidden_tooltip = {
-					has_crown_law_title = no
-				}
-				holder_scope = {
+			holder_scope = {
+				OR = {
+					any_demesne_title = {
+						is_vice_royalty = yes
+					}
 					OR = {
 						has_law = centralization_3
 						has_law = centralization_4
@@ -272,6 +267,14 @@ succession_laws = {
 				is_merchant_republic = no
 				is_patrician = no
 				NOT = { has_law = people_control_0 }
+				OR = {
+					independent = yes
+					NOT = {
+						any_demesne_title = {
+							is_vice_royalty = yes
+						}
+					}
+				}
 			}
 			OR = {
 				is_landless_type_title = no
@@ -503,6 +506,14 @@ succession_laws = {
 				is_patrician = no
 #				culture_group = celtic 		# <--- commented by Numahr, open to debate - too interesting a law to be so limited IMO
 				NOT = { has_law = people_control_0 }
+				OR = {
+					independent = yes
+					NOT = {
+						any_demesne_title = {
+							is_vice_royalty = yes
+						}
+					}
+				}
 			}
 			OR = {
 				is_landless_type_title = no
@@ -511,13 +522,7 @@ succession_laws = {
 			}
 			is_primary_type_title = no
 			NOT = { tier = baron }
-			OR = {
-				AND = {
-					tier = baron
-					is_feudal = yes
-				}
-				holder_scope = { is_feudal = yes }
-			}
+			holder_scope = { is_feudal = yes }
 		}
 
 		allow = {		# <--- Section added by Numahr to limit access for unreformed religions (I also excluded any reformed religion as I removed the limitation to only Celtic religions)
@@ -804,6 +809,14 @@ succession_laws = {
 				is_merchant_republic = no
 				is_patrician = no
 				NOT = { has_law = people_control_0 }
+				OR = {
+					independent = yes
+					NOT = {
+						any_demesne_title = {
+							is_vice_royalty = yes
+						}
+					}
+				}
 			}
 			OR = {
 				is_landless_type_title = no
@@ -869,27 +882,36 @@ succession_laws = {
 					}
 				}
 				NOT = { has_law = people_control_0 }
+				is_nomadic = no
 			}
 
 			OR = {
-				is_landless_type_title = no
-				is_tribal_type_title = yes
-				temporary = yes
-			}
-			holder_scope = {
-				OR = {
-					independent = yes
-					NOT = {
-						any_liege = {
-							holy_order = yes
+				holder_scope = { # Viceroyalties can always have turkish succession if muslim
+					any_demesne_title = {
+						is_vice_royalty = yes
+					}
+				}
+				AND = {
+					OR = {
+						is_landless_type_title = no
+						is_tribal_type_title = yes
+						temporary = yes
+					}
+					holder_scope = {
+						OR = {
+							independent = yes
+							NOT = {
+								any_liege = {
+									holy_order = yes
+								}
+							}
 						}
 					}
+					is_primary_type_title = no
 				}
 				is_republic = no
 				is_merchant_republic = no
-				religion_group = muslim
 			}
-			is_primary_type_title = no
 		}
 		allow = {												# <--- section added by Numahr, to limit access in the case of non-muslims
 			OR = {
@@ -1130,6 +1152,22 @@ succession_laws = {
 	}
 }
 
+	succ_nomad_succession = {
+		potential = {
+			has_dlc = "Horse Lords"
+			holder_scope = {
+				is_nomadic = yes
+			}
+		}
+		effect = {
+			succession = nomad_succession
+		}
+		revoke_allowed = {
+			always = no
+		}			
+	}
+}
+
 gender_laws = {
 	cognatic_succession = {
 		potential = {
@@ -1148,6 +1186,8 @@ gender_laws = {
 					is_merchant_republic = yes
 				}
 				NOT = { religion_group = muslim }
+				is_tribal = no
+				is_nomadic = no
 				has_horde_culture = no
 				is_merchant_republic = no
 				is_patrician = no
@@ -1158,10 +1198,12 @@ gender_laws = {
 			OR = {
 				AND = {
 					tier = baron
-					is_feudal = yes
+					is_theocracy = no
+					is_republic = no
 				}
 				holder_scope = {
-					is_feudal = yes
+					is_theocracy = no
+					is_republic = no
 				}
 			}
 			
@@ -1206,6 +1248,8 @@ gender_laws = {
 			}
 			holder_scope = { 
 				NOT = { religion_group = muslim }
+				is_tribal = no
+				is_nomadic = no
 				has_horde_culture = no
 				is_merchant_republic = no
 				is_patrician = no
@@ -1216,9 +1260,13 @@ gender_laws = {
 			OR = {
 				AND = {
 					tier = baron
-					is_feudal = yes
+					is_theocracy = no
+					is_republic = no
 				}
-				holder_scope = { is_feudal = yes }
+				holder_scope = {
+					is_theocracy = no
+					is_republic = no
+				}
 			}
 			
 			is_primary_type_title = no

@@ -11,12 +11,15 @@ obj_become_chancellor = {
 	type = character
 	
 	expectation_of_liege = yes
+	
+	potential = {
+		independent = no
+	}
 
 	allow = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		independent = no
 		OR = {
 			is_female = no
 			AND = { #Add "feminist = yes" religions
@@ -135,11 +138,14 @@ obj_become_chancellor = {
 obj_become_marshal = {
 	type = character
 	
+	potential = {
+		independent = no
+	}
+	
 	allow = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		independent = no
 		OR = {
 			is_female = no
 			AND = { #Add "feminist = yes" religions
@@ -287,11 +293,14 @@ obj_become_marshal = {
 obj_become_treasurer = {
 	type = character
 	
+	potential = {
+		independent = no
+	}
+	
 	allow = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		independent = no
 		OR = {
 			is_female = no
 			AND = { #Add "feminist = yes" religions
@@ -410,11 +419,14 @@ obj_become_treasurer = {
 
 obj_become_spymaster = {
 	type = character
+	
+	potential = {
+		independent = no
+	}
 	allow = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		independent = no
 		OR = {
 			is_female = no
 			liege = { mother = { character = ROOT } }
@@ -545,11 +557,14 @@ obj_become_spymaster = {
 obj_become_spiritual = {
 	type = character
 	
+	potential = {
+		independent = no
+	}
+	
 	allow = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		independent = no
 		OR = {
 			is_female = no
 			AND = {
@@ -994,18 +1009,22 @@ obj_become_exalted = {
 obj_get_married = {
 	type = character
 	
-	allow = {
-		prisoner = no
-		is_marriage_adult = yes
+	potential = {
+		NOT = { has_landed_title = k_papal_state }
 		is_married = no
 		is_betrothed = no
 		is_consort = no
 		can_marry = yes
-		NOT = { has_landed_title = k_papal_state }
+	}
+	allow = {
+		prisoner = no
+		is_marriage_adult = yes
 		NOT = { trait = celibate }
 		NOT = { trait = incapable }
 		NOT = { trait = eunuch }
 		NOT = { trait = homosexual }
+		NOT = { trait = monk }
+		NOT = { trait = nun }
 		OR = {
 			is_female = no
 			NOT = { age = 40 }
@@ -1013,6 +1032,9 @@ obj_get_married = {
 		OR = {
 			is_ruler = no
 			is_feudal = yes
+			is_tribal = yes
+			is_nomadic = yes
+			is_patrician = yes
 		}
 	}
 	chance = {
@@ -1067,6 +1089,9 @@ obj_get_married = {
 			}
 			trait = celibate
 			trait = incapable
+			trait = eunuch
+			trait = monk
+			trait = nun
 		}
 	}
 	abort_effect = {
@@ -1096,14 +1121,16 @@ obj_get_married = {
 obj_marry_ruler = {
 	type = character
 	
-	allow = {
-		prisoner = no
-		is_marriage_adult = yes
+	potential = {
 		is_ruler = no
 		is_female = yes
 		is_married = no
 		is_consort = no
 		can_marry = yes
+	}
+	allow = {
+		prisoner = no
+		is_marriage_adult = yes
 		NOT = { trait = celibate }
 		NOT = { trait = incapable }
 		OR = {
@@ -1159,6 +1186,9 @@ obj_marry_ruler = {
 			}
 			trait = celibate
 			trait = incapable
+			trait = eunuch
+			trait = monk
+			trait = nun
 		}
 	}
 	abort_effect = {
@@ -1333,13 +1363,18 @@ obj_have_a_son = {
 obj_wants_landed_title = {
 	type = character
 	
+	potential = {
+		is_ruler = no
+	}
+	
 	allow = {
 		prisoner = no
 		is_adult = yes
 		is_female = no
-		is_ruler = no
 		NOT = { trait = incapable }
 		NOT = { trait = eunuch }
+		NOT = { trait = monk }
+		NOT = { trait = nun }
 		liege = {
 			is_feudal = yes
 			is_close_relative = ROOT
@@ -1402,6 +1437,11 @@ obj_wants_landed_title = {
 				NOT = { num_of_extra_landed_titles = 1 }
 			}
 		}
+		OR = {
+			trait = eunuch
+			trait = monk
+			trait = nun
+		}
 	}	
 	abort_effect = {
 		clr_character_flag = flag_denied_title
@@ -1429,15 +1469,16 @@ obj_wants_landed_title = {
 
 obj_become_heir = {
 	type = character
-	
-	allow = {
-		prisoner = no
-		is_adult = yes
-		is_primary_heir = no
-		NOT = { trait = incapable }
-		liege = { any_child = { character = ROOT } }
+
+	potential = {
 		liege = {
 			any_child = {
+				character = ROOT
+			}
+			any_child = {
+				NOT = {
+					character = ROOT
+				}
 				is_primary_heir = yes
 				OR = {
 					has_epidemic = yes
@@ -1453,6 +1494,12 @@ obj_become_heir = {
 				}
 			}
 		}
+	}
+	allow = {
+		prisoner = no
+		is_adult = yes
+		is_primary_heir = no
+		NOT = { trait = incapable }
 	}
 	chance = {
 		factor = 50
@@ -1848,10 +1895,10 @@ obj_lower_decadence = {
 	potential = {
 		is_adult = yes
 		is_ruler = yes
+		uses_decadence = yes
 	}
 	
 	allow = {
-		religion_group = muslim
 		decadence = 60
 		NOT = { trait = incapable }
 	}
@@ -2029,8 +2076,7 @@ obj_become_king = {
 obj_buddhist_stop_drinking = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2040,6 +2086,9 @@ obj_buddhist_stop_drinking = {
 			religion = tao_reformed
 		}
 		trait = drunkard
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2084,8 +2133,7 @@ obj_buddhist_stop_drinking = {
 obj_buddhist_reject_empty_pleasures = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2095,6 +2143,10 @@ obj_buddhist_reject_empty_pleasures = {
 			religion = tao_reformed
 		}
 		trait = hedonist
+	}
+	
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2139,8 +2191,7 @@ obj_buddhist_reject_empty_pleasures = {
 obj_buddhist_abstain_sexual_excess = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2150,6 +2201,9 @@ obj_buddhist_abstain_sexual_excess = {
 			religion = tao_reformed
 		}
 		trait = lustful
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2194,8 +2248,7 @@ obj_buddhist_abstain_sexual_excess = {
 obj_buddhist_reject_cruelty = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2208,6 +2261,9 @@ obj_buddhist_reject_cruelty = {
 			trait = impaler
 			trait = cruel
 		}
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2253,8 +2309,7 @@ obj_buddhist_reject_cruelty = {
 obj_buddhist_temperance_food = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2264,6 +2319,9 @@ obj_buddhist_temperance_food = {
 			religion = tao_reformed
 		}
 		trait = gluttonous
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2308,8 +2366,7 @@ obj_buddhist_temperance_food = {
 obj_buddhist_reject_greed = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2319,6 +2376,9 @@ obj_buddhist_reject_greed = {
 			religion = tao_reformed
 		}
 		trait = greedy
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2363,8 +2423,7 @@ obj_buddhist_reject_greed = {
 obj_buddhist_reject_envy = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2374,6 +2433,9 @@ obj_buddhist_reject_envy = {
 			religion = tao_reformed
 		}
 		trait = envious
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2418,8 +2480,7 @@ obj_buddhist_reject_envy = {
 obj_buddhist_reject_hate = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2429,6 +2490,9 @@ obj_buddhist_reject_hate = {
 			religion = tao_reformed
 		}
 		trait = wroth
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2473,8 +2537,7 @@ obj_buddhist_reject_hate = {
 obj_buddhist_reject_pride = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2484,6 +2547,9 @@ obj_buddhist_reject_pride = {
 			religion = tao_reformed
 		}
 		trait = proud
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2528,8 +2594,7 @@ obj_buddhist_reject_pride = {
 obj_buddhist_defeat_fear = {
 	type = character
 	
-	allow = {
-		is_adult = yes
+	potential = {
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -2542,6 +2607,9 @@ obj_buddhist_defeat_fear = {
 			trait = paranoid
 			trait = craven
 		}
+	}
+	allow = {
+		is_adult = yes
 		NOT = { trait = incapable }
 		NOT = { trait = infirm }
 	}
@@ -2587,10 +2655,7 @@ obj_buddhist_defeat_fear = {
 obj_become_paragon_of_enlightenment = {
 	type = character
 	
-	allow = {
-		is_adult = yes
-		NOT = { piety = 100 }
-		is_ruler = yes
+	potential = {
 		OR = {
 			religion_group = indian_group
 			religion_group = bud_group
@@ -2600,6 +2665,11 @@ obj_become_paragon_of_enlightenment = {
 			religion = tao
 			religion = tao_reformed
 		}
+	}
+	allow = {
+		is_adult = yes
+		NOT = { piety = 100 }
+		is_ruler = yes
 		NOT = { trait = slow }
 		NOT = { trait = imbecile }
 		NOT = { trait = inbred }
