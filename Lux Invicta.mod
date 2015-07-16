@@ -1,7 +1,9 @@
-name = "Lux Invicta v0.6K3" 
+name = "Lux Invicta v0.6K5" 
 path = "mod/Lux Invicta"
 user_dir = "Lux Invicta"
 
+replace_path = common/buildings
+replace_path = common/trade_routes
 replace_path = "history"
 replace_path = "history/characters"
 replace_path = "history/diplomacy"
