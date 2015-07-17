@@ -23,8 +23,9 @@ character_event = {
 	
 	hide_from = yes
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
-	is_female = no
+	only_men = yes
 	
 	trigger = {
 		OR = {
@@ -64,6 +65,7 @@ character_event = {
 	
 	hide_from = yes
 	prisoner = no
+	only_rulers = yes
 	
 	trigger = {
 		has_character_flag = toy_army_prepare
@@ -180,6 +182,7 @@ character_event = {
 	
 	hide_from = yes
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -281,6 +284,7 @@ character_event = {
 	
 	hide_from = yes
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -317,6 +321,7 @@ character_event = {
 	border = GFX_event_normal_frame_war
 	
 	hide_from = yes
+	only_rulers = yes
 	
 	trigger = {
 		OR = {
@@ -446,6 +451,7 @@ character_event = {
 	border = GFX_event_normal_frame_war
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -479,6 +485,7 @@ character_event = {
 	border = GFX_event_normal_frame_war
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -514,11 +521,8 @@ character_event = {
 		text = EVTDESC94018
 		trigger = {
 			capital_scope = {
-				empire = {
-					NOT = {
-						title = e_south_india
-						title = e_india
-					}
+				NOT = {
+					region = world_india
 				}
 			}
 		}
@@ -527,17 +531,13 @@ character_event = {
 		text = EVTDESC94018_india
 		trigger = {
 			capital_scope = {
-				empire = {
-					OR = {
-						title = e_south_india
-						title = e_india
-					}
-				}
+				region = world_india
 			}
 		}
 	}
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -564,25 +564,14 @@ character_event = {
 	
 	mean_time_to_happen = {
 		months = 280
-
-		modifier = {
-			factor = 0.1
-			has_focus = focus_war
-			NOT = { lifestyle_traits = 1 }
-			NOT = { has_character_modifier = student_of_strategy }
-			NOT = { has_character_modifier = adept_of_strategy }
-		}
 	}
 	
 	option = {
 		name = EVTOPTA94018
 		trigger = {
 			capital_scope = {
-				empire = {
-					NOT = {
-						title = e_south_india
-						title = e_india
-					}
+				NOT = {
+					region = world_india
 				}
 			}
 			OR = {
@@ -596,12 +585,7 @@ character_event = {
 		name = EVTOPTB_94018
 		trigger = {
 			capital_scope = {
-				empire = {
-					OR = {
-						title = e_south_india
-						title = e_india
-					}
-				}
+				region = world_india
 			}
 			OR = {
 				has_ambition = obj_improve_martial
@@ -620,7 +604,7 @@ character_event = {
 			duration = -1
 		}
 		custom_tooltip = { text = studying_strategy_tooltip }
-		hidden_tooltip = { character_event = { id = 94019 days = 300 random = 400 } }
+		hidden_tooltip = { character_event = { id = 94019 days = 300 random = 900 } }
 	}
 }
 
@@ -634,11 +618,8 @@ character_event = {
 		text = EVTDESC_94019
 		trigger = {
 			capital_scope = {
-				empire = {
-					NOT = {
-						title = e_south_india
-						title = e_india
-					}
+				NOT = {
+					region = world_india
 				}
 			}
 		} 
@@ -647,12 +628,7 @@ character_event = {
 		text = EVTDESC_94019_india
 		trigger = {
 			capital_scope = {
-				empire = {
-					OR = {
-						title = e_south_india
-						title = e_india
-					}
-				}
+				region = world_india
 			}
 		}
 	}
@@ -664,16 +640,37 @@ character_event = {
 		trigger = {
 			has_focus = focus_war
 			NOT = { lifestyle_traits = 1 }
+			has_character_modifier = adept_of_strategy
 		}
-		remove_character_modifier = student_of_strategy
+		remove_character_modifier = adept_of_strategy
 		add_trait = strategist
 	}
 	option = {
-		name = EVTOPTB_94019
+		name = EVTOPTA_94019
+		trigger = {
+			has_character_modifier = student_of_strategy
+		}
 		remove_character_modifier = student_of_strategy
 		add_character_modifier = {
 			modifier = adept_of_strategy
 			duration = -1
+		}
+	}
+	option = {
+		name = EVTOPTB_94019
+		trigger = {
+			has_character_modifier = adept_of_strategy
+		}
+		prestige = 25
+	}
+	option = {
+		name = EVTOPTC_94019
+		trigger = {
+			trait = strategist
+		}
+		add_character_modifier = { 
+			modifier = strategic_innovation
+			duration = 1095
 		}
 	}
 }
@@ -692,6 +689,7 @@ character_event = {
 	border = GFX_event_normal_frame_economy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -748,26 +746,26 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA94051
-		trigger = { NOT = { religion_group = muslim } }
+		trigger = { NOT = { uses_decadence = yes } }
 		character_event = { id = 94052 days = 30 random = 10 tooltip = EVTTOOLTIP94052 }
 	}
 	option = {
 		name = EVTOPTB94051
 		trigger = {
-			NOT = { religion_group = muslim }
+			NOT = { uses_decadence = yes }
 			NOT = { religion_group = indian_group }
 		}
 		character_event = { id = 94052 days = 30 random = 10 tooltip = EVTTOOLTIP94052 }
 	}
 	option = {
 		name = EVTOPTC94051
-		trigger = { NOT = { religion_group = muslim } }
+		trigger = { NOT = { uses_decadence = yes } }
 		character_event = { id = 94052 days = 30 random = 10 tooltip = EVTTOOLTIP94052 }
 	}
 	option = {
 		name = EVTOPTD94051
 		trigger = {
-			NOT = { religion_group = muslim }
+			NOT = { uses_decadence = yes }
 			NOT = { religion_group = indian_group }
 		}
 		character_event = { id = 94052 days = 30 random = 10 tooltip = EVTTOOLTIP94052 }
@@ -779,17 +777,17 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTF94051
-		trigger = { religion_group = muslim }
+		trigger = { uses_decadence = yes }
 		character_event = { id = 94052 days = 30 random = 10 tooltip = EVTTOOLTIP94052 }
 	}
 	option = {
 		name = EVTOPTG94051
-		trigger = { religion_group = muslim }
+		trigger = { uses_decadence = yes }
 		character_event = { id = 94052 days = 30 random = 10 tooltip = EVTTOOLTIP94052 }
 	}
 	option = {
 		name = EVTOPTH94051
-		trigger = { religion_group = muslim }
+		trigger = { uses_decadence = yes }
 		character_event = { id = 94052 days = 30 random = 10 tooltip = EVTTOOLTIP94052 }
 	}
 }
@@ -1073,6 +1071,7 @@ character_event = {
 	border = GFX_event_normal_frame_economy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1137,6 +1136,7 @@ character_event = {
 	border = GFX_event_normal_frame_economy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1194,6 +1194,7 @@ character_event = {
 	border = GFX_event_normal_frame_economy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1227,6 +1228,7 @@ character_event = {
 	border = GFX_event_normal_frame_economy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1260,6 +1262,7 @@ character_event = {
 	border = GFX_event_normal_frame_economy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1300,6 +1303,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1714,6 +1718,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1775,6 +1780,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1839,6 +1845,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1854,6 +1861,8 @@ character_event = {
 		NOT = { has_character_flag = hermit_visit }
 		NOT = { has_character_flag = hermit_visit_taken }
 		NOT = { trait = in_hiding }
+		NOT = { has_character_flag = do_not_disturb }
+		in_command = no
 	}
 	
 	mean_time_to_happen = {
@@ -1953,6 +1962,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -1987,6 +1997,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2021,6 +2032,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2060,6 +2072,7 @@ character_event = {
 	border = GFX_event_normal_frame_diplomacy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2309,6 +2322,7 @@ character_event = {
 	border = GFX_event_normal_frame_diplomacy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2345,6 +2359,7 @@ character_event = {
 	
 	hide_from = yes
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2375,6 +2390,7 @@ character_event = {
 	border = GFX_event_normal_frame_diplomacy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2550,6 +2566,7 @@ character_event = {
 	border = GFX_event_normal_frame_diplomacy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2584,6 +2601,7 @@ character_event = {
 	border = GFX_event_normal_frame_diplomacy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2617,6 +2635,7 @@ character_event = {
 	border = GFX_event_normal_frame_diplomacy
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -2657,6 +2676,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3104,6 +3124,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3256,6 +3277,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3289,6 +3311,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3322,6 +3345,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3361,6 +3385,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3415,6 +3440,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3553,6 +3579,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3656,6 +3683,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3683,6 +3711,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
@@ -3711,6 +3740,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
 	
 	trigger = {
