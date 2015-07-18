@@ -106,7 +106,7 @@ character_event = {
 		name = EVTOPTA_CM_6002
 		trigger = {
 			FROM = {
-				NOT = {
+				NOR = {
 					is_plot_target_of = ROOT
 					any_known_plotter = {
 						any_plot_backer = {
@@ -117,12 +117,6 @@ character_event = {
 				}
 				OR = {
 					any_child  = {
-						character = ROOT
-					}
-					father = {
-						character = ROOT
-					}
-					mother = {
 						character = ROOT
 					}
 					any_lover = {
@@ -170,7 +164,7 @@ character_event = {
 		name = EVTOPTA_CM_6003
 		trigger = {
 			FROM = {
-				NOT = {
+				NOR = {
 					is_plot_target_of = ROOT
 					any_known_plotter = {
 						any_plot_backer = {
@@ -187,12 +181,6 @@ character_event = {
 						character = ROOT
 					}
 					any_sibling = {
-						character = ROOT
-					}
-					father = {
-						character = ROOT
-					}
-					mother = {
 						character = ROOT
 					}
 				}
@@ -220,72 +208,83 @@ character_event = {
 }
 
 # Notify that character has sent child into hiding
-#Obsolete
-#character_event = {
-#	id = CM.6004
-#	desc = EVTDESC_CM_6004
-#	picture = GFX_evt_spymaster
-#	border = GFX_event_normal_frame_intrigue
-#	
-#	is_triggered_only = yes
-#	
-#	ai = no
-#	
-#	option = {
-#		name = EVTOPTA_CM_6004
-#		trigger = {
-#			NOT = { FROM = { is_plot_target_of = ROOT } }
-#			NOT = {	FROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } } }
-#			NOT = { is_rival = FROM }
-#		}
-#		tooltip = { FROM = { add_trait = in_hiding } }
-#	}
-#	option = {
-#		name = EVTOPTB_CM_6004
-#		trigger = {
-#			OR = {
-#				FROM = { is_plot_target_of = ROOT }
-#				FROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } }
-#				is_rival = FROM
-#			}
-#		}
-#		tooltip = { FROM = { add_trait = in_hiding } }
-#	}
-#}
-
+character_event = {
+	id = CM.6004
+	desc = EVTDESC_CM_6004
+	picture = GFX_evt_spymaster
+	border = GFX_event_normal_frame_intrigue
+	
+	is_triggered_only = yes
+	
+	ai = no
+	
+	option = {
+		name = EVTOPTA_CM_6004
+		trigger = {
+			FROM = {
+				NOR = {
+					is_plot_target_of = ROOT
+					any_known_plotter = {
+						any_plot_backer = {
+							character = ROOT
+						}
+					}
+					is_rival = ROOT
+				}
+			}
+		}
+		tooltip = { FROM = { add_trait = in_hiding } }
+	}
+	option = {
+		name = EVTOPTB_CM_6004
+		trigger = {
+			FROM = {
+				OR = {
+					is_plot_target_of = ROOT
+					any_known_plotter = {
+						any_plot_backer = {
+							character = ROOT
+						}
+					}
+					is_rival = ROOT
+				}
+			}
+		}
+		tooltip = { FROM = { add_trait = in_hiding } }
+	}
+}
 # Notify that character has taken child out of hiding
-#Obsolete
-#character_event = {
-#	id = CM.6005
-#	desc = EVTDESC_CM_6005
-#	picture = GFX_evt_spymaster
-#	border = GFX_event_normal_frame_intrigue
-#	
-#	is_triggered_only = yes
-#	
-#	ai = no
-#	
-#	option = {
-#		name = EVTOPTA_CM_6005
-#		trigger = {
-#			NOT = { FROM = { is_plot_target_of = ROOT } }
-#			NOT = {	FROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } } }
-#			NOT = { is_rival = FROM }
-#		}
-#		tooltip = { FROM = { remove_trait = in_hiding } }
-#	}
-#	option = {
-#		name = EVTOPTB_CM_6005
-#		trigger = {
-#			OR = {
-#				FROM = { is_plot_target_of = ROOT }
-#				FROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } }
-#				is_rival = FROM
-#			}
-#		}
-#		tooltip = { FROM = { remove_trait = in_hiding } }
-#	}
-#}
+character_event = {
+	id = CM.6005
+	desc = EVTDESC_CM_6005
+	picture = GFX_evt_spymaster
+	border = GFX_event_normal_frame_intrigue
+	
+	is_triggered_only = yes
+	
+	ai = no
+	
+	option = {
+		name = EVTOPTA_CM_6005
+		trigger = {
+			NOT = { FROM = { is_plot_target_of = ROOT } }
+			NOT = {	FROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } } }
+			NOT = { is_rival = FROM }
+		}
+		tooltip = { FROM = { remove_trait = in_hiding } }
+	}
+	option = {
+		name = EVTOPTB_CM_6005
+		trigger = {
+			OR = {
+				FROM = { is_plot_target_of = ROOT }
+				FROM = { any_known_plotter = { any_plot_backer = { character = ROOT } } }
+				is_rival = FROM
+			}
+		}
+		tooltip = { FROM = { remove_trait = in_hiding } }
+	}
+}
 
 
 # To trigger notification events when a player comes out of hiding through event, for example when accepting a feast or tournament invitation
@@ -451,7 +450,7 @@ character_event = {
 
 	trigger = {
 		trait = in_hiding
-		NOT = { lifestyle_traits = 1 }
+		NOT = { trait = celibate }
 		age = 16
 	}
 	
@@ -1187,6 +1186,7 @@ character_event = {
 	immediate = {
 		random_child = {
 			limit = {
+				is_alive = yes
 				NOT = { has_character_modifier = suspected_murder_plot }
 				OR = {
 					ROOT = { trait = paranoid }
@@ -1416,6 +1416,7 @@ character_event = {
 	
 	capable_only = yes
 	prisoner = no
+	is_part_of_plot = yes
 	
 	trigger = {
 		OR = {
@@ -1743,6 +1744,7 @@ character_event = {
 	
 	capable_only = yes
 	prisoner = no
+	is_part_of_plot = yes
 	
 	trigger = {
 		OR = {
@@ -2068,6 +2070,7 @@ character_event = {
 	
 	capable_only = yes
 	prisoner = no
+	is_part_of_plot = yes
 	
 	trigger = {
 		OR = {
@@ -2392,6 +2395,7 @@ character_event = {
 	
 	capable_only = yes
 	prisoner = no
+	is_part_of_plot = yes
 	
 	trigger = {
 		OR = {
@@ -2634,7 +2638,7 @@ narrative_event = {
 	title = EVTTITLE_CM_6333
 	desc = EVTDESC_CM_6337
 	picture = GFX_evt_shadow
-	border = GFX_event_normal_frame_intrigue
+	border = GFX_event_narrative_frame_intrigue
 
 	is_triggered_only = yes
 
@@ -2715,9 +2719,9 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	prisoner = no
+	is_part_of_plot = yes
 	
 	trigger = {
-		trait = incapable
 		OR = {
 			has_plot = plot_kill_character
 			has_plot = plot_kill_spouse
@@ -3039,6 +3043,7 @@ character_event = {
 	
 	capable_only = yes
 	prisoner = no
+	is_part_of_plot = yes
 	
 	trigger = {
 		OR = {
