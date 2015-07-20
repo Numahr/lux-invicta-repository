@@ -29,6 +29,23 @@ claim = {
 	can_ask_to_join_war = no
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
 	press_claim = yes
+	
+	can_use = {
+		ROOT = {
+			NOR = {
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
+				has_character_flag = do_not_disturb
+			}
+		}
+	}
 
 	can_use_title = {
 		ROOT = {
@@ -83,18 +100,32 @@ claim = {
 			}
 		}
 		ROOT = { has_claim = PREV }
+		
+		NOT = {
+			FROM = {
+				is_patrician = yes
+				OR = {
+					capital_holding = {
+						title = PREVPREV
+					}
+					PREV = {
+						is_primary_holder_title_tier = yes
+					}
+				}
+			}
+			ROOT = {
+				is_patrician = yes
+				OR = {
+					liege_before_war = {
+						character = FROM
+					}
+					liege = {
+						character = FROM
+					}
+				}
+			}
+		}
 	}
-	# can_use_gui = { #tentatively removed - DR
-		# ROOT = {
-			# wealth = 50
-			# prestige = 100
-		# }
-	# }
-	# on_add = { #v11 addition
-			# ROOT = {	
-				# scaled_wealth = -0.1
-			# }
-		# }
 	on_success_title = {
 	
 		hidden_tooltip = {
@@ -235,10 +266,20 @@ other_claim = {
 
 	can_use = {
 		ROOT = {
-			scaled_wealth = 0.1
-			NOT = {
+			mercenary = no
+			NOR = {
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 				has_character_flag = do_not_disturb
 			}
+			scaled_wealth = 0.1
 		}
 	}
 	can_use_title = {
@@ -300,12 +341,6 @@ other_claim = {
 			}
 		}
 	}
-	# can_use_gui = { #tentatively removed - DR
-		# ROOT = {
-			# wealth = 50
-			# prestige = 100
-		# }
-	# }
 	is_valid_title = {
 		OR = {
 			FROM = {
@@ -316,12 +351,32 @@ other_claim = {
 			}
 		}
 		ROOT = { has_claim = PREV }
+		
+		NOT = {
+			FROM = {
+				is_patrician = yes
+				OR = {
+					capital_holding = {
+						title = PREVPREV
+					}
+					PREV = {
+						is_primary_holder_title_tier = yes
+					}
+				}
+			}
+			ROOT = {
+				is_patrician = yes
+				OR = {
+					liege_before_war = {
+						character = FROM
+					}
+					liege = {
+						character = FROM
+					}
+				}
+			}
+		}
 	}
-	# on_add = { #v11 addition
-		# ROOT = {	
-			# scaled_wealth = -0.1
-		# }
-	# }
 	on_success = {
 		hidden_tooltip = {
 			ROOT = {
@@ -357,6 +412,22 @@ other_claim = {
 					random = {
 						chance = 50
 						give_nickname = nick_the_usurper
+					}
+				}
+			}
+			
+			# Anti-Popes take all the gold of the Vatican
+			if = {
+				limit = {
+					OR = {
+						tag = k_papal_state
+						tag = d_fraticelli
+					}
+				}
+				FROM = {
+					transfer_scaled_wealth = {
+						to = ROOT
+						value = all
 					}
 				}
 			}
@@ -437,10 +508,14 @@ other_claim = {
 							}
 						}
 						OR = {
-							de_jure_liege_or_above = FROMFROM
-							ROOT = { has_character_flag = claimant_is_vassal_ruler_flag }
+							holder_scope = {
+								de_jure_liege_or_above = FROMFROM
+							}
 							ROOT = {
-								dynasty = FROMFROM
+								OR = {
+									has_character_flag = claimant_is_vassal_ruler_flag
+									dynasty = FROMFROM
+								}
 							}
 						}
 					}
@@ -586,7 +661,16 @@ claim_on_liege = {
 	
 	can_use = {
 		ROOT = {
-			NOT = {
+			NOR = {
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 				has_character_flag = do_not_disturb
 			}
 		}
@@ -630,6 +714,18 @@ claim_on_liege = {
 				}
 			}
 		}
+		ROOT = {
+			OR = {
+				liege = {
+					character = PREV # either independent
+				}
+				liege = { 
+					FROM = { 
+						is_liege_or_above = PREV # or have shared liege
+					}
+				}
+			}
+		}
 	}
 
 	is_valid_title = {
@@ -644,6 +740,23 @@ claim_on_liege = {
 		OR = {
 			has_law = succ_feudal_elective
 			ROOT = { has_claim = PREV }
+		}
+		
+		NOR = {
+			FROM = {
+				is_patrician = yes
+				OR = {
+					capital_holding = {
+						title = PREVPREV
+					}
+					PREV = {
+						is_primary_holder_title_tier = yes
+					}
+				}
+			}
+			ROOT = {
+				is_patrician = yes
+			}
 		}
 		ROOT = {
 			OR = {
@@ -731,6 +844,16 @@ claim_on_liege = {
 				NOT = { culture = ROOT }
 			}
 			hidden_tooltip = { conquest_culture = ROOT }
+		}
+		
+		if = {
+			limit = {
+				higher_tier_than = FROM
+			}
+			
+			FROM = {
+				set_defacto_liege = ROOT
+			}
 		}
 		
 		hidden_tooltip = {
@@ -1227,6 +1350,38 @@ claim_on_liege_plot = {
 	can_call_allies = no
 	can_ask_to_join_war = no
 	
+	can_use = {
+		ROOT = {
+			NOT = {
+				has_character_flag = do_not_disturb
+			}
+		}
+	}
+
+	can_use_title = {
+		ROOT = {
+			NOR = {
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
+			}
+		}
+		OR = {
+			FROM = {
+				has_landed_title = PREV
+			}
+			holder_scope = {
+				is_liege_or_above = FROM
+			}
+		}
+	}
+	
 	is_valid = {
 		FROM = {
 			in_revolt = no
@@ -1237,27 +1392,20 @@ claim_on_liege_plot = {
 				}
 			}
 		}
+		ROOT = {
+			OR = {
+				liege = {
+					character = PREV # either independent
+				}
+				liege = { 
+					FROM = { 
+						is_liege_or_above = PREV # or have shared liege
+					}
+				}
+			}
+		}
 	}
 	
-	can_use = {
-		ROOT = {
-			NOT = {
-				has_character_flag = do_not_disturb
-			}
-		}
-	}
-
-	can_use_title = {
-		OR = {
-			FROM = {
-				has_landed_title = PREV
-			}
-			holder_scope = {
-				is_liege_or_above = FROM
-			}
-		}
-	}
-
 	is_valid_title = {
 		OR = {
 			FROM = {
@@ -1456,6 +1604,19 @@ claim_on_vassal_plot = {
 	}
 
 	can_use_title = {
+		ROOT = {
+			NOR = {
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
+			}
+		}
 		OR = {
 			FROM = {
 				has_landed_title = PREV
