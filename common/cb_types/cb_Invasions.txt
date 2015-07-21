@@ -32,8 +32,18 @@ invasion = {
 
 	can_use = {
 		ROOT = {
-			NOT = {
+			mercenary = no
+			NOR = {
 				has_character_flag = do_not_disturb
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 			}
 		}
 	}
@@ -261,13 +271,48 @@ tribal_invasion = {
 
 	can_use = {
 		ROOT = {
-			NOT = {
+			NOR = {
 				has_character_flag = do_not_disturb
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 			}
+			is_nomadic = no
 			OR = {
 				AND = {
-					primary_title = { is_tribal_type_title = yes }
-					has_horde_culture = yes
+					has_dlc = "Horse Lords"
+					OR = {
+						has_character_flag = horde_invader
+						AND = {
+							religion = aztec
+							culture_group = mesoamerican
+							FROM = {
+								NOT = {
+									religion = aztec # Should subjugate these instead
+								}
+							}
+						}
+					}
+				}
+				AND = {
+					NOT = { has_dlc = "Horse Lords" }
+					higher_tier_than = COUNT
+					independent = yes
+					OR = {
+						religion = aztec
+						AND = {
+							OR = {
+								has_horde_culture = yes
+								has_character_flag = horde_invader
+							}
+						}
+					}
 					#NOT = { religion_group = christian }
 				}
 				AND = {
@@ -280,7 +325,7 @@ tribal_invasion = {
 		}
 
 		ROOT = {
-			NOT = { is_liege_or_above = FROM }
+			NOT = { same_realm = FROM }
 		}
 	}
 	can_use_gui = {
@@ -475,7 +520,7 @@ tribal_invasion = {
 }
 
 # Glorious Conquest
-# availability: # availability: 1000 authority (1500 stockpiled), 200 gold, 200% annual income, ambitious/authorative/naturalleader/proud/arrogant/selfish/greedy/pompous/demanding but NOT content/weakwilled/submissive/
+#availability: 1000 authority (1500 stockpiled), 200 gold, 200% annual income, ambitious/authorative/naturalleader/proud/arrogant/selfish/greedy/pompous/demanding but NOT content/weakwilled/submissive/
 glorious_conquest = {
 	name = CB_NAME_GLORIOUS_CONQUEST
 	war_name = WAR_NAME_GLORIOUS_CONQUEST
@@ -491,6 +536,8 @@ glorious_conquest = {
 			NOT = {
 				has_character_flag = do_not_disturb
 			}
+			mercenary = no
+			is_nomadic = no
 		}
 	}
 	
@@ -741,6 +788,7 @@ viking_invasion = {
 
 	can_use = {
 		ROOT = {
+			mercenary = no
 			OR = {
 					religion = aglibol
 					religion = antinomian 
@@ -792,6 +840,15 @@ viking_invasion = {
 			has_opinion_modifier = { who = FROM modifier = preparing_to_invade }
 			NOR = {
 				is_liege_or_above = FROM
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 				has_character_flag = do_not_disturb
 			}
 		}
@@ -1006,10 +1063,51 @@ pagan_subjugation = {
 		ROOT = {
 			is_reformed_religion = no
 			has_horde_culture = no # Should use tribal invasion instead
+			mercenary = no
+			OR = {
+				AND = {
+					has_dlc = "Horse Lords"
+					is_nomadic = no
+				}
+				AND = {
+					NOT = {
+						has_dlc = "Horse Lords"
+					}
+					has_horde_culture = no
+				}
+			}
+			OR = {
+				NOT = {
+					has_character_modifier = launched_subjugation
+				}
+				AND = {
+					has_ambition = obj_become_king
+					capital_scope = {
+						kingdom = {
+							FROM = {
+								any_realm_title = {
+									kingdom = {
+										title = PREVPREVPREV
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			NOR = {
 				same_realm = FROM
 				is_liege_or_above = FROM
 				has_character_flag = do_not_disturb
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 			}
 			OR = { # All religions with Clanic Politics feature (i.e. unreformed religions of Barbarian, Celtic, Norse, Shamanic and Steppe civilizations)
 				religion = allfather
@@ -1066,6 +1164,8 @@ pagan_subjugation = {
 			}
 		}
 		FROM = {
+			in_revolt = no
+			is_nomadic = no
 			culture = ROOT
 			OR = {
 				is_reformed_religion = no
@@ -1075,52 +1175,22 @@ pagan_subjugation = {
 			NOT = {
 				any_war = {
 					defender = { character = FROM }
-					using_cb = pagan_subjugation
-				}
-			}
-		}
-	}
-	can_use_gui = {
-		ROOT = {
-			prestige = 500
-			# scaled_wealth = 1
-			# wealth = 50
-		}
-	}
-	can_use_title = {
-		ROOT = {
-			#piety = 250
-			#prestige = 250
-			#scaled_wealth = 1.5
-			OR = {
-				NOT = { has_character_modifier = launched_subjugation }
-				AND = {
-					has_ambition = obj_become_king
-					capital_scope = {
-						kingdom = {
-							title = PREVPREVPREV
-						}
+					OR = {
+						using_cb = pagan_subjugation
+						using_cb = nomad_subjugation
 					}
 				}
 			}
 		}
-
-		FROM = {
-			any_realm_title = {
-				de_jure_liege_or_above = PREVPREV
-			}
-		}
 	}
 
-	is_valid_title = {
-		FROM = {
-			any_realm_title = {
-				de_jure_liege_or_above = PREVPREV
-			}
-		}
-	}
 	on_add = {
 		ROOT = {
+			add_character_modifier = {
+				name = launched_subjugation
+				days = -1
+				hidden = yes
+			}
 			# scaled_wealth = -0.5
 			# wealth = -50
 			prestige = -200
@@ -1172,52 +1242,27 @@ pagan_subjugation = {
 				}
 				religion = ROOT
 			}
-		}
-	}
-
-	on_success_title = {
-		# Usurp the target kingdom itself, if the enemy holds it
-		if = {
-			limit = {
-				holder_scope = {
-					character = FROM
-				}
-				NOT = { ROOT = { tier = EMPEROR } }
+			
+			custom_tooltip = {
+				text = tribal_subjugation_tip
 			}
-			ROOT = { usurp_title = { target = PREV type = invasion } }
-		}
-
-		if = {
-			# Take the enemy's duchies within the target kingdom, if we are the same or lower tier
-			limit = {
-				ROOT = {
-					NOT = { higher_tier_than = FROM }
-				}
-			}
-			FROM = {
+				
+			hidden_tooltip = {
 				any_demesne_title = {
 					limit = {
-						tier = DUKE
-						OR = {
-							title = PREVPREV
-							de_jure_liege_or_above = PREVPREV
-						}
+						higher_tier_than = ROOT
 					}
-					ROOT = { usurp_title = { target = PREV type = invasion } }
+					ROOT = { grant_title = { target = PREV type = invasion } }
+					add_pressed_claim = FROM
 				}
-			}
-		}
-
-		# Vassalize the rest
-		custom_tooltip = {
-			text = pagan_subjugation_tip
-			hidden_tooltip = {
-				ROOT = {
-					subjugate_or_take_under_title = { # If the target only has territory within the kingdom, he is simply vassalized
-						title = PREV
-						enemy = FROM
+				any_demesne_title = {
+					limit = {
+						tier = ROOT
 					}
+					ROOT = { grant_title = { target = PREV type = invasion } }
+					add_pressed_claim = PREV
 				}
+				set_defacto_liege = ROOT
 			}
 		}
 	}
@@ -1306,6 +1351,9 @@ pagan_subjugation = {
 	defender_ai_defeat_worth = {
 		factor = 100
 	}
+	ai_will_do = {
+		factor = 1
+	}
 }
 
 
@@ -1336,6 +1384,7 @@ decadence_invasion = {
 						OR = {
 							tier = king
 							tier = emperor
+							is_primary_holder_title = yes
 						}
 						NOT = { has_law = centralization_0 }
 					}

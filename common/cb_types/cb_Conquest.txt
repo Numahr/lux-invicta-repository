@@ -36,7 +36,18 @@ county_conquest = {
 	can_use = {
 		ROOT = {
 			NOR = {
+				mercenary = yes
+				is_nomadic = yes
 				is_liege_or_above = FROM
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 				has_character_flag = do_not_disturb
 				OR = {# Expansion War (selected religions ? )
 					religion = alexandros
@@ -430,27 +441,45 @@ county_conquestmil = {
 				has_character_flag = do_not_disturb
 			}
 			OR = {
-				religion = alexandros
-				religion = amanai
-				religion = attar
-				religion = dazhbog
-				religion = ghazi_islam
-				religion = gurzil
-				religion = jud_sabaoth
-				religion = maher
-				religion = mani_mithra
-				religion = mithra
-				religion = mithra_christ
-				religion = mithra_sol
-				religion = norse_war
-				religion = perun
-				religion = sol_tsahay
-				religion = svetovid
-				religion = tarhunt
-				religion = teiwaz
-				religion = zal
-				religion = zal_christ
-				religion = zal_mani			
+				ROOT = {
+					is_nomadic = yes
+					NOT = {
+						same_realm = FROM
+					}
+				}
+				AND = {
+					OR = {
+						religion = alexandros
+						religion = amanai
+						religion = attar
+						religion = dazhbog
+						religion = ghazi_islam
+						religion = gurzil
+						religion = jud_sabaoth
+						religion = maher
+						religion = mani_mithra
+						religion = mithra
+						religion = mithra_christ
+						religion = mithra_sol
+						religion = norse_war
+						religion = perun
+						religion = sol_tsahay
+						religion = svetovid
+						religion = tarhunt
+						religion = teiwaz
+						religion = zal
+						religion = zal_christ
+						religion = zal_mani
+					}
+					NOT = {
+						same_realm = FROM
+					}
+					FROM = {
+						NOT = {
+							religion = ROOT
+						}
+					}
+				}
 			}
 		}
 	}
@@ -670,6 +699,8 @@ pagan_county_conquest = {
 			NOT = {
 				has_character_flag = do_not_disturb
 			}
+			mercenary = no
+			is_nomadic = no
 			OR = { # All Traditional
 				religion = allat
 				religion = allfather
@@ -1038,6 +1069,8 @@ martial_county_conquest = {
 			NOT = {
 				has_character_flag = do_not_disturb
 			}
+			mercenary = no
+			is_nomadic = no
 			OR = { # All Martial
 				religion = alexandros
 				religion = amanai
@@ -1339,6 +1372,8 @@ clerical_county_conquest = {
 			NOT = {
 				has_character_flag = do_not_disturb
 			}
+			mercenary = no
+			is_nomadic = no
 			OR = { # All Clerical
 				religion = adoptionist
 				religion = almaqah

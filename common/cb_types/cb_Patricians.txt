@@ -33,6 +33,7 @@ coastal_republic = {
 
 	can_use = {
 		ROOT = {
+			mercenary = no
 			OR = {
 				is_merchant_republic = yes
 				is_patrician = yes
@@ -42,6 +43,15 @@ coastal_republic = {
 				is_vassal_or_below = FROM
 				same_liege = FROM
 				has_character_flag = do_not_disturb
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 			}
 		}
 	}
@@ -194,6 +204,7 @@ coastal_county_republic = {
 
 	can_use = {
 		ROOT = {
+			mercenary = no
 			OR = {
 				is_merchant_republic = yes
 				is_patrician = yes
@@ -202,6 +213,15 @@ coastal_county_republic = {
 				is_liege_or_above = FROM
 				is_vassal_or_below = FROM
 				same_liege = FROM
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 				has_character_flag = do_not_disturb
 			}
 		}
@@ -396,19 +416,45 @@ embargo_cb = {
 
 	can_use = {
 		ROOT = {
+			mercenary = no
 			independent = yes
 			NOR = {
 				has_embargo = FROM
 				has_character_flag = do_not_disturb
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
 			}
 		}
 		FROM = {
 			OR = {
-				is_merchant_republic = yes
+				AND = {
+					is_merchant_republic = yes
+					any_trade_post = {
+						owner = {
+							character = ROOT
+							is_liege_or_above = ROOT
+						}
+					}
+				}
 				AND = {
 					higher_tier_than = DUKE
 					any_realm_lord = {
 						is_merchant_republic = yes
+						any_trade_post = {
+							owner = {
+								OR = {
+									character = ROOT
+									is_liege_or_above = ROOT
+								}
+							}
+						}
 					}
 				}
 			}
@@ -580,6 +626,7 @@ seize_trade_post = {
 
 	can_use = {
 		ROOT = {
+			mercenary = no
 			OR = {
 				is_merchant_republic = yes
 				is_patrician = yes
@@ -587,13 +634,22 @@ seize_trade_post = {
 			NOR = {
 				is_liege_or_above = FROM
 				has_character_flag = do_not_disturb
-				# We cannot overtly attack much weaker Patricians in the same republic
-				AND = {
-					same_realm = FROM
-					num_of_trade_post_diff = {
-						character = FROM
-						value = 3
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
 					}
+				}
+			}
+			# We cannot overtly attack much weaker Patricians in the same republic
+			NAND = {
+				same_realm = FROM
+				num_of_trade_post_diff = {
+					character = FROM
+					value = 3
 				}
 			}
 		}
