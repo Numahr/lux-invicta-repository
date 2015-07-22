@@ -309,27 +309,32 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA64005
-		trigger = {
-			any_lover = {
-				is_female = no
+	immediate = {
+		random_lover = {
+			limit = {
 				is_abroad = no
 				OR = {
 					trait = ill
 					trait = pneumonic
 				}
 			}
+			save_event_target_as = ill_lover
+		}
+	}
+	
+	option = {
+		name = EVTOPTA64005
+		trigger = {
+			event_target:ill_lover = {
+				is_female = no
+			}
 		}
 		ai_chance = { factor = 50 }
-		random_lover = {
-			limit = {
-				is_female = no
-				is_abroad = no
-				OR = {
-					trait = ill
-					trait = pneumonic
-				}			
+		event_target:ill_lover = {
+			opinion = {
+				modifier = opinion_glad
+				who = ROOT
+				years = 1
 			}
 			if = {
 				limit = {
@@ -344,20 +349,11 @@ character_event = {
 						}
 					}
 				}
+				break = yes
 			}
-			if = {
-				limit = {
-					trait = pneumonic
-				}
-				random = {
-					chance = 10
-					remove_trait = pneumonic
-				}
-			}
-			opinion = {
-				modifier = opinion_glad
-				who = ROOT
-				years = 1
+			random = {
+				chance = 10
+				remove_trait = pneumonic
 			}
 		}
 	}
@@ -365,15 +361,12 @@ character_event = {
 		name = EVTOPTB64005
 		ai_chance = { factor = 50 }
 		scaled_wealth = -0.2
-		random_lover = {
-			limit = {
+		trigger = {
+			event_target:ill_lover = {
 				is_female = no
-				is_abroad = no
-				OR = {
-					trait = ill
-					trait = pneumonic
-				}			
 			}
+		}
+		event_target:ill_lover = {
 			if = {
 				limit = {
 					trait = ill
@@ -383,15 +376,11 @@ character_event = {
 					remove_trait = ill
 					hidden_tooltip = { character_event = { id = 38283 } } #notify removed ill
 				}
+				break = yes
 			}
-			if = {
-				limit = {
-					trait = pneumonic
-				}
-				random = {
-					chance = 10
-					remove_trait = pneumonic
-				}
+			random = {
+				chance = 10
+				remove_trait = pneumonic
 			}
 		}
 	}
@@ -399,15 +388,12 @@ character_event = {
 	option = {
 		name = EVTOPTC64005
 		ai_chance = { factor = 0 }
-		random_lover = {
-			limit = {
+		trigger = {
+			event_target:ill_lover = {
 				is_female = no
-				is_abroad = no
-				OR = {
-					trait = ill
-					trait = pneumonic
-				}			
-			}		
+			}
+		}
+		event_target:ill_lover = {
 			character_event = {
 				id = 64046
 				tooltip = "EVTTOOLTIP64046"
@@ -418,24 +404,16 @@ character_event = {
 	option = {
 		name = EVTOPTD64005
 		trigger = {
-			any_lover = {
+			event_target:ill_lover = {
 				is_female = yes
-				is_abroad = no
-				OR = {
-					trait = ill
-					trait = pneumonic
-				}
 			}
 		}
 		ai_chance = { factor = 50 }
-		random_lover = {
-			limit = {
-				is_female = yes
-				is_abroad = no
-				OR = {
-					trait = ill
-					trait = pneumonic
-				}			
+		event_target:ill_lover = {
+			opinion = {
+				modifier = opinion_glad
+				who = ROOT
+				years = 1
 			}
 			if = {
 				limit = {
@@ -446,20 +424,11 @@ character_event = {
 					remove_trait = ill
 					hidden_tooltip = { character_event = { id = 38283 } } #notify removed ill
 				}
+				break = yes
 			}
-			if = {
-				limit = {
-					trait = pneumonic
-				}
-				random = {
-					chance = 10
-					remove_trait = pneumonic
-				}
-			}
-			opinion = {
-				modifier = opinion_glad
-				who = ROOT
-				years = 1
+			random = {
+				chance = 10
+				remove_trait = pneumonic
 			}
 		}
 	}
@@ -484,6 +453,16 @@ character_event = {
 			trait = cruel
 		}
 	}
+	
+	immediate = {
+		random_lover = {
+			limit = {
+				is_abroad = no
+				trait = wounded
+			}
+			save_event_target_as = wounded_lover
+		}
+	}
 
 	weight_multiplier = {
 		days = 1
@@ -501,11 +480,7 @@ character_event = {
 	option = {
 		name = EVTOPTA64006
 		ai_chance = { factor = 50 }
-		random_lover = {
-			limit = {
-				is_abroad = no
-				trait = wounded			
-			}
+		event_target:wounded_lover = {
 			random = {
 				chance = 10
 				remove_trait = wounded
@@ -516,11 +491,7 @@ character_event = {
 		name = EVTOPTB64006
 		ai_chance = { factor = 50 }
 		scaled_wealth = -0.2
-		random_lover = {
-			limit = {
-				is_abroad = no
-				trait = wounded			
-			}
+		event_target:wounded_lover = {
 			random = {
 				chance = 20
 				remove_trait = wounded
@@ -531,11 +502,7 @@ character_event = {
 	option = {
 		name = EVTOPTC64006
 		ai_chance = { factor = 0 }
-		random_lover = {
-			limit = {
-				is_abroad = no
-				trait = wounded			
-			}
+		event_target:wounded_lover = {
 			character_event = {
 				id = 64046
 				tooltip = EVTTOOLTIP64046
@@ -584,19 +551,8 @@ character_event = {
 				family = ROOT
 				age = 18
 			}
-			OR = {
-				AND = {
-					is_female = no
-					ROOT = {
-						is_female = yes
-					}
-				}
-				AND = {
-					is_female = yes
-					ROOT = {
-						is_female = no
-					}
-				}
+			NOT = {
+				same_sex = ROOT
 			}
 		}
 	}
@@ -894,6 +850,7 @@ character_event = {
 		}
 		any_courtier = {
 			is_female = yes
+			prisoner = no
 			age = 16
 			NOR = {
 				is_close_relative = ROOT
@@ -919,6 +876,27 @@ character_event = {
 					fertility = 0.2
 				}
 			}
+		}
+	}
+	
+	immediate = {
+		random_courtier = {
+			limit = {
+				is_female = yes
+				prisoner = no
+				age = 16
+				NOR = {
+					is_close_relative = ROOT
+					trait = homosexual
+					trait = celibate
+					trait = incapable
+					age = 50
+				}
+				has_epidemic = no
+				is_ill = no
+				has_lover = no
+			}
+			save_event_target_as = mistress
 		}
 	}
 	
@@ -960,21 +938,7 @@ character_event = {
 				}
 			}
 		}
-		random_courtier = {
-			limit = {
-				is_female = yes
-				age = 16
-				NOR = {
-					is_close_relative = ROOT
-					trait = homosexual
-					trait = celibate
-					trait = incapable
-					age = 50
-				}
-				has_epidemic = no
-				is_ill = no
-				has_lover = no
-			}
+		event_target:mistress = {
 			character_event = {
 				id = 64017
 				tooltip = EVTTOOLTIP64017
@@ -1006,21 +970,7 @@ character_event = {
 				}
 			}
 		}
-		random_courtier = {
-			limit = {
-				is_female = yes
-				age = 16
-				NOR = {
-					is_close_relative = ROOT
-					trait = homosexual
-					trait = celibate
-					trait = incapable
-					age = 50
-				}
-				has_epidemic = no
-				is_ill = no
-				has_lover = no
-			}
+		event_target:mistress = {
 			character_event = {
 				id = 64017
 				tooltip = "EVTTOOLTIP64017"
@@ -1034,6 +984,10 @@ character_event = {
 			50 = {
 			}
 			20 = {
+				modifier = {
+					factor = 1.25
+					NOT = { religion_group = christian }
+				}
 				if = {
 					limit = {
 						religion_group = christian
@@ -1061,11 +1015,9 @@ character_event = {
 				}
 			}
 			5 = {
-				if = {
-					limit = {
-						NOT = { religion_group = christian }
-					}
-					piety = 5
+				modifier = {
+					factor = 0
+					NOT = { religion_group = christian }
 				}
 				if = {
 					limit = {
@@ -1363,14 +1315,22 @@ character_event = {
 		days = 1
 	}
 	
-	option = {
-		name = EVTOPTA64030 #I shall take her to my isolated country cottage
+	immediate = {
 		random_lover = {
 			limit = {
-				NOT = { trait = incapable }
 				is_female = yes
 				prisoner = no
+				NOT = {
+					trait = incapable
+				}
 			}
+			save_event_target_as = weekend_lover
+		}
+	}
+	
+	option = {
+		name = EVTOPTA64030 #I shall take her to my isolated country cottage
+		event_target:weekend_lover = {
 			add_character_modifier = {
 				name = lovers_retreat
 				duration = 365
@@ -1384,12 +1344,7 @@ character_event = {
 	option = {
 		name = EVTOPTB64030 #I'll sponsor entertainment at the local court
 		scaled_wealth = -0.05
-		random_lover = {
-			limit = {
-				NOT = { trait = incapable }
-				is_female = yes
-				prisoner = no
-			}
+		event_target:weekend_lover = {
 			add_character_modifier = {
 				name = lovers_entertainment
 				duration = 365
@@ -1418,8 +1373,7 @@ character_event = {
 		name = EVTOPTC64030 #I'll spend the time with my mates instead
 		random = {
 			chance = 25
-			random_lover = {
-				limit = { is_female = yes }			
+			event_target:weekend_lover = {
 				character_event = {
 					id = 64046
 					tooltip = "EVTTOOLTIP64046"
@@ -1443,8 +1397,8 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			trait = homosexual
 		}
 		OR = {
@@ -1459,20 +1413,18 @@ character_event = {
 			is_female = yes
 			prisoner = no
 			is_pregnant = no
-			NOT = {
+			NOR = {
 				any_child = {
 					father = {
 						character = ROOT
 					}
 				}
+				trait = incapable
 			}
 			OR = {
 				trait = ambitious
 				trait = arbitrary
 				trait = wroth
-			}
-			NOT = {
-				trait = incapable
 			}
 		}
 		NOT = { trait = in_hiding }
@@ -1480,6 +1432,30 @@ character_event = {
 	
 	weight_multiplier = {
 		days = 1
+	}
+	
+	immediate = {
+		random_lover = {
+			limit = {
+				is_female = yes
+				prisoner = no
+				is_pregnant = no
+				NOR = {
+					any_child = {
+						father = {
+							character = ROOT
+						}
+					}
+					trait = incapable
+				}
+				OR = {
+					trait = ambitious
+					trait = arbitrary
+					trait = wroth
+				}
+			}
+			save_event_target_as = bored_lover
+		}
 	}
 	
 	option = {
@@ -1507,54 +1483,14 @@ character_event = {
 				}
 			}
 		}
-		random_lover = {
-			limit = {
-				is_female = yes
-				prisoner = no
-				is_pregnant = no
-				NOT = {
-					any_child = {
-						father = {
-							character = ROOT
-						}
-					}
-				}
-				OR = {
-					trait = ambitious
-					trait = arbitrary
-					trait = wroth
-				}
-				NOT = {
-					trait = incapable
-				}
-			}
+		event_target:bored_lover = {
 			prestige = 20
 		}
 	}
 	option = {
 		name = EVTOPTB64035 #Take her to do something dangerous, like hunting
 		prestige = 10
-		random_lover = {
-			limit = {
-				is_female = yes
-				prisoner = no
-				is_pregnant = no
-				NOT = {
-					any_child = {
-						father = {
-							character = ROOT
-						}
-					}
-				}
-				OR = {
-					trait = ambitious
-					trait = arbitrary
-					trait = wroth
-				}
-				NOT = {
-					trait = incapable
-				}
-			}
+		event_target:bored_lover = {
 			random = {
 				chance = 10
 				add_trait = wounded
@@ -1572,19 +1508,7 @@ character_event = {
 		add_trait = greedy
 		random = {
 			chance = 25
-			random_lover = {
-				limit = {
-					is_female = yes
-					is_pregnant = no
-					OR = {
-						trait = ambitious
-						trait = arbitrary
-						trait = wroth
-					}
-					NOT = {
-						trait = incapable
-					}
-				}
+			event_target:bored_lover = {
 				character_event = {
 					id = 64046
 					tooltip = "EVTTOOLTIP64045" 
@@ -1673,8 +1597,9 @@ character_event = {
 			limit = {
 				is_abroad = no
 				prisoner = no
-				NOT = {
+				NOR = {
 					trait = incapable
+					character = FROM
 				}
 			}
 			character_event = {
@@ -1877,8 +1802,7 @@ character_event = {
 		months = 120
 	}
 	
-	option = {
-		name = EVTOPTA64050 #Our infatuation has turned into love
+	immediate = {
 		random_courtier = {
 			limit = {
 				prisoner = no
@@ -1907,6 +1831,13 @@ character_event = {
 					value = 25
 				}
 			}
+			save_event_target_as = infatuation_target
+		}
+	}
+	
+	option = {
+		name = EVTOPTA64050 #Our infatuation has turned into love
+		event_target:infatuation_target = {
 			hidden_tooltip = {
 				remove_opinion = {
 					who = ROOT
@@ -1925,34 +1856,7 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB64050 #This was just something for us growing up
-		random_courtier = {
-			limit = {
-				prisoner = no
-				NOT = {
-					trait = incapable
-				}
-				has_character_flag = teenage_infatuation
-				has_lover = no
-				age = 18
-				is_abroad = no
-				same_realm = ROOT
-				has_opinion_modifier = {
-					who = ROOT
-					modifier = teenage_infatuation
-				}
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = teenage_infatuation
-				}
-				opinion = {
-					who = ROOT
-					value = 25
-				}
-				their_opinion = {
-					who = ROOT
-					value = 25
-				}
-			}
+		event_target:infatuation_target = {
 			hidden_tooltip = {
 				remove_opinion = {
 					who = ROOT
@@ -2078,17 +1982,16 @@ character_event = {
 		months = 120
 	}
 	
-	option = {
-		name = EVTOPTA64055 #Ahh, how sweet...
+	immediate = {
 		random_child = {
 			limit = {
 				NOT = {
 					trait = incapable
 				}
 				has_character_flag = teenage_infatuation
+				is_ruler = no
 				is_abroad = no
 				prisoner = no
-				is_ruler = no
 				ROOT = {
 					any_courtier = {
 						NOT = {
@@ -2113,6 +2016,13 @@ character_event = {
 					}
 				}
 			}
+			save_event_target_as = infatuated_child
+		}
+	}
+	
+	option = {
+		name = EVTOPTA64055 #Ahh, how sweet...
+		event_target:infatuated_child = {
 			opinion = {
 				modifier = opinion_happy
 				who = ROOT
@@ -2128,39 +2038,7 @@ character_event = {
 			}
 			prestige = -10
 		}
-		random_child = {
-			limit = {
-				NOT = {
-					trait = incapable
-				}
-				has_character_flag = teenage_infatuation
-				is_abroad = no
-				prisoner = no
-				is_ruler = no
-				ROOT = {
-					any_courtier = {
-						NOT = {
-							trait = incapable
-						}
-						has_character_flag = teenage_infatuation
-						is_abroad = no
-						prisoner = no
-						NOT = {
-							spouse = {
-								character = PREVPREVPREV
-							}
-						}
-						has_opinion_modifier = {
-							who = PREVPREV
-							modifier = teenage_infatuation
-						}
-						reverse_has_opinion_modifier = {
-							who = PREVPREV
-							modifier = teenage_infatuation
-						}
-					}
-				}
-			}
+		event_target:infatuated_child = {
 			opinion = {
 				modifier = opinion_glad
 				who = ROOT
@@ -2170,39 +2048,7 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTC64055 #Separate them
-		random_child = {
-			limit = {
-				NOT = {
-					trait = incapable
-				}
-				has_character_flag = teenage_infatuation
-				is_abroad = no
-				prisoner = no
-				is_ruler = no
-				ROOT = {
-					any_courtier = {
-						NOT = {
-							trait = incapable
-						}
-						has_character_flag = teenage_infatuation
-						is_abroad = no
-						prisoner = no
-						NOT = {
-							spouse = {
-								character = PREVPREVPREV
-							}
-						}
-						has_opinion_modifier = {
-							who = PREVPREV
-							modifier = teenage_infatuation
-						}
-						reverse_has_opinion_modifier = {
-							who = PREVPREV
-							modifier = teenage_infatuation
-						}
-					}
-				}
-			}
+		event_target:infatuated_child = {
 			ROOT = {
 				random_courtier = {
 					limit = {
@@ -2265,6 +2111,7 @@ character_event = {
 		in_command = no
 		is_ill = no
 		is_married = no
+		prisoner = no
 		OR = {
 			trait = kind
 			trait = just
@@ -2382,6 +2229,7 @@ character_event = {
 		NOT = { has_dlc = "Way of Life" }
 		war = no
 		in_command = no
+		prisoner = no
 		OR = {
 			trait = kind
 			trait = just

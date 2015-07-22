@@ -183,10 +183,10 @@ character_event = {
 	
 	only_playable = yes
 	prisoner = no
+ 	has_character_flag = hedge_knights_visiting
 	
 	picture = GFX_evt_joust
 	trigger = {
-	 	has_character_flag = hedge_knights_visiting
 		NOT = {	has_character_flag = hedge_knight_recruited }
 		NOT = {	has_character_flag = hedge_knight_woman_seduced	}
 	}
@@ -225,11 +225,11 @@ character_event = {
 	
 	only_playable = yes
 	prisoner = no
+ 	has_character_flag = hedge_knights_visiting
 	
 	picture = GFX_evt_joust
 	
 	trigger =  {
-	 	has_character_flag = hedge_knights_visiting
 		NOT = {	has_character_flag = hedge_knight_recruited }
 		NOT = {	has_character_flag = hedge_knight_woman_seduced	}
 	}
@@ -277,10 +277,10 @@ character_event = {
 	
 	only_playable = yes
 	prisoner = no
+ 	has_character_flag = hedge_knights_visiting
 	
 	picture = GFX_evt_joust
 	trigger = {
-	 	has_character_flag = hedge_knights_visiting
 	 	any_courtier = {
 	 		age = 16
 	 		is_female = no
@@ -352,15 +352,15 @@ character_event = {
 	
 	only_playable = yes
 	prisoner = no
+ 	has_character_flag = hedge_knights_visiting
 	
 	picture = GFX_evt_lovers
 	
 	trigger = {
-		has_lover = no
-	 	has_character_flag = hedge_knights_visiting
 		NOT = {	has_character_flag = hedge_knight_recruited }
 		NOT = {	has_character_flag = hedge_knight_woman_seduced	}
 		any_courtier = {
+			has_lover = no
 	 		age = 16
 	 		not = { age = 20 }
 	 		is_female = yes	
@@ -375,6 +375,32 @@ character_event = {
 	
 	immediate = {
 		set_character_flag = hedge_knight_woman_seduced
+		random_courtier = {
+			limit = {
+				has_lover = no
+				age = 16
+				not = { age = 20 }
+				is_female = yes	
+				is_married = no
+				is_pregnant = no
+				has_lover = no
+				NOT = { trait = homosexual }
+				fertility = 0.1
+				culture_group = ROOT
+			}
+			save_event_target_as = seduced_woman
+		}
+		create_character = {
+			random_traits = yes
+			dynasty = none
+			culture = root
+			fertility = 0.6
+			female = no
+			age = 24
+	 	}
+		new_character = {
+			save_event_target_as = hedge_knight
+		}
 	}
 
 	mean_time_to_happen = {
@@ -389,28 +415,9 @@ character_event = {
 		name = EVTOPTA71004 #stay
  		
  		
-		random_courtier = {
-	 		limit = {
-	 			age = 16
-	 			not = { age = 20 }
-	 			is_female = yes	
-	 			is_married = no
-	 			is_pregnant = no
-				has_lover = no
-				NOT = { trait = homosexual }
-				fertility = 0.1
-				culture_group = ROOT
-	 		}
+		event_target:seduced_woman = {
 	 		add_trait = lustful
-	 		create_character = {
-				random_traits = yes
-				dynasty = none
-				culture = root
-				fertility = 0.6
-				female = no
-				age = 24
-	 		}
-			new_character = {
+	 		event_target:hedge_knight = {
 	 			impregnate = PREV
 	 			add_lover = PREV
 				PREV = {
@@ -442,28 +449,9 @@ character_event = {
 				 }
 			}
 		}
-		random_courtier = {
-	 		limit = {
-	 			age = 16
-	 			not = { age = 20 }
-	 			is_female = yes	
-	 			is_married = no
-	 			is_pregnant = no
-				has_lover = no
-				NOT = { trait = homosexual }
-				fertility = 0.1
-				culture_group = ROOT
-	 		}
+		event_target:seduced_woman = {
 	 		add_trait = lustful
-			create_character = {
-				random_traits = yes
-				dynasty = none
-				fertility = 0.6
-				female = no
-				age = 24
-				culture = root
-	 		}
-			new_character = {
+			event_target:hedge_knight = {
 	 			impregnate = PREV
 	 			add_lover = PREV
 				PREV = {
@@ -492,9 +480,10 @@ character_event = {
 	
 	only_playable = yes
 	prisoner = no
+ 	has_character_flag = hedge_knights_visiting
 	
 	trigger = {
-	 	has_character_flag = hedge_knights_visiting
+	 	always = yes
 	}	
 	immediate = {
 		clr_character_flag = hedge_knights_visiting
