@@ -3,9 +3,8 @@ decisions = {
 	hold_a_epic_tournament  = {
 		is_high_prio = yes
 		potential = {
-			NOR = {
+			NOT = {
 				has_character_flag = epic_tournament
-				has_character_flag = do_not_disturb
 			}
 			NOR = {
 				culture = bedouin_arabic
@@ -27,6 +26,7 @@ decisions = {
 				religion_group = mand_group
 			}
 			independent = yes
+			NOT = { is_nomadic = yes }
 			OR = {
 				is_female = no
 				trait = strong
@@ -50,12 +50,16 @@ decisions = {
 			age = 16
 			prestige = 500
 			wealth = 200
+			custom_tooltip = {
+				text = is_not_busy_trigger_tooltip
+				hidden_tooltip = { NOT = { has_character_flag = do_not_disturb } }
+			}
 		}
 		effect = {
 			set_character_flag = epic_tournament
 			set_character_flag = do_not_disturb
 			clr_character_flag = tournament_has_ended
-			hidden_tooltip = { character_event = { id = 70999 days = 150 } } # Safety catch flag clearing
+			hidden_tooltip = { character_event = { id = 70999 days = 300 } } # Safety catch flag clearing
 			wealth = -200
 			prestige = 100
 			narrative_event = { id = 70033 tooltip = "tournament_invite" }
@@ -67,6 +71,7 @@ decisions = {
 						OR = {
 							is_feudal = yes
 							is_tribal = yes
+							is_nomadic = yes
 						}
 						NOT = { has_job_title = job_spiritual }
 						age = 16
@@ -353,9 +358,14 @@ decisions = {
 			age = 16
 			prestige = 500
 			wealth = 200
+			custom_tooltip = {
+				text = is_not_busy_trigger_tooltip
+				hidden_tooltip = { NOT = { has_character_flag = do_not_disturb } }
+			}
 		}
 		effect = {
 			set_character_flag = epic_tournament_furusiyya
+			set_character_flag = do_not_disturb
 			clr_character_flag = tournament_has_ended_furusiyya
 			hidden_tooltip = { character_event = { id = 88999 days = 150 } } # Safety catch flag clearing
 			wealth = -200
@@ -370,6 +380,7 @@ decisions = {
 						OR = {
 							is_feudal = yes
 							is_tribal = yes
+							is_nomadic = yes
 						}
 						NOT = { has_job_title = job_spiritual }
 						age = 16
@@ -407,19 +418,25 @@ decisions = {
 	restore_roman_empire = {
 		is_high_prio = yes
 		potential = {
-			has_dlc = "Legacy of Rome"
-			age = 16
-			prisoner = no
-			NOT = { trait = incapable }
-			NOT = { has_global_flag = rome_restored }
 			OR = {
 				culture = roman
 				culture = galloroman
 				culture = romanobrython
 				culture = greek #IDK about the Rhomaion
 			}
+			has_dlc = "Legacy of Rome"
+			age = 16
+			prisoner = no
+			NOT = { trait = incapable }
+			NOT = { has_global_flag = rome_restored }
 		}
 		allow = {
+			primary_title = {
+				OR = {
+					title = e_byzantium
+					title = e_roman
+				}
+			}
 			has_landed_title = e_byzantium
 			has_landed_title = e_roman
 			prestige = 3000
@@ -870,6 +887,7 @@ decisions = {
 			has_dlc = "Charlemagne"
 			is_playable = yes
 			tier = KING
+			is_nomadic = no
 			NOT = { tier = EMPEROR }
 			OR = {
 				ai = no
@@ -1539,13 +1557,13 @@ decisions = {
 			modifier = {
 				factor = 0.001
 				liege = {
-					OR = {
+#					OR = {
 						NOT = { religion_group = ROOT }
-						AND = {
-							religion_group = pagan_group
-							NOT = { religion = ROOT }
-						}
-					}
+#						AND = {
+#							religion_group = pagan_group
+#							NOT = { religion = ROOT }
+#						}
+#					}
 				}
 			}
 			modifier = {
@@ -1559,7 +1577,7 @@ decisions = {
 				factor = 0.01
 				liege = {
 					religion_group = ROOT
-					NOT = { religion_group = pagan_group }
+#					NOT = { religion_group = pagan_group }
 					NOT = { religion = ROOT }
 				}
 			}
