@@ -13,24 +13,25 @@
 targetted_decisions = {
 
 	vassal_fatwa_decision = {
+		filter = vassals
 		ai_target_filter = vassals
 	
 		from_potential = {
-			is_playable = yes
-			religion_group = muslim
+			is_ruler = yes
+			uses_decadence = yes
 			any_courtier = {
 				has_job_title = job_spiritual
-				religion_group = muslim
+				uses_decadence = yes
 			}
 		}
 		
 		potential = {
-			is_adult = yes
+			vassal_of = FROM
 			is_ruler = yes
+			is_adult = yes
 			is_landed = yes
 			prisoner = no
-			is_liege_or_above = FROM
-			religion_group = muslim
+			uses_decadence = yes
 			decadence = 40
 			NOT = { piety = 100 }
 			NOT = { dynasty = FROM }
@@ -72,15 +73,21 @@ targetted_decisions = {
 	}
 	
 	vassal_castrate_decision = {
-	
+		filter = court
 		ai_target_filter = home_court
+		
+		from_potential = {
+			has_dlc = "Legacy of Rome"
+			is_ruler = yes
+		}
 	
 		potential = {
-			has_dlc = "Legacy of Rome"
+			host = {
+				character = FROM
+			}
 			prisoner = yes
 			is_female = no
 			NOT = { trait = eunuch }
-			host = { character = FROM }
 		}
 		allow = {
 			prisoner = yes
@@ -202,14 +209,18 @@ targetted_decisions = {
 	}
 	
 	vassal_blinding_decision = {
-
+		filter = court
 		ai_target_filter = home_court
+		
+		from_potential = {
+			has_dlc = "Legacy of Rome"
+			is_ruler = yes
+		}
 	
 		potential = {
-			has_dlc = "Legacy of Rome"
+			host = { character = FROM }
 			prisoner = yes
 			NOT = { trait = blinded }
-			host = { character = FROM }
 			OR = {
 				AND = {
 					sibling = FROM
@@ -484,4 +495,116 @@ targetted_decisions = {
 #			}
 #		}
 #	}
+	
+	prisoner_to_oubilette = {
+		filter = court
+		ai_target_filter = court
+
+		from_potential = {
+			ai = no
+		}
+	
+		potential = {
+			host = { character = FROM }
+			prisoner = yes
+			NOT = { has_character_modifier = the_oubliette }
+		}
+		allow = {
+			prisoner = yes
+		}
+		effect = {
+			add_character_modifier = { 
+				name = the_oubliette
+				duration = -1
+			}
+			hidden_tooltip = {
+				remove_character_modifier = the_dungeon
+				remove_character_modifier = house_arrest
+			}
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+	prisoner_to_dungeon = {
+		filter = court
+		ai_target_filter = court
+
+		from_potential = {
+			ai = no
+		}
+	
+		potential = {
+			host = { character = FROM }
+			prisoner = yes
+			OR = {
+				has_character_modifier = the_oubliette
+				has_character_modifier = house_arrest
+			}
+		}
+		allow = {
+			prisoner = yes
+		}
+		effect = {
+			add_character_modifier = { 
+				name = the_dungeon
+				duration = -1
+			}
+			hidden_tooltip = {
+				remove_character_modifier = the_oubliette
+				remove_character_modifier = house_arrest
+			}
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+	prisoner_to_suite = {
+		filter = court
+		ai_target_filter = court
+
+		from_potential = {
+			ai = no
+		}
+	
+		potential = {
+			host = { character = FROM }
+			prisoner = yes
+			NOT = { has_character_modifier = house_arrest }
+		}
+		allow = {
+			prisoner = yes
+		}
+		effect = {
+			add_character_modifier = { 
+				name = house_arrest
+				duration = -1
+			}
+			hidden_tooltip = {
+				remove_character_modifier = the_oubliette
+				remove_character_modifier = the_dungeon
+			}
+		}
+		
+		revoke_allowed = {
+			always = no
+		}
+		
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
 }
