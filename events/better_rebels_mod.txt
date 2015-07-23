@@ -124,6 +124,7 @@ province_event = {
 	picture = "GFX_evt_burning_house"
 
 	trigger = {
+		num_of_settlements = 1
 		# Revolting province
 		has_province_modifier = brm_minor_revolt
 		
@@ -634,9 +635,24 @@ province_event = {
 	picture = GFX_evt_peasants
 	
 	trigger = {
+		NOT = { has_dlc = "The Old Gods" }
 		NOT = { has_global_flag = possible_province_defection }
+		num_of_settlements = 1
 		# Massive revolts
 		has_province_modifier = brm_massive_revolt
+		# Rebel occupied
+		controlled_by = e_rebels
+		NOT = {
+			any_province_lord = {
+				any_demesne_title = {
+					location = {
+						province_id = ROOT
+					}
+					tier = baron
+					NOT = { controlled_by = e_rebels }
+				}
+			}
+		}
 		# Not for those in an independence war
 		owner = {
 			top_liege = {

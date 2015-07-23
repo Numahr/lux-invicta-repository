@@ -40,9 +40,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 
 	prisoner = no
+	has_character_flag = preparing_hajj
 	
 	trigger = {
-		has_character_flag = preparing_hajj
 		any_courtier = {
 			is_female = no
 			age = 20
@@ -82,7 +82,7 @@ character_event = {
 				NOT = { trait = on_hajj }
 				NOT = { trait = hajjaj }
 			}
-			set_character_flag = invite_to_hajj
+			save_event_target_as = hajj_courtier
 		}
 		set_character_flag = hajj_company
 	}
@@ -105,9 +105,7 @@ character_event = {
 			}
 		}
 		scaled_wealth = -0.05
-		random_courtier = {
-			limit = { has_character_flag = invite_to_hajj }
-			clr_character_flag = invite_to_hajj
+		event_target:hajj_courtier = {
 			add_trait = on_hajj
 			opinion = { 
 				modifier = opinion_bring_on_hajj
@@ -126,10 +124,6 @@ character_event = {
 		name = "EVTOPTB86001"
 		trigger = { NOT = { trait = charitable } }
 		piety = -5
-		random_courtier = {
-			limit = { has_character_flag = invite_to_hajj }
-			clr_character_flag = invite_to_hajj
-		}	
 	}
 }
 
@@ -142,20 +136,23 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = preparing_hajj
 	
 	trigger = {
-		has_character_flag = preparing_hajj
 		NOT = { has_character_flag = hajj_company }
 		liege = {
 			war = no
 			is_female = no
 			age = 40
 			religion_group = muslim
-			NOT = { trait = on_hajj }
-			NOT = { trait = hajjaj }
-			NOT = { has_character_flag = preparing_hajj }
-			NOT = {	has_character_flag = ramadan }
-			NOT = {	has_character_flag = asked_on_hajj }
+			NOR = {
+				trait = on_hajj
+				trait = hajjaj
+				has_character_flag = preparing_hajj
+				has_character_flag = ramadan
+				has_character_flag = asked_on_hajj
+				has_character_flag = do_not_disturb
+			}
 		}
 	}
 	
@@ -292,9 +289,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = preparing_hajj
 	
 	trigger = {
-		has_character_flag = preparing_hajj
 		liege = {
 			trait = hajjaj
 			is_female = no
@@ -336,9 +333,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 
 	prisoner = no
+	has_character_flag = preparing_hajj
 	
 	trigger = {
-		has_character_flag = preparing_hajj
 		NOT = { has_character_flag = hajj_company }
 		any_child = {
 			age = 16
@@ -600,9 +597,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	only_rulers = yes
 	
 	is_triggered_only = yes
-	only_rulers = yes
 
 	trigger = {
 		trait = on_hajj
@@ -631,13 +628,12 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	only_rulers = yes
 	
 	is_triggered_only = yes
-	only_rulers = yes
 
 	trigger = {
 		trait = on_hajj
-
 	}
 	
 	option = {
@@ -698,20 +694,22 @@ character_event = {
 	trigger = {
 		trait = on_hajj
 		on_hajj = {
-			NOR = {
+			is_rival = ROOT
+			prisoner = no
+			NOT = {
 				has_character_flag = hajj_arrived_in_mecca
-				opinion = { who = ROOT value = 0 }
 			}
 		}
 	}
 	
 	immediate = {
-		on_hajj = {
+		random_playable_ruler = {
 			limit = {
+				is_rival = ROOT
 				prisoner = no
-				NOR = {
+				trait = on_hajj
+				NOT = {
 					has_character_flag = hajj_arrived_in_mecca
-					opinion = { who = ROOT value = 0 }
 				}
 			}
 			set_character_flag = hajj_rival
@@ -1613,6 +1611,10 @@ character_event = {
 			remove_character_modifier = voice_of_satan
 			remove_character_modifier = voice_of_jesus
 			remove_character_modifier = holy_comet
+			remove_character_modifier = lycanthropy
+			clr_character_flag = demon_child
+			clr_character_flag = demon_child_fake
+			clr_character_flag = child_exorcism
 		}
 		if = {
 			limit = { trait = lunatic }
@@ -1673,9 +1675,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = on_home_from_hajj
 	
 	trigger = {
-		has_character_flag = on_home_from_hajj
 		trait = on_hajj
 		NOT = { has_character_flag = hajj_bring_guards }
 		NOT = { has_character_flag = hajj_home_event }
@@ -1716,9 +1718,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = on_home_from_hajj
 	
 	trigger = {
-		has_character_flag = on_home_from_hajj
 		trait = on_hajj
 		has_character_flag = hajj_bring_guards
 		NOT = { has_character_flag = hajj_home_event }
@@ -1746,9 +1748,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = on_home_from_hajj
 	
 	trigger = {
-		has_character_flag = on_home_from_hajj
 		trait = on_hajj
 		NOT = { has_character_flag = hajj_home_event }
 	}
@@ -1824,9 +1826,9 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	only_rulers = yes
+	religion_group = muslim
 	
 	trigger = {
-		religion_group = muslim
 		NOT = { trait = hajjaj }
 		NOT = { trait = mujahid}
 		NOT = { trait = on_hajj }
@@ -1914,10 +1916,9 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	only_rulers = yes
+	religion_group = muslim
 	
 	trigger = {
-		is_female = no
-		religion_group = muslim
 		war = no
 		has_character_flag = promise_hajj
 		any_demesne_title = {
@@ -1953,10 +1954,9 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	only_rulers = yes
+	religion_group = muslim
 	
 	trigger = {
-		is_female = no
-		religion_group = muslim
 		war = no
 		has_character_flag = promise_jihad
 		prisoner = no		
@@ -1988,17 +1988,20 @@ character_event = {
 	only_men = yes
 	min_age = 30
 	capable_only = yes
+	only_rulers = yes
 	prisoner = no
+	religion_group = muslim
 	
 	trigger = {
 		has_character_flag = promise_jihad
-		religion_group = muslim
 		war = yes
 		any_war = {
 			any_attacker = {
+				is_primary_war_attacker = yes
 				character = ROOT
 			}
 			any_defender = {
+				is_primary_war_defender = yes
 				NOT = {
 					religion_group = muslim
 				}
@@ -2397,9 +2400,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+		has_character_flag = on_home_from_hajj
 	
 	trigger = {
-		has_character_flag = on_home_from_hajj
 		trait = on_hajj
 		NOT = { has_character_flag = hajj_home_event }
 	}
@@ -2426,9 +2429,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = on_home_from_hajj
 	
 	trigger = {
-		has_character_flag = on_home_from_hajj
 		trait = on_hajj
 		NOT = { has_character_flag = hajj_home_event }
 	}
@@ -2455,9 +2458,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = on_home_from_hajj
 	
 	trigger = {
-		has_character_flag = on_home_from_hajj
 		trait = on_hajj
 		NOT = { has_character_flag = hajj_home_event }
 	}
@@ -2489,9 +2492,9 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
+	has_character_flag = on_home_from_hajj
 	
 	trigger = {
-		has_character_flag = on_home_from_hajj
 		has_character_flag = saved_assassin
 		trait = on_hajj
 		NOT = { has_character_flag = hajj_home_event }
