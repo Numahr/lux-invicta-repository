@@ -938,35 +938,61 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		if = {
-			limit = {
-				FROMFROMFROM = {
-					is_father_real_father = no
+		hidden_tooltip = {
+			if = {
+				limit = {
+					FROMFROMFROM = {
+						is_father_real_father = no
+							NOT = { trait = bastard }
+							NOT = { trait = legit_bastard }
+					}
 				}
+				set_character_flag = charge_illegitimate
+				break = yes
 			}
-			set_character_flag = charge_illegitimate
-			break = yes
-		}
-		
-		if = {
-			limit = {
-				FROMFROMFROM = {
-					OR = {
-						trait = cynical
-						AND = {
-							trait = mutazilite
-							liege = { trait = ashari }
+			
+			if = {
+				limit = {
+					FROMFROMFROM = {
+						OR = {
+							trait = cynical
+							AND = {
+								trait = mutazilite
+								liege = { trait = ashari }
+							}
+							AND = {
+								trait = ashari
+								liege = { trait = mutazilite }
+							}
+							AND = {
+								liege = { religion_group = PREV }
+								NOT = { liege = { religion = PREV } }
+								NOT = { religion_group = pagan_group }
+								NOT = { religion_group = indian_group }
+								NOT = {
+									OR = {
+										religion_group = finnish_group
+										religion_group = baltic_group
+										religion_group = slavic_group
+										religion_group = celtic_group
+										religion_group = norsegerman_group
+										religion_group = tengri_group
+									}
+								}
+							}
 						}
-						AND = {
-							trait = ashari
-							liege = { trait = mutazilite }
-						}
-						AND = {
-							liege = { religion_group = PREV }
-							NOT = { liege = { religion = PREV } }
-							NOT = { religion_group = pagan_group }
-							NOT = { religion_group = indian_group }
-							NOT = {
+					}
+				}
+				set_character_flag = charge_heretic
+				break = yes
+			}
+			if = {
+				limit = {
+					FROMFROMFROM = {
+						OR = {
+							NOT = { liege = { religion_group = PREV } }
+							AND = {
+								NOT = { liege = { religion = PREV } }
 								OR = {
 									religion_group = finnish_group
 									religion_group = baltic_group
@@ -979,63 +1005,41 @@ character_event = {
 						}
 					}
 				}
+				set_character_flag = charge_infidel
+				break = yes
 			}
-			set_character_flag = charge_heretic
-			break = yes
-		}
-		if = {
-			limit = {
-				FROMFROMFROM = {
-					OR = {
-						NOT = { liege = { religion_group = PREV } }
-						AND = {
-							NOT = { liege = { religion = PREV } }
-							OR = {
-								religion_group = finnish_group
-								religion_group = baltic_group
-								religion_group = slavic_group
-								religion_group = celtic_group
-								religion_group = norsegerman_group
-								religion_group = tengri_group
-							}
+			if = {
+				limit = {
+					FROMFROMFROM = {
+						OR = {
+							trait = decadent
+							trait = hedonist
+							trait = homosexual
+							trait = possessed
+							trait = lunatic
+							trait = arbitrary
+							trait = cruel
+							trait = impaler
+							trait = seducer
+							trait = seductress
+							has_character_modifier = incestuous_adulterer
+							has_character_modifier = incestuous_adulteress
+							has_character_modifier = adulterer
+							has_character_modifier = adulteress
+							has_character_modifier = known_sodomite
+							has_character_modifier = cradle_robber
+							has_character_modifier = adulterous_priest
 						}
 					}
 				}
+				set_character_flag = charge_deviant
+				break = yes
 			}
-			set_character_flag = charge_infidel
-			break = yes
-		}
-		if = {
-			limit = {
-				FROMFROMFROM = {
-					OR = {
-						trait = decadent
-						trait = hedonist
-						trait = homosexual
-						trait = possessed
-						trait = lunatic
-						trait = arbitrary
-						trait = cruel
-						trait = impaler
-						trait = seducer
-						trait = seductress
-						has_character_modifier = incestuous_adulterer
-						has_character_modifier = incestuous_adulteress
-						has_character_modifier = adulterer
-						has_character_modifier = adulteress
-						has_character_modifier = known_sodomite
-						has_character_modifier = cradle_robber
-						has_character_modifier = adulterous_priest
-					}
-				}
+			
+			random_list = {
+				10 = { set_character_flag = charge_traitor }
+				90 = { set_character_flag = charge_slanderer }
 			}
-			set_character_flag = charge_deviant
-			break = yes
-		}
-		
-		random_list = {
-			10 = { set_character_flag = charge_traitor }
-			90 = { set_character_flag = charge_slanderer }
 		}
 	}
 	
