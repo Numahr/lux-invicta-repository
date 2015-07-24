@@ -9,6 +9,8 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	
+	is_triggered_only = yes
+	
 	trigger = {
 		OR = {
 			religion = norse_pagan
@@ -26,51 +28,51 @@ character_event = {
 		NOT = { trait = infirm }
 	}
 	
-	mean_time_to_happen = {
-		months = 2400
+	weight_multiplier	= {
+		days = 1
 		
 		modifier = {
-			factor = 0.5
+			factor = 2.0
 			trait = wroth
 		}
 		modifier = {
-			factor = 0.5
+			factor = 2.0
 			trait = proud
 		}
 		modifier = {
-			factor = 0.5
+			factor = 2.0
 			trait = ambitious
 		}
 		modifier = {
-			factor = 0.5
+			factor = 2.0
 			trait = strong
 		}
 		modifier = {
-			factor = 5.0
+			factor = 0.2
 			trait = content
 		}
 		modifier = {
-			factor = 5.0
+			factor = 0.2
 			trait = humble
 		}
 		modifier = {
-			factor = 3.0
+			factor = 0.33
 			trait = wounded
 		}
 		modifier = {
-			factor = 6.0
+			factor = 0.17
 			trait = maimed
 		}
 		modifier = {
-			factor = 0.8
+			factor = 1.25
 			martial = 14
 		}
 		modifier = {
-			factor = 0.8
+			factor = 1.25
 			martial = 18
 		}
 		modifier = {
-			factor = 0.8
+			factor = 1.25
 			prestige = 300
 		}
 	}
@@ -279,6 +281,8 @@ character_event = {
 	prisoner = no
 	only_women = yes
 	
+	is_triggered_only = yes
+	
 	trigger = {
 		is_married = yes
 		religion = catholic
@@ -287,30 +291,30 @@ character_event = {
 			prisoner = no
 			is_alive = yes
 			is_ruler = yes
-		OR = {
-			religion = norse_pagan
-			religion = norse_pagan_reformed
-			religion = norse_war
-			religion = ragnarok
-			religion = ragnarok_reformed
-			religion = sol_norse
+			OR = {
+				religion = norse_pagan
+				religion = norse_pagan_reformed
+				religion = norse_war
+				religion = ragnarok
+				religion = ragnarok_reformed
+				religion = sol_norse
 
-		}
+			}
 		}
 	}
 	
-	mean_time_to_happen = {
-		months = 720
+	weight_multiplier = {
+		days = 1
 		modifier = {
-			factor = 0.8
+			factor = 1.25
 			trait = proud
 		}
 		modifier = {
-			factor = 0.2
+			factor = 5.0
 			trait = zealous
 		}
 		modifier = {
-			factor = 1.5
+			factor = 0.67
 			trait = cynical
 		}
 	}
@@ -1013,6 +1017,8 @@ character_event = {
 	min_age = 16
 	only_men = yes
 	
+	is_triggered_only = yes
+	
 	trigger = {
 		OR = {
 			trait = possessed
@@ -1033,29 +1039,29 @@ character_event = {
 		}
 		NOT = { has_character_modifier = nm_possessed_odin }
 		NOT = { has_character_modifier = nm_possessed_loke }
-		NOT = { has_character_modifier = nm_possessed_freya }
+#		NOT = { has_character_modifier = nm_possessed_freya }
 	}
 	
-	mean_time_to_happen = {
-		months = 1200
+	weight_multiplier = {
+		days = 1
 
 		modifier = {
-			factor = 3.0
+			factor = 0.33
 			trait = cynical
 		}
 
 		modifier = {
-			factor = 0.5
+			factor = 2.0
 			trait = nm_seidmann
 		}
 
 		modifier = {
-			factor = 0.8
+			factor = 1.25
 			trait = mystic
 		}
 
 		modifier = {
-			factor = 0.5
+			factor = 2.0
 			religion = norse_war
 		}
 	}
@@ -1066,6 +1072,7 @@ character_event = {
 			name = nm_possessed_odin
 			duration = 1000
 		}
+		set_character_flag = possessed_odin
 		remove_trait = humble
 		remove_trait = content
 		remove_trait = temperate
@@ -1090,6 +1097,7 @@ character_event = {
 
 	min_age = 16
 	only_men = yes
+	has_character_flag = possessed_odin
 	
 	trigger = {
 		has_character_modifier = nm_possessed_odin
@@ -1115,30 +1123,35 @@ character_event = {
 			chance = 30
 			remove_character_modifier = nm_possessed_odin
 			remove_trait = possessed
+			clr_character_flag = possessed_odin
 		}
 	}
 }
 
 character_event = {
-	id = nm_random.22
-	desc = "EVTDESC340022"
-	picture = GFX_evt_lunatic
-
-	min_age = 16
+	id = nm_random.220
+	hide_window = yes
+	
+	only_men = yes
+	has_character_flag = possessed_odin
 	
 	trigger = {
-		OR = {
-			religion = norse_pagan
-			religion = norse_pagan_reformed
-			religion = norse_war
-			religion = ragnarok
-			religion = ragnarok_reformed
-			religion = sol_norse
+		has_character_modifier = nm_possessed_odin
+		is_married = yes
+		spouse = {
+			NOT = {
+				has_character_flag = nm_spouse_believes_odin
+			}
+			OR = {
+				religion = norse_pagan
+				religion = norse_pagan_reformed
+				religion = norse_war
+				religion = ragnarok
+				religion = ragnarok_reformed
+				religion = sol_norse
+			}
 		}
-		spouse = { has_character_modifier = nm_possessed_odin }
-		NOT = { has_character_flag = nm_spouse_believes_odin }
 	}
-	
 	mean_time_to_happen = {
 		months = 12
 		modifier = {
@@ -1156,18 +1169,33 @@ character_event = {
 			trait = zealous
 		}
 	}
+	immediate = {
+		spouse = {
+			character_event = {
+				id = nm_random.22
+			}
+		}
+	}
+}
+
+character_event = {
+	id = nm_random.22
+	desc = "EVTDESC340022"
+	picture = GFX_evt_lunatic
+
+	is_triggered_only = yes
 	
 	option = {
 		name = "EVTOPTA340022"
 		set_character_flag = nm_spouse_believes_odin
-		spouse = { character_event = { id = nm_random.23 tooltip = EVTTOOLTIP340023 } }
+		FROM = { character_event = { id = nm_random.23 tooltip = EVTTOOLTIP340023 } }
 	}
 	option = {
 		name = "EVTOPTB340022"
 		trigger = {
 			NOT = { trait = ambitious }
 		}
-		spouse = { character_event = { id = nm_random.24 tooltip = EVTTOOLTIP340024 } }
+		FROM = { character_event = { id = nm_random.24 tooltip = EVTTOOLTIP340024 } }
 	}
 }
 
@@ -1193,8 +1221,8 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA340024"
-		spouse = { character_event = { id = nm_random.13 tooltip = EVTTOOLTIP340013 } }
-		remove_spouse = spouse
+		FROM = { character_event = { id = nm_random.13 tooltip = EVTTOOLTIP340013 } }
+		remove_spouse = FROM
 	}
 	option = {
 		name = "EVTOPTB340024"
@@ -1203,6 +1231,7 @@ character_event = {
 			chance = 30
 			remove_character_modifier = nm_possessed_odin
 			remove_trait = possessed
+			clr_character_flag = possessed_odin
 		}
 	}
 }
@@ -1214,6 +1243,7 @@ character_event = {
 
 	min_age = 16
 	only_men = yes
+	has_character_flag = possessed_odin
 	
 	trigger = {
 		OR = {
@@ -1244,6 +1274,7 @@ character_event = {
 			chance = 30
 			remove_character_modifier = nm_possessed_odin
 			remove_trait = possessed
+			clr_character_flag = possessed_odin
 		}
 	}
 }
@@ -1255,6 +1286,7 @@ character_event = {
 
 	min_age = 16
 	only_men = yes
+	has_character_flag = possessed_odin
 	
 	trigger = {
 		OR = {
@@ -1299,6 +1331,7 @@ character_event = {
 			chance = 30
 			remove_character_modifier = nm_possessed_odin
 			remove_trait = possessed
+			clr_character_flag = possessed_odin
 		}
 	}
 }
@@ -1310,6 +1343,7 @@ character_event = {
 
 	min_age = 16
 	only_men = yes
+	has_character_flag = possessed_odin
 	
 	trigger = {
 		OR = {
@@ -1340,6 +1374,7 @@ character_event = {
 			chance = 30
 			remove_character_modifier = nm_possessed_odin
 			remove_trait = possessed
+			clr_character_flag = possessed_odin
 		}
 	}
 }
@@ -1350,6 +1385,7 @@ character_event = {
 
 	min_age = 16
 	only_men = yes
+	has_character_flag = possessed_odin
 	
 	trigger = {
 		OR = {
@@ -1412,6 +1448,7 @@ character_event = {
 		give_nickname = nick_the_divine
 		add_trait = nm_divine_blood_odin
 		remove_character_modifier = nm_possessed_odin
+		clr_character_flag = possessed_odin
 		add_character_modifier = {
 			name = nm_possessed_odin_recognised
 			duration = -1
@@ -1450,19 +1487,19 @@ character_event = {
 		NOT = { has_character_modifier = nm_possessed_freya }
 	}
 	
-	mean_time_to_happen = {
-		months = 1200
+	weight_multiplier = {
+		days = 1
 
 		modifier = {
-			factor = 3.0
+			factor = 0.33
 			trait = cynical
 		}
 		modifier = {
-			factor = 0.5
+			factor = 2.0
 			trait = deceitful
 		}
 		modifier = {
-			factor = 0.8
+			factor = 1.25
 			trait = mystic
 		}
 	}
@@ -1487,6 +1524,7 @@ character_event = {
 		add_trait = hedonist
 		add_trait = proud
 		add_trait = possessed
+		set_character_flag = possessed_loke
 	}
 }
 
