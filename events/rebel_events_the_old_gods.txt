@@ -22,6 +22,12 @@ province_event = {
 	
 	trigger = {
 		has_dlc = "The Old Gods"
+		NAND = {
+			has_empty_holding = yes
+			owner = {
+				is_nomadic = yes
+			}
+		}
 	}
 	
 	immediate = {
@@ -41,6 +47,7 @@ province_event = {
 				}
 			}
 			set_province_flag = ongoing_peasant_revolt
+			break = yes
 		}
 		if = { # Heretic revolt
 			limit = {
@@ -56,6 +63,7 @@ province_event = {
 				}
 			}
 			set_province_flag = ongoing_heretic_revolt
+			break = yes
 		}
 		if = {# Religious revolt
 			limit = {
@@ -71,6 +79,7 @@ province_event = {
 				}
 			}
 			set_province_flag = ongoing_religious_revolt
+			break = yes
 		}
 		if = { # Nationalist revolt
 			limit = {
@@ -92,6 +101,7 @@ province_event = {
 				}
 			}
 			set_province_flag = ongoing_nationalist_revolt
+			break = yes
 		}
 		if = { # Slave revolt
 			limit = {
@@ -110,6 +120,7 @@ province_event = {
 				}
 			}
 			set_province_flag = ongoing_slave_revolt
+			break = yes
 		}
 		if = { # Martial revolt
 			limit = {
@@ -125,6 +136,7 @@ province_event = {
 				}
 			}
 			set_province_flag = ongoing_martial_revolt
+			break = yes
 		}
 		if = { # Messianic revolt
 			limit = {
@@ -140,6 +152,7 @@ province_event = {
 				}
 			}
 			set_province_flag = ongoing_messianic_revolt
+			break = yes
 		}
 		if = { # Populist revolt
 			limit = {
@@ -160,7 +173,6 @@ province_event = {
 	
  	# Start a new revolt
 	option = { # Start Slave revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -192,7 +204,6 @@ province_event = {
 		}
 	}
 	option = { # Start nationalist revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -212,7 +223,19 @@ province_event = {
 			kingdom = {
 				culture = ROOT
 				has_holder = no
-				any_previous_holder = { always = yes } # Must have had a holder in the past
+				any_previous_holder = { # Must have had a holder in the past
+					ROOT = {
+						owner = {
+							top_liege = {
+								NOT = { dynasty = PREVPREVPREV }
+								OR = {
+									is_nomadic = no
+									NOT = { culture_group = ROOT }
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		province_event = { id = TOG.1040 }
@@ -221,7 +244,6 @@ province_event = {
 		}
 	}
 	option = { # Start religious revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -246,7 +268,6 @@ province_event = {
 		}
 	}
 	option = { # Start heretic revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -271,7 +292,6 @@ province_event = {
 		}
 	}
 	option = { # Start peasant revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -290,7 +310,6 @@ province_event = {
 		}
 	}
 	option = { # Start martial revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -332,7 +351,6 @@ province_event = {
 		}
 	}
 	option = { # Start messianic revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -377,7 +395,6 @@ province_event = {
 		}
 	}
 	option = { # Start populist revolt
-		name = OK
 		trigger = {
 			NOR = {
 				has_province_flag = ongoing_peasant_revolt
@@ -421,7 +438,6 @@ province_event = {
 	}
 	# Reinforce the ongoing revolt
 	option = { # Reinforce Slave revolt
-		name = OK
 		trigger = {
 			has_province_flag = ongoing_slave_revolt
 		}
@@ -439,7 +455,6 @@ province_event = {
 		}
 	}
 	option = { # Reinforce nationalist revolt
-		name = OK
 		trigger = {
 			has_province_flag = ongoing_nationalist_revolt
 		}
@@ -457,7 +472,6 @@ province_event = {
 		}
 	}
 	option = { # Reinforce heretic revolt
-		name = OK
 		trigger = {
 			has_province_flag = ongoing_heretic_revolt
 		}
@@ -684,6 +698,8 @@ province_event = {
 				name = "PEASANT_REVOLT"
 				holder = THIS
 			}
+			
+			wealth = 100
 			
 			random_list = {
 				17 = {
@@ -1169,6 +1185,11 @@ province_event = {
 	is_triggered_only = yes
 	
 	immediate = {
+		add_province_modifier = {
+			name = recent_county_uprising
+			duration = 1825 # Five years of -100% revolt risk in this county
+		}
+		
 		owner = {
 			top_liege = {
 				any_war = {
@@ -1704,6 +1725,8 @@ province_event = {
 				holder = THIS
 			}
 			
+			wealth = 100
+			
 			random_list = {
 				34 = {
 					spawn_unit = {
@@ -2003,6 +2026,11 @@ province_event = {
 	is_triggered_only = yes
 	
 	immediate = {
+		add_province_modifier = {
+			name = recent_county_uprising
+			duration = 1825 # Five years of -100% revolt risk in this county
+		}
+		
 		owner = {
 			top_liege = {
 				any_war = {
@@ -2317,6 +2345,8 @@ province_event = {
 				holder = THIS
 			}
 			
+			wealth = 100
+			
 			spawn_unit = {
 				province = ROOT
 				home = ROOT
@@ -2502,6 +2532,12 @@ province_event = {
 	is_triggered_only = yes
 	
 	immediate = {
+	
+		add_province_modifier = {
+			name = recent_county_uprising
+			duration = 1825 # Five years of -100% revolt risk in this county
+		}
+	
 		owner = {
 			top_liege = {
 				any_war = {
@@ -2682,6 +2718,8 @@ province_event = {
 				name = "HERETIC_REVOLT"
 				holder = THIS
 			}
+			
+			wealth = 100
 			
 			random_list = {
 				34 = {
@@ -3503,6 +3541,9 @@ province_event = {
 				holder = THIS
 			}
 			set_character_flag = slave_rebel
+			
+			wealth = 100
+			
 			spawn_unit = {
 				province = ROOT
 				home = ROOT
@@ -3832,6 +3873,12 @@ province_event = {
 	hide_window = yes
 	
 	immediate = {
+	
+		add_province_modifier = {
+			name = recent_county_uprising
+			duration = 1825 # Five years of -100% revolt risk in this county
+		}
+	
 		set_province_flag = slave_revolt
 		owner = {
 			top_liege = {
@@ -4525,6 +4572,12 @@ province_event = {
 	is_triggered_only = yes
 	
 	immediate = {
+	
+		add_province_modifier = {
+			name = recent_county_uprising
+			duration = 1825 # Five years of -100% revolt risk in this county
+		}
+	
 		owner = {
 			top_liege = {
 				any_war = {
@@ -5057,6 +5110,8 @@ province_event = {
 				holder = THIS
 			}
 			
+			wealth = 100
+			
 			random_list = {
 				17 = {
 					spawn_unit = {
@@ -5536,6 +5591,12 @@ province_event = {
 	is_triggered_only = yes
 	
 	immediate = {
+	
+		add_province_modifier = {
+			name = recent_county_uprising
+			duration = 1825 # Five years of -100% revolt risk in this county
+		}
+	
 		owner = {
 			top_liege = {
 				any_war = {
@@ -6069,6 +6130,8 @@ province_event = {
 				holder = THIS
 			}
 			
+			wealth = 100
+			
 			random_list = {
 				17 = {
 					spawn_unit = {
@@ -6548,6 +6611,12 @@ province_event = {
 	is_triggered_only = yes
 	
 	immediate = {
+	
+		add_province_modifier = {
+			name = recent_county_uprising
+			duration = 1825 # Five years of -100% revolt risk in this county
+		}
+	
 		owner = {
 			top_liege = {
 				any_war = {
