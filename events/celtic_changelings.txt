@@ -3,7 +3,7 @@
 # ANCIENT RELIGIONS
 # - Celtic changelings
 #
-# Event IDs ancrel.211-241 are reserved
+# Event IDs ancrel.211-244 are used
 #
 ##################################################################
 
@@ -11,30 +11,47 @@ namespace = ancrel
 
 ### Druidic warnings
 
-# Druid Warns About Child (AI Spouse)
+#Druid warns about child (choose AI spouse)
 character_event = {
-	id = ancrel.211
+	id = ancrel.214
 	hide_window = yes
 	
-	only_women = yes
-	min_age = 16
-	prisoner = no
+	only_rulers = yes
+	only_men = yes
 	
 	trigger = {
-		has_dlc = "The Old Gods"
-		is_pregnant = yes
+		is_married = yes
 		spouse = {
-			ai = no
-			any_courtier = { 
-				trait = druid 
+			is_pregnant = yes
+			NOT = {
+				has_character_modifier = child_stolen_sidhe
 			}
 		}
-		NOT = { has_character_flag = child_stolen_sidhe }
+		any_courtier = {
+			trait = druid
+		}
 	}
 	
 	mean_time_to_happen = {
 		months = 550
 	}
+	
+	immediate = {
+		spouse = {
+			character_event = {
+				id = ancrel.211
+			}
+		}
+	}
+	
+}
+
+# Druid Warns About Child (AI Spouse)
+character_event = {
+	id = ancrel.211
+	hide_window = yes
+	
+	is_triggered_only = yes
 	
 	immediate = {
 		set_character_flag = child_stolen_sidhe
@@ -44,10 +61,6 @@ character_event = {
 				character_event = { id = ancrel.212 }
 			}
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -62,10 +75,6 @@ character_event = {
 		liege = {
 			character_event = { id = ancrel.213 }
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -121,9 +130,52 @@ character_event = {
 		}
 		mother = { clr_character_flag = child_stolen_sidhe }
 	}
+}
+
+# Child acts strange I (selection)
+character_event = {
+	id = ancrel.242
+	hide_window = yes
 	
-	option = {
-		name = OK
+	only_rulers = yes
+	only_men = yes
+	
+	trigger = {
+		has_dlc = "The Old Gods"
+		any_child = {
+			has_character_flag = changeling_child
+			host = {
+				character = ROOT
+			}
+			age = 4
+			NOR = {
+				age = 16
+				has_character_flag = changeling_child_strange_1
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		months = 220
+	}
+	
+	immediate = {
+		random_child = {
+			limit = {
+				has_character_flag = changeling_child
+				host = {
+					character = ROOT
+				}
+				age = 4
+				NOR = {
+					age = 16
+					has_character_flag = changeling_child_strange_1
+				}
+			}
+			character_event = {
+				id = ancrel.216
+			}
+		}
 	}
 }
 
@@ -132,28 +184,11 @@ character_event = {
 	id = ancrel.216
 	hide_window = yes
 	
-	ai = yes
-	
-	trigger = {
-		has_dlc = "The Old Gods"
-		age = 4
-		NOT = { age = 16 }
-		NOT = { has_character_flag = changeling_child_strange_1 }
-		has_character_flag = changeling_child
-		father = { is_alive = yes }
-	}
-	
-	mean_time_to_happen = {
-		months = 220
-	}
+	is_triggered_only = yes
 	
 	immediate = {
 		set_character_flag = changeling_child_strange_1
-		father = { character_event = { id = ancrel.217 } }
-	}
-	
-	option = {
-		name = OK
+		FROM = { character_event = { id = ancrel.217 } }
 	}
 }
 
@@ -172,20 +207,27 @@ character_event = {
 	}
 }
 
-# Child acts strange II (AI)
+# Child acts strange II (selection)
 character_event = {
-	id = ancrel.218
+	id = ancrel.243
 	hide_window = yes
 	
-	ai = yes
+	only_rulers = yes
+	only_men = yes
 	
 	trigger = {
 		has_dlc = "The Old Gods"
-		age = 4
-		NOT = { age = 16 }
-		NOT = { has_character_flag = changeling_child_strange_2 }
-		has_character_flag = changeling_child
-		father = { is_alive = yes }
+		any_child = {
+			has_character_flag = changeling_child
+			host = {
+				character = ROOT
+			}
+			age = 4
+			NOR = {
+				age = 16
+				has_character_flag = changeling_child_strange_2
+			}
+		}
 	}
 	
 	mean_time_to_happen = {
@@ -193,12 +235,35 @@ character_event = {
 	}
 	
 	immediate = {
+		random_child = {
+			limit = {
+				has_character_flag = changeling_child
+				host = {
+					character = ROOT
+				}
+				age = 4
+				NOR = {
+					age = 16
+					has_character_flag = changeling_child_strange_2
+				}
+			}
+			character_event = {
+				id = ancrel.218
+			}
+		}
+	}
+}
+
+# Child acts strange II (AI)
+character_event = {
+	id = ancrel.218
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
 		set_character_flag = changeling_child_strange_2
 		father = { character_event = { id = ancrel.219 } }
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -217,20 +282,27 @@ character_event = {
 	}
 }
 
-# Child acts strange III (AI)
+# Child acts strange III (selection)
 character_event = {
-	id = ancrel.220
+	id = ancrel.244
 	hide_window = yes
 	
-	ai = yes
+	only_rulers = yes
+	only_men = yes
 	
 	trigger = {
 		has_dlc = "The Old Gods"
-		age = 4
-		NOT = { age = 16 }
-		NOT = { has_character_flag = changeling_child_strange_3 }
-		has_character_flag = changeling_child
-		father = { is_alive = yes }
+		any_child = {
+			has_character_flag = changeling_child
+			host = {
+				character = ROOT
+			}
+			age = 4
+			NOR = {
+				age = 16
+				has_character_flag = changeling_child_strange_3
+			}
+		}
 	}
 	
 	mean_time_to_happen = {
@@ -238,12 +310,35 @@ character_event = {
 	}
 	
 	immediate = {
+		random_child = {
+			limit = {
+				has_character_flag = changeling_child
+				host = {
+					character = ROOT
+				}
+				age = 4
+				NOR = {
+					age = 16
+					has_character_flag = changeling_child_strange_3
+				}
+			}
+			character_event = {
+				id = ancrel.220
+			}
+		}
+	}
+}
+
+# Child acts strange III (AI)
+character_event = {
+	id = ancrel.220
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
 		set_character_flag = changeling_child_strange_3
 		father = { character_event = { id = ancrel.221 } }
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -262,42 +357,46 @@ character_event = {
 	}
 }
 
-# Child kills Courtier I (AI Child)
+# Child kills Courtier I (Child's father)
 character_event = {
 	id = ancrel.222
 	hide_window = yes
 	
-	ai = yes
+	only_rulers = yes
+	only_men = yes
 	
 	trigger = {
 		has_dlc = "The Old Gods"
-		age = 4
-		NOT = { age = 16 }
-		NOT = { has_character_flag = changeling_child_kills_1 }
-		has_character_flag = changeling_child
-		father = { is_alive = yes }
-		OR = {
-			has_character_flag = changeling_child_strange_1
-			has_character_flag = changeling_child_strange_2
-			has_character_flag = changeling_child_strange_3
-		}
-		father = {
-			any_courtier = {
-				NOR = { 
-					character = ROOT
-					is_close_relative = ROOT 
-				}
-				host = { 
-					character = liege
+		any_child = {
+			has_character_flag = changeling_child
+			age = 4
+			NOR = {
+				age = 16
+				has_character_flag = changeling_child_kills_1
+			}
+			OR = {
+				has_character_flag = changeling_child_strange_1
+				has_character_flag = changeling_child_strange_2
+				has_character_flag = changeling_child_strange_3
+			}
+			ROOT = {
+				any_courtier = {
+					NOR = { 
+						character = PREVPREV
+						is_close_relative = PREVPREV
+						spouse = { character = ROOT }
+					}
+					host = { 
+						character = ROOT
+						prisoner = no
+					}
+					ai = yes
+					is_primary_heir = no
+					is_pretender = no
 					prisoner = no
+					age = 13
+					in_command = no
 				}
-				ai = yes
-				is_primary_heir = no
-				is_pretender = no
-				prisoner = no
-				age = 13
-				in_command = no
-				NOT = { spouse = { character = host } }
 			}
 		}
 	}
@@ -307,33 +406,63 @@ character_event = {
 	}
 	
 	immediate = {
-		set_character_flag = changeling_child_kills_1
-		father = { 
-			random_courtier = {
-				limit = {
-					NOR = { 
-						character = ROOT
-						is_close_relative = ROOT 
-					}
-					host = { 
-						character = liege
-						prisoner = no
-					}
-					ai = yes
-					is_primary_heir = no
-					is_pretender = no
-					prisoner = no
-					age = 13
-					in_command = no
-					NOT = { spouse = { character = host } }
+		random_child = {
+			limit = {
+				has_character_flag = changeling_child
+				age = 4
+				NOR = {
+					age = 16
+					has_character_flag = changeling_child_kills_1
 				}
-				character_event = { id = ancrel.223 } 
+				OR = {
+					has_character_flag = changeling_child_strange_1
+					has_character_flag = changeling_child_strange_2
+					has_character_flag = changeling_child_strange_3
+				}
+				ROOT = {
+					any_courtier = {
+						NOR = { 
+							character = PREVPREV
+							is_close_relative = PREVPREV
+							spouse = { character = ROOT }
+						}
+						host = { 
+							character = ROOT
+							prisoner = no
+						}
+						ai = yes
+						is_primary_heir = no
+						is_pretender = no
+						prisoner = no
+						age = 13
+						in_command = no
+					}
+				}
+			}
+			set_character_flag = changeling_child_kills_1
+			ROOT = { 
+				random_courtier = {
+					limit = {
+						NOR = { 
+							character = PREVPREV
+							is_close_relative = PREVPREV
+							spouse = { character = ROOT }
+						}
+						host = { 
+							character = ROOT
+							prisoner = no
+						}
+						ai = yes
+						is_primary_heir = no
+						is_pretender = no
+						prisoner = no
+						age = 13
+						in_command = no
+					}
+					character_event = { id = ancrel.223 } 
+				}
 			}
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -345,11 +474,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		liege = { character_event = { id = ancrel.224 } }
-	}
-	
-	option = {
-		name = OK
+		FROM = { character_event = { id = ancrel.224 } }
 	}
 }
 
@@ -377,37 +502,43 @@ character_event = {
 	id = ancrel.225
 	hide_window = yes
 	
-	ai = yes
+	only_rulers = yes
+	only_men = yes
 	
 	trigger = {
 		has_dlc = "The Old Gods"
-		age = 4
-		NOT = { age = 16 }
-		NOT = { has_character_flag = changeling_child_kills_2 }
-		has_character_flag = changeling_child
-		father = { is_alive = yes }
-		OR = {
-			has_character_flag = changeling_child_strange_1
-			has_character_flag = changeling_child_strange_2
-			has_character_flag = changeling_child_strange_3
-		}
-		father = {
-			any_courtier = {
-				NOR = { 
-					character = ROOT
-					is_close_relative = ROOT 
-				}
-				host = { 
-					character = liege
+		any_child = {
+			has_character_flag = changeling_child
+			age = 4
+			NOR = {
+				age = 16
+				has_character_flag = changeling_child_kills_2
+			}
+			OR = {
+				has_character_flag = changeling_child_strange_1
+				has_character_flag = changeling_child_strange_2
+				has_character_flag = changeling_child_strange_3
+			}
+			ROOT = {
+				any_courtier = {
+					NOR = { 
+						character = ROOT
+						is_close_relative = ROOT
+						spouse = {
+							character = ROOT
+						}
+					}
+					host = { 
+						character = ROOT
+						prisoner = no
+					}
+					ai = yes
+					is_primary_heir = no
+					is_pretender = no
 					prisoner = no
+					age = 13
+					in_command = no
 				}
-				ai = yes
-				is_primary_heir = no
-				is_pretender = no
-				prisoner = no
-				age = 13
-				in_command = no
-				NOT = { spouse = { character = host } }
 			}
 		}
 	}
@@ -417,33 +548,67 @@ character_event = {
 	}
 	
 	immediate = {
-		set_character_flag = changeling_child_kills_2
-		father = { 
-			random_courtier = {
-				limit = {
-					NOR = { 
-						character = ROOT
-						is_close_relative = ROOT 
-					}
-					host = { 
-						character = liege
-						prisoner = no
-					}
-					ai = yes
-					is_primary_heir = no
-					is_pretender = no
-					prisoner = no
-					age = 13
-					in_command = no
-					NOT = { spouse = { character = host } }
+		random_child = {
+			limit = {
+				has_character_flag = changeling_child
+				age = 4
+				NOR = {
+					age = 16
+					has_character_flag = changeling_child_kills_2
 				}
-				character_event = { id = ancrel.226 } 
+				OR = {
+					has_character_flag = changeling_child_strange_1
+					has_character_flag = changeling_child_strange_2
+					has_character_flag = changeling_child_strange_3
+				}
+				ROOT = {
+					any_courtier = {
+						NOR = { 
+							character = ROOT
+							is_close_relative = ROOT
+							spouse = {
+								character = ROOT
+							}
+						}
+						host = { 
+							character = ROOT
+							prisoner = no
+						}
+						ai = yes
+						is_primary_heir = no
+						is_pretender = no
+						prisoner = no
+						age = 13
+						in_command = no
+					}
+				}
+			}
+			set_character_flag = changeling_child_kills_2
+			ROOT = {
+				random_courtier = {
+					limit = {
+						NOR = { 
+							character = PREVPREV
+							is_close_relative = PREVPREV 
+							spouse = {
+								character = ROOT
+							}
+						}
+						host = { 
+							character = ROOT
+							prisoner = no
+						}
+						ai = yes
+						is_primary_heir = no
+						is_pretender = no
+						prisoner = no
+						age = 13
+						in_command = no
+					}
+					character_event = { id = ancrel.226 } 
+				}
 			}
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -455,11 +620,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		liege = { character_event = { id = ancrel.227 } }
-	}
-	
-	option = {
-		name = OK
+		FROM = { character_event = { id = ancrel.227 } }
 	}
 }
 
@@ -487,37 +648,43 @@ character_event = {
 	id = ancrel.228
 	hide_window = yes
 	
-	ai = yes
+	only_rulers = yes
+	only_men = yes
 	
 	trigger = {
 		has_dlc = "The Old Gods"
-		age = 4
-		NOT = { age = 16 }
-		NOT = { has_character_flag = changeling_child_kills_3 }
-		has_character_flag = changeling_child
-		father = { is_alive = yes }
-		OR = {
-			has_character_flag = changeling_child_strange_1
-			has_character_flag = changeling_child_strange_2
-			has_character_flag = changeling_child_strange_3
-		}
-		father = {
-			any_courtier = {
-				NOR = { 
-					character = ROOT
-					is_close_relative = ROOT 
-				}
-				host = { 
-					character = liege
+		any_child = {
+			has_character_flag = changeling_child
+			age = 4
+			NOR = {
+				age = 16
+				has_character_flag = changeling_child_kills_3
+			}
+			OR = {
+				has_character_flag = changeling_child_strange_1
+				has_character_flag = changeling_child_strange_2
+				has_character_flag = changeling_child_strange_3
+			}
+			ROOT = {
+				any_courtier = {
+					NOR = { 
+						character = PREVPREV
+						is_close_relative = PREVPREV 
+						spouse = {
+							character = ROOT
+						}
+					}
+					host = { 
+						character = ROOT
+						prisoner = no
+					}
+					ai = yes
+					is_primary_heir = no
+					is_pretender = no
 					prisoner = no
+					age = 13
+					in_command = no
 				}
-				ai = yes
-				is_primary_heir = no
-				is_pretender = no
-				prisoner = no
-				age = 13
-				in_command = no
-				NOT = { spouse = { character = host } }
 			}
 		}
 	}
@@ -527,16 +694,55 @@ character_event = {
 	}
 	
 	immediate = {
+		random_child = {
+			limit = {
+				has_character_flag = changeling_child
+				age = 4
+				NOR = {
+					age = 16
+					has_character_flag = changeling_child_kills_3
+				}
+				OR = {
+					has_character_flag = changeling_child_strange_1
+					has_character_flag = changeling_child_strange_2
+					has_character_flag = changeling_child_strange_3
+				}
+				ROOT = {
+					any_courtier = {
+						NOR = { 
+							character = PREVPREV
+							is_close_relative = PREVPREV 
+							spouse = {
+								character = ROOT
+							}
+						}
+						host = { 
+							character = ROOT
+							prisoner = no
+						}
+						ai = yes
+						is_primary_heir = no
+						is_pretender = no
+						prisoner = no
+						age = 13
+						in_command = no
+					}
+				}
+			}
+		}
 		set_character_flag = changeling_child_kills_3
-		father = { 
+		ROOT = { 
 			random_courtier = {
 				limit = {
 					NOR = { 
-						character = ROOT
-						is_close_relative = ROOT 
+						character = PREVPREV
+						is_close_relative = PREVPREV 
+						spouse = {
+							character = ROOT
+						}
 					}
 					host = { 
-						character = liege
+						character = ROOT
 						prisoner = no
 					}
 					ai = yes
@@ -545,15 +751,10 @@ character_event = {
 					prisoner = no
 					age = 13
 					in_command = no
-					NOT = { spouse = { character = host } }
 				}
 				character_event = { id = ancrel.229 } 
 			}
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -566,10 +767,6 @@ character_event = {
 	
 	immediate = {
 		liege = { character_event = { id = ancrel.230 } }
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -592,27 +789,29 @@ character_event = {
 	}
 }
 
-# Druid offers to save child (AI Child)
+# Druid offers to save child (selection)
 character_event = {
 	id = ancrel.231
 	hide_window = yes
 	
-	ai = yes
+	only_rulers = yes
+	only_men = yes
 	
 	trigger = {
 		has_dlc = "The Old Gods"
-		age = 4
-		NOT = { age = 16 }
-		NOT = { has_character_flag = changeling_trade }
-		father = { is_alive = yes }
-		OR = {
-			has_character_flag = changeling_child
-			has_character_flag = changeling_child_fake
-		}
-		father = {
-			any_courtier = {
-				trait = druid
+		any_child = {
+			age = 4
+			NOR = {
+				age = 16
+				has_character_flag = changeling_trade
 			}
+			OR = {
+				has_character_flag = changeling_child
+				has_character_flag = changeling_child_fake
+			}
+		}
+		any_courtier = {
+			trait = druid
 		}
 	}
 	
@@ -621,17 +820,28 @@ character_event = {
 	}
 	
 	immediate = {
-		set_character_flag = changeling_trade
+		random_child = {
+			limit = {
+				age = 4
+				NOR = {
+					age = 16
+					has_character_flag = changeling_trade
+				}
+				OR = {
+					has_character_flag = changeling_child
+					has_character_flag = changeling_child_fake
+				}
+			}
+			set_character_flag = changeling_trade
+			save_event_target_as = changeling_trade
+		}
 		father = {
 			random_courtier = {
 				limit = { trait = druid }
+				save_event_target_as = changeling_druid
 				character_event = { id = ancrel.232 }
 			}
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -646,10 +856,6 @@ character_event = {
 		liege = {
 			character_event = { id = ancrel.233 }
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -699,8 +905,7 @@ character_event = {
 		custom_tooltip = {
 			text = changeling_trade_begins
 			hidden_tooltip = {
-				random_child = {
-					limit = { has_character_flag = changeling_trade }
+				event_target:changeling_trade = {
 					character_event = { id = ancrel.235 days = 3 }
 				}
 			}
@@ -716,16 +921,9 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		father = {
-			random_courtier = {
-				limit = { trait = druid }
-				character_event = { id = ancrel.236 }
-			}
+		event_target:changeling_druid = {
+			character_event = { id = ancrel.236 }
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -745,10 +943,6 @@ character_event = {
 				20 = { character_event = { id = ancrel.240 days = 3 } }
 			}
 		}
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -770,6 +964,8 @@ character_event = {
 		}
 		FROMFROM = { # Flags removed, no more events
 			clr_character_flag = changeling_trade
+			clr_character_flag = changeling_child
+			clr_character_flag = changeling_child_fake
 		}
 	}
 }
@@ -854,6 +1050,7 @@ character_event = {
 			clr_character_flag = changeling_child_fake
 			clr_character_flag = changeling_trade
 			remove_trait = possessed
+			add_trait = wounded
 		}
 		FROM = {
 			banish = yes
@@ -866,6 +1063,7 @@ character_event = {
 			clr_character_flag = changeling_child_fake
 			clr_character_flag = changeling_trade
 			remove_trait = possessed
+			add_trait = wounded
 		}
 	}
 }
