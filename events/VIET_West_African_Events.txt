@@ -166,8 +166,11 @@ character_event = {
 #Griot about to get married
 character_event = {
 	id = wafrica.2
-	desc = wafrica.2.desc
-	picture = GFX_evt_malian_ceremony
+#	desc = wafrica.2.desc
+#	picture = GFX_evt_malian_ceremony
+	hide_window = yes
+	
+	is_triggered_only = yes
 	
 	min_age = 16
 	
@@ -190,11 +193,11 @@ character_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		years = 25
+	weight_multiplier = {
+		days = 1
 		
 		modifier = {
-			factor = 0.7
+			factor = 1.4
 			ROOT = {
 				age = 16
 				NOT = { age = 25 }
@@ -202,7 +205,7 @@ character_event = {
 		}
 		
 		modifier = {
-			factor = 0.8
+			factor = 1.25
 			ROOT = {
 				age = 25
 				NOT = { age = 32 }
@@ -210,7 +213,7 @@ character_event = {
 		}
 		
 		modifier = {
-			factor = 1.2
+			factor = 0.83
 			ROOT = {
 				age = 32
 				NOT = { age = 40 }
@@ -218,79 +221,79 @@ character_event = {
 		}
 		
 		modifier = {
-			factor = 1.5
+			factor = 0.67
 			ROOT = {
 				age = 40
 			}
 		}
 		
 		modifier = {
-			factor = 10
+			factor = 0.1
 			ROOT = { trait = celibate }
 		}
 		
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = lustful }
 		}
 		
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = fair }
 		}	
 		
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = genius }
 		}
 		
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = quick }
 		}	
 		
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = zealous }
 		}
 
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = charitable }
 		}	
 		
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = greedy }
 		}
 		
 		modifier = {
-			factor = 0.9
+			factor = 1.1
 			ROOT = { trait = gregarious }
 		}	
 		
 		modifier = {
-			factor = 1.1
+			factor = 0.9
 			ROOT = { trait = cynical }
 		}
 		
 		modifier = {
-			factor = 1.1
+			factor = 0.9
 			ROOT = { trait = ugly }
 		}	
 		
 		modifier = {
-			factor = 1.1
+			factor = 0.9
 			ROOT = { trait = chaste }
 		}
 				
 		modifier = {
-			factor = 1.1
+			factor = 0.9
 			ROOT = { trait = homosexual }
 		}
 		
 		modifier = {
-			factor = 1.1
+			factor = 0.9
 			ROOT = { trait = shy }
 		}			
 	}
@@ -380,15 +383,14 @@ character_event = {
 	desc = "wafrica.10.desc"
 	picture = GFX_evt_dogon_village
 	
+	is_triggered_only = yes
+	
+	has_character_flag = iron_woman_ongoing
+	
 	trigger = {
-		has_character_flag = iron_woman_ongoing
 		NOT = { has_character_flag = iron_woman_started }
 	}
 	
-	mean_time_to_happen = {
-		days = 1
-	}
-
 	option = {
 		name = wafrica.10.a
 		set_character_flag = iron_woman_started
@@ -623,6 +625,11 @@ narrative_event = {
 		prestige = 100
 		piety = 100
 		set_character_flag = le_lion_king
+		character_event = {
+			id = wafrica.46
+			days = 40
+			random = 20
+		}
 	}
 }
 
@@ -632,19 +639,29 @@ character_event = {
 	desc = wafrica.46.desc
 	picture = GFX_evt_african_savanna
 	
+	is_triggered_only = yes
+	
 	trigger = {
 		has_character_flag = le_lion_king
 		NOT = { has_global_flag = lion_king_nickname_given }
 	}
 	
-	mean_time_to_happen = {
-		days = 50
-	}	
-	
 	option = { # ok
 		name = wafrica.46.a
 		give_nickname = nick_lion_king
 		set_global_flag = lion_king_nickname_given
+		hidden_tooltip = {
+			any_dynasty_member = {
+				limit = {
+					NOT = {
+						trait = bilal_descendant
+					}
+				}
+				character_event = {
+					id = wafrica.12
+				}
+			}
+		}
 	}				
 	
 }
@@ -655,15 +672,7 @@ character_event = {
 	desc = wafrica.12.desc
 	picture = GFX_evt_griot
 	
-	trigger = {
-
-		has_dynasty_flag = descendants_of_bilal
-		NOT = { trait = bilal_descendant }
-	}
-	
-	mean_time_to_happen = {
-		days = 1
-	}
+	is_triggered_only = yes
 	
 	option = {
 		name = wafrica.12.a #Ok
@@ -737,6 +746,18 @@ narrative_event = {
 		set_dynasty_flag = descendants_of_noble_stranger
 		prestige = 100
 		piety = 100
+		hidden_tooltip = {
+			any_dynasty_member = {
+				limit = {
+					NOT = {
+						trait = noble_stranger_descendant
+					}
+				}
+				character_event = {
+					id = wafrica.14
+				}
+			}
+		}
 	}
 }
 
@@ -746,15 +767,7 @@ character_event = {
 	desc = wafrica.14.desc
 	picture = GFX_evt_griot
 	
-	trigger = {
-		NOT = { has_global_flag = VIET_wafrican_features_off }
-		has_dynasty_flag = descendants_of_noble_stranger
-		NOT = { trait = noble_stranger_descendant }
-	}
-	
-	mean_time_to_happen = {
-		days = 1
-	}
+	is_triggered_only = yes
 	
 	option = {
 		name = wafrica.14.a #Ok
