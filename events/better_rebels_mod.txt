@@ -16,6 +16,7 @@ province_event = {
 	id = better_rebels.0 #better_rebels.0 - doesn`t work for some reason
 	desc = "EVTDESCbetter_rebels.0"
 	picture = "GFX_evt_peasants"
+	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 		trigger = {
@@ -84,17 +85,22 @@ province_event = {
 
 			# Inform barons about the rebels
 			owner = {
-				set_character_flag = informed_about_rebels
-			}
-			any_province_lord = {
-				limit = {
-					NOT = { has_character_flag = informed_about_rebels }
-					ai = no
+				any_liege = {
+					limit = {
+						NOT = { character = PREV }
+						ai = no
+					}
+					character_event = { id = better_rebels.1 days = 7 }
 				}
-				character_event = { id = better_rebels.1 days = 7 }
-			}
-			owner = {
-				clr_character_flag = informed_about_rebels
+				ROOT = {
+					any_province_lord = {
+						limit = {
+							NOT = { character = PREVPREV }
+							ai = no
+						}
+						character_event = { id = better_rebels.1 days = 7 }
+					}
+				}
 			}
 		}
 	}
@@ -424,8 +430,9 @@ character_event = {
 # Rebels Kill Random Province Lord - Baron
 character_event = {
 	id = better_rebels.6
-	desc = "EVTDESCbetter_rebels.4"
-	picture = "GFX_evt_peasants"
+	hide_window = yes		#Can't play as a baron
+#	desc = "EVTDESCbetter_rebels.4"
+#	picture = "GFX_evt_peasants"
 
 	only_rulers = yes
 	min_age = 16
@@ -458,57 +465,103 @@ character_event = {
 	immediate = {
 		hidden_tooltip = {
 			random_list = {
-				50 = { set_character_flag = character_killed_by_rebels }
-				25 = { set_character_flag = character_maimed_by_rebels }
-				25 = { set_character_flag = character_wounded_by_rebels }
+				50 = {
+					if = {
+						limit = {
+							independent = no
+						}
+						liege = {
+							character_event = {
+								id = better_rebels.8
+								days = 3
+							}
+						}
+					}
+					death = {
+						death_reason = death_battle
+					}
+				}
+				25 = {
+					if = {
+						limit = {
+							independent = no
+						}
+						liege = {
+							letter_event = {
+								id = better_rebels.9
+								days = 3
+							}
+						}
+					}
+					add_trait = maimed
+				}
+				25 = {
+					if = {
+						limit = {
+							independent = no
+						}
+						liege = {
+							letter_event = {
+								id = better_rebels.10
+								days = 3
+							}
+						}
+					}
+					add_trait = wounded
+				}
 			}
 		}
 	}
+}
+
+character_event = {
+	id = better_rebels.33
+	hide_window = yes
 	
-	option = {
-		name = "EVTOPTAbetter_rebels.4"
-		trigger = { has_character_flag = character_killed_by_rebels }
-		hidden_tooltip = {
-			if = {
-				limit = { independent = no }
-				liege = { character_event = { id = better_rebels.8 days = 3 } }
+	only_rulers = yes
+	
+	trigger = {
+		any_courtier = {
+			is_ruler = no
+			prisoner = no
+			in_command = no
+			location = {
+				has_province_modifier = brm_minor_revolt
 			}
 		}
-		death = yes
-		# Clear flags
-		clr_character_flag = character_killed_by_rebels
-		clr_character_flag = character_maimed_by_rebels
-		clr_character_flag = character_wounded_by_rebels
 	}
-	option = {
-		name = "EVTOPTBbetter_rebels.4"
-		trigger = { has_character_flag = character_maimed_by_rebels }
-		hidden_tooltip = {
-			if = {
-				limit = { independent = no }
-				liege = { letter_event = { id = better_rebels.9 days = 3 } }
+	mean_time_to_happen = {
+		years = 100
+		
+		modifier = {
+			factor = 1.5
+			NOT = {
+				location = {
+					has_province_modifier = brm_serious_revolt
+				}
 			}
 		}
-		add_trait = maimed
-		# Clear flags
-		clr_character_flag = character_killed_by_rebels
-		clr_character_flag = character_maimed_by_rebels
-		clr_character_flag = character_wounded_by_rebels
+		modifier = {
+			factor = 0.75
+			location = {
+				has_province_modifier = brm_massive_revolt
+			}
+		}
 	}
-	option = {
-		name = "EVTOPTCbetter_rebels.4"
-		trigger = { has_character_flag = character_wounded_by_rebels }
-		hidden_tooltip = {
-			if = {
-				limit = { independent = no }
-				liege = { letter_event = { id = better_rebels.10 days = 3 } }
+	immediate = {
+		random_courtier = {
+			limit = {
+				is_ruler = no
+				prisoner = no
+				in_command = no
+				location = {
+					has_province_modifier = brm_minor_revolt
+				}
+			}
+			character_event = {
+				id = better_rebels.7
 			}
 		}
-		add_trait = wounded
-		# Clear flags
-		clr_character_flag = character_killed_by_rebels
-		clr_character_flag = character_maimed_by_rebels
-		clr_character_flag = character_wounded_by_rebels
 	}
 }
 
@@ -534,12 +587,16 @@ character_event = {
 		modifier = {
 			factor = 1.5
 			NOT = {
-				has_province_modifier = brm_serious_revolt
+				location = {
+					has_province_modifier = brm_serious_revolt
+				}
 			}
 		}
 		modifier = {
 			factor = 0.75
-			has_province_modifier = brm_massive_revolt
+			location = {
+				has_province_modifier = brm_massive_revolt
+			}
 		}
 	}
 	
@@ -673,9 +730,23 @@ province_event = {
 
 		}
 		# No neighbor province from same realm
-		NOT = {
+		NOR = {
 			any_neighbor_province = {
 				owner = {
+					top_liege = {
+						ROOT = {
+							owner = {
+								top_liege = {
+									character = PREVPREVPREV
+								}
+							}
+						}
+					}
+				}
+			}
+		# Not if part of de jure duchy held by someone in same top realm
+			duchy = {
+				holder_scope = {
 					top_liege = {
 						ROOT = {
 							owner = {
@@ -702,22 +773,6 @@ province_event = {
 		}
 		# Not a coastal province
 		port = no		
-		# Not if part of de jure duchy held by someone in same top realm
-		NOT = {
-			duchy = {
-				holder_scope = {
-					top_liege = {
-						ROOT = {
-							owner = {
-								top_liege = {
-									character = PREVPREVPREV
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	mean_time_to_happen = {
@@ -827,9 +882,23 @@ province_event = {
 			}
 		}
 		# No neighbor province from same realm
-		NOT = {
+		NOR = {
 			any_neighbor_province = {
 				owner = {
+					top_liege = {
+						ROOT = {
+							owner = {
+								top_liege = {
+									character = PREVPREVPREV
+								}
+							}
+						}
+					}
+				}
+			}
+			# Not if part of de jure duchy held by someone in same top realm
+			duchy = {
+				holder_scope = {
 					top_liege = {
 						ROOT = {
 							owner = {
@@ -856,22 +925,6 @@ province_event = {
 		}
 		# Not a coastal province
 		port = no
-		# Not if part of de jure duchy held by someone in same top realm
-		NOT = {
-			duchy = {
-				holder_scope = {
-					top_liege = {
-						ROOT = {
-							owner = {
-								top_liege = {
-									character = PREVPREVPREV
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	mean_time_to_happen = {
@@ -896,64 +949,54 @@ province_event = {
 	trigger = {
 		has_province_modifier = brm_isolated_province
 		
-		OR = {
-			NOT = {
-				# Not a player's last province
-				owner = {
-					OR = {
-						ai = yes
-						AND = {
-							ai = no
-							any_demesne_province = {
-								NOT = { province_id = ROOT }
-							}
-						}
-					}
-				}
-			}
-			NOT = {
-				# No neighbor province from same realm
-				NOT = {
-					any_neighbor_province = {
-						owner = {
-							top_liege = {
-								ROOT = {
-									owner = {
-										top_liege = {
-											character = PREVPREVPREV
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			NOT = {
-				# Not the only province in the realm
-				owner = {
-					top_liege = {
-						any_realm_province = {
+		NAND = {
+			# Not a player's last province
+			owner = {
+				OR = {
+					ai = yes
+					AND = {
+						ai = no
+						any_demesne_province = {
 							NOT = { province_id = ROOT }
 						}
 					}
 				}
 			}
-			NOT = {
-				# Not if part of de jure duchy held by someone in same top realm
-				NOT = {
-					duchy = {
-						holder_scope = {
-							top_liege = {
-								ROOT = {
-									owner = {
-										top_liege = {
-											character = PREVPREVPREV
-										}
+			# No neighbor province from same realm
+			NOR = {
+				any_neighbor_province = {
+					owner = {
+						top_liege = {
+							ROOT = {
+								owner = {
+									top_liege = {
+										character = PREVPREVPREV
 									}
 								}
 							}
 						}
+					}
+				}
+				# Not if part of de jure duchy held by someone in same top realm
+				duchy = {
+					holder_scope = {
+						top_liege = {
+							ROOT = {
+								owner = {
+									top_liege = {
+										character = PREVPREVPREV
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			# Not the only province in the realm
+			owner = {
+				top_liege = {
+					any_realm_province = {
+						NOT = { province_id = ROOT }
 					}
 				}
 			}
@@ -1138,27 +1181,19 @@ province_event = {
 	}
 }
 
-# Marshal suppresses revolt
-narrative_event = {
-	id = better_rebels.31 #better_rebels.31 - doesn`t work for some reason
-	title = "EVTNAMEbetter_rebels.31"
-	desc = "EVTDESCbetter_rebels.31"
-	picture = "GFX_evt_large_army"
+character_event = {
+	id = better_rebels.34
+	hide_window = yes
 	
-	only_men = yes
-	capable_only = yes
-	prisoner = no
+	only_rulers = yes
 	
 	trigger = {
-		has_job_action = action_assist_arrest
-		location = {
-			has_province_modifier = brm_minor_revolt
-			NOT = {
-				has_province_modifier = brm_revolt_suppressed
-			}
-			owner = {
-				job_marshal = {
-					character = ROOT
+		job_marshal = {
+			has_job_action = action_assist_arrest
+			location = {
+				has_province_modifier = brm_minor_revolt
+				NOT = {
+					has_province_modifier = brm_revolt_suppressed
 				}
 			}
 		}
@@ -1169,77 +1204,130 @@ narrative_event = {
 		
 		modifier = {
 			factor = 1.2
-			location = {
-				has_province_modifier = brm_serious_revolt
+			job_marshal = {
+				location = {
+					has_province_modifier = brm_serious_revolt
+				}
 			}
 		}
 		modifier = {
 			factor = 1.2
-			location = {
-				has_province_modifier = brm_massive_revolt
+			job_marshal = {
+				location = {
+					has_province_modifier = brm_massive_revolt
+				}
 			}
 		}
 		modifier = {
 			factor = 1.25
-			NOT = { martial = 2 }
+			job_marshal = {
+				NOT = { martial = 2 }
+			}
 		}
 		modifier = {
 			factor = 1.25
-			NOT = { martial = 3 }
+			job_marshal = {
+				NOT = { martial = 3 }
+			}
 		}
 		modifier = {
 			factor = 1.25
-			NOT = { martial = 4 }
+			job_marshal = {
+				NOT = { martial = 4 }
+			}
 		}
 		modifier = {
 			factor = 1.25
-			NOT = { martial = 5 }
+			job_marshal = {
+				NOT = { martial = 5 }
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 10
+			job_marshal = {
+				martial = 10
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 11
+			job_marshal = {
+				martial = 11
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 12
+			job_marshal = {
+				martial = 12
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 13
+			job_marshal = {
+				martial = 13
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 14
+			job_marshal = {
+				martial = 14
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 15
+			job_marshal = {
+				martial = 15
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 16
+			job_marshal = {
+				martial = 16
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 17
+			job_marshal = {
+				martial = 17
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 18
+			job_marshal = {
+				martial = 18
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 19
+			job_marshal = {
+				martial = 19
+			}
 		}
 		modifier = {
 			factor = 0.95
-			martial = 20
+			job_marshal = {
+				martial = 20
+			}
 		}
 	}
+	
+	immediate = {
+		job_marshal = {
+			narrative_event = {
+				id = better_rebels.31
+			}
+		}
+	}
+}
+
+# Marshal suppresses revolt
+narrative_event = {
+	id = better_rebels.31 #better_rebels.31 - doesn`t work for some reason
+	title = "EVTNAMEbetter_rebels.31"
+	desc = "EVTDESCbetter_rebels.31"
+	picture = "GFX_evt_large_army"
+	
+	is_triggered_only = yes
+	hide_from = yes
 	
 	option = {
 		name = "EVTOPTAbetter_rebels.31"
