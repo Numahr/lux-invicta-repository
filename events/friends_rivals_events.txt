@@ -24,55 +24,28 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = {
+		NOR = {
 			num_of_friends = 2
-		}
-		NOT = {
 			num_of_rivals = 2
+			trait = in_hiding
 		}
 		host = {
 			any_courtier = {
 				is_abroad = no
 				prisoner = no
 				at_location = ROOT
-				OR = {
-					AND = {
-						ROOT = {
-							is_female = no
-						}
-						is_female = no
-					}
-					AND = {
-						ROOT = {
-							is_female = yes
-						}
-						is_female = yes
-					}
-				}
-				NOT = {
-					trait = craven
-				}
-				NOT = {
-					trait = honest
-				}
-				NOT = {
-					sibling = ROOT
-				}
+				same_sex = ROOT
 				age = 4
-				NOT = {
+				NOR = {
+					trait = craven
+					trait = honest
+					sibling = ROOT
 					age = 14
-				}
-				NOT = {
 					num_of_friends = 2
-				}
-				NOT = {
 					num_of_rivals = 2
-				}
-				NOT = {
 					is_friend = ROOT
-				}
-				NOT = {
 					is_rival = ROOT
+					trait = in_hiding
 				}
 			}
 		}
@@ -96,121 +69,75 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA100000
+	immediate = {
 		host = {
 			random_courtier = {
 				limit = {
 					is_abroad = no
 					prisoner = no
 					at_location = ROOT
-					NOT = {
-						is_friend = ROOT
-					}
-					NOT = {
-						is_rival = ROOT
-					}
-					NOT = {
-						trait = craven
-					}
-					NOT = {
-						trait = honest
-					}
-					OR = {
-						AND = {
-							ROOT = {
-								is_female = no
-							}
-							is_female = no
-						}
-						AND = {
-							ROOT = {
-								is_female = yes
-							}
-							is_female = yes
-						}
-					}
-					NOT = {
-						sibling = ROOT
-					}
+					same_sex = ROOT
 					age = 4
-					NOT = {
+					NOR = {
 						age = 14
+						is_friend = ROOT
+						is_rival = ROOT
+						trait = craven
+						trait = honest
+						sibling = ROOT
+						num_of_friends = 2
+						num_of_rivals = 2
+						trait = in_hiding
+					}
+				}
+				save_event_target_as = new_friend_rival
+			}
+		}
+	}
+	
+	option = {
+		name = EVTOPTA100000
+		event_target = new_friend_rival = {
+			add_rival = ROOT
+			character_event = {
+				id = 100001
+				days = 1
+				random = 2
+				tooltip = EVTTOOLTIP100001
+			}
+			if = {
+				limit = {
+					NOT = {
+						num_of_traits = 5
 					}
 					NOT = {
-						num_of_friends = 2
-					}
-				}
-				add_rival = ROOT
-				character_event = {
-					id = 100001
-					days = 1
-					random = 2
-					tooltip = EVTTOOLTIP100001
-				}
-				if = {
-					limit = {
-						NOT = {
-							num_of_traits = 5
-						}
-						NOT = {
-							trait = wroth
-						}
-						trait = greedy
-					}
-					add_trait = wroth
-				}
-				if = {
-					limit = {
-						NOT = {
-							num_of_traits = 5
-						}
-						NOT = {
-							trait = greedy
-						}
 						trait = wroth
 					}
-					add_trait = greedy
+					trait = greedy
 				}
+				add_trait = wroth
+			}
+			if = {
+				limit = {
+					NOT = {
+						num_of_traits = 5
+					}
+					NOT = {
+						trait = greedy
+					}
+					trait = wroth
+				}
+				add_trait = greedy
 			}
 		}
 	}
 	option = {
 		name = EVTOPTB100000
-		host = {
-			random_courtier = {
-				limit = {
-					is_abroad = no
-					prisoner = no
-					at_location = ROOT
-					NOT = {
-						is_friend = ROOT
-					}
-					NOT = {
-						is_rival = ROOT
-					}
-					NOT = {
-						trait = craven
-					}
-					NOT = {
-						trait = honest
-					}
-					NOT = {
-						sibling = ROOT
-					}
-					age = 4
-					NOT = {
-						age = 14
-					}
-					NOT = {
-						num_of_friends = 2
-					}
-				}
-				add_friend = ROOT
-				character_event = {
-					id = 100002
-					tooltip = EVTTOOLTIP100002
-				}
+		event_target:new_friend_rival = {
+			add_friend = ROOT
+			character_event = {
+				id = 100002
+				tooltip = EVTTOOLTIP100002
 			}
 		}
 	}
@@ -255,11 +182,10 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = {
+		NOR = {
 			num_of_friends = 2
-		}
-		NOT = {
 			num_of_rivals = 2
+			trait = in_hiding
 		}
 		OR = {
 			trait = gregarious
@@ -271,26 +197,16 @@ character_event = {
 				at_location = ROOT
 				prisoner = no
 				age = 4
-				NOT = {
+				NOR = {
 					age = 14
-				}
-				NOT = {
 					is_friend = ROOT
-				}
-				NOT = {
 					is_rival = ROOT
-				}
-				NOT = {
 					num_of_friends = 2
-				}
-				NOT = {
 					num_of_rivals = 2
-				}
-				NOT = {
 					sibling = ROOT
+					trait = in_hiding
 				}
 				trait = shy
-				NOT = { trait = in_hiding }
 			}
 		}
 		NOT = { trait = in_hiding }
@@ -313,33 +229,32 @@ character_event = {
 		}
 	}
 	
+	immediate = {
+		host = {
+			random_courtier = {
+				limit = {
+					at_location = ROOT
+					prisoner = no
+					age = 4
+					NOR = {
+						age = 14
+						is_friend = ROOT
+						is_rival = ROOT
+						num_of_friends = 2
+						num_of_rivals = 2
+						sibling = ROOT
+						trait = in_hiding
+					}
+					trait = shy
+				}
+				save_event_target_as = new_friend_rival
+			}
+		}
+	}
+	
 	option = {
 		name = EVTOPTA100005
-		random_courtier = {
-			limit = {
-				at_location = ROOT
-				prisoner = no
-				age = 4
-				NOT = {
-					age = 14
-				}
-				NOT = {
-					is_friend = ROOT
-				}
-				NOT = {
-					is_rival = ROOT
-				}
-				NOT = {
-					num_of_friends = 2
-				}
-				NOT = {
-					num_of_rivals = 2
-				}
-				NOT = {
-					sibling = ROOT
-				}
-				trait = shy
-			}
+		event_target:new_friend_rival = {
 			character_event = {
 				id = 100006
 				days = 2
@@ -351,31 +266,7 @@ character_event = {
 	
 	option = {
 		name = EVTOPTB100005
-		random_courtier = {
-			limit = {
-				at_location = ROOT
-				prisoner = no
-				age = 4
-				NOT = {
-					age = 14
-				}
-				NOT = {
-					is_friend = ROOT
-				}
-				NOT = {
-					is_rival = ROOT
-				}
-				NOT = {
-					num_of_friends = 2
-				}
-				NOT = {
-					num_of_rivals = 2
-				}
-				NOT = {
-					sibling = ROOT
-				}
-				trait = shy
-			}
+		event_target:new_friend_rival = {
 			character_event = {
 				id = 100007
 				days = 2
@@ -588,34 +479,24 @@ character_event = {
 	trigger = {
 		has_guardian = yes
 		trait = slothful
-		NOT = {
+		NOR = {
 			num_of_friends = 2
-		}
-		NOT = {
 			num_of_rivals = 2
 		}
 		host = {
 			any_courtier = {
 				is_female = no
 				same_guardian = ROOT
-				NOT = {
-					sibling = ROOT
-				}
 				OR = {
 					trait = charitable
 					trait = kind
 					trait = ambitious
 				}
-				NOT = {
+				NOR = {
+					sibling = ROOT
 					num_of_friends = 3
-				}
-				NOT = {
 					num_of_rivals = 3
-				}
-				NOT = {
 					is_friend = ROOT
-				}
-				NOT = {
 					is_rival = ROOT
 				}
 			}
@@ -635,84 +516,56 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA100015
+	immediate = {
 		host = {
 			random_courtier = {
 				limit = {
 					is_female = no
 					same_guardian = ROOT
-					NOT = {
-						sibling = ROOT
-					}
 					OR = {
 						trait = charitable
 						trait = kind
 						trait = ambitious
 					}
-					NOT = {
+					NOR = {
+						sibling = ROOT
 						num_of_friends = 3
-					}
-					NOT = {
 						num_of_rivals = 3
-					}
-					NOT = {
 						is_friend = ROOT
-					}
-					NOT = {
 						is_rival = ROOT
 					}
 				}
-				add_friend = ROOT
-				character_event = {
-					id = 100016
-					days = 1
-					random = 3
-					tooltip = EVTTOOLTIPA100016
-				}
+				save_event_target_as = new_friend_rival
+			}
+		}
+	}
+	
+	option = {
+		name = EVTOPTA100015
+		event_target:new_friend_rival = {
+			add_friend = ROOT
+			character_event = {
+				id = 100016
+				days = 1
+				random = 3
+				tooltip = EVTTOOLTIPA100016
 			}
 		}
 	}
 	option = {
 		name = EVTOPTB100015
-		host = {
-			random_courtier = {
-				limit = {
-					is_female = no
-					same_guardian = ROOT
-					NOT = {
-						sibling = ROOT
-					}
-					OR = {
-						trait = charitable
-						trait = kind
-						trait = ambitious
-					}
-					NOT = {
-						num_of_friends = 3
-					}
-					NOT = {
-						num_of_rivals = 3
-					}
-					NOT = {
-						is_friend = ROOT
-					}
-					NOT = {
-						is_rival = ROOT
-					}
-				}
-				reverse_opinion = {
-					modifier = opinion_irritated
-					who = ROOT
-					years = 100
-				}
-				set_character_flag = wrongly_interfered
-				character_event = {
-					id = 100016
-					days = 1
-					random = 3
-					tooltip = EVTTOOLTIPB100016
-				}
+		event_target:new_friend_rival = {
+			reverse_opinion = {
+				modifier = opinion_irritated
+				who = ROOT
+				years = 100
+			}
+			set_character_flag = wrongly_interfered
+			character_event = {
+				id = 100016
+				days = 1
+				random = 3
+				tooltip = EVTTOOLTIPB100016
 			}
 		}
 	}
