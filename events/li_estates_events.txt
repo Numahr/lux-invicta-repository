@@ -196,75 +196,120 @@ character_event = {
 #		}
 	}
 }
-# Relative demands estates due to ambition
+
 character_event = {
-	id = liestates.2
+	id = liestates.8
 	hide_window = yes
-
-	min_age = 20
-	only_men = yes
-	capable_only = yes
-	prisoner = no
-
+	
+	only_rulers = yes
+	
 	trigger = {
-		has_ambition = obj_gain_estates_1
-		is_ruler = no
-		liege = {
-			war = no
+		war = no
+		wealth = 50
+		any_courtier = {
+			has_ambition = obj_gain_estate_1
+			NOR = {
+				character = ROOT
+				trait = incapable
+			}
+			age = 20
+			is_female = no
+			prisoner = no
 			OR = {
 				is_close_relative = ROOT
 				dynasty = ROOT
 			}
-			wealth = 50
 		}
 	}
-
+	
+	immediate = {
+		random_courtier = {
+			limit = {
+				has_ambition = obj_gain_estate_1
+				NOR = {
+					character = ROOT
+					trait = incapable
+				}
+				age = 20
+				is_female = no
+				prisoner = no
+				OR = {
+					is_close_relative = ROOT
+					dynasty = ROOT
+				}
+			}
+			save_event_target_as = estates_courtier
+			character_event = {
+				id = liestates.2
+			}
+		}
+	}
+	
 	mean_time_to_happen = {
 		months = 12
 
 		modifier = {
 			factor = 10.0
-			liege = {
-				NOT = { is_close_relative = ROOT }
+			event_target:estates_courtier = {
+				NOT = {
+					is_close_relative = ROOT
+				}
 			}
 		}
 		modifier = {
 			factor = 0.5
-			liege = {
-				wealth = 250
+			wealth = 250
+		}
+		modifier = {
+			factor = 0.5
+			wealth = 500
+		}
+		modifier = {
+			factor = 0.5
+			event_target:estates_courtier = {
+				trait = greedy
 			}
 		}
 		modifier = {
 			factor = 0.5
-			liege = {
-				wealth = 500
+			event_target:estates_courtier = {
+				trait = ambitious
 			}
 		}
 		modifier = {
 			factor = 0.5
-			trait = greedy
-		}
-		modifier = {
-			factor = 0.5
-			trait = ambitious
-		}
-		modifier = {
-			factor = 0.5
-			trait = diligent
+			event_target:estates_courtier = {
+				trait = diligent
+			}
 		}
 		modifier = {
 			factor = 5.0
-			trait = slothful
+			event_target:estates_courtier = {
+				trait = slothful
+			}
 		}
 		modifier = {
 			factor = 5.0
-			trait = content
+			event_target:estates_courtier = {
+				trait = content
+			}
 		}
 		modifier = {
 			factor = 5.0
-			trait = charitable
+			event_target:estates_courtier = {
+				trait = charitable
+			}
 		}
 	}
+	
+}
+
+# Relative demands estates due to ambition
+character_event = {
+	id = liestates.2
+	hide_window = yes
+
+	is_triggered_only = yes
 
 	option = {
 		name = OK # Ask liege for estates
