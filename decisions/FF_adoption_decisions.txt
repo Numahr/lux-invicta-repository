@@ -1,9 +1,20 @@
 decisions = {
 	adopt_orphan_boy = {
 		potential = {
-			NOT = {	num_of_children = 1 }
+			is_ruler = yes
+			OR = {
+				is_feudal = yes
+				is_tribal = yes
+				is_nomadic = yes
+				is_patrician = yes
+			}
 			is_married = yes
-			is_female = no
+			NOR = {
+				spouse = {
+					same_sex = ROOT
+				}
+				num_of_children = 1
+			}
 			age = 50
 		}
 		
@@ -25,12 +36,26 @@ decisions = {
 					age = 5
 					trait = legit_bastard
 				}
+				if = {
+					limit = {
+						ROOT = {
+							is_female = no
+						}
+					}
+					new_character = {
+						set_father = ROOT
+						set_mother = PREV
+						set_character_flag = adopted_check
+					}
+					recalc_succession = yes
+					break = yes
+				}
 				new_character = {
-					set_father = ROOT
-					set_mother = PREV
+					set_father = PREV
+					set_mother = ROOT
 					set_character_flag = adopted_check
 				}
- 				recalc_succession = yes
+				recalc_succession = yes
            }
 		}
 		
