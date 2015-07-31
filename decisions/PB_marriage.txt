@@ -28,6 +28,7 @@ decisions = {
 	}
 	marry_courtiers = {
 		potential = {
+			ai = no
 			has_character_flag = enable_marriage_decisions
 		}
 		allow = {
@@ -38,11 +39,13 @@ decisions = {
 				is_female = no
 			}
 			any_courtier = {
-				NOT = { dynasty = ROOT }
+				age = 16
+				NOR = {
+					age = 45
+					dynasty = ROOT
+				}
 				is_married = no
 				is_consort = no
-				age = 16
-				NOT = { age = 45 }
 				is_female = yes
 			}
 		}
@@ -74,17 +77,27 @@ decisions = {
 }
 
 # Vassal decisions are listed for each courtier and direct vassal. The ruler is in the FROM scope.
-vassal_decisions = {
+targetted_decisions = {
 	marry_courtier = {
+		filter = home_court
+		ai_target_filter = home_court
+		from_potential = {
+			ai = no
+		}
 		potential = {
-			liege = { has_character_flag = enable_marriage_decisions }
 			is_ruler = no
+			liege = {
+				character = FROM
+			}
 			is_married = no
 			age = 16
 			OR = {
 				is_female = no
 				NOT = { age = 45 }
 			}
+		}
+		allow = {
+			prisoner = no
 		}
 		effect = {
 			if = {

@@ -56,8 +56,10 @@ decisions = {
 			is_ruler = yes
 			ai = no #Ai uses yearly event slavery.299
 			is_patrician = yes # Only patricians can be slave traders
-			NOT = { trait = slave_trader } # Obviously, can't do this when already a slave trader
-			NOT = { trait = liberator } # Won't do this for obvious reasons
+			NOR = {
+				trait = slave_trader # Obviously, can't do this when already a slave trader
+				trait = liberator # Won't do this for obvious reasons
+			}
 			has_character_flag = flag_slave_management_menu_open
 		}
 		allow = { crownlaw_title = { has_law = slavery_2 } } # Slavery must be Legal
@@ -106,7 +108,7 @@ decisions = {
 		}
 	}
 	
-	# Close Slave Markets (Start receiving offers again)
+	# Open Slave Markets (Start receiving offers again)
 	open_slave_markets = {
 		potential = { 
 			is_ruler = yes
@@ -144,8 +146,10 @@ decisions = {
 				}
 				slave = {
 					has_opinion_modifier = { who = PREV modifier = opinion_my_owner }
-					NOT = { trait = incapable }
-					NOT = { has_character_flag = flag_not_for_sale }
+					NOR = {
+						trait = incapable
+						has_character_flag = flag_not_for_sale
+					}
 				}
 			}
 			OR = {
@@ -171,8 +175,8 @@ decisions = {
 			ai = no #Ai uses yearly event slavery.299
 			demesne_size = 1
 			crownlaw_title = { has_law = slavery_2 }		
-			NOT = { trait = liberator }
-			NOT = {
+			NOR = {
+				trait = liberator
 				capital_holding = {
 					OR = {
 						has_building = ca_asoiaf_slavepit_5
@@ -264,18 +268,22 @@ decisions = {
 				text = TOOLTIPsell_bulk_slaves
 				hidden_tooltip = {
 					slave_trader = {
-						NOT = { character = ROOT }
 						is_alive = yes
-						NOT = { family_palace = { has_building = fp_asoiaf_slavepit_5 } }
+						NOR = {
+							character = ROOT
+							family_palace = { has_building = fp_asoiaf_slavepit_5 }
+						}
 						OR = {
 							wealth = 400
 							AND = { #AI may take loan to buy slaves if they can afford it
 								ai = yes
 								monthly_income = 12
 								wealth = 100
-								NOT = { has_character_flag = loan_taken }
-								NOT = { has_character_modifier = loan_timer }
-								NOT = { has_character_flag = offended_moneylenders }
+								NOR = {
+									has_character_flag = loan_taken
+									has_character_modifier = loan_timer
+									has_character_flag = offended_moneylenders
+								}
 							}
 						}
 						OR = {
@@ -671,8 +679,10 @@ targetted_decisions = {
 		allow = {
 			FROM = { crownlaw_title = { has_law = slavery_2 } }
 			# Must be at least theoretically capable of breeding
-			NOT = { trait = incapable }
-			NOT = { trait = eunuch }
+			NOR = {
+				trait = incapable
+				trait = eunuch
+			}
 			is_married = no
 			age = 16
 			is_consort = no	
@@ -692,8 +702,10 @@ targetted_decisions = {
 						ROOT = { is_female = yes }
 					}
 				}	
-				NOT = { trait = incapable }
-				NOT = { trait = eunuch }
+				NOR = {
+					trait = incapable
+					trait = eunuch
+				}
 				age = 16
 				is_consort = no
 			}
@@ -743,9 +755,11 @@ targetted_decisions = {
 		}
 		allow = {
 			FROM = {
-				NOT = { trait = kind }
-				NOT = { trait = just }
-				NOT = { trait = honorable }
+				NOR = {
+					trait = kind
+					trait = just
+					trait = honorable
+				}
 			}
 		}
 		effect = {
@@ -753,8 +767,10 @@ targetted_decisions = {
 				piety = -25
 				if = {
 					limit = { 
-						NOT = { trait = cruel } 
-						NOT = { trait = kind }
+						NOR = {
+							trait = cruel
+							trait = kind
+						}
 					} 
 					add_trait = cruel # Beating your slaves without provocation is always unjust!
 				}
@@ -1018,8 +1034,13 @@ targetted_decisions = {
 			}
 		}
 		allow = {
-			NOT = { has_character_flag = flag_not_for_sale }
-			NOT = { reverse_has_opinion_modifier = { who = FROM modifier = opinion_rejected_slave } }
+			NOR = {
+				has_character_flag = flag_not_for_sale
+				reverse_has_opinion_modifier = {
+					who = FROM
+					modifier = opinion_rejected_slave
+				}
+			}
 			slave_owner = {
 				has_opinion_modifier = { who = ROOT modifier = opinion_my_slave }
 				is_within_diplo_range = FROM
@@ -1073,13 +1094,11 @@ targetted_decisions = {
 			prisoner = yes
 			host = { character = FROM }
 			is_ruler = no # Cannot enslave rulers
-			NOT = { trait = slave }
-			NOT = {
-				OR = {
-					any_spouse = { character = FROM }
-					dynasty = FROM
-					is_close_relative = FROM
-				}
+			NOR = {
+				trait = slave
+				any_spouse = { character = FROM }
+				dynasty = FROM
+				is_close_relative = FROM
 			}	
 			# There must exist at least one possible slave trader to sell to
 			slave_trader = {
@@ -1093,8 +1112,10 @@ targetted_decisions = {
 		}
 		effect = {
 			character_event = { id = slavery.150 tooltip = "EVTTOOLTIPSLAVERY150" }
-			from = { set_character_flag = flag_slave_action }
-			FROM = { set_character_flag = flag_selling_prisoner_into_slavery }
+			FROM = {
+				set_character_flag = flag_slave_action
+				set_character_flag = flag_selling_prisoner_into_slavery
+			}
 			if = { #If is my subject this is tyrannical 
 				limit = {
 					FROM = { crownlaw_title = { has_law = slavery_2 } }
@@ -1114,11 +1135,11 @@ targetted_decisions = {
 				}
 
 			}
-			if = { #Warn if this is illegal
-				limit = {
-					FROM = { NOT = { crownlaw_title = { has_law = slavery_2 } } }					
-				}	
-				FROM = { 
+			FROM = {
+				if = { #Warn if this is illegal
+					limit = {
+						NOT = { crownlaw_title = { has_law = slavery_2 } }					
+					}
 					custom_tooltip = { text = TOOLTIPSLAVEILEGALSLAVERYWARNING }	
 				}
 			}
@@ -1143,9 +1164,11 @@ targetted_decisions = {
 					any_liege = { liege_before_war = { character = FROM } }
 				}
 				FROM = {
-					NOT = { trait = arbitrary }
-					NOT = { trait = ruthless }
-					NOT = { trait = cruel }
+					NOR = {
+						trait = arbitrary
+						trait = ruthless
+						trait = cruel
+					}
 				}
 			}
 			
@@ -1162,14 +1185,18 @@ targetted_decisions = {
 			
 			modifier = {
 				factor = 0
-				OR = {
-					is_close_relative = FROM
-					spouse = { character = FROM }
-					dynasty = FROM
-					FROM = { spouse = { is_close_relative = PREVPREV } }
-					FROM = { spouse = { dynasty = PREV } }
-				}
 				FROM = {
+					OR = {
+						is_close_relative = ROOT
+						dynasty = ROOT
+						spouse = {
+							OR = {
+								character = ROOT
+								is_close_relative = ROOT
+								dynasty = ROOT
+							}
+						}
+					}
 					OR = {
 						trait = just
 						NOT = { trait = ruthless }
@@ -1194,16 +1221,18 @@ targetted_decisions = {
 			modifier = {
 				factor = 0
 				FROM = {
-					NOT = { crownlaw_title = { has_law = slavery_2 } }
+					NOR = {
+						crownlaw_title = { has_law = slavery_2 }
+						trait = slow
+						trait = imbecile
+						trait = wroth
+					}
 					liege = { FROM = { NOT = { intrigue = PREV } } }
 					OR = {
 						trait = craven
 						trait = patient
 						trait = temperate
 					}
-					NOT = { trait = slow }
-					NOT = { trait = imbecile }
-					NOT = { trait = wroth }
 				}
 			}
 			modifier = {
@@ -1223,12 +1252,10 @@ targetted_decisions = {
 				NOT = { liege = { character = FROM } }
 				FROM = {
 					OR = {
-						NOT = {
-							OR = {
-								trait = ruthless
-								trait = arbitrary
-								NOT = { wealth = 0 }
-							}
+						NOR = {
+							trait = ruthless
+							trait = arbitrary
+							NOT = { wealth = 0 }
 						}
 						trait = honorable
 						trait = just
@@ -1355,8 +1382,10 @@ targetted_decisions = {
 			modifier = {
 				factor = 0
 				FROM = {
-					NOT = { trait = greedy }
-					NOT = { trait = ambitious }
+					NOR = {
+						trait = greedy
+						trait = ambitious
+					}
 					opinion = { who = prev value = -49 }
 					wealth = 0
 				}

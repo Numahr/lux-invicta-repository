@@ -1,33 +1,36 @@
-# Vassal decisions are listed for each courtier and direct vassal. The ruler is in the FROM scope.
-decisions = {
+# Targetted decisions are possible vs _all_ other characters and shown are in the Diplomacy View, not the Intrigue View. The taker is in the FROM scope.
+#
+# filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/all] ('self' MUST be set for decisions targetting only the taker, the other filter types can be set to lessen CPU load)
+# ai_target_filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/all] (which characters for which the AI evaluates the decision.)
+#	court: all characters in the AI's host court, including prisoners, and characters currently away (wards, prisoners, etc)
+#	home_court: all characters in the AI's home court, including prisoners, and characters currently away (wards, prisoners, etc)
+#	vassals: direct vassal rulers of the AI's employer
+#	sub_realm: all characters below the AI's employer
+#	realm: all characters in the same top realm as the AI
+#	dynasty: all members of the same dynasty
+#	rivals: your rivals plus any character you have an opinion modifier with 'crime = yes' set (the same set of characters the 'is_foe' trigger evaluates)
+#	all: all living characters (Avoid if possible. VERY CPU-HEAVY!)
+#	
+targetted_decisions = {
 
 	force_marriage_decision = {
-		potential = {
+		filter = home_court
+		ai_target_filter = home_court
+		from_potential = {
+			is_ruler = yes
+			higher_tier_than = baron
 			is_female = no
 			is_adult = yes
 			NOR = {
 				trait = incapable
 				trait = eunuch
+				trait = celibate
+				trait = homosexual
 			}
-			any_courtier = {
-				is_female = yes
-				prisoner = yes
-				host = {
-					character = ROOT
-				}
-				is_adult = yes
-				NOT = { age = 45 }
-				is_married = no
-			}
-		}
-		allow = {
 			OR = {
 				is_married = no
 				AND = {
-					OR = {
-						religion_group = muslim
-						religion = muslim_sufi_reformed
-					}
+					has_polygamy = yes
 					NOT = {
 						any_spouse = {
 							is_alive = yes
@@ -37,19 +40,20 @@ decisions = {
 				}
 			}
 		}
-		effect = {
-			any_courtier = {
-				limit = {
-					is_female = yes
-					prisoner = yes
-					is_adult = yes
-					NOT = { age = 45 }
-					is_married = no
-				}
-				letter_event = { id = prisoners.1 }
+		potential = {
+			is_female = yes
+			prisoner = yes
+			host = {
+				character = FROM
 			}
-		#}
-				
+			is_adult = yes
+			NOT = { age = 45 }
+		}
+		allow = {
+			is_married = no
+		}
+		effect = {
+			letter_event = { id = prisoners.1 }
 		}
 		revoke_allowed = {
 			always = no
@@ -60,69 +64,46 @@ decisions = {
 	}
 
 	indoctrinate_prisoners_decision = {
-		potential = {
+		filter = home_court
+		ai_target_filter = home_court
+		from_potential = {
+			is_ruler = yes
 			is_adult = yes
 			NOT = {
 				trait = incapable
 			}
-			any_courtier = {
-				prisoner = yes
-				age = 6
-				is_adult = no
-				host = {
-					character = ROOT
-				}
-				NOT = {
-					has_character_flag = refused_wardship
-				}
-				OR = {
-					has_guardian = no
-					guardian = {
-						NOT = {
-							character = ROOT
-						}
+		}
+		potential = {
+			prisoner = yes
+			age = 6
+			is_adult = no
+			host = {
+				character = FROM
+			}
+			NOT = {
+				has_character_flag = refused_wardship
+			}
+			OR = {
+				has_guardian = no
+				guardian = {
+					NOT = {
+						character = ROOT
 					}
 				}
 			}
 		}
 		allow = {
 			NOT = {
-				any_ward = {
-					ROOT = {
-						any_ward = {
-							NOT = {
-								character = PREVPREV
-							}
-						}
+				FROM = {
+					any_ward = {
+						is_alive = yes
+						count = 2
 					}
 				}
 			}
 		}
 		effect = {		
-		
-			any_courtier = {
-				limit ={				
-				prisoner = yes
-				age = 6
-				is_adult = no
-				host = {
-					character = ROOT
-				}
-				NOT = {
-					has_character_flag = refused_wardship
-				}
-				OR = {
-					has_guardian = no
-					guardian = {
-						NOT = {
-							character = ROOT
-							}
-						}
-					}
-				}
-				letter_event = { id = prisoners.10 }	
-			}
-			
+			letter_event = { id = prisoners.10 }	
 		}
 		revoke_allowed = {
 			always = no
@@ -131,5 +112,4 @@ decisions = {
 			factor = 0
 		}
 	}
-
 }
