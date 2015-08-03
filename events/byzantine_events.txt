@@ -29,10 +29,10 @@ character_event = {
 			has_landed_title = e_byzantium
 			has_landed_title = e_roman_empire
 		}
-		NOT = {
-			any_courtier = { has_minor_title = title_imperial_eunuch }
+		NOR = {
+			any_courtier = { has_minor_title = title_imperial_eunuch
+			trait = in_hiding
 		}
-		NOT = { trait = in_hiding }
 	}
 	
 	mean_time_to_happen = {
@@ -399,9 +399,11 @@ character_event = {
 			is_female = yes
 			is_marriage_adult = yes
 			is_married = no
-			NOT = { trait = celibate }
-			NOT = { trait = chaste }
-			NOT = { trait = homosexual }
+			NOR = {
+				trait = celibate
+				trait = chaste
+				trait = homosexual
+			}
 		}
 	}
 	
@@ -416,9 +418,11 @@ character_event = {
 				is_female = yes
 				is_marriage_adult = yes
 				is_married = no
-				NOT = { trait = celibate }
-				NOT = { trait = chaste }
-				NOT = { trait = homosexual }
+				NOR = {
+					trait = celibate
+					trait = chaste
+					trait = homosexual
+				}
 			}
 			character_event = { id = LoR.845 }
 		}
@@ -619,12 +623,13 @@ narrative_event = {
 			has_landed_title = e_byzantium
 			has_landed_title = e_roman_empire
 		}
-		NOT = { has_global_flag = greek_fire }
+		NOR = {
+			has_global_flag = greek_fire }
+			trait = in_hiding }
 		age = 16
 		in_command = no
 		capital_scope = { province_id = 517 }	#Konstantinoupolis
 		religion_group = christian
-		NOT = { trait = in_hiding }
 	}
 	
 	mean_time_to_happen = {
@@ -1173,20 +1178,16 @@ character_event = {
 		has_dlc = "Legacy of Rome"
 		is_adult = yes
 		in_command = no
-		NOT = { religion_group = indian_group }
-		capital_scope = {
-			NOT = {
+		NOR = {
+			religion_group = indian_group
+			trait = in_hiding
+			capital_scope = {
+				region = world_india
+			}
+			location = {
 				region = world_india
 			}
 		}
-		location = {
-			county = {
-				NOT = {
-					region = world_india
-				}
-			}
-		}
-		NOT = { trait = in_hiding }
 	}
 	
 	mean_time_to_happen = {
@@ -1394,36 +1395,36 @@ character_event = {
 	trigger = {
 		primary_title = { higher_tier_than = COUNT }
 		is_feudal = yes
-		OR = {
-			liege = {
-				has_dlc = "Legacy of Rome"
-				has_landed_title = e_byzantium
-				NOT = { has_character_flag = no_more_tzykanion }
+		has_dlc = "Legacy of Rome"
+		liege = {
+			has_landed_title = e_byzantium
+			OR = {
 				ai = no
 				culture = greek
 				is_female = no
 				prisoner = no
 				age = 16
-				NOT = { age = 50 }
-				NOT = { trait = infirm }
-				NOT = { trait = incapable }
-				NOT = { trait = in_hiding }
-			}
-			liege = {
-				has_landed_title = e_byzantium
+				NOR = {
+					age = 50
+					has_character_flag = no_more_tzykanion
+					trait = infirm
+					trait = incapable
+					trait = in_hiding
+				}
 				any_realm_lord = {
 					ai = no
-					has_dlc = "Legacy of Rome"
-					NOT = { has_character_flag = no_more_tzykanion }
 					same_liege = ROOT
 					culture = greek
 					is_female = no
 					prisoner = no
 					age = 16
-					NOT = { age = 50 }
-					NOT = { trait = infirm }
-					NOT = { trait = incapable }
-					NOT = { trait = in_hiding }
+					NOR = {
+						age = 50
+						has_character_flag = no_more_tzykanion
+						trait = infirm
+						trait = incapable
+						trait = in_hiding
+					}
 				}
 			}
 		}
@@ -1436,42 +1437,47 @@ character_event = {
 	}
 	
 	immediate = {
-		if = {
-			limit = {
-				liege = {
+		liege = {
+			if = {
+				limit = {
 					has_landed_title = e_byzantium
 					ai = no
-					NOT = { trait = in_hiding }
+					culture = greek
+					is_female = no
+					prisoner = no
+					age = 16
+					NOR = {
+						age = 50
+						has_character_flag = no_more_tzykanion
+						trait = infirm
+						trait = incapable
+						trait = in_hiding
+					}
 				}
+				save_event_target_as = tzykanion_challenger
+				character_event = { id = LoR.901 }
+				break = yes
 			}
-			liege = {
+			random_realm_lord = {
+				limit = {
+					ai = no
+					same_liege = ROOT
+					culture = greek
+					is_female = no
+					prisoner = no
+					age = 16
+					NOR = {
+						age = 50
+						has_character_flag = no_more_tzykanion
+						trait = infirm
+						trait = incapable
+						trait = in_hiding
+					}
+				}
+				save_event_target_as = tzykanion_challenger
 				character_event = { id = LoR.901 }
 			}
-		}
-		if = {
-			limit = {
-				liege = {
-					has_landed_title = e_byzantium
-					any_realm_lord = { 
-						ai = no
-						NOT = { trait = in_hiding }
-					}
-				}
-			}
-			liege = {
-				random_realm_lord = {
-					limit = { 
-						ai = no
-						NOT = { trait = in_hiding }
-					}
-					character_event = { id = LoR.901 }
-				}
-			}
 		}		
-	}
-	
-	option = {
-		name = OK
 	}
 }
 
@@ -1488,7 +1494,6 @@ character_event = {
 		custom_tooltip = {
 			text = tzykanion_accepted
 			hidden_tooltip = {
-				FROM = { set_character_flag = tzykanion }
 				if = {
 					limit = {
 						NOT = { trait = wroth }
@@ -1526,30 +1531,10 @@ character_event = {
 	option = {
 		name = EVTOPTALoR.902
 		prestige = 25
-		if = {
-			limit = { 
-				NOT = { has_landed_title = e_byzantium }
-			}
-			liege = {
-				any_realm_lord = {
-					limit = { has_character_flag = tzykanion }
-					opinion = {
-						modifier = opinion_tzykanion_pos
-						who = ROOT
-					}
-					clr_character_flag = tzykanion
-				}
-			}
-		}
-		if = {
-			limit = { has_landed_title = e_byzantium }
-			any_realm_lord = {
-				limit = { has_character_flag = tzykanion }
-				opinion = {
-					modifier = opinion_tzykanion_pos
-					who = ROOT
-				}
-				clr_character_flag = tzykanion
+		event_target:tzykanion_challenger = {
+			opinion = {
+				modifier = opinion_tzykanion_pos
+				who = ROOT
 			}
 		}
 	}
@@ -1565,30 +1550,10 @@ character_event = {
 	
 	option = {
 		name = EVTOPTALoR.903
-		if = {
-			limit = { 
-				NOT = { has_landed_title = e_byzantium }
-			}
-			liege = {
-				any_realm_lord = {
-					limit = { has_character_flag = tzykanion }
-					opinion = {
-						modifier = opinion_tzykanion_pos
-						who = ROOT
-					}
-					clr_character_flag = tzykanion
-				}
-			}
-		}
-		if = {
-			limit = { has_landed_title = e_byzantium }
-			any_realm_lord = {
-				limit = { has_character_flag = tzykanion }
-				opinion = {
-					modifier = opinion_tzykanion_pos
-					who = ROOT
-				}
-				clr_character_flag = tzykanion
+		event_target_tzykanion_challenger = {
+			opinion = {
+				modifier = opinion_tzykanion_pos
+				who = ROOT
 			}
 		}
 	}
@@ -1606,30 +1571,10 @@ character_event = {
 		name = EVTOPTALoR.904
 		prestige = -25
 		set_character_flag = no_more_tzykanion
-		if = {
-			limit = { 
-				NOT = { has_landed_title = e_byzantium }
-			}
-			liege = {
-				any_realm_lord = {
-					limit = { has_character_flag = tzykanion }
-					opinion = {
-						modifier = opinion_tzykanion_neg
-						who = ROOT
-					}
-					clr_character_flag = tzykanion
-				}
-			}
-		}
-		if = {
-			limit = { has_landed_title = e_byzantium }
-			any_realm_lord = {
-				limit = { has_character_flag = tzykanion }
-				opinion = {
-					modifier = opinion_tzykanion_neg
-					who = ROOT
-				}
-				clr_character_flag = tzykanion
+		event_target:tzykanion_challenger = {
+			opinion = {
+				modifier = opinion_tzykanion_neg
+				who = ROOT
 			}
 		}
 	}

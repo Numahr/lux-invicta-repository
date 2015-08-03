@@ -379,11 +379,22 @@ character_event = {
 	religion = catholic
 	
 	trigger = {
-		NOT = { wealth = -50 }
-		NOT = { has_character_flag = stolen_church_properties }
-		NOT = { trait = zealous }
+		NOR = {
+			wealth = -50
+			has_character_flag = stolen_church_properties
+			trait = zealous
+		}
 		any_vassal = {
 			is_theocracy = yes
+		}
+	}
+	
+	immediate = {
+		random_vassal = {
+			limit = {
+				is_theocracy = yes
+			}
+			save_event_target_as = target_priest
 		}
 	}
 	
@@ -394,8 +405,7 @@ character_event = {
 	option = {
 		name = EVTOPTA38020 # There are fat bishop, seize them !
 		trigger = {
-			any_vassal = {
-				is_theocracy = yes
+			event_target:target_priest = {
 				any_demesne_title = {
 					tier = baron
 					num_of_buildings = 1
@@ -409,15 +419,7 @@ character_event = {
 				NOT = { trait = cynical }
 			}
 		}
-		random_vassal = {
-			limit = {
-				is_theocracy = yes
-				any_demesne_title = {
-					tier = baron
-					num_of_buildings = 1
-				}
-			}
-			
+		event_target:target_priest = {
 			character_event = { id = 38021 days = 1 tooltip = EVTTOOLTIP38021 }
 			imprison = yes
 		}
@@ -430,10 +432,7 @@ character_event = {
 		wealth = 100
 		random = {
 			chance = 25
-			random_vassal = {
-				limit = {
-					is_theocracy = yes
-				}
+			event_target:target_priest = {
 				character_event = { id = 38021 days = 1 tooltip = EVTTOOLTIP38021 }
 			}
 		}
@@ -628,25 +627,42 @@ character_event = {
 	trigger = {
 		independent = no
 		liege = {
-			NOT = { character = ROOT }
-		}
-		liege = {
-			NOT = { wealth = -50 }
+			NOR = {
+				character = ROOT
+				wealth = -50
+			}
 			any_demesne_title = {
 				has_de_jure_pretension = ROOT
 				can_be_given_away = yes
 				lower_tier_than = PREV
-				NOT = {
-					AND = {
-						tier = count
-						location = {
-							is_capital = yes
-						}						
+				NAND = {
+					tier = count
+					location = {
+						is_capital = yes
 					}
 				}
 			}
 		}
 		wealth = 250
+	}
+	
+	immediate = {
+		liege = {
+			random_demesne_title = {
+				limit = {
+					has_de_jure_pretension = ROOT
+					can_be_given_away = yes
+					lower_tier_than = PREV
+					NAND = {
+						tier = count
+						location = {
+							is_capital = yes
+						}
+					}
+				}
+				save_event_target_as = target_title
+			}
+		}
 	}
 	
 	mean_time_to_happen = {
@@ -689,25 +705,13 @@ character_event = {
 	option = {
 		name = EVTOPTA38060
 		ai_chance = { factor = 100 }
-		liege = { character_event = { id = 38061 days = 1 tooltip = EVTTOOLTIP38061 } }
 		liege = {
+			character_event = { id = 38061 days = 1 tooltip = EVTTOOLTIP38061 }
 			tooltip = {
-				random_demesne_title = {
-					limit = {
-						has_de_jure_pretension = ROOT
-						can_be_given_away = yes
-						lower_tier_than = ROOT
-						NOT = {
-							AND = {
-								tier = count
-								location = {
-									is_capital = yes
-								}						
-							}
-						}
-					}
+				event_target:target_title = {
 					grant_title = ROOT
 				}
+				wealth = 200
 				ROOT = {
 					wealth = -200
 				}
@@ -732,20 +736,7 @@ character_event = {
 		name = EVTOPTA38061
 		ai_chance = { factor = 100 }
 		wealth = 200
-		random_demesne_title = {
-			limit = {
-				has_de_jure_pretension = FROM
-				can_be_given_away = yes
-				lower_tier_than = ROOT
-				NOT = {
-					AND = {
-						tier = count
-						location = {
-							is_capital = yes
-						}						
-					}
-				}
-			}
+		event_target:target_title = {
 			grant_title = FROM
 		}
 		FROM = {
