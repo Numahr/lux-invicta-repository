@@ -430,7 +430,7 @@ character_event = {
 	trigger = {
 		is_abroad = no
 		any_lover = {
-			is_consort = PREV
+			is_consort = ROOT
 			is_alive = yes
 			is_abroad = no
 			prisoner = no
@@ -440,6 +440,27 @@ character_event = {
 		in_command = no
 		NOT = {
 			has_character_modifier = blissful_timer
+		}
+	}
+	immediate = {
+		random_lover = {
+			limit = {
+				is_consort = ROOT
+				is_alive = yes
+				is_abroad = no
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+			}
+			save_event_target_as = beloved_consort
+		}
+		hidden_tooltip = {
+			add_character_modifier = {
+				name = blissful_timer
+				duration = 1825
+				hidden = yes
+			}
 		}
 	}
 	
@@ -468,23 +489,12 @@ character_event = {
 		}
 	}
 	
-	immediate = {
-		hidden_tooltip = {
-			add_character_modifier = {
-				name = blissful_timer
-				duration = 1825
-				hidden = yes
-			}
-		}
-	}
-	
 	option = {
 		name = "EVTOPTA1000150004" #It's such a stress-relief
 		trigger = {
 			OR = {
 				trait = stressed
-				any_lover = {
-					is_consort = ROOT
+				event_target:beloved_consert = {
 					trait = stressed
 				}
 			}
@@ -497,13 +507,11 @@ character_event = {
 		}
 		if = {
 			limit = {
-				any_lover = {
-					is_consort = PREV
+				event_target:beloved_consort = {
 					trait = stressed
 				}
 			}
-			any_lover = {
-				limit = { is_consort = PREV }
+			event_target:beloved_consort = {
 				remove_trait = stressed
 			}
 		}
@@ -513,8 +521,7 @@ character_event = {
 		trigger = {
 			OR = {
 				trait = ill
-				any_lover = {
-					is_consort = ROOT
+				event_target:beloved_consort = {
 					trait = ill
 				}
 			}
@@ -527,19 +534,28 @@ character_event = {
 		}
 		if = {
 			limit = {
-				any_lover = {
-					is_consort = ROOT
+				event_target:beloved_consort = {
 					trait = ill
 				}
 			}
-			any_lover = {
-				limit = { is_consort = ROOT }
+			event_target:beloved_consort = {
 				remove_trait = ill
 			}
 		}
 	}
 	option = {
-		name = "EVTOPTC1000150004" #It makes me feel so virile
+		name = {
+			text = EVTOPTC1000150004 #It makes me feel so virile
+			trigger = {
+				is_female = no
+			}
+		}
+		name = {
+			text = EVTOPTD1000150004	#It makes me feel so feminine
+			trigger = {
+				is_female = yes
+			}
+		}
 		fertility = 0.05
 		any_lover = {
 			limit = { is_consort = ROOT }
@@ -575,6 +591,23 @@ character_event = { #Wife is jealous of consort, considers course of action
 			}
 		}
 	}
+	
+	immediate = {
+		spouse = {
+			random_lover = {
+				limit = {
+					NOT = {
+						reverse_opinion = {
+							who = ROOT
+							value = 0
+						}
+					}
+					is_consort = PREV
+				}
+				save_event_target_as = target_consort
+			}
+		}
+	}
 
 	weight_multiplier = {
 		days = 1
@@ -607,12 +640,9 @@ character_event = { #Wife is jealous of consort, considers course of action
 			}
 		}
 		set_character_flag = concubine_killer
-		spouse = {
-			any_lover = {
-				limit = { is_consort = ROOT }
-				character_event = { id = concubines.7 days = 4 
-					tooltip = EVTTOOLTIPB1000150005
-				}
+		event_target:target_consort = {
+			character_event = { id = concubines.7 days = 4 
+				tooltip = EVTTOOLTIPB1000150005
 			}
 		}
 	}
@@ -650,8 +680,7 @@ character_event = { # Jealous wife tries to convince husband to set beloved conc
 	option = { # Yes, yes, of course dear
 		name = "EVTOPTA1000150006"
 		prestige = -10
-		random_lover = {
-			limit = { is_consort = ROOT }
+		event_target:target_consort = {
 			remove_consort = ROOT
 			banish = yes
 		}
@@ -713,15 +742,13 @@ character_event = { # Jealous wife tries to off beloved concubine
 					death_reason = death_murder
 					killer = FROM
 				}
-				any_lover = {
-					limit = { is_consort = ROOT }
+				event_target:target_consort = {
 					character_event = { id = concubines.8 days = 4 }
 				}
 				character_event = { id = concubines.30 days = 2 }
 			}
 			50 = {
-				any_lover = {
-					limit = { is_consort = ROOT }
+				event_target:target_consort = {
 					character_event = { id = concubines.9 days = 4 }
 				}
 				character_event = { id = concubines.31 days = 2 }
@@ -883,20 +910,24 @@ character_event = { # Wife is insecure about husband's attention to concubines
 		OR = {
 			AND = {
 				spouse = {
-					NOT = { trait = infirm }
-					NOT = { trait = incapable }
 					prisoner = no
-					NOT = { trait = fair }
-					NOT = { trait = homosexual }
+					NOR = {
+						trait = infirm
+						trait = incapable
+						trait = fair
+						trait = homosexual
+					}
 				}
 				any_consort = { trait = fair }
 			}
 			AND = {
 				spouse = { trait = ugly }
 				spouse = { 
-					NOT = { trait = homosexual } 
-					NOT = { trait = infirm }
-					NOT = { trait = incapable }
+					NOR = {
+						trait = homosexual
+						trait = infirm
+						trait = incapable
+					}
 					prisoner = no
 				}
 				any_consort = {
@@ -1083,9 +1114,9 @@ character_event = { # Forced concubine attempts to escape
 		liege = {
 			reverse_has_opinion_modifier = { who = ROOT modifier = opinion_forced_consort }
 		}
-		NOT = { opinion = { who = liege value = -25 } }
-		NOT = {
-			any_consort = {
+		NOR = {
+			opinion = { who = liege value = -25 }
+			liege = {
 				any_child = {
 					is_alive = yes
 					mother = { character = ROOT }
@@ -1226,30 +1257,38 @@ character_event = { # Wife unhappy that primary heir is the child of a concubine
 	
 	trigger = {
 		is_married = yes
+		is_ruler = no
 		spouse = { demesne_size = 5 }
 		any_child = {
 			always = yes
 		}
 		spouse = {
 			any_child = {
-					is_primary_heir = yes
-					trait = child_of_consort
+				is_primary_heir = yes
+				trait = child_of_consort
 			}
+			NOT = {
+				trait = incapable
+			}
+		}
+		NOR = {
+			any_child = { has_character_flag = trueborn_son }
+			has_character_flag = jealous_wife
 		}
 		spouse = {
-			NOT = {
-				trait = incapable
-			}
-		}
-		NOT = { any_child = { has_character_flag = trueborn_son } }
-		NOT = { has_character_flag = jealous_wife }
-		any_child = {
-			is_female = no
-			is_primary_heir = no
-			is_alive = yes
-			age = 14
-			NOT = {
-				trait = incapable
+			ROOT = {
+				any_child = {
+					is_female = no
+					is_primary_heir = no
+					father = {
+						character = PREVPREVPREV
+					}
+					is_alive = yes
+					age = 14
+					NOT = {
+						trait = incapable
+					}
+				}
 			}
 		}
 	}
@@ -1278,14 +1317,26 @@ character_event = { # Wife unhappy that primary heir is the child of a concubine
 		name = "EVTOPTA1000150015"
 		ai_chance = { factor = 100 }
 		set_character_flag = jealous_wife
-		any_child = {
-			limit = { 
-				is_female = no
-				age = 14
-				is_primary_heir = no
+		spouse = {
+			ROOT = {
+				random_child = {
+					limit = { 
+						is_female = no
+						age = 14
+						is_primary_heir = no
+						father = {
+							character = PREVPREVPREV
+						}
+						is_alive = yes
+						NOT = {
+							trait = incapable
+						}
+					}
+					save_event_target_as = trueborn_son
+					set_character_flag = trueborn_son
+					character_event = { id = concubines.16 days = 2 tooltip = "EVTTOOLTIPA1000150015" }
+				}
 			}
-			set_character_flag = trueborn_son
-			character_event = { id = concubines.16 days = 2 tooltip = "EVTTOOLTIPA1000150015" }
 		}
 	}
 	option = { # Do nothing
@@ -1320,16 +1371,11 @@ character_event = { # Father decides on disposal of land
 		name = "EVTOPTA1000150016"
 		random_demesne_title = {
 			limit = {
-				NOT = {	tier = duke }
-				NOT = {	tier = king }
-				NOT = {	tier = emperor }
+				lower_tier_than = duke
 				NOT = {	location = { is_capital = yes }	}
 			}
-			ROOT = {
-				any_child = {
-					limit = { has_character_flag = trueborn_son }
-					grant_title = PREVPREV
-				}
+			event_target:trueborn_son = {
+				grant_title = PREVPREV
 			}
 		}
 	}
@@ -1345,8 +1391,7 @@ character_event = { # Father decides on disposal of land
 			}
 		}
 		hidden_tooltip = {
-			any_child = {
-				limit = { has_character_flag = trueborn_son }
+			event_target:trueborn_son = {
 				character_event = { id = concubines.18 days = 2 }
 			}
 		}
@@ -1691,11 +1736,13 @@ character_event = {
 		if = {
 			limit = {
 				liege = {
-						spouse = {
-							has_character_flag = concubine_target
-						}
-						NOT = { any_consort = { has_character_flag = second_concubine_killer } }
-						NOT = { any_consort = { has_character_flag = third_concubine_killer } }
+					spouse = {
+						has_character_flag = concubine_target
+					}
+					NOR = {
+						any_consort = { has_character_flag = second_concubine_killer }
+						any_consort = { has_character_flag = third_concubine_killer }
+					}
 				}
 			}
 			random_list = {

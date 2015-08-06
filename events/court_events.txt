@@ -20,8 +20,10 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { trait = proud }
-		NOT = { trait = humble }
+		NOR = {
+			trait = proud
+			trait = humble
+		}
 	}
 
 	weight_multiplier = {
@@ -197,8 +199,10 @@ character_event = {
 			is_abroad = no
 			prisoner = no
 			is_alive = yes
-			NOT = { age = 21 }
-			NOT = { demesne_size = 1 }
+			NOR = {
+				age = 21
+				demesne_size = 1
+			}
 			fertility = 0.15
 		}
 	}
@@ -242,25 +246,33 @@ character_event = {
 	option = {
 		name = EVTOPTA73001 # Help her, by getting her more to read.
 		wealth = -10
-		spouse = { fertility = 0.1 }
-		if = {
-			limit = { spouse = { not = {trait = lustful } } }
-			spouse = { add_trait = lustful }
+		spouse = {
+			fertility = 0.1
+			if = {
+				limit = {
+					NOT = {
+						trait = lustful
+					}
+				}
+				add_trait = lustful
+			}
+			opinion = {
+				who = ROOT
+				modifier = spouse_encouraged
+				months = 12
+			}
 		}
-		opinion = {
-			who = ROOT
-			modifier = spouse_encouraged
-			months = 12
-		}		
 	}	
 	option = {
 		name = EVTOPTB73001 # That is her interests, not mine.
 		piety = 5
-		spouse = { fertility = -0.1 }
-		opinion = {
-			who = ROOT
-			modifier = spouse_ignores_me
-			months = 12
+		spouse = {
+			fertility = -0.1
+			opinion = {
+				who = ROOT
+				modifier = spouse_ignores_me
+				months = 12
+			}
 		}		
 	}
 	option = {
@@ -275,15 +287,15 @@ character_event = {
 				NOT= { trait = zealous }
 			}
 		}
-		if = {
-			limit = {
-				spouse = {
+		spouse = {
+			if = {
+				limit = {
 					NOT = {
 						religion_group = muslim
 					}
 				}
+				add_trait = chaste
 			}
-			spouse = { add_trait = chaste }
 		}
 		piety = 10
 	}
@@ -299,15 +311,15 @@ character_event = {
 				NOT= { trait = zealous }
 			}
 		}
-		if = {
-			limit = {
-				spouse = {
+		spouse = {
+			if = {
+				limit = {
 					NOT = {
 						religion_group = muslim
 					}
 				}
+				add_trait = chaste
 			}
-			spouse = { add_trait = chaste }
 		}
 		piety = 10
 	}
@@ -680,12 +692,15 @@ character_event = {
 			is_married = no
 			is_female = no
 			age = 16
-			NOT = { age = 21 }
-			NOT = { demesne_size = 1 }
-			NOT = { trait = chaste }
-			NOT = { trait = celibate }
-			NOT = { trait = eunuch }
-			NOT = { trait = homosexual }
+			NOR = {
+				age = 21
+				demesne_size = 1
+				trait = chaste
+				trait = celibate
+				trait = eunuch
+				trait = homosexual
+				trait = monk
+			}
 		}
 	}
 	immediate = {
@@ -694,43 +709,45 @@ character_event = {
 				is_married = no
 				is_female = no
 				age = 16
-				NOT = { age = 21 }
-				NOT = { demesne_size = 1 }
-				NOT = { trait = chaste }
-				NOT = { trait = celibate }
-				NOT = { trait = eunuch }
-				NOT = { trait = homosexual }
+				NOR = {
+					age = 21
+					demesne_size = 1
+					trait = chaste
+					trait = celibate
+					trait = eunuch
+					trait = homosexual
+					trait = monk
+				}
 			}
-			set_character_flag = knock_up_maid
+			save_event_target_as = knocked_up_maid
 		}
 
 	}
 	option = {
 		name = EVTOPTA73006 #That's my boy
 		trigger = {
-			NOT = { trait = chaste }
-			NOT = { trait = celibate }
-			NOT = { trait = eunuch }
-			NOT = { trait = spiritual }
-			NOT = { trait = dogmatic }
+			NOR = {
+				trait = chaste
+				trait = celibate
+				trait = eunuch
+				trait = spiritual
+				trait = dogmatic
+			}
 		}
 		piety = -10
-		random_child = {
-			limit = { has_character_flag = knock_up_maid }
+		event_target:knocked_up_maid = {
 			opinion = {
 				modifier = approves_of_my_behaviour
 				who = ROOT
 				years = 2
 			}			
 			add_trait = lustful
-			clr_character_flag = knock_up_maid
 		}
 	}
 	option = {
 		name = EVTOPTB73006 #Force him to adopt the child to prevent scandal
 		piety = 10
-		random_child = {
-			limit = { has_character_flag = knock_up_maid }
+		event_target:knocked_up_maid = {
 			opinion = {
 				modifier = resentful_of_my_behaviour
 				who = ROOT
@@ -741,7 +758,7 @@ character_event = {
 				trait = bastard
 			}
 			new_character = {
-				set_father = prev
+				set_father = PREV
 				dynasty = father
 			}
 			prestige = -5
@@ -751,16 +768,17 @@ character_event = {
 	option = {
 		name = EVTOPTC73006 #Give him a beating for messing with inferiors
 		trigger = {
-			NOT = { trait = noblespirit }
-			NOT = { trait = submissive }
+			NOR = {
+				trait = noblespirit
+				trait = submissive
+			}
 		}
 		if = {
 			limit = { religion = jain }
 			piety = -20
 			custom_tooltip = { text = jain_ahimsa_tooltip }
 		}
-		random_child = {
-			limit = { has_character_flag = knock_up_maid }
+		event_target:knocked_up_maid = {
 			opinion = {
 				modifier = resentful_of_my_behaviour
 				who = ROOT
@@ -817,9 +835,11 @@ character_event = {
 			is_abroad = no
 			prisoner = no
 			is_alive = yes
-			NOT = { trait = shy } 
-			NOT = { trait = zealous }
-			NOT = { demesne_size = 1 }
+			NOR = {
+				trait = shy
+				trait = zealous
+				demesne_size = 1
+			}
 			opinion = { who = ROOT value = 10 }
 		}
 		NOT = { trait = zealous }
@@ -914,13 +934,13 @@ character_event = {
 #			}
 #		}
 #		
-#		spouse = {
-#			opinion = {
-#				who = ROOT
-#				modifier = not_feeling_apreciated
-#				years = 2
-#			}
-#		}
+		spouse = {
+			opinion = {
+				who = ROOT
+				modifier = not_feeling_apreciated
+				years = 2
+			}
+		}
 	}	
 }	
 
@@ -1111,7 +1131,7 @@ character_event = {
 								tier = count
 							}
 						}
-						add_claim = prevprevprev
+						add_claim = PREVPREVPREV
 					}
 				}
 			}
@@ -1269,14 +1289,16 @@ character_event = {
 	option = {
 		name = EVTOPTA73011 #I am avoiding temptation.
 		trigger = {
-			NOT = { trait = cynical }
-			NOT = { trait = lustful }
-			NOT = { trait = gluttonous }
-			NOT = { trait = greedy }
-			NOT = { trait = slothful }
-			NOT = { trait = envious }
-			NOT = { trait = wroth }
-			NOT = { trait = proud }
+			NOR = {
+				trait = cynical
+				trait = lustful
+				trait = gluttonous
+				trait = greedy
+				trait = slothful
+				trait = envious
+				trait = wroth
+				trait = proud
+			}
 
 		}
 		health = -1
@@ -1386,13 +1408,17 @@ character_event = {
 		is_ruler = no
 		is_councillor = no
 		independent = no
-		NOT = { liege = { has_character_flag = asked_marshal_petition } }
-		NOT = { has_character_flag = asked_for_job }
+		NOR = {
+			liege = { has_character_flag = asked_marshal_petition }
+			has_character_flag = asked_for_job
+		}
 		liege = {
 			job_marshal = {
 				same_liege = ROOT
-				NOT = { martial = ROOT }
-				NOT = { has_minor_title = title_regent }
+				NOR = {
+					martial = ROOT
+					has_minor_title = title_regent
+				}
 			}
 		}
 		can_hold_title = job_marshal
@@ -1448,8 +1474,10 @@ letter_event = {
 		name = EVTOPTB73201 
 		trigger = {
 			job_marshal = { 
-				NOT = { trait = stressed } 
-				NOT = { trait = depressed } 
+				NOR = {
+					trait = stressed
+					trait = depressed
+				} 
 			}
 		}
 		job_marshal = {
@@ -1461,8 +1489,6 @@ letter_event = {
 		name = EVTOPTC73201 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
@@ -1497,8 +1523,10 @@ letter_event = {
 	option = {
 		name = EVTOPTB73202 
 		trigger = {
-			NOT = { trait = ambitious }
-			NOT = { trait = proud }
+			NOR = {
+				trait = ambitious
+				trait = proud
+			}
 		}
 		prestige = -5
 	}
@@ -1524,9 +1552,9 @@ character_event = {
 		liege = {
 			NOT = { character = ROOT }
 			job_marshal = { 
-				NOT = { martial = prev } 
 				same_liege = ROOT
-				NOT = {
+				NOR = {
+					martial = ROOT 
 					ROOT = {
 						is_liege_of = PREV
 					}
@@ -1572,8 +1600,6 @@ letter_event = {
 		name = EVTOPTC73204 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
@@ -1613,13 +1639,17 @@ character_event = {
 		is_ruler = no
 		independent = no
 		is_councillor = no
-		NOT = { liege = { has_character_flag = asked_spymaster_petition } }
-		NOT = { has_character_flag = asked_for_job }
+		NOR = {
+			liege = { has_character_flag = asked_spymaster_petition }
+			has_character_flag = asked_for_job
+		}
 		liege = {
 			job_spymaster = {
 				same_liege = ROOT
-				NOT = { intrigue = ROOT }
-				NOT = { has_minor_title = title_regent }
+				NOR = {
+					intrigue = ROOT
+					has_minor_title = title_regent
+				}
 			}
 		}
 		can_hold_title = job_spymaster
@@ -1676,8 +1706,10 @@ letter_event = {
 		name = EVTOPTB73211 
 		trigger = {
 			job_spymaster = { 
-				NOT = { trait = stressed } 
-				NOT = { trait = depressed } 
+				NOR = {
+					trait = stressed
+					trait = depressed
+				} 
 			}
 		}
 		job_spymaster = {
@@ -1689,8 +1721,6 @@ letter_event = {
 		name = EVTOPTC73211 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
@@ -1727,8 +1757,10 @@ letter_event = {
 	option = {
 		name = EVTOPTB73212 
 		trigger = {
-			NOT = { trait = ambitious }
-			NOT = { trait = proud }
+			NOR = {
+				trait = ambitious
+				trait = proud
+			}
 		}
 		prestige = -5
 	}
@@ -1754,13 +1786,13 @@ character_event = {
 		liege = {
 			NOT = { character = ROOT }
 			job_spymaster = {
-				NOT = { intrigue = prev }
-				same_liege = ROOT
-				NOT = {
+				NOR = {
+					intrigue = ROOT
 					ROOT = {
 						is_liege_of = PREV
 					}
 				}
+				same_liege = ROOT
 			}
 		}
 	}
@@ -1801,8 +1833,6 @@ letter_event = {
 		name = EVTOPTC73214 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
@@ -1841,15 +1871,19 @@ character_event = {
 		is_ruler = no
 		independent = no
 		is_councillor = no
-		NOT = { liege = { has_character_flag = asked_treasurer_petition } }
-		NOT = { has_character_flag = asked_for_job }
+		NOR = {
+			liege = { has_character_flag = asked_treasurer_petition }
+			has_character_flag = asked_for_job
+		}
 		liege = {
 			job_treasurer = {
 				same_liege = ROOT
-				NOT = { stewardship = ROOT }
-				NOT = { has_minor_title = title_regent }
+				NOR = {
+					stewardship = ROOT
+					has_minor_title = title_regent
+				}
 			}
-		can_hold_title = job_treasurer
+			can_hold_title = job_treasurer
 		}
 	}
 	
@@ -1902,8 +1936,10 @@ letter_event = {
 		name = EVTOPTB73221 
 		trigger = {
 			job_treasurer = { 
-				NOT = { trait = stressed } 
-				NOT = { trait = depressed } 
+				NOR = {
+					trait = stressed
+					trait = depressed
+				} 
 			}
 		}
 		job_treasurer = {
@@ -1915,8 +1951,6 @@ letter_event = {
 		name = EVTOPTC73221 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
@@ -1949,8 +1983,10 @@ letter_event = {
 	option = {
 		name = EVTOPTB73222 
 		trigger = {
-			NOT = { trait = ambitious }
-			NOT = { trait = proud }
+			NOR = {
+				trait = ambitious
+				trait = proud
+			}
 		}
 		prestige = -5
 	}
@@ -1975,9 +2011,9 @@ character_event = {
 		liege = {
 			NOT = { character = ROOT }
 			job_treasurer = { 
-				NOT = { stewardship = prev }
 				same_liege = ROOT
-				NOT = {
+				NOR = {
+					stewardship = ROOT
 					ROOT = {
 						is_liege_of = PREV
 					}
@@ -2023,8 +2059,6 @@ letter_event = {
 		name = EVTOPTC73224 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
@@ -2066,23 +2100,29 @@ character_event = {
 			is_theocracy = yes
 			AND = {
 				is_ruler = no
-				NOT = { religion = orthodox }
-				NOT = { is_heresy_of = orthodox }
-				NOT = { religion = solomonic_christ }
-				NOT = { is_heresy_of = solomonic_christ }
+				NOR = {
+					religion = orthodox
+					is_heresy_of = orthodox
+					religion = solomonic_christ
+					is_heresy_of = solomonic_christ
+				}
 			}
 		}
 		independent = no
 		is_councillor = no
-		NOT = { liege = { has_character_flag = asked_lord_spiritual_petition } }
-		NOT = { has_character_flag = asked_for_job }
+		NOR = {
+			liege = { has_character_flag = asked_lord_spiritual_petition }
+			has_character_flag = asked_for_job
+		}
 		liege = {
 			NOT = { character = ROOT }
 			job_spiritual = {
 				same_liege = ROOT
-				NOT = { learning = ROOT }
-				NOT = { has_minor_title = title_regent }
-				NOT = { ROOT = { religion_head = { character = PREVPREV } } }  # Won't claim to be a better chaplain than your religious head...
+				NOR = {
+					learning = ROOT
+					has_minor_title = title_regent
+					ROOT = { religion_head = { character = PREVPREV } }  # Won't claim to be a better chaplain than your religious head...
+				}
 			}
 			religion = ROOT
 			NOT = {
@@ -2151,8 +2191,10 @@ letter_event = {
 		name = EVTOPTB73231 
 		trigger = {
 			job_spiritual = { 
-				NOT = { trait = stressed } 
-				NOT = { trait = depressed } 
+				NOR = {
+					trait = stressed
+					trait = depressed
+				} 
 			}
 		}
 		job_spiritual = {
@@ -2164,8 +2206,6 @@ letter_event = {
 		name = EVTOPTC73231 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
@@ -2198,8 +2238,10 @@ letter_event = {
 	option = {
 		name = EVTOPTB73232 
 		trigger = {
-			NOT = { trait = ambitious }
-			NOT = { trait = proud }
+			NOR = {
+				trait = ambitious
+				trait = proud
+			}
 		}
 		prestige = -5
 	}
@@ -2224,10 +2266,10 @@ character_event = {
 		liege = {
 			NOT = { character = ROOT }
 			job_spiritual = { 
-				NOT = { learning = prev } 
 				same_liege = ROOT
-				NOT = { has_minor_title = title_regent }
-				NOT = {
+				NOR = {
+					learning = ROOT
+					has_minor_title = title_regent
 					ROOT = {
 						is_liege_of = PREV
 					}
@@ -2313,13 +2355,17 @@ character_event = {
 		is_ruler = no
 		independent = no
 		is_councillor = no
-		NOT = { liege = { has_character_flag = asked_chancellor_petition } }
-		NOT = { has_character_flag = asked_for_job }
+		NOR = {
+			liege = { has_character_flag = asked_chancellor_petition }
+			has_character_flag = asked_for_job
+		}
 		liege = {
 			job_chancellor = {
 				same_liege = ROOT
-				NOT = { diplomacy = ROOT }
-				NOT = { has_minor_title = title_regent }
+				NOR = {
+					diplomacy = ROOT
+					has_minor_title = title_regent
+				}
 			}
 		}
 		can_hold_title = job_chancellor
@@ -2374,8 +2420,10 @@ letter_event = {
 		name = EVTOPTB73241 
 		trigger = {
 			job_chancellor = { 
-				NOT = { trait = stressed } 
-				NOT = { trait = depressed } 
+				NOR = {
+					trait = stressed
+					trait = depressed
+				} 
 			}
 		}
 		job_chancellor = {
@@ -2421,8 +2469,10 @@ letter_event = {
 	option = {
 		name = EVTOPTB73242 
 		trigger = {
-			NOT = { trait = ambitious }
-			NOT = { trait = proud }
+			NOR = {
+				trait = ambitious
+				trait = proud
+			}
 		}
 		prestige = -5
 	}
@@ -2495,8 +2545,6 @@ letter_event = {
 		name = EVTOPTC73244 
 		FROM = {
 			prestige = -10
-		}
-		FROM = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_refused_council
