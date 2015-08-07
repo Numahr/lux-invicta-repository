@@ -20,24 +20,47 @@ character_event = {
 		num_of_children = 1
 		is_female = no
 		has_landed_title = no
-		NOT = { trait = eunuch }
-		NOT = { trait = monk }
-		NOT = { trait = nun }
+		NOR = {
+			trait = eunuch
+			trait = monk
+		}
 		any_dynasty_member = {
 			demesne_size = 1
-			NOT = { num_of_children = 1 }
+			NOR = {
+				num_of_children = 1
+				has_law = succ_feudal_elective
+				has_law = succ_tanistry
+				any_demesne_title = {
+					claimed_by = ROOT
+				}
+			}
 			age = 35
-			NOT = { has_law = succ_feudal_elective }
 			OR = {
 				is_feudal = yes
 				is_tribal = yes
 				is_nomadic = yes
 			}
-			NOT = { any_demesne_title = { claimed_by = root	} }
 		}
 		OR = {
 			diplomacy = 12
 			intrigue = 12
+		}
+	}
+	
+	immediate = {
+		random_dynasty_member = {
+			limit = {
+				demesne_size = 1
+				NOR = {
+					num_of_children = 1
+					has_law = succ_feudal_elective
+					has_law = succ_tanistry
+					any_demesne_title = {
+						claimed_by = ROOT
+					}
+				}
+			}
+			save_event_target_as = target_relative
 		}
 	}
 	
@@ -136,19 +159,7 @@ character_event = {
 			factor = 1
 		}
 		
-		random_dynasty_member = {
-			limit = {
-				demesne_size = 1
-				NOT = { num_of_children = 1 }
-				age = 35
-				NOT = { has_law = succ_feudal_elective }
-				OR = {
-					is_feudal = yes
-					is_tribal = yes
-					is_nomadic = yes
-				}
-				NOT = { any_demesne_title = { claimed_by = root	} }
-			}
+		event_target:target_relative = {
 			character_event = {	id = 66010  days = 17	tooltip = EVTTOOLTIP66010 }
 		}
 	}
@@ -159,33 +170,12 @@ character_event = {
 			factor = 1000
 		}
 		trigger = {
-			any_dynasty_member = {
-				NOT = { num_of_children = 1 }
-				age = 35
+			event_target:target_relative = {
 				demesne_size = 2
-				NOT = { has_law = succ_feudal_elective }
-				OR = {
-					is_feudal = yes
-					is_tribal = yes
-					is_nomadic = yes
-				}
-				NOT = { any_demesne_title = { claimed_by = root	} }
 			}
 		}
 		
-		random_dynasty_member = {
-			limit = {
-				NOT = { num_of_children = 1 }
-				age = 35
-				NOT = { has_law = succ_feudal_elective }
-				OR = {
-					is_feudal = yes
-					is_tribal = yes
-					is_nomadic = yes
-				}
-				NOT = { any_demesne_title = { claimed_by = root	} }
-				demesne_size = 2
-			}
+		event_target:target_relative = {
 			character_event = {	id = 66020 tooltip = EVTTOOLTIP66020 }
 		}
 	}
@@ -298,9 +288,7 @@ character_event = {
 		prestige = -5
 		random_demesne_title = {
 			limit = {
-				NOT = {	tier = duke }
-				NOT = {	tier = king }
-				NOT = {	tier = emperor }
+				lower_tier_than = duke
 			}
 			grant_title = FROM
 		}
@@ -331,10 +319,10 @@ character_event = {
 	
 	trigger = {
 		has_landed_title = no
-		NOT = { trait = eunuch }
-		NOT = { trait = monk }
-		NOT = { trait = nun }
-		NOT = {
+		NOR = {
+			trait = eunuch
+			trait = monk
+			trait = nun
 			num_of_king_titles = 1
 		}
 		any_dynasty_member = {
@@ -346,6 +334,15 @@ character_event = {
 			intrigue = 12
 			diplomacy = 12
 			stewardship = 12
+		}
+	}
+	immediate = {
+		random_dynasty_member = {
+			limit = {
+				demesne_size = 1
+				num_of_king_titles = 2
+			}
+			save_event_target_as = target_relative
 		}
 	}
 	
@@ -439,11 +436,7 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA66050 # ask for the title!
-		random_dynasty_member = {
-			limit = {
-				demesne_size = 1
-				num_of_king_titles = 2
-			}
+		event_target:target_relative = {
 			character_event = {	id = 66051	days = 1 tooltip = EVTTOOLTIP66051 }
 		}		
 	}
