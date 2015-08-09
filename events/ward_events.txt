@@ -646,8 +646,10 @@ character_event = {
 		any_ward = {
 			prisoner = no
 			age = 6
-			NOT = {
+			NOR = {
 				age = 16
+				trait = incapable
+				trait = in_hiding
 			}
 			OR = {
 				trait = shy
@@ -655,19 +657,69 @@ character_event = {
 				trait = kind
 				trait = trusting
 			}
-		}
-		any_child = {
-			is_abroad = no
-			prisoner = no
-			age = 6
-			NOT = {
-				age = 16
+			guardian = {
+				employer = {
+					any_courtier = {
+						is_abroad = no
+						prisoner = no
+						age = 6
+						NOR = {
+							age = 16
+							character = PREVPREVPREV
+							trait = incapable
+							trait = in_hiding
+						}
+						OR = {
+							trait = wroth
+							trait = cruel
+							trait = deceitful
+							trait = envious
+						}
+					}
+				}
 			}
-			OR = {
-				trait = wroth
-				trait = cruel
-				trait = deceitful
-				trait = envious
+		}
+	}
+	
+	immediate = {
+		random_ward = {
+			limit = {
+				prisoner = no
+				age = 6
+				NOR = {
+					age = 16
+					trait = incapable
+					trait = in_hiding
+				}
+				OR = {
+					trait = shy
+					trait = craven
+					trait = kind
+					trait = trusting
+				}
+			}
+			save_event_target_as = bullied_ward
+		}
+		employer = {
+			random_courtier = {
+				limit = {
+					is_abroad = no
+					prisoner = no
+					age = 6
+					NOR = {
+						age = 16
+						character = event_target:bullied_ward
+						trait = incapable
+						trait = in_hiding
+					}
+					OR = {
+						trait = wroth
+						trait = cruel
+						trait = deceitful
+						trait = envious
+					}
+				}
+				save_event_target_as = bully
 			}
 		}
 	}
@@ -678,20 +730,7 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA78020
-		random_ward = {
-			limit = {
-				prisoner = no
-				age = 6
-				NOT = {
-					age = 16
-				}
-				OR = {
-					trait = shy
-					trait = craven
-					trait = kind
-					trait = trusting
-				}
-			}
+		event_target:bullied_ward = {
 			random = {
 				chance = 25
 				
@@ -711,26 +750,17 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB78020
-		random_ward = {
-			limit = {
-				prisoner = no
-				age = 6
-				NOT = {
-					age = 16
-				}
-				OR = {
-					trait = shy
-					trait = craven
-					trait = kind
-					trait = trusting
-				}
+		event_target:bullied_ward = {
+			add_trait = stressed
+			opinion = {
+				modifier = opinion_upset
+				who = ROOT
+				years = 5
 			}
 			if = {
 				limit = {
-					NOT = {
+					NOR = {
 						trait = craven
-					}
-					NOT = {
 						trait = shy
 					}
 				}
@@ -739,6 +769,7 @@ character_event = {
 					
 					change_martial = 1
 				}
+				break = yes
 			}
 			if = {
 				limit = {
@@ -754,47 +785,24 @@ character_event = {
 						}
 					}
 				}
+				break = yes
 			}
-			if = {
-				limit = {
-					trait = shy
-				}
-				random = {
-					chance = 25
-					
-					remove_trait = craven
-					hidden_tooltip = {
-						character_event = {
-							id = 38296 #Notify remove Craven
-						}
+			#craven
+			random = {
+				chance = 25
+				
+				remove_trait = craven
+				hidden_tooltip = {
+					character_event = {
+						id = 38296 #Notify remove Craven
 					}
 				}
-			}
-			add_trait = stressed
-			opinion = {
-				modifier = opinion_upset
-				who = ROOT
-				years = 5
 			}
 		}
 	}
 	option = {
 		name = EVTOPTC78020
-		random_child = {
-			limit = {
-				is_abroad = no
-				prisoner = no
-				age = 6
-				NOT = {
-					age = 16
-				}
-				OR = {
-					trait = wroth
-					trait = cruel
-					trait = deceitful
-					trait = envious
-				}
-			}
+		event_target:bully = {
 			opinion = {
 				modifier = opinion_angry
 				who = ROOT

@@ -11,16 +11,16 @@ character_event = {
 	
 	prisoner = yes
 	capable_only = yes
+	min_age = 16
+	max_age = 45
+	only_women = yes
 	
 	trigger = {
-		age = 16
 		NOR = {
-			age = 45
 			trait = ugly
 			trait = celibate
 			trait = chaste
 		}
-		is_female = yes
 		is_pregnant = no
 		fertility = 4
 		OR = {
@@ -231,49 +231,93 @@ character_event = {
 	
 	option = {
 		name = EVTOPTAMyMod.802 # Free at last!
-		FROM = { 
-			FROM = {
-					remove_trait = idealistic
-					remove_trait = noblespirit
-					remove_trait = gullible
-					remove_trait = aloof
+		FROM = {
+			remove_trait = idealistic
+			remove_trait = noblespirit
+			remove_trait = gullible
+			remove_trait = aloof
 		
 			
-				reverse_opinion = {
-					who = ROOT
-					modifier = opinion_sprung_from_jail
-					months = 240
+			reverse_opinion = {
+				who = ROOT
+				modifier = opinion_sprung_from_jail
+				months = 240
+			}
+			if = {
+				limit = { 
+					fertility = 0.1
+					ROOT = {
+						fertility = 0.1
+					}
+					is_married = yes
 				}
 				if = {
-					limit = { 
-						fertility = 1 
-						is_married = yes
+					limit = {
+						NOT = {
+							trait = deceitful
+						}
 					}
-					
-					random_list = {
-						30 = { add_trait = deceitful }
-						30 = { }
-						40 = { ROOT = { impregnate_cuckoo = prev } }
+					random = {
+						chance = 30 
+						add_trait = deceitful
 					}
-					set_character_flag = love_mistress
-				}
-				if = {
-					limit = { 
-						fertility = 1 
-						is_married = no
-					}
-					
-					random_list = {
-						30 = { add_trait = deceitful }
-						30 = { }
-						40 = { ROOT = { impregnate = PREV } }
-					}
-					set_character_flag = love_mistress
 				}
 				random = {
-					chance = 25
-					add_lover = ROOT
+					chance = 40
+					modifier = {
+						factor = 1.1
+						fertility = 0.3
+					}
+					modifier = {
+						factor = 1.1
+						fertility = 0.5
+					}
+					modifier = {
+						factor = 1.1
+						fertility = 0.7
+					}
+					modifier = {
+						factor = 1.1
+						ROOT = {
+							fertility = 0.3
+						}
+					}
+					modifier = {
+						factor = 1.1
+						ROOT = {
+							fertility = 0.5
+						}
+					}
+					modifier = {
+						factor = 1.1
+						ROOT = {
+							fertility = 0.7
+						}
+					}
+					ROOT = {
+						impregnate_cuckoo = PREV
+					}
 				}
+				set_character_flag = love_mistress
+			}
+			if = {
+				limit = { 
+					fertility = 0.1
+					ROOT = {
+						fertility = 0.1
+					}
+					is_married = no
+				}
+				
+				random = {
+					chance = 40
+					ROOT = { impregnate = PREV }
+				}
+				set_character_flag = love_mistress
+			}
+			random = {
+				chance = 25
+				add_lover = ROOT
 			} 
 		}
 	}

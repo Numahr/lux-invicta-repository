@@ -1,537 +1,537 @@
 # Generic Crusade/Jihad (obsolete, for reference)
-crusade = {
-	name = CB_NAME_CRUSADE
-	war_name = WAR_NAME_CRUSADE
-	sprite = 9
-	truce_days = 3650
-	is_permanent = yes
-	is_holy_war = yes
-	check_de_jure_tier = KING # this scans all de jure kingdoms for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
-	
-	can_use_gui = {
-		ROOT = {
-			has_called_crusade = no
-			religion_authority = 0.05
-		}
-	}
-	
-	can_use = {
-		#year = 1090
-		ROOT = {
-			mercenary = no
-			is_nomadic = no		
-			is_landed = yes
-			can_call_crusade = yes
-			NOR = {
-				pays_tribute_to = FROM
-				any_liege = {
-					OR = {
-						pays_tribute_to = FROM
-						FROM = {
-							pays_tribute_to = PREV
-						}
-					}
-				}
-				has_character_flag = do_not_disturb
-				trait = tolerant_ruler
-			}
-		}
-		FROM = {
-			OR = {
-				NOT = { religion_group = ROOT }
-				is_heresy_of = ROOT
-				is_parent_religion = ROOT
-			}
-			NOT = {
-				any_war = {
-					defender = {
-						character = FROM
-					}
-					using_cb = crusade
-				}
-			}
-		}
-	}
-
-	can_use_title = {
-		FROM = {
-			any_realm_title = {
-				de_jure_liege_or_above = PREVPREV
-			}
-			
-			independent = yes # Don't declare Crusades on revolters - chances are high the war will invalidate
-			
-			num_of_realm_counties = {
-				value = 6
-				title = PREV
-			}
-			NOT = {
-				distance_from_realm = {
-					who = ROOT
-					value = 1000
-				}
-			}
-		}
-	}
-
-	is_valid = {
-		ROOT = {
-			can_call_crusade = yes
-			is_landed = yes
-		}
-		FROM = {
-			OR = {
-				NOT = { religion_group = ROOT }
-				is_heresy_of = ROOT
-				is_parent_religion = ROOT
-			}
-		}
-	}
-
-	is_valid_title = {
-		FROM = {
-			any_realm_title = {
-				de_jure_liege_or_above = PREVPREV
-			}
-		}
-	}
-
-	on_success_title = {
-		if = {
-			limit = {
-				has_holder = yes
-				holder_scope = {
-					religion = ROOT
-				}
-			}
-			holder_scope = {
-				gain_settlements_under_title = {
-					title = PREV
-					enemy = FROM
-					is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
-					type = holy_war
-				}
-			}
-		}
-		
-		# Should we give the seized land to a claimant of our faith?
-		if = {
-			limit = {
-				OR = {
-					has_holder = no
-					NOT = {
-						holder_scope = {
-							religion = ROOT
-						}
-					}
-				}
-				best_crusade_claimant = {
-					always = yes # There is a "best" claimant
-				}
-			}
-			
-			# Claimants must be of ROOT's religion, and are ranked by strength of claim and actual contribution to the war
-			best_crusade_claimant = {
-				gain_settlements_under_title = {
-					title = PREV
-					enemy = FROM
-					is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
-					type = holy_war
-				}
-				if = {
-					limit = {
-						top_liege = {
-							character = FROM
-						}
-					}
-					set_defacto_liege = THIS
-				}
-				if  = {
-					limit = {
-						PREV = {
-							OR = { 
-								has_holder = no
-								holder_scope = { 
-									top_liege = { character = FROM }
-								}
-							} 
-						}
-						OR = {
-							independent = yes
-							is_ruler = no
-							liege = {
-								tier = EMPEROR
-							}
-						}
-					}
-					usurp_title = { target = PREV type = holy_war }
-				}
-			}
-		}
-		# Give the seized land to the main contributor of the Crusade
-		if = {
-			limit = {
-				OR = {
-					has_holder = no
-					NOT = {
-						holder_scope = {
-							religion = ROOT
-						}
-					}
-				}
-				NOT = {
-					best_crusade_claimant = {
-						always = yes
-					}
-				}
-			}
-			
-			most_participating_crusader = {
-				gain_settlements_under_title = {
-					title = PREV
-					enemy = FROM
-					type = holy_war
-				}
-				if  = {
-					limit = {
-						primary_title = { is_primary_type_title = no } # Mercs, the Pope, Holy Orders, etc
-						PREV = { 
-							OR = {
-								has_holder = no 
-								holder_scope = {
-									top_liege = { character = FROM }
-								}
-							}
-						}
-						NOT = { character = ROOT }
-						OR = {
-							independent = yes
-							liege = {
-								tier = EMPEROR
-							}
-						}
-					}
-					usurp_title_only = { target = PREV type = holy_war }
-					
-					if = {
-						limit = {
-							NOT = { culture = PREV }
-						}
-						hidden_tooltip = { PREV = { conquest_culture = THIS } }
-					}
-				}
-				hidden_tooltip = {
-					if = {
-						limit = {
-							has_nickname = no
-						}
-						random_list = {
-							10 = {
-								modifier = {
-									factor = 0
-									NOT = { religion_group = christian }
-								}
-								give_nickname = nick_the_crusader
-							}
-							10 = { give_nickname = nick_the_holy }
-							10 = { give_nickname = nick_the_glorious }
-							10 = { give_nickname = nick_the_lionheart }
-							10 = { give_nickname = nick_the_great }
-							10 = { give_nickname = nick_the_hammer }
-							10 = { give_nickname = nick_the_pilgrim }
-							40 = {
-								modifier = {
-									factor = 0
-									religion_group = christian
-								}
-								give_nickname = nick_the_sword_of_god
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		any_attacker = {
-			limit = { character = ROOT }
-			participation_scaled_prestige = 500
-			participation_scaled_piety = 1000
-			if = {
-				limit = {
-					uses_decadence = yes
-				}
-				participation_scaled_decadence = -100
-			}
-		}
-		any_attacker = {
-			limit = { NOT = { character = ROOT } }
-			hidden_tooltip = { 
-				participation_scaled_prestige = 1000
-				participation_scaled_piety = 1000
-				if = {
-					limit = {
-						uses_decadence = yes
-					}
-					participation_scaled_decadence = -100
-				}
-			}
-		}
-		
-		ROOT = {
-			religion_authority = {
-				modifier = won_crusade
-				years = 20
-			}
-		}
-		
-		FROM = {
-			piety = -100
-			religion_authority = {
-				modifier = lost_crusade
-				years = 20
-			}			
-		}
-	}
-
-	on_fail = {
-		ROOT = {
-			piety = -100
-			#REPLACE ME
-		}
-		
-		any_defender = {
-			limit = { character = FROM }
-			participation_scaled_piety = 200
-			participation_scaled_prestige = 100
-			if = {
-				limit = {
-					uses_decadence = yes
-				}
-				participation_scaled_decadence = -50
-			}
-		}
-		any_defender = {
-			limit = { NOT = { character = FROM } }
-			hidden_tooltip = { 
-				participation_scaled_piety = 200
-				participation_scaled_prestige = 100
-				if = {
-					limit = {
-						uses_decadence = yes
-					}
-					participation_scaled_decadence = -50
-				}
-			}
-		}
-		
-		FROM = {
-			if = {
-				limit = { 
-					has_dlc = "Legacy of Rome"
-					OR = {
-						has_landed_title = e_byzantium
-						has_landed_title = e_roman_empire
-						has_landed_title = e_roman
-						AND = {
-							OR = {
-								culture = roman
-								culture = romanobrython
-								culture = romanogothic
-								culture = galloroman
-								culture = greek
-							}
-							independent = yes
-							higher_tier_than = duke
-						}
-					}
-				}
-				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
-			}
-			
-			hidden_tooltip = {
-				if = {
-					limit = {
-						has_nickname = no
-					}
-					random_list = {
-						10 = { give_nickname = nick_the_holy }
-						10 = { give_nickname = nick_the_glorious }
-						10 = { give_nickname = nick_the_lionheart }
-						10 = { give_nickname = nick_the_great }
-						10 = { give_nickname = nick_the_hammer }
-						20 = {
-							modifier = {
-								factor = 0
-								religion_group = christian
-							}
-							give_nickname = nick_the_sword_of_god
-						}
-					}
-				}
-			}
-		}
-	}
-
-	on_reverse_demand = {
-		ROOT = {
-			piety = -250
-			religion_authority = {
-				modifier = lost_crusade
-				years = 20
-			}
-			wealth = -150
-		}
-		FROM = {
-			piety = 250
-			wealth = 150
-			religion_authority = {
-				modifier = won_crusade
-				years = 20
-			}
-		}
-		any_defender = {
-			limit = { character = FROM }
-			participation_scaled_piety = 300
-			participation_scaled_prestige = 150
-			if = {
-				limit = {
-					uses_decadence = yes
-				}
-				participation_scaled_decadence = -100
-			}
-		}
-		FROM = {
-			if = {
-				limit = { 
-					has_dlc = "Legacy of Rome"
-					OR = {
-						has_landed_title = e_byzantium
-						has_landed_title = e_roman_empire
-						has_landed_title = e_roman
-						AND = {
-							OR = {
-								culture = roman
-								culture = romanobrython
-								culture = romanogothic
-								culture = galloroman
-								culture = greek
-							}
-							independent = yes
-							higher_tier_than = duke
-						}
-					}
-				}
-				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
-			}
-			hidden_tooltip = {
-				if = {
-					limit = {
-						has_nickname = no
-					}
-					random_list = {
-						10 = { give_nickname = nick_the_holy }
-						10 = { give_nickname = nick_the_glorious }
-						10 = { give_nickname = nick_the_lionheart }
-						10 = { give_nickname = nick_the_great }
-						10 = { give_nickname = nick_the_hammer }
-						20 = {
-							modifier = {
-								factor = 0
-								religion_group = christian
-							}
-							give_nickname = nick_the_sword_of_god
-						}
-					}
-				}
-			}
-		}
-		any_defender = {
-			limit = { NOT = { character = FROM } }
-			hidden_tooltip = { 
-				participation_scaled_piety = 300
-				participation_scaled_prestige = 150
-				if = {
-					limit = {
-						uses_decadence = yes
-					}
-					participation_scaled_decadence = -100
-				}
-			}
-		}
-	}
-
-	attacker_ai_victory_worth = {
-		factor = -1 # always accept
-	}
-	
-	attacker_ai_defeat_worth = {
-		factor = 100
-	}
-
-	defender_ai_victory_worth = {
-		factor = -1 # always accept
-	}
-	
-	defender_ai_defeat_worth = {
-		factor = 100
-	}
-	ai_will_do = {
-		factor = 1
-		modifier = {
-			factor = 0
-			ROOT = {
-				distance = {
-					who = FROM
-					value = 1000
-				}
-			}
-		}
-		modifier = {
-			factor = 2
-			NOT = {
-				ROOT = {
-					distance = {
-						who = FROM
-						value = 800
-					}
-				}
-			}
-		}
-		modifier = {
-			factor = 2
-			NOT = {
-				ROOT = {
-					distance = {
-						who = FROM
-						value = 600
-					}
-				}
-			}
-		}
-		modifier = {
-			factor = 2
-			NOT = {
-				ROOT = {
-					distance = {
-						who = FROM
-						value = 400
-					}
-				}
-			}
-		}
-		modifier = {
-			factor = 2
-			NOT = {
-				ROOT = {
-					distance = {
-						who = FROM
-						value = 200
-					}
-				}
-			}
-		}
-	}
-}
+#crusade = {
+#	name = CB_NAME_CRUSADE
+#	war_name = WAR_NAME_CRUSADE
+#	sprite = 9
+#	truce_days = 3650
+#	is_permanent = yes
+#	is_holy_war = yes
+#	check_de_jure_tier = KING # this scans all de jure kingdoms for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+#	
+#	can_use_gui = {
+#		ROOT = {
+#			has_called_crusade = no
+#			religion_authority = 0.05
+#		}
+#	}
+#	
+#	can_use = {
+#		#year = 1090
+#		ROOT = {
+#			mercenary = no
+#			is_nomadic = no		
+#			is_landed = yes
+#			can_call_crusade = yes
+#			NOR = {
+#				pays_tribute_to = FROM
+#				any_liege = {
+#					OR = {
+#						pays_tribute_to = FROM
+#						FROM = {
+#							pays_tribute_to = PREV
+#						}
+#					}
+#				}
+#				has_character_flag = do_not_disturb
+#				trait = tolerant_ruler
+#			}
+#		}
+#		FROM = {
+#			OR = {
+#				NOT = { religion_group = ROOT }
+#				is_heresy_of = ROOT
+#				is_parent_religion = ROOT
+#			}
+#			NOT = {
+#				any_war = {
+#					defender = {
+#						character = FROM
+#					}
+#					using_cb = crusade
+#				}
+#			}
+#		}
+#	}
+#
+#	can_use_title = {
+#		FROM = {
+#			any_realm_title = {
+#				de_jure_liege_or_above = PREVPREV
+#			}
+#			
+#			independent = yes # Don't declare Crusades on revolters - chances are high the war will invalidate
+#			
+#			num_of_realm_counties = {
+#				value = 6
+#				title = PREV
+#			}
+#			NOT = {
+#				distance_from_realm = {
+#					who = ROOT
+#					value = 1000
+#				}
+#			}
+#		}
+#	}
+#
+#	is_valid = {
+#		ROOT = {
+#			can_call_crusade = yes
+#			is_landed = yes
+#		}
+#		FROM = {
+#			OR = {
+#				NOT = { religion_group = ROOT }
+#				is_heresy_of = ROOT
+#				is_parent_religion = ROOT
+#			}
+#		}
+#	}
+#
+#	is_valid_title = {
+#		FROM = {
+#			any_realm_title = {
+#				de_jure_liege_or_above = PREVPREV
+#			}
+#		}
+#	}
+#
+#	on_success_title = {
+#		if = {
+#			limit = {
+#				has_holder = yes
+#				holder_scope = {
+#					religion = ROOT
+#				}
+#			}
+#			holder_scope = {
+#				gain_settlements_under_title = {
+#					title = PREV
+#					enemy = FROM
+#					is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
+#					type = holy_war
+#				}
+#			}
+#		}
+#		
+#		# Should we give the seized land to a claimant of our faith?
+#		if = {
+#			limit = {
+#				OR = {
+#					has_holder = no
+#					NOT = {
+#						holder_scope = {
+#							religion = ROOT
+#						}
+#					}
+#				}
+#				best_crusade_claimant = {
+#					always = yes # There is a "best" claimant
+#				}
+#			}
+#			
+#			# Claimants must be of ROOT's religion, and are ranked by strength of claim and actual contribution to the war
+#			best_crusade_claimant = {
+#				gain_settlements_under_title = {
+#					title = PREV
+#					enemy = FROM
+#					is_crusade = yes # Even if the title holder is not participating in the war, gain holdings occupied by all Crusade participants
+#					type = holy_war
+#				}
+#				if = {
+#					limit = {
+#						top_liege = {
+#							character = FROM
+#						}
+#					}
+#					set_defacto_liege = THIS
+#				}
+#				if  = {
+#					limit = {
+#						PREV = {
+#							OR = { 
+#								has_holder = no
+#								holder_scope = { 
+#									top_liege = { character = FROM }
+#								}
+#							} 
+#						}
+#						OR = {
+#							independent = yes
+#							is_ruler = no
+#							liege = {
+#								tier = EMPEROR
+#							}
+#						}
+#					}
+#					usurp_title = { target = PREV type = holy_war }
+#				}
+#			}
+#		}
+#		# Give the seized land to the main contributor of the Crusade
+#		if = {
+#			limit = {
+#				OR = {
+#					has_holder = no
+#					NOT = {
+#						holder_scope = {
+#							religion = ROOT
+#						}
+#					}
+#				}
+#				NOT = {
+#					best_crusade_claimant = {
+#						always = yes
+#					}
+#				}
+#			}
+#			
+#			most_participating_crusader = {
+#				gain_settlements_under_title = {
+#					title = PREV
+#					enemy = FROM
+#					type = holy_war
+#				}
+#				if  = {
+#					limit = {
+#						primary_title = { is_primary_type_title = no } # Mercs, the Pope, Holy Orders, etc
+#						PREV = { 
+#							OR = {
+#								has_holder = no 
+#								holder_scope = {
+#									top_liege = { character = FROM }
+#								}
+#							}
+#						}
+#						NOT = { character = ROOT }
+#						OR = {
+#							independent = yes
+#							liege = {
+#								tier = EMPEROR
+#							}
+#						}
+#					}
+#					usurp_title_only = { target = PREV type = holy_war }
+#					
+#					if = {
+#						limit = {
+#							NOT = { culture = PREV }
+#						}
+#						hidden_tooltip = { PREV = { conquest_culture = THIS } }
+#					}
+#				}
+#				hidden_tooltip = {
+#					if = {
+#						limit = {
+#							has_nickname = no
+#						}
+#						random_list = {
+#							10 = {
+#								modifier = {
+#									factor = 0
+#									NOT = { religion_group = christian }
+#								}
+#								give_nickname = nick_the_crusader
+#							}
+#							10 = { give_nickname = nick_the_holy }
+#							10 = { give_nickname = nick_the_glorious }
+#							10 = { give_nickname = nick_the_lionheart }
+#							10 = { give_nickname = nick_the_great }
+#							10 = { give_nickname = nick_the_hammer }
+#							10 = { give_nickname = nick_the_pilgrim }
+#							40 = {
+#								modifier = {
+#									factor = 0
+#									religion_group = christian
+#								}
+#								give_nickname = nick_the_sword_of_god
+#							}
+#						}
+#					}
+#				}
+#			}
+#		}
+#		
+#		any_attacker = {
+#			limit = { character = ROOT }
+#			participation_scaled_prestige = 500
+#			participation_scaled_piety = 1000
+#			if = {
+#				limit = {
+#					uses_decadence = yes
+#				}
+#				participation_scaled_decadence = -100
+#			}
+#		}
+#		any_attacker = {
+#			limit = { NOT = { character = ROOT } }
+#			hidden_tooltip = { 
+#				participation_scaled_prestige = 1000
+#				participation_scaled_piety = 1000
+#				if = {
+#					limit = {
+#						uses_decadence = yes
+#					}
+#					participation_scaled_decadence = -100
+#				}
+#			}
+#		}
+#		
+#		ROOT = {
+#			religion_authority = {
+#				modifier = won_crusade
+#				years = 20
+#			}
+#		}
+#		
+#		FROM = {
+#			piety = -100
+#			religion_authority = {
+#				modifier = lost_crusade
+#				years = 20
+#			}			
+#		}
+#	}
+#
+#	on_fail = {
+#		ROOT = {
+#			piety = -100
+#			#REPLACE ME
+#		}
+#		
+#		any_defender = {
+#			limit = { character = FROM }
+#			participation_scaled_piety = 200
+#			participation_scaled_prestige = 100
+#			if = {
+#				limit = {
+#					uses_decadence = yes
+#				}
+#				participation_scaled_decadence = -50
+#			}
+#		}
+#		any_defender = {
+#			limit = { NOT = { character = FROM } }
+#			hidden_tooltip = { 
+#				participation_scaled_piety = 200
+#				participation_scaled_prestige = 100
+#				if = {
+#					limit = {
+#						uses_decadence = yes
+#					}
+#					participation_scaled_decadence = -50
+#				}
+#			}
+#		}
+#		
+#		FROM = {
+#			if = {
+#				limit = { 
+#					has_dlc = "Legacy of Rome"
+#					OR = {
+#						has_landed_title = e_byzantium
+#						has_landed_title = e_roman_empire
+#						has_landed_title = e_roman
+#						AND = {
+#							OR = {
+#								culture = roman
+#								culture = romanobrython
+#								culture = romanogothic
+#								culture = galloroman
+#								culture = greek
+#							}
+#							independent = yes
+#							higher_tier_than = duke
+#						}
+#					}
+#				}
+#				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
+#			}
+#			
+#			hidden_tooltip = {
+#				if = {
+#					limit = {
+#						has_nickname = no
+#					}
+#					random_list = {
+#						10 = { give_nickname = nick_the_holy }
+#						10 = { give_nickname = nick_the_glorious }
+#						10 = { give_nickname = nick_the_lionheart }
+#						10 = { give_nickname = nick_the_great }
+#						10 = { give_nickname = nick_the_hammer }
+#						20 = {
+#							modifier = {
+#								factor = 0
+#								religion_group = christian
+#							}
+#							give_nickname = nick_the_sword_of_god
+#						}
+#					}
+#				}
+#			}
+#		}
+#	}
+#
+#	on_reverse_demand = {
+#		ROOT = {
+#			piety = -250
+#			religion_authority = {
+#				modifier = lost_crusade
+#				years = 20
+#			}
+#			wealth = -150
+#		}
+#		FROM = {
+#			piety = 250
+#			wealth = 150
+#			religion_authority = {
+#				modifier = won_crusade
+#				years = 20
+#			}
+#		}
+#		any_defender = {
+#			limit = { character = FROM }
+#			participation_scaled_piety = 300
+#			participation_scaled_prestige = 150
+#			if = {
+#				limit = {
+#					uses_decadence = yes
+#				}
+#				participation_scaled_decadence = -100
+#			}
+#		}
+#		FROM = {
+#			if = {
+#				limit = { 
+#					has_dlc = "Legacy of Rome"
+#					OR = {
+#						has_landed_title = e_byzantium
+#						has_landed_title = e_roman_empire
+#						has_landed_title = e_roman
+#						AND = {
+#							OR = {
+#								culture = roman
+#								culture = romanobrython
+#								culture = romanogothic
+#								culture = galloroman
+#								culture = greek
+#							}
+#							independent = yes
+#							higher_tier_than = duke
+#						}
+#					}
+#				}
+#				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
+#			}
+#			hidden_tooltip = {
+#				if = {
+#					limit = {
+#						has_nickname = no
+#					}
+#					random_list = {
+#						10 = { give_nickname = nick_the_holy }
+#						10 = { give_nickname = nick_the_glorious }
+#						10 = { give_nickname = nick_the_lionheart }
+#						10 = { give_nickname = nick_the_great }
+#						10 = { give_nickname = nick_the_hammer }
+#						20 = {
+#							modifier = {
+#								factor = 0
+#								religion_group = christian
+#							}
+#							give_nickname = nick_the_sword_of_god
+#						}
+#					}
+#				}
+#			}
+#		}
+#		any_defender = {
+#			limit = { NOT = { character = FROM } }
+#			hidden_tooltip = { 
+#				participation_scaled_piety = 300
+#				participation_scaled_prestige = 150
+#				if = {
+#					limit = {
+#						uses_decadence = yes
+#					}
+#					participation_scaled_decadence = -100
+#				}
+#			}
+#		}
+#	}
+#
+#	attacker_ai_victory_worth = {
+#		factor = -1 # always accept
+#	}
+#	
+#	attacker_ai_defeat_worth = {
+#		factor = 100
+#	}
+#
+#	defender_ai_victory_worth = {
+#		factor = -1 # always accept
+#	}
+#	
+#	defender_ai_defeat_worth = {
+#		factor = 100
+#	}
+#	ai_will_do = {
+#		factor = 1
+#		modifier = {
+#			factor = 0
+#			ROOT = {
+#				distance = {
+#					who = FROM
+#					value = 1000
+#				}
+#			}
+#		}
+#		modifier = {
+#			factor = 2
+#			NOT = {
+#				ROOT = {
+#					distance = {
+#						who = FROM
+#						value = 800
+#					}
+#				}
+#			}
+#		}
+#		modifier = {
+#			factor = 2
+#			NOT = {
+#				ROOT = {
+#					distance = {
+#						who = FROM
+#						value = 600
+#					}
+#				}
+#			}
+#		}
+#		modifier = {
+#			factor = 2
+#			NOT = {
+#				ROOT = {
+#					distance = {
+#						who = FROM
+#						value = 400
+#					}
+#				}
+#			}
+#		}
+#		modifier = {
+#			factor = 2
+#			NOT = {
+#				ROOT = {
+#					distance = {
+#						who = FROM
+#						value = 200
+#					}
+#				}
+#			}
+#		}
+#	}
+#}
 
 # Crusade/Jihad
 # availability: Christians
