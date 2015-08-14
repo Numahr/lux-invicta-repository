@@ -36,14 +36,18 @@ character_event = {
 			OR = {
 				region = world_steppe_east
 				region = world_steppe_tarim
-				duchy = { title = d_marakanda }
-				duchy = { title = d_khwarizmian }
-				duchy = { title = d_merv }
+				duchy = {
+					OR = {
+						title = d_marakanda
+						title = d_khwarizmian
+						title = d_merv
+					}
+				}
 			}
 		}
 		any_demesne_province = {
 			has_trade_post = yes
-#			trade_route = silk_road
+			trade_route = silk_road
 		#	trade_route_active = silk_road
 		}
 	}
@@ -56,7 +60,7 @@ character_event = {
 		random_demesne_province = {
 			limit = {
 				has_trade_post = yes
-#				trade_route = silk_road
+				trade_route = silk_road
 			#	trade_route_active = silk_road
 			}
 			save_event_target_as = trade_province
@@ -249,22 +253,18 @@ character_event = {
 	immediate = {
 		if = {
 			limit = {
-				OR = {
-					NOT = {
-						event_target:chinese_envoy = {
-							OR = {
-								liege = { character = ROOT }
-								host = { character = ROOT }
-							}
-							prisoner = no
-							has_character_flag = is_chinese_envoy
+				NAND = {
+					event_target:chinese_envoy = {
+						OR = {
+							liege = { character = ROOT }
+							host = { character = ROOT }
 						}
+						prisoner = no
+						has_character_flag = is_chinese_envoy
 					}
-					NOT = {
-						event_target:trade_province = {
-							holder_scope = {
-								character = ROOT
-							}
+					event_target:trade_province = {
+						holder_scope = {
+							character = ROOT
 						}
 					}
 				}
@@ -323,40 +323,40 @@ character_event = {
 					limit = {
 						NOT = { has_character_modifier = pet_hunting_dog }
 						any_vassal = {
-							NOT = { character = ROOT }
-							prisoner = no
-							in_command = no
 							NOR = {
+								character = ROOT
 								trait = incapable
 								has_character_flag = do_not_disturb
 							}
+							prisoner = no
+							in_command = no
 						}
 					}
 					random_vassal = {
 						limit = {
-							NOT = { character = ROOT }
-							prisoner = no
-							in_command = no
 							NOR = {
+								character = ROOT
 								trait = incapable
 								has_character_flag = do_not_disturb
 							}
+							prisoner = no
+							in_command = no
 						}
 						character_event = { id = HL.5009 }
 					}
 				}
 				if = {
 					limit = {
-						NOT = { has_character_modifier = pet_hunting_dog }
-						NOT = {
+						NOR = {
+							has_character_modifier = pet_hunting_dog
 							any_vassal = {
-								NOT = { character = ROOT }
-								prisoner = no
-								in_command = no
 								NOR = {
+									character = ROOT
 									trait = incapable
 									has_character_flag = do_not_disturb
 								}
+								prisoner = no
+								in_command = no
 							}
 						}
 					}
@@ -390,8 +390,10 @@ character_event = {
 						is_married = no
 						is_female = yes
 						is_adult = yes
-						NOT = { age = 40 }
-						NOT = { trait = incapable }
+						NOR = {
+							age = 40
+							trait = incapable
+						}
 						prisoner = no
 					}
 					character_event = { id = HL.5012 }
@@ -487,13 +489,9 @@ character_event = {
 				NOT = { yearly_income = 200 }
 			}
 			wealth = 40
+			break = yes
 		}
-		if = {
-			limit = {
-				yearly_income = 200
-			}
-			scaled_wealth = 0.2
-		}
+		scaled_wealth = 0.2
 	}
 	
 	option = {
