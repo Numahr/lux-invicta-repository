@@ -184,57 +184,28 @@ narrative_event = {
 	
 	option = {
 		name = "EVTOPTA921"
-		trigger = {
-			NOT = { stewardship = 5 }
-		}
 		random_list = {
-			25 = { character_event = { id = 20210 tooltip = "EVTTOOLTIP20210" } }
+			25 = {
+				modifier = {
+					factor = 1.5
+					stewardship = 5
+				}
+				modifier = {
+					factor = 1.5
+					stewardship = 10
+				}
+				character_event = { id = 20210 tooltip = "EVTTOOLTIP20210" }
+			}
 			50 = { character_event = { id = 20211 tooltip = "EVTTOOLTIP20211" } }
 			25 = {
-				death = {
-					death_reason = death_rabble
+				modifier = {
+					factor = 0.6
+					stewardship = 5
 				}
-				hidden_tooltip = {
-					liege = { character_event = { id = 20213 } }
+				modifier = {
+					factor = 0.6
+					stewardship = 10
 				}
-			}
-		}
-	}
-	option = {
-		name = "EVTOPTA921"
-		tooltip_info = stewardship
-		trigger = {
-			stewardship = 5
-			NOT = { stewardship = 10 }
-		}
-		random_list = {
-			35 = { character_event = { id = 20210 tooltip = "EVTTOOLTIP20210" } }
-			50 = { character_event = { id = 20211 tooltip = "EVTTOOLTIP20211" } }
-			15 = {
-				death = {
-					death_reason = death_rabble
-				}
-				hidden_tooltip = {
-					liege = { character_event = { id = 20213 } }
-				}
-			}
-		}
-	}
-	option = {
-		name = "EVTOPTA921"
-		tooltip_info = stewardship
-		trigger = {
-			stewardship = 10
-		}
-		random_list = {
-			50 = { character_event = { id = 20210 tooltip = "EVTTOOLTIP20210" } }
-			40 = {
-				character_event = { id = 20211 tooltip = "EVTTOOLTIP20211" }
-				hidden_tooltip = {
-					liege = { letter_event = { id = 20212 } }
-				}
-			}
-			10 = {
 				death = {
 					death_reason = death_rabble
 				}
@@ -446,8 +417,10 @@ letter_event = {
 				# Province barons
 				any_province_lord = {
 					limit = {
-						NOT = { character = ROOT }
-						NOT = { character = FROM }
+						NOR = {
+							character = ROOT
+							character = FROM
+						}
 					}
 					opinion = {
 						who = ROOT
@@ -650,27 +623,19 @@ character_event = {
 	option = {
 		name = "EVTOPTA20240"
 		ai_chance = { factor = 100 }
-		hidden_tooltip = {
-			if = {
-				limit = {
-					FROM = {
-						liege = {
-							job_spymaster = {
+		FROM = {
+			liege = {
+				job_spymaster = {
+					hidden_tooltip = {
+						if = {
+							limit = {
 								intrigue = 12
 							}
-						}
-					}
-				}
-				FROM = {
-					liege = {
-						job_spymaster = {
 							character_event = { id = 20243 days = 14 }
 						}
 					}
 				}
 			}
-		}
-		FROM = {
 			character_event = { id = 20241 days = 4 tooltip = "EVTTOOLTIP20241"	}
 		}
 	}
@@ -741,13 +706,11 @@ letter_event = {
 	option = {
 		name = "EVTOPTA20244"
 		ai_chance = { factor = 100 }
-		FROM = {
-			FROM = {
-				reverse_opinion = {
-					modifier = opinion_dishonorable
-					who = ROOT
-					years = 2
-				}
+		FROMFROM = {
+			reverse_opinion = {
+				modifier = opinion_dishonorable
+				who = ROOT
+				years = 2
 			}
 		}
 	}
@@ -950,10 +913,12 @@ narrative_event = {
 				}
 				if = {
 					limit = {
-						NOT = { has_province_modifier = province_prosperity_2 }
-						NOT = { has_province_modifier = province_prosperity_1 }
-						NOT = { has_province_modifier = province_poverty_1 }
-						NOT = { has_province_modifier = province_poverty_2 }
+						NOR = {
+							has_province_modifier = province_prosperity_2
+							has_province_modifier = province_prosperity_1
+							has_province_modifier = province_poverty_1
+							has_province_modifier = province_poverty_2
+						}
 					}
 					add_province_modifier = { name = "province_prosperity_1" duration = -1 }
 				}
@@ -997,10 +962,12 @@ letter_event = {
 				}
 				if = {
 					limit = {
-						NOT = { has_province_modifier = province_prosperity_2 }
-						NOT = { has_province_modifier = province_prosperity_1 }
-						NOT = { has_province_modifier = province_poverty_1 }
-						NOT = { has_province_modifier = province_poverty_2 }
+						NOR = {
+							has_province_modifier = province_prosperity_2
+							has_province_modifier = province_prosperity_1
+							has_province_modifier = province_poverty_1
+							has_province_modifier = province_poverty_2
+						}
 					}
 					add_province_modifier = { name = "province_prosperity_1" duration = -1 }
 				}
@@ -1035,8 +1002,10 @@ narrative_event = {
 	trigger = {
 		has_job_action = action_advance_eco_tech
 		location = {
-			NOT = { has_province_modifier = province_prosperity_1 }
-			NOT = { has_province_modifier = peasant_obstructionism }
+			NOR = {
+				has_province_modifier = province_prosperity_1
+				has_province_modifier = peasant_obstructionism
+			}
 			owner = {
 				job_treasurer = {
 					character = ROOT
@@ -1639,8 +1608,10 @@ character_event = {
 						is_occupied = no
 					}
 					any_province_lord = {
-						NOT = { character = ROOT }
-						NOT = { character = PREVPREVPREV }
+						NOR = {
+							character = ROOT
+							character = PREVPREVPREV
+						}
 						OR = {
 							vassal_of = PREVPREVPREV
 							pays_tribute_to = PREVPREVPREV
