@@ -21,7 +21,13 @@ narrative_event = {
 	capable_only = yes
 	
 	trigger = {
-		NOT = { has_global_flag = robin_hood_existed }
+		NOR = {
+			has_global_flag = robin_hood_existed
+			has_character_flag = killed_robin_hood
+			has_character_flag = robin_marion_married
+			has_character_flag = robin_hood
+			trait = in_hiding
+		}
 		war = no
 		in_command = no
 		is_ill = no
@@ -32,22 +38,12 @@ narrative_event = {
 			religion_group = slavic_group
 			religion_group = baltic_group
 		}
-		NOT = {
-			has_character_flag = killed_robin_hood
-		}
-		NOT = {
-			has_character_flag = robin_marion_married
-		}
-		NOT = {
-			has_character_flag = robin_hood
-		}
 		any_demesne_province = {
 			OR = {
 				has_province_modifier = highway_robber_band
 				revolt_risk = 0.05
 			}
 		}
-		NOT = { trait = in_hiding }
 	}
 	
 	mean_time_to_happen = {
@@ -112,12 +108,14 @@ narrative_event = {
 						id = 38256 #Notify Diligent
 					}
 				}
+				set_character_flag = temp_diligent
 			}
 		}
 		if = {
 			limit = {
 				trait = diligent
-				NOT = {
+				NOR = {
+					has_character_flag = temp_diligent
 					trait = deceitful
 				}
 			}
@@ -132,6 +130,7 @@ narrative_event = {
 				}
 			}
 		}
+		clr_character_flag = temp_diligent
 		random = {
 			chance = 40
 			
@@ -183,6 +182,7 @@ narrative_event = {
 	
 	option = {
 		name = "EVTOPTB10001" #Something must be done! Set a trap
+		set_character_flag = do_something
 		if = {
 			limit = {
 				NOT = {
@@ -199,10 +199,10 @@ narrative_event = {
 					}
 				}
 			}
+			break = yes
 		}
 		if = {
 			limit = {
-				trait = diligent
 				NOT = {
 					trait = ambitious
 				}
@@ -218,7 +218,6 @@ narrative_event = {
 				}
 			}
 		}
-		set_character_flag = do_something
 	}
 }
 
@@ -239,6 +238,7 @@ narrative_event = {
 	
 	option = {
 		name = "EVTOPTB10002" #Something must be done! Set a trap
+		set_character_flag = do_something
 		if = {
 			limit = {
 				NOT = {
@@ -255,10 +255,10 @@ narrative_event = {
 					}
 				}
 			}
+			break = yes
 		}
 		if = {
 			limit = {
-				trait = diligent
 				NOT = {
 					trait = ambitious
 				}
@@ -274,7 +274,6 @@ narrative_event = {
 				}
 			}
 		}
-		set_character_flag = do_something
 	}
 }
 
@@ -289,11 +288,11 @@ narrative_event = {
 	prisoner = no
 	capable_only = yes
 	only_playable = yes
+	has_character_flag = lure_robin
 	
 	trigger = {
 		war = no
 		in_command = no
-		has_character_flag = lure_robin
 	}
 	
 	mean_time_to_happen = {
@@ -324,6 +323,7 @@ narrative_event = {
 				}
 			}
 			add_trait = craven
+			break = yes
 		}
 		if = {
 			limit = {	
@@ -332,7 +332,7 @@ narrative_event = {
 					trait = slothful
 				}
 			}
-			add_trait = craven
+			add_trait = slothful
 		}
 	}
 	
@@ -363,16 +363,19 @@ narrative_event = {
 				}
 			}
 			add_trait = deceitful
+			set_character_flag = temp_deceitful
 		}
 		if = {
 			limit = {
 				trait = deceitful
-				NOT = {
+				NOR = {
+					has_character_flag = temp_deceitful
 					trait = patient
 				}
 			}
 			add_trait = patient
 		}
+		clr_character_flag = temp_deceitful
 		narrative_event = {
 			id = 10020
 			days = 1
@@ -428,6 +431,19 @@ narrative_event = {
 		name = "EVTOPTA10011" #Hang him!
 		set_character_flag = killed_robin_hood
 		prestige = 10
+		any_courtier = {
+			limit = {
+				NOR = {
+					trait = charitable
+					trait = kind
+				}
+			}
+			opinion = {
+				modifier = opinion_killed_merrymen
+				who = ROOT
+				years = 5
+			}
+		}
 		if = {
 			limit = {
 				NOT = {
@@ -435,6 +451,7 @@ narrative_event = {
 				}
 			}
 			add_trait = wroth
+			break = yes
 		}
 		if = {
 			limit = {
@@ -444,21 +461,6 @@ narrative_event = {
 				}
 			}
 			add_trait = cruel
-		}
-		any_courtier = {
-			limit = {
-				NOT = {
-					trait = charitable
-				}
-				NOT = {
-					trait = kind
-				}
-			}
-			opinion = {
-				modifier = opinion_killed_merrymen
-				who = ROOT
-				years = 5
-			}
 		}
 	}
 	
@@ -485,7 +487,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			set_character_flag = marion_robin
+			save_event_target_as = robin_hood
 		}
 		create_character = {
 			name = Marion
@@ -504,7 +506,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			set_character_flag = robin_marion
+			save_event_target_as = maid_marion
 		}
 		narrative_event = {
 			id = 10042
@@ -1130,23 +1132,6 @@ narrative_event = {
 		name = "EVTOPTA10040" #Hang him!
 		set_character_flag = killed_robin_hood
 		prestige = 10
-		if = {
-			limit = {
-				NOT = {
-					trait = wroth
-				}
-			}
-			add_trait = wroth
-		}
-		if = {
-			limit = {
-				trait = wroth
-				NOT = {
-					trait = cruel
-				}
-			}
-			add_trait = cruel
-		}
 		any_courtier = {
 			limit = {
 				NOT = {
@@ -1161,6 +1146,24 @@ narrative_event = {
 				who = ROOT
 				years = 5
 			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					trait = wroth
+				}
+			}
+			add_trait = wroth
+			break = yes
+		}
+		if = {
+			limit = {
+				trait = wroth
+				NOT = {
+					trait = cruel
+				}
+			}
+			add_trait = cruel
 		}
 	}
 	
@@ -1187,7 +1190,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			set_character_flag = marion_robin
+			save_event_target_as = robin_hood
 		}
 		create_character = {
 			name = Marion
@@ -1206,7 +1209,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			set_character_flag = robin_marion
+			save_event_target_as = maid_marion
 		}
 		narrative_event = {
 			id = 10042
@@ -1312,7 +1315,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			set_character_flag = marion_robin
+			save_event_target_as = robin_hood
 		}
 		create_character = {
 			name = Marion
@@ -1331,7 +1334,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			set_character_flag = robin_marion
+			save_event_target_as = maid_marion
 		}
 		narrative_event = {
 			id = 10042
@@ -1354,14 +1357,8 @@ narrative_event = {
 	option = {
 		name =  "EVTOPTA10042"
 		set_character_flag = robin_marion_married
-		random_courtier = {
-			limit = {
-				has_character_flag = robin_marion
-			}
-			random_courtier = {
-				limit = {
-					has_character_flag = marion_robin
-				}
+		event_target:robin_hood = {
+			event_target:maid_marion = {
 				add_spouse = PREV
 				hidden_tooltip = {
 					add_lover = PREV
@@ -1389,21 +1386,15 @@ narrative_event = {
 	trigger = {
 		war = no
 		in_command = no
-		NOT = {
-			has_character_modifier = flaming_gap
-		}
-		NOT = {
-			has_character_modifier = gates_hell
-		}
-		NOT = {
-			has_character_modifier = wailing_gap
-		}
 		NOR = {
+			has_character_modifier = flaming_gap
+			has_character_modifier = gates_hell
+			has_character_modifier = wailing_gap
 			has_character_modifier = exorcism_gateshell
 			has_character_modifier = cattle_gateshell
 			has_character_modifier = sacrifice_gateshell
+			trait = in_hiding
 		}
-		NOT = { trait = in_hiding }
 	}
 	
 	mean_time_to_happen = {
@@ -1442,6 +1433,7 @@ narrative_event = {
 					}
 				}
 			}
+			break = yes
 		}
 		if = {
 			limit = {
@@ -1716,7 +1708,7 @@ narrative_event = {
 					}
 				}
 			}
-			set_character_flag = human_sacrifice
+			save_event_target_as = human_sacrifice
 		}
 		set_character_flag = choose_solution_gh
 		narrative_event = {
@@ -1866,10 +1858,7 @@ narrative_event = {
 	
 	option = {
 		name = "EVTOPTA10107"
-		random_child = {
-			limit = {
-				has_character_flag = human_sacrifice
-			}
+		event_target:human_sacrifice = {
 			clr_character_flag = human_sacrifice
 			death = {
 				death_reason = death_execution
