@@ -31,10 +31,8 @@ character_event = {
 				trait = genius
 			}
 		}
-		NOT = {
+		NOR = {
 			has_character_modifier = town_appreciate
-		}
-		NOT = {
 			has_character_modifier = castle_appreciate
 		}
 	}
@@ -124,8 +122,10 @@ character_event = {
 	capable_only = yes
 	
 	trigger = {
-		NOT = {
+		NOR = {
 			treasury = 50
+			has_character_modifier = steward_taxincome
+			has_character_modifier = steward_revoltrisk
 		}
 		any_demesne_province = { 
 			revolt_risk = 0.02
@@ -136,12 +136,6 @@ character_event = {
 				trait = quick
 				trait = genius
 			}
-		}
-		NOT = {
-			has_character_modifier = steward_taxincome
-		}
-		NOT = {
-			has_character_modifier = steward_revoltrisk
 		}
 	}
 	
@@ -184,10 +178,8 @@ character_event = {
 				trait = genius
 			}
 		}
-		NOT = {
+		NOR = {
 			has_character_modifier = increase_arrest_chance
-		}
-		NOT = {
 			has_character_modifier = increase_plot_power
 		}
 	}
@@ -224,8 +216,10 @@ character_event = {
 	capable_only = yes
 	
 	trigger = {
-		NOT = {
+		NOR = {
 			religion_group = muslim
+			has_character_modifier = church_appreciates
+			has_character_modifier = spiritual_increase_piety
 		}
 		job_spiritual = {
 			learning = 12
@@ -236,12 +230,6 @@ character_event = {
 				trait = quick
 				trait = genius
 			}
-		}
-		NOT = {
-			has_character_modifier = church_appreciates
-		}
-		NOT = {
-			has_character_modifier = spiritual_increase_piety
 		}
 	}
 	
@@ -286,10 +274,8 @@ character_event = {
 				trait = genius
 			}
 		}
-		NOT = {
+		NOR = {
 			has_character_modifier = church_appreciates
-		}
-		NOT = {
 			has_character_modifier = spiritual_increase_piety
 		}
 	}
@@ -335,26 +321,36 @@ character_event = {
 		independent = no
 		liege = {
 			war = no
-			NOT = {
+			NOR = {
 				character = ROOT
-			}
-			NOT = {
 				has_character_modifier = lustful_chancellor_timer
 			}
 			job_chancellor = {
 				age = 16
-				NOT = {
+				NOR = {
 					age = 60
+					character = ROOT
+					trait = celibate
+					trait = eunuch
+					trait = monk
+					trait = homosexual
 				}
 				at_location = ROOT
 				is_female = no
-				trait = lustful
-				NOT = {
-					character = ROOT
+				OR = {
+					trait = lustful
+					has_focus = focus_seduction
 				}
-				NOT = {
-					trait = celibate
-				}
+			}
+		}
+		spouse = {
+			is_female = yes
+			prisoner = no
+			at_location = ROOT
+			NOR = {
+				age = 45
+				trait = celibate
+				trait = incapable
 			}
 		}
 	}
@@ -553,7 +549,12 @@ character_event = {
 	trigger = {
 		has_job_title = job_chancellor
 		trait = diligent
-		liege = { prisoner = no }
+		liege = {
+			prisoner = no
+			NOT = {
+				trait = incapable
+			}
+		}
 	}
 	
 	weight_multiplier = {
@@ -604,7 +605,10 @@ character_event = {
 					is_abroad = no
 					prisoner = no
 					is_alive = yes
-					NOT = { opinion = { who = PREV value = 0 } }
+					NOR = {
+						trait = incapable
+						opinion = { who = PREV value = 0 }
+					}
 				}
 			}
 		}
@@ -1121,13 +1125,9 @@ character_event = {
 			}
 			any_courtier = {
 				age = 16
-				NOT = {
+				NOR = {
 					religion_group = ROOT
-				}
-				NOT = {
 					has_character_flag = banished_religion
-				}
-				NOT = {
 					character = ROOT
 				}
 				prisoner = no
@@ -1139,8 +1139,25 @@ character_event = {
 		days = 1
 	}
 	
+	immediate = {
+		liege = {
+			random_courtier = {
+				limit = {
+					age = 16
+					NOR = {
+						religion_group = ROOT
+						has_character_flag = banished_religion
+						character = ROOT
+					}
+					prisoner = no
+				}
+				save_event_target_as = infidel
+			}
+		}
+	}
+	
 	option = {
-		name = "EVTOPTA75040" #Demand to liege that vassal should be burned at the stake
+		name = "EVTOPTA75040" #Demand that liege have vassal be burned at the stake
 		liege = {
 			character_event = {
 				id = 75041
@@ -1149,9 +1166,14 @@ character_event = {
 				tooltip = "EVTTOOLTIP75041"
 			}
 		}
+		event_target:infidel = {
+			custom_tooltip = {
+				text = EVTTOOLTIP75041a
+			}
+		}
 	}
 	option = {
-		name = "EVTOPTB75040" #Demand to liege that X should be exiled.
+		name = "EVTOPTB75040" #Demand that liege have X exiled.
 		liege = {
 			character_event = {
 				id = 75042
@@ -1159,6 +1181,9 @@ character_event = {
 				random = 2
 				tooltip = "EVTTOOLTIP75042"
 			}
+		}
+		event_target:infidel = {
+			text = EVTTOOLTIP75041a
 		}
 	}
 }
@@ -1173,28 +1198,13 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75041"
-		random_courtier = {
-			limit = {
-				age = 16
-				NOT = {
-					religion_group = ROOT
-				}
-				NOT = {
-					has_character_flag = banished_religion
-				}
-				NOT = {
-					character = ROOT
-				}
-				prisoner = no
-			}
+		event_target:infidel = {
 			any_courtier = {
 				limit = {
 					religion = PREV
 					prisoner = no
-					NOT = {
+					NOR = {
 						character = ROOT
-					}
-					NOT = {
 						character = PREV
 					}				
 				}
@@ -1226,17 +1236,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75041"
-		random_courtier = {
-			limit = {
-				age = 16
-				NOT = {
-					religion = ROOT
-				}
-				NOT = {
-					has_character_flag = banished_religion
-				}
-				prisoner = no
-			}
+		event_target:infidel = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1280,25 +1280,13 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75042"
-		random_courtier = {
-			limit = {
-				age = 16
-				NOT = {
-					religion = ROOT
-				}
-				NOT = {
-					has_character_flag = banished_religion
-				}
-				prisoner = no
-			}
+		event_target:infidel = {
 			banish = yes
 			any_courtier = {
 				limit = {
 					religion = PREV
-					NOT = {
+					NOR = {
 						character = ROOT
-					}
-					NOT = {
 						character = PREV
 					}
 					prisoner = no
@@ -1327,17 +1315,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75042"
-		random_courtier = {
-			limit = {
-				age = 16
-				NOT = {
-					religion = ROOT
-				}
-				NOT = {
-					has_character_flag = banished_religion
-				}
-				prisoner = no
-			}
+		event_target:infidel = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1462,8 +1440,21 @@ character_event = {
 		days = 1
 	}
 	
+	immediate = {
+		liege = {
+			random_courtier = {
+				limit = {
+					age = 16
+					is_heresy_of = ROOT
+					prisoner = no
+				}
+				save_event_target_as = heretic
+			}
+		}
+	}
+	
 	option = {
-		name = "EVTOPTA75050" #Demand to liege that vassal should be burned at the stake
+		name = "EVTOPTA75050" #Demand that liege have vassal burned at the stake
 		liege = {
 			character_event = {
 				id = 75051
@@ -1472,15 +1463,25 @@ character_event = {
 				tooltip = "EVTTOOLTIP75051"
 			}
 		}
+		event_target:heretic = {
+			custom_tooltip = {
+				text = EVTTOOLTIP75041a
+			}
+		}
 	}
 	option = {
-		name = "EVTOPTB75050" #Demand to liege that X should be exiled.
+		name = "EVTOPTB75050" #Demand that liege have X exiled.
 		liege = {
 			character_event = {
 				id = 75052
 				days = 1
 				random = 2
 				tooltip = "EVTTOOLTIP75052"
+			}
+		}
+		event_target:heretic = {
+			custom_tooltip = {
+				text = EVTTOOLTIP75041a
 			}
 		}
 	}
@@ -1496,19 +1497,12 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75051"
-		random_courtier = {
-			limit = {
-				age = 16
-				is_heresy_of = ROOT
-				prisoner = no
-			}
+		event_target:heretic = {
 			any_courtier = {
 				limit = {
 					religion = PREV
-					NOT = {
+					NOR = {
 						character = ROOT
-					}
-					NOT = {
 						character = PREV
 					}
 					prisoner = no
@@ -1541,12 +1535,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75051"
-		random_courtier = {
-			limit = {
-				age = 16
-				is_heresy_of = ROOT
-				prisoner = no
-			}
+		event_target:heretic = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1590,21 +1579,14 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75052"
-		random_courtier = {
-			limit = {
-				age = 16
-				is_heresy_of = ROOT
-				prisoner = no
-			}
+		event_target:heretic = {
 			banish = yes
 			any_courtier = {
 				limit = {
 					religion = PREV
 					prisoner = no
-					NOT = {
+					NOR = {
 						character = ROOT
-					}
-					NOT = {
 						character = PREV
 					}				
 				}
@@ -1632,12 +1614,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75052"
-		random_courtier = {
-			limit = {
-				age = 16
-				is_heresy_of = ROOT
-				prisoner = no
-			}
+		event_target:heretic = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -2274,17 +2251,15 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75096" #Deny
-		random_list = {
-			90 = {
-				FROM = {
+		FROM = {
+			random_list = {
+				90 = {
 					character_event = {
 						id = 75097
 						tooltip = "EVTTOOLTIP75097"
 					}
 				}
-			}
-			10 = {
-				FROM = {
+				10 = {
 					character_event = {
 						id = 75098
 						tooltip = "EVTTOOLTIP75098"
@@ -2434,10 +2409,8 @@ character_event = {
 			trait = brave
 			martial = 10
 		}
-		NOT = {
+		NOR = {
 			trait = slothful
-		}
-		NOT = {
 			trait = craven
 		}
 	}
