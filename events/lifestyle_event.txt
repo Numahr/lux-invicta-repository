@@ -21,13 +21,11 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		NOT = { trait = blinded }
 		in_command = no
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
+			trait = blinded
 			lifestyle_traits = 1
-		}
-		NOT = {
 			has_character_flag = LE_ST
 		}
 	}
@@ -151,8 +149,8 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
 		}
 		has_character_modifier = illumination
@@ -243,18 +241,12 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		in_command = no
 		NOT = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
-		}
-		NOT = {
 			has_character_flag = LE_ST
-		}
-		NOT = {
 			has_character_modifier = the_impaler
-		}
-		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -348,21 +340,15 @@ character_event = {
 	min_age = 25
 	capable_only = yes
 	prisoner = no
+	has_character_flag = LE_ST
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		has_character_flag = LE_ST
-		NOT = {
-			lifestyle_traits = 1
-		}
-		NOT = {
-			has_character_flag = red_rose
-		}
 		has_character_flag = stake_pole
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
+			lifestyle_traits = 1
+			has_character_flag = red_rose
 			has_character_modifier = the_impaler
-		}
-		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -435,16 +421,13 @@ character_event = {
 				days = 30
 				tooltip = "EVTTOOLTIP5023"
 			}
+			break = yes
 		}
-		if = {
-			limit = {
-				religion_group = muslim
-			}
-			character_event = { 
-				id = 5026
-				days = 30
-				tooltip = "EVTTOOLTIP5023" #Muslim Impaler
-			}
+		#muslim
+		character_event = { 
+			id = 5026
+			days = 30
+			tooltip = "EVTTOOLTIP5023" #Muslim Impaler
 		}
 	}
 }
@@ -458,21 +441,15 @@ character_event = {
 	min_age = 25
 	capable_only = yes
 	prisoner = no
+	has_character_flag = LE_ST
 
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		has_character_flag = LE_ST
-		NOT = {
-			lifestyle_traits = 1
-		}
-		NOT = {
-			has_character_flag = stake_pole
-		}
 		has_character_flag = red_rose
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
+			lifestyle_traits = 1
+			has_character_flag = stake_pole
 			has_character_modifier = the_impaler
-		}
-		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -581,18 +558,14 @@ character_event = {
 	min_age = 25
 	capable_only = yes
 	prisoner = no
+	has_character_flag = LE_ST
 
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		has_character_flag = LE_ST
-		NOT = {
-			lifestyle_traits = 1
-		}
 		has_character_flag = vlad_impaler
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
+			lifestyle_traits = 1
 			has_character_modifier = the_impaler
-		}
-		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -630,18 +603,14 @@ character_event = {
 	min_age = 25
 	capable_only = yes
 	prisoner = no
+	has_character_flag = LE_ST
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		has_character_flag = LE_ST
-		NOT = {
-			lifestyle_traits = 1
-		}
 		has_character_flag = rose_gardener
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
+			lifestyle_traits = 1
 			has_character_modifier = the_gardener
-		}
-		NOT = {
 			has_character_modifier = the_impaler
 		}
 	}
@@ -710,41 +679,48 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		in_command = no
 		has_lover = no
 		is_married = no
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			trait = homosexual
-		}
-		NOT = {
 			lifestyle_traits = 1
-		}
-		NOT = {
 			religion_group = muslim
+			has_character_flag = LE_ST
+			trait = in_hiding
 		}
 		any_courtier = {
 			has_lover = no
 			age = 25
-			NOT = {
-				age = 35
-			}
 			is_female = yes
-			NOT = {
+			NOR = {
+				age = 35
 				trait = celibate
-			}
-			NOT = {
 				trait = homosexual
+				opinion = { who = ROOT value = 20 }
 			}
+			reverse_opinion = { who = ROOT value = 20 }
 		}
-		NOT = {
-			has_character_flag = LE_ST
-		}
-		NOT = { trait = in_hiding }
 	}
 	
 	immediate = {
 		set_character_flag = LE_ST
+		random_courtier = {
+			limit = {
+				has_lover = no
+				age = 25
+				is_female = yes
+				NOR = {
+					age = 35
+					trait = celibate
+					trait = homosexual
+					opinion = { who = ROOT value = 20 }
+				}
+				reverse_opinion = { who = ROOT value = 20 }
+			}
+			save_event_target_as = target_courtier
+		}
 	}
 	
 	mean_time_to_happen = {
@@ -789,25 +765,7 @@ character_event = {
 					days = 14
 					tooltip = "EVTTOOLTIPA5031"
 				}
-				random_courtier = {
-					limit = {
-						age = 25
-						NOT = {
-							age = 35
-						}
-						is_female = yes
-						is_married = no
-						NOT = {
-							trait = celibate
-						}
-						NOT = {
-							trait = homosexual
-						}
-						NOT = {
-							opinion = { who = ROOT value = 20 }
-						}
-						reverse_opinion = { who = ROOT value = 20 }
-					}
+				event_target:target_courtier = {
 					set_character_flag = ignore_courtship
 					opinion = {
 						modifier = opinion_disgusted
@@ -822,25 +780,7 @@ character_event = {
 					days = 14
 					tooltip = "EVTTOOLTIP5032"
 				}
-				random_courtier = {
-					limit = {
-						age = 25
-						NOT = {
-							age = 35
-						}
-						is_female = yes
-						is_married = no
-						NOT = {
-							trait = celibate
-						}
-						NOT = {
-							trait = homosexual
-						}
-						NOT = {
-							opinion = { who = ROOT value = 20 }
-						}
-						reverse_opinion = { who = ROOT value = 20 }
-					}
+				event_target:target_courtier = {
 					set_character_flag = encourage_courtship
 					opinion = {
 						modifier = opinion_approves
@@ -866,25 +806,7 @@ character_event = {
 					days = 14
 					tooltip = "EVTTOOLTIPB5031"
 				}
-				random_courtier = {
-					limit = {
-						age = 25
-						NOT = {
-							age = 35
-						}
-						is_female = yes
-						is_married = no
-						NOT = {
-							trait = celibate
-						}
-						NOT = {
-							trait = homosexual
-						}
-						NOT = {
-							opinion = { who = ROOT value = 20 }
-						}
-						reverse_opinion = { who = ROOT value = 20 }
-					}
+				event_target:target_courtier = {
 					set_character_flag = ignore_courtship
 					opinion = {
 						modifier = opinion_disgusted
@@ -899,25 +821,7 @@ character_event = {
 					days = 14
 					tooltip = "EVTTOOLTIP5033"
 				}
-				random_courtier = {
-					limit = {
-						age = 25
-						NOT = {
-							age = 35
-						}
-						is_female = yes
-						is_married = no
-						NOT = {
-							trait = celibate
-						}
-						NOT = {
-							trait = homosexual
-						}
-						NOT = {
-							opinion = { who = ROOT value = 20 }
-						}
-						reverse_opinion = { who = ROOT value = 20 }
-					}
+				event_target:target_courtier = {
 					set_character_flag = encourage_courtship
 					opinion = {
 						modifier = opinion_approves
@@ -949,11 +853,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA5031" #Forget it
 		prestige = -15
-		random_courtier = {
-			limit = {
-				has_character_flag = ignore_courtship
-			}
-			clr_character_flag = ignore_courtship
+		event_target:target_courtier = {
 			opinion = {
 				modifier = opinion_disgusted
 				who = ROOT
@@ -965,10 +865,7 @@ character_event = {
 	option = {
 		name = "EVTOPTB5031" #Try something else
 		set_character_flag = never_giveup
-		random_courtier = {
-			limit = {
-				has_character_flag = ignore_courtship
-			}
+		event_target:target_courtier = {
 			opinion = {
 				modifier = opinion_disgusted
 				who = ROOT
@@ -992,10 +889,7 @@ character_event = {
 			name = "aspiring_poet"
 			duration = -1
 		}
-		random_courtier = {
-			limit = {
-				has_character_flag = encourage_courtship
-			}
+		event_target:target_courtier = {
 			opinion = {
 				modifier = opinion_approves
 				who = ROOT
@@ -1019,10 +913,7 @@ character_event = {
 			name = "aspiring_duelist"
 			duration = -1
 		}
-		random_courtier = {
-			limit = {
-				has_character_flag = encourage_courtship
-			}
+		event_target:target_courtier = {
 			opinion = {
 				modifier = opinion_approves
 				who = ROOT
@@ -1044,9 +935,9 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		in_command = no
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
 		}
 		OR = {
@@ -1103,9 +994,9 @@ character_event = {
 	prisoner = no
 
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		in_command = no
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
 		}
 		OR = {
@@ -1289,16 +1180,14 @@ character_event = {
 	capable_only = yes
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		in_command = no
-		NOT = { religion = jain }
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
+			religion = jain
 			lifestyle_traits = 1
-		}
-		NOT = {
 			has_character_flag = LE_ST
+			trait = in_hiding
 		}
-		NOT = { trait = in_hiding }
 	}
 	
 	immediate = {
@@ -1357,27 +1246,10 @@ character_event = {
 				}
 			}
 			50 = {
-				if = {
-					limit = {
-						NOT = {
-							religion_group = muslim
-						}
-					}
-					character_event = {
-						id = 5042
-						days = 14
-						tooltip = "EVTTOOLTIP5042"
-					}
-				}
-				if = {
-					limit = {
-						religion_group = muslim
-					}
-					character_event = {
-						id = 5047
-						days = 14
-						tooltip = "EVTTOOLTIP5042"
-					}
+				character_event = {
+					id = 5042
+					days = 14
+					tooltip = "EVTTOOLTIP5042"
 				}
 			}	
 		}
@@ -1437,7 +1309,20 @@ character_event = {
 #Hunting - Really fun!
 character_event = {
 	id = 5042
-	desc = "EVTDESC5042"
+	desc = {
+		text = "EVTDESC5042"
+		trigger = {
+			NOT = {
+				religion_group = muslim
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC5047
+		trigger = {
+			religion_group = muslim
+		}
+	}
 	picture = "GFX_evt_hunt"
 	
 	is_triggered_only = yes	
@@ -1452,21 +1337,22 @@ character_event = {
 }
 
 #Muslim Hunting - Really fun!
-character_event = {
-	id = 5047
-	desc = "EVTDESC5047"
-	picture = "GFX_evt_hunt"
-	
-	is_triggered_only = yes	
-	
-	option = {
-		name = "EVTOPTA5042"
-		add_character_modifier = {
-			name = aspiring_hunter
-			duration = -1
-		}
-	}
-}
+#combined with event 5042
+#character_event = {
+#	id = 5047
+#	desc = "EVTDESC5047"
+#	picture = "GFX_evt_hunt"
+#	
+#	is_triggered_only = yes	
+#	
+#	option = {
+#		name = "EVTOPTA5042"
+#		add_character_modifier = {
+#			name = aspiring_hunter
+#			duration = -1
+#		}
+#	}
+#}
 
 #Falconry - no fun
 character_event = {
@@ -1519,9 +1405,9 @@ character_event = {
 	capable_only = yes
 
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		in_command = no
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
 		}
 		has_character_modifier = aspiring_hunter
@@ -1577,9 +1463,9 @@ character_event = {
 	capable_only = yes
 
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		in_command = no
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			trait = falconer
 		}
 		has_character_modifier = aspiring_falconer
@@ -1638,15 +1524,13 @@ character_event = {
 	prisoner = no
 
 	trigger = {
-		NOT = { religion = jain }
 		in_command = no
-		NOT = {
-			has_character_flag = LE_ST
-		}
-		NOT = { trait = in_hiding }
 		NOR = {
 			trait = falconer
 			trait = poet
+			religion = jain
+			has_character_flag = LE_ST
+			trait = in_hiding
 		}
 	}
 	
@@ -2038,9 +1922,9 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		has_character_modifier = one_hedonist
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
 		}
 		OR = {
@@ -2108,7 +1992,10 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
+		NOR = {
+			has_dlc = "Way of Life"
+			lifestyle_traits = 1
+		}
 		has_character_modifier = one_celibate
 		OR = {
 			trait = sensual
@@ -2118,9 +2005,6 @@ character_event = {
 #			trait = phlegmblood
 #			trait = phlegmbbile
 #			trait = bbileybile
-		}
-		NOT = {
-			lifestyle_traits = 1
 		}
 	}
 
@@ -2190,9 +2074,9 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
 		has_character_modifier = sweet_temptation
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
 		}
 	}
@@ -2399,14 +2283,12 @@ character_event = {
 	religion_group = muslim
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
-		}
-		NOT = {
 			has_character_flag = LE_ST
+			trait = in_hiding
 		}
-		NOT = { trait = in_hiding }
 	}
 
 	immediate = {
@@ -2475,14 +2357,12 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	religion_group = muslim
+	has_character_flag = LE_ST
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		has_character_flag = LE_ST
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
-		}
-		NOT = {
 			has_character_modifier = muslim_poet
 		}
 		OR = {
@@ -2549,6 +2429,7 @@ character_event = {
 				}
 			}
 			add_trait = content
+			break = yes
 		}
 		if = {
 			limit = {
@@ -2580,14 +2461,12 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	religion_group = muslim
+	has_character_flag = LE_ST
 	
 	trigger = {
-		NOT = { has_dlc = "Way of Life" }
-		has_character_flag = LE_ST
-		NOT = {
+		NOR = {
+			has_dlc = "Way of Life"
 			lifestyle_traits = 1
-		}
-		NOT = {
 			has_character_modifier = muslim_hedonist
 		}
 		OR = {
@@ -2661,6 +2540,7 @@ character_event = {
 				}
 			}
 			add_trait = content
+			break = yes
 		}
 		if = {
 			limit = {
@@ -2739,28 +2619,14 @@ character_event = {
 	
 	trigger = {
 		in_command = no
-		NOT = {
+		NOR = {
 			has_character_modifier = aspiring_faqih
-		}
-		NOT = {
 			has_character_flag = LE_ST
-		}
-		NOT = {
 			has_character_flag = aspiring_faqih_flag
-		}
-		NOT = {
 			trait = scholar
-		}
-		NOT = {
 			trait = hafiz
-		}
-		NOT = {
 			trait = inbred
-		}
-		NOT = {
 			trait = slow
-		}
-		NOT = {
 			trait = infirm
 		}
 	}
