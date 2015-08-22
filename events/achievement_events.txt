@@ -649,17 +649,36 @@ character_event = {
 	
 	trigger = {
 		has_dlc = "Charlemagne"
-		NOT = {
-			has_global_flag = achievement_full_house
-		}
 		OR = {
-			father = {
-				ai = no
-				NOT = { has_character_flag = achievement_full_house }
+			AND = {
+				NOT = {
+					has_global_flag = achievement_full_house
+				}
+				OR = {
+					father = {
+						ai = no
+						NOT = { has_character_flag = achievement_full_house }
+					}
+					mother = { 
+						ai = no 
+						NOT = { has_character_flag = achievement_full_house }
+					}
+				}
 			}
-			mother = { 
-				ai = no 
-				NOT = { has_character_flag = achievement_full_house }
+			AND = {
+				NOT = {
+					has_global_flag = achievement_cheaper_dozen
+				}
+				OR = {
+					father = {
+						ai = no
+						NOT = { has_character_flag = achievement_cheaper_dozen }
+					}
+					mother = { 
+						ai = no 
+						NOT = { has_character_flag = achievement_cheaper_dozen }
+					}
+				}
 			}
 		}
 	}
@@ -670,8 +689,10 @@ character_event = {
 			limit = {
 				father = { 
 					ai = no
-					NOT = { has_character_flag = achievement_full_house }
-					NOT = { check_variable = { which = "bob_saget" value = 4.5 } }
+					NOR = {
+						has_character_flag = achievement_cheaper_dozen
+						check_variable = { which = "bob_saget" value = 11.5 }
+					}
 				}
 			}
 			father = {
@@ -682,8 +703,10 @@ character_event = {
 			limit = {
 				mother = { 
 					ai = no
-					NOT = { has_character_flag = achievement_full_house }
-					NOT = { check_variable = { which = "bob_saget" value = 4.5 } }
+					NOR = {
+						has_character_flag = achievement_cheaper_dozen
+						check_variable = { which = "bob_saget" value = 4.5 }
+					}
 				}
 			}
 			mother = {
@@ -693,6 +716,9 @@ character_event = {
 		
 		if = {
 			limit = {
+				NOT = {
+					has_global_flag = achievement_full_house
+				}
 				father = { 
 					ai = no
 					NOT = { has_character_flag = achievement_full_house }
@@ -711,12 +737,62 @@ character_event = {
 					id = chronicled_achievements.7
 				}
 			}
+			break = yes
 		}
 		if = {
 			limit = {
+				NOT = {
+					has_global_flag = achievement_cheaper_dozen
+				}
+				father = { 
+					ai = no
+					NOT = { has_character_flag = achievement_cheaper_dozen }
+					check_variable = { which = "bob_saget" value = 11.5 }
+				}
+			}
+			father = {
+				set_character_flag = achievement_full_house
+				set_global_flag = achievement_full_house
+				chronicle = {
+					entry = CHRONICLE_ACHIEVEMENT_CHEAPER_DOZEN
+					portrait = [This.GetID]
+					picture = GFX_evt_birth
+				}
+				narrative_event = {
+					id = chronicled_achievements.160
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				has_global_flag = achievement_full_house
 				mother = { 
 					ai = no
 					NOT = { has_character_flag = achievement_full_house }
+					check_variable = { which = "bob_saget" value = 4.5 }
+				}
+			}
+			mother = {
+				set_character_flag = achievement_full_house
+				set_global_flag = achievement_full_house
+				chronicle = {
+					entry = CHRONICLE_ACHIEVEMENT_CHEAPER_DOZEN
+					portrait = [This.GetID]
+					picture = GFX_evt_birth
+				}
+				narrative_event = {
+					id = chronicled_achievements.160
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				has_global_flag = achievement_cheaper_dozen
+				mother = { 
+					ai = no
+					NOT = { has_character_flag = achievement_cheaper_dozen }
 					check_variable = { which = "bob_saget" value = 4.5 }
 				}
 			}
@@ -9041,6 +9117,70 @@ narrative_event = {
 	id = chronicled_achievements.159
 	title = ACHIEVEMENT
 	desc = EVTDESCca.159
+	picture = GFX_evt_hunt
+	border = GFX_event_narrative_frame_war
+	
+	is_triggered_only = yes
+	hide_from = yes
+	major = yes
+	major_trigger = {
+		ai = no
+	}
+	
+	option = {
+		name = EVTOPTAca.1
+		trigger = {
+			character = ROOT
+		}
+	}
+	option = {
+		name = EVTOPTBca.1
+		trigger = {
+			NOT = {
+				character = ROOT
+			}
+		}
+	}
+	option = {
+		name = EVTOPTCca.1
+		trigger = {
+			NOT = { character = ROOT }
+			multiplayer = yes
+		}
+		custom_tooltip = {
+			text = ca.100.tooltip
+			hidden_tooltip = {
+				ROOT = {
+					letter_event = {
+						id = chronicled_achievements.100
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = EVTOPTDca.1
+		trigger = {
+			NOT = { character = ROOT }
+			multiplayer = yes
+		}
+		custom_tooltip = {
+			text = ca.101.tooltip
+			hidden_tooltip = {
+				ROOT = {
+					letter_event = {
+						id = chronicled_achievements.101
+					}
+				}
+			}
+		}
+	}
+}
+
+narrative_event = {
+	id = chronicled_achievements.160
+	title = ACHIEVEMENT
+	desc = EVTDESCca.160
 	picture = GFX_evt_hunt
 	border = GFX_event_narrative_frame_war
 	
