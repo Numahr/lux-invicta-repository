@@ -185,26 +185,69 @@ character_event = {
 		OR = {
 			AND = {
 				age = 15
-				NOT = {
+				NOR = {
 					age = 35
+					has_character_flag = murdered_by_guardian
 				}
 				any_courtier = {
 					is_abroad = no
 					in_command = no
 					prisoner = no
 					age = 14
-					NOT = { trait = incapable }
-					NOT = { character = ROOT }
-					opinion = { who = ROOT value = 50 }
-					NOT = {
+					NOR = {
+						trait = incapable
+						character = ROOT
 						is_liege_of = ROOT
 					}
+					opinion = { who = ROOT value = 50 }
 				}
+			}
+			has_character_flag = murdered_by_guardian
+		}
+	}
+	
+	immediate = {
+		if = {
+			limit = {
 				NOT = {
 					has_character_flag = murdered_by_guardian
 				}
 			}
-			has_character_flag = murdered_by_guardian
+			random_courtier = {
+				limit = {
+					is_abroad = no
+					in_command = no
+					prisoner = no
+					age = 14
+					NOR = {
+						trait = incapable
+						character = ROOT
+						is_liege_of = ROOT
+					}
+					opinion = { who = ROOT value = 50 }
+				}
+				save_event_target_as = suspects_murder
+				random_courtier = {
+					limit = {
+						NOR = {
+							character = PREV
+							character = ROOT
+							trait = incapable
+						}
+						intrigue = 8
+						prisoner = no
+						age = 16
+					}
+					save_event_target_as = murder_suspect
+				}
+			}
+			break = yes
+		}
+		random_courtier = {
+			limit = {
+				has_character_flag = murdered_fosterling
+			}
+			save_event_target_as = murder_suspect
 		}
 	}
 	
@@ -219,19 +262,7 @@ character_event = {
 				has_character_flag = murdered_by_guardian
 			}
 		}
-		random_courtier = {
-			limit = {
-				is_abroad = no
-				in_command = no
-				prisoner = no
-				age = 14
-				NOT = { trait = incapable }
-				NOT = { character = ROOT }
-				NOT = {
-					is_liege_of = ROOT
-				}
-				opinion = { who = ROOT value = 50 }
-			}
+		event_target:suspects_murder = {
 			character_event = {
 				id = 24506
 				tooltip = EVTTOOLTIP24506
@@ -289,12 +320,7 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA24506 #Keep my grudge
-		trigger = {
-			NOT = {
-				has_character_flag = guardian_murdered_child
-			}
-		}
-		random_courtier = {
+		event_target:murder_suspect = {
 			limit = {
 				intrigue = 8
 				NOT = { character = ROOT }
@@ -309,122 +335,21 @@ character_event = {
 				years = 10
 			}
 		}
-		any_courtier = {
-			limit = {
-				has_character_flag = murder_suspect
-			}
-			clr_character_flag = murder_suspect
-		}
 	}
 	
 	option = {
 		name = EVTOPTB24506
 		trigger = {
 			is_ruler = yes
-			NOT = {
-				has_character_flag = guardian_murdered_child
-			}
 		}
-		random_courtier = {
-			limit = {
-				intrigue = 8
-				NOT = { character = ROOT }
-				NOT = { character = FROM }
-				prisoner = no
-				age = 16
-				NOT = { trait = incapable }
-			}
+		event_target:murder_suspect = {
 			imprison = ROOT
 		}
-		any_courtier = {
-			limit = {
-				has_character_flag = murder_suspect
-			}
-			clr_character_flag = murder_suspect
-		}
 	}
 	option = {
 		name = EVTOPTC24506
 		trigger = {
 			is_ruler = no
-			NOT = {
-				has_character_flag = guardian_murdered_child
-			}
-		}
-		random_courtier = {
-			limit = {
-				intrigue = 8
-				NOT = { character = ROOT }
-				NOT = { character = FROM }
-				prisoner = no
-				age = 16
-				NOT = { trait = incapable }
-			}
-			set_character_flag = murder_suspect
-		}
-		liege = {
-			character_event = {
-				id = 24507
-				tooltip = EVTTOOLTIP24507
-			}
-		}
-	}
-	option = {
-		name = EVTOPTA24506 #Keep my grudge
-		trigger = {
-			has_character_flag = guardian_murdered_child
-		}
-		FROM = {
-			any_courtier = {
-				limit = {
-					has_character_flag = murdered_fosterling
-				}
-				reverse_opinion = {
-					modifier = suspect_of_murder
-					who = ROOT
-					years = 10
-				}
-			}
-		}
-	}
-	
-	option = {
-		name = EVTOPTB24506
-		trigger = {
-			is_ruler = yes
-			has_character_flag = guardian_murdered_child
-		}
-		FROM = {
-			any_courtier = {
-				limit = {
-					has_character_flag = murdered_fosterling
-				}
-				reverse_opinion = {
-					modifier = suspect_of_murder
-					who = ROOT
-					years = 10
-				}
-			}
-		}
-	}
-	option = {
-		name = EVTOPTC24506
-		trigger = {
-			is_ruler = no
-			has_character_flag = guardian_murdered_child
-		}
-		FROM = {
-			any_courtier = {
-				limit = {
-					has_character_flag = murdered_fosterling
-				}
-				reverse_opinion = {
-					modifier = suspect_of_murder
-					who = ROOT
-					years = 10
-				}
-				set_character_flag = murder_suspect
-			}
 		}
 		liege = {
 			character_event = {
@@ -445,18 +370,6 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA24507 #Ignore
-		random_courtier = {
-			limit = {
-				has_character_flag = murder_suspect
-			}
-			clr_character_flag = murder_suspect
-		}
-		any_courtier = {
-			limit = {
-				has_character_flag = murder_suspect
-			}
-			clr_character_flag = murder_suspect
-		}
 		FROM = {
 			opinion = {
 				modifier = opinion_betrayed
@@ -467,19 +380,8 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB24507 #Imprison
-		random_courtier = {
-			limit = {
-				has_character_flag = murder_suspect
-			}
+		event_target:murder_suspect = {
 			imprison = ROOT
-			
-			clr_character_flag = murder_suspect
-		}
-		any_courtier = {
-			limit = {
-				has_character_flag = murder_suspect
-			}
-			clr_character_flag = murder_suspect
 		}
 		FROM = {
 			opinion = {
@@ -513,19 +415,17 @@ character_event = {
 			stewardship = 15
 		}
 		liege = {
-			NOT = {
+			NOR = {
 				character = ROOT
+				spouse = {
+					character = ROOT
+				}
+				trait = in_hiding
 			}
 			OR = {
 				tier = duke
 				tier = count
 			}
-			NOT = {
-				spouse = {
-					character = ROOT
-				}
-			}
-			NOT = { trait = in_hiding }
 		}
 	}
 	
