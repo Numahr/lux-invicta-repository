@@ -20,13 +20,7 @@ obj_become_chancellor = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		OR = {
-			is_female = no
-			AND = { #Add "feminist = yes" religions
-				religion = cathar 
-				liege = { religion = cathar } 
-			}
-		}
+		can_hold_title = job_chancellor
 		NOT = { trait = incapable }
 	}
 	chance = {
@@ -108,9 +102,11 @@ obj_become_chancellor = {
 			}
 			AND = { 
 				is_female = yes
-				OR = {
-					NOT = { religion = cathar }
-					NOT = { liege = { religion = cathar } }
+				NAND = {
+					female_chancellor_trigger = yes
+					liege = {
+						religion = ROOT
+					}
 				}
 			}
 			trait = incapable
@@ -146,48 +142,12 @@ obj_become_marshal = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		OR = {
-			is_female = no
-			AND = { #Add "feminist = yes" religions
-				religion = cathar 
-				liege = { religion = cathar } 
-			}
-			AND = {
-				top_liege = {
-					has_character_modifier = female_marshals_allowed
-				}
-				martial = 20
-				OR = {
-					trait = misguided_warrior
-					trait = tough_soldier
-					trait = skilled_tactician
-					trait = brilliant_strategist
-				}
-				is_pregnant = no
-			}
-			AND = {
-				is_female = yes
-				top_liege = {
-					has_character_modifier = female_marshals_accepted
-				}
-				martial = 12
-				OR = {
-					trait = misguided_warrior
-					trait = tough_soldier
-					trait = skilled_tactician
-					trait = brilliant_strategist
-				}
-				is_pregnant = no
-			}
-			AND = {
-				is_female = yes
-				top_liege = {
-					has_character_modifier = female_marshals_approved
-				}
-				is_pregnant = no
-			}
+		can_hold_title = job_marshal
+		NOR = {
+			trait = incapable
+			trait = in_hiding
+			has_character_flag = guru
 		}
-		NOT = { trait = incapable }
 		martial = 8
 	}
 
@@ -289,7 +249,6 @@ obj_become_marshal = {
 	}
 }
 
-
 obj_become_treasurer = {
 	type = character
 	
@@ -301,13 +260,7 @@ obj_become_treasurer = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		OR = {
-			is_female = no
-			AND = { #Add "feminist = yes" religions
-				religion = cathar
-				liege = { religion = cathar }
-			}
-		}
+		can_hold_title = job_treasurer
 		NOT = { trait = incapable }
 	}
 	chance = {
@@ -427,15 +380,7 @@ obj_become_spymaster = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
-		OR = {
-			is_female = no
-			liege = { mother = { character = ROOT } }
-			liege = { spouse = { character = ROOT } }
-			AND = { #Add "feminist = yes" religions
-				religion = cathar 
-				liege = { religion = cathar }
-			}
-		}
+		can_hold_title = job_spymaster
 		NOT = { trait = incapable }
 	}
 	chance = {
@@ -523,14 +468,8 @@ obj_become_spymaster = {
 				is_councillor = yes
 				NOT = { has_job_title = job_spymaster }
 			}
-			AND = { 
-				is_female = yes
-				NOT = { liege = { mother = { character = ROOT } } }
-				NOT = { liege = { spouse = { character = ROOT } } }
-				OR = {
-					NOT = { religion = cathar }
-					NOT = { liege = { religion = cathar } }
-				}
+			NOT = {
+				can_hold_title = job_spymaster
 			}
 			trait = incapable
 		}
