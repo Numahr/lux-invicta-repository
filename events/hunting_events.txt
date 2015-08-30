@@ -1461,7 +1461,52 @@ letter_event = {
 	}	
 
 	option = {
-		name = "EVTOPTA36080"
+		name = {
+			text = "EVTOPTA36080whitestag"
+			trigger = {
+				capital_scope = {
+					OR = {
+						region = world_europe_south
+						region = world_europe_west
+						region = world_asia_minor
+					}
+				}
+			}
+		}
+		name = {
+			text = "EVTOPTA36080whitebear"
+			trigger = {
+				capital_scope = {
+					OR = {
+						region = world_europe_north
+						region = world_europe_east
+						region = world_steppe
+					}
+				}
+			}
+		}
+		name = {
+			text = "EVTOPTA36080whitetiger"
+			trigger = {
+				capital_scope = {
+					OR = {
+						region = world_india
+						region = world_persia
+					}
+				}
+			}
+		}
+		name = {
+			text = "EVTOPTA36080whitelion"
+			trigger = {
+				capital_scope = {
+					OR = {
+						region = world_middle_east
+						region = world_africa
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -1560,10 +1605,39 @@ character_event = {
 			flag = hunt_begin
 			days = 3
 		}
+		any_vassal = {
+			prisoner = no
+			is_adult = yes
+			NOT = {
+				trait = incapable
+			}
+			war = no
+			in_command = no
+			OR = {
+				is_abroad = no
+				at_location = ROOT
+			}
+		}
 	}
 	
 	immediate = {
 		set_character_flag = hunt_event_happened
+		random_vassal = {
+			limit = {
+				prisoner = no
+				is_adult = yes
+				NOT = {
+					trait = incapable
+				}
+				war = no
+				in_command = no
+				OR = {
+					is_abroad = no
+					at_location = ROOT
+				}
+			}
+			save_event_target_as = target_vassal
+		}
 	}	
 
 	mean_time_to_happen = {
@@ -1598,7 +1672,7 @@ character_event = {
 				trait = content
 			}
 		}
-		random_vassal = {
+		event_target:target_vassal = {
 			opinion = {
 				modifier = opinion_irritated
 				who = ROOT
@@ -1616,7 +1690,7 @@ character_event = {
 			}
 		}
 		treasury = -10
-		random_vassal = {
+		event_target:target_vassal = {
 			opinion = {
 				modifier = opinion_happy
 				who = ROOT
@@ -1632,12 +1706,7 @@ character_event = {
 				trait = greedy
 				trait = content
 			}
-		}
-		random_vassal = {
-			limit = {
-				war = no
-				prisoner = no
-				is_adult = yes
+			event_target:target_vassal = {
 				OR = {
 					trait = diligent
 					trait = ambitious
@@ -1646,6 +1715,8 @@ character_event = {
 					}
 				}
 			}
+		}
+		event_target:target_vassal = {
 			opinion = {
 				modifier = content_neg
 				who = ROOT
