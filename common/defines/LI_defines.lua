@@ -449,3 +449,4 @@ NDefines.NRulerDesigner.COST_AMBITION_OPINION = -0.25
 NDefines.NLearningScenario.START_CHARACTER = 710
 NDefines.NLearningScenario.ANGRY_VASSAL = 712
 NDefines.NLearningScenario.REVOLT_PROVINCE = 163
+NDefines.NDiplomacy.DEMAND_RELIGIOUS_CONVERSION_INTERACTION_ENABLED = 0
