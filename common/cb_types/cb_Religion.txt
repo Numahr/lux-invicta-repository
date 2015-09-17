@@ -19,7 +19,7 @@
 # can_use_gui: If otherwise valid, the CB is listed in the Diplo View, but you can't declare war unless 'can_use_gui' is also valid (also shows a trigger tooltip.)
 #
 
-# Holy War
+# Holy War - Proselyte against other religious group 
 # availability: positive piety, EITHER zealous/spiritual/ambitious/dogmatic/scripture spouter, NOT cynical/tolerant/content/patrician
 religious = {
 	name = CB_NAME_RELIGIOUS
@@ -32,6 +32,7 @@ religious = {
 
 	can_use = {
 		ROOT = {
+			proselyte_religion_trigger = yes
 			NOR = {
 				has_character_flag = do_not_disturb				
 				# These religions use Total War
@@ -60,27 +61,10 @@ religious = {
 				is_patrician = no
 				is_feudal = yes
 			}
-			OR = {
-				NOT = { religion_group = FROM }
-				is_heresy_of = FROM
-				is_parent_religion = FROM
-				AND = {
-					religion_group = muslim
-					NOT = { religion = FROM }
-					FROM = {
-						NOT = { 
-							any_current_enemy = {
-								NOT = {
-									religion_group = muslim
-								}
-							}
-						}
-					}
-				}
-			}
+			NOT = { religion_group = FROM }
 			top_liege = {
 				religion_group = ROOT
-				NOT = { religion = FROM }
+#				NOT = { religion = FROM }
 				OR = {
 					religion = ROOT
 					AND = {
@@ -93,7 +77,7 @@ religious = {
 	}
 	can_use_title = {
 		ROOT = {			
-			piety = 250 #v11 edit
+			piety = 400 #v11 edit
 			# prestige = 200 #v11 edit		
 		}
 		# The attacker needs at least one county in the target kingdom, or a border, or be only two sea zones away from one of your counties
@@ -152,23 +136,15 @@ religious = {
 	}
 	on_add = {
 		ROOT = {	
-			piety = -25
-			prestige = -25
-			scaled_wealth = -0.1
+			piety = -250
+			prestige = -100
+			scaled_wealth = -0.3
 		}
 	}
 	is_valid = {
 		ROOT = {
 			NOT = { same_realm = FROM }
-			OR = {
-				NOT = { religion_group = FROM }
-				is_heresy_of = FROM
-				is_parent_religion = FROM
-				AND = {
-					religion_group = muslim
-					NOT = { religion = FROM }
-				}
-			}
+			NOT = { religion_group = FROM }
 			top_liege = {
 				NOT = { religion = FROM }
 			}
@@ -178,7 +154,7 @@ religious = {
 	on_success = {
 		any_attacker = {
 			limit = { character = ROOT }
-			participation_scaled_piety = 100
+			participation_scaled_piety = 150
 			participation_scaled_prestige = 50
 			if = {
 				limit = {
@@ -227,7 +203,7 @@ religious = {
 						vassalize_or_take_under_title = {
 							title = PREV
 							enemy = FROM
-							same_religion = yes # Only vassalize rulers of my religion
+#							same_religion = yes # Only vassalize rulers of my religion
 							is_religious = yes
 							type = holy_war
 						}
