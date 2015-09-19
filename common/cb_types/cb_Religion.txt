@@ -35,7 +35,7 @@ religious_proselyte1 = {
 			proselyte_religion_trigger = yes
 			NOR = {
 				has_character_flag = do_not_disturb				
-				total_war_religion_trigger = yes # thos should use total war
+				total_war_religion_trigger = yes # those should use total war
 				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
 				pays_tribute_to = FROM
 				any_liege = {
@@ -675,359 +675,6 @@ religious_proselyte2 = {
 	}
 }
 
-# Holy War - Ancestral 
-# availability: positive piety, EITHER zealous/spiritual/ambitious/dogmatic, NOT tolerant/content
-religious_ancestral = {
-	name = CB_NAME_RELIGIOUS_ANCESTRAL
-	war_name = WAR_NAME_RELIGIOUS_ANCESTRAL
-	sprite = 9
-	truce_days = 3650
-	is_permanent = yes
-	is_holy_war = yes
-	check_de_jure_tier = DUKE # this scans all dejure duchies for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
-	
-	can_use = {
-		ROOT = {
-			ancestral_religion_trigger = yes
-			NOR = {
-				has_character_flag = do_not_disturb				
-				total_war_religion_trigger = yes # those should use total war
-				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
-				pays_tribute_to = FROM
-				any_liege = {
-					OR = {
-						pays_tribute_to = FROM
-						FROM = {
-							pays_tribute_to = PREV
-						}
-					}
-				}
-				same_realm = FROM
-			}
-			is_merchant_republic = no
-			is_nomadic = no
-			mercenary = no
-			OR = {
-				is_patrician = no
-				is_feudal = yes
-			}
-			NOT = { religion = FROM }
-			top_liege = {
-				religion_group = ROOT
-				NOT = { religion = FROM }
-				OR = {
-					religion = ROOT
-					AND = {
-						is_heretic = no
-						ROOT = { is_heretic = no }
-					}
-				}
-			}
-		}
-	}
-
-	can_use_gui = {
-		ROOT = {			
-			piety = 500 
-			# prestige = 200 
-			OR = {
-				trait = zealous
-				trait = ambitious
-				trait = spiritual
-				trait = dogmatic
-				trait = bible				
-			}
-			NOR = {
-				trait = tolerant_ruler
-				trait = content
-			}
-		}
-	}
-	
-	can_use_title = {
-		# The attacker needs at least one county in the target kingdom, or a border, or be only two sea zones away from one of your counties
-		any_direct_de_jure_vassal_title = {
-			OR = {
-				holder_scope = {
-					OR = {
-						character = ROOT
-						is_liege_or_above = ROOT
-					}
-				}
-				location = {
-					any_neighbor_province = {
-						OR = {
-							AND = {
-								has_owner = yes
-								owner = {
-									OR = {
-										character = ROOT
-										is_liege_or_above = ROOT
-									}
-								}
-							}
-							AND = {
-								is_land = no
-								any_neighbor_province = {
-									OR = {
-										AND = {
-											has_owner = yes
-											owner = {
-												OR = {
-													character = ROOT
-													is_liege_or_above = ROOT
-												}
-											}
-										}
-										AND = {
-											is_land = no
-											any_neighbor_province = {
-												owner = {
-													OR = {
-														character = ROOT
-														is_liege_or_above = ROOT
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	on_add = {
-		ROOT = {	
-			piety = -100
-			prestige = -25
-		}
-	}
-	
-	is_valid = {
-		ROOT = {
-			NOT = { same_realm = FROM }
-			NOT = { religion = FROM }
-			top_liege = {
-				NOT = { religion = FROM }
-			}
-		}
-	}
-	
-	on_success = {
-		any_attacker = {
-			limit = { character = ROOT }
-			participation_scaled_piety = 100
-			if = {
-				limit = {
-					uses_decadence = yes
-				}
-				participation_scaled_decadence = -10
-			}
-		}
-		any_attacker = {
-			limit = { NOT = { character = ROOT } }
-			hidden_tooltip = { 
-				participation_scaled_piety = 100
-				if = {
-					limit = {
-						uses_decadence = yes
-					}
-					participation_scaled_decadence = -10
-				}
-			}
-		}
-		
-		ROOT = {
-			piety = 100
-			religion_authority = {
-				modifier = won_holy_war
-				years = 20
-			}
-		}
-		FROM = {
-			religion_authority = {
-				modifier = lost_holy_war
-				years = 20
-			}
-			piety = -50
-			prestige = -100
-			if = {
-				limit = {
-					controls_religion = no
-					is_reformed_religion = ROOT
-					is_heresy_of = ROOT
-					ROOT = { 
-						OR = {
-							is_reformed_religion = FROM
-							is_heresy_of = FROM
-						}
-					}
-				}
-				religion = ROOT # If reform or heresy relationship, attacker converts defender upon victory
-				trait = cynical
-			}
-
-			custom_tooltip = {
-				text = religious_ancestral_cb_succ_tip
-			}
-
-			hidden_tooltip = {
-				set_defacto_liege = ROOT
-				
-				any_demesne_title = {
-					limit = {
-						higher_tier_than = ROOT
-					}
-					ROOT = { grant_title = { target = PREV type = invasion } }
-					add_pressed_claim = PREV
-					set_character_flag = had_higher_titles
-				}
-				
-				if = {
-					limit = {
-						has_character_flag = had_higher_titles
-					}
-					set_defacto_liege = ROOT
-					clr_character_flag = had_higher_titles
-					break = yes
-				}
-				
-				any_demesne_title = {
-					limit = {
-						tier = ROOT
-					}
-					ROOT = { grant_title = { target = PREV type = invasion } }
-					add_pressed_claim = PREV
-				}
-				set_defacto_liege = ROOT
-			}
-		}
-	}
-	
-	on_fail = {
-		FROM = {
-			piety = 50
-		}
-		any_defender = {
-			limit = { character = FROM }
-			participation_scaled_prestige = 50
-		}
-		any_defender = {
-			limit = { NOT = { character = FROM } }
-			hidden_tooltip = { participation_scaled_prestige = 50 }
-		}
-		ROOT = {
-			piety = -100
-		}
-	}
-
-	on_reverse_demand = {
-		ROOT = {
-			transfer_scaled_wealth = {
-				to = FROM
-				value = 1
-			}
-			piety = -100
-			prestige = -50
-			wealth = -50
-		}
-		FROM = {
-		wealth = 50
-		}
-		any_defender = {
-			limit = { character = FROM }
-			participation_scaled_piety = 100
-			participation_scaled_prestige = 50
-			if = {
-				limit = {
-					uses_decadence = yes
-				}
-				participation_scaled_decadence = -5
-			}
-		}
-		any_defender = {
-			limit = { NOT = { character = FROM } }
-			hidden_tooltip = { 
-				participation_scaled_piety = 100
-				participation_scaled_prestige = 50
-				if = {
-					limit = {
-						uses_decadence = yes
-					}
-					participation_scaled_decadence = -5
-				}
-			}
-		}
-		FROM = { 
-			religion_authority = {
-				modifier = won_holy_war
-				years = 20
-			}		
-		}
-		ROOT = { 
-			religion_authority = {
-				modifier = lost_holy_war
-				years = 20
-			}
-		}
-	}
-	
-	attacker_ai_victory_worth = {
-		factor = -1 # always accept
-	}
-	
-	attacker_ai_defeat_worth = {
-		factor = 100
-	}
-
-	defender_ai_victory_worth = {
-		factor = -1 # always accept
-	}
-	
-	defender_ai_defeat_worth = {
-		factor = 100
-	}
-	
-	ai_will_do = { 
-		factor = 1
-		modifier = {
-			factor = 0.5
-			ROOT = { # Not as often if not any of these. 
-				OR = { 
-					trait = cynical
-					NOT = { piety = 700 }
-				}
-			}
-		}
-		modifier = {
-			factor = 2
-			ROOT = { # Religion focused characters will be even more likely
-				OR = {
-					piety = 1000
-					trait = zealous
-				}
-			}	
-		}
-		modifier = {
-			factor = 3
-			OR = { # More likely when targeting an "close enemy" religion
-				is_reformed_religion = FROM
-				is_heresy_of = FROM
-				FROM = { 
-					OR = {
-						is_reformed_religion = ROOT
-						is_heresy_of = ROOT
-					}
-				}
-			}
-		}
-	}
-}
-
 # Holy War - Bastion of the Faith - same religious group
 # availability: positive piety, EITHER zealous/spiritual/ambitious/dogmatic, NOT tolerant/content
 religious_bastion1 = {
@@ -1066,6 +713,10 @@ religious_bastion1 = {
 			}
 			religion_group = FROM
 			NOT = { religion = FROM }
+			OR = {
+				is_heresy_of = FROM
+				is_parent_religion = FROM
+			}
 			top_liege = {
 				religion_group = ROOT
 				NOT = { religion = FROM }
@@ -1714,6 +1365,359 @@ religious_bastion2 = {
 			ROOT = { # Religion focused characters will be even more likely
 				OR = {
 					piety = 500
+					trait = zealous
+				}
+			}	
+		}
+		modifier = {
+			factor = 3
+			OR = { # More likely when targeting an "close enemy" religion
+				is_reformed_religion = FROM
+				is_heresy_of = FROM
+				FROM = { 
+					OR = {
+						is_reformed_religion = ROOT
+						is_heresy_of = ROOT
+					}
+				}
+			}
+		}
+	}
+}
+
+# Holy War - Ancestral 
+# availability: positive piety, EITHER zealous/spiritual/ambitious/dogmatic, NOT tolerant/content
+religious_ancestral = {
+	name = CB_NAME_RELIGIOUS_ANCESTRAL
+	war_name = WAR_NAME_RELIGIOUS_ANCESTRAL
+	sprite = 9
+	truce_days = 3650
+	is_permanent = yes
+	is_holy_war = yes
+	check_de_jure_tier = DUKE # this scans all dejure duchies for the counties which are held by or vassals(or below) of selected character. Only valid if is_permanent = yes
+	
+	can_use = {
+		ROOT = {
+			ancestral_religion_trigger = yes
+			NOR = {
+				has_character_flag = do_not_disturb				
+				total_war_religion_trigger = yes # those should use total war
+				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
+				same_realm = FROM
+			}
+			is_merchant_republic = no
+			is_nomadic = no
+			mercenary = no
+			OR = {
+				is_patrician = no
+				is_feudal = yes
+			}
+			NOT = { religion_group = FROM }
+			top_liege = {
+				religion_group = ROOT
+				NOT = { religion = FROM }
+				OR = {
+					religion = ROOT
+					AND = {
+						is_heretic = no
+						ROOT = { is_heretic = no }
+					}
+				}
+			}
+		}
+	}
+
+	can_use_gui = {
+		ROOT = {			
+			piety = 500 
+			# prestige = 200 
+			OR = {
+				trait = zealous
+				trait = ambitious
+				trait = spiritual
+				trait = dogmatic
+				trait = bible				
+			}
+			NOR = {
+				trait = tolerant_ruler
+				trait = content
+			}
+		}
+	}
+	
+	can_use_title = {
+		# The attacker needs at least one county in the target kingdom, or a border, or be only two sea zones away from one of your counties
+		any_direct_de_jure_vassal_title = {
+			OR = {
+				holder_scope = {
+					OR = {
+						character = ROOT
+						is_liege_or_above = ROOT
+					}
+				}
+				location = {
+					any_neighbor_province = {
+						OR = {
+							AND = {
+								has_owner = yes
+								owner = {
+									OR = {
+										character = ROOT
+										is_liege_or_above = ROOT
+									}
+								}
+							}
+							AND = {
+								is_land = no
+								any_neighbor_province = {
+									OR = {
+										AND = {
+											has_owner = yes
+											owner = {
+												OR = {
+													character = ROOT
+													is_liege_or_above = ROOT
+												}
+											}
+										}
+										AND = {
+											is_land = no
+											any_neighbor_province = {
+												owner = {
+													OR = {
+														character = ROOT
+														is_liege_or_above = ROOT
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	on_add = {
+		ROOT = {	
+			piety = -100
+			prestige = -25
+		}
+	}
+	
+	is_valid = {
+		ROOT = {
+			NOT = { same_realm = FROM }
+			NOT = { religion = FROM }
+			top_liege = {
+				NOT = { religion = FROM }
+			}
+		}
+	}
+	
+	on_success = {
+		any_attacker = {
+			limit = { character = ROOT }
+			participation_scaled_piety = 100
+			if = {
+				limit = {
+					uses_decadence = yes
+				}
+				participation_scaled_decadence = -10
+			}
+		}
+		any_attacker = {
+			limit = { NOT = { character = ROOT } }
+			hidden_tooltip = { 
+				participation_scaled_piety = 100
+				if = {
+					limit = {
+						uses_decadence = yes
+					}
+					participation_scaled_decadence = -10
+				}
+			}
+		}
+		
+		ROOT = {
+			piety = 100
+			religion_authority = {
+				modifier = won_holy_war
+				years = 20
+			}
+		}
+		FROM = {
+			religion_authority = {
+				modifier = lost_holy_war
+				years = 20
+			}
+			piety = -50
+			prestige = -100
+			if = {
+				limit = {
+					controls_religion = no
+					is_reformed_religion = ROOT
+					is_heresy_of = ROOT
+					ROOT = { 
+						OR = {
+							is_reformed_religion = FROM
+							is_heresy_of = FROM
+						}
+					}
+				}
+				religion = ROOT # If reform or heresy relationship, attacker converts defender upon victory
+				trait = cynical
+			}
+
+			custom_tooltip = {
+				text = religious_ancestral_cb_succ_tip
+			}
+
+			hidden_tooltip = {
+				set_defacto_liege = ROOT
+				
+				any_demesne_title = {
+					limit = {
+						higher_tier_than = ROOT
+					}
+					ROOT = { grant_title = { target = PREV type = invasion } }
+					add_pressed_claim = PREV
+					set_character_flag = had_higher_titles
+				}
+				
+				if = {
+					limit = {
+						has_character_flag = had_higher_titles
+					}
+					set_defacto_liege = ROOT
+					clr_character_flag = had_higher_titles
+					break = yes
+				}
+				
+				any_demesne_title = {
+					limit = {
+						tier = ROOT
+					}
+					ROOT = { grant_title = { target = PREV type = invasion } }
+					add_pressed_claim = PREV
+				}
+				set_defacto_liege = ROOT
+			}
+		}
+	}
+	
+	on_fail = {
+		FROM = {
+			piety = 50
+		}
+		any_defender = {
+			limit = { character = FROM }
+			participation_scaled_prestige = 50
+		}
+		any_defender = {
+			limit = { NOT = { character = FROM } }
+			hidden_tooltip = { participation_scaled_prestige = 50 }
+		}
+		ROOT = {
+			piety = -100
+		}
+	}
+
+	on_reverse_demand = {
+		ROOT = {
+			transfer_scaled_wealth = {
+				to = FROM
+				value = 1
+			}
+			piety = -100
+			prestige = -50
+			wealth = -50
+		}
+		FROM = {
+		wealth = 50
+		}
+		any_defender = {
+			limit = { character = FROM }
+			participation_scaled_piety = 100
+			participation_scaled_prestige = 50
+			if = {
+				limit = {
+					uses_decadence = yes
+				}
+				participation_scaled_decadence = -5
+			}
+		}
+		any_defender = {
+			limit = { NOT = { character = FROM } }
+			hidden_tooltip = { 
+				participation_scaled_piety = 100
+				participation_scaled_prestige = 50
+				if = {
+					limit = {
+						uses_decadence = yes
+					}
+					participation_scaled_decadence = -5
+				}
+			}
+		}
+		FROM = { 
+			religion_authority = {
+				modifier = won_holy_war
+				years = 20
+			}		
+		}
+		ROOT = { 
+			religion_authority = {
+				modifier = lost_holy_war
+				years = 20
+			}
+		}
+	}
+	
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+	
+	ai_will_do = { 
+		factor = 1
+		modifier = {
+			factor = 0.5
+			ROOT = { # Not as often if not any of these. 
+				OR = { 
+					trait = cynical
+					NOT = { piety = 700 }
+				}
+			}
+		}
+		modifier = {
+			factor = 2
+			ROOT = { # Religion focused characters will be even more likely
+				OR = {
+					piety = 1000
 					trait = zealous
 				}
 			}	
