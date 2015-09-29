@@ -174,15 +174,22 @@ character_event = {
 		trait = lustful
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
-		NOT = { trait = wounded }
-		NOT = { trait = craven }
+		NOR = {
+			trait = in_hiding
+			trait = wounded
+			trait = craven
+		}
 		any_courtier = {
 			is_female = yes
 			age = 16
-			NOT = { age = 35 }
-			NOT = { trait = ugly }
-			NOT = { is_close_relative = ROOT }
+			prisoner = no
+			NOR = {
+				age = 35
+				trait = ugly
+				is_close_relative = ROOT
+				trait = incapable
+				trait = in_hiding
+			}
 		}
 	}
 	
@@ -216,11 +223,16 @@ character_event = {
 		prestige = 15
 		random_courtier = {
 			limit = {
-				is_female = yes
-				NOT = { is_close_relative = ROOT }
 				age = 16
-				NOT = { age = 35 }
-				NOT = { trait = ugly }
+				is_female = yes
+				prisoner = no
+				NOR = {
+					is_close_relative = ROOT
+					age = 35
+					trait = ugly
+					trait = incapable
+					trait = in_hiding
+				}
 			}
 			opinion = {
 				modifier = opinion_tourney_boost
@@ -1921,12 +1933,18 @@ character_event = {
 		OR = {
 			any_courtier = {
 				age = 16
+				prisoner = no
+				NOT = { trait = in_hiding }
+				NOT = { trait = incapable }
 				NOT = { opinion = { who = ROOT value = 0 } }
 			}
 			AND = {
 				is_ruler = yes
 				any_vassal = {
 					age = 16
+					prisoner = no
+					NOT = { trait = in_hiding }
+					NOT = { trait = incapable }
 					NOT = { opinion = { who = ROOT value = 0 } }
 				}
 			}
@@ -1946,12 +1964,18 @@ character_event = {
 		trigger = {
 			any_courtier = {
 				age = 16
+				prisoner = no
+				NOT = { trait = in_hiding }
+				NOT = { trait = incapable }
 				NOT = { opinion = { who = ROOT value = 0 } }
 			}
 		}
 		random_courtier = {
 			limit = {
 				age = 16
+				prisoner = no
+				NOT = { trait = in_hiding }
+				NOT = { trait = incapable }
 				NOT = { opinion = { who = ROOT value = 0 } }
 			}
 			opinion = { who = ROOT modifier = charitable_to_you }
@@ -1963,12 +1987,18 @@ character_event = {
 			is_ruler = yes
 			any_vassal = {
 				age = 16
+				prisoner = no
+				NOT = { trait = in_hiding }
+				NOT = { trait = incapable }
 				NOT = { opinion = { who = ROOT value = 0 } }
 			}
 		}
 		random_vassal = {
 			limit = {
 				age = 16
+				prisoner = no
+				NOT = { trait = in_hiding }
+				NOT = { trait = incapable }
 				NOT = { opinion = { who = ROOT value = 0 } }
 			}
 			opinion = { who = ROOT modifier = charitable_to_you }
@@ -1992,6 +2022,9 @@ character_event = {
 		trait = charitable
 		NOT = { trait = in_hiding }
 		any_courtier = {
+			prisoner = no
+			NOT = { trait = in_hiding }
+			NOT = { trait = incapable }
 			OR = {
 				is_ill = yes
 				health_traits = 1
@@ -2012,10 +2045,13 @@ character_event = {
 			trait = slothful
 		}
 	}
-	option = {
-		name = EVTOPTA3081
+	
+	immediate = {
 		random_courtier = {
 			limit = {
+				prisoner = no
+				NOT = { trait = in_hiding }
+				NOT = { trait = incapable }
 				OR = {
 					is_ill = yes
 					health_traits = 1
@@ -2027,6 +2063,12 @@ character_event = {
 					}			
 				}
 			}
+			save_event_target_as = ill_courtier
+		}
+	}
+	option = {
+		name = EVTOPTA3081
+		event_target:ill_courtier = {
 			opinion = { who = ROOT modifier = charitable_to_you }
 		}			
 	}
@@ -2039,19 +2081,7 @@ character_event = {
 		opinion = { who = ROOT modifier = charitable_to_you }
 		add_trait = humble
 		piety = 10
-		random_courtier = {
-			limit = {
-				OR = {
-					is_ill = yes
-					health_traits = 1
-				}
-				NOT = {
-					has_opinion_modifier = {
-						who = ROOT
-						modifier = charitable_to_you
-					}			
-				}
-			}
+		event_target:ill_courtier = {
 			opinion = { who = ROOT modifier = charitable_to_you }
 		}			
 	}
