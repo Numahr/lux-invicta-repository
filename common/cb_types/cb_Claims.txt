@@ -1957,12 +1957,6 @@ dejure_county_claim = {
 			# }
 		# }
 	on_success_title = {
-		ROOT = {
-			subjugate_or_take_under_title = {
-				title = PREV
-				enemy = FROM
-			}
-		}
 		any_attacker = {
 			limit = { character = ROOT }
 			participation_scaled_prestige = 100
@@ -1970,6 +1964,67 @@ dejure_county_claim = {
 		any_attacker = {
 			limit = { NOT = { character = ROOT } }
 			hidden_tooltip = { participation_scaled_prestige = 100 }
+		}
+		if = {
+			limit = {
+				OR = {
+					ROOT = {
+						tier = count
+					}
+					holder_scope = {
+						any_demesne_title = {
+							tier = count
+							NOT = {
+								title = PREVPREV
+							}
+						}
+					}
+				}
+			}
+			holder_scope = {
+				ROOT = {
+					usurp_title = PREVPREV
+				}
+				add_pressed_claim = PREV
+			}
+			break = yes
+		}
+		holder_scope = {
+			any_demesne_title = {
+				limit = {
+					higher_tier_than = ROOT
+					is_landless_type_title = no
+				}
+				ROOT = {
+					usurp_title = PREV
+				}
+				add_pressed_claim = PREV
+			}
+			any_demesne_title = {
+				limit = {
+					tier = ROOT
+					is_landless_type_title = no
+				}
+				ROOT = {
+					usurp_title = PREV
+				}
+				add_pressed_claim = PREV
+			}
+			if = {
+				limit = {
+					any_demesne_title = {
+						NOT = {
+							lower_tier_than = ROOT
+						}
+					}
+				}
+				ROOT = {
+					grant_title = PREVPREV
+				}
+				add_pressed_claim = PREV
+				break = yes
+			}
+			set_defacto_liege = ROOT
 		}
 	}
 
