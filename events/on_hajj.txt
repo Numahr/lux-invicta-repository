@@ -82,7 +82,7 @@ character_event = {
 				NOT = { trait = on_hajj }
 				NOT = { trait = hajjaj }
 			}
-			save_event_target_as = hajj_courtier
+			save_event_target_as = invite_to_hajj
 		}
 		set_character_flag = hajj_company
 	}
@@ -105,7 +105,7 @@ character_event = {
 			}
 		}
 		scaled_wealth = -0.05
-		event_target:hajj_courtier = {
+		event_target:invite_to_hajj = {
 			add_trait = on_hajj
 			opinion = { 
 				modifier = opinion_bring_on_hajj
@@ -1829,26 +1829,40 @@ character_event = {
 	religion_group = muslim
 	
 	trigger = {
-		NOT = { trait = hajjaj }
-		NOT = { trait = mujahid}
-		NOT = { trait = on_hajj }
-		NOT = { trait = cynical }
-		NOT = {	has_character_flag = preparing_hajj }
-		NOT = { has_character_flag = opinion_hajj_promised }
-		NOT = { has_character_flag = opinion_jihad_promised }
 		job_spiritual = {
 			learning = 11
 			age = 30
 			trait = hajjaj
 		}
-		NOT = {
+		NOR = {
+			trait = hajjaj
+			trait = mujahid
+			trait = on_hajj
+			trait = cynical
+			has_character_flag = preparing_hajj
+			has_character_flag = opinion_hajj_promised
+			has_character_flag = opinion_jihad_promised
 			any_war = {
-				any_attacker = {
-					character = ROOT
-				}
-				any_defender = {
-					NOT = {
-						religion_group = muslim
+				OR = {
+					AND = {
+						any_attacker = {
+							character = ROOT
+						}
+						any_defender = {
+							NOT = {
+								religion_group = muslim
+							}
+						}
+					}
+					AND = {
+						any_attacker = {
+							NOT = {
+								religion_group = muslim
+							}
+						}
+						any_defender = {
+							character = ROOT
+						}
 					}
 				}
 			}
@@ -1926,10 +1940,12 @@ character_event = {
 		}
 		prisoner = no		
 		job_spiritual = { learning = 1 }
-		NOT = { trait = hajjaj }
-		NOT = { trait = mujahid }
-		NOT = { trait = on_hajj }
-		NOT = {	has_character_flag = preparing_hajj }
+		NOR = {
+			trait = hajjaj
+			trait = mujahid
+			trait = on_hajj
+			has_character_flag = preparing_hajj
+		}
 	}
 	
 	mean_time_to_happen = {
@@ -2272,18 +2288,32 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA86830"
-		random = {
-			chance = 5
-			add_trait = depressed
-			hidden_tooltip = { character_event = { id = 38288 } }
+		if = {
+			limit = {
+				NOT = {
+					trait = depressed
+				}
+			}
+			random = {
+				chance = 5
+				add_trait = depressed
+				hidden_tooltip = { character_event = { id = 38288 } }
+			}
 		}
 	}
 	option = {
 		name = "EVTOPTB86830"
-		random = {
-			chance = 5
-			add_trait = possessed
-			hidden_tooltip = { character_event = { id = 6032 } }
+		if = {
+			limit = {
+				NOT = {
+					trait = possessed
+				}
+			}
+			random = {
+				chance = 5
+				add_trait = possessed
+				hidden_tooltip = { character_event = { id = 6032 } }
+			}
 		}
 	}
 }
@@ -2400,7 +2430,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	prisoner = no
-		has_character_flag = on_home_from_hajj
+	has_character_flag = on_home_from_hajj
 	
 	trigger = {
 		trait = on_hajj

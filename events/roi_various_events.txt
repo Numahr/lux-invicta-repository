@@ -3347,12 +3347,12 @@ character_event = {
 		has_dlc = "Rajas of India"
 		war = yes
 		in_command = yes
-		NOT = { has_character_flag = crossing_indus }
 		OR = {
 			culture = greek
 			culture = hellenistic
 		}
-		NOT = {
+		NOR = {
+			has_character_flag = crossing_indus
 			any_realm_province = {
 				region = world_india
 			}
@@ -4310,13 +4310,30 @@ character_event = {
 	
 	is_triggered_only = yes
 	
+	only_playable = yes
+	religion_group = indian_group
+	
 	trigger = {
 		has_dlc = "Rajas of India"
-		religion_group = indian_group
+		OR = {
+			religion_group = indian_group
+			religion_group = bud_group
+		}
 		NOT = { religion_authority = 0.3 }
+		OR = {
+			culture_group = dravidian_group
+			culture_group = indo_aryan_group
+		}
 		any_independent_ruler = {
 			any_realm_province = {
-				religion_group = indian_group
+				OR = {
+					culture_group = dravidian_group
+					culture_group = indo_aryan_group
+				}
+				OR = {
+					religion_group = indian_group
+					religion_group = bud_group
+				}
 				NOT = { religion = ROOT }
 				religion_authority = 0.7
 			}
@@ -4327,6 +4344,25 @@ character_event = {
 	}
 
 	immediate = {
+		random_independent_ruler = {
+			random_realm_province = {
+				limit = {
+					OR = {
+						culture_group = dravidian_group
+						culture_group = indo_aryan_group
+					}
+					OR = {
+						religion_group = indian_group
+						religion_group = bud_group
+					}
+					NOT = {
+						religion = ROOT
+					}
+					religion_authority = 0.7
+				}
+				save_event_target_as = high_MA_religion
+			}
+		}
 		random_demesne_province = {
 			limit = { religion = ROOT }
 			province_event = { id = RoI.3521 }
@@ -4343,68 +4379,7 @@ province_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		if = {
-			limit = {
-				any_neighbor_province = {
-					religion_group = indian_group
-					NOT = { religion = ROOT }
-				}
-			}
-			random_neighbor_province = {
-				limit = {
-					religion_group = indian_group
-					NOT = { religion = ROOT }
-				}
-				ROOT = {
-					religion = PREV
-				}
-			}
-		}
-		if = {
-			limit = {
-				religion = hindu
-				NOT = {
-					any_neighbor_province = {
-						religion_group = indian_group
-						NOT = { religion = ROOT }
-					}
-				}
-			}
-			random_list = {
-				10 = { religion = bud_sthaviravada }
-				10 = { religion = jain }
-			}
-		}
-		if = {
-			limit = {
-				religion_group = bud_group
-				NOT = {
-					any_neighbor_province = {
-						religion_group = indian_group
-						NOT = { religion = ROOT }
-					}
-				}
-			}
-			random_list = {
-				10 = { religion = hindu }
-				10 = { religion = jain }
-			}
-		}
-		if = {
-			limit = {
-				religion = jain
-				NOT = {
-					any_neighbor_province = {
-						religion_group = indian_group
-						NOT = { religion = ROOT }
-					}
-				}
-			}
-			random_list = {
-				10 = { religion = bud_sthaviravada }
-				10 = { religion = hindu }
-			}
-		}
+		religion = event_target:high_MA_religion
 		FROM = { character_event = { id = RoI.3525 } }
 	}
 }
@@ -4419,7 +4394,7 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_RoI_3535
-		tooltip = { FROM = { religion = FROM } }
+		tooltip = { FROM = { religion = THIS } }
 	}
 }
 
