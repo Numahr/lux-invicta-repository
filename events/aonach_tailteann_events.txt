@@ -45,7 +45,7 @@ narrative_event = {
 
 	option = {
 		name = EVTOPTAancrel.1191
-		trigger = {
+		  = {
 			war = no
 		}
 		hidden_tooltip = {
@@ -115,10 +115,7 @@ narrative_event = {
 	picture = GFX_evt_funeral_pyre
 
 	is_triggered_only = yes
-	
-	trigger = {
-		has_character_flag = tailteann_begins
-	}
+	has_character_flag = tailteann_begins
 	
 	option = {
 		name = EVTOPTAancrel.1194
@@ -134,31 +131,6 @@ narrative_event = {
 		any_vassal = {
 			limit = {
 				has_character_flag = attending_tailteann
-				NOR = {
-					character = PREV
-					has_character_flag = tailteann_craftsman
-					has_character_flag = tailteann_fighter
-					has_character_flag = tailteann_winner_athlete
-				}
-			}
-			set_character_flag = tailteann_has_ended
-			clr_character_flag = attending_tailteann
-			clr_character_flag = attending_tailteann_event
-			letter_event = {
-				id = ancrel.1195
-				days = 2
-				random = 2
-				tooltip = EVTTOOLTIPancrel.1195
-			}
-		}
-		any_vassal = {
-			limit = {
-				has_character_flag = attending_tailteann
-				OR = {
-					has_character_flag = tailteann_craftsman
-					has_character_flag = tailteann_fighter
-					has_character_flag = tailteann_winner_athlete
-				}
 			}
 			letter_event = {
 				id = ancrel.1195
@@ -179,7 +151,7 @@ narrative_event = {
 # The Aonach has been cancelled due to Ruler's death
 letter_event = {
 	id = ancrel.1195
-#	title = TAILTEANNTITLE
+	title = TAILTEANNTITLE
 	desc = EVTDESCancrel.1195
 #	picture = GFX_evt_funeral_pyre
 	
@@ -202,10 +174,6 @@ narrative_event = {
 	has_character_flag = tailteann_death_phase
 	
 	trigger = {
-		NOR = {
-			has_character_flag = choose_dead_one_tailteann
-			has_character_flag = chosen_dead_one_tailteann
-		}
 		OR = {
 			father_even_if_dead = {
 				is_alive = no
@@ -213,6 +181,10 @@ narrative_event = {
 			mother = {
 				is_alive = no
 			}
+		}
+		NOR = {
+			has_character_flag = choose_dead_one_tailteann
+			has_character_flag = chosen_dead_one_tailteann
 		}
 	}
 	
@@ -809,14 +781,19 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = {
-			has_character_flag = tailteann_has_ended
-		}
 		top_liege = {
-			had_character_flag = { flag = tailteann_game_phase days = 20 }
-			NOR = {
-				has_character_flag = winner_athletic
-				has_character_flag = tailteann_has_ended
+			had_character_flag = {
+				flag = tailteann_game_phase
+				days = 20
+			}
+		}
+		NOR = {
+			has_character_flag = tailteann_has_ended
+			top_liege = {
+				OR = {
+					has_character_flag = winner_athletic
+					has_character_flag = tailteann_has_ended
+				}
 			}
 		}
 	}
@@ -931,16 +908,24 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			had_character_flag = {
+				flag = tailteann_game_phase
+				days = 20
+			}
+			had_character_flag = {
+				flag = winner_athletic
+				days = 1
+			}
+		}
 		NOR = {
 			has_character_flag = tailteann_has_ended
 			has_character_flag = tailteann_fighting
-		}
-		top_liege = {
-			had_character_flag = { flag = tailteann_game_phase days = 20 }
-			had_character_flag = { flag = winner_athletic days = 1 }
-			NOR = {
-				has_character_flag = winner_fighter
-				has_character_flag = tailteann_has_ended
+			top_liege = {
+				OR = {
+					has_character_flag = winner_fighter
+					has_character_flag = tailteann_has_ended
+				}
 			}
 		}
 	}
@@ -1060,20 +1045,28 @@ narrative_event = {
 	only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tailteann
 	
 	trigger = {
-		has_character_flag = attending_tailteann
+		top_liege = {
+			had_character_flag = {
+				flag = tailteann_game_phase
+				days = 20
+			}
+			had_character_flag = {
+				flag = winner_fighter
+				days = 1
+			}
+		}
 		NOR = {
 			has_character_flag = tailteann_has_ended
 			has_character_flag = tailteann_winner_athletic
 			has_character_flag = tailteann_fighting
-		}
-		top_liege = {
-			had_character_flag = { flag = tailteann_game_phase days = 20 }
-			had_character_flag = { flag = winner_fighter days = 1 }
-			NOR = {
-				has_character_flag = winner_crafting
-				has_character_flag = tailteann_has_ended
+			top_liege = {
+				OR = {
+					has_character_flag = winner_crafting
+					has_character_flag = tailteann_has_ended
+				}
 			}
 		}
 	}
@@ -1238,16 +1231,10 @@ province_event = {
 			any_realm_character = {
 				limit = {
 					has_character_flag = attending_tailteann
-					NOT = {
+					NOR = {
 						character = PREV
-					}
-					NOT = {
 						has_character_flag = tailteann_craftsman
-					}
-					NOT = {
 						has_character_flag = tailteann_fighting
-					}
-					NOT = {
 						has_character_flag = tailteann_winner_athletic
 					}
 				}
@@ -1297,8 +1284,10 @@ narrative_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOT = { has_character_flag = no_msg_death }
-		NOT = { has_character_flag = tailteann_has_ended }
+		NOR = {
+			has_character_flag = no_msg_death
+			has_character_flag = tailteann_has_ended
+		}
 	}
 	
 	option = {
@@ -1320,8 +1309,10 @@ narrative_event = {
 	is_triggered_only = yes
 
 	trigger = {
-		NOT = { has_character_flag = no_msg_maimed }
-		NOT = { has_character_flag = tailteann_has_ended }
+		NOR = {
+			has_character_flag = no_msg_maimed
+			has_character_flag = tailteann_has_ended
+		}
 	}
 	
 	option = {
@@ -1341,8 +1332,10 @@ narrative_event = {
 	picture = GFX_evt_viking_throneroom_oldgods
 
 	trigger = {
-		NOT = { has_character_flag = no_msg_wounded }
-		NOT = { has_character_flag = tailteann_has_ended }
+		NOR = {
+			has_character_flag = no_msg_wounded
+			has_character_flag = tailteann_has_ended
+		}
 	}
 	
 	is_triggered_only = yes
@@ -1460,12 +1453,12 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = {
-			has_character_flag = tailteann_has_ended
-		}
 		top_liege = {
 			has_character_flag = tailteann_game_phase
-			NOT = {
+		}
+		NOR = {
+			has_character_flag = tailteann_has_ended
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -1557,13 +1550,13 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
 		NOR = {
 			trait = maimed
 			has_character_flag = tailteann_has_ended
-		}
-		top_liege = {
-			has_character_flag = tailteann_game_phase
-			NOT = {
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -1653,19 +1646,15 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = { has_character_flag = attending_tailteann_event }
-		NOT = {
-			has_character_flag = tailteann_has_ended
-		}
-		NOT = {
-			trait = wounded
-		}
-		NOT = {
-			trait = maimed
-		}
 		top_liege = {
 			has_character_flag = tailteann_game_phase
-			NOT = {
+		}
+		NOR = {
+			has_character_flag = attending_tailteann_event
+			has_character_flag = tailteann_has_ended
+			trait = wounded
+			trait = maimed
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -1751,13 +1740,14 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
 		NOR = {
 			has_character_flag = attending_tailteann_event
 			has_character_flag = tailteann_has_ended
 			trait = craven
-		}
-		top_liege = {
-			has_character_flag = tailteann_game_phase
+			top_liege = {
 			NOT = {
 				has_character_flag = tailteann_has_ended
 			}
@@ -1824,14 +1814,14 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
 		NOR = {
 			has_character_flag = attending_tailteann_event
 			has_character_flag = tailteann_has_ended
 			trait = brave
-		}
-		top_liege = {
-			has_character_flag = tailteann_game_phase
-			NOT = {
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -1897,14 +1887,14 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
+		trait = misguided_warrior
 		NOR = {
 			has_character_flag = attending_tailteann_event
 			has_character_flag = tailteann_has_ended
-		}
-		trait = misguided_warrior
-		top_liege = {
-			has_character_flag = tailteann_game_phase
-			NOT = {
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -1971,14 +1961,14 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
+		trait = tough_soldier 
 		NOR = {
 			has_character_flag = attending_tailteann_event
 			has_character_flag = tailteann_has_ended
-		}
-		trait = tough_soldier 
-		top_liege = {
-			has_character_flag = tailteann_game_phase
-			NOT = {
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -2045,14 +2035,14 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
+		trait = skilled_tactician 
 		NOR = {
 			has_character_flag = attending_tailteann_event
 			has_character_flag = tailteann_has_ended
-		}
-		trait = skilled_tactician 
-		top_liege = {
-			has_character_flag = tailteann_game_phase
-			NOT = {
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -2119,14 +2109,14 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
+		trait = brilliant_strategist 
 		NOR = {
 			has_character_flag = attending_tailteann_event
 			has_character_flag = tailteann_has_ended
-		}
-		trait = brilliant_strategist 
-		top_liege = {
-			has_character_flag = tailteann_game_phase
-			NOT = {
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -2193,14 +2183,14 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
+		top_liege = {
+			has_character_flag = tailteann_game_phase
+		}
+		trait = skilled_tactician 
 		NOR = {
 			has_character_flag = attending_tailteann_event
 			has_character_flag = tailteann_has_ended
-		}
-		trait = skilled_tactician 
-		top_liege = {
-			has_character_flag = tailteann_game_phase
-			NOT = {
+			top_liege = {
 				has_character_flag = tailteann_has_ended
 			}
 		}
@@ -2267,16 +2257,16 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
-		NOR = {
-			has_character_flag = attending_tailteann_event
-			has_character_flag = tailteann_has_ended
-		}
 		trait = tough_soldier
 		top_liege = {
 			has_character_flag = tailteann_game_phase
 			NOT = {
 				has_character_flag = tailteann_has_ended
 			}
+		}
+		NOR = {
+			has_character_flag = attending_tailteann_event
+			has_character_flag = tailteann_has_ended
 		}
 	}
 
