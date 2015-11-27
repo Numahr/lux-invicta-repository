@@ -24,9 +24,9 @@ character_event = {
 	immediate = {
 		if = {
 			limit = {
-				OR = {
-					NOT = { has_character_modifier = declined_prestige_duel_timer }
-					NAND = {
+				NOR = {
+					has_character_modifier = declined_prestige_duel_timer
+					AND = {
 						is_female = no
 						event_target:challenger = { is_female = yes }
 						top_liege = { is_nomadic = no }
@@ -102,18 +102,14 @@ character_event = {
 			piety = -20
 			custom_tooltip = { text = jain_ahimsa_tooltip }
 		}
-		if = {
-			limit = { 
-				FROMFROM = { 
-					has_opinion_modifier = { who = ROOT modifier = grievously_offended }
-				}
-			}
-			FROMFROM = {
-				remove_opinion = { who = ROOT modifier = grievously_offended }
-			}
-		}
 		save_event_target_as = opponent
 		FROMFROM = {
+			if = {
+				limit = { 
+					has_opinion_modifier = { who = ROOT modifier = grievously_offended }
+				}
+				remove_opinion = { who = ROOT modifier = grievously_offended }
+			}
 			save_event_target_as = challenger
 			hidden_tooltip = {
 				character_event = { id = WoL.11001 days = 3 }
@@ -512,15 +508,15 @@ long_character_event = {
 	desc = {
 		text = EVTDESCC_WOL_11006 # Maiming challenger
 		trigger = {
-			NOT = { event_target:challenger = { character = ROOT } }
 			has_character_flag = duel_maim
+			NOT = { event_target:challenger = { character = ROOT } }
 		}
 	}
 	desc = {
 		text = EVTDESCD_WOL_11006 # Winning over challenger
 		trigger = {
-			NOT = { event_target:challenger = { character = ROOT } }
-			NOT = {
+			NOR = {
+				event_target:challenger = { character = ROOT }
 				has_character_flag = duel_maim
 			}
 		}
@@ -793,8 +789,10 @@ long_character_event = {
 		}
 		if = {
 			limit = {
-				NOT = { FROM = { has_character_flag = duel_maim } }
-				NOT = { trait = maimed }
+				NOR = {
+					FROM = { has_character_flag = duel_maim }
+					trait = maimed
+				}
 			}
 			add_trait = wounded
 		}
@@ -833,15 +831,15 @@ long_character_event = {
 		hidden_tooltip = {
 			FROM = { clr_character_flag = duel_maim }
 		}
-		if = {
-			limit = {
-				FROM = {
+		FROM = {
+			if = {
+				limit = {
 					dynasty = ROOT
 					NOT = { trait = kinslayer }
 				}
-			}
-			tooltip = {
-				FROM = { add_trait = kinslayer }
+				tooltip = {
+					add_trait = kinslayer
+				}
 			}
 		}
 		if = {
@@ -1202,9 +1200,11 @@ character_event = {
 	
 	trigger = {
 		has_focus = focus_war
-		NOT = { trait = incapable }
-		NOT = { trait = infirm }
-		NOT = { has_character_flag = do_not_disturb }
+		NOR = {
+			trait = incapable
+			trait = infirm
+			has_character_flag = do_not_disturb
+		}
 		in_command = no
 	}
 	
@@ -1427,13 +1427,11 @@ character_event = {
 				is_adult = yes
 				is_female = no
 				prisoner = no
-				NOT = {
-					OR = {
-						is_rival = ROOT
-						trait = incapable
-						trait = infirm
-						character = ROOT
-					}
+				NOR = {
+					is_rival = ROOT
+					trait = incapable
+					trait = infirm
+					character = ROOT
 				}
 			}
 			add_trait = maimed
@@ -1466,13 +1464,11 @@ character_event = {
 						is_adult = yes
 						is_female = no
 						prisoner = no
-						NOT = {
-							OR = {
-								is_rival = ROOT
-								trait = incapable
-								trait = infirm
-								character = ROOT
-							}
+						NOR = {
+							is_rival = ROOT
+							trait = incapable
+							trait = infirm
+							character = ROOT
 						}
 					}
 					character_event = { id = WoL.11108 }
@@ -1545,14 +1541,12 @@ character_event = {
 				ai = yes
 				is_female = no
 				is_adult = yes
-				NOT = {
-					OR = {
-						is_rival = ROOT
-						is_friend = ROOT
-						age = 50
-						trait = incapable
-						trait = infirm
-					}
+				NOR = {
+					is_rival = ROOT
+					is_friend = ROOT
+					age = 50
+					trait = incapable
+					trait = infirm
 				}
 			}
 			hidden_tooltip = {
@@ -1805,9 +1799,9 @@ character_event = {
 	immediate = {
 		if = {
 			limit = {
-				OR = {
-					NOT = { event_target:attacker = { always = yes } }
-					NOT = { event_target:defender = { always = yes } }
+				NAND = {
+					event_target:attacker = { always = yes }
+					event_target:defender = { always = yes }
 				}
 			}
 			character_event = { id = WoL.11117 days = 3 }
@@ -3088,8 +3082,10 @@ character_event = {
 		}
 		if = {
 			limit = {
-				NOT = { has_character_modifier = adept_of_strategy }
-				NOT = { has_character_modifier = student_of_strategy }
+				NOR = {
+					has_character_modifier = adept_of_strategy
+					has_character_modifier = student_of_strategy
+				}
 			}
 			add_character_modifier = { modifier = student_of_strategy duration = -1 }
 		}
@@ -3102,8 +3098,8 @@ character_event = {
 	option = {
 		name = EVTOPTB_WOL_11140
 		trigger = {
-			NOT = { trait = wroth }
 			NOR = {
+				trait = wroth
 				has_character_flag = wargame_win1
 				has_character_flag = wargame_win2
 				has_character_flag = wargame_win3
@@ -3329,13 +3325,9 @@ character_event = {
 				NOT = { trait = patient }
 			}
 			add_trait = wroth
+			break = yes
 		}
-		if = {
-			limit = {
-				trait = patient
-			}
-			remove_trait = patient
-		}
+		remove_trait = patient
 	}
 }
 
@@ -3354,13 +3346,9 @@ character_event = {
 				NOT = { trait = craven }
 			}
 			add_trait = brave
+			break = yes
 		}
-		if = {
-			limit = {
-				trait = craven
-			}
-			remove_trait = craven
-		}
+		remove_trait = craven
 	}
 }
 

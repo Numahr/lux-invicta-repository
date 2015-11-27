@@ -243,14 +243,7 @@ character_event = {
 	immediate = {
 		random_courtier = {
 			limit = {
-				prisoner = no
-				has_regent = no
-				in_command = no
 				is_adult = yes
-				NOR = {
-					character = FROM
-					character = ROOT
-				}
 				OR = {
 					is_close_relative = ROOT
 					is_close_relative = FROM
@@ -302,6 +295,14 @@ character_event = {
 						modifier = opinion_chasing_spouse
 					}
 				}
+				NOR = {
+					character = FROM
+					character = ROOT
+				}
+				prisoner = no
+				has_regent = no
+				in_command = no
+				is_abroad = no
 			}
 			if = {
 				limit = {
@@ -450,8 +451,7 @@ narrative_event = {
 			limit = {
 				FROM = {
 					is_close_relative = event_target:target_lover_1
-#					NOT = { religion = messalian }
-					NOT = { religion = zoroastrian }
+					close_relative_marriages_allowed_trigger = no
 				}
 			}
 			set_character_flag = scandal_temp_incest
@@ -580,13 +580,11 @@ narrative_event = {
 	option = {
 		name = EVTOPTA_WOL_55 # Expose them!
 		trigger = {
-			NOT = {
-				OR = {
-					has_character_flag = scandal_temp_incest
-					has_character_flag = scandal_temp_m_homo
-					has_character_flag = scandal_temp_f_homo
-					has_character_flag = scandal_temp_priest
-				}
+			NOR = {
+				has_character_flag = scandal_temp_incest
+				has_character_flag = scandal_temp_m_homo
+				has_character_flag = scandal_temp_f_homo
+				has_character_flag = scandal_temp_priest
 			}
 		}
 		ai_chance = {
@@ -717,25 +715,27 @@ narrative_event = {
 	option = {
 		name = EVTOPTC_WOL_55 # Blackmail the seducer
 		trigger = {
-			NOT = { is_father = FROM }
-			NOT = { is_mother = FROM }
-			NOT = { is_consort = FROM }
-			NOT = { is_consort = FROMFROM }
-			NOT = {
+			OR = {
+				FROMFROM = {
+					is_female = yes
+					is_married = yes
+				}
+				has_character_flag = scandal_temp_incest
+				has_character_flag = scandal_temp_m_homo
+				has_character_flag = scandal_temp_priest
+				has_character_flag = scandal_temp_f_married
+			}
+			NOR = {
+				is_father = FROM
+				is_mother = FROM
+				is_consort = FROM
+				is_consort = FROMFROM
 				any_spouse = {
 					OR = {
 						character = FROM
 						character = FROMFROM
 					}
 				}
-			}
-			OR = {
-				FROMFROM = { is_female = yes }
-				FROMFROM = { is_married = yes }
-				has_character_flag = scandal_temp_incest
-				has_character_flag = scandal_temp_m_homo
-				has_character_flag = scandal_temp_priest
-				has_character_flag = scandal_temp_f_married
 			}
 		}
 		ai_chance = {
@@ -774,12 +774,10 @@ letter_event = {
 		text = EVTDESC_WOL_56
 		trigger = {
 			FROM = {
-				NOT = {
-					OR = {
-						has_character_flag = scandal_temp_incest
-						has_character_flag = scandal_temp_m_homo
-						has_character_flag = scandal_temp_f_homo
-					}
+				NOR = {
+					has_character_flag = scandal_temp_incest
+					has_character_flag = scandal_temp_m_homo
+					has_character_flag = scandal_temp_f_homo
 				}
 			}
 		}
@@ -929,8 +927,10 @@ narrative_event = {
 		
 		any_spouse = {
 			limit = {
-				NOT = { character = FROMFROM }
-				NOT = { character = FROM }
+				NOR = {
+					character = FROMFROM
+					character = FROM
+				}
 			}
 			narrative_event = { id = WoL.62 }
 		}
@@ -1012,8 +1012,7 @@ narrative_event = {
 		if = {
 			limit = {
 				is_close_relative = FROMFROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
+				close_relative_marriages_allowed_trigger = no
 			}
 			if = {
 				limit = {
@@ -1118,15 +1117,19 @@ narrative_event = {
 	immediate = {
 		any_spouse = {
 			limit = {
-				NOT = { character = FROMFROM }
-				NOT = { character = FROM }
+				NOR = {
+					character = FROMFROM
+					character = FROM
+				}
 			}
 			narrative_event = { id = WoL.63 }
 		}
 		any_consort = {
 			limit = {
-				NOT = { character = FROMFROM }
-				NOT = { character = FROM }
+				NOR = {
+					character = FROMFROM
+					character = FROM
+				}
 			}
 			narrative_event = { id = WoL.63 }
 		}
@@ -1346,8 +1349,10 @@ character_event = {
 		
 		if = {
 			limit = {
-				NOT = { has_character_modifier = wol_court_vixen }
-				NOT = { has_character_modifier = wol_court_tomcat }
+				NOR = {
+					has_character_modifier = wol_court_vixen
+					has_character_modifier = wol_court_tomcat
+				}
 			}
 			random = {
 				chance = 5
@@ -1502,8 +1507,10 @@ character_event = {
 					age = 45
 					is_pregnant = yes
 					FROM = { is_female = yes }
-					NOT = { fertility = 0.2 }
-					NOT = { FROM = { fertility = 0.2 } }
+					NOR = {
+						fertility = 0.2
+						FROM = { fertility = 0.2 }
+					}
 				}
 			}
 			break  = yes
@@ -1606,8 +1613,10 @@ character_event = {
 		# Chance of trait adjustments
 		if = {
 			limit = {
-				NOT = { trait = chaste }
-				NOT = { trait = lustful }
+				NOR = {
+					trait = chaste
+					trait = lustful
+				}
 				random = 85 # 15% chance
 			}
 			add_trait = lustful
@@ -1681,8 +1690,10 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOT = { lifestyle_traits = 1 }
-		NOT = { has_character_flag = wol_no_to_seducer_trait }
+		NOR = {
+			lifestyle_traits = 1
+			has_character_flag = wol_no_to_seducer_trait
+		}
 	}
 	
 	immediate = {
@@ -1717,9 +1728,7 @@ character_event = {
 		name = EVTOPTA_WOL_99
 		trigger = {
 			is_female = yes
-			NOT = { religion_group = muslim }
-			NOT = { religion_group = zoroastrian_group }
-			NOT = { religion_group = indian_group }
+			close_relative_marriages_allowed_trigger = no
 		}
 		ai_chance = {
 			factor = 100
@@ -1733,11 +1742,7 @@ character_event = {
 		name = EVTOPTA_WOL_99_PERS
 		trigger = {
 			is_female = yes
-			OR = {
-				religion_group = muslim
-				religion_group = zoroastrian_group
-				religion_group = indian_group
-			}
+			close_relative_marriages_allowed_trigger = yes
 		}
 		ai_chance = {
 			factor = 100
@@ -1874,10 +1879,14 @@ character_event = {
 				OR = {
 					has_regent = yes
 					in_command = yes
-					FROMFROM = { trait = on_hajj }
-					FROMFROM = { trait = in_hiding }
-					FROMFROM = { trait = on_pilgrimage }
-					FROMFROM = { in_command = yes }
+					FROMFROM = {
+						OR = {
+							trait = on_hajj
+							trait = in_hiding
+							trait = on_pilgrimage
+							in_command = yes
+						}
+					}
 				}
 			}
 			repeat_event = { id = WoL.110 days = 20 random = 20 } # Fire again with no scope changes
@@ -2596,12 +2605,10 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 0.5
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -2755,13 +2762,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					reverse_personal_opinion = {
@@ -2772,13 +2777,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					reverse_personal_opinion = {
@@ -2789,13 +2792,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					is_lover = ROOT
@@ -2832,16 +2833,14 @@ narrative_event = {
 					trait = hunchback
 				}
 				FROM = {
-					NOT = {
-						OR = {
-							trait = ugly
-							trait = leper
-							trait = dwarf
-							trait = harelip
-							trait = hunchback
-							trait = inbred
-							trait = imbecile
-						}
+					NOR = {
+						trait = ugly
+						trait = leper
+						trait = dwarf
+						trait = harelip
+						trait = hunchback
+						trait = inbred
+						trait = imbecile
 					}
 				}
 			}
@@ -2892,12 +2891,10 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -2914,16 +2911,14 @@ narrative_event = {
 					trait = hunchback
 				}
 				FROM = {
-					NOT = {
-						OR = {
-							trait = ugly
-							trait = leper
-							trait = dwarf
-							trait = harelip
-							trait = hunchback
-							trait = inbred
-							trait = imbecile
-						}
+					NOR = {
+						trait = ugly
+						trait = leper
+						trait = dwarf
+						trait = harelip
+						trait = hunchback
+						trait = inbred
+						trait = imbecile
 					}
 				}
 			}
@@ -3368,12 +3363,10 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 0.5
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -3522,13 +3515,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					reverse_personal_opinion = {
@@ -3539,13 +3530,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					reverse_personal_opinion = {
@@ -3556,13 +3545,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					is_lover = ROOT
@@ -3596,16 +3583,14 @@ narrative_event = {
 					trait = hunchback
 				}
 				FROM = {
-					NOT = {
-						OR = {
-							trait = ugly
-							trait = leper
-							trait = dwarf
-							trait = harelip
-							trait = hunchback
-							trait = inbred
-							trait = imbecile
-						}
+					NOR = {
+						trait = ugly
+						trait = leper
+						trait = dwarf
+						trait = harelip
+						trait = hunchback
+						trait = inbred
+						trait = imbecile
 					}
 				}
 			}
@@ -3654,12 +3639,10 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -3676,16 +3659,14 @@ narrative_event = {
 					trait = hunchback
 				}
 				FROM = {
-					NOT = {
-						OR = {
-							trait = ugly
-							trait = leper
-							trait = dwarf
-							trait = harelip
-							trait = hunchback
-							trait = inbred
-							trait = imbecile
-						}
+					NOR = {
+						trait = ugly
+						trait = leper
+						trait = dwarf
+						trait = harelip
+						trait = hunchback
+						trait = inbred
+						trait = imbecile
 					}
 				}
 			}
@@ -4168,12 +4149,10 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 0.5
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -4322,13 +4301,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					reverse_personal_opinion = {
@@ -4339,13 +4316,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					reverse_personal_opinion = {
@@ -4356,13 +4331,11 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = lustful 
-						trait = deceitful
-						trait = arbitrary
-						trait = hedonist
-					}
+				NOR = {
+					trait = lustful 
+					trait = deceitful
+					trait = arbitrary
+					trait = hedonist
 				}
 				spouse = {
 					is_lover = ROOT
@@ -4396,16 +4369,14 @@ narrative_event = {
 					trait = hunchback
 				}
 				FROM = {
-					NOT = {
-						OR = {
-							trait = ugly
-							trait = leper
-							trait = dwarf
-							trait = harelip
-							trait = hunchback
-							trait = inbred
-							trait = imbecile
-						}
+					NOR = {
+						trait = ugly
+						trait = leper
+						trait = dwarf
+						trait = harelip
+						trait = hunchback
+						trait = inbred
+						trait = imbecile
 					}
 				}
 			}
@@ -4454,12 +4425,10 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 2.0
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -4476,16 +4445,14 @@ narrative_event = {
 					trait = hunchback
 				}
 				FROM = {
-					NOT = {
-						OR = {
-							trait = ugly
-							trait = leper
-							trait = dwarf
-							trait = harelip
-							trait = hunchback
-							trait = inbred
-							trait = imbecile
-						}
+					NOR = {
+						trait = ugly
+						trait = leper
+						trait = dwarf
+						trait = harelip
+						trait = hunchback
+						trait = inbred
+						trait = imbecile
 					}
 				}
 			}
@@ -4723,11 +4690,11 @@ narrative_event = {
 		trigger = {
 			FROM = { is_female = no }
 			OR = {
-				NOT = { is_close_relative = FROM }
 				has_opinion_modifier = {
 					who = FROM
 					modifier = opinion_seduced_attracted
 				}
+				NOT = { is_close_relative = FROM }
 			}
 		}
 	}
@@ -4750,11 +4717,11 @@ narrative_event = {
 		trigger = {
 			FROM = { is_female = yes }
 			OR = {
-				NOT = { is_close_relative = FROM }
 				has_opinion_modifier = {
 					who = FROM
 					modifier = opinion_seduced_attracted
 				}
+				NOT = { is_close_relative = FROM }
 			}
 		}
 	}
@@ -4801,12 +4768,10 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -4915,14 +4880,6 @@ narrative_event = {
 			modifier = {
 				factor = 5.0
 				is_female = yes
-				NOT = { trait = lustful }
-				NOT = { trait = hedonist }
-				NOT = { trait = seducer }
-				NOT = { trait = seductress }
-				NOT = { trait = arbitrary }
-				NOT = { trait = slow }
-				NOT = { trait = imbecile }
-				NOT = { has_focus = focus_seduction }
 				OR = {
 					trait = craven
 					trait = chaste
@@ -4938,6 +4895,16 @@ narrative_event = {
 							}
 						}
 					}
+				}
+				NOR = {
+					trait = lustful
+					trait = hedonist
+					trait = seducer
+					trait = seductress
+					trait = arbitrary
+					trait = slow
+					trait = imbecile
+					has_focus = focus_seduction
 				}
 			}
 		}
@@ -4975,14 +4942,14 @@ narrative_event = {
 				who = FROM
 				years = 25
 			}
-			NOT = { is_older_than = FROM }
 			OR = {
-				NOT = { is_close_relative = FROM }
 				has_opinion_modifier = {
 					who = FROM
 					modifier = opinion_seduced_attracted
 				}
+				NOT = { is_close_relative = FROM }
 			}
+			NOT = { is_older_than = FROM }
 		}
 		ai_chance = {
 			factor = 100
@@ -5009,14 +4976,6 @@ narrative_event = {
 					is_married = yes
 					is_consort = yes
 				}
-				NOT = { trait = lustful }
-				NOT = { trait = hedonist }
-				NOT = { trait = seducer }
-				NOT = { trait = seductress }
-				NOT = { trait = arbitrary }
-				NOT = { trait = slow }
-				NOT = { trait = imbecile }
-				NOT = { has_focus = focus_seduction }
 				OR = {
 					trait = craven
 					trait = chaste
@@ -5032,6 +4991,16 @@ narrative_event = {
 							}
 						}
 					}
+				}
+				NOR = {
+					trait = lustful
+					trait = hedonist
+					trait = seducer
+					trait = seductress
+					trait = arbitrary
+					trait = slow
+					trait = imbecile
+					has_focus = focus_seduction
 				}
 			}
 		}
@@ -5234,14 +5203,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -5733,17 +5699,21 @@ narrative_event = {
 	desc = {
 		text = EVTDESC_WOL_352
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
 			same_realm = FROM
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+			}
 		}
 	}
 	desc = {
 		text = EVTDESC_WOL_352_DISTANT
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
-			NOT = { same_realm = FROM }
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+				same_realm = FROM
+			}
 		}
 	}
 	
@@ -5767,14 +5737,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -5810,21 +5777,25 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 0.1
-				NOT = { learning = 5 }
-				NOT = { trait = scholar }
-				NOT = { trait = mystic }
-				NOT = { trait = poet }
-				NOT = { trait = mastermind_theologian }
-				NOT = { trait = scholarly_theologian }
+				NOR = {
+					learning = 5
+					trait = scholar
+					trait = mystic
+					trait = poet
+					trait = mastermind_theologian
+					trait = scholarly_theologian
+				}
 			}
 			modifier = {
 				factor = 0.25
-				NOT = { age = 25 }
-				NOT = { trait = scholar }
-				NOT = { trait = mystic }
-				NOT = { trait = poet }
-				NOT = { trait = mastermind_theologian }
-				NOT = { trait = scholarly_theologian }
+				NOR = {
+					age = 25
+					trait = scholar
+					trait = mystic
+					trait = poet
+					trait = mastermind_theologian
+					trait = scholarly_theologian
+				}
 			}
 			modifier = {
 				factor = 10.0
@@ -5892,14 +5863,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -5995,14 +5963,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = yes
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -6104,14 +6069,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -6174,14 +6136,6 @@ narrative_event = {
 			modifier = {
 				factor = 10.0
 				is_female = yes
-				NOT = { trait = lustful }
-				NOT = { trait = hedonist }
-				NOT = { trait = seducer }
-				NOT = { trait = seductress }
-				NOT = { trait = arbitrary }
-				NOT = { trait = slow }
-				NOT = { trait = imbecile }
-				NOT = { has_focus = focus_seduction }
 				OR = {
 					trait = craven
 					trait = chaste
@@ -6209,6 +6163,16 @@ narrative_event = {
 							}
 						}
 					}
+				}
+				NOR = {
+					trait = lustful
+					trait = hedonist
+					trait = seducer
+					trait = seductress
+					trait = arbitrary
+					trait = slow
+					trait = imbecile
+					has_focus = focus_seduction
 				}
 			}
 		}
@@ -6267,31 +6231,33 @@ narrative_event = {
 	desc = {
 		text = EVTDESC_WOL_353_OLD_F
 		trigger = {
-			NOT = { is_close_relative = FROM }
 			age_diff = {
 				who = FROM
 				years = 25
 			}
 			is_older_than = FROM
 			is_female = yes
+			NOT = { is_close_relative = FROM }
 		}
 	}
 	desc = {
 		text = EVTDESC_WOL_353_YOUNG
 		trigger = {
-			NOT = { is_close_relative = FROM }
 			age_diff = {
 				who = FROM
 				years = 25
 			}
-			NOT = { is_older_than = FROM }
+			NOR = {
+				is_close_relative = FROM
+				is_older_than = FROM
+			}
 		}
 	}
 	desc = {
 		text = EVTDESC_WOL_353
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = {
+			NOR = {
+				is_close_relative = FROM
 				age_diff = {
 					who = FROM
 					years = 25
@@ -6392,16 +6358,20 @@ narrative_event = {
 		text = EVTDESC_WOL_401
 		trigger = {
 			same_realm = FROM
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+			}
 		}
 	}
 	desc = {
 		text = EVTDESC_WOL_401_DISTANT
 		trigger = {
-			NOT = { same_realm = FROM }
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
+			NOR = {
+				same_realm = FROM
+				is_close_relative = FROM
+				same_sex = FROM
+			}
 		}
 	}
 	desc = {
@@ -6423,8 +6393,10 @@ narrative_event = {
 	option = { # Find an ally among target's friends
 		name = EVTOPTA_WOL_401
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+			}
 		}
 		ai_chance = {
 			factor = 100
@@ -6438,16 +6410,18 @@ narrative_event = {
 						ai = yes
 						same_sex = PREV
 						is_adult = yes
-						NOT = { character = ROOT }
-						NOT = { character = PREV }
-						NOT = { trait = incapable }
-						NOT = { trait = on_hajj }
-						NOT = { trait = in_hiding }
-						NOT = { trait = on_pilgrimage }
-						NOT = { is_father = PREV }
-						NOT = { is_mother = PREV }
-						NOT = { is_lover = PREV }
-						NOT = { is_rival = PREV }
+						NOR = {
+							character = ROOT
+							character = PREV
+							trait = incapable
+							trait = on_hajj
+							trait = in_hiding
+							trait = on_pilgrimage
+							is_father = PREV
+							is_mother = PREV
+							is_lover = PREV
+							is_rival = PREV
+						}
 					}
 					character_event = { id = WoL.402 days = 1 }
 					break = yes
@@ -6460,8 +6434,10 @@ narrative_event = {
 	option = { # Leave a note for target
 		name = EVTOPTB_WOL_401
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+			}
 		}
 		ai_chance = {
 			factor = 100
@@ -6475,12 +6451,6 @@ narrative_event = {
 							AND = {
 								prisoner = no
 								is_adult = yes
-								NOT = { character = ROOT }
-								NOT = { character = PREV }
-								NOT = { trait = incapable }
-								NOT = { trait = on_hajj }
-								NOT = { trait = in_hiding }
-								NOT = { trait = on_pilgrimage }
 								at_location = PREV
 								OR = {
 									AND = {
@@ -6510,6 +6480,14 @@ narrative_event = {
 									}
 									random = 98 # 2% chance
 								}
+								NOR = {
+									character = ROOT
+									character = PREV
+									trait = incapable
+									trait = on_hajj
+									trait = in_hiding
+									trait = on_pilgrimage
+								}
 							}
 						}
 					}
@@ -6537,8 +6515,10 @@ narrative_event = {
 	option = { # Take what chances I can to build attraction
 		name = EVTOPTD_WOL_401
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+			}
 		}
 		ai_chance = {
 			factor = 10
@@ -6793,27 +6773,33 @@ narrative_event = {
 	desc = {
 		text = EVTDESC_WOL_404_HOMO
 		trigger = {
-			NOT = { is_close_relative = FROM }
 			same_sex = FROM
-			NOT = { has_character_flag = seduction_outing_note }
+			NOR = {
+				is_close_relative = FROM
+				has_character_flag = seduction_outing_note
+			}
 		}
 	}
 	desc = {
 		text = EVTDESC_WOL_404
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
 			same_realm = FROM
-			NOT = { has_character_flag = seduction_outing_note }
+			NOR = {
+				same_sex = FROM
+				is_close_relative = FROM
+				has_character_flag = seduction_outing_note
+			}
 		}
 	}
 	desc = {
 		text = EVTDESC_WOL_404_DISTANT
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
-			NOT = { same_realm = FROM }
-			NOT = { has_character_flag = seduction_outing_note }
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+				same_realm = FROM
+				has_character_flag = seduction_outing_note
+			}
 		}
 	}
 	desc = {
@@ -6851,14 +6837,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -6894,21 +6877,25 @@ narrative_event = {
 			}
 			modifier = {
 				factor = 0.1
-				NOT = { learning = 5 }
-				NOT = { trait = scholar }
-				NOT = { trait = mystic }
-				NOT = { trait = poet }
-				NOT = { trait = mastermind_theologian }
-				NOT = { trait = scholarly_theologian }
+				NOR = {
+					learning = 5
+					trait = scholar
+					trait = mystic
+					trait = poet
+					trait = mastermind_theologian
+					trait = scholarly_theologian
+				}
 			}
 			modifier = {
 				factor = 0.25
-				NOT = { age = 25 }
-				NOT = { trait = scholar }
-				NOT = { trait = mystic }
-				NOT = { trait = poet }
-				NOT = { trait = mastermind_theologian }
-				NOT = { trait = scholarly_theologian }
+				NOR = {
+					age = 25
+					trait = scholar
+					trait = mystic
+					trait = poet
+					trait = mastermind_theologian
+					trait = scholarly_theologian
+				}
 			}
 			modifier = {
 				factor = 10.0
@@ -6977,14 +6964,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -7037,8 +7021,10 @@ narrative_event = {
 			modifier = {
 				factor = 0.25
 				is_female = yes
-				NOT = { age = 25 }
-				NOT = { trait = lustful }
+				NOR = {
+					age = 25
+					trait = lustful
+				}
 			}
 			modifier = {
 				factor = 0.75
@@ -7081,14 +7067,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -7191,14 +7174,11 @@ narrative_event = {
 			modifier = {
 				factor = 0.5
 				is_close_relative = FROM
-#				NOT = { religion = messalian }
-				NOT = { religion = zoroastrian }
-				NOT = {
-					OR = {
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				close_relative_marriages_allowed_trigger = no
+				NOR = {
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 			modifier = {
@@ -7261,14 +7241,6 @@ narrative_event = {
 			modifier = {
 				factor = 10.0
 				is_female = yes
-				NOT = { trait = lustful }
-				NOT = { trait = hedonist }
-				NOT = { trait = seducer }
-				NOT = { trait = seductress }
-				NOT = { trait = arbitrary }
-				NOT = { trait = slow }
-				NOT = { trait = imbecile }
-				NOT = { has_focus = focus_seduction }
 				OR = {
 					trait = craven
 					trait = chaste
@@ -7296,6 +7268,16 @@ narrative_event = {
 							}
 						}
 					}
+				}
+				NOR = {
+					trait = lustful
+					trait = hedonist
+					trait = seducer
+					trait = seductress
+					trait = arbitrary
+					trait = slow
+					trait = imbecile
+					has_focus = focus_seduction
 				}
 			}
 		}
@@ -7333,8 +7315,10 @@ narrative_event = {
 	desc = {
 		text = EVTDESC_WOL_405
 		trigger = {
-			NOT = { is_close_relative = FROM }
-			NOT = { same_sex = FROM }
+			NOR = {
+				is_close_relative = FROM
+				same_sex = FROM
+			}
 		}
 	}
 	
@@ -7534,14 +7518,12 @@ narrative_event = {
 			trigger = {
 				FROMFROMFROM = {
 					is_female = no
-					OR = {
-						NOT = {
-							age_diff = {
-								who = ROOT
-								years = 10
-							}
+					NAND = {
+						age_diff = {
+							who = ROOT
+							years = 10
 						}
-						NOT = { is_older_than = ROOT }
+						is_older_than = ROOT
 					}
 				}
 			}
@@ -7564,14 +7546,12 @@ narrative_event = {
 			trigger = {
 				FROMFROMFROM = {
 					is_female = yes
-					OR = {
-						NOT = {
-							age_diff = {
-								who = ROOT
-								years = 10
-							}
+					NAND = {
+						age_diff = {
+							who = ROOT
+							years = 10
 						}
-						NOT = { is_older_than = ROOT }
+						is_older_than = ROOT
 					}
 				}
 			}
@@ -8155,14 +8135,12 @@ narrative_event = {
 			trigger = {
 				FROMFROM = {
 					is_female = no
-					OR = {
-						NOT = {
-							age_diff = {
-								who = ROOT
-								years = 10
-							}
+					NAND = {
+						age_diff = {
+							who = ROOT
+							years = 10
 						}
-						NOT = { is_older_than = ROOT }
+						is_older_than = ROOT
 					}
 				}
 			}
@@ -8185,14 +8163,12 @@ narrative_event = {
 			trigger = {
 				FROMFROM = {
 					is_female = yes
-					OR = {
-						NOT = {
-							age_diff = {
-								who = ROOT
-								years = 10
-							}
+					NAND = {
+						age_diff = {
+							who = ROOT
+							years = 10
 						}
-						NOT = { is_older_than = ROOT }
+						is_older_than = ROOT
 					}
 				}
 			}
@@ -8384,14 +8360,12 @@ narrative_event = {
 			trigger = {
 				FROMFROM = {
 					is_female = no
-					OR = {
-						NOT = {
-							age_diff = {
-								who = ROOT
-								years = 10
-							}
+					NAND = {
+						age_diff = {
+							who = ROOT
+							years = 10
 						}
-						NOT = { is_older_than = ROOT }
+						is_older_than = ROOT
 					}
 				}
 			}
@@ -8414,14 +8388,12 @@ narrative_event = {
 			trigger = {
 				FROMFROM = {
 					is_female = yes
-					OR = {
-						NOT = {
-							age_diff = {
-								who = ROOT
-								years = 10
-							}
+					NAND = {
+						age_diff = {
+							who = ROOT
+							years = 10
 						}
-						NOT = { is_older_than = ROOT }
+						is_older_than = ROOT
 					}
 				}
 			}
@@ -8800,38 +8772,34 @@ character_event = {
 			prisoner = no
 			has_regent = no
 			is_ill = no
-			NOT = { age = 65 }
-			NOT = {
-				OR = {
-					trait = incapable
-					trait = infirm
-					trait = eunuch
-					trait = celibate
-					trait = inbred
-					trait = imbecile
-				}
-			}
-			NOT = { is_lover = ROOT }
-			NOT = { character = ROOT }
 			OR = {
 				AND = {
 					trait = homosexual
 					ROOT = { trait = homosexual }
 					same_sex = ROOT
 				}
-				AND = {
-					NOT = { trait = homosexual }
-					NOT = { ROOT = { trait = homosexual } }
-					NOT = { same_sex = ROOT }
+				NOR = {
+					trait = homosexual
+					ROOT = { trait = homosexual }
+					same_sex = ROOT
 				}
 			}
-			NOT = {
+			NOR = {
+				age = 65
+				trait = incapable
+				trait = infirm
+				trait = eunuch
+				trait = celibate
+				trait = inbred
+				trait = imbecile
+				is_lover = ROOT
+				character = ROOT
 				has_opinion_modifier = {
 					who = ROOT
 					modifier = opinion_seduced_lustful_worship
 				}
+				is_close_relative = ROOT
 			}
-			NOT = { is_close_relative = ROOT }
 		}
 	}
 	
@@ -8884,38 +8852,34 @@ character_event = {
 				prisoner = no
 				has_regent = no
 				is_ill = no
-				NOT = { age = 65 }
-				NOT = {
-					OR = {
-						trait = incapable
-						trait = infirm
-						trait = eunuch
-						trait = celibate
-						trait = inbred
-						trait = imbecile
-					}
-				}
-				NOT = { is_lover = ROOT }
-				NOT = { character = ROOT }
 				OR = {
-					AND = {
+					NOR = {
 						trait = homosexual
 						ROOT = { trait = homosexual }
 						same_sex = ROOT
 					}
 					AND = {
-						NOT = { trait = homosexual }
-						NOT = { ROOT = { trait = homosexual } }
-						NOT = { same_sex = ROOT }
+						trait = homosexual
+						ROOT = { trait = homosexual }
+						same_sex = ROOT
 					}
 				}
-				NOT = {
+				NOR = {
+					age = 65
+					trait = incapable
+					trait = infirm
+					trait = eunuch
+					trait = celibate
+					trait = inbred
+					trait = imbecile
+					is_lover = ROOT
+					character = ROOT
 					has_opinion_modifier = {
 						who = ROOT
 						modifier = opinion_seduced_lustful_worship
 					}
+					is_close_relative = ROOT
 				}
-				NOT = { is_close_relative = ROOT }
 			}
 			save_event_target_as = target_priest
 		}
@@ -8954,18 +8918,16 @@ character_event = {
 			modifier = {
 				factor = 30 # More dangerous for fertile married women
 				is_female = yes
-				NOT = { age = 45 }
 				OR = {
 					is_consort = yes
 					is_married = yes
 				}
-				NOT = {
-					OR = {
-						trait = homosexual
-						trait = arbitrary
-						trait = lustful
-						trait = hedonist
-					}
+				NOR = {
+					age = 45
+					trait = homosexual
+					trait = arbitrary
+					trait = lustful
+					trait = hedonist
 				}
 			}
 		}
@@ -9001,8 +8963,8 @@ character_event = {
 				NOT = { trait = homosexual }
 			}
 			AND = {
-				is_female = no
 				trait = homosexual
+				is_female = no
 			}
 		}
 		NOT = { has_character_modifier = hidden_seduced_bodyguard }
@@ -9013,18 +8975,16 @@ character_event = {
 		modifier = {
 			factor = 5.0 # More dangerous for fertile married women
 			is_female = yes
-			NOT = { age = 45 }
 			OR = {
 				is_consort = yes
 				is_married = yes
 			}
-			NOT = {
-				OR = {
-					trait = homosexual
-					trait = arbitrary
-					trait = lustful
-					trait = hedonist
-				}
+			NOR = {
+				age = 45
+				trait = homosexual
+				trait = arbitrary
+				trait = lustful
+				trait = hedonist
 			}
 		}
 		
@@ -9197,8 +9157,8 @@ character_event = {
 				NOT = { trait = homosexual }
 			}
 			AND = {
-				is_female = yes
 				trait = homosexual
+				is_female = yes
 			}
 		}
 		NOT = { has_character_modifier = hidden_seduced_maid }
@@ -9356,17 +9316,15 @@ character_event = {
 				NOT = { trait = homosexual }
 			}
 			AND = {
-				is_female = yes
 				trait = homosexual
+				is_female = yes
 			}
 		}
-		NOT = {
-			OR = {
-				trait = incapable
-				trait = infirm
-				trait = eunuch
-				trait = celibate
-			}
+		NOR = {
+			trait = incapable
+			trait = infirm
+			trait = eunuch
+			trait = celibate
 		}
 		is_ill = no
 		prisoner = no
@@ -9582,22 +9540,20 @@ character_event = {
 				NOT = { trait = homosexual }
 			}
 			AND = {
-				is_female = no
 				trait = homosexual
+				is_female = no
 			}
 		}
-		NOT = { trait = eunuch }
 		is_ill = no
 		prisoner = no
 		has_regent = no
-		NOT = {
-			OR = {
-				trait = incapable
-				trait = infirm
-				trait = celibate
-			}
+		NOR = {
+			trait = eunuch
+			trait = incapable
+			trait = infirm
+			trait = celibate
+			has_character_modifier = hidden_seduced_tree
 		}
-		NOT = { has_character_modifier = hidden_seduced_tree }
 	}
 	
 	mean_time_to_happen = {
@@ -9712,18 +9668,16 @@ character_event = {
 		prisoner = yes
 		is_ill = no
 		is_female = yes
-		NOT = {
-			OR = {
-				trait = incapable
-				trait = infirm
-				trait = eunuch
-				trait = celibate
-				trait = inbred
-				trait = imbecile
-			}
+		NOR = {
+			trait = incapable
+			trait = infirm
+			trait = eunuch
+			trait = celibate
+			trait = inbred
+			trait = imbecile
+			has_character_modifier = the_oubliette
+			has_character_modifier = hidden_seduced_gaoler
 		}
-		NOT = { has_character_modifier = the_oubliette }
-		NOT = { has_character_modifier = hidden_seduced_gaoler }
 	}
 	
 	mean_time_to_happen = {
@@ -10007,8 +9961,8 @@ character_event = {
 		if = {
 			limit = {
 				is_female = yes
-				NOT = { age = 45 }
 				fertility = 0.33
+				NOT = { age = 45 }
 			}
 			random = {
 				chance = 33
@@ -10054,8 +10008,6 @@ character_event = {
 	}
 }
 
-
-
 # Seduction of a Concubine
 character_event = {
 	id = WoL.590
@@ -10071,29 +10023,25 @@ character_event = {
 		prisoner = no
 		has_concubinage = yes
 		is_ill = no
-		NOT = {
-			OR = {
-				trait = incapable
-				trait = infirm
-				trait = eunuch
-				trait = celibate
-				trait = inbred
-				trait = imbecile
-			}
+		NOR = {
+			trait = incapable
+			trait = infirm
+			trait = eunuch
+			trait = celibate
+			trait = inbred
+			trait = imbecile
+			has_any_opinion_modifier = opinion_seducing_concubine
 		}
 		any_consort = {
-			NOT = { is_lover = ROOT }
 			prisoner = no
-			NOT = {
-				OR = {
-					trait = incapable
-					trait = infirm
-					trait = celibate
-				}
+			NOR = {
+				is_lover = ROOT
+				trait = incapable
+				trait = infirm
+				trait = celibate
+				age = 40
 			}
-			NOT = { age = 40 }
 		}
-		NOT = { has_any_opinion_modifier = opinion_seducing_concubine }
 	}
 	
 	mean_time_to_happen = {
@@ -10154,16 +10102,14 @@ character_event = {
 	immediate = {
 		random_consort = {
 			limit = {
-				NOT = { is_lover = ROOT }
 				prisoner = no
-				NOT = {
-					OR = {
-						trait = incapable
-						trait = infirm
-						trait = celibate
-					}
+				NOR = {
+					trait = incapable
+					trait = infirm
+					trait = celibate
+					is_lover = ROOT
+					age = 40
 				}
-				NOT = { age = 40 }
 			}
 			save_event_target_as = target_consort
 			reverse_opinion = {
@@ -10478,4 +10424,3 @@ character_event = {
 		}
 	}
 }
-

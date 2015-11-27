@@ -32,10 +32,35 @@ religious_proselyte1 = {
 
 	can_use = {
 		ROOT = {
-			proselyte_religion_trigger = yes
+			custom_tooltip = {
+				text = proselyte_religion_tooltip
+			}
+			hidden_tooltip = {
+				proselyte_religion_trigger = yes
+			}
+			OR = {
+				is_patrician = no
+				is_feudal = yes
+			}
+			top_liege = {
+				religion_group = ROOT
+				OR = {
+					religion = ROOT
+					AND = {
+						is_heretic = no
+						ROOT = { is_heretic = no }
+					}
+				}
+			}
 			NOR = {
-				has_character_flag = do_not_disturb				
-				total_war_religion_trigger = yes # those should use total war
+				religion_group = FROM
+				has_character_flag = do_not_disturb
+				custom_tooltip = {
+					text = total_war_tooltip
+				}
+				hidden_tooltip = {
+					total_war_religion_trigger = yes # those should use total war
+				}
 				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
 				pays_tribute_to = FROM
 				any_liege = {
@@ -51,22 +76,6 @@ religious_proselyte1 = {
 			is_merchant_republic = no
 			is_nomadic = no
 			mercenary = no
-			OR = {
-				is_patrician = no
-				is_feudal = yes
-			}
-			NOT = { religion_group = FROM }
-			top_liege = {
-				religion_group = ROOT
-#				NOT = { religion = FROM }
-				OR = {
-					religion = ROOT
-					AND = {
-						is_heretic = no
-						ROOT = { is_heretic = no }
-					}
-				}
-			}
 		}
 	}
 
@@ -152,10 +161,12 @@ religious_proselyte1 = {
 	
 	is_valid = {
 		ROOT = {
-			NOT = { same_realm = FROM }
-			NOT = { religion_group = FROM }
-			top_liege = {
-				NOT = { religion = FROM }
+			NOR = {
+				same_realm = FROM
+				religion_group = FROM
+				top_liege = {
+					religion = FROM
+				}
 			}
 		}
 	}
@@ -334,10 +345,36 @@ religious_proselyte2 = {
 	
 	can_use = {
 		ROOT = {
-			proselyte_religion_trigger = yes
+			custom_tooltip = {
+				text = proselyte_religion_tooltip
+			}
+			hidden_tooltip = {
+				proselyte_religion_trigger = yes
+			}
+			OR = {
+				is_patrician = no
+				is_feudal = yes
+			}
+			top_liege = {
+				religion_group = ROOT
+				OR = {
+					religion = ROOT
+					AND = {
+						is_heretic = no
+						ROOT = { is_heretic = no }
+					}
+				}
+				NOT = { religion = FROM }
+			}
 			NOR = {
-				has_character_flag = do_not_disturb				
-				total_war_religion_trigger = yes # thos should use total war
+				religion = FROM
+				has_character_flag = do_not_disturb
+				custom_tooltip = {
+					text = total_war_tooltip
+				}
+				hidden_tooltip = {
+					total_war_religion_trigger = yes # those should use total war
+				}
 				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
 				pays_tribute_to = FROM
 				any_liege = {
@@ -353,23 +390,7 @@ religious_proselyte2 = {
 			is_merchant_republic = no
 			is_nomadic = no
 			mercenary = no
-			OR = {
-				is_patrician = no
-				is_feudal = yes
-			}
 			religion_group = FROM
-			NOT = { religion = FROM }
-			top_liege = {
-				religion_group = ROOT
-				NOT = { religion = FROM }
-				OR = {
-					religion = ROOT
-					AND = {
-						is_heretic = no
-						ROOT = { is_heretic = no }
-					}
-				}
-			}
 		}
 	}
 
@@ -454,11 +475,13 @@ religious_proselyte2 = {
 	
 	is_valid = {
 		ROOT = {
-			NOT = { same_realm = FROM }
-			NOT = { religion = FROM }
 			religion_group = FROM
-			top_liege = {
-				NOT = { religion = FROM }
+			NOR = {
+				top_liege = {
+					religion = FROM
+				}
+				same_realm = FROM
+				religion = FROM
 			}
 		}
 	}
@@ -661,31 +684,17 @@ religious_bastion1 = {
 	
 	can_use = {
 		ROOT = {
-			bastion_of_faith_religion_trigger = yes
-			NOR = {
-				has_character_flag = do_not_disturb				
-				total_war_religion_trigger = yes # those should use total war
-				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
-				pays_tribute_to = FROM
-				any_liege = {
-					OR = {
-						pays_tribute_to = FROM
-						FROM = {
-							pays_tribute_to = PREV
-						}
-					}
-				}
-				same_realm = FROM
+			custom_tooltip = {
+				text = bastion_religion_tooltip
 			}
-			is_merchant_republic = no
-			is_nomadic = no
-			mercenary = no
+			hidden_tooltip = {
+				bastion_of_faith_religion_trigger = yes
+			}
 			OR = {
 				is_patrician = no
 				is_feudal = yes
 			}
 			religion_group = FROM
-			NOT = { religion = FROM }
 			OR = {
 				is_reformed_religion = FROM
 				is_heresy_of = FROM
@@ -702,6 +711,30 @@ religious_bastion1 = {
 					}
 				}
 			}
+			NOR = {
+				religion = FROM
+				has_character_flag = do_not_disturb
+				custom_tooltip = {
+					text = total_war_tooltip
+				}
+				hidden_tooltip = {
+					total_war_religion_trigger = yes # those should use total war
+				}
+				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
+				same_realm = FROM
+			}
+			is_merchant_republic = no
+			is_nomadic = no
+			mercenary = no
 		}
 	}
 
@@ -786,16 +819,18 @@ religious_bastion1 = {
 	
 	is_valid = {
 		ROOT = {
-			NOT = { same_realm = FROM }
-			NOT = { religion = FROM }
 			religion_group = FROM
-			top_liege = {
-				NOT = { religion = FROM }
-			}
 			OR = {
 				is_reformed_religion = FROM
 				is_heresy_of = FROM
 				is_parent_religion = FROM
+			}
+			NOR = {
+				same_realm = FROM
+				religion = FROM
+				top_liege = {
+					religion = FROM
+				}
 			}
 		}
 	}
@@ -994,10 +1029,35 @@ religious_bastion2 = {
 	
 	can_use = {
 		ROOT = {
-			bastion_of_faith_religion_trigger = yes
+			custom_tooltip = {
+				text = bastion_religion_tooltip
+			}
+			hidden_tooltip = {
+				bastion_of_faith_religion_trigger = yes
+			}
+			OR = {
+				is_patrician = no
+				is_feudal = yes
+			}
+			top_liege = {
+				religion_group = ROOT
+				OR = {
+					religion = ROOT
+					AND = {
+						is_heretic = no
+						ROOT = { is_heretic = no }
+					}
+				}
+			}
 			NOR = {
-				has_character_flag = do_not_disturb				
-				total_war_religion_trigger = yes # those should use total war
+				religion_group = FROM
+				has_character_flag = do_not_disturb
+				custom_tooltip = {
+					text = total_war_tooltip
+				}
+				hidden_tooltip = {
+					total_war_religion_trigger = yes # those should use total war
+				}
 				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
 				pays_tribute_to = FROM
 				any_liege = {
@@ -1013,21 +1073,6 @@ religious_bastion2 = {
 			is_merchant_republic = no
 			is_nomadic = no
 			mercenary = no
-			OR = {
-				is_patrician = no
-				is_feudal = yes
-			}
-			NOT = { religion_group = FROM }
-			top_liege = {
-				religion_group = ROOT
-				OR = {
-					religion = ROOT
-					AND = {
-						is_heretic = no
-						ROOT = { is_heretic = no }
-					}
-				}
-			}
 		}
 	}
 
@@ -1112,10 +1157,12 @@ religious_bastion2 = {
 	
 	is_valid = {
 		ROOT = {
-			NOT = { same_realm = FROM }
-			NOT = { religion_group = FROM }
-			top_liege = {
-				NOT = { religion = FROM }
+			NOR = {
+				same_realm = FROM
+				religion_group = FROM
+				top_liege = {
+					religion = FROM
+				}
 			}
 		}
 	}
@@ -1289,25 +1336,12 @@ religious_ancestral = {
 	
 	can_use = {
 		ROOT = {
-			ancestral_religion_trigger = yes
-			NOR = {
-				has_character_flag = do_not_disturb				
-				total_war_religion_trigger = yes # those should use total war
-				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
-				pays_tribute_to = FROM
-				any_liege = {
-					OR = {
-						pays_tribute_to = FROM
-						FROM = {
-							pays_tribute_to = PREV
-						}
-					}
-				}
-				same_realm = FROM
+			custom_tooltip = {
+				text = ancestral_religion_tooltip
 			}
-			is_merchant_republic = no
-			is_nomadic = no
-			mercenary = no
+			hidden_tooltip = {
+				ancestral_religion_trigger = yes
+			}
 			OR = {
 				is_patrician = no
 				is_feudal = yes
@@ -1329,6 +1363,29 @@ religious_ancestral = {
 					}
 				}
 			}
+			NOR = {
+				has_character_flag = do_not_disturb
+				custom_tooltip = {
+					text = total_war_tooltip
+				}
+				hidden_tooltip = {
+					total_war_religion_trigger = yes # those should use total war
+				}
+				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
+				pays_tribute_to = FROM
+				any_liege = {
+					OR = {
+						pays_tribute_to = FROM
+						FROM = {
+							pays_tribute_to = PREV
+						}
+					}
+				}
+				same_realm = FROM
+			}
+			is_merchant_republic = no
+			is_nomadic = no
+			mercenary = no
 		}
 	}
 
@@ -1413,10 +1470,12 @@ religious_ancestral = {
 	
 	is_valid = {
 		ROOT = {
-			NOT = { same_realm = FROM }
-			NOT = { religion_group = FROM }
-			top_liege = {
-				NOT = { religion = FROM }
+			NOR = {
+				same_realm = FROM
+				religion_group = FROM
+				top_liege = {
+					religion = FROM
+				}
 			}
 		}
 	}
@@ -1604,14 +1663,47 @@ totalwar = {
 
 	can_use = {
 		ROOT = {
-			OR = {# Total War 
-				religion = mani_ahriman
-				religion = norse_war
-				religion = ragnarok
-				religion = tengri_ahriman
-				religion = zor_angra
+			custom_tooltip = {
+				text = total_war_tooltip
+			}
+			hidden_tooltip = {
+				total_war_religion_trigger = yes
+			}
+			OR = {
+				is_patrician = no
+				is_feudal = yes
+			}
+			OR = {
+				is_heresy_of = FROM
+				is_parent_religion = FROM
+				AND = {
+					religion_group = muslim
+					NOR = {
+						religion = FROM
+						FROM = {
+							any_current_enemy = {
+								NOT = {
+									religion_group = muslim
+								}
+							}
+						}
+					}
+				}
+				NOT = { religion_group = FROM }
+			}
+			top_liege = {
+				religion_group = ROOT
+				OR = {
+					religion = ROOT
+					AND = {
+						is_heretic = no
+						ROOT = { is_heretic = no }
+					}
+				}
+				NOT = { religion = FROM }
 			}
 			NOR = {
+				same_realm = FROM
 				has_character_flag = do_not_disturb
 				#Tolerant rulers don't use religion as a casus belli
 				trait = tolerant_ruler
@@ -1627,40 +1719,6 @@ totalwar = {
 			}
 			mercenary = no
 			is_merchant_republic = no
-			OR = {
-				is_patrician = no
-				is_feudal = yes
-			}
-			NOT = { same_realm = FROM }
-			OR = {
-				NOT = { religion_group = FROM }
-				is_heresy_of = FROM
-				is_parent_religion = FROM
-				AND = {
-					religion_group = muslim
-					NOT = { religion = FROM }
-					FROM = {
-						NOT = {
-							any_current_enemy = {
-								NOT = {
-									religion_group = muslim
-								}
-							}
-						}
-					}
-				}
-			}
-			top_liege = {
-				religion_group = ROOT
-				NOT = { religion = FROM }
-				OR = {
-					religion = ROOT
-					AND = {
-						is_heretic = no
-						ROOT = { is_heretic = no }
-					}
-				}
-			}
 		}
 	}
 	can_use_gui = {
@@ -1729,7 +1787,6 @@ totalwar = {
 		
 	is_valid = {
 		ROOT = {
-			NOT = { same_realm = FROM }
 			OR = {
 				NOT = { religion_group = FROM }
 				is_heresy_of = FROM
@@ -1739,8 +1796,11 @@ totalwar = {
 					NOT = { religion = FROM }
 				}
 			}
-			top_liege = {
-				NOT = { religion = FROM }
+			NOR = {
+				same_realm = FROM
+				top_liege = {
+					religion = FROM
+				}
 			}
 		}
 	}
@@ -1921,50 +1981,12 @@ sacred_war = {
 				primary_title = {
 					has_law = tolerance_2
 				}
-				religion = alexandros
-				religion = amanai
-				religion = anansi
-				religion = aten
-				religion = attar
-				religion = aztec
-				religion = dazhbog
-				religion = endovellico
-				religion = ghazi_islam
-				religion = gurzil
-				religion = hadad
-				religion = jud_sabaoth
-				religion = lubu
-				religion = maher
-				religion = mani_mithra
-				religion = mithra
-				religion = mithra_christ
-				religion = mithra_sol
-				religion = murugan
-				religion = norse_war
-				religion = perun
-				religion = sol_tsahay
-				religion = solomonic_alexandros
-				religion = svetovid
-				religion = tarhunt
-				religion = teiwaz
-				religion = zal
-				religion = zal_christ
-				religion = zal_mani
-				religion = zande_pagan
-				religion = zulu_pagan
-				# Reformed religions
-				religion = aten_reformed
-				religion = berber_pagan_reformed
-				religion = cybele_reformed
-				religion = erlik_reformed
-				religion = ethiopian_war_reformed
-				religion = lubu_reformed
-				religion = murugan_reformed
-				religion = muslim_domination_reformed
-				religion = set_reformed
-				religion = teiwaz_reformed
-				religion = zande_pagan_reformed
-				religion = zulu_pagan_reformed
+				custom_tooltip = {
+					text = martial_religion_tooltip
+					hidden_tooltip = {
+						martial_religion_trigger = yes
+					}
+				}
 				same_realm = FROM
 				religion_group = FROM
 			}
@@ -2367,18 +2389,11 @@ county_liberation = {
 				has_character_flag = do_not_disturb
 				FROM = { religion = ROOT}
 			}
-			OR = {# Populist religions
-				religion = antinomian
-				religion = bogomilist
-				religion = cathar
-				religion = dionysos
-				religion = fraticelli
-				religion = jud_zion
-				religion = kharijite
-				religion = mani_slavic
-				religion = mazdakism
-				religion = tao
-				religion = waldensian
+			custom_tooltip = {
+				text = populist_soul_tooltip
+				hidden_tooltip = {
+					populist_soul_trigger = yes
+				}
 			}
 		}
 	}
