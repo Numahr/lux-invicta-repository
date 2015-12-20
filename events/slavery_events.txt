@@ -272,8 +272,10 @@ character_event = {
 			}
 			FROM = { 
 				# Must be at least theoretically capable of breeding
-				NOT = { trait = incapable }
-				NOT = { trait = eunuch }
+				NOR = {
+					trait = incapable
+					trait = eunuch
+				}
 				is_married = no
 				age = 16
 				is_consort = no
@@ -284,16 +286,10 @@ character_event = {
 				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
 				NOT = { character = FROM }
 				is_married = no
+				is_opposite_sex = FROM
 				OR = {
-					AND = {
-						is_female = yes
-						NOT = { age = 40 }
-						FROM = { is_female = no }
-					}
-					AND = {
-						is_female = no
-						FROM = { is_female = yes }
-					}
+					is_female = no
+					NOT = { age = 40 }
 				}	
 				NOR = {
 					trait = incapable
@@ -409,8 +405,8 @@ character_event = {
 				}	
 			}		
 		}
-		FROM = {
-			remove_spouse = spouse
+		spouse = {
+			remove_spouse = FROM
 		}	
 		clr_character_flag = flag_slave_action
 	}
@@ -743,17 +739,43 @@ character_event = {
 		}
 		piety = -30
 		hidden_tooltip = {
-			father = { opinion = { who = FROM modifier = opinion_castrated_close_kin } }
-			mother = { opinion = { who = FROM modifier = opinion_castrated_close_kin } }
+			father = {
+				if = {
+					limit = {
+						NOT = {
+							character = FROM
+						}
+					}
+					opinion = { who = FROM modifier = opinion_castrated_close_kin }
+				}
+			}
+			mother = {
+				if = {
+					limit = {
+						NOT = {
+							character = FROM
+						}
+					}
+					opinion = { who = FROM modifier = opinion_castrated_close_kin }
+				}
+			}
 			any_dynasty_member = {
 				limit = {
 					is_close_relative = ROOT
-					NOT = { any_child = { character = ROOT } } 
+					NOT = {
+						any_child = { character = ROOT }
+						character = FROM
+					} 
 				}
 				opinion = { who = FROM modifier = opinion_castrated_close_kin }
 			}
 			any_spouse = {
-				limit = { opinion = { who = ROOT value = -25 } }
+				limit = {
+					NOT = {
+						character = FROM
+					}
+					opinion = { who = ROOT value = -25 }
+				}
 				opinion = { who = FROM modifier = opinion_castrated_close_kin }
 			}
 		}
@@ -770,45 +792,43 @@ character_event = {
 			modifier = {
 				factor = 0
 				FROM = {
-					NOT = {
-						OR = {
-							ROOT = { trait = liberator }
-							any_lover = {
-								character = ROOT
+					NOR = {
+						ROOT = { trait = liberator }
+						any_lover = {
+							character = ROOT
+							OR = {
+								trait = kind
+								trait = just
+								trait = honorable
+							}
+						}
+						AND = {
+							NOT = { trait = bastard }
+							ROOT = {
+								OR = {
+									is_close_relative = FROM
+									dynasty = FROM
+								}
 								OR = {
 									trait = kind
 									trait = just
 									trait = honorable
+									trait = familyperson
+									is_feudal = yes
 								}
 							}
-							AND = {
-								NOT = { trait = bastard }
-								ROOT = {
-									OR = {
-										is_close_relative = FROM
-										dynasty = FROM
-									}
-									OR = {
-										trait = kind
-										trait = just
-										trait = honorable
-										trait = familyperson
-										is_feudal = yes
-									}
-								}
+						}
+						ROOT = {
+							opinion = { who = FROM value = 100 }
+							OR = {
+								trait = kind
+								trait = just
+								trait = honorable
 							}
-							ROOT = {
-								opinion = { who = FROM value = 100 }
-								OR = {
-									trait = kind
-									trait = just
-									trait = honorable
-								}
-							}
-							ROOT = {
-								abolitionist_trigger = yes
-								trait = zealous
-							}
+						}
+						ROOT = {
+							abolitionist_trigger = yes
+							trait = zealous
 						}
 					}
 				}	
@@ -872,7 +892,7 @@ character_event = {
 	ai = yes
 	hide_window = yes
 	
-	option = {
+	option = { #Join slave trade
 		trigger = {
 			is_patrician = yes # Only patricians can be slave traders
 			NOR = {
@@ -994,7 +1014,7 @@ character_event = {
 		remove_trait = slave_trader
 		#clr_dynasty_flag = flag_slaver_tradition
 	}
-	option = {
+	option = {#Buy a slave
 		trigger = {
 			crownlaw_title = {
 				OR = {
@@ -1117,8 +1137,8 @@ character_event = {
 		trigger = {
 			demesne_size = 1
 			crownlaw_title = { has_law = slavery_2 }		
-			NOT = { trait = liberator }
 			NOR = {
+				trait = liberator
 				capital_holding = {
 					OR = {
 						has_building = ca_asoiaf_slavepit_5
@@ -1360,22 +1380,20 @@ character_event = {
 						trait = zealous
 					}
 				}
-				NOT = {
-					AND = {
-						capital_scope = { revolt_risk = 0.1 }
-						OR = {
-							trait = slave_trader
-							AND = {
-								has_character_flag = flag_selling_bulk_slaves_rejected
-								NOT = { had_character_flag = { flag = flag_selling_bulk_slaves_rejected days = 1825 } }
-							}
+				NAND = {
+					capital_scope = { revolt_risk = 0.1 }
+					OR = {
+						trait = slave_trader
+						AND = {
+							has_character_flag = flag_selling_bulk_slaves_rejected
+							NOT = { had_character_flag = { flag = flag_selling_bulk_slaves_rejected days = 1825 } }
 						}
-						NOR = {
-							trait = lunatic
-							trait = possessed
-							trait = imbecile
-							trait = slow
-						}
+					}
+					NOR = {
+						trait = lunatic
+						trait = possessed
+						trait = imbecile
+						trait = slow
 					}
 				}
 			}
@@ -1617,11 +1635,9 @@ character_event = {
 		slave = {
 			is_alive = yes
 			liege = { character = ROOT }
-			NOT = {
-				OR = {
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-					reverse_has_opinion_modifier = { who = ROOT modifier = opinion_my_slave }
-				}
+			NOR = {
+				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				reverse_has_opinion_modifier = { who = ROOT modifier = opinion_my_slave }
 			}
 		}
 	}
@@ -1677,7 +1693,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	immediate = {
-		set_character_flag = flag_breeding_slave_1
+		save_event_target_as = breeding_slave_1
 		liege = { character_event = { id = slavery.301 } }
 	}
 }
@@ -1692,16 +1708,10 @@ character_event = {
 			limit = {
 				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
 				is_married = no
+				is_opposite_sex = FROM
 				OR = {
-					AND = {
-						is_female = yes
-						NOT = { age = 40 }
-						FROM = { is_female = no }
-					}
-					AND = {
-						is_female = no
-						FROM = { is_female = yes }
-					}
+					is_female = no
+					NOT = { age = 40 }
 				}
 				
 				# Must be capable of having children
@@ -1709,26 +1719,20 @@ character_event = {
 				NOR = {
 					trait = incapable
 					trait = eunuch
-					has_character_flag = flag_breeding_slave_1
+					character = breeding_slave_1
 				}
 				is_consort = no
 			}
-			set_character_flag = flag_breeding_candidate_1
+			save_event_target_as = breeding_candidate_1
 		}
 		slave = {
 			limit = {
 				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
 				is_married = no
+				is_opposite_sex = FROM
 				OR = {
-					AND = {
-						is_female = yes
-						NOT = { age = 40 }
-						FROM = { is_female = no }
-					}
-					AND = {
-						is_female = no
-						FROM = { is_female = yes }
-					}
+					is_female = no
+					NOT = { age = 40 }
 				}
 				
 				# Must be capable of having children
@@ -1736,27 +1740,21 @@ character_event = {
 				NOR = {
 					trait = incapable
 					trait = eunuch
-					has_character_flag = flag_breeding_slave_1
-					has_character_flag = flag_breeding_candidate_1
+					character = event_target:breeding_slave_1
+					character = event_target:breeding_candidate_1
 				}
 				is_consort = no
 			}
-			set_character_flag = flag_breeding_candidate_2
+			save_event_target_as = breeding_candidate_2
 		}
 		slave = {
 			limit = {
 				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
 				is_married = no
+				is_opposite_sex = FROM
 				OR = {
-					AND = {
-						is_female = yes
-						NOT = { age = 40 }
-						FROM = { is_female = no }
-					}
-					AND = {
-						is_female = no
-						FROM = { is_female = yes }
-					}
+					is_female = no
+					NOT = { age = 40 }
 				}
 				
 				# Must be capable of having children
@@ -1764,568 +1762,389 @@ character_event = {
 				NOR = {
 					trait = incapable
 					trait = eunuch
-					has_character_flag = flag_breeding_slave_1
-					has_character_flag = flag_breeding_candidate_1
-					has_character_flag = flag_breeding_candidate_2
+					character = breeding_slave_1
+					character = breeding_candidate_1
+					character = breeding_candidate_2
 				}
 				is_consort = no
 			}
-			set_character_flag = flag_breeding_candidate_3
+			save_event_target_as = breeding_candidate_3
 		}
 	}
 	
 	option = {
 		trigger = {
-			slave = {
-				has_character_flag = flag_breeding_candidate_1
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+			event_target:breeding_candidate_1 = {
+				always = yes
 			}
 		}
 		name = "EVTOPTASLAVERY301"
-		slave = {
-			limit = {
-				has_character_flag = flag_breeding_candidate_1
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-			}
-			clr_character_flag = flag_breeding_candidate_1
-			set_character_flag = flag_breeding_slave_2
-			character_event = { id = slavery.302 tooltip = "EVTTOOLTIPSLAVERY302" }
-		}
-		hidden_tooltip = {
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_2
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_3
-			}
-		}
 		ai_chance = {
 			factor = 100
 			modifier = {
 				factor = 0.2
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					is_close_relative = FROM
 				}
 			}
 			modifier = {
 				factor = 4
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = genius
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = quick
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = slow
 				}
 			}
 			modifier = {
 				factor = 0.25
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = imbecile
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = strong
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = weak
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = fair
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = ugly
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = tall
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = dwarf
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = clubfooted
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = harelip
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = hunchback
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = lisp
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = stutter
 				}
 			}
 			modifier = {
 				factor = 0
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_1 = {
 					trait = inbred
 				}
 			}
 		}
+		event_target:breeding_candidate_1 = {
+			save_event_target_as = breeding_slave_2
+			character_event = { id = slavery.302 tooltip = "EVTTOOLTIPSLAVERY302" }
+		}
+		clear_event_target = breeding_candidate_1
+		clear_event_target = breeding_candidate_2
+		clear_event_target = breeding_candidate_3
 	}
 	
 	option = {
 		trigger = {
-			slave = {
-				has_character_flag = flag_breeding_candidate_2
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+			event_target:breeding_candidate_2 = {
+				always = yes
 			}
 		}
 		name = "EVTOPTASLAVERY301"
-		slave = {
-			limit = {
-				has_character_flag = flag_breeding_candidate_2
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-			}
-			clr_character_flag = flag_breeding_candidate_2
-			set_character_flag = flag_breeding_slave_2
-			character_event = { id = slavery.302 tooltip = "EVTTOOLTIPSLAVERY302" }
-		}
-		hidden_tooltip = {
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_1
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_3
-			}
-		}
 		ai_chance = {
 			factor = 100
 			modifier = {
 				factor = 0.2
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					is_close_relative = FROM
 				}
 			}
 			modifier = {
 				factor = 4
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = genius
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = quick
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = slow
 				}
 			}
 			modifier = {
 				factor = 0.25
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = imbecile
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = strong
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = weak
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = fair
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = ugly
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = tall
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = dwarf
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = clubfooted
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = harelip
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = hunchback
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = lisp
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = stutter
 				}
 			}
 			modifier = {
 				factor = 0
-				slave = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_2 = {
 					trait = inbred
 				}
 			}
 		}
+		event_target:breeding_candidate_2 = {
+			save_event_target_as = breeding_slave_2
+			character_event = { id = slavery.302 tooltip = "EVTTOOLTIPSLAVERY302" }
+		}
+		clear_event_target = breeding_candidate_1
+		clear_event_target = breeding_candidate_2
+		clear_event_target = breeding_candidate_3
 	}
 	
 	option = {
 		trigger = {
-			slave = {
-				has_character_flag = flag_breeding_candidate_3
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+			event_target:breeding_candidate_3 = {
+				always = yes
 			}
 		}
 		name = "EVTOPTASLAVERY301"
-		slave = {
-			limit = {
-				has_character_flag = flag_breeding_candidate_3
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-			}
-			clr_character_flag = flag_breeding_candidate_3
-			set_character_flag = flag_breeding_slave_2
-			character_event = { id = slavery.302 tooltip = "EVTTOOLTIPSLAVERY302" }
-		}
-		hidden_tooltip = {
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_2
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_1
-			}
-		}
 		ai_chance = {
 			factor = 100
 			modifier = {
 				factor = 0.2
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					is_close_relative = FROM
 				}
 			}
 			modifier = {
 				factor = 4
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = genius
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = quick
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = slow
 				}
 			}
 			modifier = {
 				factor = 0.25
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = imbecile
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = strong
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = weak
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = fair
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = ugly
 				}
 			}
 			modifier = {
 				factor = 2
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = tall
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = dwarf
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = clubfooted
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = harelip
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = hunchback
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = lisp
 				}
 			}
 			modifier = {
 				factor = 0.5
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = stutter
 				}
 			}
 			modifier = {
 				factor = 0
-				slave = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
+				event_target:breeding_candidate_3 = {
 					trait = inbred
 				}
 			}
 		}
+		event_target:breeding_candidate_3 = {
+			save_event_target_as = breeding_slave_2
+			character_event = { id = slavery.302 tooltip = "EVTTOOLTIPSLAVERY302" }
+		}
+		clear_event_target = breeding_candidate_1
+		clear_event_target = breeding_candidate_2
+		clear_event_target = breeding_candidate_3
 	}
 	
 	option = {
 		name = "EVTOPTBSLAVERY301"
 		clr_character_flag = flag_slave_action
-		hidden_tooltip = {
-			FROM = { clr_character_flag = flag_breeding_slave_1 }
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_1
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_2
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_candidate_3
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_candidate_3
-			}
-		}
 		ai_chance = {
 			factor = 25
 		}
+		clear_event_target = breeding_slave_1
+		clear_event_target = breeding_candidate_1
+		clear_event_target = breeding_candidate_2
+		clear_event_target = breeding_candidate_3
 	}
 }
 
@@ -2435,7 +2254,7 @@ character_event = {
 			modifier = {
 				factor = 5
 				any_lover = {
-					has_character_flag = flag_breeding_slave_1
+					character = breeding_slave_1
 					has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
 				}
 			}
@@ -2542,20 +2361,8 @@ character_event = {
 		}	
 		clr_character_flag = flag_slave_action
 		hidden_tooltip = {
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_1
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_2
-			}
+			clear_event_target = breeding_slave_1
+			clear_event_target = breeding_slave_2
 		}
 	}
 }
@@ -2568,11 +2375,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTASLAVERY304"
-		slave = {
-			limit = {
-				has_character_flag = flag_breeding_slave_1
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-			}
+		event_target:breeding_slave_1 = {
 			character_event = { id = slavery.305 tooltip = "EVTTOOLTIPSLAVERY302" }
 		}
 	}
@@ -2684,7 +2487,7 @@ character_event = {
 			modifier = {
 				factor = 5
 				any_lover = {
-					has_character_flag = flag_breeding_slave_2
+					character = breeding_slave_2
 					has_opinion_modifier = { who = FROM modifier = opinion_my_owner }
 				}
 			}
@@ -2791,20 +2594,8 @@ character_event = {
 		}	
 		clr_character_flag = flag_slave_action
 		hidden_tooltip = {
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_1
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_2
-			}
+			clear_event_target = breeding_slave_1
+			clear_event_target = breeding_slave_2
 		}
 	}
 }
@@ -2817,29 +2608,13 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTASLAVERY307"
-		slave = {
-			limit = {
-				has_character_flag = flag_breeding_slave_2
-				has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-			}
+		event_target:breeding_slave_2 = {
 			add_spouse = FROM
 		}
 		clr_character_flag = flag_slave_action
 		hidden_tooltip = {
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_1
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_2
-			}
+			clear_event_target = breeding_slave_1
+			clear_event_target = breeding_slave_2
 		}
 	}
 }
@@ -2878,55 +2653,34 @@ character_event = {
 	}
 	
 	immediate = {
-		if = {
-			limit = {
+		random = {
+			chance = 55
+			modifier = {
+				factor = 1.45
 				fertility = 0.75
-				spouse = { fertility = 0.75 }
-			}
-			random = {
-				chance = 80
-				spouse = { ROOT = { impregnate = PREV } }
-			}
-		}
-		if = {
-			limit = {
-				NAND = {
+				spouse = {
 					fertility = 0.75
-					spouse = { fertility = 0.75 }
 				}
-				fertility = 0.5
-				spouse = { fertility = 0.5 }
 			}
-			random = {
-				chance = 55
-				spouse = { ROOT = { impregnate = PREV } }
-			}	
-		}
-		if = {
-			limit = {
+			modifier = {
+				factor = 0.54
 				NAND = {
 					fertility = 0.5
-					spouse = { fertility = 0.5 }
+					spouse = {
+						fertility = 0.5
+					}
 				}
-				fertility = 0.2
-				spouse = { fertility = 0.2 }
 			}
-			random = {
-				chance = 30
-				spouse = { ROOT = { impregnate = PREV } }
-			}	
-		}
-		if = {
-			limit = {
+			modifier = {
+				factor = 0.5
 				NAND = {
 					fertility = 0.2
-					spouse = { fertility = 0.2 }
+					spouse = {
+						fertility = 0.2
+					}
 				}
 			}
-			random = {
-				chance = 15
-				spouse = { ROOT = { impregnate = PREV } }
-			}	
+			spouse = { impregnate = ROOT }
 		}
 	}
 }
@@ -3251,34 +3005,26 @@ character_event = {
 			break = yes
 		}
 		#If we got here, the slave is neither wounded nor maimed
-		if = {
-			limit = {
-				NOR = {
-					trait = maimed
-					trait = wounded
+		event_target:my_owner = {
+			random_list = {
+				40 = {
+					character_event = { id = slavery.501 }
 				}
-			}
-			event_target:my_owner = {
-				random_list = {
-					40 = {
-						character_event = { id = slavery.501 }
+				30 = {
+					ROOT = {
+						add_trait = wounded
 					}
-					30 = {
-						ROOT = {
-							add_trait = wounded
-						}
-						character_event = { id = slavery.502 }
+					character_event = { id = slavery.502 }
+				}
+				20 = {
+					ROOT = {
+						add_trait = maimed
 					}
-					20 = {
-						ROOT = {
-							add_trait = maimed
-						}
-						character_event = { id = slavery.503 }
-					}
-					10 = {
-						character_event = { id = slavery.504 }
-						ROOT = { death = { death_reason = death_murder killer = PREV } }
-					}
+					character_event = { id = slavery.503 }
+				}
+				10 = {
+					character_event = { id = slavery.504 }
+					ROOT = { death = { death_reason = death_murder killer = PREV } }
 				}
 			}
 		}
@@ -3303,15 +3049,22 @@ character_event = {
 	}
 	
 	option = {
-		trigger = { FROM = { has_character_flag = flag_breeding_slave_1 } }
 		name = "EVTOPTBSLAVERY501"
-		hidden_tooltip = { FROM = { character_event = { id = slavery.305 } } }
-	}
-	
-	option = {
-		trigger = { FROM = { has_character_flag = flag_breeding_slave_2 } }
-		name = "EVTOPTBSLAVERY501"
-		hidden_tooltip = { FROM = { character_event = { id = slavery.302 } } }
+		hidden_tooltip = {
+			FROM =  {
+				if = {
+					limit = {
+						character = event_target:breeding_slave_1
+					}
+					character_event = {
+						id = slavery.305
+					}
+					break = yes
+				}
+				#breeding slave 2
+				character_event = slavery.302
+			}
+		}
 	}
 }
 character_event = {
@@ -3331,15 +3084,24 @@ character_event = {
 	}
 	
 	option = {
-		trigger = { FROM = { has_character_flag = flag_breeding_slave_1 } }
 		name = "EVTOPTBSLAVERY501"
-		hidden_tooltip = { FROM = { character_event = { id = slavery.305 } } }
-	}
-	
-	option = {
-		trigger = { FROM = { has_character_flag = flag_breeding_slave_2 } }
-		name = "EVTOPTBSLAVERY501"
-		hidden_tooltip = { FROM = { character_event = { id = slavery.302 } } }
+		hidden_tooltip = {
+			FROM = {
+				if = {
+					limit = {
+						character = event_target:breeding_slave_1
+					}
+					character_event = {
+						id = slavery.305
+					}
+					break = yes
+				}
+				#breeding slave 2
+				character_event = {
+					id = slavery.302
+				}
+			}
+		}
 	}
 }
 character_event = {
@@ -3359,15 +3121,24 @@ character_event = {
 	}
 	
 	option = {
-		trigger = { FROM = { has_character_flag = flag_breeding_slave_1 } }
 		name = "EVTOPTBSLAVERY501"
-		hidden_tooltip = { FROM = { character_event = { id = slavery.305 } } }
-	}
-	
-	option = {
-		trigger = { FROM = { has_character_flag = flag_breeding_slave_2 } }
-		name = "EVTOPTBSLAVERY501"
-		hidden_tooltip = { FROM = { character_event = { id = slavery.302 } } }
+		hidden_tooltip = {
+			FROM = {
+				if = {
+					limit = {
+						character = event_target:breeding_slave_1
+					}
+					character_event = {
+						id = slavery.305
+					}
+					break = yes
+				}
+				#breeding slave 2
+				character_event = {
+					id = slavery.302
+				}
+			}
+		}
 	}
 }
 character_event = {
@@ -3393,20 +3164,8 @@ character_event = {
 		name = "EVTOPTBSLAVERY504"
 		clr_character_flag = flag_slave_action
 		hidden_tooltip = {
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_1
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_1
-			}
-			slave = {
-				limit = {
-					has_character_flag = flag_breeding_slave_2
-					has_opinion_modifier = { who = ROOT modifier = opinion_my_owner }
-				}
-				clr_character_flag = flag_breeding_slave_2
-			}
+			clear_event_target = breeding_slave_1
+			clear_event_target = breeding_slave_2
 		}
 	}
 }
@@ -3853,13 +3612,13 @@ character_event = {
 				if = {
 					limit = {
 						holding_type = castle
+						NOT = {
+							has_building = ca_asoiaf_slavepit_5
+						}
 					}
 					if = {
 						limit = {
-								has_building = ca_asoiaf_slavepit_4
-							NOT = {
-								has_building = ca_asoiaf_slavepit_5
-							}
+							has_building = ca_asoiaf_slavepit_4
 						}
 						add_building = ca_asoiaf_slavepit_5
 						break = yes
@@ -3867,9 +3626,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = ca_asoiaf_slavepit_3
-							NOT = {
-								has_building = ca_asoiaf_slavepit_4
-							}
 						}
 						add_building = ca_asoiaf_slavepit_4
 						break = yes
@@ -3877,9 +3633,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = ca_asoiaf_slavepit_2
-							NOT = {
-								has_building = ca_asoiaf_slavepit_3
-							}
 						}
 						add_building = ca_asoiaf_slavepit_3
 						break = yes
@@ -3887,9 +3640,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = ca_asoiaf_slavepit_1
-							NOT = {
-								has_building = ca_asoiaf_slavepit_2
-							}
 						}
 						add_building = ca_asoiaf_slavepit_2
 						break = yes
@@ -3903,13 +3653,13 @@ character_event = {
 				if = {
 					limit = {
 						holding_type = city
+						NOT = {
+							has_building = ct_asoiaf_slavepit_5
+						}
 					}
 					if = {
 						limit = {
 							has_building = ct_asoiaf_slavepit_4
-							NOT = {
-								has_building = ct_asoiaf_slavepit_5
-							}
 						}
 						add_building = ct_asoiaf_slavepit_5
 						break = yes
@@ -3917,9 +3667,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = ct_asoiaf_slavepit_3
-							NOT = {
-								has_building = ct_asoiaf_slavepit_4
-							}
 						}
 						add_building = ct_asoiaf_slavepit_4
 						break = yes
@@ -3927,9 +3674,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = ct_asoiaf_slavepit_2
-							NOT = {
-								has_building = ct_asoiaf_slavepit_3
-							}
 						}
 						add_building = ct_asoiaf_slavepit_3
 						break = yes
@@ -3937,9 +3681,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = ct_asoiaf_slavepit_1
-							NOT = {
-								has_building = ct_asoiaf_slavepit_2
-							}
 						}
 						add_building = ct_asoiaf_slavepit_2
 						break = yes
@@ -3953,13 +3694,13 @@ character_event = {
 				if = {
 					limit = {
 						holding_type = temple
+						NOT = {
+							has_building = tp_asoiaf_slavepit_5
+						}
 					}
 					if = {
 						limit = {
 							has_building = tp_asoiaf_slavepit_4
-							NOT = {
-								has_building = tp_asoiaf_slavepit_5
-							}
 						}
 						add_building = tp_asoiaf_slavepit_5
 						break = yes
@@ -3967,9 +3708,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = tp_asoiaf_slavepit_3
-							NOT = {
-								has_building = tp_asoiaf_slavepit_4
-							}
 						}
 						add_building = tp_asoiaf_slavepit_4
 						break = yes
@@ -3977,9 +3715,6 @@ character_event = {
 					if = {
 						limit = {
 								has_building = tp_asoiaf_slavepit_2
-							NOT = {
-								has_building = tp_asoiaf_slavepit_3
-							}
 						}
 						add_building = tp_asoiaf_slavepit_3
 						break = yes
@@ -3987,9 +3722,6 @@ character_event = {
 					if = {
 						limit = {
 							has_building = tp_asoiaf_slavepit_1
-							NOT = {
-								has_building = tp_asoiaf_slavepit_2
-							}
 						}
 						add_building = tp_asoiaf_slavepit_2
 						break = yes
@@ -4006,48 +3738,52 @@ character_event = {
 		family_palace = {
 			if = {
 				limit = {
-					has_building = fp_asoiaf_slavepit_4
 					NOT = {
 						has_building = fp_asoiaf_slavepit_5
 					}
 				}
-				add_building = fp_asoiaf_slavepit_5
-				break = yes
-			}
-			if = {
-				limit = {
-					has_building = fp_asoiaf_slavepit_3
-					NOT = {
+				if = {
+					limit = {
 						has_building = fp_asoiaf_slavepit_4
 					}
+					add_building = fp_asoiaf_slavepit_5
+					break = yes
 				}
-				add_building = fp_asoiaf_slavepit_4
-				break = yes
-			}
-			if = {
-				limit = {
-					has_building = fp_asoiaf_slavepit_2
-					NOT = {
+				if = {
+					limit = {
 						has_building = fp_asoiaf_slavepit_3
+						NOT = {
+							has_building = fp_asoiaf_slavepit_4
+						}
 					}
+					add_building = fp_asoiaf_slavepit_4
+					break = yes
 				}
-				add_building = fp_asoiaf_slavepit_3
-				break = yes
-			}
-			if = {
-				limit = {
-					has_building = fp_asoiaf_slavepit_1
-					NOT = {
+				if = {
+					limit = {
 						has_building = fp_asoiaf_slavepit_2
+						NOT = {
+							has_building = fp_asoiaf_slavepit_3
+						}
 					}
+					add_building = fp_asoiaf_slavepit_3
+					break = yes
 				}
-				add_building = fp_asoiaf_slavepit_2
-				break = yes
+				if = {
+					limit = {
+						has_building = fp_asoiaf_slavepit_1
+						NOT = {
+							has_building = fp_asoiaf_slavepit_2
+						}
+					}
+					add_building = fp_asoiaf_slavepit_2
+					break = yes
+				}
+				ROOT = {
+					add_trait = slave_owner
+				}
+				add_building = fp_asoiaf_slavepit_1
 			}
-			ROOT = {
-				add_trait = slave_owner
-			}
-			add_building = fp_asoiaf_slavepit_1
 		}
 	}
 }
