@@ -60,11 +60,20 @@
 			NOR = {
 				trait = incapable
 				trait = infirm
+		}
+		modifier = {
+			factor = 0.001
+			OR = {
+				death_reason = death_sacrificed
+				death_reason = death_battle
+				death_reason = death_execution
+				death_reason = death_dungeon
 			}
 		}
 		modifier = {
 			factor = 0.02
 			trait = infirm
+			is_alive = yes
 		}
 	}
 	
@@ -84,8 +93,17 @@
 		factor = 100
 		modifier = {
 			factor = 0
-			in_command = no
-			NOT = { has_job_title  = job_marshal }
+			OR = {
+				AND = {
+					is_alive = yes
+					in_command = no
+					NOT = { has_job_title  = job_marshal }
+				}
+				AND = {
+					is_alive = no
+					NOT = { death_reason = death_battle }
+				}
+			}
 		}
 		modifier = {
 			factor = 0.02
@@ -106,6 +124,10 @@
 			}						# <--- modded by Numahr
 		}
 		modifier = {
+			factor = 100
+			is_alive = no
+		}
+		modifier = {
 			factor = 2
 			is_priest = yes
 		}
@@ -117,11 +139,15 @@
 			NOR = {
 				trait = cruel
 				trait = impaler
+				death_reason = death_execution
 			}
 		}
 		modifier = {
 			factor = 20
-			trait = impaler
+			OR = {
+				trait = impaler
+				death_reason = death_execution
+			}
 		}
 	}
 	9 = { # Church
@@ -142,9 +168,21 @@
 		factor = 5
 		modifier = {
 			factor = 0
-			NOT = { culture_group = arabic }
+			NOR = {
+				culture_group = arabic
+				culture_group = berberic
+			}
 			#NOT = { capital_scope = { terrain = desert } }
 			#NOT = { capital_scope = { terrain = coastal_desert } }
+		}
+		modifier = {
+			factor = 0
+			capital_scope = {
+				NOR = {
+					terrain = desert
+					terrain = coastal_desert
+				}
+			}
 		}
 	}
 	11 = { # Steppe
@@ -154,6 +192,15 @@
 			#NOT = { capital_scope = { terrain = steppe } }
 			#NOT = { capital_scope = { terrain = plains } }
 			NOT = { culture_group = altaic }
+		}
+		modifier = {
+			factor = 0
+			capital_scope = {
+				NOR = {
+					terrain = steppe
+					terrain = plains
+				}
+			}
 		}
 		modifier = {
 			factor = 10
@@ -537,11 +584,13 @@
 		modifier = {
 			factor = 0
 			is_female = no
-			NOT = { trait = detached_priest }
-			NOT = { trait = martial_cleric }
-			NOT = { trait = scholarly_theologian }
-			NOT = { trait = mastermind_theologian }
-			NOT = { has_job_title = job_spiritual }
+			NOR = {
+				trait = detached_priest
+				trait = martial_cleric
+				trait = scholarly_theologian
+				trait = mastermind_theologian
+				has_job_title = job_spiritual
+			}
 		}
 
 		modifier = {
@@ -2130,7 +2179,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
@@ -2141,7 +2190,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
@@ -2152,7 +2201,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
@@ -2163,7 +2212,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
@@ -2201,7 +2250,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
@@ -2211,7 +2260,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
@@ -2221,7 +2270,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
@@ -2242,7 +2291,7 @@
 		factor = 10
 		modifier = {
 			factor = 0
-			NAND = {
+			NOR = {
 				trait = scarred
 				trait = maimed
 			}
