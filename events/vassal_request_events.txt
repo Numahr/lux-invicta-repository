@@ -28,7 +28,10 @@ character_event = {
 		independent = no
 		war = no
 		liege = {
-			NOT = { character = ROOT }
+			NOR = {
+				character = ROOT
+				holds_favor_on = ROOT
+			}
 			war = no
 			any_vassal = {
 				NOT = { character = ROOT }
@@ -109,6 +112,56 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
+		trigger = {
+			has_dlc = "Zeus"
+		}
+		name = EVTOPTA63001B # Very well, for a favor
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 2.0
+				trait = charitable
+			}
+			modifier = {
+				factor = 2.0
+				trait = just
+			}
+			modifier = {
+				factor = 2.0
+				trait = content
+			}
+			modifier = {
+				factor = 0.1
+				trait = greedy
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					opinion = { who = FROM value = 0 }
+				}
+			}
+			modifier = {
+				factor = 2.0
+				opinion = { who = FROM value = 25 }
+			}
+		}
+		add_favor = FROM
+		FROM = {
+			set_character_flag = vassal_for_favor
+		}
+		random_vassal = {
+			limit = {
+				NOT = { character = FROM }
+				de_jure_liege = FROM
+			}
+			character_event = { id = 63002 tooltip = EVTTOOLTIP63002 }
+		}
+	}
+	
+	option = {
+		trigger = {
+			NOT = { has_dlc = "Zeus" }
+		}
 		name = EVTOPTA63001 # Very well
 		ai_chance = {
 			factor = 50
@@ -481,12 +534,33 @@ character_event = {
 	id = 63006
 	desc = EVTDESC63006
 	
+	desc = {
+		text = EVTDESC63006B
+		trigger = {
+			has_character_flag = vassal_for_favor
+		}
+	}
+
+	desc = {
+		text = EVTDESC63006
+		trigger = {
+			NOT = {
+				has_character_flag = vassal_for_favor
+			}
+		}
+	}
+	
 	picture = GFX_evt_emissary
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
 	
 	option = {
+		trigger = {
+			NOT = {
+				has_character_flag = vassal_for_favor
+			}
+		}
 		name = EVTOPTA63006 # Excellent!
 		FROM = { set_defacto_liege = ROOT }
 		opinion = {
@@ -494,6 +568,16 @@ character_event = {
 			who = liege
 			months = 120
 		}
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = vassal_for_favor
+		}
+		name = EVTOPTA63006 # Excellent!
+		FROM = { set_defacto_liege = ROOT }
+		tooltip = { reverse_add_favor = liege }
+		clr_character_flag = vassal_for_favor
 	}
 }
 
@@ -1345,24 +1429,40 @@ character_event = {
 	
 	trigger = {
 		independent = no
-		NOT = { has_character_flag = requested_de_jure_title }
+		has_ambition = obj_gain_any_title
 		liege = {
+			war = no
+			NOT = { has_opinion_modifier = { who = ROOT modifier = requested_land } }
 			NOT = {
 				character = ROOT
 			}
+			demesne_size = 3
 			any_demesne_title = {
-				has_de_jure_pretension = ROOT
 				can_be_given_away = yes
 				lower_tier_than = PREV
-				NOT = {
-					AND = {
-						tier = count
-						location = {
-							is_capital = yes
-						}						
+				NAND = {
+					tier = count
+					location = {
+						is_capital = yes
 					}
 				}
 			}
+		}
+	}
+	
+	immediate = {
+		random_demesne_title = {
+			limit = {
+				can_be_given_away = yes
+				lower_tier_than = ROOT
+				NAND = {
+					tier = COUNT
+					location = {
+						is_capital = yes
+					}
+				}
+			}
+			save_event_target_as = vassal_wanted_title
 		}
 	}
 	
@@ -1420,6 +1520,10 @@ character_event = {
 				factor = 2.0
 				trait = charitable
 			}
+			modifier = {
+				factor = 2.0
+				trait = content
+			}
 			modifier = {	## added by Ash
 				factor = 4.0
 				trait = gullible
@@ -1475,8 +1579,33 @@ letter_event = {
 	is_triggered_only = yes
 	
 	option = {
+		trigger = {
+			has_dlc = "Zeus"
+			NOT = { holds_favor_on = FROM }
+		}
+		name = EVTOPTD63041 # Accept the request
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 0
+				trait = greedy
+			}
+		}
+
+		add_favor = FROM
+
+		event_target:vassal_wanted_title = {
+			gain_title = FROM
+		}
+		
+		hidden_tooltip = {
+			FROM = { letter_event = { id = 63042 days = 1 } }
+		}
+	}
+
+	option = {
 		name = EVTOPTA63041 # Accept the request
-		ai_chance = { 
+		ai_chance = {
 			factor = 50
 			modifier = {
 				factor = 0
@@ -1501,20 +1630,7 @@ letter_event = {
 				}
 			}
 		}
-		random_demesne_title = {
-			limit = {
-				has_de_jure_pretension = FROM
-				can_be_given_away = yes
-				lower_tier_than = ROOT
-				NOT = {
-					AND = {
-						tier = count
-						location = {
-							is_capital = yes
-						}				
-					}
-				}
-			}
+		event_target:vassal_wanted_title = {
 			gain_title = FROM
 		}
 		hidden_tooltip = {
@@ -1941,7 +2057,10 @@ character_event = {
 	
 	trigger = {
 		is_republic = yes
-		NOT = { wealth = 300 }
+		NOR = {
+			has_dlc = "Zeus"
+			wealth = 300
+		}
 		liege = {
 			NOR = { 
 				character = ROOT
@@ -1952,28 +2071,7 @@ character_event = {
 				religion = sol_slav
 				AND = {
 					is_reformed_religion = no
-					OR = {
-						religion_group = muslim
-						religion_group = norsegerman_group
-						religion_group = celtic_group
-						religion_group = finnish_group
-						religion_group = slavic_group
-						religion_group = baltic_group
-						religion_group = tengri_group
-						AND = {
-							religion_group = serer_group
-							NOT = {
-								religion = yoruba
-							}
-						}
-						AND = {
-							religion_group = bantu_group
-							NOR = {
-								religion = nyau
-								religion = mwari
-							}
-						}
-					}
+					clanic_trigger = yes
 				}
 			}
 			primary_title = {

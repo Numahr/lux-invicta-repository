@@ -1,0 +1,150 @@
+###########################################
+#                                         #
+# ZE Ambition Events                      #
+# ID ZE.6000-ZE.6999                      #
+#                                         #
+###########################################
+
+#Written by Markus Olsen
+
+namespace = ZE
+
+#Invisible event from vassals to their liege requesting council position
+character_event = {
+	id = ZE.6000
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	trigger = { 
+		#has_dlc = "Zeus"
+		has_ambition = obj_become_council_member
+		among_most_powerful_vassals = 5
+		prisoner = no
+		NOR = { 
+			trait = incapable
+			trait = in_hiding
+			has_character_flag = council_membership_requested
+		}
+	}
+
+	immediate = {
+		liege = { character_event = { id = ZE.6001 } }
+	}
+}
+
+#Liege recieves vassals request for council position
+character_event = {
+	id = ZE.6001
+	picture = GFX_evt_courtiers_talking
+	border = GFX_event_normal_frame_economy
+	desc = EVTDESC_ZE_6001
+
+	is_triggered_only = yes
+
+	trigger = { 
+		#has_dlc = "Zeus"
+		prisoner = no
+		is_adult = yes
+		NOR = { 
+			trait = incapable
+			trait = in_hiding
+		}
+	}
+	#
+	option = {
+		name = EVTOPTA_ZE_6001
+		hidden_tooltip = {
+			FROM = { set_character_flag = council_membership_requested }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ZE_6001
+		FROM = { 
+			opinion = {
+				modifier = opinion_very_disappointed
+				who = ROOT
+				years = 5
+			} 
+		}
+	}
+
+	option = {
+		trigger = {
+			diplomacy = 15
+		}
+		name = EVTOPTC_ZE_6001
+		tooltip_info = diplomacy
+	}
+}
+
+#Vassal invisible event demanding position on council
+character_event = {
+	id = ZE.6002
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	trigger = { 
+		#has_dlc = "Zeus"
+		has_ambition = obj_become_council_member
+		has_character_flag = council_membership_requested
+		prisoner = no
+		is_adult = yes
+		NOR = { 
+			trait = incapable
+			trait = in_hiding
+		}
+	}
+
+	immediate = {
+		liege = { character_event = { id = ZE.6003 } }
+	}
+}
+
+#Liege recieves vassals demand for council position
+character_event = {
+	id = ZE.6003
+	picture = GFX_evt_courtiers_talking
+	border = GFX_event_normal_frame_economy
+	desc = EVTDESC_ZE_6003
+
+	is_triggered_only = yes
+
+	trigger = { 
+		#has_dlc = "Zeus"
+		prisoner = no
+		is_adult = yes
+		NOR = { 
+			trait = incapable
+			trait = in_hiding
+		}
+	}
+
+	option = {
+		name = EVTOPTA_ZE_6003
+		hidden_tooltip = {
+			FROM = { set_character_flag = council_membership_requested }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_ZE_6003
+		FROM = { 
+			opinion = {
+				modifier = opinion_very_disappointed
+				who = ROOT
+				years = 5
+			} 
+		}
+	}
+
+	option = {
+		trigger = {
+			intrigue = 15
+		}
+		name = EVTOPTC_ZE_6003
+		tooltip_info = intrigue
+	}
+}

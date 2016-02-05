@@ -208,21 +208,19 @@ plot_gain_title = {
 		}
 		modifier = {
 			factor = 4.0
-#			AND = {
-				is_primary_holder_title = no
-				is_primary_holder_title_tier = yes
-				is_titular = no
-				holder_scope = {
-					overlord_of = FROM
-				}
-				FROM = {
-					primary_title = {
-						kingdom = {
-							title = PREVPREVPREV
-						}
+			is_primary_holder_title = no
+			is_primary_holder_title_tier = yes
+			is_titular = no
+			holder_scope = {
+				overlord_of = FROM
+			}
+			FROM = {
+				primary_title = {
+					kingdom = {
+						title = PREVPREVPREV
 					}
 				}
-#			}
+			}
 		}
 	}
 	
@@ -327,8 +325,18 @@ plot_gain_vassal_title = {
 				AND = {
 					tier = DUKE
 					holder_scope = {
-	#					AND = {
-							NOT = {
+						NOT = {
+							any_demesne_title = {
+								tier = COUNT
+								location = {
+									duchy = {
+										title = ROOT
+									}
+								}
+							}
+						}
+						NOT = {
+							any_vassal = {
 								any_demesne_title = {
 									tier = COUNT
 									location = {
@@ -338,19 +346,7 @@ plot_gain_vassal_title = {
 									}
 								}
 							}
-							NOT = {
-								any_vassal = {
-									any_demesne_title = {
-										tier = COUNT
-										location = {
-											duchy = {
-												title = ROOT
-											}
-										}
-									}
-								}
-							}
-	#					}
+						}
 					}
 				}
 				# Count titles in ruler's primary duchy
@@ -390,6 +386,13 @@ plot_gain_vassal_title = {
 			}
 			holder_scope = {
 				NOT = { reverse_has_truce = FROM }
+			}
+		}
+		
+		# Only if there is no non-aggression-pact with the vassal
+		FROM = {
+			NOT = {
+				has_non_aggression_pact_with = ROOT
 			}
 		}
 	}
@@ -523,8 +526,18 @@ plot_gain_vassal_title = {
 					AND = {
 						tier = DUKE
 						holder_scope = {
-#							AND = {
-								NOT = {
+							NOT = {
+								any_demesne_title = {
+									tier = COUNT
+									location = {
+										duchy = {
+											title = ROOT
+										}
+									}
+								}
+							}
+							NOT = {
+								any_vassal = {
 									any_demesne_title = {
 										tier = COUNT
 										location = {
@@ -534,19 +547,7 @@ plot_gain_vassal_title = {
 										}
 									}
 								}
-								NOT = {
-									any_vassal = {
-										any_demesne_title = {
-											tier = COUNT
-											location = {
-												duchy = {
-													title = ROOT
-												}
-											}
-										}
-									}
-								}
-#							}
+							}
 						}
 					}
 					# Count titles in ruler's primary duchy
@@ -665,19 +666,17 @@ plot_kill_character = {
 				}
 				
 				# Character's child is heir or pretender to a title that I don't hold
-#				AND = {
-					any_child = {
-						OR = {
-							any_pretender_title = {
-								NOT = { holder = ROOT }
-								NOT = { current_heir = { character = ROOT } }
-							}
-							any_heir_title = {
-								NOT = { holder = ROOT }
-							}
+				any_child = {
+					OR = {
+						any_pretender_title = {
+							NOT = { holder = ROOT }
+							NOT = { current_heir = { character = ROOT } }
+						}
+						any_heir_title = {
+							NOT = { holder = ROOT }
 						}
 					}
-#				}
+				}
 				
 				# Spouse is pretender to a title
 				spouse = {
@@ -709,7 +708,7 @@ plot_kill_character = {
 		NOT = { has_blood_oath_with = FROM }
 	}
 
-	target_potential = {	
+	target_potential = {
 		NOT = { any_spouse = { character = FROM } } # This case is covered by another plot
 	}
 	
@@ -868,8 +867,10 @@ plot_kill_character = {
 			factor = 0.01
 			FROM = {
 				trait = content
-				NOT = { trait = lunatic } 
-				NOT = { trait = possessed }
+				NOR = {
+					trait = lunatic
+					trait = possessed
+				}
 			}
 		}
 		
@@ -915,11 +916,11 @@ plot_kill_character = {
 		modifier = {
 			factor = 0
 			their_opinion = { who = FROM value = 0 }
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}		
 		}
@@ -1024,14 +1025,12 @@ plot_kill_spouse = {
 		prisoner = no
 		age = 16
 		is_married = yes
-		NOT = { trait = incapable }
-		NOT = {
+		NOR = {
+			trait = incapable
 			AND = {
 				ai = yes
 				trait = honest
 			}
-		}
-		NOT = {
 			AND = {
 				ai = yes
 				trait = kind
@@ -1128,11 +1127,11 @@ plot_kill_spouse = {
 		modifier = {
 			factor = 0
 			their_opinion = { who = FROM value = 0 }
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}		
 		}
@@ -1241,11 +1240,9 @@ plot_weaken_fellow_vassal = {
 		}
 		OR = {
 			crownlaw_title = {
-				NOT = {
-					OR = {
-						has_law = centralization_3
-						has_law = centralization_4
-					}
+				NOR = {
+					has_law = centralization_3
+					has_law = centralization_4
 				}
 			}
 			NOT = {
@@ -1334,11 +1331,11 @@ plot_weaken_fellow_vassal = {
 					reverse_opinion = { who = FROM value = 25 }
 				}
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}
@@ -1349,10 +1346,12 @@ plot_weaken_fellow_vassal = {
 					reverse_opinion = { who = FROM value = 50 }
 				}
 			}
-			OR = {
-				FROM = { trait = envious }
-				FROM = { trait = deceitful }
-				FROM = { trait = ambitious }
+			FROM = {
+				OR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
+				}
 			}
 		}
 		modifier = {
@@ -1362,11 +1361,11 @@ plot_weaken_fellow_vassal = {
 					reverse_opinion = { who = FROM value = 0 }
 				}
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}		
@@ -1593,11 +1592,11 @@ plot_gain_liege_title = {
 			holder_scope = {
 				reverse_opinion = { who = FROM value = 25 }
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}
@@ -1606,10 +1605,12 @@ plot_gain_liege_title = {
 			holder_scope ={
 				reverse_opinion = { who = FROM value = 50 }
 			}
-			OR = {
-				FROM = { trait = envious }
-				FROM = { trait = deceitful }
-				FROM = { trait = ambitious }
+			FROM = {
+				OR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
+				}
 			}
 		}
 		modifier = {
@@ -1617,11 +1618,11 @@ plot_gain_liege_title = {
 			holder_scope = {
 				reverse_opinion = { who = FROM value = 0 }
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}
@@ -1630,10 +1631,12 @@ plot_gain_liege_title = {
 			holder_scope ={
 				reverse_opinion = { who = FROM value = 25 }
 			}
-			OR = {
-				FROM = { trait = envious }
-				FROM = { trait = deceitful }
-				FROM = { trait = ambitious }
+			FROM = {
+				OR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
+				}
 			}
 		}
 		modifier = {
@@ -1747,8 +1750,10 @@ plot_gain_fellow_vassal_title = {
 		}
 		is_landed = yes
 		independent = no
-		NOT = { trait = incapable }
-		NOT = { trait = imbecile }
+		NOR = {
+			trait = incapable
+			trait = imbecile
+		}
 	}
 	
 	# Target scope
@@ -1780,6 +1785,8 @@ plot_gain_fellow_vassal_title = {
 			NOT = { character = FROM }
 		}
 	}
+	
+	# Target scope
 	allow = {
 		is_vice_royalty = no
 		NOT = { claimed_by = FROM }
@@ -1814,11 +1821,11 @@ plot_gain_fellow_vassal_title = {
 			holder_scope = {
 				reverse_opinion = { who = FROM value = 25 }
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}
@@ -1827,10 +1834,12 @@ plot_gain_fellow_vassal_title = {
 			holder_scope ={
 				reverse_opinion = { who = FROM value = 50 }
 			}
-			OR = {
-				FROM = { trait = envious }
-				FROM = { trait = deceitful }
-				FROM = { trait = ambitious }
+			FROM = {
+				OR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
+				}
 			}
 		}
 		modifier = {
@@ -1838,11 +1847,11 @@ plot_gain_fellow_vassal_title = {
 			holder_scope = {
 				reverse_opinion = { who = FROM value = 0 }
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}
@@ -1851,10 +1860,12 @@ plot_gain_fellow_vassal_title = {
 			holder_scope ={
 				reverse_opinion = { who = FROM value = 25 }
 			}
-			OR = {
-				FROM = { trait = envious }
-				FROM = { trait = deceitful }
-				FROM = { trait = ambitious }
+			FROM = {
+				OR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
+				}
 			}
 		}
 		modifier = {
@@ -1949,8 +1960,10 @@ plot_seize_trade_post = {
 		is_merchant_republic = no
 		prisoner = no
 		age = 16
-		NOT = { trait = incapable }
-		NOT = { trait = imbecile }
+		NOR = {
+			trait = incapable
+			trait = imbecile
+		}
 	}
 	
 	# Target scope
@@ -1968,6 +1981,13 @@ plot_seize_trade_post = {
 			NOT = { character = FROM }
 			NOT = { 
 				has_opinion_modifier = { who = FROM modifier = opinion_seized_tp }
+			}
+			
+			# Only if there is no non-aggression-pact with the trade post owner
+			FROM = {
+				NOT = {
+					has_non_aggression_pact_with = PREV
+				}			
 			}
 		}
 		any_neighbor_province = {
@@ -2008,10 +2028,12 @@ plot_seize_trade_post = {
 					reverse_opinion = { who = FROM value = 25 }
 				}
 			}
-			OR = {
-				FROM = { trait = envious }
-				FROM = { trait = deceitful }
-				FROM = { trait = ambitious }
+			FROM = {
+				OR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
+				}
 			}
 		}
 		modifier = {
@@ -2022,11 +2044,11 @@ plot_seize_trade_post = {
 					reverse_opinion = { who = FROM value = 50 }
 				}
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}
@@ -2038,10 +2060,12 @@ plot_seize_trade_post = {
 					reverse_opinion = { who = FROM value = 0 }
 				}
 			}
-			OR = {
-				FROM = { trait = envious }
-				FROM = { trait = deceitful }
-				FROM = { trait = ambitious }
+			FROM = {
+				OR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
+				}
 			}
 		}
 		modifier = {
@@ -2052,11 +2076,11 @@ plot_seize_trade_post = {
 					reverse_opinion = { who = FROM value = 25 }
 				}
 			}
-			NOT = {
-				OR = {
-					FROM = { trait = envious }
-					FROM = { trait = deceitful }
-					FROM = { trait = ambitious }
+			FROM = {
+				NOR = {
+					trait = envious
+					trait = deceitful
+					trait = ambitious
 				}
 			}
 		}

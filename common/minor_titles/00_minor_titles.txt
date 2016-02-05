@@ -20,9 +20,10 @@ title_regent = {
 	realm_in_name = yes
 	dignity = 0.9
 	revoke_allowed = no
+	is_voter = yes
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.02
+	monthly_prestige = 1.50
 	
 	gain_effect = {
 	}
@@ -33,13 +34,14 @@ title_regent = {
 }
 
 title_appointed_regent = {
+	is_high_prio = yes
 	dignity = 0.9
 	grant_limit = 1
-	opinion_effect = 20
+	opinion_effect = 10
 	revoke_allowed = yes
 
 	monthly_salary = 0.05
-	monthly_prestige = 0.02
+	monthly_prestige = 0.75
 
 	allowed_to_hold = {
 		is_adult = yes
@@ -69,7 +71,7 @@ title_ruler_consort = {
 	revoke_allowed = no
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.02
+	monthly_prestige = 1.00
 	
 	gain_effect = {
 	}
@@ -87,7 +89,7 @@ title_tanist = {
 	revoke_allowed = no
 	
 	monthly_salary = 0.07
-	monthly_prestige = 0.02
+	monthly_prestige = 0.75
 	
 	gain_effect = {
 	}
@@ -104,7 +106,7 @@ title_queen_mother = {
 	revoke_allowed = no
 	
 	monthly_salary = 0.025
-	monthly_prestige = 0.01
+	monthly_prestige = 1.00
 	
 	gain_effect = {
 	}
@@ -121,7 +123,7 @@ title_prince = {
 	revoke_allowed = no
 	
 	monthly_salary = 0.025
-	monthly_prestige = 0.01
+	monthly_prestige = 0.25
 	
 	gain_effect = {
 	}
@@ -138,7 +140,7 @@ title_courtesan = {
 	revoke_allowed = no
 	
 	monthly_salary = 0.01
-	monthly_prestige = 0.01
+	monthly_prestige = 0.10
 	
 	gain_effect = {
 	}
@@ -158,22 +160,61 @@ title_commander = {
 	realm_in_name = yes
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.005
+	monthly_prestige = 0.50
 	
 	allowed_to_hold = {
+		liege = { character = FROM }
 		OR = {
 			AND = {
 				OR = {
 					is_female = no
 					AND = {
-#						OR = {
-							religion = cathar
-#							religion = messalian
-#						}
-#						OR = {
-							liege = { religion = cathar }
-#							liege = { religion = messalian }
-#						}
+						is_pregnant = no
+						OR = {
+							AND = {
+								feminist_religions_trigger = yes
+								liege = {
+									religion = PREV
+								}
+							}
+							liege = {
+								primary_title = {
+									has_law = status_of_women_4
+								}
+							}
+							AND = {
+								top_liege = {
+									has_character_modifier = female_marshals_allowed
+								}
+								martial = 20
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							AND = {
+								top_liege = {
+									has_character_modifier = female_marshals_accepted
+								}
+								martial = 12
+								OR = {
+									trait = misguided_warrior
+									trait = tough_soldier
+									trait = skilled_tactician
+									trait = brilliant_strategist
+								}
+							}
+							top_liege = {
+								has_character_modifier = female_marshals_approved
+							}
+						}
+					}
+					liege = {
+						primary_title = {
+							has_law = status_of_women_4
+						}
 					}
 				}
 				OR = {
@@ -186,9 +227,11 @@ title_commander = {
 		}
 		
 		prisoner = no
-		NOT = { trait = incapable }
-		NOT = { trait = in_hiding }
-		NOT = { has_character_flag = guru }
+		NOR = {
+			trait = incapable
+			trait = in_hiding
+			has_character_flag = guru
+		}
 	}
 	
 	gain_effect = {
@@ -210,7 +253,7 @@ title_court_eunuch = {
 	opinion_effect = 10
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.01
+	monthly_prestige = 0.25
 	
 	allowed_to_hold = {
 		is_adult = yes
@@ -245,9 +288,6 @@ title_court_eunuch = {
 	}
 	
 	gain_effect = {
-		FROM = {
-			prestige = 10
-		}
 	}
 	lose_effect = {
 	}
@@ -262,7 +302,7 @@ title_court_dwarf = {
 	opinion_effect = 10
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.01
+	monthly_prestige = 0.25
 	
 	allowed_to_hold = {
 		is_adult = yes
@@ -296,9 +336,6 @@ title_court_dwarf = {
 	}
 	
 	gain_effect = {
-		FROM = {
-			prestige = 10
-		}
 	}
 	lose_effect = {
 	}
@@ -310,10 +347,10 @@ title_court_jester = {
 	dignity = 0.01
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = -10
+	opinion_effect = -5
 	
 	monthly_salary = 0.02
-	monthly_prestige = -0.01
+	monthly_prestige = -0.25
 	
 	is_unique = yes
 	
@@ -336,8 +373,10 @@ title_court_jester = {
 				tier = emperor
 			}
 		}
-		NOT = { religion_group = muslim }
-		NOT = { religion_group = zoroastrian_group }
+		NOR = {
+			religion_group = muslim
+			religion_group = zoroastrian_group
+		}
 	}
 	
 	gain_effect = {
@@ -353,10 +392,10 @@ title_keeper_of_swans = {
 	dignity = 0.05
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.01
-	monthly_prestige = 0.002
+	monthly_prestige = 0.50
 	
 	is_unique = yes
 	
@@ -379,8 +418,10 @@ title_keeper_of_swans = {
 			}
 		}
 		LI_roman_imperial_trigger = no
-		NOT = { religion_group = muslim }
-		NOT = { religion_group = zoroastrian_group }
+		NOR = {
+			religion_group = muslim
+			religion_group = zoroastrian_group
+		}
 		LI_pagan_trigger = no
 	}
 	
@@ -396,10 +437,10 @@ title_master_of_the_horse = {
 	dignity = 0.06
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.40
 	
 	is_unique = yes
 	
@@ -417,8 +458,10 @@ title_master_of_the_horse = {
 			is_tribal = yes
 		}
 		LI_roman_imperial_trigger = no
-		NOT = { religion_group = muslim }
-		NOT = { religion_group = zoroastrian_group }
+		NOR = {
+			religion_group = muslim
+			religion_group = zoroastrian_group
+		}
 		LI_pagan_trigger = no
 	}
 	
@@ -434,10 +477,10 @@ title_master_of_the_hunt = {
 	dignity = 0.05
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.40
 	
 	is_unique = yes
 	
@@ -475,10 +518,10 @@ title_high_almoner = {
 	dignity = 0.03
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.40
 	
 	is_unique = yes
 	
@@ -514,10 +557,10 @@ title_cupbearer = {
 	dignity = 0.1
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 5
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.006
+	monthly_prestige = 0.60
 	
 	is_unique = yes
 	
@@ -551,10 +594,10 @@ title_seneschal = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.006
+	monthly_prestige = 0.60
 	
 	is_unique = yes
 	
@@ -599,7 +642,7 @@ title_paramount_knight = {
 	grant_limit = 0 
 	opinion_effect = 0
 
-	monthly_prestige = 0.5
+	monthly_prestige = 1.50
 
 	gain_effect = {
 	}
@@ -614,10 +657,10 @@ title_despot = {
 	dignity = 0.25
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 25
+	opinion_effect = 15
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.01
+	monthly_prestige = 0.50
 	
 	counts_as_purple_born = yes
 	
@@ -631,8 +674,10 @@ title_despot = {
 	allowed_to_grant = {
 		is_feudal = yes
 		LI_roman_imperial_trigger = yes
-		NOT = { religion_group = muslim }
-		NOT = { religion_group = zoroastrian_group }
+		NOR = {
+			religion_group = muslim
+			religion_group = zoroastrian_group
+		}
 	}
 	
 	gain_effect = {
@@ -647,10 +692,10 @@ title_sebastokrator = {
 	dignity = 0.2
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 20
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.01
+	monthly_prestige = 0.25
 	
 	is_unique = yes
 	
@@ -679,10 +724,10 @@ title_caesar = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.01
+	monthly_prestige = 0.25
 	
 	is_unique = yes
 	
@@ -711,10 +756,10 @@ title_kouropalates = {
 	dignity = 0.1
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.05
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -743,10 +788,10 @@ title_kouropalates = {
 title_anthypatos = {
 	dignity = 0.075
 	grant_limit = 4
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.005
-	monthly_prestige = 0.005
+	monthly_prestige = 0.25
 	
 	allowed_to_hold = {
 		is_adult = yes
@@ -773,10 +818,10 @@ title_anthypatos = {
 title_imperial_eunuch = {
 	dignity = 0.050
 	grant_limit = 1
-	opinion_effect = 60
+	opinion_effect = 30
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.01
+	monthly_prestige = 0.35
 	
 	allowed_to_hold = {
 		is_adult = yes
@@ -810,10 +855,10 @@ title_food_taster = {
 	dignity = 0.01
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = -10
+	opinion_effect = -5
 	
 	monthly_salary = 0.02
-	monthly_prestige = -0.01
+	monthly_prestige = -0.25
 	
 	is_unique = yes
 
@@ -853,10 +898,10 @@ title_court_calligrapher = {
 	dignity = 0.05
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.01
-	monthly_prestige = 0.002
+	monthly_prestige = 0.20
 	
 	is_unique = yes
 	
@@ -928,10 +973,10 @@ title_court_poet = {
 	dignity = 0.05
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.40
 	
 	is_unique = yes
 	
@@ -1000,10 +1045,10 @@ title_chief_architect = {
 	dignity = 0.03
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.40
 	
 	is_unique = yes
 	
@@ -1035,10 +1080,10 @@ title_chief_qadi = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.006
+	monthly_prestige = 0.60
 	
 	is_unique = yes
 	
@@ -1124,10 +1169,10 @@ title_state_inquisitor = {
 	dignity = 0.06
 	realm_in_name = yes
 	grant_limit = 3
-	opinion_effect = 12
+	opinion_effect = 6
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.40
 	
 	is_unique = yes
 	
@@ -1156,10 +1201,10 @@ title_high_admiral = {
 	dignity = 0.1
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.006
+	monthly_prestige = 0.60
 	
 	is_unique = yes
 	
@@ -1187,10 +1232,10 @@ title_high_judge = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.006
+	monthly_prestige = 0.60
 	
 	is_unique = yes
 	
@@ -1223,19 +1268,21 @@ title_patrician_heir = {
 	dignity = 0.05
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 50
+	opinion_effect = 25
 	
 	patrician_heir = yes
 	
 	monthly_salary = 0.01
-	monthly_prestige = 0.002
+	monthly_prestige = 0.20
 	
 	allowed_to_hold = {
 		is_female = no
 		dynasty = FROM
 		NOR = {
-			trait = bastard
 			trait = incapable
+			trait = bastard
+			trait = monk
+			trait = eunuch
 		}
 	}
 
@@ -1259,7 +1306,7 @@ title_volva = {
 	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.01
+	monthly_prestige = 0.25
 	
 	is_unique = yes
 	
@@ -1302,10 +1349,10 @@ title_lawspeaker = {
 	dignity = 0.2
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 20
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1337,10 +1384,10 @@ title_drottseti = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.05
+	monthly_prestige = 0.5
 	
 	is_unique = yes
 	
@@ -1372,10 +1419,10 @@ title_court_skald = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1417,10 +1464,10 @@ title_marksman = {
 	dignity = 0.1
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1451,10 +1498,10 @@ title_marksman = {
 title_hirdman = {
 	dignity = 0.075
 	grant_limit = 4
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.005
-	monthly_prestige = 0.005
+	monthly_prestige = 0.25
 	
 	is_unique = yes
 	
@@ -1488,10 +1535,10 @@ title_baghatur = {
 	dignity = 0.2
 	realm_in_name = yes
 	grant_limit = 2
-	opinion_effect = 20
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1523,10 +1570,10 @@ title_cherbi = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.05
+	monthly_prestige = 0.5
 	
 	is_unique = yes
 	
@@ -1567,10 +1614,10 @@ title_darkhan = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 2
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1610,10 +1657,10 @@ title_darkhan = {
 title_noyan = {
 	dignity = 0.075
 	grant_limit = 4
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.005
-	monthly_prestige = 0.005
+	monthly_prestige = 0.5
 	
 	is_unique = yes
 	
@@ -1644,10 +1691,10 @@ title_noyan = {
 title_behi = {
 	dignity = 0.1
 	grant_limit = 2
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.05
-	monthly_prestige = 0.1
+	monthly_prestige = 0.25
 	
 	is_unique = yes
 	
@@ -1688,10 +1735,10 @@ title_behi = {
 title_master_of_the_eagle = {
 	dignity = 0.10
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.15
+	monthly_prestige = 0.35
 	
 	is_unique = yes
 	
@@ -1734,10 +1781,10 @@ title_shahrwaraz = {
 	dignity = 0.2
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 20
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1770,10 +1817,10 @@ title_kardarigan = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1806,10 +1853,10 @@ title_shahin = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	
@@ -1842,10 +1889,10 @@ title_pushtigban_salar = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.05
+	monthly_prestige = 0.5
 	is_unique = yes
 	
 	allowed_to_hold = {
@@ -1871,13 +1918,42 @@ title_pushtigban_salar = {
 
 	message = yes
 }
+title_eran_ambaragbed = {
+	dignity = 0.075
+	grant_limit = 1
+	opinion_effect = 10
+	
+	monthly_salary = 0.005
+	monthly_prestige = 0.5
+	
+	is_unique = yes
+	
+	allowed_to_hold = {
+		is_adult = yes
+	}
+
+	allowed_to_grant = {
+		OR = {
+			is_feudal = yes
+			is_tribal = yes
+		}
+		religion_group = zoroastrian_group
+	}
+	
+	gain_effect = {
+	}
+	lose_effect = {
+	}
+
+	message = yes
+}
 
 title_dregvant = {
 	dignity = 0.01
 	grant_limit = 1
 	opinion_effect = -15
 	
-	monthly_prestige = -0.02
+	monthly_prestige = -0.2
 	
 	is_unique = yes
 	allowed_to_hold = {
@@ -1940,9 +2016,9 @@ title_dregvant = {
 title_ashavan = {
 	dignity = 0.01
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
-	monthly_prestige = 0.02
+	monthly_prestige = 0.2
 	
 	allowed_to_hold = {
 		is_adult = yes
@@ -1999,10 +2075,10 @@ title_sraoshavarez = {
 	dignity = 0.01
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.01
+	monthly_prestige = 0.1
 	
 	is_unique = yes
 	allowed_to_hold = {
@@ -2036,10 +2112,10 @@ title_shapsheraz = {
 	dignity = 0.01
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.01
+	monthly_prestige = 0.1
 	
 	is_unique = yes
 	allowed_to_hold = {
@@ -2071,10 +2147,10 @@ title_champion = {
 	dignity = 0.2
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 20
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	allowed_to_hold = {
 		is_adult = yes
@@ -2106,10 +2182,10 @@ title_master_of_the_blade = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	is_unique = yes
 	allowed_to_hold = {
@@ -2146,10 +2222,10 @@ title_master_of_the_bow = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	is_unique = yes
 	
 	allowed_to_hold = {
@@ -2187,10 +2263,10 @@ title_venerable_elder = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 4
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.75
 	
 	allowed_to_hold = {
 		is_female = no
@@ -2228,10 +2304,10 @@ title_yabgu = {
 	dignity = 0.25
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 25
+	opinion_effect = 15
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.01
+	monthly_prestige = 0.50
 	
 	is_unique = yes
 	
@@ -2263,10 +2339,10 @@ title_ishad = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 4
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.075
-	monthly_prestige = 0.075
+	monthly_prestige = 0.40
 	
 	is_unique = yes
 	
@@ -2297,10 +2373,10 @@ title_kundur = {
 	dignity = 0.15
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.1
-	monthly_prestige = 0.05
+	monthly_prestige = 0.5
 	
 	is_unique = yes
 	
@@ -2332,10 +2408,10 @@ title_master_of_the_royal_elephants = {
 	dignity = 0.06
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.4
 	
 	is_unique = yes
 	
@@ -2374,10 +2450,10 @@ title_royal_builder = {
 	dignity = 0.03
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.4
 	
 	is_unique = yes
 	
@@ -2415,10 +2491,10 @@ title_court_poet_india = {
 	dignity = 0.05
 	realm_in_name = yes
 	grant_limit = 1
-	opinion_effect = 10
+	opinion_effect = 5
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.004
+	monthly_prestige = 0.4
 	
 	is_unique = yes
 	
@@ -2448,10 +2524,10 @@ title_court_poet_india = {
 title_guru = {
 	dignity = 0.050
 	grant_limit = 1
-	opinion_effect = 15
+	opinion_effect = 10
 	
 	monthly_salary = 0.02
-	monthly_prestige = 0.1
+	monthly_prestige = 0.75
 
 	revoke_allowed = no
 	
@@ -2496,3 +2572,140 @@ title_guru = {
 	message = yes
 }
 
+title_genghis = {
+	dignity = 10
+	revoke_allowed = no
+	
+	realm_in_name = no
+	show_as_title = yes
+	
+	replace_order = yes
+	
+	monthly_salary = 0
+	monthly_prestige = 1.50
+	
+	gain_effect = {
+	}
+	lose_effect = {
+	}
+	
+	message = yes
+}
+
+title_councilmember_king = {
+	dignity = 0.050
+	grant_limit = 1
+	opinion_effect = 10
+	monthly_salary = 0.00
+	monthly_prestige = 0.75
+	is_voter = yes
+	
+	allowed_to_grant = {
+		higher_tier_than = DUKE
+		has_dlc = "Zeus"
+		primary_title = { has_law = law_voting_power_1 }
+	}
+	
+	allowed_to_hold = {
+		prisoner = no
+		NOR = {
+			trait = incapable
+			trait = in_hiding
+		}
+		OR = {
+			is_female = no
+			AND = {
+				feminist_religions_trigger = yes
+				liege = { religion = ROOT }
+			}
+			AND = {
+				liege = {
+					primary_title = {
+						OR = {
+							has_law = status_of_women_1
+							has_law = status_of_women_2
+							has_law = status_of_women_3
+						}
+					}
+				}
+				is_landed = yes
+			}
+			liege = {
+				primary_title = {
+					has_law = status_of_women_4
+				}
+			}
+		}
+		is_adult = yes
+	}
+	
+	gain_effect = {
+	}
+	lose_effect = {
+		opinion = { who = FROM modifier = opinion_fired_from_council }
+		opinion = { who = FROM modifier = opinion_recently_fired }
+	}
+	retire_effect = {
+	}
+
+	message = yes
+}
+
+title_councilmember_emperor = {
+	dignity = 0.060
+	grant_limit = 1
+	opinion_effect = 10
+	monthly_salary = 0.00
+	monthly_prestige = 1.00
+	is_voter = yes
+	
+	allowed_to_grant = {
+		higher_tier_than = KING
+		has_dlc = "Zeus"
+		primary_title = { has_law = law_voting_power_1 }
+	}
+	
+	allowed_to_hold = {
+		prisoner = no
+			NOR = {
+			trait = incapable
+			trait = in_hiding
+		}
+		OR = {
+			is_female = no
+			AND = {
+				feminist_religions_trigger = yes
+				liege = { religion = ROOT }
+			}
+			AND = {
+				liege = {
+					primary_title = {
+						OR = {
+							has_law = status_of_women_1
+							has_law = status_of_women_2
+							has_law = status_of_women_3
+						}
+					}
+				}
+				is_landed = yes
+			}
+			liege = {
+				primary_title = {
+					has_law = status_of_women_4
+				}
+			}
+		}
+		is_adult = yes
+	}
+	
+	gain_effect = {
+	}
+	lose_effect = {
+		opinion = { who = FROM modifier = opinion_fired_from_council }
+		opinion = { who = FROM modifier = opinion_recently_fired }
+	}
+	retire_effect = {
+	}
+
+	message = yes
+}

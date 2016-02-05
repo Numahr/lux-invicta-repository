@@ -1,7 +1,7 @@
 # Targetted decisions are possible vs _all_ other characters and shown are in the Diplomacy View, not the Intrigue View. The taker is in the FROM scope.
 #
-# filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/all] ('self' MUST be set for decisions targetting only the taker, the other filter types can be set to lessen CPU load)
-# ai_target_filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/all] (which characters for which the AI evaluates the decision.)
+# filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/rivals/all] ('self' MUST be set for decisions targetting only the taker, the other filter types can be set to lessen CPU load)
+# ai_target_filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/rivals/all] (which characters for which the AI evaluates the decision.)
 #	court: all characters in the AI's host court, including prisoners, and characters currently away (wards, prisoners, etc)
 #	home_court: all characters in the AI's home court, including prisoners, and characters currently away (wards, prisoners, etc)
 #	vassals: direct vassal rulers of the AI's employer
@@ -149,7 +149,7 @@ targetted_decisions = {
 					if = {
 						limit = {
 							is_close_relative = ROOT
-							close_relative_marriages_allowed_trigger = no
+							NOT = { religion = zoroastrian }
 						}
 						narrative_event = { id = WoL.102 days = 1 } # Warning - Incest scandal risk
 						break = yes
@@ -170,13 +170,9 @@ targetted_decisions = {
 								is_priest = yes
 								trait = monk
 								trait = nun
-								ROOT = {
-									OR = {
-										is_priest = yes
-										trait = monk
-										trait = nun
-									}
-								}
+								ROOT = { is_priest = yes }
+								ROOT = { trait = monk }
+								ROOT = { trait = nun }
 							}
 						}
 						narrative_event = { id = WoL.103 days = 1 } # Warning - Priest scandal risk
@@ -259,11 +255,13 @@ targetted_decisions = {
 			modifier = {
 				factor = 0.1
 				is_ruler = no
-				any_spouse = {
-					ai = no
-				}
-				any_consort = {
-					ai = no
+				OR = {
+					any_spouse = {
+						ai = no
+					}
+					any_consort = {
+						ai = no
+					}
 				}
 			}
 			modifier = {
@@ -350,10 +348,11 @@ targetted_decisions = {
 					ROOT = {
 						has_opinion_modifier = {
 							who = PREV
-							modifier = opinion_seducing
+							name = opinion_seducing
 						}
 					}
 				}
+				save_event_target_as = target_seduced
 				ROOT = { character_event = { id = WoL.118 tooltip = stop_seduce_decision_tt } }
 			}
 		}
@@ -382,12 +381,13 @@ targetted_decisions = {
 			FROM = {
 				has_opinion_modifier = {
 					who = ROOT
-					modifier = opinion_seducing
+					name = opinion_seducing
 				}
 			}
 		}
 		
 		effect = {
+			save_event_target_as = target_seduced
 			hidden_tooltip = {
 				FROM = { character_event = { id = WoL.118 } }
 			}
@@ -506,7 +506,6 @@ targetted_decisions = {
 		potential = {
 			ai = no
 			has_focus = focus_intrigue
-			has_character_flag = spy_on_confirmed
 			has_any_opinion_modifier = opinion_spying_on
 		}
 		
@@ -516,7 +515,7 @@ targetted_decisions = {
 					ROOT = {
 						has_opinion_modifier = {
 							who = PREV
-							modifier = opinion_spying_on
+							name = opinion_spying_on
 						}
 					}
 				}
@@ -540,7 +539,6 @@ targetted_decisions = {
 		from_potential = {
 			ai = no
 			has_focus = focus_intrigue
-			has_character_flag = spy_on_confirmed
 			has_any_opinion_modifier = opinion_spying_on
 		}
 		
@@ -548,7 +546,7 @@ targetted_decisions = {
 			FROM = {
 				has_opinion_modifier = {
 					who = ROOT
-					modifier = opinion_spying_on
+					name = opinion_spying_on
 				}
 			}
 		}
@@ -657,6 +655,7 @@ targetted_decisions = {
 	}
 
 	invite_to_party = {
+		is_high_prio = yes
 		ai_target_filter = court
 		
 		from_potential = {
@@ -664,7 +663,6 @@ targetted_decisions = {
 			is_adult = yes
 			has_focus = focus_carousing
 			prisoner = no
-			war = no
 			NOR = {
 				trait = incapable
 				had_character_flag = {
@@ -675,7 +673,6 @@ targetted_decisions = {
 		}
 		potential = {
 			is_adult = yes
-			war = no
 			prisoner = no
 			is_within_diplo_range = FROM
 			NOR = {
@@ -694,6 +691,7 @@ targetted_decisions = {
 					who = FROM
 				}
 			}
+			war = no
 			ROOT = {
 				custom_tooltip = {
 					text = tooltip_not_busy
@@ -701,6 +699,7 @@ targetted_decisions = {
 				}
 			}
 			FROM = {
+				war = no
 				NOT = { has_character_modifier = party_timer }
 				OR = {
 					NOT = { religion_group = muslim }
@@ -769,33 +768,16 @@ targetted_decisions = {
 				ai = no
 				AND = {
 					is_female = no
-					NOT = { trait = craven }
-					NOT = { trait = content }
+					NOR = {
+						trait = craven
+						trait = content
+					}
 				}
 			}
 			OR = {
 				is_female = no
 				is_nomadic = yes
-				religion = allat
-				religion = almaqah
-				religion = amanai
-				religion = attar
-				religion = berber_pagan
-				religion = gurzil
-				religion = hubal
-				religion = maher
-				religion = norse_pagan
-				religion = norse_war
-				religion = nott
-				religion = ragnarok
-				religion = shams
-				religion = sowilo
-				religion = talab
-				religion = arab_pagan_reformed
-				religion = berber_pagan_reformed
-				religion = norse_christ_reformed
-				religion = norse_pagan_reformed
-				religion = ragnarok_reformed
+				feminist_religions_trigger = yes
 			}
 		}
 		
@@ -806,10 +788,8 @@ targetted_decisions = {
 				is_female = no
 				FROM = { is_female = yes }
 			}
-			is_ill = no
-			NOR = {
+			NOT = {
 				character = FROM
-				trait = incapable
 			}
 		}
 		
@@ -853,13 +833,15 @@ targetted_decisions = {
 				text = duel_tooltip_busy
 				hidden_tooltip = {
 					FROM = {
-						NOT = { has_character_flag = do_not_disturb }
-						NOT = { war = yes }
+						NOT = {
+							has_character_flag = do_not_disturb
+						}
+						war = no
 					}
-					NOR = {
+					NOT = {
 						has_character_flag = do_not_disturb
-						war = yes
 					}
+					war = no
 				}
 			}
 			custom_tooltip = {
@@ -870,26 +852,7 @@ targetted_decisions = {
 						FROM = {
 							OR = {
 								is_nomadic = yes
-								religion = allat
-								religion = almaqah
-								religion = amanai
-								religion = attar
-								religion = berber_pagan
-								religion = gurzil
-								religion = hubal
-								religion = maher
-								religion = norse_pagan
-								religion = norse_war
-								religion = nott
-								religion = ragnarok
-								religion = shams
-								religion = sowilo
-								religion = talab
-								religion = arab_pagan_reformed
-								religion = berber_pagan_reformed
-								religion = norse_christ_reformed
-								religion = norse_pagan_reformed
-								religion = ragnarok_reformed
+								feminist_religions_trigger = yes
 							}
 						}
 					} ### Not priest or challenger religion is pagan (Or martials in LI?)
@@ -910,20 +873,18 @@ targetted_decisions = {
 				custom_tooltip = {
 					text = duel_tooltip_sickness
 					hidden_tooltip = {				
-						NOT = {
-							OR = {
-								trait = incapable
-								trait = infirm
-								trait = has_aztec_disease
-								trait = has_small_pox
-								trait = has_measles
-								trait = has_bubonic_plague
-								trait = has_typhus
-								trait = has_typhoid_fever
-								trait = has_tuberculosis
-								trait = leper
-								trait = pneumonic
-							}
+						NOR = {
+							trait = incapable
+							trait = infirm
+							trait = has_aztec_disease
+							trait = has_small_pox
+							trait = has_measles
+							trait = has_bubonic_plague
+							trait = has_typhus
+							trait = has_typhoid_fever
+							trait = has_tuberculosis
+							trait = leper
+							trait = pneumonic
 						}
 					}
 				}

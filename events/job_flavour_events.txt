@@ -1152,7 +1152,7 @@ character_event = {
 					}
 					prisoner = no
 				}
-				save_event_target_as = infidel
+				save_event_target_as = target_infidel
 			}
 		}
 	}
@@ -1167,7 +1167,7 @@ character_event = {
 				tooltip = "EVTTOOLTIP75041"
 			}
 		}
-		event_target:infidel = {
+		event_target:target_infidel = {
 			custom_tooltip = {
 				text = EVTTOOLTIP75041a
 			}
@@ -1183,7 +1183,7 @@ character_event = {
 				tooltip = "EVTTOOLTIP75042"
 			}
 		}
-		event_target:infidel = {
+		event_target:target_infidel = {
 			custom_tooltip = {
 				text = EVTTOOLTIP75041a
 			}
@@ -1201,7 +1201,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75041"
-		event_target:infidel = {
+		event_target:target_infidel = {
 			any_courtier = {
 				limit = {
 					religion = PREV
@@ -1239,7 +1239,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75041"
-		event_target:infidel = {
+		event_target:target_infidel = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1283,7 +1283,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75042"
-		event_target:infidel = {
+		event_target:target_infidel = {
 			banish = yes
 			any_courtier = {
 				limit = {
@@ -1318,7 +1318,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75042"
-		event_target:infidel = {
+		event_target:target_infidel = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1451,7 +1451,7 @@ character_event = {
 					is_heresy_of = ROOT
 					prisoner = no
 				}
-				save_event_target_as = heretic
+				save_event_target_as = target_heretic
 			}
 		}
 	}
@@ -1466,7 +1466,7 @@ character_event = {
 				tooltip = "EVTTOOLTIP75051"
 			}
 		}
-		event_target:heretic = {
+		event_target:target_heretic = {
 			custom_tooltip = {
 				text = EVTTOOLTIP75041a
 			}
@@ -1482,7 +1482,7 @@ character_event = {
 				tooltip = "EVTTOOLTIP75052"
 			}
 		}
-		event_target:heretic = {
+		event_target:target_heretic = {
 			custom_tooltip = {
 				text = EVTTOOLTIP75041a
 			}
@@ -1500,7 +1500,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75051"
-		event_target:heretic = {
+		event_target:target_heretic = {
 			any_courtier = {
 				limit = {
 					religion = PREV
@@ -1538,7 +1538,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75051"
-		event_target:heretic = {
+		event_target:target_heretic = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1582,7 +1582,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75052"
-		event_target:heretic = {
+		event_target:target_heretic = {
 			banish = yes
 			any_courtier = {
 				limit = {
@@ -1617,7 +1617,7 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTB75052"
-		event_target:heretic = {
+		event_target:target_heretic = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -2055,6 +2055,9 @@ character_event = {
 	trigger = {
 		has_job_title = job_treasurer
 		trait = deceitful
+		NOT = {
+			wealth = 1500
+		}
 		any_demesne_province = {
 			OR = {
 				has_province_modifier = highway_robber_band
@@ -2125,9 +2128,20 @@ character_event = {
 			limit = {	
 				FROM = {
 					treasury = 1
+					NOT = {
+						treasury = 50
+					}
 				}
 			}
 			wealth = FROM
+		}
+		if = {
+			limit = {
+				FROM = {
+					treasury = 50
+				}
+			}
+			wealth = 50
 		}
 		FROM = {
 			hidden_tooltip = {
@@ -2164,7 +2178,16 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA75093"
-		clear_wealth = yes
+		if = {
+			limit = {
+				NOT = {
+					wealth = 50
+				}
+			}
+			clear_wealth = yes
+			break = yes
+		}
+		wealth = -50
 	}
 }
 
@@ -2180,6 +2203,9 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
+		NOT = {
+			has_dlc = "Zeus"
+		}
 		job_treasurer = {
 			trait = greedy
 			NOT = {

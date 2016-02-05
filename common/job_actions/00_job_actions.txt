@@ -2,7 +2,7 @@
 # COUNCILLOR ACTIONS
 ##########################################
 # attribute = [diplomacy/stewardship/intrigue/martial/learning] - Character attribute is multiplied with the modifiers
-# trigger = Province scope trigger to determine if the action is meaningful in a province (the player character is FROM)
+# trigger = Province scope trigger to determine if the action is meaningful in a province (the player character is FROM, the councillor is in 'new_character')
 # Events that can trigger off this action. This info is only used by the GUI.
 # All modifiers (like 'local_build_time_modifier') are multiplied by the attribute
 
@@ -401,6 +401,12 @@ action_inquisition = {
 			} #allows foreign vassals to spread their different faiths but not the main religion's ones to overwrite them 
 		}
 		num_of_settlements = 1
+		NAND = {
+			FROM = { job_spiritual = { has_character_modifier = spiritual_refused_pagans } }  # See Event ZE.5040
+			owner = {
+				accepts_missionaries_trigger = yes
+			}
+		}
 		OR = {
 			owner = {
 				independent = yes
@@ -491,12 +497,14 @@ action_build_zeal = {
 	potential = {
 		FROM = {
 			is_tribal = yes
-			NOT = { trait = tolerant_ruler }
-			liege = { NOT = { trait = tolerant_ruler } }
+			NOR = {
+				trait = tolerant_ruler
+				liege = { trait = tolerant_ruler }
+			}
 			top_liege = {
-				OR = {
-					NOT = { trait = tolerant_ruler }
-					NOT = { religion_group = FROM }
+				NAND = {
+					trait = tolerant_ruler
+					religion_group = FROM
 				}
 			}
 		}

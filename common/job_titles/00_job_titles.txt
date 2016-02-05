@@ -12,6 +12,7 @@
 
 job_chancellor = {
 	is_chancellor = yes
+	is_voter = yes
 	attribute = diplomacy
 	dignity = 0.33
 	opinion_effect = 15
@@ -20,38 +21,32 @@ job_chancellor = {
 	monthly_prestige = 0.015
 	
 	allow = {
-		OR = {
-			is_female = no
-			AND = {
-				feminist_religions_trigger = yes
-				liege = {
-					religion = PREV
-				}
-			}
-			has_character_flag = special_chancellor
-		}
-		
-		is_adult = yes
-		prisoner = no
-		NOR = {
-			trait = incapable
-			trait = in_hiding
-		}
+		can_be_chancellor_trigger = yes
 	}
 	gain_effect = {
 		if = {
 			limit = {
-				has_opinion_modifier = {
-					who = FROM
-					modifier = opinion_fired_from_council
+				NOT = {
+					has_dlc = Zeus
 				}
 			}
-			remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
-			opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						who = FROM
+						modifier = opinion_fired_from_council
+					}
+				}
+				remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
+				opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			}
 		}
 	}
 	lose_effect = {
 		opinion = { who = FROM modifier = opinion_fired_from_council }
+		opinion = { who = FROM modifier = opinion_recently_fired }
+	}
+	retire_effect = {
 	}
 	
 	action = action_improve_relations
@@ -65,6 +60,7 @@ job_chancellor = {
 # NOTE: The allow trigger for this job also determines who can command armies!
 job_marshal = {
 	is_marshal = yes
+	is_voter = yes
 	attribute = martial
 	dignity = 0.33
 	opinion_effect = 15
@@ -73,79 +69,38 @@ job_marshal = {
 	monthly_prestige = 0.015
 	
 	allow = {
-		OR = {
-			is_female = no
-			AND = {
-				is_pregnant = no
-				OR = {
-					AND = {
-						feminist_religions_trigger = yes
-						liege = {
-							religion = PREV
-						}
-					}
-					AND = {
-						top_liege = {
-							has_character_modifier = female_marshals_allowed
-						}
-						martial = 20
-						OR = {
-							trait = misguided_warrior
-							trait = tough_soldier
-							trait = skilled_tactician
-							trait = brilliant_strategist
-						}
-					}
-					AND = {
-						top_liege = {
-							has_character_modifier = female_marshals_accepted
-						}
-						martial = 12
-						OR = {
-							trait = misguided_warrior
-							trait = tough_soldier
-							trait = skilled_tactician
-							trait = brilliant_strategist
-						}
-					}
-					top_liege = {
-						has_character_modifier = female_marshals_approved
-					}
-				}
-			}
-			OR = {
-				NOT = { religion = hindu }
-				trait = kshatriya
-			}
-			has_character_flag = special_marshal
-		}
-		is_adult = yes
-		prisoner = no
-		NOR = {
-			trait = incapable
-			trait = in_hiding
-			has_character_flag = guru
-		}
+		can_be_marshal_trigger = yes
 	}
 	
 	gain_effect = {
 		if = {
 			limit = {
-				has_opinion_modifier = {
-					who = FROM
-					modifier = opinion_fired_from_council
+				NOT = {
+					has_dlc = Zeus
 				}
 			}
-			remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
-			opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						who = FROM
+						modifier = opinion_fired_from_council
+					}
+				}
+				remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
+				opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			}
 		}
 	}
 	lose_effect = {
 		opinion = { who = FROM modifier = opinion_fired_from_council }
+		opinion = { who = FROM modifier = opinion_recently_fired }
+	}
+	retire_effect = {
 	}
 	
 	action = action_assist_arrest
 	action = action_train_troops
+	action = action_train_troops_nomadic
 	action = action_advance_mil_tech
 	action = action_organize_raid # Replaces action_advance_mil_tech for Tribes
 
@@ -154,6 +109,7 @@ job_marshal = {
 
 job_treasurer = {
 	is_treasurer = yes
+	is_voter = yes
 	attribute = stewardship
 	dignity = 0.2
 	opinion_effect = 15
@@ -162,38 +118,32 @@ job_treasurer = {
 	monthly_prestige = 0.15
 	
 	allow = {
-		OR = {
-			is_female = no
-			AND = {
-				feminist_religions_trigger = yes
-				liege = {
-					religion = PREV
-				}
-			}
-			has_character_flag = special_treasurer
-		}
-		is_adult = yes
-		prisoner = no
-		NOR = {
-			trait = incapable
-			trait = in_hiding
-			has_character_flag = guru
-		}
+		can_be_treasurer_trigger = yes
 	}
 	gain_effect = {
 		if = {
 			limit = {
-				has_opinion_modifier = {
-					who = FROM
-					modifier = opinion_fired_from_council
+				NOT = {
+					has_dlc = Zeus
 				}
 			}
-			remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
-			opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						who = FROM
+						modifier = opinion_fired_from_council
+					}
+				}
+				remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
+				opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			}
 		}
 	}
 	lose_effect = {
 		opinion = { who = FROM modifier = opinion_fired_from_council }
+		opinion = { who = FROM modifier = opinion_recently_fired }
+	}
+	retire_effect = {
 	}
 	
 	action = action_squeeze_peasants
@@ -208,6 +158,7 @@ job_treasurer = {
 
 job_spymaster = {
 	is_spymaster = yes
+	is_voter = yes
 	attribute = intrigue
 	dignity = 0.1
 	opinion_effect = 15
@@ -215,40 +166,32 @@ job_spymaster = {
 	monthly_salary = 0.1
 	
 	allow = {
-		OR = {
-			is_female = no
-			feminist_religions_trigger = yes
-			liege = { 
-				OR = {
-					mother = { character = ROOT }
-					spouse = { character = ROOT }
-				}
-			}
-			has_character_flag = special_spymaster
-		}
-		
-		is_adult = yes
-		prisoner = no
-		NOR = {
-			trait = incapable
-			trait = in_hiding
-			has_character_flag = guru
-		}
+		can_be_spymaster_trigger = yes
 	}
 	gain_effect = {
 		if = {
 			limit = {
-				has_opinion_modifier = {
-					who = FROM
-					modifier = opinion_fired_from_council
+				NOT = {
+					has_dlc = Zeus
 				}
 			}
-			remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
-			opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						who = FROM
+						modifier = opinion_fired_from_council
+					}
+				}
+				remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
+				opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			}
 		}
 	}
 	lose_effect = {
 		opinion = { who = FROM modifier = opinion_fired_from_council }
+		opinion = { who = FROM modifier = opinion_recently_fired }
+	}
+	retire_effect = {
 	}
 	
 	action = action_uncover_plots
@@ -260,6 +203,7 @@ job_spymaster = {
 
 job_spiritual = {
 	is_spiritual = yes
+	is_voter = yes
 	attribute = learning
 	dignity = 0.15
 	opinion_effect = 15
@@ -268,93 +212,38 @@ job_spiritual = {
 	monthly_piety = 0.015
 	
 	allow = {
-		prisoner = no
-		NOR = {
-			trait = incapable
-			trait = in_hiding
-		}
-		liege = {
-			religion = ROOT
-		}
-
-		OR = {
-			AND = {
-				is_adult = yes
-				OR = {
-					AND = {
-						is_female = no
-						ultra_feminist_religion_trigger = no
-					}
-					AND = {
-						is_female = yes
-						feminist_religions_trigger = yes
-					}
-				}
-				OR = {
-					NOT = { religion = hindu }
-					trait = brahmin
-				}
-			}
-			has_character_flag = special_spiritual
-		}
-		
-		OR = {
-			is_theocracy = yes
-			AND = {
-				liege = { is_tribal = yes }
-				is_ruler = no
-			}
-			liege = { religion_group = muslim }
-			AND = {
-				clan = yes
-				liege = {
-					is_nomadic = yes
-				}
-			}
-			AND = {
-				is_ruler = no
-				has_autocephaly = no
-			}
-			AND = {
-				has_autocephaly = yes
-				is_ruler = no
-				NOT = {
-					any_vassal = { is_theocracy = yes }
-				}
-			}
-		}
-		
-		OR = {
-			NOR = {
-				religion_group = muslim
-				liege = { religion_group = muslim }
-			}
-			trait = detached_priest
-			trait = martial_cleric
-			trait = scholarly_theologian
-			trait = mastermind_theologian
-		}
+		can_be_spiritual_trigger = yes
 	}
 	gain_effect = {
 		if = {
 			limit = {
-				has_opinion_modifier = {
-					who = FROM
-					modifier = opinion_fired_from_council
+				NOT = {
+					has_dlc = Zeus
 				}
 			}
-			remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
-			opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			if = {
+				limit = {
+					has_opinion_modifier = {
+						who = FROM
+						modifier = opinion_fired_from_council
+					}
+				}
+				remove_opinion = { who = FROM modifier = opinion_fired_from_council }	#### ADDED BY ASH
+				opinion = { who = FROM modifier = opinion_job_security_concerns }	#### ADDED BY ASH
+			}
 		}
 	}
 	lose_effect = {
 		opinion = { who = FROM modifier = opinion_fired_from_council }
+		opinion = { who = FROM modifier = opinion_recently_fired }
+	}
+	retire_effect = {
 	}
 	dismiss_trigger = {
 		FROM = {
-			NAND = {
-				religion_group = muslim
-				religion = ROOT
+			OR = {
+				NOT = { religion_group = muslim }
+				NOT = { religion = ROOT }
 			}
 		}
 	}
