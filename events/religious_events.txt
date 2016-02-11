@@ -22,11 +22,12 @@ province_event = {
 	trigger = {
 		is_heretic = no
 		has_heresies = yes
-		NOT = { province_id = 275 } # Rome
-		NOT = { province_id = 517 } # Konstantinoúpolis
-		NOT = { province_id = 719 } # Mecca
-		
-		NOT = { has_dlc = "Sons of Abraham" }
+		NOR = {
+			province_id = 275 # Rome
+			province_id = 517 # Konstantinoúpolis
+			province_id = 719 # Mecca
+			has_dlc = "Sons of Abraham"
+		}
 	}
 	
 	mean_time_to_happen = {
@@ -191,8 +192,14 @@ province_event = {
 	}
 	
 	option = {
-		name = "EVTOPTA39000"
-		trigger = { owner = { NOT = { religion = ROOT } } }
+		name = {
+			text = "EVTOPTA39000"
+			trigger = { owner = { NOT = { religion = ROOT } } }
+		}
+		name = {
+			text = "EVTOPTB39000"
+			trigger = { owner = { religion = ROOT } }
+		}
 		if = {
 			limit = { 
 				ruler = { is_parent_religion = ROOT }
@@ -215,56 +222,6 @@ province_event = {
 			add_province_modifier = {
 				name = heretic_stronghold
 				duration = 3650
-			}
-		}
-		# News spread
-		hidden_tooltip = {
-			owner = {
-				top_liege = {
-					if = {
-						limit = {
-							NOT = { character = PREV }
-						}
-						character_event = { id = 39400 days = 2 }
-					}
-					any_vassal = {
-						limit = {
-							OR = {
-								is_parent_religion = ROOT
-								religion = ROOT
-							}
-						}
-						character_event = { id = 39400 days = 2 }
-					}
-				}
-			}
-		}
-	}
-	option = {
-		name = "EVTOPTB39000"
-		trigger = { owner = { religion = ROOT } }
-		if = {
-			limit = { 
-				ruler = { is_parent_religion = ROOT }
-			}
-			ruler = { piety = -10 }
-		}
-		if = {
-			limit = {
-				owner = {
-					top_liege = {
-						NOT = {
-							any_realm_province = {
-								religion = ROOT
-								has_province_modifier = heretic_stronghold
-							}
-						}
-					}
-				}
-			}
-			add_province_modifier = {
-				name = heretic_stronghold
-				duration = -1
 			}
 		}
 		# News spread
@@ -3582,12 +3539,12 @@ character_event = {
 				primary_title = {
 					has_law = clanic_centralization_4
 				}
-				OR = {
-					AND = {
-						capital_scope = {
-							port = yes
-						}
-						capital_holding = {
+				capital_holding = {
+					OR = {
+						AND = {
+							location = {
+								port = yes
+							}
 							OR = {
 								AND = {
 									holding_type = tribal
@@ -3596,15 +3553,11 @@ character_event = {
 								holding_type = city
 							}
 						}
-					}
-					capital_holding = {
-						OR = {
-							AND = {
-								holding_type = tribal
-								has_building = tb_hillfort_4
-							}
-							holding_type = castle
+						AND = {
+							holding_type = tribal
+							has_building = tb_hillfort_4
 						}
+						holding_type = castle
 					}
 				}
 			}
@@ -3879,12 +3832,12 @@ character_event = {
 				primary_title = {
 					has_law = clanic_centralization_4
 				}
-				OR = {
-					AND = {
-						capital_scope = {
-							port = yes
-						}
-						capital_holding = {
+				capital_holding = {
+					OR = {
+						AND = {
+							location = {
+								port = yes
+							}
 							OR = {
 								AND = {
 									holding_type = tribal
@@ -3893,15 +3846,11 @@ character_event = {
 								holding_type = city
 							}
 						}
-					}
-					capital_holding = {
-						OR = {
-							AND = {
-								holding_type = tribal
-								has_building = tb_hillfort_4
-							}
-							holding_type = castle
+						AND = {
+							holding_type = tribal
+							has_building = tb_hillfort_4
 						}
+						holding_type = castle
 					}
 				}
 			}
@@ -4059,7 +4008,6 @@ character_event = {
 letter_event = {
 	id = 39617
 	desc = EVTDESC_39617
-#	picture = GFX_evt_bishop
 	border = GFX_event_letter_frame_religion
 	
 	is_triggered_only = yes

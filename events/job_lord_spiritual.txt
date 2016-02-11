@@ -112,14 +112,14 @@ narrative_event = {
 			factor = 0.75
 			learning = 13
 		}
-#		modifier = {		#Do not uncomment, having a factor of 1 changes nothing but checking adds computation time
-#			factor = 1
-#			NOT = { religion_authority = 0.1 }
-#		}
-#		modifier = {
-#			factor = 1
-#			NOT = { religion_authority = 0.2 }
-#		}
+		modifier = {
+			factor = 3.0
+			NOT = { religion_authority = 0.1 }
+		}
+		modifier = {
+			factor = 2.0
+			NOT = { religion_authority = 0.2 }
+		}
 		modifier = {
 			factor = 1.5
 			NOT = { religion_authority = 0.3 }
@@ -218,6 +218,18 @@ narrative_event = {
 				primary_title = {
 					has_law = tolerance_2
 				}
+			}
+		}
+		modifier = {
+			factor = 0.75
+			location = {
+				has_province_modifier = force_converting
+			}
+		}
+		modifier = {
+			factor = 3.0
+			location = {
+				has_province_modifier = heretic_stronghold
 			}
 		}
 	}
@@ -747,6 +759,12 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
+
+	immediate = {
+		location = {
+			save_event_target_as = wounded_location
+		}
+	}
 	
 	option = {
 		name = "EVTOPTA20021"
@@ -826,13 +844,12 @@ narrative_event = {
 	prisoner = no
 	
 	trigger = {
-		NOT = {
+		NOR = {
 			trait = tolerant_ruler
-		}
-		liege = {
-			NOT = {
+			liege = {
 				trait = tolerant_ruler
 			}
+			religion_group = indian_group
 		}
 		top_liege = {
 			NAND = {
@@ -841,9 +858,10 @@ narrative_event = {
 			}
 		}
 		has_job_action = action_inquisition
-		NOT = { religion_group = indian_group }
+		trait = zealous
 		location = {
 			any_province_lord = {
+				trait = cynical
 				NOR = {
 					is_liege_of = ROOT
 					has_character_flag = no_heretic
@@ -916,9 +934,11 @@ narrative_event = {
 		location = {
 			random_province_lord = {
 				limit = {
+					trait = cynical
 					NOR = {
 						is_liege_of = ROOT
 						has_character_flag = no_heretic
+						has_character_flag = branded_heretic
 						character = ROOT
 						piety = 100
 					}
@@ -927,35 +947,15 @@ narrative_event = {
 					religion_group = ROOT
 					can_change_religion = yes
 				}
-				set_character_flag = suspected_heretic
+				save_event_target_as = suspected_heretic
 			}
 		}
 	}
 	
 	option = {
 		name = "EVTOPTA903"
-		ai_chance = { factor = 75 }
-		location = {
-			random_province_lord = {
-				limit = {
-					has_character_flag = suspected_heretic
-				}
-				clr_character_flag = suspected_heretic
-				character_event = { id = 20030 days = 7 tooltip = "EVTTOOLTIP20030" }
-			}
-		}
-	}
-	option = {
-		name = "EVTOPTB903"
-		ai_chance = { factor = 25 }
-		trigger = { NOT = { trait = zealous } }
-		location = {
-			random_province_lord = {
-				limit = {
-					has_character_flag = suspected_heretic
-				}
-				clr_character_flag = suspected_heretic
-			}
+		event_target:suspected_heretic = {
+			character_event = { id = 20030 days = 7 tooltip = "EVTTOOLTIP20030" }
 		}
 	}
 }
@@ -1074,7 +1074,6 @@ letter_event = {
 			}
 		}
 		piety = 5
-		clr_character_flag = suspected_heretic
 	}
 	option = {
 		name = "EVTOPTB20033"
@@ -1082,7 +1081,6 @@ letter_event = {
 			religion_group = muslim
 		}
 		piety = 5
-		clr_character_flag = suspected_heretic
 	}
 }
 
@@ -1124,7 +1122,6 @@ letter_event = {
 			}
 		}
 		piety = -50
-		clr_character_flag = suspected_heretic
 	}
 }
 
