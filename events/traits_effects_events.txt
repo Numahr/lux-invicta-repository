@@ -15064,17 +15064,15 @@ character_event = {
 		trait = impaler
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
-		NOT = {
+		NOR = {
+			trait = in_hiding
 			intrigue = 15
 		}
 		OR = {
 			trait = diligent
 			trait = ambitious
-			NOT = {
+			NAND = {
 				trait = slothful
-			}
-			NOT = {
 				trait = content
 			}
 		}
@@ -15104,9 +15102,7 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA3605 #Demand
-		piety = -10
+	immediate  {
 		random_courtier = {
 			limit = {
 				age = 16
@@ -15121,6 +15117,14 @@ character_event = {
 					martial = 10
 				}
 			}
+			save_event_target_as = impaler_teacher
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3605 #Demand
+		piety = -10
+		event_target:impaler_teacher = {
 			set_character_flag = pressured_teacher
 			character_event = {
 				id = 3606
@@ -15132,20 +15136,7 @@ character_event = {
 	option = {
 		name = EVTOPTB3605 #Ask nicely
 		prestige = -10
-		random_courtier = {
-			limit = {
-				age = 16
-				in_command = no
-				OR = {
-					learning = 10
-					trait = impaler
-					diplomacy = 8
-				}
-				OR = {
-					trait = wroth
-					martial = 10
-				}
-			}
+		event_target:impaler_teacher = {
 			set_character_flag = asked_teacher
 			character_event = {
 				id = 3606
@@ -15161,20 +15152,7 @@ character_event = {
 	option = {
 		name = EVTOPTD3605 #Bribe
 		scaled_wealth = -0.10
-		random_courtier = {
-			limit = {
-				age = 16
-				in_command = no
-				OR = {
-					learning = 10
-					trait = impaler
-					diplomacy = 8
-				}
-				OR = {
-					trait = wroth
-					martial = 10
-				}
-			}
+		event_target:impaler_teacher = {
 			set_character_flag = bribed_teacher
 			character_event = {
 				id = 3606
@@ -15325,6 +15303,7 @@ character_event = {
 		num_of_prisoners = 2
 		any_courtier = {
 			prisoner = yes
+			is_adult = yes
 			has_character_modifier = the_dungeon
 			is_female = no
 		}
@@ -15347,14 +15326,21 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA3610
+	immediate = {
 		random_courtier = {
 			limit = {
 				prisoner = yes
+				is_adult = yes
 				has_character_modifier = the_dungeon
 				is_female = no
 			}
+			save_event_target_as = confession_target
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3610
+		event_target:confession_target = {
 			character_event = {
 				id = 3611
 				tooltip = EVTTOOLTIP3611
@@ -15367,12 +15353,7 @@ character_event = {
 		trigger = {
 			has_character_modifier = brazen_bull
 		}
-		random_courtier = {
-			limit = {
-				prisoner = yes
-				has_character_modifier = the_dungeon
-				is_female = no
-			}
+		event_target:confession_target = {
 			set_character_flag = tortured_by_brazenbull
 			character_event = {
 				id = 3611
@@ -15630,6 +15611,8 @@ character_event = {
 		random_child = {
 			limit = {
 				age = 15
+				is_abroad = no
+				prisoner = no
 				OR = {
 					trait = envious
 					trait = wroth
@@ -15952,14 +15935,10 @@ character_event = {
 		trait = duelist
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
-		NOT = {
+		NOR = {
+			trait = in_hiding
 			has_character_modifier = averted_duel
-		}
-		NOT = {
 			trait = slothful
-		}
-		NOT = {
 			trait = content
 		}
 		any_courtier = {
@@ -16000,18 +15979,26 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA3620 #Demand
-		piety = -10
+	immediate = {
 		random_courtier = {
 			limit = {
 				age = 20
 				is_female = no
+				is_abroad = no
+				prisoner = no
 				OR = {
 					martial = 10
 					trait = duelist
 				}
 			}
+			save_event_target_as = duelist_partner
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3620 #Demand
+		piety = -10
+		event_target:duelist_partner = {
 			set_character_flag = pressured_duelist
 			character_event = {
 				id = 3621
@@ -16023,15 +16010,7 @@ character_event = {
 	option = {
 		name = EVTOPTB3620 #Ask nicely
 		prestige = -10
-		random_courtier = {
-			limit = {
-				age = 20
-				is_female = no
-				OR = {
-					martial = 10
-					trait = duelist
-				}
-			}
+		event_target:duelist_partner = {
 			set_character_flag = asked_duelist
 			character_event = {
 				id = 3621
@@ -16043,15 +16022,7 @@ character_event = {
 	option = {
 		name = EVTOPTC3620 #Bribe
 		scaled_wealth = -0.10
-		random_courtier = {
-			limit = {
-				age = 20
-				is_female = no
-				OR = {
-					martial = 10
-					trait = duelist
-				}
-			}
+		event_target:duelist_partner = {
 			set_character_flag = bribed_duelist
 			character_event = {
 				id = 3621
@@ -16208,31 +16179,23 @@ character_event = {
 		trait = duelist
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
-		NOT = {
+		NOR = {
+			trait = in_hiding
 			has_character_modifier = averted_duel
 		}
 		any_courtier = {
 			is_councillor = no
 			age = 20
 			is_female = no
-			NOT = { trait = in_hiding }
-			NOT = {
-				age = 65
-			}
-			NOT = {
-				spouse = {
-					character = ROOT
-				}
-			}
 			OR = {
 				trait = duelist
 				martial = 9
 			}
-			NOT = {
+			NOR = {
+				trait = in_hiding
+				age = 65
+				character = ROOT
 				opinion = { who = ROOT value = 10 }
-			}
-			NOT = {
 				reverse_opinion = { who = ROOT value = 10 }
 			}
 		}
@@ -16242,33 +16205,31 @@ character_event = {
 		factor = 1
 	}
 	
-	option = {
-		name = EVTOPTA3625
+	immediate = {
 		random_courtier = {
 			limit = {
 				is_councillor = no
 				age = 20
 				is_female = no
-				NOT = { trait = in_hiding }
-				NOT = {
-					age = 65
-				}
-				NOT = {
-					spouse = {
-						character = ROOT
-					}
-				}
 				OR = {
 					trait = duelist
 					martial = 9
 				}
-				NOT = {
+				NOR = {
+					trait = in_hiding
+					age = 65
+					character = ROOT
 					opinion = { who = ROOT value = 10 }
-				}
-				NOT = {
 					reverse_opinion = { who = ROOT value = 10 }
 				}
 			}
+			save_event_target_as = duelist_opponent
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3625
+		event_target:duelist_opponent = {
 			character_event = {
 				id = 3626
 				days = 1
@@ -16289,31 +16250,7 @@ character_event = {
 				}
 			}
 		}
-		random_courtier = {
-			limit = {
-				is_councillor = no
-				age = 20
-				is_female = no
-				NOT = { trait = in_hiding }
-				NOT = {
-					age = 65
-				}
-				NOT = {
-					spouse = {
-						character = ROOT
-					}
-				}
-				OR = {
-					trait = duelist
-					martial = 9
-				}
-				NOT = {
-					opinion = { who = ROOT value = 10 }
-				}
-				NOT = {
-					reverse_opinion = { who = ROOT value = 10 }
-				}
-			}
+		event_target:duelist_opponent = {
 			opinion = {
 				modifier = opinion_coward
 				who = ROOT
@@ -16329,10 +16266,8 @@ character_event = {
 				prisoner = no
 				is_abroad = no
 				martial = 6
-				NOT = {
+				NOR = {
 					trait = maimed
-				}
-				NOT = {
 					trait = wounded
 				}
 			}
@@ -16367,64 +16302,13 @@ character_event = {
 						add_trait = wounded
 					}
 					10 = {
-						ROOT = {
-							random_courtier = {
-								limit = {
-									is_councillor = no
-									age = 20
-									is_female = no
-									NOT = { trait = in_hiding }
-									NOT = {
-										age = 65
-									}
-									NOT = {
-										spouse = {
-											character = ROOT
-										}
-									}
-									OR = {
-										trait = duelist
-										martial = 9
-									}
-									NOT = {
-										opinion = { who = ROOT value = 10 }
-									}
-									NOT = {
-										reverse_opinion = { who = ROOT value = 10 }
-									}
-								}
-								add_trait = wounded
-							}
+						event_target:target_duelist = {
+							add_trait = wounded
 						}
 					}
 					10 = {
-						ROOT = {
-							random_courtier = {
-								limit = {
-									is_councillor = no
-									age = 20
-									is_female = no
-									NOT = {
-										age = 65
-									}
-									NOT = {
-										spouse = {
-											character = ROOT
-										}
-									}
-									OR = {
-										trait = duelist
-										martial = 9
-									}
-									NOT = {
-										opinion = { who = ROOT value = 10 }
-									}
-									NOT = {
-										reverse_opinion = { who = ROOT value = 10 }
-									}
-								}
-								add_trait = maimed
-							}
+						event_target:target_duelist = {
+							add_trait = maimed
 						}
 					}
 				}
@@ -16438,65 +16322,13 @@ character_event = {
 						add_trait = wounded
 					}
 					30 = {
-						ROOT = {
-							random_courtier = {
-								limit = {
-									is_councillor = no
-									age = 20
-									is_female = no
-									NOT = { trait = in_hiding }
-									NOT = {
-										age = 65
-									}
-									NOT = {
-										spouse = {
-											character = ROOT
-										}
-									}
-									OR = {
-										trait = duelist
-										martial = 9
-									}
-									NOT = {
-										opinion = { who = ROOT value = 10 }
-									}
-									NOT = {
-										reverse_opinion = { who = ROOT value = 10 }
-									}
-								}
-								add_trait = maimed
-							}
+						event_target:target_duelist = {
+							add_trait = maimed
 						}
 					}
 					40 = {
-						ROOT = {
-							random_courtier = {
-								limit = {
-									is_councillor = no
-									age = 20
-									is_female = no
-									NOT = { trait = in_hiding }
-									NOT = {
-										age = 65
-									}
-									NOT = {
-										spouse = {
-											character = ROOT
-										}
-									}
-									OR = {
-										trait = duelist
-										martial = 9
-									}
-									NOT = {
-										opinion = { who = ROOT value = 10 }
-									}
-									NOT = {
-										reverse_opinion = { who = ROOT value = 10 }
-									}
-								}
-								add_trait = wounded
-							}
+						event_target:target_duelist = {
+							add_trait = wounded
 						}
 					}
 					10 = {
@@ -16569,7 +16401,6 @@ character_event = {
 			}
 			random = {
 				chance = 20
-				
 				remove_trait = duelist
 			}
 		}
@@ -16645,8 +16476,8 @@ character_event = {
 		trait = duelist
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
-		NOT = {
+		NOR = {
+			trait = in_hiding
 			has_character_modifier = averted_duel
 		}
 		OR = {
@@ -16660,8 +16491,8 @@ character_event = {
 			any_courtier = {
 				age = 16
 				in_command = no
-				NOT = { trait = in_hiding }
-				NOT = {
+				NOR = {
+					trait = in_hiding
 					trait = duelist
 				}
 				OR = {
@@ -16713,8 +16544,8 @@ character_event = {
 			limit = {
 				age = 16
 				in_command = no
-				NOT = { trait = in_hiding }
-				NOT = {
+				NOR = {
+					trait = in_hiding
 					trait = duelist
 				}
 				OR = {
@@ -16858,50 +16689,38 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	is_triggered_only = yes
+	only_rulers = yes
 	
 	trigger = {
 		trait = duelist
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
 		OR = {
 			tier = duke
 			tier = count
 		}
-		NOT = {
+		NOR = {
+			trait = in_hiding
 			has_character_modifier = averted_duel
-		}
-		NOT = {
 			has_character_modifier = master_duelist
 		}
-		location = {
-			any_province_lord = {
-				is_female = no
-				age = 20
-				NOT = { trait = in_hiding }
-				OR = {
-					AND = {
-						tier = duke
-						ROOT = {
-							tier = duke
-						}
+		top_liege = {
+			any_realm_province = {
+				any_province_lord = {
+					is_female = no
+					age = 20
+					tier = ROOT
+					NOR = {
+						trait = in_hiding
+						age = 65
+						opinion = { who = ROOT value = -10 }
+						trait = wounded
+						trait = maimed
 					}
-					AND = {
-						tier = count
-						ROOT = {
-							tier = count
-						}
+					OR = {
+						trait = duelist
+						martial = 9
 					}
-				}					
-				NOT = {
-					age = 65
-				}
-				NOT = {
-					opinion = { who = ROOT value = -10 }
-				}
-				OR = {
-					trait = duelist
-					martial = 9
 				}
 			}
 		}			
@@ -16923,41 +16742,43 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA3635
-		location = {
-			random_province_lord = {
+		top_liege = {
+			random_realm_province = {
 				limit = {
-					is_female = no
-					age = 20
-					NOT = { trait = in_hiding }
-					OR = {
-						AND = {
-							tier = duke
-							ROOT = {
-								tier = duke
-							}
+					any_province_lord = {
+						is_female = no
+						age = 20
+						tier = ROOT
+						NOR = {
+							trait = in_hiding
+							trait = wounded
+							trait = maimed
+							age = 65
+							opinion = { who = ROOT value = -10 }
 						}
-						AND = {
-							tier = count
-							ROOT = {
-								tier = count
-							}
+						OR = {
+							trait = duelist
+							martial = 9
 						}
 					}
-					NOT = {
-						trait = wounded
-					}
-					NOT = {
-						trait = maimed
-					}
-					NOT = {
-						age = 65
-					}
-					NOT = {
-						opinion = { who = ROOT value = -10 }
-					}
-					OR = {
-						trait = duelist
-						martial = 9
+				}
+				save_event_target_as = duel_location
+				random_province_lord = {
+					limit = {
+						is_female = no
+						age = 20
+						tier = ROOT
+						NOR = {
+							trait = in_hiding
+							trait = wounded
+							trait = maimed
+							age = 65
+							opinion = { who = ROOT value = -10 }
+						}
+						OR = {
+							trait = duelist
+							martial = 9
+						}
 					}
 				}
 				character_event = {
@@ -17143,14 +16964,10 @@ character_event = {
 		trait = hunter
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
-		NOT = {
+		NOR = {
+			trait = in_hiding
 			martial = 15
-		}
-		NOT = {
 			trait = slothful
-		}
-		NOT = {
 			trait = craven
 		}
 		any_courtier = {
@@ -17189,9 +17006,7 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA3640 #Demand
-		piety = -10
+	immediate = {
 		random_courtier = {
 			limit = {
 				age = 16
@@ -17201,7 +17016,16 @@ character_event = {
 					martial = 10
 					trait = hunter
 				}
+				has_job_action = no
 			}
+			save_event_target_as = fellow_hunter
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3640 #Demand
+		piety = -10
+		event_target:fellow_hunter = {
 			set_character_flag = bribed_hunter
 			character_event = {
 				id = 3641
@@ -17213,16 +17037,7 @@ character_event = {
 	option = {
 		name = EVTOPTB3640 #Ask nicely
 		prestige = -10
-		random_courtier = {
-			limit = {
-				age = 16
-				in_command = no
-				NOT = { trait = in_hiding }
-				OR = {
-					martial = 10
-					trait = hunter
-				}
-			}
+		event_target:fellow_hunter = {
 			set_character_flag = bribed_hunter
 			character_event = {
 				id = 3641
@@ -17234,16 +17049,7 @@ character_event = {
 	option = {
 		name = EVTOPTC3640 #Bribe
 		scaled_wealth = -0.10
-		random_courtier = {
-			limit = {
-				age = 16
-				in_command = no
-				NOT = { trait = in_hiding }
-				OR = {
-					martial = 10
-					trait = hunter
-				}
-			}
+		event_target:fellow_hunter = {
 			set_character_flag = bribed_hunter
 			character_event = {
 				id = 3641
@@ -17397,31 +17203,33 @@ character_event = {
 	trigger = {
 		trait = hunter
 		NOT = { trait = in_hiding }
-		any_courtier = {
-			age = 16
-			in_command = no
-			NOT = { trait = in_hiding }
-			is_councillor = yes
-			has_job_action = no
-			OR = {
-				trait = hunter
-				trait = brave
-				martial = 9
-				NOT = {
-					trait = craven
+		OR = {
+			any_courtier = {
+				age = 16
+				in_command = no
+				NOT = { trait = in_hiding }
+				is_councillor = yes
+				has_job_action = no
+				OR = {
+					trait = hunter
+					trait = brave
+					martial = 9
+					NOT = {
+						trait = craven
+					}
 				}
 			}
-		}
-		any_child = {
-			age = 15
-			OR = {
-				trait = hunter
-				trait = brave
-				martial = 9
-				NOT = {
-					trait = craven
+			any_child = {
+				age = 15
+				OR = {
+					trait = hunter
+					trait = brave
+					martial = 9
+					NOR = {
+						trait = craven
+						trait = in_hiding
+					}
 				}
-				NOT = { trait = in_hiding }
 			}
 		}
 	}
@@ -17504,6 +17312,54 @@ character_event = {
 			}
 		}
 		job_spymaster = {
+			character_event = {
+				id = 3646
+				days = 2
+				tooltip = EVTTOOLTIP3646
+			}
+		}
+	}
+	option = {
+		name = EVTOPTE3645
+		trigger = {
+			job_treasurer = {
+				has_job_action = no
+				NOT = { trait = in_hiding }
+				OR = {
+					trait = hunter
+					trait = brave
+					martial = 9
+					NOT = {
+						trait = craven
+					}
+				}
+			}
+		}
+		job_treasurer = {
+			character_event = {
+				id = 3646
+				days = 2
+				tooltip = EVTTOOLTIP3646
+			}
+		}
+	}
+	option = {
+		name = EVTOPTF3645
+		trigger = {
+			job_spiritual = {
+				has_job_action = no
+				NOT = { trait = in_hiding }
+				OR = {
+					trait = hunter
+					trait = brave
+					martial = 9
+					NOT = {
+						trait = craven
+					}
+				}
+			}
+		}
+		job_spiritual = {
 			character_event = {
 				id = 3646
 				days = 2
@@ -17682,20 +17538,20 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOT = { religion_group = muslim }
-		NOT = { religion_group = jewish_group }
+		NOR = {
+			religion_group = muslim
+			religion_group = jewish_group
+			trait = in_hiding
+			has_character_modifier = master_hunter
+		}
 		trait = hunter
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
 		OR = {
 			trait = brave
 			NOT = {
 				trait = craven
 			}
-		}
-		NOT = {
-			has_character_modifier = master_hunter
 		}
 		any_courtier = {
 			age = 16
@@ -18101,6 +17957,7 @@ character_event = {
 		name = EVTOPTA3655
 		trigger = {
 			job_chancellor = {
+				in_command = no
 				has_job_action = no
 				NOT = { trait = in_hiding }
 				OR = {
@@ -18128,6 +17985,7 @@ character_event = {
 		name = EVTOPTB3655
 		trigger = {
 			job_marshal = {
+				in_command = no
 				has_job_action = no
 				NOT = { trait = in_hiding }
 				OR = {
@@ -18155,6 +18013,7 @@ character_event = {
 		name = EVTOPTC3655
 		trigger = {
 			job_treasurer = {
+				in_command = no
 				has_job_action = no
 				NOT = { trait = in_hiding }
 				OR = {
@@ -18182,6 +18041,7 @@ character_event = {
 		name = EVTOPTD3655
 		trigger = {
 			job_spymaster = {
+				in_command = no
 				has_job_action = no
 				NOT = { trait = in_hiding }
 				OR = {
@@ -18209,6 +18069,7 @@ character_event = {
 		name = EVTOPTE3655
 		trigger = {
 			job_spiritual = {
+				in_command = no
 				has_job_action = no
 				NOT = { trait = in_hiding }
 				OR = {
@@ -18402,10 +18263,8 @@ character_event = {
 		OR = {
 			trait = charitable
 			trait = gregarious
-			NOT = {
+			NAND = {
 				diplomacy = 15
-			}
-			NOT = {
 				trait = content
 			}
 		}
@@ -18639,10 +18498,10 @@ character_event = {
 	trigger = {
 		war = no
 		in_command = no
-		NOT = { trait = in_hiding }
 		trait = poet
 		diplomacy = 6
-		NOT = {
+		NOR = {
+			trait = in_hiding
 			trait = wroth
 		}
 		any_courtier = {
@@ -18767,6 +18626,20 @@ character_event = {
 		factor = 1
 	}
 	
+	immediate = {
+		random_courtier = {
+			limit = {
+				age = 20
+				prisoner = no
+				has_lover = no
+				NOT = {
+					trait = poet
+				}
+			}
+			save_event_target_as = poem_customer
+		}
+	}
+	
 	option = {
 		name = EVTOPTA3675
 		hidden_tooltip = {
@@ -18777,15 +18650,7 @@ character_event = {
 			}
 		}
 		add_trait = charitable
-		random_courtier = {
-			limit = {
-				age = 20
-				prisoner = no
-				has_lover = no
-				NOT = {
-					trait = poet
-				}
-			}
+		event_target:poem_customer = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -18803,18 +18668,12 @@ character_event = {
 					limit = {
 						ROOT = {
 							is_married = yes
-						}
-						ROOT = {
 							is_female = no
 						}
 						is_female = yes
-						NOT = {
+						NOR = {
 							trait = homosexual
-						}
-						NOT = {
 							trait = celibate
-						}
-						NOT = {
 							age = 30
 						}
 					}
@@ -18839,15 +18698,7 @@ character_event = {
 			}
 		}
 		treasury = 10
-		random_courtier = {
-			limit = {
-				age = 20
-				prisoner = no
-				has_lover = no
-				NOT = {
-					trait = poet
-				}
-			}
+		event_target:poem_customer = {
 			hidden_tooltip = {
 				add_character_modifier = {
 					name = used_poetry_timer
@@ -18865,15 +18716,7 @@ character_event = {
 	option = {
 		name = EVTOPTC3675
 		prestige = 10
-		random_courtier = {
-			limit = {
-				age = 20
-				prisoner = no
-				has_lover = no
-				NOT = {
-					trait = poet
-				}
-			}
+		event_target:poem_customer = {
 			opinion = {
 				modifier = opinion_disappointed
 				who = ROOT
@@ -18992,18 +18835,14 @@ character_event = {
 			in_command = no
 			prisoner = no
 		}
-		NOT = {
+		NOR = {
 			trait = celibate
-		}
-		NOT = {
 			trait = homosexual
 		}
 		any_courtier = {
 			is_female = yes
-			NOT = {
+			NOR = {
 				trait = celibate
-			}
-			NOT = {
 				trait = homosexual
 			}
 			prisoner = no
@@ -19019,15 +18858,12 @@ character_event = {
 		factor = 1
 	}
 	
-	option = {
-		name = EVTOPTA3680
+	immediate = {
 		random_courtier = {
 			limit = {
 				is_female = yes
-				NOT = {
+				NOR = {
 					trait = celibate
-				}
-				NOT = {
 					trait = homosexual
 				}
 				prisoner = no
@@ -19037,17 +18873,28 @@ character_event = {
 				opinion = { who = ROOT value = 20 }
 				reverse_opinion = { who = ROOT value = 20 }
 			}
+			save_event_target_as = sweetheart
+		}
+		random_courtier = {
+			limit = {
+				age = 16
+				has_character_modifier = poetry_timer
+				war = no
+				in_command = no
+				prisoner = no
+			}
+			save_event_target_as = poem_author
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3680
+		event_target:sweetheart = {
 			add_lover = ROOT
 		}
 		random = {
 			chance = 10
-			random_courtier = {
-				limit = {
-					has_character_modifier = poetry_timer
-					war = no
-					in_command = no
-					prisoner = no
-				}
+			event_target:poem_author = {
 				character_event = {
 					id = 3681
 					tooltip = EVTTOOLTIP3681
@@ -19059,21 +18906,7 @@ character_event = {
 		name = EVTOPTB3680
 		prestige = -10
 		remove_trait = deceitful
-		random_courtier = {
-			limit = {
-				is_female = yes
-				NOT = {
-					trait = celibate
-				}
-				NOT = {
-					trait = homosexual
-				}
-				prisoner = no
-				is_abroad = no
-				age = 20
-				opinion = { who = ROOT value = 20 }
-				reverse_opinion = { who = ROOT value = 20 }
-			}
+		event_target:sweetheart = {
 			opinion = {
 				modifier = opinion_glad
 				who = ROOT
@@ -19111,7 +18944,7 @@ character_event = {
 		trigger = {
 			any_child = {
 				is_female = yes
-				any_lover = { character = from }
+				any_lover = { character = FROM }
 				NOT = {
 					spouse = {
 						character = FROM
@@ -19137,7 +18970,7 @@ character_event = {
 			spouse = {
 				is_female = yes
 				is_alive = yes
-				any_lover = { character = from }
+				any_lover = { character = FROM }
 			}
 		}
 		FROM = {
@@ -19236,10 +19069,8 @@ character_event = {
 		OR = {
 			trait = slothful
 			trait = content
-			NOT = {
+			NAND = {
 				trait = ambitious
-			}
-			NOT = {
 				trait = diligent
 			}
 		}
@@ -19323,24 +19154,9 @@ character_event = {
 				in_command = no
 				has_lover = no
 				prisoner = no
-				OR = {
-					AND = {
-						is_female = yes
-						ROOT = {
-							is_female = no
-						}
-					}
-					AND = {
-						is_female = no
-						ROOT = {
-							is_female = yes
-						}
-					}
-				}
-				NOT = {
+				is_opposite_sex = ROOT
+				NOR = {
 					trait = celibate
-				}
-				NOT = {
 					trait = homosexual
 				}
 				
@@ -19355,24 +19171,9 @@ character_event = {
 				age = 16
 				in_command = no
 				prisoner = no
-				OR = {
-					AND = {
-						is_female = yes
-						ROOT = {
-							is_female = no
-						}
-					}
-					AND = {
-						is_female = no
-						ROOT = {
-							is_female = yes
-						}
-					}
-				}
-				NOT = {
+				is_opposite_sex = ROOT
+				NOR = {
 					trait = celibate
-				}
-				NOT = {
 					trait = homosexual
 				}
 				
@@ -19530,12 +19331,12 @@ character_event = {
 		num_of_children = 3
 		any_child = {
 			age = 13
-			NOT = {
+			NOR = {
 				age = 20
+				trait = in_hiding
 			}
 			is_abroad = no
 			prisoner = no
-			NOT = { trait = in_hiding }
 		}
 	}
 	
@@ -19543,18 +19344,24 @@ character_event = {
 		factor = 1
 	}
 	
-	option = {
-		name = EVTOPTA3690
+	immediate = {
 		random_child = {
 			limit = {
 				age = 13
 				NOT = {
 					age = 20
+					trait = in_hiding
 				}
 				is_abroad = no
 				prisoner = no
-				NOT = { trait = in_hiding }
 			}
+			save_event_target_as = hunting_child
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3690
+		event_target:hunting_child = {
 			character_event = {
 				id = 3691
 				tooltip = EVTTOOLTIP3691
@@ -19571,16 +19378,7 @@ character_event = {
 				years = 5
 			}
 		}
-		random_child = {
-			limit = {
-				age = 13
-				NOT = {
-					age = 20
-				}
-				is_abroad = no
-				prisoner = no
-				NOT = { trait = in_hiding }
-			}
+		event_target:hunting_child = {
 			character_event = {
 				id = 3692
 				tooltip = EVTTOOLTIP3691
@@ -19596,16 +19394,7 @@ character_event = {
 				years = 5
 			}
 		}
-		random_child = {
-			limit = {
-				age = 13
-				NOT = {
-					age = 20
-				}
-				is_abroad = no
-				prisoner = no
-				NOT = { trait = in_hiding }
-			}
+		event_target:hunting_child = {
 			opinion = {
 				modifier = opinion_disappointed
 				who = ROOT
@@ -19620,14 +19409,7 @@ character_event = {
 				is_alive = yes
 				trait = falconer
 			}
-			any_child = {
-				age = 13
-				NOT = {
-					age = 20
-				}
-				is_abroad = no
-				prisoner = no
-				NOT = { trait = in_hiding }
+			event_target:hunting_child = {
 				trait = brave
 				martial = 10
 			}
@@ -19719,6 +19501,12 @@ character_event = {
 		FROM = {
 			random_list = {
 				20 = {
+					modifier = {
+						factor = 0
+						event_target:hunting_child = {
+							martial = 10
+						}
+					}
 					character_event = {
 						id = 3693
 						tooltip = EVTTOOLTIP3693 #Good hunt!
@@ -19731,12 +19519,24 @@ character_event = {
 					}
 				}
 				20 = {
+					modifier = {
+						factor = 0
+						event_target:hunting_child = {
+							trait = brave
+						}
+					}
 					character_event = {
 						id = 3695
 						tooltip = EVTTOOLTIP3694 #I am impressed!
 					}
 				}
 				30 = {
+					modifier = {
+						factor = 0
+						event_target:hunting_child = {
+							learning = 10
+						}
+					}
 					character_event = {
 						id = 3696
 						tooltip = EVTTOOLTIP3695 #Plucking flowers? What for?
@@ -19774,17 +19574,7 @@ character_event = {
 	option = {
 		name = EVTOPTA3693
 		change_martial = 1
-		random_child = {
-			limit = {
-				age = 13
-				NOT = {
-					age = 20
-				}
-				is_abroad = no
-				prisoner = no
-				trait = brave
-				martial = 10
-			}
+		event_target:hunting_child = {
 			opinion = {
 				modifier = opinion_glad
 				who = ROOT
@@ -19805,17 +19595,7 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA3694
-		random_child = {
-			limit = {
-				age = 13
-				NOT = {
-					age = 20
-				}
-				is_abroad = no
-				prisoner = no
-				trait = brave
-				martial = 10
-			}
+		event_target:hunting_child = {
 			reverse_opinion = {
 				modifier = opinion_disappointed
 				who = ROOT
@@ -19844,31 +19624,13 @@ character_event = {
 	option = {
 		name = EVTOPTA3695
 		prestige = 10
-		random_child = {
-			limit = {
-				age = 13
-				NOT = {
-					age = 20
-				}
-				is_abroad = no
-				prisoner = no
-				trait = brave
-				martial = 10
-			}
-			if = {
-				limit = {
-					NOT = {
-						trait = brave
-					}
-				}
-				random = {
-					chance = 20
-					
-					add_trait = brave
-					hidden_tooltip = {
-						character_event = {
-							id = 38270
-						}
+		event_target:hunting_child = {
+			random = {
+				chance = 20
+				add_trait = brave
+				hidden_tooltip = {
+					character_event = {
+						id = 38270
 					}
 				}
 			}
@@ -19892,15 +19654,7 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA3696
-		random_child = {
-			limit = {
-				age = 13
-				NOT = {
-					age = 20
-				}
-				is_abroad = no
-				prisoner = no
-			}
+		event_target:hunting_child = {
 			opinion = {
 				modifier = opinion_sad
 				who = ROOT
@@ -19964,13 +19718,11 @@ character_event = {
 		trait = falconer
 		any_courtier = {
 			prisoner = no
-			NOT = { trait = in_hiding }
 			opinion = { who = ROOT value = 20 }
 			age = 16
-			NOT = {
+			NOR = {
+				trait = in_hiding
 				trait = falconer
-			}
-			NOT = {
 				trait = craven
 			}
 			martial = 6
@@ -20525,10 +20277,8 @@ character_event = {
 					in_command = no
 					war = no
 					martial = 8
-					NOT = {
+					NOR = {
 						lifestyle_traits = 1
-					}
-					NOT = {
 						has_character_flag = LE_ST
 					}
 				}
@@ -20565,8 +20315,8 @@ character_event = {
 			prisoner = no
 			war = no
 			in_command = no
-			NOT = { trait = in_hiding }
-			NOT = {
+			NOR = {
+				trait = in_hiding
 				opinion = { who = ROOT value = -10 }
 			}
 		}
@@ -20586,18 +20336,24 @@ character_event = {
 		factor = 1
 	}
 	
-	option = {
-		name = EVTOPTA3710
+	immediate = {
 		random_vassal = {
 			limit = {
 				prisoner = no
 				war = no
 				in_command = no
-				NOT = { trait = in_hiding }
-				NOT = {
+				NOR = {
+					trait = in_hiding
 					opinion = { who = ROOT value = -10 }
 				}
 			}
+			save_event_target_as = nonsupportive_vassal
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3710
+		event_target:nonsupportive_vassal = {
 			character_event = {
 				id = 3711
 				tooltip = EVTTOOLTIP3711
@@ -20607,16 +20363,7 @@ character_event = {
 	option = {
 		name = EVTOPTB3710
 		prestige = 10
-		random_vassal = {
-			limit = {
-				prisoner = no
-				war = no
-				in_command = no
-				NOT = { trait = in_hiding }
-				NOT = {
-					opinion = { who = ROOT value = -10 }
-				}
-			}
+		event_target:nonsupportive_vassal = {
 			opinion = {
 				modifier = opinion_upset
 				who = ROOT
@@ -20750,17 +20497,23 @@ character_event = {
 		modifier = {
 			factor = 0.5
 			trait = cynical
-		}		
+		}
 	}
 	
-	option = {
-		name = EVTOPTA3715
+	immediate = {
 		random_child = {
 			limit = {
 				is_abroad = no
 				prisoner = no
 				trait = shy
 			}
+			save_event_target_as = shy_child
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3715
+		event_target:shy_child = {
 			random_list = {
 				25 = {
 					remove_trait = shy
@@ -20799,12 +20552,7 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB3715
-		random_child = {
-			limit = {
-				is_abroad = no
-				prisoner = no
-				trait = shy
-			}
+		event_target:shy_child = {
 			random_list = {
 				30 = {
 				}
@@ -20849,12 +20597,7 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTC3715
-		random_child = {
-			limit = {
-				is_abroad = no
-				prisoner = no
-				trait = shy
-			}
+		event_target:shy_child = {
 			random_list = {
 				20 = {
 				}
@@ -20946,8 +20689,7 @@ character_event = {
 		}
 	}
 	
-	option = {
-		name = EVTOPTA3720
+	immediate = {
 		random_courtier = {
 			limit = {
 				age = 16
@@ -20961,6 +20703,13 @@ character_event = {
 					trait = cynical
 				}
 			}
+			save_event_target_as = proud_courtier
+		}
+	}
+	
+	option = {
+		name = EVTOPTA3720
+		event_target:proud_courtier = {
 			character_event = {
 				id = 3721
 				tooltip = EVTTOOLTIP3721
@@ -21020,18 +20769,7 @@ character_event = {
 				}
 			}
 		}
-		random_courtier = {
-			limit = {
-				age = 16
-				in_command = no
-				trait = proud
-				opinion = { who = ROOT value = 10 }
-				OR = {
-					trait = shy
-					trait = paranoid
-					trait = cynical
-				}
-			}
+		event_target:proud_courtier = {
 			opinion = {
 				modifier = opinion_upset
 				who = ROOT
@@ -21041,19 +20779,7 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTC3720
-		random_courtier = {
-			limit = {
-				age = 16
-				in_command = no
-				NOT = { trait = in_hiding }
-				trait = proud
-				opinion = { who = ROOT value = 10 }
-				OR = {
-					trait = shy
-					trait = paranoid
-					trait = cynical
-				}
-			}
+		event_target:proud_courtier = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -21308,6 +21034,7 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	religion_group = muslim
 	
 	is_triggered_only = yes 
 	only_playable = yes
@@ -21316,17 +21043,14 @@ character_event = {
 		war = no
 		in_command = no
 		NOT = { trait = in_hiding }
-		religion_group = muslim
 		trait = wroth
 		any_courtier = {
 			age = 16
 			prisoner = no
-			NOT = { trait = in_hiding }
 			is_abroad = no
-			NOT = {
-				trait = incapable
-			}
 			NOR = {
+				trait = in_hiding
+				trait = incapable
 				trait = wroth
 				trait = patient
 			}
@@ -21367,10 +21091,9 @@ character_event = {
 				age = 16
 				prisoner = no
 				is_abroad = no
-				NOT = {
-					trait = incapable
-				}
 				NOR = {
+					trait = in_hiding
+					trait = incapable
 					trait = wroth
 					trait = patient
 				}
@@ -21499,13 +21222,13 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	is_triggered_only = yes 
+	religion_group = muslim
 	
 	trigger = {
 		war = no
 		in_command = no
 		NOT = { trait = in_hiding }
 		trait = craven
-		religion_group = muslim
 		OR = {
 			NOT = { demesne_size = 1 }
 			tier = count
@@ -21513,15 +21236,13 @@ character_event = {
 		any_courtier = {
 			age = 16
 			prisoner = no
-			NOT = { trait = in_hiding }
 			OR = {
 				is_priest = yes
 				has_job_title = job_spiritual
 			}
-			NOT = {
+			NOR = {
+				trait = in_hiding
 				character = ROOT
-			}
-			NOT = {
 				trait = incapable
 			}
 			OR = {
@@ -21561,10 +21282,9 @@ character_event = {
 			limit = {
 				age = 16
 				prisoner = no
-				NOT = {
+				NOR = {
+					trait = in_hiding
 					character = ROOT
-				}
-				NOT = {
 					trait = incapable
 				}
 				OR = {
@@ -21636,12 +21356,12 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	is_triggered_only = yes 
+	religion_group = muslim
 	
 	trigger = {
 		war = no
 		in_command = no
 		NOT = { trait = in_hiding }
-		religion_group = muslim
 		trait = brave
 	}
 	
@@ -21730,12 +21450,12 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	is_triggered_only = yes 
+	religion_group = muslim
 	
 	trigger = {
 		trait = zealous
 		war = no
 		in_command = no
-		religion_group = muslim
 		OR = {
 			spouse = {
 				is_alive = yes
@@ -21832,73 +21552,42 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = EVTOPTA3751
-		trigger = {
-			FROM = {
-				is_female = yes
-				spouse = {
-					character = ROOT
+		name = {
+			text = EVTOPTA3751
+			trigger = {
+				FROM = {
+					is_female = yes
+					spouse = {
+						character = ROOT
+					}
 				}
 			}
 		}
-		FROM = {
-			reverse_opinion = {
-				modifier = zealous_neg
-				who = ROOT
-				years = 2
-			}
-			character_event = {
-				id = 3752
-				tooltip = EVTTOOLTIP3752
-			}
-		}
-	}
-	option = {
-		name = EVTOPTB3751
-		trigger = {
-			FROM = {
-				is_female = no
-				spouse = {
-					character = ROOT
+		name = {
+			text = EVTOPTB3751
+			trigger = {
+				FROM = {
+					is_female = no
+					spouse = {
+						character = ROOT
+					}
 				}
 			}
 		}
-		FROM = {
-			reverse_opinion = {
-				modifier = zealous_neg
-				who = ROOT
-				years = 2
-			}
-			character_event = {
-				id = 3752
-				tooltip = EVTTOOLTIP3752
+		name = {
+			text = EVTOPTC3751
+			trigger = {
+				father = {
+					character = FROM
+				}
 			}
 		}
-	}
-	option = {
-		name = EVTOPTC3751
-		trigger = {
-			father = {
-				character = FROM
-			}
-		}
-		FROM = {
-			reverse_opinion = {
-				modifier = zealous_neg
-				who = ROOT
-				years = 2
-			}
-			character_event = {
-				id = 3752
-				tooltip = EVTTOOLTIP3752
-			}
-		}
-	}
-	option = {
-		name = EVTOPTD3751
-		trigger = {
-			mother = {
-				character = FROM
+		name = {
+			text = EVTOPTD3751
+			trigger = {
+				mother = {
+					character = FROM
+				}
 			}
 		}
 		FROM = {
@@ -21945,12 +21634,12 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	is_triggered_only = yes 
+	religion_group = muslim
 	
 	trigger = {
 		war = no
 		in_command = no
 		scaled_wealth = 0.5
-		religion_group = muslim
 		trait = zealous
 		NOT = {
 			trait = greedy
