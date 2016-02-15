@@ -225,22 +225,34 @@ character_event = {
 	hide_window = yes
 	
 	is_triggered_only = yes
+	
+	only_men = yes
 
 	trigger = {
 		has_dlc = "Zeus"
+		has_lover = yes
+		OR = {
+			death_reason = death_execution
+			death_reason = death_murder
+			death_reason = death_dungeon
+			death_reason = death_sacrificed
+		}
 		any_lover = {
-			is_female = yes
 			OR = {
-				ROOT = { death_reason = death_execution }
-				ROOT = { death_reason = death_murder }
-				ROOT = { death_reason = death_dungeon }
-				AND = {
-					OR = {
-						NOT = { trait = zealous }
-						NOT = { ROOT = { killer = { religion = PREVPREV } } }
-					}
-					ROOT = { death_reason = death_sacrificed }
+				father = {
+					ROOT = { killer = { character = PREVPREV } }
+					ai = no
 				}
+				mother = {
+					ROOT = { killer = { character = PREVPREV } }
+					ai = no
+				}
+			}
+			is_female = yes
+			NAND = {
+				ROOT = { death_reason = death_sacrificed }
+				trait = zealous
+				ROOT = { killer = { religion = PREVPREV } }
 			}
 			OR = {
 				trait = possessed
@@ -266,16 +278,6 @@ character_event = {
 				trait = trusting
 				trait = blinded
 			}
-			OR = {
-				father = {
-					ROOT = { killer = { character = PREVPREV } }
-					ai = no
-				}
-				mother = {
-					ROOT = { killer = { character = PREVPREV } }
-					ai = no
-				}
-			}
 		}
 	}
 	
@@ -284,16 +286,19 @@ character_event = {
 			limit = {
 				is_female = yes
 				OR = {
-					ROOT = { death_reason = death_execution }
-					ROOT = { death_reason = death_murder }
-					ROOT = { death_reason = death_dungeon }
-					AND = {
-						OR = {
-							NOT = { trait = zealous }
-							NOT = { ROOT = { killer = { religion = PREVPREV } } }
-						}
-						ROOT = { death_reason = death_sacrificed }
+					father = {
+						ROOT = { killer = { character = PREVPREV } }
+						ai = no
 					}
+					mother = {
+						ROOT = { killer = { character = PREVPREV } }
+						ai = no
+					}
+				}
+				NAND = {
+					ROOT = { death_reason = death_sacrificed }
+					trait = zealous
+					ROOT = { killer = { religion = PREVPREV } }
 				}
 				OR = {
 					trait = possessed
@@ -318,16 +323,6 @@ character_event = {
 					trait = content
 					trait = trusting
 					trait = blinded
-				}
-				OR = {
-					father = {
-						ROOT = { killer = { character = PREVPREV } }
-						ai = no
-					}
-					mother = {
-						ROOT = { killer = { character = PREVPREV } }
-						ai = no
-					}
 				}
 			}
 			save_event_target_as = target_daughter_killed_her_friend
@@ -379,9 +374,9 @@ character_event = {
 				ROOT = { death_reason = death_murder }
 				ROOT = { death_reason = death_dungeon }
 				AND = {
-					OR = {
-						NOT = { trait = zealous }
-						NOT = { ROOT = { killer = { religion = PREVPREV } } }
+					NAND = {
+						trait = zealous
+						ROOT = { killer = { religion = PREVPREV } }
 					}
 					ROOT = { death_reason = death_sacrificed }
 				}
@@ -432,9 +427,9 @@ character_event = {
 					ROOT = { death_reason = death_murder }
 					ROOT = { death_reason = death_dungeon }
 					AND = {
-						OR = {
-							NOT = { trait = zealous }
-							NOT = { ROOT = { killer = { religion = PREVPREV } } }
+						NAND = {
+							trait = zealous
+							ROOT = { killer = { religion = PREVPREV } }
 						}
 						ROOT = { death_reason = death_sacrificed }
 					}
@@ -519,9 +514,13 @@ character_event = {
 	
 	trigger = {
 		any_child = {
+			is_ruler = no
 			is_female = yes
 			is_ill = no
-			NOT = { trait = incapable }
+			NOR = {
+				trait = incapable
+				trait = in_hiding
+			}
 			liege = { character = ROOT }
 			has_character_flag = disobedient_daughter
 			has_character_flag = disobedient_daughter_unhappy
@@ -531,9 +530,13 @@ character_event = {
 	immediate = {
 		random_child = {
 			limit = {
+				is_ruler = no
 				is_female = yes
 				is_ill = no
-				NOT = { trait = incapable }
+				NOR = {
+					trait = incapable
+					trait = in_hiding
+				}
 				liege = { character = ROOT }
 				has_character_flag = disobedient_daughter
 				has_character_flag = disobedient_daughter_unhappy
@@ -778,14 +781,19 @@ character_event = {
 					factor = 1.5
 					trait = fair
 				}
+				remove_trait = chaste
 				liege = {
-					remove_trait = chaste
 					random_courtier = {
 						limit = {
-							ai = no
-							NOT = { character = ROOT }
-							NOT = { num_of_lovers = 5 }
+							ai = yes
+							is_valid_romance_target = ROOT
+							prisoner = no
+							NOR = {
+								character = ROOT
+								num_of_lovers = 5
+							}
 						}
+						remove_trait = in_hiding
 						add_lover = ROOT
 					}
 				}
@@ -843,8 +851,10 @@ character_event = {
 					}
 					if = {
 						limit = {
-							NOT = { trait = lunatic }
-							NOT = { trait = depressed }
+							NOR = {
+								trait = lunatic
+								trait = depressed
+							}
 						}
 						add_trait = stressed
 					}
@@ -880,9 +890,11 @@ character_event = {
 				}
 				modifier = {
 					factor = 0
-					NOT = { trait = stressed }
-					NOT = { trait = depressed }
-					NOT = { trait = lunatic }
+					NOR = {
+						trait = stressed
+						trait = depressed
+						trait = lunatic
+					}
 				}
 				modifier = {
 					factor = 3
@@ -904,7 +916,7 @@ character_event = {
 character_event = {
 	id = ZE.1120
 	desc = EVTDESC_ZE_1120
-	picture = GFX_evt_daughter_asking_father ###
+	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
@@ -926,7 +938,7 @@ character_event = {
 character_event = {
 	id = ZE.1130
 	desc = EVTDESC_ZE_1130
-	picture = GFX_evt_daughter_asking_father ###
+	picture = GFX_evt_quarrel
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
@@ -996,7 +1008,7 @@ province_event = {
 character_event = {
 	id = ZE.1142
 	desc = EVTDESC_ZE_1142
-	picture = GFX_evt_daughter_asking_father ###
+	picture = GFX_evt_rider_adventure
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
@@ -1011,7 +1023,9 @@ character_event = {
 			remove_spouse = spouse
 			random_lover = {
 				limit = {
+					ai = yes
 					is_married = no
+					is_female = no
 				}
 				add_spouse_matrilineal = PREV
 			}
@@ -1033,7 +1047,7 @@ character_event = {
 	id = ZE.1150
 	title = EVTTITLE_ZE_1150
 	desc = EVTDESC_ZE_1150
-	picture = GFX_evt_daughter_asking_father ###
+	picture = GFX_evt_steppe_mercenaries
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
@@ -1048,20 +1062,26 @@ character_event = {
 			remove_spouse = spouse
 			random_lover = {
 				limit = {
+					ai = yes
 					is_married = no
+					is_female = no
 				}
 				add_spouse_matrilineal = ROOT
 			}
-			if = {
-				limit = { has_nickname = no }
-				random_list = {
-					10 = { give_nickname = nick_the_red }
-					10 = { give_nickname = nick_the_sea_devil }
-					10 = { give_nickname = nick_the_lioness }
-					10 = { give_nickname = nick_the_flail_of }
-					10 = { give_nickname = nick_the_scourge_of }
-					10 = { give_nickname = nick_the_bold }
-					10 = { give_nickname = nick_the_fearless }
+			hidden_tooltip = {
+				add_trait = adventurer
+				set_character_flag = special_marshal
+				if = {
+					limit = { has_nickname = no }
+					random_list = {
+						10 = { give_nickname = nick_the_red }
+						10 = { give_nickname = nick_the_sea_devil }
+						10 = { give_nickname = nick_the_lioness }
+						10 = { give_nickname = nick_the_flail_of }
+						10 = { give_nickname = nick_the_scourge_of }
+						10 = { give_nickname = nick_the_bold }
+						10 = { give_nickname = nick_the_fearless }
+					}
 				}
 			}
 			create_title = {
@@ -1071,10 +1091,10 @@ character_event = {
 				temporary = yes
 				adventurer = yes
 				custom_created = yes
-				culture = ROOT
-				holder = ROOT
-				base_title = THIS
+				culture = FROM
+				holder = FROM
 				mercenary = yes
+				army_template = mercenary_princess_composition
 				ruler = "CAPTAIN"
 				ruler_female = "CAPTAIN"
 				foa = "CAPTAIN_FOA"
@@ -1087,7 +1107,7 @@ character_event = {
 character_event = {
 	id = ZE.1180
 	desc = EVTDESC_ZE_1180
-	picture = GFX_evt_daughter_asking_father ###
+	picture = GFX_evt_daughter_asking_father
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
@@ -1102,7 +1122,7 @@ character_event = {
 character_event = {
 	id = ZE.1190
 	desc = EVTDESC_ZE_1190
-	picture = GFX_evt_daughter_asking_father ###
+	picture = GFX_evt_into_the_dungeon
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
@@ -1134,7 +1154,10 @@ character_event = {
 			prisoner = no
 			is_ill = no
 			is_married = no
-			has_lover = yes
+			any_lover = {
+				ai = yes
+				is_female = no
+			}
 			NOT = { trait = incapable }
 			liege = { character = ROOT }
 			has_character_flag = disobedient_daughter
@@ -1148,7 +1171,10 @@ character_event = {
 				prisoner = no
 				is_ill = no
 				is_married = no
-				has_lover = yes
+				any_lover = {
+					ai = yes
+					is_female = no
+				}
 				NOT = { trait = incapable }
 				liege = { character = ROOT }
 				has_character_flag = disobedient_daughter
@@ -1168,6 +1194,10 @@ character_event = {
 	
 	immediate = {
 		random_lover = {
+			limit = {
+				ai = yes
+				is_female = no
+			}
 			save_event_target_as = target_daughter_wants_to_marry
 		}
 		character_event = { id = ZE.1302 }

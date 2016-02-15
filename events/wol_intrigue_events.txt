@@ -875,6 +875,8 @@ character_event = {
 			modifier = opinion_spying_on
 		}
 		
+		clear_delayed_event = { id = WoL.2060 }
+		
 		clr_character_flag = charge_illegitimate
 		clr_character_flag = charge_heretic
 		clr_character_flag = charge_infidel
@@ -1098,11 +1100,11 @@ character_event = {
 		
 		hidden_tooltip = {
 			FROMFROMFROM = { liege = { character_event = { id = WoL.2082 } } }
-		}
 		
-		opinion = {
-			who = FROMFROMFROM
-			modifier = opinion_spy_blackmailed
+			opinion = {
+				who = FROMFROMFROM
+				modifier = opinion_spy_blackmailed
+			}
 		}
 
 		# Mudslinger achievement check event
@@ -2311,6 +2313,17 @@ character_event = {
 		ai_chance = {
 			factor = 100
 			modifier = {
+				factor = 0
+				FROMFROMFROM = {
+					same_liege = ROOT # No use for vassals to kill other vassals
+					NOT = { is_foe = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { wealth = 5 }
+			}
+			modifier = {
 				factor = 2.0
 				trait = arbitrary
 			}
@@ -2319,8 +2332,24 @@ character_event = {
 				trait = cruel
 			}
 			modifier = {
-				factor = 5.0
+				factor = 10.0
 				is_rival = FROMFROMFROM
+			}
+			modifier = {
+				factor = 0.1
+				trait = just
+			}
+			modifier = {
+				factor = 0.25
+				FROMFROMFROM = {
+					liege = {
+						ROOT = {
+							character = PREV
+						}
+					}
+					in_faction = no
+					NOT = { is_foe = ROOT }
+				}
 			}
 		}
 		
@@ -2626,6 +2655,45 @@ character_event = {
 		name = EVTOPTA_WOL_2120
 		ai_chance = {
 			factor = 100
+			modifier = {
+				factor = 0
+				NOT = { wealth = 5 }
+			}
+			modifier = {
+				factor = 0
+				FROMFROMFROM = {
+					same_liege = ROOT # No use for vassals to imprison other vassals
+					NOT = { is_foe = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0.1
+				trait = just
+			}
+			modifier = {
+				factor = 2.0
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 3.0
+				trait = cruel
+			}
+			modifier = {
+				factor = 0.25
+				FROMFROMFROM = {
+					liege = {
+						ROOT = {
+							character = PREV
+						}
+					}
+					in_faction = no
+					NOT = { is_foe = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { wealth = 10 }
+			}
 		}
 		
 		wealth = -5
@@ -2813,7 +2881,7 @@ character_event = {
 		FROM = {
 			save_event_target_as = target_captive
 		}
-#		save_event_target_as = target_rescuer
+		save_event_target_as = target_rescuer
 		set_character_flag = freeing_concubine
 	}
 	

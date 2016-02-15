@@ -268,10 +268,12 @@ character_event = {
 			if = {
 				limit = {
 					NOT = {
-						any_realm_character = {
-							has_opinion_modifier = {
-								modifier = opinion_carousing
-								who = ROOT
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
 							}
 						}
 					}
@@ -308,14 +310,16 @@ character_event = {
 		clr_character_flag = do_not_disturb
 		remove_character_modifier = organizing_party
 		hidden_tooltip = {
-			any_realm_character = {
-				limit = {
-					has_opinion_modifier = {
-						modifier = opinion_carousing
-						who = ROOT
+			top_liege = {
+				any_realm_character = {
+					limit = {
+						has_opinion_modifier = {
+							modifier = opinion_carousing
+							who = ROOT
+						}
 					}
+					letter_event = { id = WoL.4012 } # Notify by letter
 				}
-				letter_event = { id = WoL.4012 } # Notify by letter
 			}
 		}
 	}
@@ -375,15 +379,17 @@ character_event = {
 			days = 40
 		}
 		hidden_tooltip = {
-			any_realm_character = {
-				limit = {
-					has_opinion_modifier = {
-						modifier = opinion_carousing
-						who = ROOT
+			top_liege = {
+				any_realm_character = {
+					limit = {
+						has_opinion_modifier = {
+							modifier = opinion_carousing
+							who = ROOT
+						}
 					}
+					character_event = { id = WoL.4031 } # Notify guests that carousing starts
+					character_event = { id = WoL.4800 days = 30 } # End of party
 				}
-				character_event = { id = WoL.4031 } # Notify guests that carousing starts
-				character_event = { id = WoL.4800 days = 30 } # End of party
 			}
 			character_event = { id = WoL.4035 days = 15 } # Select outcome/events
 			character_event = { id = WoL.4800 days = 30 } # End of party
@@ -419,10 +425,12 @@ character_event = {
 	is_triggered_only = yes
 
 	trigger = {
-		any_realm_character = {
-			has_opinion_modifier = {
-				modifier = opinion_carousing
-				who = ROOT
+		top_liege = {
+			any_realm_character = {
+				has_opinion_modifier = {
+					modifier = opinion_carousing
+					who = ROOT
+				}
 			}
 		}
 	}
@@ -433,28 +441,36 @@ character_event = {
 				modifier = {
 					factor = 0
 					NOR = {
-						trait = lunatic
-						trait = possessed
-						trait = impaler
-						any_realm_character = {
-							ai = yes
-							has_opinion_modifier = {
-								modifier = opinion_carousing
-								who = ROOT
-							}
-						}
-					}
-					NOR = {
-						ai = yes
-						any_realm_character = {
-							has_opinion_modifier = {
-								modifier = opinion_carousing
-								who = ROOT
-							}
+						AND = {
 							OR = {
 								trait = lunatic
 								trait = possessed
 								trait = impaler
+								top_liege = {
+									any_realm_character = {
+										has_opinion_modifier = {
+											modifier = opinion_carousing
+											who = ROOT
+										}
+										OR = {
+											trait = lunatic
+											trait = possessed
+											trait = impaler
+										}
+									}
+								}
+							}
+							OR = {
+								ai = yes
+								top_liege = {
+									any_realm_character = {
+										ai = yes
+										has_opinion_modifier = {
+											modifier = opinion_carousing
+											who = ROOT
+										}
+									}
+								}
 							}
 						}
 					}
@@ -473,52 +489,38 @@ character_event = {
 				modifier = {
 					factor = 0
 					NOT = {
-						any_realm_character = {
-							has_opinion_modifier = {
-								modifier = opinion_carousing
-								who = ROOT
-							}
-							ROOT = {
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
+								ROOT = {
+									OR = {
+										trait = lustful
+										trait = hedonist
+									}
+								}
 								OR = {
 									trait = lustful
 									trait = hedonist
 								}
-							}
-							OR = {
-								trait = lustful
-								trait = hedonist
-							}
-							OR = {
-								AND = {
-									is_female = no
-									NOT = { trait = homosexual }
-									ROOT = {
-										is_female = yes
-										NOT = { trait = homosexual }
+								OR = {
+									AND = {
+										is_opposite_sex = ROOT
+										NOR = {
+											trait = homosexual
+											ROOT = {
+												trait = homosexual
+											}
+										}
 									}
-								}
-								AND = {
-									is_female = yes
-									NOT = { trait = homosexual }
-									ROOT = {
-										is_female = no
-										NOT = { trait = homosexual }
-									}
-								}
-								AND = {
-									is_female = no
-									trait = homosexual
-									ROOT = {
-										is_female = no
+									AND = {
+										same_sex = ROOT
 										trait = homosexual
-									}
-								}
-								AND = {
-									is_female = yes
-									trait = homosexual
-									ROOT = {
-										is_female = yes
-										trait = homosexual
+										ROOT = {
+											trait = homosexual
+										}
 									}
 								}
 							}
@@ -531,37 +533,41 @@ character_event = {
 				modifier = {
 					factor = 0
 					NOT = {
-						any_realm_character = {
-							has_opinion_modifier = {
-								modifier = opinion_carousing
-								who = ROOT
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
+								NOT = { is_friend = ROOT }
 							}
-							NOT = { is_friend = ROOT }
 						}
 					}
 				}
 				character_event = { id = WoL.4120 } # Makes new friend
 			}
-			2 = {
+			10 = {
 				modifier = {
 					factor = 0
 					NOT = {
-						any_realm_character = {
-							has_opinion_modifier = {
-								modifier = opinion_carousing
-								who = ROOT
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
+								NOT = { is_rival = ROOT }
 							}
-							NOT = { is_rival = ROOT }
 						}
 					}
 				}
 				modifier = {
 					factor = 0
-					NOT = {
-						OR = {
-							trait = wroth
-							trait = lunatic
-							trait = paranoid
+					NOR = {
+						trait = wroth
+						trait = lunatic
+						trait = paranoid
+						top_liege = {
 							any_realm_character = {
 								has_opinion_modifier = {
 									modifier = opinion_carousing
@@ -581,9 +587,9 @@ character_event = {
 			20 = {
 				modifier = {
 					factor = 0
-					NOT = {
-						OR = {
-							trait = lunatic
+					NOR = {
+						trait = lunatic
+						top_liege = {
 							any_realm_character = {
 								has_opinion_modifier = {
 									modifier = opinion_carousing
@@ -599,9 +605,9 @@ character_event = {
 			10 = {
 				modifier = {
 					factor = 0
-					NOT = {
-						OR = {
-							trait = drunkard
+					NOR = {
+						trait = drunkard
+						top_liege = {
 							any_realm_character = {
 								has_opinion_modifier = {
 									modifier = opinion_carousing
@@ -619,34 +625,38 @@ character_event = {
 					factor = 3
 					OR = {
 						trait = gamer
-						any_realm_character = {
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
+								trait = gamer
+							|
+						}
+					}
+				}
+				top_liege = {
+					random_realm_character = {
+						limit = {
 							has_opinion_modifier = {
 								modifier = opinion_carousing
 								who = ROOT
 							}
 							trait = gamer
 						}
+						character_event = { id = WoL.4160 }
+						break = yes
 					}
-				}
-				random_realm_character = {
-					limit = {
-						has_opinion_modifier = {
-							modifier = opinion_carousing
-							who = ROOT
+					random_realm_character = {
+						limit = {
+							has_opinion_modifier = {
+								modifier = opinion_carousing
+								who = ROOT
+							}
 						}
-						trait = gamer
+						character_event = { id = WoL.4160 }
 					}
-					character_event = { id = WoL.4160 }
-					break = yes
-				}
-				random_realm_character = {
-					limit = {
-						has_opinion_modifier = {
-							modifier = opinion_carousing
-							who = ROOT
-						}
-					}
-					character_event = { id = WoL.4160 }
 				}
 			}
 		}
@@ -673,20 +683,22 @@ character_event = {
 			character_event = { id = WoL.4101 }
 			break = yes
 		}
-		random_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
+		top_liege = {
+			random_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
+					OR = {
+						trait = lunatic
+						trait = possessed
+						trait = impaler
+					}
+					ROOT = { ai = yes }
 				}
-				OR = {
-					trait = lunatic
-					trait = possessed
-					trait = impaler
-				}
-				ROOT = { ai = yes }
+				character_event = { id = WoL.4101 }
 			}
-			character_event = { id = WoL.4101 }
 		}
 	}
 }
@@ -742,16 +754,18 @@ character_event = {
 				duration = -1
 			}
 		}
-		random_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
+		top_liege = {
+			random_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
 				}
-			}
-			death = {
-				death_reason = death_murder_unknown
-				killer = ROOT
+				death = {
+					death_reason = death_murder_unknown
+					killer = ROOT
+				}
 			}
 		}
 	}
@@ -793,36 +807,38 @@ character_event = {
 				character_event = { id = WoL.4111 }
 			}
 			10 = {
-				random_realm_character = {
-					limit = {
-						has_opinion_modifier = {
-							modifier = opinion_carousing
-							who = ROOT
-						}
-						OR = {
-							trait = lustful
-							trait = hedonist
-						}
-						OR = {
-							AND = {
-								is_opposite_sex = ROOT
-								NOR = {
+				top_liege = {
+					random_realm_character = {
+						limit = {
+							has_opinion_modifier = {
+								modifier = opinion_carousing
+								who = ROOT
+							}
+							OR = {
+								trait = lustful
+								trait = hedonist
+							}
+							OR = {
+								AND = {
+									is_opposite_sex = ROOT
+									NOR = {
+										trait = homosexual
+										ROOT = {
+											trait = homosexual
+										}
+									}
+								}
+								AND = {
+									same_sex = ROOT
 									trait = homosexual
 									ROOT = {
 										trait = homosexual
 									}
 								}
 							}
-							AND = {
-								same_sex = ROOT
-								trait = homosexual
-								ROOT = {
-									trait = homosexual
-								}
-							}
 						}
+						character_event = { id = WoL.4111 }
 					}
-					character_event = { id = WoL.4111 }
 				}
 			}
 		}
@@ -846,40 +862,34 @@ character_event = {
 		ai_chance = {
 			factor = 1
 		}
-		random_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
-				}
-				OR = {
-					AND = {
-						is_opposite_sex = ROOT
-						NOR = {
+		top_liege = {
+			random_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
+					OR = {
+						AND = {
+							is_opposite_sex = ROOT
+							NOR = {
+								trait = homosexual
+								ROOT = {
+									trait = homosexual
+								}
+							}
+						}
+						AND = {
+							same_sex = ROOT
 							trait = homosexual
 							ROOT = {
 								trait = homosexual
 							}
 						}
 					}
-					AND = {
-						is_female = no
-						trait = homosexual
-						ROOT = {
-							is_female = no
-							trait = homosexual
-						}
-					}
-					AND = {
-						same_sex = ROOT
-						trait = homosexual
-						ROOT = {
-							trait = homosexual
-						}
-					}
 				}
+				character_event = { id = WoL.4112 }
 			}
-			character_event = { id = WoL.4112 }
 		}
 	}
 	option = {
@@ -950,11 +960,28 @@ character_event = {
 		hidden_tooltip = {
 			if = {
 				limit = {
-					is_female = no
+					is_opposite_sex = FROM
 					FROM = {
 						is_female = yes
-						is_married = no
-						is_consort = no
+						is_pregnant = no
+						OR = {
+							AND = {
+								is_married = no
+								is_consort = no
+							}
+							AND = {
+								is_consort = yes
+								consort = {
+									character = ROOT
+								}
+							}
+							AND = {
+								is_married = yes
+								spouse = {
+									character = ROOT
+								}
+							}
+						}
 						NOT = { health_traits = 1 }
 					}
 				}
@@ -965,14 +992,23 @@ character_event = {
 			}
 			if = {
 				limit = {
-					is_female = no
+					is_opposite_sex = FROM
 					FROM = {
 						is_female = yes
+						is_pregnant = no
 						OR = {
 							is_married = yes
 							is_consort = yes
 						}
-						NOT = { health_traits = 1 }
+						NOR = {
+							health_traits = 1
+							consort = {
+								character = ROOT
+							}
+							spouse = {
+								character = ROOT
+							}
+						}
 					}
 				}
 				random = {
@@ -983,11 +1019,26 @@ character_event = {
 		}
 		if = {
 			limit = {
+				NOT = { trait = syphilitic }
 				FROM = { trait = syphilitic }
 			}
 			random = {
 				chance = 20
 				add_trait = syphilitic
+			}
+		}
+		tooltip = {
+			if = {
+				limit = {
+					trait = syphilitic
+					NOT = { FROM = { trait = syphilitic } }
+				}
+				random = {
+					chance = 20
+					FROM = {
+						add_trait = syphilitic
+					}
+				}
 			}
 		}
 		hidden_tooltip = { FROM = { character_event = { id = WoL.4113 } } }
@@ -1030,11 +1081,28 @@ character_event = {
 		hidden_tooltip = {
 			if = {
 				limit = {
-					is_female = no
+					is_opposite_sex = FROM
 					FROM = {
 						is_female = yes
-						is_married = no
-						is_consort = no
+						is_pregnant = no
+						OR = {
+							AND = {
+								is_married = no
+								is_consort = no
+							}
+							AND = {
+								is_consort = yes
+								consort = {
+									character = ROOT
+								}
+							}
+							AND = {
+								is_married = yes
+								spouse = {
+									character = ROOT
+								}
+							}
+						}
 						NOT = { health_traits = 1 }
 					}
 				}
@@ -1045,14 +1113,23 @@ character_event = {
 			}
 			if = {
 				limit = {
-					is_female = no
+					is_opposite_sex = FROM
 					FROM = {
 						is_female = yes
+						is_pregnant = no
 						OR = {
 							is_married = yes
 							is_consort = yes
 						}
-						NOT = { health_traits = 1 }
+						NOR = {
+							health_traits = 1
+							consort = {
+								character = ROOT
+							}
+							spouse = {
+								character = ROOT
+							}
+						}
 					}
 				}
 				random = {
@@ -1063,6 +1140,7 @@ character_event = {
 		}
 		if = {
 			limit = {
+				NOT = { trait = syphilitic }
 				FROM = { trait = syphilitic }
 			}
 			random = {
@@ -1106,16 +1184,18 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_WoL_4120
-		random_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
+		top_liege = {
+			random_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
+					NOT = { is_friend = ROOT }
 				}
-				NOT = { is_friend = ROOT }
+				add_friend = ROOT
+				hidden_tooltip = { character_event = { id = WoL.4121 } }
 			}
-			add_friend = ROOT
-			hidden_tooltip = { character_event = { id = WoL.4121 } }
 		}
 	}
 }
@@ -1150,9 +1230,9 @@ character_event = {
 					factor = 0
 					NOR = {
 						trait = wroth
-							trait = lunatic
-							trait = paranoid
-						}
+						trait = lunatic
+						trait = paranoid
+					}
 				}
 				character_event = { id = WoL.4131 }
 			}
@@ -1160,7 +1240,24 @@ character_event = {
 				modifier = {
 					factor = 0
 					NOT = {
-						any_realm_character = {
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
+								OR = {
+									trait = wroth
+									trait = lunatic
+									trait = paranoid
+								}
+							}
+						}
+					}
+				}
+				top_liege = {
+					random_realm_character = {
+						limit = {
 							has_opinion_modifier = {
 								modifier = opinion_carousing
 								who = ROOT
@@ -1171,21 +1268,8 @@ character_event = {
 								trait = paranoid
 							}
 						}
+						character_event = { id = WoL.4131 }
 					}
-				}
-				random_realm_character = {
-					limit = {
-						has_opinion_modifier = {
-							modifier = opinion_carousing
-							who = ROOT
-						}
-						OR = {
-							trait = wroth
-							trait = lunatic
-							trait = paranoid
-						}
-					}
-					character_event = { id = WoL.4131 }
 				}
 			}
 		}
@@ -1206,14 +1290,16 @@ character_event = {
 		trigger = {
 			has_character_flag = party_host
 		}
-		random_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
+		top_liege = {
+			random_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
 				}
+				hidden_tooltip = { character_event = { id = WoL.4132 } }
 			}
-			hidden_tooltip = { character_event = { id = WoL.4132 } }
 		}
 	}
 	option = {
@@ -1254,11 +1340,16 @@ character_event = {
 				add_trait = maimed
 			}
 		}
+		random = {
+			chance = 30
+			add_rival = FROM
+			set_character_flag = party_fight_became_rivals
+		}
 	}
 	option = {
 		name = EVTOPTB_WoL_4132 # Talk - best option
 		trigger = {
-			diplomacy = 8
+			diplomacy = 15
 		}
 		tooltip_info = diplomacy
 		FROM = {
@@ -1284,8 +1375,10 @@ character_event = {
 		name = EVTOPTC_WoL_4132 # Hide!
 		if = {
 			limit = {
-				NOT = { trait = craven }
-				NOT = { trait = brave }
+				NOR = {
+					trait = craven
+					trait = brave
+				}
 			}
 			random = {
 				chance = 30
@@ -1352,6 +1445,13 @@ character_event = {
 			}
 		}
 		if = {
+			limit = {
+				has_character_flag = party_fight_became_rivals
+			}
+			tooltip = { add_rival = FROM }
+			clr_character_flag = party_fight_became_rivals
+		}
+		if = {
 			limit = { has_nickname = no }
 			random = {
 				chance = 20
@@ -1409,24 +1509,28 @@ character_event = {
 				modifier = {
 					factor = 0
 					NOT = {
-						any_realm_character = {
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
+								trait = lunatic
+							}
+						}
+					}
+				}
+				top_liege = {
+					random_realm_character = {
+						limit = {
 							has_opinion_modifier = {
 								modifier = opinion_carousing
 								who = ROOT
 							}
 							trait = lunatic
 						}
+						character_event = { id = WoL.4141 }
 					}
-				}
-				random_realm_character = {
-					limit = {
-						has_opinion_modifier = {
-							modifier = opinion_carousing
-							who = ROOT
-						}
-						trait = lunatic
-					}
-					character_event = { id = WoL.4141 }
 				}
 			}
 		}
@@ -1458,19 +1562,21 @@ character_event = {
 				give_nickname = nick_the_merry
 			}
 		}
-		any_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
+		top_liege = {
+			any_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
 				}
+				opinion = {
+					modifier = opinion_approves
+					who = ROOT
+					years = 4
+				}
+				hidden_tooltip = { character_event = { id = WoL.4142 } }
 			}
-			opinion = {
-				modifier = opinion_approves
-				who = ROOT
-				years = 4
-			}
-			hidden_tooltip = { character_event = { id = WoL.4142 } }
 		}
 	}
 	option = {
@@ -1532,24 +1638,28 @@ character_event = {
 				modifier = {
 					factor = 0
 					NOT = {
-						any_realm_character = {
+						top_liege = {
+							any_realm_character = {
+								has_opinion_modifier = {
+									modifier = opinion_carousing
+									who = ROOT
+								}
+								trait = drunkard
+							}
+						}
+					}
+				}
+				top_liege = {
+					random_realm_character = {
+						limit = {
 							has_opinion_modifier = {
 								modifier = opinion_carousing
 								who = ROOT
 							}
 							trait = drunkard
 						}
+						character_event = { id = WoL.4151 }
 					}
-				}
-				random_realm_character = {
-					limit = {
-						has_opinion_modifier = {
-							modifier = opinion_carousing
-							who = ROOT
-						}
-						trait = drunkard
-					}
-					character_event = { id = WoL.4151 }
 				}
 			}
 		}
@@ -1581,35 +1691,39 @@ character_event = {
 				give_nickname = nick_the_drunkard
 			}
 		}
-		any_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
+		top_liege = {
+			any_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
+					NOT = { trait = drunkard }
 				}
-				NOT = { trait = drunkard }
+				opinion = {
+					modifier = despise_drunkard
+					who = ROOT
+					years = 4
+				}
+				hidden_tooltip = { character_event = { id = WoL.4152 } }
 			}
-			opinion = {
-				modifier = despise_drunkard
-				who = ROOT
-				years = 4
-			}
-			hidden_tooltip = { character_event = { id = WoL.4152 } }
 		}
-		any_realm_character = {
-			limit = {
-				has_opinion_modifier = {
-					modifier = opinion_carousing
-					who = ROOT
+		top_liege = {
+			any_realm_character = {
+				limit = {
+					has_opinion_modifier = {
+						modifier = opinion_carousing
+						who = ROOT
+					}
+					trait = drunkard
 				}
-				trait = drunkard
+				opinion = {
+					modifier = opinion_gained_respect
+					who = ROOT
+					years = 4
+				}
+				hidden_tooltip = { character_event = { id = WoL.4152 } }
 			}
-			opinion = {
-				modifier = opinion_gained_respect
-				who = ROOT
-				years = 4
-			}
-			hidden_tooltip = { character_event = { id = WoL.4152 } }
 		}
 	}
 	option = {
@@ -1783,8 +1897,8 @@ character_event = {
 	}
 	desc = {
 		trigger = {
-			FROM = { NOT = { has_character_flag = game_play_for_money } }
 			NOR = {
+				FROM = { has_character_flag = game_play_for_money }
 				trait = gamer
 				has_character_modifier = apprentice_boardgamer
 			}
@@ -1848,8 +1962,10 @@ character_event = {
 		}
 		if = {
 			limit = {
-				NOT = { has_character_modifier = apprentice_boardgamer }
-				NOT = { trait = gamer }
+				NOR = {
+					has_character_modifier = apprentice_boardgamer
+					trait = gamer
+				}
 			}
 			add_character_modifier = {
 				name = apprentice_boardgamer

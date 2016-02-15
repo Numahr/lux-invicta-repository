@@ -1,3 +1,10 @@
+#Written by Markus Olsén
+#ZE.3000 - ZE.3001 Steward borrows money
+#ZE.3002 - ZE.3003 Steward collects money but wants land
+#ZE.3004 - ZE.3010 Steward builds statue for liege
+#ZE.3011 - ZE.3014 Steward wants to educate liege in stewardship
+
+
 namespace = ZE
 
 #Steward has low stewardship and is proud, borrows money from jews
@@ -183,11 +190,22 @@ character_event = {
 	only_playable = yes
 
 	trigger = {
-		any_demesne_title = { tier = COUNT can_be_given_away = yes }
+		any_demesne_title = {
+			tier = COUNT
+			can_be_given_away = yes
+			num_of_settlements = 1
+		}
 	}
 
 	immediate = { 
-		random_demesne_title = { limit = { tier = COUNT can_be_given_away = yes } save_event_target_as = requested_province }
+		random_demesne_title = {
+			limit = {
+				tier = COUNT
+				can_be_given_away = yes
+				num_of_settlements = 1
+			}
+			save_event_target_as = requested_province
+		}
 	}
 
 	#approve request, granting province title
@@ -202,13 +220,15 @@ character_event = {
 	}
 
 	#deny request but owe favor to steward
-#	option = {
-#		#TODO effect to set favor status
-#		name = EVTOPTB_ZE_3003
-#		event_target:target_treasurer = {
-#			#favor goes here
-#		}
-#	}
+	option = {
+		trigger = {
+			NOT = {
+				owes_favor_to = event_target:target_treasurer
+			}
+		}
+		name = EVTOPTB_ZE_3003
+		reverse_add_favor = event_target:target_treasurer
+	}
 
 	#deny request
 	option = {
