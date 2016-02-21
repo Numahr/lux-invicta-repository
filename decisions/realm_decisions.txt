@@ -64,25 +64,8 @@ decisions = {
 			prestige = 100
 			narrative_event = { id = 70033 tooltip = "tournament_invite" }
 			hidden_tooltip = {
-				narrative_event = { id = 70001 days = 60 } # Tournament start
+#				narrative_event = { id = 70001 days = 60 } # Tournament start
 				clr_character_flag = tournament_has_ended
-				any_realm_character = {
-					limit = {
-						OR = {
-							is_feudal = yes
-							is_tribal = yes
-							is_nomadic = yes
-						}
-						NOT = { has_job_title = job_spiritual }
-						age = 16
-						NOT = { age = 50 }
-						NOT = { trait = incapable }
-						prisoner = no	
-						is_female = no
-					}
-					clr_character_flag = tournament_has_ended
-					narrative_event = { id = 70000 }
-				}
 			}
 		}
 		ai_will_do = {
@@ -250,7 +233,6 @@ decisions = {
 		potential = {
 			ai = no
 			has_ambition = obj_gain_any_title
-			NOT = { has_character_flag = requested_de_jure_title }
 			liege = {
 				NOT = { character = ROOT }
 			}
@@ -260,6 +242,7 @@ decisions = {
 		}
 		allow = {
 			liege = {
+				NOT = { has_opinion_modifier = { who = ROOT modifier = requested_land } }
 				demesne_size = 3
 				any_demesne_title = {
 					can_be_given_away = yes
@@ -273,8 +256,12 @@ decisions = {
 			}
 		}
 		effect = {
-			set_character_flag = requested_de_jure_title
 			liege = {
+				opinion = {
+					who = ROOT
+					years = 2
+					modifier = requested_land
+				}
 				random_demesne_title = {
 					limit = {
 						can_be_given_away = yes
@@ -388,34 +375,6 @@ decisions = {
 			prestige = 100
 			decadence = -5
 			narrative_event = { id = 88283 tooltip = "furusiyya_invite" }
-			hidden_tooltip = {
-				narrative_event = { id = 88251 days = 60 } # Tournament start
-				clr_character_flag = tournament_has_ended_furusiyya
-				any_realm_character = {
-					limit = {
-						OR = {
-							is_feudal = yes
-							is_tribal = yes
-							is_nomadic = yes
-						}
-						NOT = { has_job_title = job_spiritual }
-						age = 16
-						NOT = { age = 50 }
-						NOT = { trait = incapable }
-						prisoner = no	
-						is_female = no
-					}
-					clr_character_flag = tournament_has_ended_furusiyya
-					narrative_event = { id = 88250 }
-				}
-				any_dynasty_member = {
-					limit = { 
-						ai = no
-						NOT = { character = ROOT }
-					}
-					character_event = { id = 88300 }
-				}
-			}
 		}
 		ai_will_do = {
 			factor = 1
@@ -553,6 +512,127 @@ decisions = {
 			NOT = { has_landed_title = c_byzantion }
 			any_realm_lord = { 
 				has_landed_title = c_byzantion 
+	petition_doge_for_tp = {
+		is_high_prio = yes
+		potential = {
+			is_merchant_republic = no
+			is_patrician = yes
+			liege = { is_merchant_republic = yes }
+			NOT = { has_character_flag = petition_doge_for_tp_taken }
+			OR = {
+				liege = {
+					any_vassal = {
+						is_patrician = yes
+						num_of_trade_post_diff = {
+							character = ROOT
+							value = 10
+						}
+					}
+				}
+				AND = {
+					NOT = { num_of_trade_posts = 1 }
+					liege = {
+						any_vassal = {
+							is_patrician = yes
+							num_of_trade_posts = 10
+						}
+					}
+				}
+			}
+		}
+		allow = {
+			liege = {
+				opinion = {
+					who = ROOT
+					value = 25
+				}
+			}
+		}
+		effect = {
+			set_character_flag = petition_doge_for_tp_taken
+			liege = {
+				letter_event = { id = REP.500 days = 5 tooltip = EVTTOOLTIP_REP_500 }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	usurp_tp = {
+		is_high_prio = yes
+		potential = {
+			is_merchant_republic = yes
+			is_patrician = yes
+			NOT = { has_character_flag = usurp_tp_taken }
+			OR = {
+				any_vassal = {
+					is_patrician = yes
+					num_of_trade_post_diff = {
+						character = ROOT
+						value = 10
+					}
+				}
+				AND = {
+					NOT = { num_of_trade_posts = 1 }
+					any_vassal = {
+						is_patrician = yes
+						num_of_trade_posts = 10
+					}
+				}
+			}
+		}
+		allow = {
+			is_merchant_republic = yes
+		}
+		effect = {
+			set_character_flag = usurp_tp_taken
+			if = {
+				limit = {
+					num_of_trade_posts = 1
+					any_vassal = {
+						is_patrician = yes
+						num_of_trade_post_diff = {
+							character = ROOT
+							value = 10
+						}
+					}
+				}
+				random_vassal = {
+					limit = {
+						is_patrician = yes
+						num_of_trade_post_diff = {
+							character = ROOT
+							value = 10
+						}
+					}
+					set_character_flag = target_patrician_doge
+					letter_event = { id = REP.510 days = 5 tooltip = EVTTOOLTIP_REP_510 }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { num_of_trade_posts = 1 }
+					any_vassal = {
+						is_patrician = yes
+						num_of_trade_posts = 10
+					}
+				}
+				random_vassal = {
+					limit = {
+						is_patrician = yes
+						num_of_trade_posts = 10
+					}
+					set_character_flag = target_patrician_doge
+					letter_event = { id = REP.510 days = 5 tooltip = EVTTOOLTIP_REP_510 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
 			}
 		}
 		effect = {
