@@ -11,7 +11,7 @@
 # Rewritten by Niklas Strid
 
 # Invitation
-narrative_event = {
+character_event = {
 	id = 70000
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70000"
@@ -32,7 +32,7 @@ narrative_event = {
 		prestige = 50
 		set_character_flag = attending_tournament
 		set_character_flag = do_not_disturb
-		hidden_tooltip = { character_event = { id = 70999 days = 150 } } # Safety catch flag clearing
+		hidden_tooltip = { character_event = { id = 70999 days = 300 } } # Safety catch flag clearing
 		if = {
 			limit = { trait = in_hiding	}
 			remove_trait = in_hiding
@@ -53,7 +53,7 @@ narrative_event = {
 }
 
 # Start of tournament
-narrative_event = {
+character_event = {
 	id = 70001
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70001"
@@ -70,10 +70,27 @@ narrative_event = {
 			set_character_flag = tournament_begins
 			set_character_flag = attending_tournament
 			set_character_flag = tournament_60_days
-		}
-		chronicle = {
-			entry = CHRONICLE_GRAND_TOURNAMENT
-			picture = GFX_evt_joust
+			chronicle = {
+				entry = CHRONICLE_GRAND_TOURNAMENT
+				picture = GFX_evt_joust
+			}
+			#Injuries
+			any_realm_character = {
+				limit = {
+					has_character_flag = attending_tournament
+				}
+				character_event = { id = 70050 days = 1 random = 15 }
+				#Set score
+				character_event = { id = 70060 days = 46 }
+			}
+			#select winner
+			character_event = { id = 70061 days = 48 }
+			#select runner up
+			character_event = { id = 70062 days = 49 }
+			#select third place
+			character_event = { id = 70063 days = 50 }
+			#Notify winners
+			character_event = { id = 70064 days = 51 }
 		}
 	}
 	option = {
@@ -88,7 +105,7 @@ narrative_event = {
 				limit = {
 					has_character_flag = attending_tournament
 				}
-				narrative_event = { id = 70037 }
+				character_event = { id = 70037 }
 			}
 		}
 		clr_character_flag = epic_tournament
@@ -97,7 +114,7 @@ narrative_event = {
 }
 
 # Tournament has been cancelled
-narrative_event = {
+character_event = {
 	id = 70037
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70037"
@@ -114,7 +131,7 @@ narrative_event = {
 }
 
 # Message about death
-narrative_event = {
+character_event = {
 	id = 70038
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70038"
@@ -137,7 +154,7 @@ narrative_event = {
 }
 
 # Message about maimed
-narrative_event = {
+character_event = {
 	id = 70039
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70039"
@@ -160,7 +177,7 @@ narrative_event = {
 }
 
 # Message about wounded
-narrative_event = {
+character_event = {
 	id = 70040
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70040"
@@ -183,36 +200,18 @@ narrative_event = {
 }
 
 # Tournament is over
-narrative_event = {
+character_event = {
 	id = 70002
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70002"
 	picture = "GFX_evt_joust"
 
-	trigger = {
-		had_character_flag = {
-			flag = tournament_60_days
-			days = 60
-		}
-		has_character_flag = winner
-		has_character_flag = second_place
-		had_character_flag = {
-			flag = third_place
-			days = 3
-		}
-	}
-
-	mean_time_to_happen = {
-		days = 1
-	}
+	is_triggered_only = yes
 
 	option = {
 		name = "EVTOPTA70002"
 		clr_character_flag = tournament_60_days
 		clr_character_flag = tournament_begins
-		clr_character_flag = winner
-		clr_character_flag = second_place
-		clr_character_flag = third_place
 		clr_character_flag = attending_tournament
 		clr_character_flag = attending_tournament_event
 		clr_character_flag = do_not_disturb
@@ -261,40 +260,40 @@ narrative_event = {
 			hidden_tooltip = {
 				random_list = {
 					10 = {
-						narrative_event = { id = 70003 }
+						character_event = { id = 70003 }
 					}
 					10 = {
-						narrative_event = { id = 70004 }
+						character_event = { id = 70004 }
 					}
 					10 = {
-						narrative_event = { id = 70005 }
+						character_event = { id = 70005 }
 					}
 					10 = {
-						narrative_event = { id = 70006 }
+						character_event = { id = 70006 }
 					}
 					10 = {
-						narrative_event = { id = 70007 }
+						character_event = { id = 70007 }
 					}
 					10 = {
-						narrative_event = { id = 70008 }
+						character_event = { id = 70008 }
 					}
 				}
+				opinion = {
+					modifier = opinion_tournament_participant
+					who = PREV
+					years = 2
+				}
+				set_character_flag = tournament_has_ended
+				clr_character_flag = attending_tournament
+				clr_character_flag = attending_tournament_event
+				clr_character_flag = do_not_disturb
 			}
-			opinion = {
-				modifier = opinion_tournament_participant
-				who = PREV
-				years = 2
-			}
-			set_character_flag = tournament_has_ended
-			clr_character_flag = attending_tournament
-			clr_character_flag = attending_tournament_event
-			clr_character_flag = do_not_disturb
 		}
 	}
 }
 
 # End of tournament event
-narrative_event = {
+character_event = {
 	id = 70003
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70003"
@@ -309,7 +308,7 @@ narrative_event = {
 }
 
 # End of tournament event
-narrative_event = {
+character_event = {
 	id = 70004
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70004"
@@ -324,7 +323,7 @@ narrative_event = {
 }
 
 # End of tournament event
-narrative_event = {
+character_event = {
 	id = 70005
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70005"
@@ -339,7 +338,7 @@ narrative_event = {
 }
 
 # End of tournament event
-narrative_event = {
+character_event = {
 	id = 70006
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70006"
@@ -354,7 +353,7 @@ narrative_event = {
 }
 
 # End of tournament event
-narrative_event = {
+character_event = {
 	id = 70007
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70007"
@@ -369,7 +368,7 @@ narrative_event = {
 }
 
 # End of tournament event
-narrative_event = {
+character_event = {
 	id = 70008
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70008"
@@ -384,7 +383,7 @@ narrative_event = {
 }
 
 # Character is killed
-narrative_event = {
+character_event = {
 	id = 70009
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70009"
@@ -394,9 +393,11 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
 		NOT = {
 			has_character_flag = tournament_has_ended
 		}
@@ -405,102 +406,6 @@ narrative_event = {
 			NOT = {
 				has_character_flag = tournament_has_ended
 			}
-		}
-	}
-
-	mean_time_to_happen = {
-		months = 1000
-		modifier = {
-			factor = 1.1
-			martial = 20
-		}
-		modifier = {
-			factor = 1.1
-			martial = 19
-		}
-		modifier = {
-			factor = 1.1
-			martial = 18
-		}
-		modifier = {
-			factor = 1.1
-			martial = 17
-		}
-		modifier = {
-			factor = 1.1
-			martial = 16
-		}
-		modifier = {
-			factor = 1.1
-			martial = 15
-		}
-		modifier = {
-			factor = 1.1
-			martial = 14
-		}
-		modifier = {
-			factor = 1.1
-			martial = 13
-		}
-		modifier = {
-			factor = 1.1
-			martial = 12
-		}
-		modifier = {
-			factor = 1.1
-			martial = 11
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 1 }
-		}
-		modifier = {
-			factor = 2
-			trait = craven
-		}
-		modifier = {
-			factor = 0.5
-			trait = brave
-		}
-		modifier = {
-			factor = 0.5
-			trait = maimed
 		}
 	}
 
@@ -522,14 +427,14 @@ narrative_event = {
 						}
 					}
 				}
-				top_liege = { narrative_event = { id = 70038 } }
+				top_liege = { character_event = { id = 70038 } }
 			}
 		}
 	}
 }
 
 # Character is maimed
-narrative_event = {
+character_event = {
 	id = 70010
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70010"
@@ -539,13 +444,13 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
+		NOR = {
 			trait = maimed
-		}
-		NOT = {
 			has_character_flag = tournament_has_ended
 		}
 		top_liege = {
@@ -556,101 +461,6 @@ narrative_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		months = 800
-		modifier = {
-			factor = 1.1
-			martial = 20
-		}
-		modifier = {
-			factor = 1.1
-			martial = 19
-		}
-		modifier = {
-			factor = 1.1
-			martial = 18
-		}
-		modifier = {
-			factor = 1.1
-			martial = 17
-		}
-		modifier = {
-			factor = 1.1
-			martial = 16
-		}
-		modifier = {
-			factor = 1.1
-			martial = 15
-		}
-		modifier = {
-			factor = 1.1
-			martial = 14
-		}
-		modifier = {
-			factor = 1.1
-			martial = 13
-		}
-		modifier = {
-			factor = 1.1
-			martial = 12
-		}
-		modifier = {
-			factor = 1.1
-			martial = 11
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 1 }
-		}
-		modifier = {
-			factor = 2
-			trait = craven
-		}
-		modifier = {
-			factor = 0.5
-			trait = brave
-		}
-		modifier = {
-			factor = 0.5
-			trait = wounded
-		}
-	}
 
 	immediate = {
 		clr_character_flag = attending_tournament
@@ -669,14 +479,14 @@ narrative_event = {
 						}
 					}
 				}
-				top_liege = { narrative_event = { id = 70039 } }
+				top_liege = { character_event = { id = 70039 } }
 			}
 		}
 	}
 }
 
 # Character is wounded
-narrative_event = {
+character_event = {
 	id = 70011
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70011"
@@ -686,17 +496,15 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
-		}
-		NOT = {
 			trait = wounded
-		}
-		NOT = {
 			trait = maimed
 		}
 		top_liege = {
@@ -707,97 +515,6 @@ narrative_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		months = 500
-		modifier = {
-			factor = 1.1
-			martial = 20
-		}
-		modifier = {
-			factor = 1.1
-			martial = 19
-		}
-		modifier = {
-			factor = 1.1
-			martial = 18
-		}
-		modifier = {
-			factor = 1.1
-			martial = 17
-		}
-		modifier = {
-			factor = 1.1
-			martial = 16
-		}
-		modifier = {
-			factor = 1.1
-			martial = 15
-		}
-		modifier = {
-			factor = 1.1
-			martial = 14
-		}
-		modifier = {
-			factor = 1.1
-			martial = 13
-		}
-		modifier = {
-			factor = 1.1
-			martial = 12
-		}
-		modifier = {
-			factor = 1.1
-			martial = 11
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 1 }
-		}
-		modifier = {
-			factor = 2
-			trait = craven
-		}
-		modifier = {
-			factor = 0.5
-			trait = brave
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -815,14 +532,14 @@ narrative_event = {
 						}
 					}
 				}
-				top_liege = { narrative_event = { id = 70040 } }
+				top_liege = { character_event = { id = 70040 } }
 			}
 		}
 	}
 }
 
 # Character becomes craven
-narrative_event = {
+character_event = {
 	id = 70012
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70012"
@@ -832,14 +549,14 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
-		}
-		NOT = {
 			trait = craven
 		}
 		top_liege = {
@@ -850,89 +567,6 @@ narrative_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 1.1
-			martial = 20
-		}
-		modifier = {
-			factor = 1.1
-			martial = 19
-		}
-		modifier = {
-			factor = 1.1
-			martial = 18
-		}
-		modifier = {
-			factor = 1.1
-			martial = 17
-		}
-		modifier = {
-			factor = 1.1
-			martial = 16
-		}
-		modifier = {
-			factor = 1.1
-			martial = 15
-		}
-		modifier = {
-			factor = 1.1
-			martial = 14
-		}
-		modifier = {
-			factor = 1.1
-			martial = 13
-		}
-		modifier = {
-			factor = 1.1
-			martial = 12
-		}
-		modifier = {
-			factor = 1.1
-			martial = 11
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 0.9
-			NOT = { martial = 1 }
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -945,7 +579,7 @@ narrative_event = {
 }
 
 # Character becomes brave
-narrative_event = {
+character_event = {
 	id = 70013
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70013"
@@ -955,14 +589,14 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
-		}
-		NOT = {
 			trait = brave
 		}
 		top_liege = {
@@ -973,89 +607,6 @@ narrative_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 0.9
-			martial = 20
-		}
-		modifier = {
-			factor = 0.9
-			martial = 19
-		}
-		modifier = {
-			factor = 0.9
-			martial = 18
-		}
-		modifier = {
-			factor = 0.9
-			martial = 17
-		}
-		modifier = {
-			factor = 0.9
-			martial = 16
-		}
-		modifier = {
-			factor = 0.9
-			martial = 15
-		}
-		modifier = {
-			factor = 0.9
-			martial = 14
-		}
-		modifier = {
-			factor = 0.9
-			martial = 13
-		}
-		modifier = {
-			factor = 0.9
-			martial = 12
-		}
-		modifier = {
-			factor = 0.9
-			martial = 11
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 1.1
-			NOT = { martial = 1 }
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -1068,7 +619,7 @@ narrative_event = {
 }
 
 # Character becomes tough soldier
-narrative_event = {
+character_event = {
 	id = 70014
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70014"
@@ -1078,11 +629,13 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
 		}
 		trait = misguided_warrior
@@ -1094,9 +647,6 @@ narrative_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		months = 250
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -1110,7 +660,7 @@ narrative_event = {
 }
 
 # Character becomes skilled tactician
-narrative_event = {
+character_event = {
 	id = 70015
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70015"
@@ -1120,11 +670,13 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
 		}
 		trait = tough_soldier
@@ -1136,9 +688,6 @@ narrative_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		months = 250
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -1152,7 +701,7 @@ narrative_event = {
 }
 
 # Character becomes brilliant strategist
-narrative_event = {
+character_event = {
 	id = 70016
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70016"
@@ -1162,11 +711,13 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
 		}
 		trait = skilled_tactician
@@ -1176,10 +727,6 @@ narrative_event = {
 				has_character_flag = tournament_has_ended
 			}
 		}
-	}
-
-	mean_time_to_happen = {
-		months = 250
 	}
 
 	immediate = {
@@ -1194,7 +741,7 @@ narrative_event = {
 }
 
 # Character becomes skilled tactician
-narrative_event = {
+character_event = {
 	id = 70017
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70017"
@@ -1204,11 +751,13 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
 		}
 		trait = brilliant_strategist
@@ -1218,10 +767,6 @@ narrative_event = {
 				has_character_flag = tournament_has_ended
 			}
 		}
-	}
-
-	mean_time_to_happen = {
-		months = 250
 	}
 
 	immediate = {
@@ -1236,7 +781,7 @@ narrative_event = {
 }
 
 # Character becomes tough soldier
-narrative_event = {
+character_event = {
 	id = 70018
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70018"
@@ -1246,9 +791,11 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
 		NOT = { has_character_flag = attending_tournament_event }
 		NOT = {
 			has_character_flag = tournament_has_ended
@@ -1260,10 +807,6 @@ narrative_event = {
 				has_character_flag = tournament_has_ended
 			}
 		}
-	}
-
-	mean_time_to_happen = {
-		months = 250
 	}
 
 	immediate = {
@@ -1278,7 +821,7 @@ narrative_event = {
 }
 
 # Character becomes misguided warrior
-narrative_event = {
+character_event = {
 	id = 70019
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70019"
@@ -1288,11 +831,13 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = { has_character_flag = attending_tournament_event }
-		NOT = {
+		NOR = {
+			has_character_flag = attending_tournament_event
 			has_character_flag = tournament_has_ended
 		}
 		trait = tough_soldier
@@ -1302,10 +847,6 @@ narrative_event = {
 				has_character_flag = tournament_has_ended
 			}
 		}
-	}
-
-	mean_time_to_happen = {
-		months = 250
 	}
 
 	immediate = {
@@ -1319,157 +860,51 @@ narrative_event = {
 	}
 }
 
-# Character wins the tournament
-narrative_event = {
+# Character gets top placement in the tournament
+character_event = {
 	id = 70020
 	title = "TOURNAMENTTITLE"
-	desc = "EVTDESC70020"
 	picture = "GFX_evt_melee"
+	desc = {
+		trigger = {
+			has_character_flag = tournament_winner
+		}
+		text = "EVTDESC70020"
+	}
+
+	desc = {
+		trigger = {
+			has_character_flag = tournament_second_place
+		}
+		text = "EVTDESC70021"
+	}
+
+	desc = {
+		trigger = {
+			has_character_flag = tournament_third_place
+		}
+		text = "EVTDESC70022"
+	}
 
 	min_age = 16
-	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
-			has_character_flag = tournament_has_ended
-		}
-		top_liege = {
-			had_character_flag = { flag = tournament_begins days = 50 }
-			NOT = {
-				has_character_flag = winner
-			}
-			NOT = {
-				has_character_flag = tournament_has_ended
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		months = 10
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = tournament_begins days = 60 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = tournament_begins days = 70 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = tournament_begins days = 80 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = tournament_begins days = 90 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = tournament_begins days = 100 }
-			}
-		}
-		modifier = {
-			factor = 0.75
-			martial = 20
-		}
-		modifier = {
-			factor = 0.75
-			martial = 19
-		}
-		modifier = {
-			factor = 0.75
-			martial = 18
-		}
-		modifier = {
-			factor = 0.75
-			martial = 17
-		}
-		modifier = {
-			factor = 0.75
-			martial = 16
-		}
-		modifier = {
-			factor = 0.75
-			martial = 15
-		}
-		modifier = {
-			factor = 0.75
-			martial = 14
-		}
-		modifier = {
-			factor = 0.75
-			martial = 13
-		}
-		modifier = {
-			factor = 0.75
-			martial = 12
-		}
-		modifier = {
-			factor = 0.75
-			martial = 11
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 1 }
-		}
-	}
-
-	immediate = {
-		set_character_flag = attending_tournament_event
-		set_character_flag = tournament_winner
-		top_liege = {
-			set_character_flag = winner
+		OR = {
+			has_character_flag = tournament_winner
+			has_character_flag = tournament_second_place
+			has_character_flag = tournament_third_place
 		}
 	}
 
 	option = {
+		trigger = {
+			has_character_flag = tournament_winner
+		}
 		name = "EVTOPTA70020"
 		wealth = 100
 		prestige = 300
@@ -1482,14 +917,56 @@ narrative_event = {
 						}
 					}
 				}
-				top_liege = { narrative_event = { id = 70034 } }
+				top_liege = { character_event = { id = 70034 days = 3} }
+			}
+		}
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = tournament_second_place
+		}
+		name = "EVTOPTA70021"
+		wealth = 75
+		prestige = 250
+		hidden_tooltip = {
+			if = {
+				limit = {
+					top_liege = {
+						NOT = {
+							character = ROOT
+						}
+					}
+				}
+				top_liege = { character_event = { id = 70035 days = 2} }
+			}
+		}
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = tournament_third_place
+		}
+		name = "EVTOPTA70022"
+		wealth = 50
+		prestige = 200
+		hidden_tooltip = {
+			if = {
+				limit = {
+					top_liege = {
+						NOT = {
+							character = ROOT
+						}
+					}
+				}
+				top_liege = { character_event = { id = 70036 days = 1} }
 			}
 		}
 	}
 }
 
 # Inform about winner
-narrative_event = {
+character_event = {
 	id = 70034
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70034"
@@ -1504,180 +981,12 @@ narrative_event = {
 			who = FROM
 			years = 20
 		}
-	}
-}
-
-# Character wins second place in the tournament
-narrative_event = {
-	id = 70021
-	title = "TOURNAMENTTITLE"
-	desc = "EVTDESC70021"
-	picture = "GFX_evt_melee"
-
-	min_age = 16
-	#only_men = yes
-	capable_only = yes
-	prisoner = no
-
-	trigger = {
-		NOT = { has_character_flag = tournament_winner }
-		has_character_flag = attending_tournament
-		NOT = {
-			has_character_flag = tournament_has_ended
-		}
-		top_liege = {
-			had_character_flag = { flag = tournament_begins days = 50 }
-			had_character_flag = { flag = winner days = 1 }
-			NOT = { has_character_flag = second_place }
-			NOT = {
-				has_character_flag = tournament_has_ended
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		months = 10
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = winner days = 10 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = winner days = 20 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = winner days = 30 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = winner days = 40 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = winner days = 50 }
-			}
-		}
-		modifier = {
-			factor = 0.75
-			martial = 20
-		}
-		modifier = {
-			factor = 0.75
-			martial = 19
-		}
-		modifier = {
-			factor = 0.75
-			martial = 18
-		}
-		modifier = {
-			factor = 0.75
-			martial = 17
-		}
-		modifier = {
-			factor = 0.75
-			martial = 16
-		}
-		modifier = {
-			factor = 0.75
-			martial = 15
-		}
-		modifier = {
-			factor = 0.75
-			martial = 14
-		}
-		modifier = {
-			factor = 0.75
-			martial = 13
-		}
-		modifier = {
-			factor = 0.75
-			martial = 12
-		}
-		modifier = {
-			factor = 0.75
-			martial = 11
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 1 }
-		}
-	}
-
-	immediate = {
-		set_character_flag = attending_tournament_event
-		set_character_flag = tournament_second_place
-		top_liege = {
-			set_character_flag = second_place
-		}
-	}
-
-	option = {
-		name = "EVTOPTA70021"
-		wealth = 75
-		prestige = 250
-		hidden_tooltip = {
-			if = {
-				limit = {
-					top_liege = {
-						NOT = {
-							character = ROOT
-						}
-					}
-				}
-				top_liege = { narrative_event = { id = 70035 } }
-			}
-		}
+		character_event = { id = 70002 }
 	}
 }
 
 # Inform about second place
-narrative_event = {
+character_event = {
 	id = 70035
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70035"
@@ -1695,178 +1004,8 @@ narrative_event = {
 	}
 }
 
-# Character wins third place in the tournament
-narrative_event = {
-	id = 70022
-	title = "TOURNAMENTTITLE"
-	desc = "EVTDESC70022"
-	picture = "GFX_evt_melee"
-
-	min_age = 16
-	#only_men = yes
-	capable_only = yes
-	prisoner = no
-
-	trigger = {
-		NOT = { has_character_flag = tournament_winner }
-		NOT = { has_character_flag = tournament_second_place }
-		has_character_flag = attending_tournament
-		NOT = {
-			has_character_flag = tournament_has_ended
-		}
-		top_liege = {
-			had_character_flag = { flag = tournament_begins days = 50 }
-			had_character_flag = { flag = second_place days = 1 }
-			NOT = { has_character_flag = third_place }
-			NOT = {
-				has_character_flag = tournament_has_ended
-			}
-		}
-	}
-
-	mean_time_to_happen = {
-		months = 10
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = second_place days = 10 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = second_place days = 20 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = second_place days = 30 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = second_place days = 40 }
-			}
-		}
-		modifier = {
-			factor = 0.5
-			top_liege = {
-				had_character_flag = { flag = second_place days = 50 }
-			}
-		}
-		modifier = {
-			factor = 0.75
-			martial = 20
-		}
-		modifier = {
-			factor = 0.75
-			martial = 19
-		}
-		modifier = {
-			factor = 0.75
-			martial = 18
-		}
-		modifier = {
-			factor = 0.75
-			martial = 17
-		}
-		modifier = {
-			factor = 0.75
-			martial = 16
-		}
-		modifier = {
-			factor = 0.75
-			martial = 15
-		}
-		modifier = {
-			factor = 0.75
-			martial = 14
-		}
-		modifier = {
-			factor = 0.75
-			martial = 13
-		}
-		modifier = {
-			factor = 0.75
-			martial = 12
-		}
-		modifier = {
-			factor = 0.75
-			martial = 11
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 10 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 9 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 8 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 7 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 6 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 5 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 4 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 3 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 2 }
-		}
-		modifier = {
-			factor = 1.25
-			NOT = { martial = 1 }
-		}
-	}
-
-	immediate = {
-		set_character_flag = attending_tournament_event
-		set_character_flag = tournament_third_place
-		top_liege = {
-			set_character_flag = third_place
-		}
-	}
-
-	option = {
-		name = "EVTOPTA70022"
-		wealth = 50
-		prestige = 200
-		hidden_tooltip = {
-			if = {
-				limit = {
-					top_liege = {
-						NOT = {
-							character = ROOT
-						}
-					}
-				}
-				top_liege = { narrative_event = { id = 70036 } }
-			}
-		}
-	}
-}
-
 # Inform about third place
-narrative_event = {
+character_event = {
 	id = 70036
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70036"
@@ -1885,7 +1024,7 @@ narrative_event = {
 }
 
 # Character becomes homosexual
-narrative_event = {
+character_event = {
 	id = 70023
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70023"
@@ -1895,47 +1034,20 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
-			has_character_flag = tournament_has_ended
-		}
-		NOT = { has_character_flag = attending_tournament_event }
 		NOR = {
+			has_character_flag = tournament_has_ended
+			has_character_flag = attending_tournament_event }
 			trait = homosexual
 			trait = celibate
+			trait = eunuch
 		}
-		NOT = { trait = eunuch }
 	}
 
-	mean_time_to_happen = {
-		months = 800
-		modifier = {
-			factor = 0.9
-			trait = drunkard
-		}
-		modifier = {
-			factor = 0.75
-			trait = hedonist
-		}
-		modifier = {
-			factor = 0.9
-			trait = lustful
-		}
-		modifier = {
-			factor = 2
-			trait = temperate
-		}
-		modifier = {
-			factor = 3
-			trait = chaste
-		}
-		modifier = {
-			factor = 3
-			trait = zealous
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -1948,7 +1060,7 @@ narrative_event = {
 }
 
 # Character becomes syphilitic
-narrative_event = {
+character_event = {
 	id = 70024
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70024"
@@ -1958,47 +1070,20 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
-			has_character_flag = tournament_has_ended
-		}
-		NOT = { has_character_flag = attending_tournament_event }
 		NOR = {
+			has_character_flag = tournament_has_ended
+			has_character_flag = attending_tournament_event }
 			trait = syphilitic
 			trait = celibate
+			trait = eunuch
 		}
-		NOT = { trait = eunuch }
 	}
 
-	mean_time_to_happen = {
-		months = 800
-		modifier = {
-			factor = 0.9
-			trait = drunkard
-		}
-		modifier = {
-			factor = 0.5
-			trait = hedonist
-		}
-		modifier = {
-			factor = 0.75
-			trait = lustful
-		}
-		modifier = {
-			factor = 2
-			trait = temperate
-		}
-		modifier = {
-			factor = 3
-			trait = chaste
-		}
-		modifier = {
-			factor = 3
-			trait = zealous
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2011,7 +1096,7 @@ narrative_event = {
 }
 
 # Character becomes drunkard
-narrative_event = {
+character_event = {
 	id = 70025
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70025"
@@ -2021,9 +1106,11 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
 		NOT = {
 			has_character_flag = tournament_has_ended
 		}
@@ -2033,25 +1120,6 @@ narrative_event = {
 		}
 	}
 
-	mean_time_to_happen = {
-		months = 500
-		modifier = {
-			factor = 0.75
-			trait = gluttonous
-		}
-		modifier = {
-			factor = 0.9
-			trait = lustful
-		}
-		modifier = {
-			factor = 3
-			trait = temperate
-		}
-		modifier = {
-			factor = 2
-			trait = chaste
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2064,7 +1132,7 @@ narrative_event = {
 }
 
 # Character becomes duelist
-narrative_event = {
+character_event = {
 	id = 70026
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70026"
@@ -2074,54 +1142,24 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
-			has_character_flag = tournament_has_ended
-		}
-		NOT = { has_character_flag = attending_tournament_event }
-		martial = 5
 		NOR = {
+			has_dlc = "Way of Life"
+			has_character_flag = tournament_has_ended
+			has_character_flag = attending_tournament_event }
 			trait = content
 			trait = kind
 			trait = craven
 			trait = weak
 			lifestyle_traits = 1
 		}
+		martial = 5
 	}
 
-	mean_time_to_happen = {
-		months = 500
-		modifier = {
-			factor = 0.75
-			trait = diligent
-		}
-		modifier = {
-			factor = 0.75
-			trait = wroth
-		}
-		modifier = {
-			factor = 0.75
-			trait = brave
-		}
-		modifier = {
-			factor = 0.75
-			trait = strong
-		}
-		modifier = {
-			factor = 0.75
-			martial = 10
-		}
-		modifier = {
-			factor = 0.75
-			martial = 15
-		}
-		modifier = {
-			factor = 0.75
-			martial = 20
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2134,7 +1172,7 @@ narrative_event = {
 }
 
 # Character gains intrigue
-narrative_event = {
+character_event = {
 	id = 70027
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70027"
@@ -2144,63 +1182,17 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
 		NOT = {
 			has_character_flag = tournament_has_ended
 		}
 		NOT = { has_character_flag = attending_tournament_event }
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 0.8
-			trait = elusive_shadow
-		}
-		modifier = {
-			factor = 0.9
-			trait = intricate_webweaver
-		}
-		modifier = {
-			factor = 1.1
-			trait = flamboyant_schemer
-		}
-		modifier = {
-			factor = 1.5
-			trait = amateurish_plotter
-		}
-		modifier = {
-			factor = 1.5
-			NOT = {
-				OR = {
-					trait = elusive_shadow
-					trait = intricate_webweaver
-					trait = flamboyant_schemer
-					trait = amateurish_plotter
-				}
-			}
-		}
-		modifier = {
-			factor = 0.9
-			trait = deceitful
-		}
-		modifier = {
-			factor = 1.5
-			trait = honest
-		}
-		modifier = {
-			factor = 4
-			martial = 10
-		}
-		modifier = {
-			factor = 0.8
-			NOT = {
-				martial = 5
-			}
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2213,7 +1205,7 @@ narrative_event = {
 }
 
 # Character loses intrigue
-narrative_event = {
+character_event = {
 	id = 70028
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70028"
@@ -2223,63 +1215,17 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
+		NOR = {
 			has_character_flag = tournament_has_ended
+			has_character_flag = attending_tournament_event
 		}
-		NOT = { has_character_flag = attending_tournament_event }
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 1.5
-			trait = elusive_shadow
-		}
-		modifier = {
-			factor = 1.1
-			trait = intricate_webweaver
-		}
-		modifier = {
-			factor = 0.9
-			trait = flamboyant_schemer
-		}
-		modifier = {
-			factor = 0.8
-			trait = amateurish_plotter
-		}
-		modifier = {
-			factor = 1.5
-			NOT = {
-				OR = {
-					trait = elusive_shadow
-					trait = intricate_webweaver
-					trait = flamboyant_schemer
-					trait = amateurish_plotter
-				}
-			}
-		}
-		modifier = {
-			factor = 1.5
-			trait = deceitful
-		}
-		modifier = {
-			factor = 0.9
-			trait = honest
-		}
-		modifier = {
-			factor = 4
-			martial = 10
-		}
-		modifier = {
-			factor = 0.8
-			NOT = {
-				martial = 5
-			}
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2292,7 +1238,7 @@ narrative_event = {
 }
 
 # Character gains stewardship
-narrative_event = {
+character_event = {
 	id = 70029
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70029"
@@ -2302,63 +1248,17 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
 		NOT = {
 			has_character_flag = tournament_has_ended
 		}
 		NOT = { has_character_flag = attending_tournament_event }
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 0.8
-			trait = midas_touched
-		}
-		modifier = {
-			factor = 0.9
-			trait = fortune_builder
-		}
-		modifier = {
-			factor = 1.1
-			trait = thrifty_clerk
-		}
-		modifier = {
-			factor = 1.5
-			trait = indulgent_wastrel
-		}
-		modifier = {
-			factor = 1.5
-			NOT = {
-				OR = {
-					trait = midas_touched
-					trait = fortune_builder
-					trait = thrifty_clerk
-					trait = indulgent_wastrel
-				}
-			}
-		}
-		modifier = {
-			factor = 0.9
-			trait = diligent
-		}
-		modifier = {
-			factor = 1.5
-			trait = slothful
-		}
-		modifier = {
-			factor = 4
-			martial = 10
-		}
-		modifier = {
-			factor = 0.8
-			NOT = {
-				martial = 5
-			}
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2371,7 +1271,7 @@ narrative_event = {
 }
 
 # Character loses stewardship
-narrative_event = {
+character_event = {
 	id = 70030
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70030"
@@ -2381,63 +1281,17 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
 		NOT = {
 			has_character_flag = tournament_has_ended
 		}
 		NOT = { has_character_flag = attending_tournament_event }
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 1.5
-			trait = midas_touched
-		}
-		modifier = {
-			factor = 1.1
-			trait = fortune_builder
-		}
-		modifier = {
-			factor = 0.9
-			trait = thrifty_clerk
-		}
-		modifier = {
-			factor = 0.8
-			trait = indulgent_wastrel
-		}
-		modifier = {
-			factor = 1.5
-			NOT = {
-				OR = {
-					trait = midas_touched
-					trait = fortune_builder
-					trait = thrifty_clerk
-					trait = indulgent_wastrel
-				}
-			}
-		}
-		modifier = {
-			factor = 1.5
-			trait = diligent
-		}
-		modifier = {
-			factor = 0.9
-			trait = slothful
-		}
-		modifier = {
-			factor = 4
-			martial = 10
-		}
-		modifier = {
-			factor = 0.8
-			NOT = {
-				martial = 5
-			}
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2450,7 +1304,7 @@ narrative_event = {
 }
 
 # Character gains diplomacy
-narrative_event = {
+character_event = {
 	id = 70031
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70031"
@@ -2460,63 +1314,17 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
+		NOR = {
 			has_character_flag = tournament_has_ended
+			has_character_flag = attending_tournament_event
 		}
-		NOT = { has_character_flag = attending_tournament_event }
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 0.8
-			trait = grey_eminence
-		}
-		modifier = {
-			factor = 0.9
-			trait = charismatic_negotiator
-		}
-		modifier = {
-			factor = 1.1
-			trait = underhanded_rogue
-		}
-		modifier = {
-			factor = 1.5
-			trait = naive_appeaser
-		}
-		modifier = {
-			factor = 1.5
-			NOT = {
-				OR = {
-					trait = grey_eminence
-					trait = charismatic_negotiator
-					trait = underhanded_rogue
-					trait = naive_appeaser
-				}
-			}
-		}
-		modifier = {
-			factor = 0.9
-			trait = gregarious
-		}
-		modifier = {
-			factor = 1.5
-			trait = shy
-		}
-		modifier = {
-			factor = 4
-			martial = 10
-		}
-		modifier = {
-			factor = 0.8
-			NOT = {
-				martial = 5
-			}
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2529,7 +1337,7 @@ narrative_event = {
 }
 
 # Character loses diplomacy
-narrative_event = {
+character_event = {
 	id = 70032
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70032"
@@ -2539,63 +1347,17 @@ narrative_event = {
 	#only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_character_flag = attending_tournament
+
+	is_triggered_only = yes
 
 	trigger = {
-		has_character_flag = attending_tournament
-		NOT = {
+		NOR = {
 			has_character_flag = tournament_has_ended
+			has_character_flag = attending_tournament_event
 		}
-		NOT = { has_character_flag = attending_tournament_event }
 	}
 
-	mean_time_to_happen = {
-		months = 250
-		modifier = {
-			factor = 1.5
-			trait = grey_eminence
-		}
-		modifier = {
-			factor = 1.1
-			trait = charismatic_negotiator
-		}
-		modifier = {
-			factor = 0.9
-			trait = underhanded_rogue
-		}
-		modifier = {
-			factor = 0.8
-			trait = naive_appeaser
-		}
-		modifier = {
-			factor = 1.5
-			NOT = {
-				OR = {
-					trait = grey_eminence
-					trait = charismatic_negotiator
-					trait = underhanded_rogue
-					trait = naive_appeaser
-				}
-			}
-		}
-		modifier = {
-			factor = 1.5
-			trait = gregarious
-		}
-		modifier = {
-			factor = 0.9
-			trait = shy
-		}
-		modifier = {
-			factor = 4
-			martial = 10
-		}
-		modifier = {
-			factor = 0.8
-			NOT = {
-				martial = 5
-			}
-		}
-	}
 
 	immediate = {
 		set_character_flag = attending_tournament_event
@@ -2608,7 +1370,7 @@ narrative_event = {
 }
 
 # Invitations have gone out
-narrative_event = {
+character_event = {
 	id = 70033
 	title = "TOURNAMENTTITLE"
 	desc = "EVTDESC70033"
@@ -2618,11 +1380,33 @@ narrative_event = {
 
 	option = {
 		name = "EVTOPTA70033"
+		hidden_tooltip = {
+			character_event = { id = 70001 days = 60 } # Tournament start
+			any_realm_character = {
+				limit = {
+					OR = {
+						is_feudal = yes
+						is_tribal = yes
+						is_nomadic = yes
+					}
+					age = 16
+					NOR = {
+						has_job_title = job_spiritual
+						age = 50
+						trait = incapable
+					}
+					prisoner = no	
+					is_female = no
+				}
+				clr_character_flag = tournament_has_ended
+				character_event = { id = 70000 }
+			}
+		}
 	}
 }
 
 # Ruler has died, the tournament is over
-narrative_event = {
+character_event = {
 	id = 70041
 	title = TOURNAMENTTITLE
 	desc = EVTDESC70041
@@ -2633,9 +1417,8 @@ narrative_event = {
 	trigger = {
 		has_character_flag = tournament_begins
 	}
-
-	option = {
-		name = EVTOPTA70041
+	
+	immediate = {		
 		clr_character_flag = tournament_begins
 		clr_character_flag = winner
 		clr_character_flag = second_place
@@ -2646,41 +1429,9 @@ narrative_event = {
 		clr_character_flag = tournament_second_place
 		clr_character_flag = tournament_winner
 		clr_character_flag = do_not_disturb
-		any_vassal = {
+		any_realm_character = {
 			limit = {
 				has_character_flag = attending_tournament
-				NOT = {
-					character = PREV
-				}
-				NOT = {
-					has_character_flag = tournament_third_place
-				}
-				NOT = {
-					has_character_flag = tournament_second_place
-				}
-				NOT = {
-					has_character_flag = tournament_winner
-				}
-			}
-			set_character_flag = tournament_has_ended
-			clr_character_flag = attending_tournament
-			clr_character_flag = attending_tournament_event
-			clr_character_flag = do_not_disturb
-			letter_event = {
-				id = 70042
-				days = 2
-				random = 2
-				tooltip = EVTTOOLTIP70042
-			}
-		}
-		any_vassal = {
-			limit = {
-				has_character_flag = attending_tournament
-				OR = {
-					has_character_flag = tournament_third_place
-					has_character_flag = tournament_second_place
-					has_character_flag = tournament_winner
-				}
 			}
 			letter_event = {
 				id = 70042
@@ -2697,14 +1448,17 @@ narrative_event = {
 			clr_character_flag = do_not_disturb
 		}
 	}
+
+	option = {
+		name = EVTOPTA70041
+	}
 }
 
 #The tournament has been cancelled due to Ruler's death
 letter_event = {
 	id = 70042
-#	title = TOURNAMENTTITLE
+	title = TOURNAMENTTITLE
 	desc = EVTDESC70042
-#	picture = GFX_evt_death
 
 	is_triggered_only = yes
 
@@ -2712,6 +1466,1160 @@ letter_event = {
 		name = EVTOPTA70042
 	}
 }
+
+#Tournament attender event for random occurences
+character_event = {
+	id = 70050
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_list = {
+			10 = { #character is killed
+				modifier = {
+					factor = 0.5
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 1
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 1 }
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 0 }
+				}
+				modifier = {
+					factor = 0.5
+					trait = craven
+				}
+				modifier = {
+					factor = 2
+					trait = brave
+				}
+				modifier = {
+					factor = 2
+					trait = maimed
+				}
+				character_event = { id = 70009 days = 1 random = 25 }
+			}
+			13 = { #character maimed
+				modifier = {
+					factor = 0.5
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 1
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 1 }
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 0 }
+				}
+				modifier = {
+					factor = 0.5
+					trait = craven
+				}
+				modifier = {
+					factor = 2
+					trait = brave
+				}
+				modifier = {
+					factor = 0
+					trait = maimed
+				}
+				character_event = { id = 70010 days = 1 random = 25 }
+			}
+			20 = { #character wounded
+				modifier = {
+					factor = 0.5
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 1
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 1 }
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 0 }
+				}
+				modifier = {
+					factor = 0.5
+					trait = craven
+				}
+				modifier = {
+					factor = 2
+					trait = brave
+				}
+				modifier = {
+					factor = 0
+					trait = maimed
+				}
+				character_event = { id = 70011 days = 1 random = 25 }
+			}
+			40 = { #gain craven
+				modifier = {
+					factor = 0.5
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 1
+				}
+				modifier = {
+					factor = 0.5
+					combat_rating = 1
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 1 }
+				}
+				modifier = {
+					factor = 1.5
+					NOT = { combat_rating = 0 }
+				}
+				modifier = {
+					factor = 0
+					trait = craven
+				}
+				character_event = { id = 70012 days = 1 random = 25 }
+			}
+			40 = { #gain brave
+				modifier = {
+					factor = 1.5
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 1.5
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 1.5
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 1.5
+					combat_rating = 1
+				}
+				modifier = {
+					factor = 1.5
+					combat_rating = 1
+				}
+				modifier = {
+					factor = 0.5
+					NOT = { combat_rating = 1 }
+				}
+				modifier = {
+					factor = 0.5
+					NOT = { combat_rating = 0 }
+				}
+				modifier = {
+					factor = 0
+					trait = brave
+				}
+				character_event = { id = 70013 days = 1 random = 25 }
+			}
+			40 = { #promoted to tough soldier
+				modifier = {
+					factor = 0
+					NOT = { trait = misguided_warrior }
+				}
+				character_event = { id = 70014 days = 1 random = 25 }
+			}
+			40 = { #promoted to skilled tactician
+				modifier = {
+					factor = 0
+					NOT = { trait = tough_soldier }
+				}
+				character_event = { id = 70015 days = 1 random = 25 }
+			}
+			40 = { #promoted to brilliant strategist
+				modifier = {
+					factor = 0
+					NOT = { trait = skilled_tactician }
+				}
+				character_event = { id = 70016 days = 1 random = 25 }
+			}
+			40 = { #demoted to skilled tactician
+				modifier = {
+					factor = 0
+					NOT = { trait = brilliant_strategist }
+				}
+				character_event = { id = 70017 days = 1 random = 25 }
+			}
+			40 = { #demoted to tough soldier
+				modifier = {
+					factor = 0
+					NOT = { trait = skilled_tactician }
+				}
+				character_event = { id = 70018 days = 1 random = 25 }
+			}
+			40 = { #demoted to misguided warrior
+				modifier = {
+					factor = 0
+					NOT = { trait = tough_soldier }
+				}
+				character_event = { id = 70019 days = 1 random = 25 }
+			}
+			13 = { #gain homosexual
+				modifier = {
+					factor = 1.2
+					trait = drunkard
+				}
+				modifier = {
+					factor = 1.5
+					trait = hedonist
+				}
+				modifier = {
+					factor = 1.2
+					trait = lustful
+				}
+				modifier = {
+					factor = 0.5
+					trait = temperate
+				}
+				modifier = {
+					factor = 0.3
+					trait = chaste
+				}
+				modifier = {
+					factor = 0.3
+					trait = zealous
+				}
+				modifier = {
+					factor = 0
+					OR = {
+						trait = homosexual
+						trait = celibate
+						trait = eunuch
+					}
+				}
+				character_event = { id = 70023 days = 1 random = 25 }
+			}
+			13 = { #gain syphilitic
+				modifier = {
+					factor = 1.2
+					trait = drunkard
+				}
+				modifier = {
+					factor = 1.5
+					trait = hedonist
+				}
+				modifier = {
+					factor = 1.2
+					trait = lustful
+				}
+				modifier = {
+					factor = 0.5
+					trait = temperate
+				}
+				modifier = {
+					factor = 0.3
+					trait = chaste
+				}
+				modifier = {
+					factor = 0.3
+					trait = zealous
+				}
+				modifier = {
+					factor = 0
+					OR = {
+						trait = syphilitic
+						trait = celibate
+						trait = eunuch
+					}
+				}
+				character_event = { id = 70024 days = 1 random = 25 }
+			}
+			20 = { #gain drunkard
+				modifier = {
+					factor = 1.3
+					trait = gluttonous
+				}
+				modifier = {
+					factor = 1.1
+					trait = lustful
+				}
+				modifier = {
+					factor = 0.3
+					trait = temperate
+				}
+				modifier = {
+					factor = 0.5
+					trait = chaste
+				}
+				modifier = {
+					factor = 0
+					trait = drunkard
+				}
+				character_event = { id = 70025 days = 1 random = 25 }
+			}
+			20 = { #gain duelist
+				modifier = {
+					factor = 1.3
+					trait = diligent
+				}
+				modifier = {
+					factor = 1.3
+					trait = wroth
+				}
+				modifier = {
+					factor = 1.3
+					trait = brave
+				}
+				modifier = {
+					factor = 1.3
+					trait = strong
+				}
+				modifier = {
+					factor = 1.3
+					martial = 10
+				}
+				modifier = {
+					factor = 1.3
+					martial = 15
+				}
+				modifier = {
+					factor = 1.3
+					martial = 20
+				}
+				modifier = {
+					factor = 0
+					OR = {
+						trait = content
+						trait = kind
+						trait = craven
+						trait = weak
+						lifestyle_traits = 1
+					}
+				}
+				character_event = { id = 70026 days = 1 random = 25 }
+			}
+			40 = { #increase intrigue
+				modifier = {
+					factor = 1.2
+					trait = elusive_shadow
+				}
+				modifier = {
+					factor = 1.1
+					trait = intricate_webweaver
+				}
+				modifier = {
+					factor = 0.9
+					trait = flamboyant_schemer
+				}
+				modifier = {
+					factor = 0.7
+					trait = amateurish_plotter
+				}
+				modifier = {
+					factor = 0.7
+					NOR = {
+						trait = elusive_shadow
+						trait = intricate_webweaver
+						trait = flamboyant_schemer
+						trait = amateurish_plotter
+					}
+				}
+				modifier = {
+					factor = 1.1
+					trait = deceitful
+				}
+				modifier = {
+					factor = 0.7
+					trait = honest
+				}
+				modifier = {
+					factor = 0.25
+					martial = 10
+				}
+				modifier = {
+					factor = 1.2
+					NOT = {
+						martial = 5
+					}
+				}
+				character_event = { id = 70027 days = 1 random = 25 }
+			}
+			40 = { #decrease intrigue
+				modifier = {
+					factor = 0.8
+					trait = elusive_shadow
+				}
+				modifier = {
+					factor = 0.9
+					trait = intricate_webweaver
+				}
+				modifier = {
+					factor = 1.1
+					trait = flamboyant_schemer
+				}
+				modifier = {
+					factor = 1.5
+					trait = amateurish_plotter
+				}
+				modifier = {
+					factor = 0.7
+					NOR = {
+						trait = elusive_shadow
+						trait = intricate_webweaver
+						trait = flamboyant_schemer
+						trait = amateurish_plotter
+					}
+				}
+				modifier = {
+					factor = 0.9
+					trait = deceitful
+				}
+				modifier = {
+					factor = 1.5
+					trait = honest
+				}
+				modifier = {
+					factor = 0.25
+					martial = 10
+				}
+				modifier = {
+					factor = 1.2
+					NOT = {
+						martial = 5
+					}
+				}
+				character_event = { id = 70028 days = 1 random = 25 }
+			}
+			40 = { #increase stewardship
+				modifier = {
+					factor = 1.5
+					trait = midas_touched
+				}
+				modifier = {
+					factor = 1.1
+					trait = fortune_builder
+				}
+				modifier = {
+					factor = 0.9
+					trait = thrifty_clerk
+				}
+				modifier = {
+					factor = 0.8
+					trait = indulgent_wastrel
+				}
+				modifier = {
+					factor = 0.7
+					NOR = {
+						trait = midas_touched
+						trait = fortune_builder
+						trait = thrifty_clerk
+						trait = indulgent_wastrel
+					}
+				}
+				modifier = {
+					factor = 1.5
+					trait = diligent
+				}
+				modifier = {
+					factor = 0.9
+					trait = slothful
+				}
+				character_event = { id = 70029 days = 1 random = 25 }
+			}
+			40 = { #decrease stewardship
+				modifier = {
+					factor = 0.8
+					trait = midas_touched
+				}
+				modifier = {
+					factor = 0.9
+					trait = fortune_builder
+				}
+				modifier = {
+					factor = 1.1
+					trait = thrifty_clerk
+				}
+				modifier = {
+					factor = 1.5
+					trait = indulgent_wastrel
+				}
+				modifier = {
+					factor = 0.7
+					NOR = {
+						trait = midas_touched
+						trait = fortune_builder
+						trait = thrifty_clerk
+						trait = indulgent_wastrel
+					}
+				}
+				modifier = {
+					factor = 0.9
+					trait = diligent
+				}
+				modifier = {
+					factor = 1.5
+					trait = slothful
+				}
+				modifier = {
+					factor = 0.25
+					martial = 10
+				}
+				modifier = {
+					factor = 1.2
+					NOT = {
+						martial = 5
+					}
+				}
+				character_event = { id = 70030 days = 1 random = 25 }
+			}
+			40 = { #increase diplomacy
+				modifier = {
+					factor = 1.5
+					trait = grey_eminence
+				}
+				modifier = {
+					factor = 1.1
+					trait = charismatic_negotiator
+				}
+				modifier = {
+					factor = 0.9
+					trait = underhanded_rogue
+				}
+				modifier = {
+					factor = 0.8
+					trait = naive_appeaser
+				}
+				modifier = {
+					factor = 0.7
+					NOR = {
+						trait = grey_eminence
+						trait = charismatic_negotiator
+						trait = underhanded_rogue
+						trait = naive_appeaser
+					}
+				}
+				modifier = {
+					factor = 1.5
+					trait = gregarious
+				}
+				modifier = {
+					factor = 0.9
+					trait = shy
+				}
+				character_event = { id = 70031 days = 1 random = 25 }
+			}
+			40 = { #decrease diplomacy
+				modifier = {
+					factor = 0.8
+					trait = grey_eminence
+				}
+				modifier = {
+					factor = 0.9
+					trait = charismatic_negotiator
+				}
+				modifier = {
+					factor = 1.1
+					trait = underhanded_rogue
+				}
+				modifier = {
+					factor = 1.5
+					trait = naive_appeaser
+				}
+				modifier = {
+					factor = 0.7
+					NOR = {
+						trait = grey_eminence
+						trait = charismatic_negotiator
+						trait = underhanded_rogue
+						trait = naive_appeaser
+					}
+				}
+				modifier = {
+					factor = 0.9
+					trait = gregarious
+				}
+				modifier = {
+					factor = 1.5
+					trait = shy
+				}
+				modifier = {
+					factor = 0.25
+					martial = 10
+				}
+				modifier = {
+					factor = 1.2
+					NOT = {
+						martial = 5
+					}
+				}
+				character_event = { id = 70032 days = 1 random = 25 }
+			}
+			1000 = {}
+		}
+	}
+}
+
+
+###########################################
+#SCORING, LOOK AWAY FRAGILE EYES		  #
+###########################################
+
+character_event = {
+	id = 70060
+
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		random_list = {
+			10 = {
+				set_character_flag = tourney_score_15
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 7 }
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_14
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 6 }
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_13
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 5 }
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_12
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 4 }
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_11
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 3 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 7
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_10
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 2 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 6
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_09
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 1 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 5
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_08
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = 0 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 4
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_07
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = -1 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 3
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_06
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = -2 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 2
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_05
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = -3 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 1
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_04
+				modifier = {
+					factor = 0.1
+					NOT = { combat_rating = -4 }
+				}
+				modifier = {
+					factor = 0.1
+					combat_rating = 0
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_03
+				modifier = {
+					factor = 0.1
+					combat_rating = -1
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_02
+				modifier = {
+					factor = 0.1
+					combat_rating = -2
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_01
+				modifier = {
+					factor = 0.1
+					combat_rating = -3
+				}
+			}
+			10 = {
+				set_character_flag = tourney_score_00
+				modifier = {
+					factor = 0.1
+					combat_rating = -4
+				}
+			}
+		}
+	}
+}
+
+###########################################
+# First place   WINNER!                   #
+###########################################
+
+
+character_event = {
+	id = 70061
+
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_15 }
+			clr_character_flag = tourney_score_15
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_14 }
+			clr_character_flag = tourney_score_14
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_13 }
+			clr_character_flag = tourney_score_13
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_12 }
+			clr_character_flag = tourney_score_12
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_11 }
+			clr_character_flag = tourney_score_11
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_10 }
+			clr_character_flag = tourney_score_10
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_09 }
+			clr_character_flag = tourney_score_09
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_08 }
+			clr_character_flag = tourney_score_08
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_07 }
+			clr_character_flag = tourney_score_07
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_06 }
+			clr_character_flag = tourney_score_06
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_05 }
+			clr_character_flag = tourney_score_05
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_04 }
+			clr_character_flag = tourney_score_04
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_03 }
+			clr_character_flag = tourney_score_03
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_02 }
+			clr_character_flag = tourney_score_02
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_01 }
+			clr_character_flag = tourney_score_01
+			set_character_flag = tournament_winner
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_00 }
+			clr_character_flag = tourney_score_00
+			set_character_flag = tournament_winner
+		}
+	}
+}
+
+###########################################
+# Second place                            #
+###########################################
+
+
+character_event = {
+	id = 70062
+
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_15 }
+			clr_character_flag = tourney_score_15
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_14 }
+			clr_character_flag = tourney_score_14
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_13 }
+			clr_character_flag = tourney_score_13
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_12 }
+			clr_character_flag = tourney_score_12
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_11 }
+			clr_character_flag = tourney_score_11
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_10 }
+			clr_character_flag = tourney_score_10
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_09 }
+			clr_character_flag = tourney_score_09
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_08 }
+			clr_character_flag = tourney_score_08
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_07 }
+			clr_character_flag = tourney_score_07
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_06 }
+			clr_character_flag = tourney_score_06
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_05 }
+			clr_character_flag = tourney_score_05
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_04 }
+			clr_character_flag = tourney_score_04
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_03 }
+			clr_character_flag = tourney_score_03
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_02 }
+			clr_character_flag = tourney_score_02
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_01 }
+			clr_character_flag = tourney_score_01
+			set_character_flag = tournament_second_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_00 }
+			clr_character_flag = tourney_score_00
+			set_character_flag = tournament_second_place
+		}
+	}
+}
+
+###########################################
+# Third place                           #
+###########################################
+
+
+character_event = {
+	id = 70063
+
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_15 }
+			clr_character_flag = tourney_score_15
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_14 }
+			clr_character_flag = tourney_score_14
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_13 }
+			clr_character_flag = tourney_score_13
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_12 }
+			clr_character_flag = tourney_score_12
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_11 }
+			clr_character_flag = tourney_score_11
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_10 }
+			clr_character_flag = tourney_score_10
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_09 }
+			clr_character_flag = tourney_score_09
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_08 }
+			clr_character_flag = tourney_score_08
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_07 }
+			clr_character_flag = tourney_score_07
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_06 }
+			clr_character_flag = tourney_score_06
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_05 }
+			clr_character_flag = tourney_score_05
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_04 }
+			clr_character_flag = tourney_score_04
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_03 }
+			clr_character_flag = tourney_score_03
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_02 }
+			clr_character_flag = tourney_score_02
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_01 }
+			clr_character_flag = tourney_score_01
+			set_character_flag = tournament_third_place
+			break = yes
+		}
+		random_realm_character = {
+			limit = { has_character_flag = tourney_score_00 }
+			clr_character_flag = tourney_score_00
+			set_character_flag = tournament_third_place
+		}
+	}
+}
+
+###########################################
+# Notify winners						  #
+###########################################
+
+character_event = {
+	id = 70064
+
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		any_realm_character = {
+			limit = {
+				OR = {
+					has_character_flag = tournament_winner
+					has_character_flag = tournament_second_place
+					has_character_flag = tournament_third_place
+				}
+			}
+			character_event = { id = 70020 }
+		}
+	}
+}
+
 
 ###########################################
 # Flag management                         #
@@ -2739,15 +2647,18 @@ character_event = {
 		clr_character_flag = second_place
 		clr_character_flag = tournament_third_place
 		clr_character_flag = third_place
+		clr_character_flag = tournament_begins
 		any_realm_character = {
 			limit = {
 				has_character_flag = attending_tournament
 			}
+			clr_character_flag = tournament_winner
 			clr_character_flag = tournament_third_place
 			clr_character_flag = tournament_second_place
 			clr_character_flag = attending_tournament
 			clr_character_flag = attending_tournament_event
 			clr_character_flag = do_not_disturb
+			clr_character_flag = tournament_has_ended
 		}		
 	}
 }
