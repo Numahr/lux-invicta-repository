@@ -292,9 +292,8 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOR = {
-				tier = king
-				tier = emperor
+			higher_tier_than = duke
+			NOT = {
 				trait = incapable
 			}
 			any_child = { 
@@ -2293,6 +2292,9 @@ character_event = {
 	
 	trigger = {
 		is_councillor = no
+		job_chancellor = {
+			always = yes
+		}
 		NOT = {
 			diplomacy = 8
 		}
@@ -2307,10 +2309,10 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
+			is_dumb_trigger = no
 			NOR = {
+				has_job_title = job_chancellor
 				trait = incapable
-				trait = slow
-				trait = imbecile
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2380,6 +2382,9 @@ character_event = {
 	
 	trigger = {
 		is_councillor = no
+		job_marshal = {
+			always = yes
+		}
 		NOT = {
 			martial = 8
 		}
@@ -2394,10 +2399,10 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
+			is_dumb_trigger = no
 			NOR = {
+				has_job_title = job_marshal
 				trait = incapable
-				trait = slow
-				trait = imbecile
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2470,6 +2475,9 @@ character_event = {
 	
 	trigger = {
 		is_councillor = no
+		job_treasurer = {
+			always = yes
+		}
 		NOT = {
 			stewardship = 8
 		}
@@ -2484,9 +2492,8 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
+			is_dumb_trigger = no
 			NOR = {
-				trait = slow
-				trait = imbecile
 				trait = incapable
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
@@ -2557,6 +2564,9 @@ character_event = {
 	
 	trigger = {
 		is_councillor = no
+		job_spymaster = {
+			always = yes
+		}
 		NOR = {
 			intrigue = 8
 			has_character_modifier = intrigue_advice
@@ -2567,10 +2577,9 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
+			is_dumb_trigger = no
 			NOR = {
 				has_job_title = job_spymaster
-				trait = slow
-				trait = imbecile
 				trait = incapable
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
@@ -2648,6 +2657,9 @@ character_event = {
 	
 	trigger = {
 		is_councillor = no
+		job_spiritual = {
+			always = yes
+		}
 		NOR = {
 			learning = 8
 			has_character_modifier = learning_advice
@@ -2659,9 +2671,9 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
+			is_dumb_trigger = no
 			NOR = {
-				trait = slow
-				trait = imbecile
+				has_job_title = job_spiritual
 				trait = incapable
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
@@ -2747,10 +2759,13 @@ character_event = {
 			prisoner = no
 			NOR = {
 				job_chancellor = {
-					attribute_diff = {
-						attribute = diplomacy
-						character = PREV
-						value = 0
+					OR = {
+						character = ROOT
+						attribute_diff = {
+							attribute = diplomacy
+							character = PREV
+							value = 0
+						}
 					}
 				}
 				trait = incapable
@@ -2943,7 +2958,7 @@ character_event = {
 		independent = no
 		any_courtier = {
 			OR = {
-				any_lover = { character = prev }
+				any_lover = { character = PREV }
 				reverse_opinion = { who = ROOT value = 40 }
 			}
 			is_councillor = no
@@ -2952,10 +2967,13 @@ character_event = {
 			prisoner = no
 			NOR = {
 				job_marshal = {
-					attribute_diff = {
-						attribute = martial
-						character = PREV
-						value = 0
+					OR = {
+						character = ROOT
+						attribute_diff = {
+							attribute = martial
+							character = PREV
+							value = 0
+						}
 					}
 				}
 				trait = incapable
@@ -3155,10 +3173,13 @@ character_event = {
 			prisoner = no
 			NOR = {
 				job_treasurer = {
-					attribute_diff = {
-						attribute = stewardship
-						character = PREV
-						value = 0
+					OR = {
+						character = ROOT
+						attribute_diff = {
+							attribute = stewardship
+							character = PREV
+							value = 0
+						}
 					}
 				}
 				trait = incapable
@@ -3358,10 +3379,13 @@ character_event = {
 			prisoner = no
 			NOR = {
 				job_spymaster = {
-					attribute_diff = {
-						attribute = intrigue
-						character = PREV
-						value = 0
+					OR = {
+						character = ROOT
+						attribute_diff = {
+							attribute = intrigue
+							character = PREV
+							value = 0
+						}
 					}
 				}
 				trait = incapable
@@ -3575,10 +3599,13 @@ character_event = {
 			prisoner = no
 			NOR = {
 				job_spiritual = {
-					attribute_diff = {
-						attribute = learning
-						character = PREV
-						value = 0
+					OR = {
+						character = ROOT
+						attribute_diff = {
+							attribute = learning
+							character = PREV
+							value = 0
+						}
 					}
 				}
 				trait = incapable
@@ -4144,10 +4171,9 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
+			is_smart_trigger = no
 			NOR = {
 				age = 30
-				trait = genius
-				trait = quick
 				trait = in_hiding
 				trait = incapable
 			}
@@ -4181,7 +4207,12 @@ character_event = {
 		
 		modifier = {
 			factor = 1.5
-			spouse = { trait = slow }
+			spouse = {
+				OR = {
+					trait = slow
+					trait = dull
+				}
+			}
 		}
 		modifier = {
 			factor = 3
@@ -4252,7 +4283,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = { #"Great!"
+	option = { #Great!
 		set_character_flag = new_friend
 		FROM = {
 			character_event = {
@@ -4616,7 +4647,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = { #"Friends forever!"
+	option = { #Friends forever!
 		ai_chance = {
 			factor = 10
 			
@@ -4644,7 +4675,7 @@ character_event = {
 			}
 		}
 	}
-	option = { #"Let's try again!"
+	option = { #Let's try again!
 		ai_chance = { factor = 90 }
 		FROM = {
 			character_event = {
@@ -4661,7 +4692,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = { #"Too bad!"
+	option = { #Too bad!
 		ai_chance = {
 			factor = 10
 			
@@ -4688,7 +4719,7 @@ character_event = {
 			}
 		}
 	}
-	option = { #"Let's try again!"
+	option = { #Let's try again!
 		ai_chance = { factor = 90 }
 		FROM = {
 			character_event = {
@@ -5328,9 +5359,8 @@ character_event = {
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOR = {
-				trait = slow
-				trait = imbecile
+			is_dumb_trigger = no
+			NOT = {
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
