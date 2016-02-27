@@ -125,7 +125,7 @@ character_event = {
 				
 				increase_mercenary_ambition_level_effect = yes
 			}
-			90 = { }
+			60 = { }
 		}
 		clr_character_flag = denied_last_request
 		# Random mercenary event
@@ -325,6 +325,7 @@ character_event = {
 				modifier = {
 					factor = 0
 					NOR = {
+						has_character_flag = mercenary_ambition_5
 						has_character_flag = mercenary_ambition_6
 						has_character_flag = mercenary_ambition_7
 						has_character_flag = mercenary_ambition_8
@@ -342,6 +343,30 @@ character_event = {
 			}
 			20 = {
 				character_event = { id = ZE.11000 } # Ask to marry child of band creator
+			}
+			10 = {
+				modifier = {
+					factor = 0
+					NOR = {
+						has_character_flag = mercenary_ambition_6
+						has_character_flag = mercenary_ambition_7
+						has_character_flag = mercenary_ambition_8
+						has_character_flag = mercenary_ambition_9
+					}
+				}
+				modifier = {
+					factor = 2
+					has_character_flag = mercenary_ambition_7
+				}
+				modifier = {
+					factor = 4
+					has_character_flag = mercenary_ambition_8
+				}
+				modifier = {
+					factor = 8
+					has_character_flag = mercenary_ambition_9
+				}
+				character_event = { id = ZE.10075 } # Break Free
 			}
 			100 = { } # Nothing happened
 		}
@@ -600,7 +625,7 @@ letter_event = {
 			set_character_flag = denied_last_request
 			opinion = {
 				who = ROOT
-				modifier = denied_request
+				modifier = opinion_denied_request
 				months = 60
 			}
 		}
@@ -665,6 +690,7 @@ character_event = {
 	immediate = {
 		primary_title = {
 			clr_title_flag = mercenary_unemployment
+			clr_title_flag = not_hired
 		}
 	}
 }
@@ -678,6 +704,7 @@ character_event = {
 	immediate = {
 		primary_title = {
 			set_title_flag = mercenary_unemployment
+			set_title_flag = not_hired
 		}
 	}
 }
@@ -739,6 +766,38 @@ letter_event = {
 		hidden_tooltip = {
 			FROM = {
 				increase_mercenary_ambition_level_effect = yes
+			}
+		}
+	}
+}
+
+# Break Free
+character_event = {
+	id = ZE.10075
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		primary_title = {
+			band_creator =  {
+				letter_event = { id = ZE.10076 }
+			}
+		}
+	}
+}
+
+letter_event = {
+	id = ZE.10076
+	desc = EVTDESC_ZE_10076
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_ZE_10076
+		FROM = {
+			primary_title = {
+				cut_mercenary_creator_relation = yes
 			}
 		}
 	}

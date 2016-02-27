@@ -607,9 +607,6 @@ obj_amass_wealth = {
 			wealth = 200
 			trait = charitable
 			trait = incapable
-			has_character_flag = amassed_wealth
-			has_character_flag = amassed_fortune
-			has_character_flag = amassed_hoard
 		}
 	}
 	chance = {
@@ -669,14 +666,20 @@ obj_amass_wealth = {
 obj_become_paragon_of_virtue = {
 	type = character
 	
+	potential = {
+		NOT = { religion_group = indian_group }
+	}
+	
 	allow = {
 		is_adult=yes
 		is_ruler = yes
 		OR={
 			AND={
 				piety = 500
-				NOT = { piety = 1000 }
-				NOT = {has_character_flag = publicly_pious}
+				NOR = {
+					piety = 1000
+					has_character_flag = publicly_pious
+				}
 			}
 			AND={
 				NOT = {piety = 1500}
@@ -1018,10 +1021,7 @@ obj_marry_ruler = {
 			trait = celibate
 			trait = incapable
 		}
-		OR = {
-			is_female = no
-			NOT = { age = 45 }
-		}
+		NOT = { age = 45 }
 		father = {
 			primary_title = {
 				higher_tier_than = COUNT
@@ -1064,11 +1064,8 @@ obj_marry_ruler = {
 				is_priest = yes
 				can_marry = no
 			}
-			AND = {
-				is_female = yes
-				is_ruler = no
-				age = 45
-			}
+			is_ruler = no
+			age = 45
 			trait = celibate
 			trait = incapable
 			trait = eunuch
@@ -1112,10 +1109,7 @@ obj_have_a_daughter = {
 		OR = { 
 			ai = no
 			is_female = yes
-			AND = {
-				num_of_children = 2
-				NOT = { age = 45 }
-			}
+			num_of_children = 2
 		}
 	}
 	chance = {
@@ -1219,16 +1213,11 @@ obj_have_a_son = {
 	}
 	abort = {
 		OR = {
-			OR = {
-				AND = {
-					age = 45
-					is_female = yes
-				}
-				AND = {
-					age = 75
-					is_female = no
-				}
+			AND = {
+				age = 45
+				is_female = yes
 			}
+			age = 75
 			trait = celibate
 			trait = incapable
 		}
@@ -1368,9 +1357,6 @@ obj_become_heir = {
 	type = character
 
 	potential = {
-		NOT = {
-			has_dlc = Zeus
-		}
 		liege = {
 			any_child = {
 				character = ROOT
@@ -1396,7 +1382,8 @@ obj_become_heir = {
 	allow = {
 		prisoner = no
 		is_adult = yes
-		NOT = {
+		NOR = {
+			has_dlc = "Zeus"
 			trait = incapable
 		}
 	}
@@ -2550,10 +2537,9 @@ obj_become_paragon_of_enlightenment = {
 	allow = {
 		is_adult = yes
 		is_ruler = yes
+		is_dumb_trigger = yes
 		NOR = {
 			piety = 100
-			trait = slow
-			trait = imbecile
 			trait = inbred
 			trait = lunatic
 		}
