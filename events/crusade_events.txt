@@ -1010,8 +1010,8 @@ character_event = {
 	only_men = yes
 	min_age = 16
 	capable_only = yes
-	prisoner = no
 	only_rulers = yes
+	prisoner = no
 	
 	trigger = {
 		has_called_crusade = yes
@@ -1083,7 +1083,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.75
-			trait = strong
+			is_strong_trigger = yes
 		}
 		modifier = {
 			factor = 0.75
@@ -1099,7 +1099,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 1.25
-			trait = weak
+			is_weak_trigger = yes
 		}
 		modifier = {
 			factor = 1.25
@@ -1153,11 +1153,10 @@ character_event = {
 	desc = "EVTDESC8430"
 	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_religion
-	
+	religion = catholic
 	only_rulers = yes
 	
 	trigger = {
-		religion = catholic
 		has_character_flag = bishop_complains_about_not_crusading
 		had_character_flag = { flag = reminded_about_crusade days = 30 }
 		liege = {
@@ -1268,6 +1267,20 @@ character_event = {
 					NOT = { excommunicated_for = PREV }
 				}
 			}
+			NOT = {
+				reverse_has_opinion_modifier = {
+					who = ROOT
+					modifier = opinion_not_participating_in_crusade_vassal
+				}
+			}
+			NOT = {
+				any_realm_province = {
+					any_neighbor_province = {
+						has_owner = yes
+						NOT = { religion_group = christian } 
+					}
+				}
+			}
 		}
 	}
 
@@ -1296,7 +1309,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.75
-			trait = strong
+			is_strong_trigger = yes
 		}
 		modifier = {
 			factor = 0.75
@@ -1312,7 +1325,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 1.25
-			trait = weak
+			is_weak_trigger = yes
 		}
 		modifier = {
 			factor = 1.25
@@ -1551,17 +1564,17 @@ character_event = {
 						any_war = {
 							using_cb = crusade
 						}
+						crusade_target = {
+							holder_scope = {
+								reverse_has_truce = PREVPREV
+							}
+						}
 						has_character_flag = offered_revoked_excommunication
 						any_realm_province = {
 							any_neighbor_province = {
 								has_owner = yes
 								NOT = { religion_group = christian } 
 							}
-						}
-					}
-					crusade_target = {
-						holder_scope = {
-							NOT = { reverse_has_truce = PREVPREV }
 						}
 					}
 					excommunicated_for = ROOT
