@@ -1093,6 +1093,7 @@ cb_liberate_nomad_duchy = {
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 	
+	infamy_modifier = 0.75
 
 	can_use = {
 		FROM = {
@@ -1121,17 +1122,13 @@ cb_liberate_nomad_duchy = {
 				}
 				location = {
 					any_neighbor_province = {
-#						OR = {
-#							AND = {
-								has_owner = yes
-								owner = {
-									OR = {
-										character = ROOT
-										is_liege_or_above = ROOT
-									}
-								}
-#							}
-#						}
+						has_owner = yes
+						owner = {
+							OR = {
+								character = ROOT
+								is_liege_or_above = ROOT
+							}
+						}
 					}
 				}
 			}
@@ -1428,7 +1425,7 @@ nomad_subjugation = {
 			NOT = {
 				FROM = {
 					tier = emperor
-					}
+				}
 			}
 		}
 		FROM = {
@@ -1517,6 +1514,17 @@ nomad_subjugation = {
 			}
 				
 			hidden_tooltip = {
+				opinion = {
+					modifier = opinion_subjugated 
+					who = ROOT
+				}
+				any_vassal = {
+					opinion = {
+						modifier = opinion_subjugated 
+						who = ROOT
+					}
+				}
+				
 #				set_defacto_liege = ROOT
 				
 				any_demesne_title = {
@@ -1606,16 +1614,25 @@ nomad_subjugation = {
 		}
 		FROM = {
 			piety = 100
-		}
-		FROM = {
 			if = {
 				limit = { 
 					has_dlc = "Legacy of Rome"
 					OR = { 
 						has_landed_title = e_byzantium
+						has_landed_title = e_roman
 						has_landed_title = e_roman_empire
+						AND = {
+							OR = {
+								culture = roman
+								culture = romanobrython
+								culture = romanogothic
+								culture = galloroman
+								culture = greek
+							}
+							independent = yes
+							higher_tier_than = duke
+						}
 					}
-					religion_group = christian
 				}
 				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
 			}
@@ -1806,9 +1823,20 @@ nomad_invasion = {
 					has_dlc = "Legacy of Rome"
 					OR = { 
 						has_landed_title = e_byzantium
+						has_landed_title = e_roman
 						has_landed_title = e_roman_empire
+						AND = {
+							OR = {
+								culture = roman
+								culture = romanobrython
+								culture = romanogothic
+								culture = galloroman
+								culture = greek
+							}
+							independent = yes
+							higher_tier_than = duke
+						}
 					}
-					religion_group = christian
 				}
 				hidden_tooltip = { character_event = { id = LoR.30 days = 12 } }
 			}

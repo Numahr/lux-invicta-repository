@@ -14,7 +14,7 @@
 # These three all have war scopes, which currently has the following scope changes: 
 # attacker, defender, thirdparty(only valid if thirdparty character is involved), thirdparty_title(only valid if thirdparty title is involved)
 #
-# ai_will_do: modifies value AI places on the CB compared to other CBs (default: 1)
+# ai_will_do: modifies value AI places on the CB compared to other CBs (default: 1) Note: is in title scope
 #
 # can_use_gui: If otherwise valid, the CB is listed in the Diplo View, but you can't declare war unless 'can_use_gui' is also valid (also shows a trigger tooltip.)
 #
@@ -28,19 +28,13 @@ claim = {
 	hostile_against_others = yes
 	can_ask_to_join_war = no
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
-	press_claim = yes
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
-	
-	can_use = {
-		ROOT = {
-			NOT = {
-				has_character_flag = do_not_disturb
-			}
-		}
-	}
+	press_claim = yes
 
+	infamy_modifier = 0.85
+	
 	can_use_title = {
 		ROOT = {
 			scaled_wealth = 0.1
@@ -232,9 +226,11 @@ other_claim = {
 	can_ask_to_join_war = yes
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
 	press_claim = yes
+
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.5
 
 	can_use = {
 		ROOT = {
@@ -589,13 +585,16 @@ claim_on_liege = {
 	sprite = 3
 	truce_days = 3650
 	hostile_against_others = yes
-	major_revolt = yes
+
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
 	press_claim = yes
 	can_call_vassals = yes
+	major_revolt = yes
+	
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.85
 	
 	can_use = {
 		ROOT = {
@@ -658,6 +657,11 @@ claim_on_liege = {
 	}
 
 	is_valid_title = {
+		NOT = { 
+			holder_scope = { 
+				character = ROOT 
+			} 
+		}
 		OR = {
 			FROM = {
 				has_landed_title = PREV
@@ -690,30 +694,33 @@ claim_on_liege = {
 		
 		FROM = {
 			hidden_tooltip = { disband_event_forces = faction_loyalists }
-			any_demesne_title = { # All titles
-				limit = {
-					OR = {
-						tier = king
-						tier = emperor
+			if = {
+				limit = { NOT = { has_dlc = "Zeus" } }
+				any_demesne_title = { # All titles
+					limit = {
+						OR = {
+							tier = king
+							tier = emperor
+						}
+#						is_titular = no
+						NOT = { has_law = centralization_0 }
 					}
-#					is_titular = no
-					NOT = { has_law = centralization_0 }
-				}
-				if = {
-					limit = { has_law = centralization_1 }
-					add_law = centralization_0
-				}
-				if = {
-					limit = { has_law = centralization_2 }
-					add_law = centralization_1
-				}
-				if = {
-					limit = { has_law = centralization_3 }
-					add_law = centralization_2
-				}
-				if = {
-					limit = { has_law = centralization_4 }
-					add_law = centralization_3
+					if = {
+						limit = { has_law = centralization_1 }
+						add_law = centralization_0
+					}
+					if = {
+						limit = { has_law = centralization_2 }
+						add_law = centralization_1
+					}
+					if = {
+						limit = { has_law = centralization_3 }
+						add_law = centralization_2
+					}
+					if = {
+						limit = { has_law = centralization_4 }
+						add_law = centralization_3
+					}
 				}
 			}
 		}
@@ -864,9 +871,12 @@ other_claim_on_liege = {
 
 	press_claim = yes
 	can_call_vassals = yes
+	major_revolt = yes
+	
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.5
 	
 	can_use = {
 		ROOT = {
@@ -1004,30 +1014,33 @@ other_claim_on_liege = {
 		FROM = {
 			hidden_tooltip = { disband_event_forces = faction_loyalists }
 			
-			any_demesne_title = { # All titles
-				limit = {
-					OR = {
-						tier = king
-						tier = emperor
+			if = {
+				limit = { NOT = { has_dlc = "Zeus" } }
+				any_demesne_title = { # All titles
+					limit = {
+						OR = {
+							tier = king
+							tier = emperor
+						}
+	#					is_titular = no
+						NOT = { has_law = centralization_0 }
 					}
-#					is_titular = no
-					NOT = { has_law = centralization_0 }
-				}
-				if = {
-					limit = { has_law = centralization_1 }
-					add_law = centralization_0
-				}
-				if = {
-					limit = { has_law = centralization_2 }
-					add_law = centralization_1
-				}
-				if = {
-					limit = { has_law = centralization_3 }
-					add_law = centralization_2
-				}
-				if = {
-					limit = { has_law = centralization_4 }
-					add_law = centralization_3
+					if = {
+						limit = { has_law = centralization_1 }
+						add_law = centralization_0
+					}
+					if = {
+						limit = { has_law = centralization_2 }
+						add_law = centralization_1
+					}
+					if = {
+						limit = { has_law = centralization_3 }
+						add_law = centralization_2
+					}
+					if = {
+						limit = { has_law = centralization_4 }
+						add_law = centralization_3
+					}
 				}
 			}
 		}
@@ -1244,13 +1257,17 @@ claim_on_liege_plot = {
 	sprite = 3
 	truce_days = 3650
 	hostile_against_others = yes
+
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
 	press_claim = yes
+	major_revolt = yes
 	can_call_allies = no
 	can_ask_to_join_war = no
+
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.85
 	
 	can_use = {
 		ROOT = {
@@ -1348,30 +1365,33 @@ claim_on_liege_plot = {
 			
 			hidden_tooltip = { disband_event_forces = faction_loyalists }
 		
-			any_demesne_title = { # All titles
-				limit = {
-					OR = {
-						tier = king
-						tier = emperor
+			if = {
+				limit = { NOT = { has_dlc = "Zeus" } }
+				any_demesne_title = { # All titles
+					limit = {
+						OR = {
+							tier = king
+							tier = emperor
+						}
+	#					is_titular = no
+						NOT = { has_law = centralization_0 }
 					}
-#					is_titular = no
-					NOT = { has_law = centralization_0 }
-				}
-				if = {
-					limit = { has_law = centralization_1 }
-					add_law = centralization_0
-				}
-				if = {
-					limit = { has_law = centralization_2 }
-					add_law = centralization_1
-				}
-				if = {
-					limit = { has_law = centralization_3 }
-					add_law = centralization_2
-				}
-				if = {
-					limit = { has_law = centralization_4 }
-					add_law = centralization_3
+					if = {
+						limit = { has_law = centralization_1 }
+						add_law = centralization_0
+					}
+					if = {
+						limit = { has_law = centralization_2 }
+						add_law = centralization_1
+					}
+					if = {
+						limit = { has_law = centralization_3 }
+						add_law = centralization_2
+					}
+					if = {
+						limit = { has_law = centralization_4 }
+						add_law = centralization_3
+					}
 				}
 			}
 		}
@@ -1479,14 +1499,16 @@ claim_on_vassal_plot = {
 	truce_days = 3650
 	hostile_against_others = yes
 	reflect_titleholder_change = no
+
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
 	press_claim = yes
 	can_call_allies = no
 	can_attack_vassals = yes
-	is_revolt_cb = yes
+
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.85
 	
 	can_use = {
 		ROOT = {
@@ -1550,6 +1572,13 @@ claim_on_vassal_plot = {
 		}
 	}
 
+	
+	on_invalidation = {
+		ROOT = {
+			cancel_plot = plot_gain_vassal_title
+		}
+		
+	}
 	on_reverse_demand = {
 		ROOT = {
 			prestige = -200
@@ -1607,6 +1636,7 @@ claim_all = {
 	can_ask_to_join_war = no
 	is_claim_all = yes
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
+
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
@@ -1816,9 +1846,11 @@ dejure_county_claim = {
 	press_claim = yes
 	can_ask_to_join_war = no
 	apply_short_occ_mod = no # Do not apply the 'recently_conquered' modifier to Holdings
+
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.5
 	
 	can_use = {
 		ROOT = {
@@ -2028,6 +2060,8 @@ other_dejure_county_claim = {
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.3
+	
 	can_use = {
 		NOR = {
 			character = ROOT
@@ -2214,6 +2248,7 @@ dejure_barony_claim = {
 	allowed_to_target_tributaries = no
 	allowed_to_target_suzerains = no
 
+	infamy_modifier = 0.5
 	
 	can_use = {
 		ROOT = {
