@@ -528,7 +528,7 @@ letter_event = {
 # The vassal is transferred
 character_event = {
 	id = 63006
-	
+
 	desc = {
 		text = EVTDESC63006B
 		trigger = {
@@ -1434,6 +1434,7 @@ character_event = {
 		independent = no
 		has_ambition = obj_gain_any_title
 		liege = {
+			has_regent = no
 			war = no
 			NOR = {
 				has_opinion_modifier = { who = ROOT modifier = requested_land }
@@ -1442,9 +1443,8 @@ character_event = {
 			demesne_size = 3
 			any_demesne_title = {
 				can_be_given_away = yes
-				lower_tier_than = PREV
-				NAND = {
-					tier = count
+				tier = COUNT
+				NOT = {
 					location = {
 						is_capital = yes
 					}
@@ -1457,9 +1457,8 @@ character_event = {
 		random_demesne_title = {
 			limit = {
 				can_be_given_away = yes
-				lower_tier_than = ROOT
-				NAND = {
-					tier = COUNT
+				tier = COUNT
+				NOT = {
 					location = {
 						is_capital = yes
 					}
@@ -1552,7 +1551,13 @@ character_event = {
 	option = {
 		name = EVTOPTA63040 # Ask for the Title
 		ai_chance = { factor = 100 }
-		set_character_flag = requested_de_jure_title
+		liege = {
+			opinion = {
+				who = ROOT
+				years = 2
+				modifier = requested_land
+			}
+		}
 		liege = { letter_event = { id = 63041 days = 4 tooltip = EVTTOOLTIP63041 } }
 	}
 	
@@ -1632,10 +1637,16 @@ letter_event = {
 					opinion = { who = FROM value = 50 }
 				}
 			}
+			modifier = {
+				factor = 3
+				is_friend = FROM
+			}
 		}
+
 		event_target:vassal_wanted_title = {
 			gain_title = FROM
 		}
+		
 		hidden_tooltip = {
 			FROM = { letter_event = { id = 63042 days = 1 } }
 		}
@@ -2373,7 +2384,7 @@ character_event = {
 					is_nomadic = yes
 				}
 				new_character = {
-					trait = strong
+					is_strong_trigger = yes
 				}
 			}
 			modifier = {
@@ -2383,7 +2394,7 @@ character_event = {
 					is_nomadic = yes
 				}
 				new_character = {
-					trait = weak
+					is_weak_trigger = yes
 				}
 			}
 			modifier = {
@@ -2444,7 +2455,7 @@ character_event = {
 					is_nomadic = yes
 				}
 				new_character = {
-					trait = strong
+					is_strong_trigger = yes
 				}
 			}
 			modifier = {
