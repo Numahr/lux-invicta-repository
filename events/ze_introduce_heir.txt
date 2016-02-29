@@ -37,12 +37,20 @@ character_event = {
 				OR = {
 					AND = {
 						is_female = no
-						ROOT = { NOT = { has_law = true_cognatic_succession } }
+						ROOT = {
+							OR = {
+								has_law = agnatic_succession
+								has_law = cognatic_succession
+							}
+						}
 						NOT = {
 							any_sibling = {
-								AND = {
-									is_older_than = PREV
-									same_sex = PREV
+								is_older_than = PREV
+								same_sex = PREV
+								is_child_of = ROOT
+								NOR = {
+									trait = bastard
+									trait = monk
 								}
 							}
 						}
@@ -52,6 +60,32 @@ character_event = {
 						NOT = {
 							any_sibling = {
 								is_older_than = PREV
+								is_child_of = ROOT
+								NOR = {
+									trait = bastard
+									trait = nun
+									trait = monk
+								}
+							}
+						}
+					}
+					AND = {
+						is_female = yes
+						ROOT = {
+							OR = {
+								has_law = enatic_cognatic_succession
+								has_law = enatic_succession
+							}
+						}
+						NOT = {
+							any_sibling = {
+								is_older_than = PREV
+								same_sex = PREV
+								is_child_of = ROOT
+								NOR = {
+									trait = bastard
+									trait = nun
+								}
 							}
 						}
 					}
@@ -79,8 +113,8 @@ character_event = {
 						religion = ROOT
 						prisoner = no
 						piety = 0
-						NOT = { holds_favor_on = ROOT }
 						NOR = {
+							holds_favor_on = ROOT
 							trait = incapable
 							trait = in_hiding
 						}
