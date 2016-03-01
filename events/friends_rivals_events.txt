@@ -90,14 +90,14 @@ character_event = {
 						trait = in_hiding
 					}
 				}
-				save_event_target_as = new_friend_rival
+				save_event_target_as = troublemaker_child
 			}
 		}
 	}
 	
 	option = {
 		name = EVTOPTA100000
-		event_target:new_friend_rival = {
+		event_target:troublemaker_child = {
 			add_rival = ROOT
 			character_event = {
 				id = 100001
@@ -129,7 +129,7 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB100000
-		event_target:new_friend_rival = {
+		event_target:troublemaker_child = {
 			add_friend = ROOT
 			character_event = {
 				id = 100002
@@ -494,7 +494,9 @@ character_event = {
 				}
 				NOR = {
 					character = ROOT
-					sibling = ROOT
+					any_sibling = {
+						character = ROOT
+					}
 					num_of_friends = 3
 					num_of_rivals = 3
 					is_friend = ROOT
@@ -531,7 +533,9 @@ character_event = {
 					}
 					NOR = {
 						character = ROOT
-						sibling = ROOT
+						any_sibling = {
+							character = ROOT
+						}
 						num_of_friends = 3
 						num_of_rivals = 3
 						is_friend = ROOT
@@ -545,30 +549,34 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA100015
-		event_target:helping_child = {
-			add_friend = ROOT
-			character_event = {
-				id = 100016
-				days = 1
-				random = 3
-				tooltip = EVTTOOLTIPA100016
+		host = {
+			event_target:helping_child = {
+				add_friend = ROOT
+				character_event = {
+					id = 100016
+					days = 1
+					random = 3
+					tooltip = EVTTOOLTIPA100016
+				}
 			}
 		}
 	}
 	option = {
 		name = EVTOPTB100015
-		event_target:helping_child = {
-			reverse_opinion = {
-				modifier = opinion_irritated
-				who = ROOT
-				years = 100
-			}
-			set_character_flag = wrongly_interfered
-			character_event = {
-				id = 100016
-				days = 1
-				random = 3
-				tooltip = EVTTOOLTIPB100016
+		host = {
+			event_target:helping_child = {
+				reverse_opinion = {
+					modifier = opinion_irritated
+					who = ROOT
+					years = 100
+				}
+				set_character_flag = wrongly_interfered
+				character_event = {
+					id = 100016
+					days = 1
+					random = 3
+					tooltip = EVTTOOLTIPB100016
+				}
 			}
 		}
 	}
@@ -737,6 +745,7 @@ character_event = { # Relay event for rulers
 				ROOT = {
 					OR = {
 						AND = {
+							NOT = { character = PREV }
 							at_location = PREV
 							is_female = no
 							prisoner = no
@@ -792,6 +801,7 @@ character_event = { # Relay event for rulers
 		random_courtier = {
 			limit = {
 				is_female = no
+				is_married = no
 				trait = lustful
 				prisoner = no
 				age = 16
@@ -1091,10 +1101,10 @@ character_event = {
 				is_female = no
 				prisoner = no
 				age = 16
-				NOT = { age = 25 }
 				in_command = no
 				is_married = no
 				NOR = {
+					age = 25
 					num_of_friends = 5
 					num_of_rivals = 5
 				}
@@ -1121,16 +1131,14 @@ character_event = {
 								sibling = PREV
 								num_of_friends = 5
 								num_of_rivals = 5
+								is_friend = PREV
+								is_rival = PREV
 							}
 							trait = lustful
 							OR = {
 								trait = charitable
 								trait = kind
 								trait = gregarious
-							}
-							NOR = {
-								is_friend = PREV
-								is_rival = PREV
 							}
 							war = no
 						}
