@@ -4862,7 +4862,6 @@ character_event = {
 letter_event = {
 	id = 100151
 	desc = EVTDESC100151
-#	picture = GFX_evt_large_army
 	
 	is_triggered_only = yes
 	
@@ -4898,7 +4897,6 @@ letter_event = {
 letter_event = {
 	id = 100152
 	desc = EVTDESC100152
-#	picture = GFX_evt_large_army
 	
 	is_triggered_only = yes
 	
@@ -5050,7 +5048,6 @@ character_event = {
 letter_event = {
 	id = 100161
 	desc = EVTDESC100161
-#	picture = GFX_evt_large_army
 	
 	is_triggered_only = yes
 	
@@ -5129,7 +5126,6 @@ letter_event = {
 letter_event = {
 	id = 100162
 	desc = EVTDESC100162
-#	picture = GFX_evt_large_army
 	
 	is_triggered_only = yes
 	
@@ -5254,7 +5250,6 @@ character_event = {
 letter_event = {
 	id = 100164
 	desc = EVTDESC100164
-#	picture = GFX_evt_large_army
 	
 	is_triggered_only = yes
 	
@@ -5787,7 +5782,7 @@ character_event = {
 					}
 				}
 			}
-			remove_friend = ROOT		#Do not change back to FROM. There is no FROM.
+			remove_friend = ROOT
 			character_event = {
 				id = 100184
 				days = 7
@@ -5848,13 +5843,11 @@ character_event = {
 		name = EVTOPTB100181
 		religion = FROM
 		FROM = {
-			hidden_tooltip = {
-				character_event = {
-					id = 100186
-					days = 7
-					random = 7
-					tooltip = EVTTOOLTIP100186
-				}
+			character_event = {
+				id = 100186
+				days = 7
+				random = 7
+				tooltip = EVTTOOLTIP100186
 			}
 		}
 	}
@@ -5867,11 +5860,13 @@ character_event = {
 				who = ROOT
 				years = 2
 			}
-			character_event = {
-				id = 100186
-				days = 7
-				random = 7
-				tooltip = EVTTOOLTIP100186
+			hidden_tooltip = {
+				character_event = {
+					id = 100186
+					days = 7
+					random = 7
+					tooltip = EVTTOOLTIP100186
+				}
 			}
 		}
 	}
@@ -8941,7 +8936,7 @@ character_event = {
 	}
 }
 
-### I ask permission to challenge my rival in a duel ###
+### I ask permission to challenge my rival to a duel ###
 character_event = {
 	id = 100410
 	desc = EVTDESC100410
@@ -8966,6 +8961,17 @@ character_event = {
 			trait = wounded
 			trait = maimed
 			trait = in_hiding
+			has_character_flag = do_not_disturb
+			trait = infirm
+			trait = has_aztec_disease
+			trait = has_small_pox
+			trait = has_measles
+			trait = has_bubonic_plague
+			trait = has_typhus
+			trait = has_typhoid_fever
+			trait = has_tuberculosis
+			trait = leper
+			trait = pneumonic
 		}
 		any_rival = {
 			is_female = no
@@ -8986,6 +8992,37 @@ character_event = {
 				trait = maimed
 				has_character_flag = duel_rival
 				trait = in_hiding
+				has_character_flag = do_not_disturb
+				trait = incapable
+				trait = infirm
+				trait = has_aztec_disease
+				trait = has_small_pox
+				trait = has_measles
+				trait = has_bubonic_plague
+				trait = has_typhus
+				trait = has_typhoid_fever
+				trait = has_tuberculosis
+				trait = leper
+				trait = pneumonic
+				AND = {
+					has_dlc = "Way of Life"
+					OR = {
+						has_opinion_modifier = {
+							who = ROOT
+							modifier = opinion_fought_duel
+						}
+						ROOT = {
+							has_opinion_modifier = {
+								who = PREV
+								modifier = opinion_fought_duel
+							}
+							has_opinion_modifier = {
+								who = PREV
+								modifier = opinion_fled_duel
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -9024,6 +9061,64 @@ character_event = {
 		}
 	}
 	
+	immediate = {
+		random_rival = {
+			limit = {
+				is_female = no
+				war = no
+				in_command = no
+				prisoner = no
+				age = 16
+				same_liege = ROOT
+				NOR = {
+					liege = {
+						character = ROOT
+					}
+					any_vassal = {
+						character = ROOT
+					}
+					age = 60
+					trait = wounded
+					trait = maimed
+					has_character_flag = duel_rival
+					trait = in_hiding
+					has_character_flag = do_not_disturb
+					trait = incapable
+					trait = infirm
+					trait = has_aztec_disease
+					trait = has_small_pox
+					trait = has_measles
+					trait = has_bubonic_plague
+					trait = has_typhus
+					trait = has_typhoid_fever
+					trait = has_tuberculosis
+					trait = leper
+					trait = pneumonic
+					AND = {
+						has_dlc = "Way of Life"
+						OR = {
+							has_opinion_modifier = {
+								who = ROOT
+								modifier = opinion_fought_duel
+							}
+							ROOT = {
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_fought_duel
+								}
+								has_opinion_modifier = {
+									who = PREV
+									modifier = opinion_fled_duel
+								}
+							}
+						}
+					}
+				}
+			}
+			save_event_target_as = duel_rival
+		}
+	}
+	
 	option = {
 		name = EVTOPTA100410
 		ai_chance = {
@@ -9043,29 +9138,8 @@ character_event = {
 				trait = kind
 			}
 		}
-		random_rival = {
-			limit = {
-				war = no
-				in_command = no
-				prisoner = no
-				same_liege = ROOT
-				age = 16
-				NOR = {
-					liege = {
-						character = ROOT
-					}
-					any_vassal = {
-						character = ROOT
-					}
-					age = 60
-					trait = wounded
-					trait = maimed
-					has_character_flag = duel_rival
-					trait = in_hiding
-				}
-			}
+		event_target:duel_rival = {
 			set_character_flag = duel_rival
-			save_event_target_as = duel_rival
 			tooltip = {
 				character_event = {
 					id = 100411
@@ -9128,11 +9202,25 @@ character_event = {
 				who = ROOT
 				years = 5
 			}
-			character_event = {
-				id = 100412
-				days = 7
-				random = 7
-				tooltip = EVTTOOLTIP100412
+			if = {
+				limit = {
+					NOT = {
+						has_dlc = "Way of Life"
+					}
+				}
+				character_event = {
+					id = 100412
+					days = 7
+					random = 7
+					tooltip = EVTTOOLTIP100412
+				}
+				event_target:duel_rival = {}
+				break = yes
+			}
+			event_target:duel_rival = {
+				character_event = {
+					id = WoL.11000
+				}
 			}
 		}
 	}
