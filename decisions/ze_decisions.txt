@@ -265,6 +265,7 @@ targetted_decisions = {
 	}
 	change_composition_mercenary_company_feudal = {
 		filter = dynasty
+		ai_target_filter = dynasty
 		
 		from_potential = {
 			has_dlc = "Zeus"
@@ -298,6 +299,7 @@ targetted_decisions = {
 	
 	send_troops_mercenary_company_feudal = {
 		filter = dynasty
+		ai_target_filter = dynasty
 		
 		from_potential = {
 			has_dlc = "Zeus"
@@ -360,22 +362,27 @@ targetted_decisions = {
 				trait = monk
 				trait = nun
 				any_sibling = {
-					AND = {
-						is_alive = yes
-						has_character_flag = introduced_heir
-					}
+					is_alive = yes
+					has_character_flag = introduced_heir
 				}
 				has_character_flag = introduced_heir
 			}
 			OR = {
 				AND = {
 					is_female = no
-					FROM = { NOT = { has_law = true_cognatic_succession } }
+					FROM = {
+						OR = {
+							has_law = cognatic_succession
+							has_law = agnatic_succession
+						}
+					}
 					NOT = {
 						any_sibling = {
-							AND = {
-								is_older_than = PREV
-								same_sex = PREV
+							is_older_than = PREV
+							same_sex = PREV
+							is_child_of = FROM
+							NOT = {
+								trait = bastard
 							}
 						}
 					}
@@ -385,6 +392,29 @@ targetted_decisions = {
 					NOT = {
 						any_sibling = {
 							is_older_than = PREV
+							is_child_of = FROM
+							NOT = {
+								trait = bastard
+							}
+						}
+					}
+				}
+				AND = {
+					is_female = yes
+					FROM = {
+						OR = {
+							has_law = enatic_cognatic_succession
+							has_law = enatic_succession
+						}
+					}
+					NOT = {
+						any_sibling = {
+							is_older_than = PREV
+							same_sex = PREV
+							is_child_of = FROM
+							NOT = {
+								trait = bastard
+							}
 						}
 					}
 				}
