@@ -2951,12 +2951,34 @@ character_event = {
 		
 		if = {
 			limit = {
+				has_character_flag = freeing_slave
+				event_target:target_captive = {
+					NOT = {
+						trait = slave
+					}
+				}
+			}
+			character_event = { id = WoL.2213 }
+			break = yes
+		}
+		
+		if = {
+			limit = {
 				has_character_flag = has_liberation_agent
 				event_target:target_agent = {
 					OR = {
 						is_alive = no
 						prisoner = yes
 						trait = incapable
+						host = {
+							event_target:target_agent = {
+								host = {
+									NOT = {
+										character = PREVPREV
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -2983,8 +3005,15 @@ character_event = {
 								prisoner = no
 								is_ill = no
 								is_adult = yes
-								NOT = { trait = incapable }
-								NOT = { character = PREVPREV }
+								NOR = {
+									trait = slave
+									trait = incapable
+									character = PREVPREV
+									reverse_has_opinion_modifier = {
+										who = ROOT
+										modifier = opinion_disappointed
+									}
+								}
 								OR = {
 									trait = arbitrary
 									trait = greedy
@@ -2997,12 +3026,6 @@ character_event = {
 										first = PREVPREV
 										second = liege
 										value = 5
-									}
-								}
-								NOT = {
-									reverse_has_opinion_modifier = {
-										who = ROOT
-										modifier = opinion_disappointed
 									}
 								}
 							}
@@ -3391,7 +3414,7 @@ character_event = {
 	}
 }
 
-# Prisoner freed
+# Prisoner/slave freed
 character_event = {
 	id = WoL.2223
 	
@@ -3432,6 +3455,13 @@ character_event = {
 		if = {
 			limit = { prisoner = yes }
 			imprison = no
+		}
+		if = {
+			limit = {
+				trait = slave
+			}
+			remove_trait = slave
+			add_trait = former_slave
 		}
 		
 		opinion = {
