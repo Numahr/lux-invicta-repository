@@ -9,19 +9,17 @@ feudal_governments = {
 		allowed_holdings_culture = { # Will not get the wrong government type penalty for tribes of the same culture
 			TRIBAL
 		}
-# Numahr: Tribals can rule over feudal without penalty
-		accepts_liege_governments = { # Gets the wrong religion modifier instead
+		accepts_liege_governments = { 
 			muslim_government
 			classical_government
-			tribal_government
+			tribal_government # Numahr: Tribals can rule over feudal without penalty
 		}
 		accepts_liege_governments_culture = {
 			oriental_monarchy_government
 		}
-# Numahr: No more free revocation of tribes of wrong religions in LI
-#		free_revoke_on_governments_religion = { # Tribal vassals of other religions can have their titles revoked for free
-#			tribal_government
-#		}
+		accepts_liege_governments_religion = { # only radical governments from the correct religion are accepted
+			anarchist_government
+		}
 		potential = {
 			NAND = {
 				controls_religion = yes
@@ -73,6 +71,7 @@ feudal_governments = {
 					religion = 	zulu_pagan_reformed
 				}
 			}
+			NOT = { has_law = people_control_0 }
 			NOT = {	religion_group = muslim	}
 			NOT = { LI_pagan_trigger = yes }
 			NOT = { oriental_monarchy_government_trigger = yes }
@@ -109,13 +108,9 @@ feudal_governments = {
 		accepts_liege_governments_culture = {
 			oriental_monarchy_government
 		}
-# No easy title revocation in LI, rulers have sticked to their realms for millenia
-#		free_revoke_on_tiers = {
-#			duke
-#		}
-#		free_revoke_on_governments_religion = { # Tribal vassals of other religions can have their titles revoked for free
-#			tribal_government
-#		}
+		accepts_liege_governments_religion = { # only radical governments from the correct religion are accepted
+			anarchist_government
+		}
 		frame_suffix = "_iqta"
 		potential = {
 			NAND = {
@@ -179,11 +174,6 @@ feudal_governments = {
 		
 		dukes_called_kings = yes
 		barons_need_dynasty = yes
-#		have_gender_laws = no
-#		allows_matrilineal_marriage = no
-#		free_retract_vassalage = yes
-
-#		free_levies_in_offensive_war = yes # Took away the hardcoded stuff for muslims where they could raise levies without pissing off vassals if in an offensive war.
 
 		can_build_tribal = no
 		
@@ -375,5 +365,69 @@ feudal_governments = {
 		}
 
 	}
-	
+
+	anarchist_government = {
+		preferred_holdings = { CASTLE }
+		allowed_holdings = { 
+		}
+		allowed_holdings_religion = { # Holdings need to be of the correct religion
+			CASTLE
+			FORT
+			TRIBAL
+		}
+		accepts_liege_governments_religion = { 
+			anarchist_government
+		}
+		potential = {
+			OR = {
+				has_law = people_control_0
+				has_law = people_control_1
+			}
+		}
+		
+		color = { 219 112 169 }
+		
+		can_build_holdings = no
+		can_build_forts = no
+		can_build_castle = no
+		can_build_city = no
+		can_build_temple = no
+		can_build_tribal = no
+		
+		max_liege_levy = -0.5
+		max_liege_tax = -0.5
+		
+		ignore_in_vassal_limit_calculation = {
+			anarchist_government
+			theocracy_government
+		}
+		vassal_call_to_arms  = {
+			anarchist_government
+			feudal_government
+			muslim_government
+			oriental_monarchy_government
+			classical_government
+			merchant_republic_government
+			republic_government
+			tribal_government
+		}
+		no_vassal_tax  = {
+			anarchist_government
+		}
+		
+		allow_looting = yes
+		free_levies_in_offensive_war = yes
+		agression = 2
+		uses_prestige_for_law_change = yes
+		ignores_de_jure_laws = yes
+		
+		can_create_kingdoms = no
+		can_usurp_kingdoms_and_empires = no
+		can_be_granted_kingdoms_and_empires_by_other_government = no
+		
+		character_modifier	= {
+			demesne_size = -4
+			vassal_limit = -20
+		}
+	}
 }
