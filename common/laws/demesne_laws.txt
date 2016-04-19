@@ -4,6 +4,9 @@ law_groups = {
 	people_control = {
 		law_type = realm
 	}
+	clergy_control = {
+		law_type = realm
+	}
 	centralization = {
 		law_type = realm
 	}
@@ -137,7 +140,7 @@ laws = {
 					religion = tao
 					religion = waldensian
 				}
-				is feudal = yes
+				is_feudal = yes
 			}
 		}
 		allow = {
@@ -202,7 +205,7 @@ laws = {
 					religion = tao
 					religion = waldensian
 				}
-				is feudal = yes
+				is_feudal = yes
 			}
 		}
 		allow = {
@@ -314,7 +317,7 @@ laws = {
 					religion = tao
 					religion = waldensian
 				}
-				is feudal = yes
+				is_feudal = yes
 			}
 		}
 		allow = {
@@ -371,7 +374,7 @@ laws = {
 					religion = tao
 					religion = waldensian
 				}
-				is feudal = yes
+				is_feudal = yes
 			}
 		}
 		allow = {
@@ -433,7 +436,7 @@ laws = {
 					religion = tao
 					religion = waldensian
 				}
-				is feudal = yes
+				is_feudal = yes
 			}
 		}
 		allow = {
@@ -461,7 +464,55 @@ laws = {
 				revoke_law = people_control_2
 				revoke_law = people_control_3
 			}
-		holder_scope = { set_government_type = demagogic_government }
+			holder_scope = { set_government_type = demagogic_government }
+			IF = {
+				limit = {
+					has_law = law_voting_power_1
+				}
+				set_law = law_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = war_voting_power_1
+				}
+				set_law = war_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = revoke_title_voting_power_1
+				}
+				set_law = revoke_title_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = imprison_voting_power_1
+				}
+				set_law = imprison_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = grant_title_voting_power_1
+				}
+				set_law = grant_title_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = banish_voting_power_1
+				}
+				set_law = banish_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = execution_voting_power_1
+				}
+				set_law = execution_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = succession_voting_power_1
+				}
+				set_law = succession_voting_power_0
+			}
 		}
 		demesne_size = 3
 		city_vassal_min_levy = 0.5
@@ -471,6 +522,362 @@ laws = {
 		city_vassal_tax_modifier = 0.5
 		temple_vassal_tax_modifier = 0.5
 		vassal_opinion = -60
+	}
+
+# Clerical Soul Clergy Power Laws
+	clergy_control_0 = {
+		show_as_title = yes
+		group = clergy_control
+
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+				}
+				is_feudal = yes
+				clerical_religion_trigger = yes
+			}
+		}
+		allow = {
+			has_law = clergy_control_1
+			NOT = {
+				piety = 200
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clergy_control_1
+				revoke_law = clergy_control_2
+				revoke_law = clergy_control_3
+				revoke_law = clergy_control_4
+			}
+#			holder_scope = { set_government_type =  }
+#			succession_w_cooldown = open_elective
+			IF = {
+				limit = {
+					 any_independent_ruler = { rightful_religious_head = ROOT } 
+				}
+				set_investiture = head
+			}
+		}
+			global_revolt_risk = 0.2
+			church_opinion = 20
+			rel_head_opinion = 20
+			temple_vassal_min_levy = -0.5
+			temple_vassal_max_levy = 1
+			temple_vassal_tax_modifier = -0.5
+			temple_tax_modifier = -0.3
+	}
+
+	clergy_control_1 = {
+		show_as_title = yes
+		group = clergy_control
+		default = yes
+
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+				}
+				is_feudal = yes
+				clerical_religion_trigger = yes
+			}
+		}
+		allow = {
+			OR = {
+				AND = { 
+					has_law = clergy_control_0
+					piety = 0
+				}
+				AND = {
+					has_law = clergy_control_2
+					NOT = { piety = 400 }
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_law = clergy_control_2
+			}
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clergy_control_0
+				revoke_law = clergy_control_2
+				revoke_law = clergy_control_3
+				revoke_law = clergy_control_4
+			}
+#			if = { 
+#				limit = {
+#					AND = {
+#						government = anarchist_government
+#						NOR = {
+#							religion_group = muslim
+#							oriental_monarchy_government_trigger = yes
+#							classical_government_trigger = yes
+#						}
+#					}
+#				}
+#				set_government_type = feudal_government
+#			}
+#			if = {
+#				limit = {
+#					AND = {
+#						government = anarchist_government
+#						religion_group = muslim
+#					}
+#				}
+#				set_government_type = muslim_government
+#			}
+#			if = {
+#				limit = {
+#					AND = {
+#						government = anarchist_government
+#						oriental_monarchy_government_trigger = yes
+#					}
+#				}
+#				set_government_type = oriental_monarchy_government
+#			}
+#			if = {
+#				limit = {
+#					AND = {
+#						government = anarchist_government
+#						classical_government_trigger = yes
+#					}
+#				}
+#				set_government_type = classical_government
+#			}
+			IF = {
+				limit = {
+					 any_independent_ruler = { rightful_religious_head = ROOT } 
+				}
+				set_investiture = head
+			}
+		}
+		global_revolt_risk = 0.1
+		church_opinion = 10
+		rel_head_opinion = 10
+		temple_vassal_min_levy = -0.2
+		temple_vassal_max_levy = 1
+		temple_vassal_tax_modifier = -0.2
+		temple_tax_modifier = -0.1
+	}
+
+	clergy_control_2 = {
+		show_as_title = yes
+		group = clergy_control
+		#default = yes
+
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+				}
+				is_feudal = yes
+				clerical_religion_trigger = yes
+			}
+		}
+		allow = {
+			OR = {
+				AND = { 
+					has_law = clergy_control_1
+					piety = 200
+				}
+				AND = {
+					has_law = clergy_control_3
+					NOT = { piety = 1000 }
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clergy_control_0
+				revoke_law = clergy_control_1
+				revoke_law = clergy_control_3
+				revoke_law = clergy_control_4
+			}
+		}
+	}
+
+	clergy_control_3 = {
+		show_as_title = yes
+		group = clergy_control
+		default = yes
+
+		potential = {
+			holder_scope = {
+				NOT = {
+					is_landed = no
+				}
+				is_feudal = yes
+				clerical_religion_trigger = yes
+			}
+		}
+		allow = {
+			OR = {
+				AND = { 
+					holder_scope = { piety = 500 }
+					has_law = clergy_control_2
+				}
+				has_law = clergy_control_4
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clergy_control_0
+				revoke_law = clergy_control_1
+				revoke_law = clergy_control_2
+				revoke_law = clergy_control_4
+			}
+			IF = {
+				limit = {
+					 any_independent_ruler = { rightful_religious_head = ROOT } 
+				}
+				set_investiture = any
+			}
+		}
+		demesne_size = 1
+		temple_vassal_min_levy = 0.5
+		temple_vassal_tax_modifier = 0.5
+		church_opinion = -10
+		rel_head_opinion = -10
+	}
+
+	clergy_control_4 = {
+		show_as_title = yes
+		group = clergy_control
+		default = yes
+
+		potential = {
+			holder_scope = {
+				NOR = {
+					is_landed = no
+				}
+				is_feudal = yes
+				clerical_religion_trigger = yes
+			}
+		}
+		allow = {
+			OR = {
+				AND = { 
+					holder_scope = { piety = 1000 }
+					has_law = clergy_control_3
+				}
+				has_law = clergy_control_4
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		ai_will_revoke = {
+			factor = 0
+		}
+		effect = {
+			hidden_tooltip = {
+				revoke_law = clergy_control_0
+				revoke_law = clergy_control_1
+				revoke_law = clergy_control_2
+				revoke_law = clergy_control_3
+			}
+			holder_scope = { set_government_type = mystic_government }
+			IF = {
+				limit = {
+					 any_independent_ruler = { rightful_religious_head = ROOT } 
+				}
+				set_investiture = any
+			}
+			IF = {
+				limit = {
+					has_law = law_voting_power_1
+				}
+				set_law = law_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = war_voting_power_1
+				}
+				set_law = war_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = revoke_title_voting_power_1
+				}
+				set_law = revoke_title_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = imprison_voting_power_1
+				}
+				set_law = imprison_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = grant_title_voting_power_1
+				}
+				set_law = grant_title_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = banish_voting_power_1
+				}
+				set_law = banish_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = execution_voting_power_1
+				}
+				set_law = execution_voting_power_0
+			}
+			IF = {
+				limit = {
+					has_law = succession_voting_power_1
+				}
+				set_law = succession_voting_power_0
+			}
+		}
+		demesne_size = 2
+		temple_vassal_min_levy = 1
+		temple_vassal_tax_modifier = 1
+		church_opinion = -30
+		rel_head_opinion = -30
 	}
 
 
