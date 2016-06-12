@@ -886,7 +886,7 @@ character_event = {
 			tier = BARON 
 			has_law = tradition_control_1
 		}
-		prestige = 200
+		piety = 100
 	}
 	mean_time_to_happen = {
 		days = 180
@@ -1070,7 +1070,7 @@ character_event = {
 			tier = BARON 
 			has_law = tradition_control_2
 		}
-		prestige = 400
+		piety = 200
 	}
 	mean_time_to_happen = {
 		days = 180
@@ -1256,7 +1256,7 @@ character_event = {
 			tier = BARON 
 			has_law = tradition_control_0
 		}
-		NOT = { prestige = 0 } 
+		NOT = { piety = 0 } 
 	}
 	mean_time_to_happen = {
 		days = 180
@@ -1409,7 +1409,7 @@ character_event = {
 			tier = BARON 
 			has_law = tradition_control_1
 		}
-		NOT = { prestige = 200 } 
+		NOT = { piety = 100 } 
 	}
 	mean_time_to_happen = {
 		days = 180
@@ -1561,7 +1561,7 @@ character_event = {
 			tier = BARON 
 			has_law = tradition_control_2
 		}
-		NOT = { piety = 300 }
+		NOT = { piety = 250 }
 	}
 	mean_time_to_happen = {
 		days = 180
@@ -1713,10 +1713,7 @@ character_event = {
 			tier = BARON 
 			has_law = tradition_control_3
 		}
-		OR = {
-			NOT = { piety = 600 }
-			NOT = { learning = 10 }
-		}
+		NOT = { piety = 500 }
 	}
 	mean_time_to_happen = {
 		days = 180
@@ -2059,7 +2056,7 @@ character_event = {
 	id = traditionallore.2
 	title = "EVTNAMEtraditionallore.2"
 	desc = "EVTDESCtraditionallore.2"
-	picture = GFX_evt_royal_court
+	picture = GFX_evt_traditional_lore_found
 	border = GFX_event_normal_frame_religion
 
 	capable_only = yes
@@ -2225,7 +2222,7 @@ character_event = {
 	id = traditionallore.2a
 	title = "EVTNAMEtraditionallore.2a"
 	desc = "EVTDESCtraditionallore.2a"
-	picture = GFX_evt_royal_court
+	picture = GFX_evt_traditional_lore_found
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
@@ -2243,16 +2240,17 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTAtraditionallore.2a"
+		custom_tooltip = { text = tooltip_traditionallore.2a }
 		piety = 100
 	}
 }
 
-# Ruler uses super power
+# Ruler prepares using super power
 character_event = {
 	id = traditionallore.3
 	title = "EVTNAMEtraditionallore.3"
 	desc = "EVTDESCtraditionallore.3"
-	picture = GFX_evt_traditional_lore_found
+	picture = GFX_evt_royal_court
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
@@ -2261,8 +2259,63 @@ character_event = {
 	prisoner = no
 	min_age = 16
 	
+	option = { #Start preparations
+		name = EVTOPTAtraditionallore.3
+		character_event = {
+			id = traditionallore.4
+			days = 30
+			random = 10
+			tooltip = EVTTOOLTIPtraditionallore.3
+		}
+	}
+}
+
+# Ruler uses super power
+character_event = {
+	id = traditionallore.4
+	title = "EVTNAMEtraditionallore.4"
+	desc = "EVTDESCtraditionallore.4"
+	picture = GFX_evt_traditional_lore_found
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	capable_only = yes
+	prisoner = no
+	min_age = 16
+
+	immediate = {
+		remove_character_modifier = reinvented_lore
+	}
+	
+	option = { #Unite realm
+		name = EVTOPTAtraditionallore.4 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 2
+				trait = socializer
+			}
+			modifier = {
+				factor = 1.5
+				diplomacy = 12
+			}
+			modifier = {
+				factor = 1.5
+				diplomacy = 16
+			}
+			modifier = {
+				factor = 1.5
+				diplomacy = 20
+			}
+		}
+		add_character_modifier = {
+			name = traditionallore_unity
+			duration = 3650
+		}
+	}
 	option = { #Expand realm
-		name = EVTOPTAtraditionallore.3 
+		name = EVTOPTBtraditionallore.4 
 		ai_chance = {
 			factor = 50
 			
@@ -2289,7 +2342,7 @@ character_event = {
 		}
 	}
 	option = { #Enlighthen realm
-		name = EVTOPTBtraditionallore.3 
+		name = EVTOPTCtraditionallore.4 
 		ai_chance = {
 			factor = 50
 			modifier = {
@@ -2349,7 +2402,7 @@ character_event = {
 		}
 	}
 	option = { #Develop realm
-		name = EVTOPTCtraditionallore.3 
+		name = EVTOPTDtraditionallore.4 
 		ai_chance = {
 			factor = 50
 			modifier = {
@@ -2400,31 +2453,4 @@ character_event = {
 			}
 		}
 	}
-	option = { #Unite realm
-		name = EVTOPTDtraditionallore.3 
-		ai_chance = {
-			factor = 50
-			modifier = {
-				factor = 2
-				trait = socializer
-			}
-			modifier = {
-				factor = 1.5
-				diplomacy = 12
-			}
-			modifier = {
-				factor = 1.5
-				diplomacy = 16
-			}
-			modifier = {
-				factor = 1.5
-				diplomacy = 20
-			}
-		}
-		add_character_modifier = {
-			name = traditionallore_unity
-			duration = 3650
-		}
-	}
-
 }
