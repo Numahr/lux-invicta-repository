@@ -1561,7 +1561,7 @@ character_event = {
 			tier = BARON 
 			has_law = tradition_control_2
 		}
-		NOT = { prestige = 500 }
+		NOT = { piety = 300 }
 	}
 	mean_time_to_happen = {
 		days = 180
@@ -1714,8 +1714,7 @@ character_event = {
 			has_law = tradition_control_3
 		}
 		OR = {
-			NOT = { prestige = 1000 }
-			NOT = { intrigue = 10 }
+			NOT = { piety = 600 }
 			NOT = { learning = 10 }
 		}
 	}
@@ -1855,13 +1854,15 @@ character_event = {
 	}
 }
 
-### DIGNIFY RELIGION JOB ACTION ### from Britannia
+### PAY TRIBUTE TO TRADITIONS JOB ACTION ### from Britannia
+
+namespace = traditionallore
 
 # The work of the Lord Spiritual increases Religion Authority
 character_event = {
-	id = 312312
-	title = "EVTNAME312312"
-	desc = "EVTDESC312312"
+	id = traditionallore.1
+	title = "EVTNAMEtraditionallore.1"
+	desc = "EVTDESCtraditionallore.1"
 	picture = GFX_evt_royal_court
 	border = GFX_event_normal_frame_religion
 
@@ -2011,7 +2012,7 @@ character_event = {
 	}
 
 	option = {
-		name = "EVTOPTA312312"
+		name = "EVTOPTAtraditionallore.1"
 		piety = 75
 		religion_authority = {
 			modifier = held_rel_authority_festival
@@ -2023,7 +2024,7 @@ character_event = {
 			}
 		}
 		liege = {
-			letter_event = { id = 3123121 tooltip = EVTTOOLTIP3123121 }
+			letter_event = { id = traditionallore.1a tooltip = EVTTOOLTIPtraditionallore.1a }
 		}
 		hidden_tooltip = {
 			add_character_modifier = {
@@ -2036,28 +2037,28 @@ character_event = {
 }
 # The liege is informed
 character_event = {
-	id = 3123121
-	title = "EVTNAME3123121"
-	desc = "EVTDESC3123121"
+	id = traditionallore.1a
+	title = "EVTNAMEtraditionallore.1a"
+	desc = "EVTDESCtraditionallore.1a"
 	picture = GFX_evt_royal_court
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA3123131"
+		name = "EVTOPTAtraditionallore.1a"
 		piety = 20
 	}
 }
 
 
-### REINVENT TRADITION JOB ACTION ### from Britannia
+### REINVENT TRADITION JOB ACTION ### 
 
 # The work of the Lord Spiritual grants super power
 character_event = {
-	id = 312313
-	title = "EVTNAME312313"
-	desc = "EVTDESC312313"
+	id = traditionallore.2
+	title = "EVTNAMEtraditionallore.2"
+	desc = "EVTDESCtraditionallore.2"
 	picture = GFX_evt_royal_court
 	border = GFX_event_normal_frame_religion
 
@@ -2209,32 +2210,221 @@ character_event = {
 	}
 
 	option = {
-		name = "EVTOPTA312313"
+		name = "EVTOPTAtraditionallore.2"
 		piety = 75
 		religion_authority = {
 			modifier = reinvented_lore_authority
 		}
 		liege = {
-			letter_event = { id = 3123131 tooltip = EVTTOOLTIP3123131 }
+			character_event = { id = traditionallore.2a tooltip = EVTTOOLTIPtraditionallore.2a }
 		}
 	}
 }
 # The liege is informed
 character_event = {
-	id = 3123131
-	title = "EVTNAME3123131"
-	desc = "EVTDESC3123131"
+	id = traditionallore.2a
+	title = "EVTNAMEtraditionallore.2a"
+	desc = "EVTDESCtraditionallore.2a"
 	picture = GFX_evt_royal_court
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
 	
-	option = {
-		name = "EVTOPTA3123131"
-		add_character_modifier = {
-			name = reinvented_lore
-			duration = 0
+	immediate = {
+		FROM = {
+			liege = {
+				add_character_modifier = {
+					name = reinvented_lore
+					duration = -1
+				}
+			}
 		}
+	}
+	
+	option = {
+		name = "EVTOPTAtraditionallore.2a"
 		piety = 100
 	}
+}
+
+# Ruler uses super power
+character_event = {
+	id = traditionallore.3
+	title = "EVTNAMEtraditionallore.3"
+	desc = "EVTDESCtraditionallore.3"
+	picture = GFX_evt_traditional_lore_found
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	capable_only = yes
+	prisoner = no
+	min_age = 16
+	
+	option = { #Expand realm
+		name = EVTOPTAtraditionallore.3 
+		ai_chance = {
+			factor = 50
+			
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+			modifier = {
+				factor = 1.5
+				martial = 12
+			}
+			modifier = {
+				factor = 1.5
+				martial = 16
+			}
+			modifier = {
+				factor = 1.5
+				martial = 20
+			}
+		}
+		add_character_modifier = {
+			name = traditionallore_totalwar
+			duration = 1825
+		}
+	}
+	option = { #Enlighthen realm
+		name = EVTOPTBtraditionallore.3 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 4
+				trait = erudite
+			}
+			modifier = {
+				factor = 2
+				trait = poet
+			}
+			modifier = {
+				factor = 2
+				trait = musician
+			}
+			modifier = {
+				factor = 1.5
+				trait = architect
+			}
+			modifier = {
+				factor = 2
+				trait = administrator
+			}
+			modifier = {
+				factor = 1.5
+				learning = 12
+			}
+			modifier = {
+				factor = 1.5
+				learning = 16
+			}
+			modifier = {
+				factor = 1.5
+				learning = 20
+			}
+			modifier = {
+				factor = 0
+				independent = yes
+				OR = {
+					any_war = {
+						defender = {
+							character = ROOT
+						}
+					}
+					any_war = {
+						attacker = {
+							character = ROOT
+						}
+					}
+				}
+			}
+		}
+		capital_scope = {
+			add_province_modifier = {
+				name = traditionallore_technology
+				duration = 7300
+			}
+		}
+	}
+	option = { #Develop realm
+		name = EVTOPTCtraditionallore.3 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 4
+				trait = architect
+			}
+			modifier = {
+				factor = 2
+				trait = administrator
+			}
+			modifier = {
+				factor = 2
+				trait = diligent
+			}
+			modifier = {
+				factor = 1.5
+				stewardship = 12
+			}
+			modifier = {
+				factor = 1.5
+				stewardship = 16
+			}
+			modifier = {
+				factor = 1.5
+				stewardship = 20
+			}
+			modifier = {
+				factor = 0
+				independent = yes
+				OR = {
+					any_war = {
+						defender = {
+							character = ROOT
+						}
+					}
+					any_war = {
+						attacker = {
+							character = ROOT
+						}
+					}
+				}
+			}
+		}
+		capital_scope = {
+			add_province_modifier = {
+				name = traditionallore_development
+				duration = 7300
+			}
+		}
+	}
+	option = { #Unite realm
+		name = EVTOPTDtraditionallore.3 
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 2
+				trait = socializer
+			}
+			modifier = {
+				factor = 1.5
+				diplomacy = 12
+			}
+			modifier = {
+				factor = 1.5
+				diplomacy = 16
+			}
+			modifier = {
+				factor = 1.5
+				diplomacy = 20
+			}
+		}
+		add_character_modifier = {
+			name = traditionallore_unity
+			duration = 3650
+		}
+	}
+
 }
