@@ -4,6 +4,8 @@ targetted_decisions = {
 		ai_target_filter = home_court
 		
 		from_potential = {
+			is_playable = yes
+			is_landed = yes
 			mercenary = no
 			primary_title = {
 				is_landless_type_title = no
@@ -11,20 +13,20 @@ targetted_decisions = {
 			controls_religion = no
 			holy_order = no
 			has_dlc = "Zeus"
-			is_ruler = yes
+		
 			OR = {
 				ai = no
 				AND = {
+					OR = {
+						trait = brilliant_strategist
+						trait = fortune_builder
+					}
 					OR = {
 						higher_tier_than = COUNT
 						AND = {
 							is_republic = yes
 							higher_tier_than = BARON
 						}
-					}
-					OR = {
-						trait = brilliant_strategist
-						trait = fortune_builder
 					}
 					NOR = {
 						is_primary_war_attacker = yes
@@ -90,6 +92,12 @@ targetted_decisions = {
 		}
 		ai_will_do = {
 			factor = 0.001
+			
+			modifier = { 
+				factor = 0
+				controls_religion = yes
+			}
+			
 		}
 	}
 
@@ -98,6 +106,8 @@ targetted_decisions = {
 		ai_target_filter = dynasty # Todo: proper ai filter
 		
 		from_potential = {
+			is_playable = yes
+			is_landed = yes
 			has_dlc = "Zeus"
 		}
 		potential = {
@@ -165,6 +175,7 @@ targetted_decisions = {
 				character = FROM
 			}
 			host = { character = FROM }
+			NOT = { liege = { character = FROM } }
 			OR = {
 				is_landed = no
 				liege = { character = FROM }
@@ -195,8 +206,76 @@ targetted_decisions = {
 				set_focus = focus_ch_heritage
 				break = yes
 			}
-			liege = {
-				letter_event = { id = ZE.2130 days = 5 }
+			hidden_tooltip = {
+				liege = {
+					letter_event = { id = ZE.2130 days = 5 }
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.05
+			}
+		}
+	}
+	
+	change_wards_focus_to_heritage  = {
+		filter = home_court
+		ai_target_filter = home_court
+		
+		from_potential = {
+			has_dlc = "Zeus"
+			is_ruler = yes
+		}
+		
+		potential = {
+			prisoner = no
+			is_adult = no
+			NOR = { 
+				has_character_flag = guardian_asked_to_culture_religion_swap
+				has_focus = focus_ch_heritage
+				character = FROM
+			}
+			host = { character = FROM }
+			liege = { character = FROM }
+			OR = {
+				is_landed = no
+				liege = { character = FROM }
+			}
+			NOT = {
+				educator = {
+					culture = ROOT
+					religion = ROOT
+				}
+			}
+		}
+		
+		allow = { 
+			NOT = { 
+				age = 10
+			}
+		}
+		
+		effect = {
+			set_character_flag = guardian_asked_to_culture_religion_swap
+			if = {
+				limit = {
+					liege = { character = FROM }
+				}
+				hidden_tooltip = {
+					clear_focus = yes
+				}
+				set_focus = focus_ch_heritage
+				break = yes
+			}
+			hidden_tooltip = {
+				liege = {
+					letter_event = { id = ZE.2130 days = 5 }
+				}
 			}
 		}
 		revoke_allowed = {
@@ -211,12 +290,12 @@ targetted_decisions = {
 	}
 
 	ask_for_pardon = {
-		filter = realm
-		ai_target_filter = realm # Todo: proper ai filter
+		filter = liege
+		ai_target_filter = liege
 		
 		from_potential = {
 			has_dlc = "Zeus"
-			is_ruler = yes
+			is_playable = yes
 			NOT = { trait = incapable }
 		}
 		potential = {
@@ -268,19 +347,18 @@ targetted_decisions = {
 		ai_target_filter = dynasty
 		
 		from_potential = {
+			is_playable = yes
+			is_landed = yes
 			has_dlc = "Zeus"
 		}
 		potential = {
-			#primary_title = {
-			#	has_title_flag = ze_dyn_merc
-			#}
 			replace_mercenary_captain_potential_trigger = yes
 		}
 		allow = {
-			replace_mercenary_captain_allow_trigger = yes
 			FROM = {
 				wealth = 50
 			}
+			replace_mercenary_captain_allow_trigger = yes
 		}
 		effect = {
 			character_event = { id = ZE.23100 }
@@ -302,16 +380,18 @@ targetted_decisions = {
 		ai_target_filter = dynasty
 		
 		from_potential = {
+			is_playable = yes
+			is_landed = yes
 			has_dlc = "Zeus"
 		}
 		potential = {
 			replace_mercenary_captain_potential_trigger = yes
 		}
 		allow = {
-			replace_mercenary_captain_allow_trigger = yes
 			FROM = {
 				wealth = 50
 			}
+			replace_mercenary_captain_allow_trigger = yes
 		}
 		effect = {
 			character_event = { id = ZE.23105 }
@@ -358,7 +438,7 @@ targetted_decisions = {
 				trait = eunuch
 				trait = celibate
 				trait = incapable
-				trait = in_hiding
+				is_inaccessible_trigger = yes
 				trait = monk
 				trait = nun
 				any_sibling = {
@@ -381,8 +461,14 @@ targetted_decisions = {
 							is_older_than = PREV
 							same_sex = PREV
 							is_child_of = FROM
-							NOT = {
+							NOR = {
 								trait = bastard
+								trait = eunuch
+								trait = celibate
+								trait = incapable
+								is_inaccessible_trigger = yes
+								trait = monk
+								trait = nun
 							}
 						}
 					}
@@ -393,8 +479,14 @@ targetted_decisions = {
 						any_sibling = {
 							is_older_than = PREV
 							is_child_of = FROM
-							NOT = {
+							NOR = {
 								trait = bastard
+								trait = eunuch
+								trait = celibate
+								trait = incapable
+								is_inaccessible_trigger = yes
+								trait = monk
+								trait = nun
 							}
 						}
 					}
@@ -412,8 +504,14 @@ targetted_decisions = {
 							is_older_than = PREV
 							same_sex = PREV
 							is_child_of = FROM
-							NOT = {
+							NOR = {
 								trait = bastard
+								trait = eunuch
+								trait = celibate
+								trait = incapable
+								is_inaccessible_trigger = yes
+								trait = monk
+								trait = nun
 							}
 						}
 					}
