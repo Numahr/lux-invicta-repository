@@ -194,4 +194,106 @@ decisions = {
 		}
 	}
 
+	become_savior = {
+		is_high_prio = yes
+		potential = {
+			has_law = messianic_power_4
+			is_adult = yes
+		}
+		allow = {
+			war = no
+			OR = {
+				piety = 2000
+				authority = 3000
+				learning = 20
+				num_of_emperor_titles = 2
+				num_of_king_titles  = 5
+				trait = possessed
+			}
+		}
+		effect = {
+			hidden_tooltip = {
+				narrative_event = { id = messianic_laws.5 }
+			}
+			give_nickname = nick_the_savior
+			add_trait = messianic_savior
+			custom_tooltip = { text = tooltip_become_savior_effect1 }
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	messianic_revolution = {
+		is_high_prio = yes
+		potential = {
+			has_law = messianic_power_4
+			trait = messianic_savior
+			is_adult = yes
+		}
+		allow = {
+			war = no
+			OR = {
+				trait = possessed
+				prestige = 2000
+			}
+		}
+		effect = {
+			set_government_type = messianic_government
+			custom_tooltip = { text = tooltip_setup_messianic_government }
+			if = {
+				limit = { 
+					NOT = { trait = possessed }
+				}
+				prestige = -1000
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	messianic_restoration = {
+		is_high_prio = yes
+		potential = {
+			government = messianic_government 
+			NOT = { trait = messianic_savior }
+		}
+		effect = {
+			if = { 
+				limit = {
+					NOR = {
+						religion_group = muslim
+						oriental_monarchy_government_trigger = yes
+						classical_government_trigger = yes
+					}
+				}
+				set_government_type = feudal_government
+			}
+			if = {
+				limit = {
+					religion_group = muslim
+				}
+				set_government_type = muslim_government
+			}
+			if = {
+				limit = {
+					oriental_monarchy_government_trigger = yes
+				}
+				set_government_type = oriental_monarchy_government
+			}
+			if = {
+				limit = {
+					classical_government_trigger = yes
+				}
+				set_government_type = classical_government
+			}
+			remove_character_modifier = messianic_agitation
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	
 }

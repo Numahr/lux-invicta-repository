@@ -23,10 +23,10 @@ NDefines.NDiplomacy.PRESTIGE_OPINION_MAX = 30 -- Max opinion impact of prestige 
 NDefines.NDiplomacy.PIETY_OPINION_DIV = 50 -- Divider for piety to church opinion -- v12 increased divider to 100, so 50 piety = +1
 NDefines.NDiplomacy.PIETY_OPINION_MAX = 20 -- Max opinion impact of piety (positive OR negative)	--
 NDefines.NDiplomacy.MIN_PREP_INV_TARGET_HOLDINGS = 0 -- The target must control at least this many holdings within the target kingdom to be a valid prepared invasion target --v12 reduced from 9 to 0
-NDefines.NDiplomacy.MAX_PREP_INV_TARGET_HOLDINGS = 30 -- The target must control at the most this many holdings within the target kingdom to be a valid prepared invasion target --v12 reduced to half
-NDefines.NDiplomacy.MAX_PREP_INV_TARGET_HOLDINGS = 30 -- The target must control at the most this many holdings within the target kingdom to be a valid prepared invasion target --v12 reduced to half
-NDefines.NDiplomacy.MAX_PREP_INV_ATTACKER_HOLDINGS = 30 -- The attacker must have fewer Holdings than this in the realm (disallow Prepared Invasions for rulers who are already very powerful)
-NDefines.NDiplomacy.PREP_INV_REQ_PRESTIGE = 30 -- Need to have this much Prestige to prepare an invasion --v12 Aside from 500 prestige, 250 piety is spent due to Populist Souls concept)
+NDefines.NDiplomacy.MAX_PREP_INV_TARGET_HOLDINGS = 60 -- The target must control at the most this many holdings within the target kingdom to be a valid prepared invasion target --v12 reduced to half --Numahr: increased since prepared invasions have spiritual power law restrictions
+NDefines.NDiplomacy.MAX_PREP_INV_TARGET_HOLDINGS = 60 -- The target must control at the most this many holdings within the target kingdom to be a valid prepared invasion target --v12 reduced to half --Numahr: increased since prepared invasions have spiritual power law restrictions
+NDefines.NDiplomacy.MAX_PREP_INV_ATTACKER_HOLDINGS = 60 -- The attacker must have fewer Holdings than this in the realm (disallow Prepared Invasions for rulers who are already very powerful) --Numahr: increased since prepared invasions have spiritual power law restrictions
+NDefines.NDiplomacy.PREP_INV_REQ_PRESTIGE = 250 -- Need to have this much Prestige to prepare an invasion --v12 Aside from 500 prestige, 250 piety is spent due to Populist Souls concept)
 NDefines.NDiplomacy.BASE_REVOLT_CHANCE_MOD = 225 -- Pre Old Gods rebel spawn chance modifier (fires on_rebel_revolt) : lower means fewer revolts. MUST NOT BE ZERO. --v12 modified to be 30% of vanilla (1k) 21 reduced 12% further
 NDefines.NDiplomacy.TOG_REVOLT_CHANCE_MOD = 75 -- Old Gods rebel spawn chance modifier (fires on_rebel_revolt) : lower means fewer revolts. MUST NOT BE ZERO. -- v12 reduced incidence to half of vanilla (200) 12a reduced 25% further
 NDefines.NDiplomacy.MAX_DIPLO_DISTANCE = 500					-- Most diplomacy is disallowed if two rulers are too distant v14 reduced from 700 to 500
