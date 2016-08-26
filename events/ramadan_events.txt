@@ -66,10 +66,10 @@ narrative_event = {
 	border =  GFX_event_narrative_frame_religion
 	
 	is_triggered_only = yes
+	has_character_flag = ramadan
 	
 	trigger = { 
 		num_of_prisoners = 1
-		has_character_flag = ramadan
 		NOT = { has_character_flag = ramadan_prisoners }
 	}
 	
@@ -104,9 +104,9 @@ narrative_event = {
 	border =  GFX_event_narrative_frame_religion
 	
 	is_triggered_only = yes
+	has_character_flag = ramadan
 	
 	trigger = {
-		has_character_flag = ramadan
 		scaled_wealth = 0.20
 		NOT = { has_character_flag = ramadan_charity }
 	}
@@ -188,12 +188,38 @@ narrative_event = {
 	
 	option = {
 		name = EVTOPTA88504
-		add_trait = ill
+		if = {
+			limit = {
+				NOT = {
+					has_dlc = "Reapers"
+				}
+			}
+			add_trait = ill
+		}
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			add_symptom_effect = yes
+		}
 		narrative_event = { id = 88522 days = 1 tooltip = EVTTOOLTIP88522 }
 	}
 	option = {
 		name = EVTOPTB88504
-		add_trait = ill
+		if = {
+			limit = {
+				NOT = {
+					has_dlc = "Reapers"
+				}
+			}
+			add_trait = ill
+		}
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			add_symptom_effect = yes
+		}
 		decadence = -1
 		piety = 15
 		set_character_flag = ramadan_ill
@@ -213,7 +239,7 @@ narrative_event = {
 	trigger = {
 		has_character_flag = ramadan
 		has_character_flag = ramadan_ill
-		trait = ill
+		is_ill = yes
 	}
 	
 #	mean_time_to_happen = {
@@ -298,11 +324,9 @@ narrative_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
-	
-	trigger = {
-		has_character_flag = ramadan
-		war = yes
-	}
+	religion_group = muslim
+	has_character_flag = ramadan
+	war = yes
 	
 	mean_time_to_happen = {
 		days = 1
@@ -325,21 +349,11 @@ narrative_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	religion_group = muslim
+	has_character_flag = ramadan
+	is_sick = yes
 	
 	trigger = {
-		OR = {
-			trait = ill
-			trait = pneumonic
-			trait = has_tuberculosis
-			trait = has_typhoid_fever
-			trait = has_typhus
-			trait = has_bubonic_plague
-			trait = has_measles
-			trait = has_small_pox
-			trait = syphilitic
-			trait = leper
-		}
-		has_character_flag = ramadan
 		NOT = { has_character_flag = ramadan_ill }
 	}
 	
@@ -394,16 +408,13 @@ letter_event = {
 	desc = EVTDESC88511
 	
 	is_triggered_only = yes
+
+	trigger = { is_inaccessible_trigger = no }
 	
 	option = {
 		name = EVTOPTA88511
 		ai_chance = {
 			factor = 1
-			modifier  = {
-				factor = 0.1
-				ai = yes
-				trait = in_hiding
-			}
 			modifier = {
 				factor = 2
 				opinion = { who = from value = -40 }
@@ -415,27 +426,11 @@ letter_event = {
 		}
 		narrative_event = { id = 88514 days = 4 tooltip = EVTTOOLTIP88514 }
 		set_character_flag = attending_ramadan_feast
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			clr_character_flag = do_not_disturb
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-		}
 	}
 	option = {
 		name = EVTOPTB88511
 		ai_chance = {
 			factor = 1
-			modifier  = {
-				factor = 0
-				opinion = { who = from value = 0 }
-				NOT = { trait = in_hiding }
-			}
 			modifier  = {
 				factor = 2
 				NOT = { opinion = { who = from value = -60 } }
@@ -513,11 +508,13 @@ narrative_event = {
 	picture = GFX_evt_marriage
 	border =  GFX_event_narrative_frame_religion
 	
+	is_married = yes
+	only_men = yes
+	has_character_flag = ramadan
+	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
-		has_character_flag = ramadan
 		NOT = {
 			any_spouse = { is_main_spouse = no }
 		}
@@ -554,12 +551,14 @@ narrative_event = {
 	picture = GFX_evt_marriage
 	border =  GFX_event_narrative_frame_religion
 	
+	only_men = yes
+	is_married = yes
+	has_character_flag = ramadan
+	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
 		any_spouse = { is_main_spouse = no }
-		has_character_flag = ramadan
 	}
 	
 	option = {
@@ -613,8 +612,13 @@ narrative_event = {
 	picture = GFX_evt_lunatic
 	border =  GFX_event_narrative_frame_religion
 	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	religion_group = muslim
+	has_character_flag = ramadan
+	
 	trigger = {
-		has_character_flag = ramadan
 		trait = gluttonous
 		NOT = { has_character_flag = ramadan_gluttonous }
 	}
@@ -639,8 +643,14 @@ narrative_event = {
 	picture = GFX_evt_jugglers
 	border =  GFX_event_narrative_frame_religion
 	
+	min_age = 16
+	only_men = yes
+	capable_only = yes
+	prisoner = no
+	religion_group = muslim
+	has_character_flag = ramadan
+	
 	trigger = {
-		has_character_flag = ramadan
 		OR = {
 			trait = lustful
 			trait = hedonist
@@ -668,8 +678,13 @@ narrative_event = {
 	picture = GFX_evt_drunk
 	border =  GFX_event_narrative_frame_religion
 	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	religion_group = muslim
+	has_character_flag = ramadan
+	
 	trigger = {
-		has_character_flag = ramadan
 		trait = drunkard
 		NOT = { has_character_flag = ramadan_drunkard }
 	}
@@ -694,8 +709,13 @@ narrative_event = {
 	picture = GFX_evt_lunatic
 	border =  GFX_event_narrative_frame_religion
 	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	religion_group = muslim
+	has_character_flag = ramadan
+	
 	trigger = {
-		has_character_flag = ramadan
 		trait = greedy
 		NOR = { 
 			has_character_flag = ramadan_greedy 
@@ -723,8 +743,13 @@ narrative_event = {
 	picture = GFX_evt_lunatic
 	border =  GFX_event_narrative_frame_religion
 	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	religion_group = muslim
+	has_character_flag = ramadan
+	
 	trigger = {
-		has_character_flag = ramadan
 		trait = cynical
 		NOT = { has_character_flag = ramadan_cynical }
 	}

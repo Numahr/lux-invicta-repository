@@ -19,19 +19,58 @@ character_event = {
 	max_age = 50
 	capable_only = yes
 	prisoner = no
+	has_dlc = "The Old Gods"
 	
 	trigger = {
-		has_dlc = "The Old Gods"
+		
+		NOT = {
+			has_game_rule = {
+				name = adventurers
+				value = none
+			}
+		}
+		
+		OR = {
+			has_game_rule = {
+				name = gender
+				value = all
+			}
+			AND = {
+				is_female = no
+				OR = {
+					liege = {
+						OR = {
+							has_law = true_cognatic_succession
+							has_law = cognatic_succession
+							has_law = agnatic_succession
+						}
+					}
+				}
+			}
+			AND = {
+				is_female = yes
+				liege = {
+					OR = {
+						feminist_religions_trigger = yes
+						has_law = status_of_women_4
+						has_law = true_cognatic_succession
+						has_law = enatic_cognatic_succession
+						has_law = enatic_succession
+					}
+				}
+			}
+		}
+		is_ruler = no
+		NOT = {
+			any_spouse = {
+				is_ruler = yes
+			}
+		}
 		
 		any_claim = {
 			has_holder = yes
 			holder_scope = {
 				independent = yes # Only do this vs independent rulers
-				OR = {
-					# Don't target my liege unless I am ambitious
-					NOT = { is_vassal_or_below = ROOT }
-					ROOT = { trait = ambitious }
-				}
 				NAND = {
 					government = nomadic_government
 					OR = {
@@ -42,6 +81,11 @@ character_event = {
 							title = PREVPREV
 						}
 					}
+				}
+				OR = {
+					# Don't target my liege unless I am ambitious
+					NOT = { is_vassal_or_below = ROOT }
+					ROOT = { trait = ambitious }
 				}
 				OR = {
 					is_merchant_republic = no
@@ -60,8 +104,6 @@ character_event = {
 		diplomacy = 7
 		
 		health = 4
-		
-		is_ruler = no
 		
 		NOR = { # Somewhat clunky way of checking that the character does not stand to inherit any titles
 			any_heir_title = {
@@ -126,6 +168,13 @@ character_event = {
 			factor = 2.0
 			trait = kind
 		}
+		modifier = {
+			factor = 50
+			has_game_rule = {
+				name = adventurers
+				value = rare
+			}
+		}
 	}
 	
 	immediate = {
@@ -134,11 +183,6 @@ character_event = {
 				has_holder = yes
 				holder_scope = {
 					independent = yes # Only do this vs independent rulers
-					OR = {
-						# Don't target my liege unless I am ambitious
-						NOT = { is_vassal_or_below = ROOT }
-						ROOT = { trait = ambitious }
-					}
 					NAND = {
 						government = nomadic_government
 						OR = {
@@ -149,6 +193,11 @@ character_event = {
 								title = PREVPREV
 							}
 						}
+					}
+					OR = {
+						# Don't target my liege unless I am ambitious
+						NOT = { is_vassal_or_below = ROOT }
+						ROOT = { trait = ambitious }
 					}
 					OR = {
 						is_merchant_republic = no
@@ -195,16 +244,9 @@ character_event = {
 				ROOT = { banish = yes } # Can't prepare for the attack from within the realm
 			}
 		}
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-		}
+
+		end_inaccessibility_effect = yes #removes in hiding or in_seclusion
+		
 		set_character_flag = do_not_disturb
 		character_event = { id = TOG.1215 days = 730 }
 	}
@@ -237,10 +279,17 @@ character_event = {
 	hide_window = yes # Only fires for unplayable landless characters
 	
 	is_triggered_only = yes
-	prisoner = no
+
 	capable_only = yes
+	prisoner = no
 	
 	trigger = {
+		is_ruler = no
+		NOT = {
+			any_spouse = {
+				is_ruler = yes
+			}
+		}
 		any_claim = {
 			has_holder = yes
 			holder_scope = {
@@ -280,7 +329,6 @@ character_event = {
 			}
 		}
 		
-		is_ruler = no
 		NOT = { # Somewhat clunky way of checking that the character does not stand to inherit any titles
 			any_heir_title = {
 				always = yes
@@ -326,17 +374,6 @@ character_event = {
 									# Don't target my liege unless I am ambitious
 									NOT = { is_vassal_or_below = ROOT }
 									ROOT = { trait = ambitious }
-								}
-								NAND = {
-									government = nomadic_government
-									OR = {
-										clan_title = {
-											title = PREVPREV
-										}
-										primary_title = {
-											title = PREVPREV
-										}
-									}
 								}
 								OR = {
 									is_merchant_republic = no
@@ -733,13 +770,53 @@ character_event = {
 	
 	min_age = 16
 	max_age = 50
-	only_men = yes
 	capable_only = yes
 	prisoner = no
+	has_dlc = "The Old Gods"
 	
 	trigger = {
-		has_dlc = "The Old Gods"
 		
+		NOT = {
+			has_game_rule = {
+				name = adventurers
+				value = none
+			}
+		}
+		
+		is_ruler = no
+		NOT = {
+			any_spouse = {
+				is_ruler = yes
+			}
+		}
+		OR = {
+			AND = {
+				is_female = no
+				liege = {
+					OR = {
+						has_law = status_of_women_4
+						has_law = true_cognatic_succession
+						has_law = cognatic_succession
+						has_law = agnatic_succession
+					}
+				{
+			}
+			AND = {
+				is_female = yes
+				liege = {
+					OR = {
+						feminist_religions_trigger = yes
+						has_law = status_of_women_4
+						has_law = true_cognatic_succession
+						has_law = enatic_cognatic_succession
+						has_law = enatic_succession
+					}
+				}
+			}
+			has_game_rule = {
+				name = gender
+				value = all
+			}
 		OR = {
 			father_even_if_dead = {
 				OR = {
@@ -769,16 +846,13 @@ character_event = {
 		martial = 9
 		health = 4
 		
-		is_ruler = no
-		
+		is_dumb_trigger = no
 		NOR = {
 			trait = content
 			trait = craven
 			trait = patient
 			trait = temperate
-			trait = slow
 			trait = slothful
-			trait = imbecile
 			any_heir_title = {
 				always = yes
 			}
@@ -821,6 +895,10 @@ character_event = {
 			has_character_flag = flag_denied_title
 		}
 		modifier = {
+			factor = 0.2
+			has_character_flag = demon_child_non_pagan
+		}
+		modifier = {
 			factor = 0.75
 			diplomacy = 15
 		}
@@ -844,10 +922,6 @@ character_event = {
 			factor = 0.75
 			trait = brave
 		}
-#		modifier = {
-#			factor = 0.75
-#			trait = reckless
-#		}
 		modifier = {
 			factor = 0.85
 			trait = proud
@@ -879,6 +953,13 @@ character_event = {
 		modifier = {
 			factor = 0.85
 			trait = bastard
+		}
+		modifier = {
+			factor = 50
+			has_game_rule = {
+				name = adventurers
+				value = rare
+			}
 		}
 	}
 	
@@ -955,16 +1036,8 @@ character_event = {
 				}
 			}
 		}
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-		}
+		end_inaccessibility_effect = yes #removes in hiding or in_seclusion
+		
 		set_character_flag = do_not_disturb
 		character_event = { id = TOG.1215 days = 730 }
 	}
@@ -1000,12 +1073,17 @@ character_event = {
 	
 	is_triggered_only = yes
 	prisoner = no
-	capable_only = yes
+	only_capable = yes
+	has_dlc = "The Old Gods"
 	
 	trigger = {
-		has_dlc = "The Old Gods"
 		
 		is_ruler = no
+		NOT = {
+			any_spouse = {
+				is_ruler = no
+			}
+		}
 		NOT = {
 			any_heir_title = {
 				always = yes
@@ -1102,7 +1180,7 @@ character_event = {
 								province = PREVPREVPREV
 								home = PREVPREVPREV
 								owner = THIS
-								leader = THIS
+								#leader = THIS
 								match_character = PREVPREV
 								match_mult = 0.125
 								match_min = 500

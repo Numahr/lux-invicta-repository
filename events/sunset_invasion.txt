@@ -16,12 +16,28 @@ province_event = {
 	
 	picture = GFX_evt_aztec_explorers
 	border = GFX_event_normal_frame_war
+
+	has_dlc = "Sunset Invasion"
 	
 	trigger = {
-		has_dlc = "Sunset Invasion"
-		year = 1250
-		NOT = { year = 1350 }
-		NOT = { has_global_flag = aztec_explorers }
+		OR = {
+			year = 1250
+			AND = {
+				has_game_rule = {
+					name = aztec_invasion
+					value = random
+				}
+				total_years_played = 50
+			}
+		}
+		NOR = {
+			year = 1350
+			has_global_flag = aztec_explorers 
+			has_game_rule = {
+				name = aztec_invasion
+				value = off
+			}
+		}
 		OR = {
 			province_id = 1 # Vestisland
 			province_id = 10 # Connacht
@@ -53,6 +69,18 @@ province_event = {
 					e_mexikha = {
 						grant_title = PREV
 					}
+					set_government_type = feudal_government
+					e_mexikha = {
+						add_law = succ_primogeniture
+						add_law = agnatic_succession
+						if = {
+							limit = {
+								has_dlc = "Zeus"
+							}
+							add_law = revoke_title_law_2
+						}
+						add_law = centralization_1
+					}
 					set_defacto_liege = THIS
 					narrative_event = { id = SSI.2 days = 7 }
 				}
@@ -65,6 +93,13 @@ province_event = {
 		modifier = {
 			factor = 0.5
 			year = 1320
+		}
+		modifier = {
+			factor = 4
+			has_game_rule = {
+				name = aztec_invasion
+				value = random
+			}
 		}
 	}
 	
@@ -111,15 +146,24 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	trigger = {
-		year = 1250
+		OR = {
+			year = 1250
+			AND = {
+				has_game_rule = {
+					name = aztec_invasion
+					value = random
+				}
+				total_years_played = 50
+			}
+		}
 		NOT = { has_global_flag = aztec_arrival }
 		had_province_flag = { flag = aztec_explorers days = 730 }
 	}
 	
 	immediate = {
 		set_global_flag = aztec_arrival
-		culture = nahuatl
-		religion = aztec
+#		culture = nahuatl
+#		religion = aztec
 		e_mexikha = {
 			holder_scope = {
 				narrative_event = { id = SSI.4 }
@@ -896,10 +940,20 @@ province_event = {
 	
 	picture = GFX_evt_aztec_arrival
 	border = GFX_event_normal_frame_war
+
+	has_global_flag = aztec_arrival
 	
 	trigger = {
-		year = 1250
-		has_global_flag = aztec_arrival
+		OR = {
+			year = 1250
+			AND = {
+				has_game_rule = {
+					name = aztec_invasion
+					value = random
+				}
+				total_years_played = 50
+			}
+		}
 		NOT = { has_global_flag = aztec_arrival_2 }
 		OR = {
 			province_id = 1 # Vestisland
@@ -920,8 +974,9 @@ province_event = {
 	
 	immediate = {
 		set_global_flag = aztec_arrival_2
-		culture = nahuatl
-		religion = aztec
+		set_province_flag = aztec_second_wave
+#		culture = nahuatl
+#		religion = aztec
 		e_mexikha = {
 			holder_scope = {
 				narrative_event = { id = SSI.6 }
@@ -1529,6 +1584,9 @@ character_event = {
 	id = SSI.100
 	hide_window = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_invasion_fleet_disbanded }
@@ -1556,8 +1614,10 @@ narrative_event = {
 	
 	major = yes
 	
+	has_global_flag = aztec_arrival_2
+	only_playable = yes
+	
 	trigger = {
-		has_global_flag = aztec_arrival_2
 		NOT = { has_global_flag = aztecs_defeated }
 		has_landed_title = e_mexikha
 		has_regiments = no
@@ -1593,8 +1653,10 @@ narrative_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_incas }
 		NOT = { has_global_flag = aztecs_defeated }
@@ -1637,8 +1699,10 @@ narrative_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_plains }
 		NOT = { has_global_flag = aztecs_defeated }
@@ -1681,8 +1745,10 @@ narrative_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_food }
 		NOT = { has_global_flag = aztecs_defeated }
@@ -1724,8 +1790,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_iceland }
 		completely_controls = d_iceland
@@ -1767,8 +1835,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_ireland }
 		
@@ -1817,8 +1887,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_britain }
 		completely_controls = d_bernicia
@@ -1881,8 +1953,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		completely_controls = c_londinium
 		NOT = { has_global_flag = aztec_london }
@@ -1924,8 +1998,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		completely_controls = c_ile_de_france
 		NOT = { has_global_flag = aztec_paris }
@@ -1967,8 +2043,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		completely_controls = c_roma
 		NOT = { has_global_flag = aztec_rome }
@@ -2010,8 +2088,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		completely_controls = c_byzantion
 		NOT = { has_global_flag = aztec_constantinople }
@@ -2053,8 +2133,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		completely_controls = c_cordoba
 		NOT = { has_global_flag = aztec_cordoba }
@@ -2096,8 +2178,10 @@ character_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		completely_controls = c_cairo
 		NOT = { has_global_flag = aztec_cairo }
@@ -2150,13 +2234,13 @@ character_event = {
 	hide_window = yes
 	
 	ai = yes
+	min_age = 16
+	prisoner = no
 	
 	is_triggered_only = yes
 	
 	trigger = {
 		in_command = no
-		prisoner = no
-		age = 16
 		NOT = { religion = aztec }
 		NOT = {
 			any_liege = {
@@ -2171,6 +2255,20 @@ character_event = {
 	immediate = {
 		liege = {
 			character_event = { id = SSI.62 }
+		}
+		new_character = {
+			if = {
+				limit = {
+					ai = no
+					ROOT = {
+						controls_religion = yes
+						NOT = {
+							religion = aztec
+						}
+					}
+				}
+				set_character_flag = achievement_holy_smoke
+			}
 		}
 		death = { death_reason = death_sacrificed }
 	}
@@ -2200,8 +2298,10 @@ narrative_event = {
 	picture = GFX_evt_aztec_explorers
 	border = GFX_event_narrative_frame_war
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztec_syphilis }
 		NOT = { has_global_flag = aztecs_defeated }
@@ -2245,8 +2345,10 @@ narrative_event = {
 	
 	major = yes
 	
+	only_playable = yes
+	has_global_flag = aztec_arrival
+	
 	trigger = {
-		has_global_flag = aztec_arrival
 		has_global_flag = aztec_syphilis
 		has_landed_title = e_mexikha
 		NOT = { has_global_flag = aztecs_defeated }

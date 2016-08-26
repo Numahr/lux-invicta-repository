@@ -33,6 +33,7 @@ character_event = {
 			}
 			any_vassal = {
 				limit = {
+					NOT = { is_inaccessible_trigger = yes }
 					prisoner = no
 					war = no
 					in_command = no
@@ -52,6 +53,7 @@ character_event = {
 			}
 			any_vassal = {
 				limit = {
+					NOT = { is_inaccessible_trigger = yes }
 					prisoner = no
 					war = no
 					in_command = no
@@ -88,6 +90,8 @@ letter_event = {
 	desc = EVTDESC_RoI_1001
 	
 	is_triggered_only = yes
+
+	trigger = { is_inaccessible_trigger = no }
 	
 	option = {
 		name = EVTOPTA_RoI_1001 #Travel to the feast
@@ -99,7 +103,7 @@ letter_event = {
 			}
 			modifier  = {
 				factor = 0.1
-				trait = in_hiding
+				is_inaccessible_trigger = yes
 			}
 			modifier  = {
 				factor = 2
@@ -130,16 +134,6 @@ letter_event = {
 			}
 			hidden_tooltip = { character_event = { id = RoI.1006 } }
 		}
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family 
-		}
 	}
 	option = {
 		name = EVTOPTB_RoI_1001 #Refuse invitation
@@ -147,8 +141,8 @@ letter_event = {
 			factor = 1
 			modifier  = {
 				factor = 0
-				opinion = { who = from value = 25 }
-				NOT = { trait = in_hiding }
+				opinion = { who = from value = 25 } 
+				NOT = { is_inaccessible_trigger = yes }
 			}
 		}
 		FROM = {
@@ -167,6 +161,8 @@ letter_event = {
 	desc = EVTDESC_RoI_1940
 	
 	is_triggered_only = yes
+
+	trigger = { is_inaccessible_trigger = no }
 	
 	option = {
 		name = EVTOPTA_RoI_1001 #Travel to the feast
@@ -178,7 +174,7 @@ letter_event = {
 			}
 			modifier  = {
 				factor = 0.1
-				trait = in_hiding
+				is_inaccessible_trigger = yes
 			}
 			modifier  = {
 				factor = 2
@@ -208,16 +204,6 @@ letter_event = {
 				has_lover = yes
 			}
 			hidden_tooltip = { character_event = { id = RoI.1006 } }
-		}
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
 		}
 	}
 	option = {
@@ -1023,7 +1009,20 @@ character_event = {
 			hidden_tooltip = {
 				random_list = {
 					10 = {
-						add_trait = ill
+						if = {
+							limit = {
+								NOT = {
+									has_dlc = "Reapers"
+								}
+							}
+							add_trait = ill
+						}
+						if = {
+							limit = {
+								has_dlc = "Reapers"
+							}
+							add_symptom_effect = yes
+						}
 						set_character_flag = bad_diwali
 						character_event = { id = 38290 } # Notify
 					}
@@ -1065,7 +1064,7 @@ character_event = {
 				ai = yes
 			}
 			death = {
-				death_reason = death_accident
+				death_reason = death_accident_snakes
 			}
 		}
 	}
@@ -1635,6 +1634,11 @@ character_event = {
 			random = {
 				chance = 20
 				add_trait = zealous
+				hidden_tooltip = {
+					character_event = {
+						id = 38269 #Notify Zealous
+					}
+				}
 			}
 		}
 		character_event = { id = RoI.1178 }
@@ -1742,6 +1746,7 @@ character_event = {
 		if = {
 			limit = {
 				NOT = { has_character_flag = achievement_kali_maaa }
+				ai = no
 				FROM = {
 					primary_title = {
 						OR = {

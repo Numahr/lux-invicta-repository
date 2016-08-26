@@ -1417,6 +1417,8 @@ narrative_event = {
 	picture = GFX_evt_crusaders
 	border = GFX_event_narrative_frame_religion
 
+	religion_group = christian 
+	
 	is_triggered_only = yes
 	
 	notification = yes
@@ -1427,9 +1429,8 @@ narrative_event = {
 		}
 		NOT = {	trait = craven }
 		NOT = {	trait = cynical	}
-		NOT = {	trait = maimed	}
+		can_be_maimed_trigger = yes
 		NOT = {	trait = wounded	}
-		religion_group = christian 
 		enemy = {
 			NOT = { religion_group = christian }
 		}		
@@ -1469,7 +1470,7 @@ narrative_event = {
 		}
 		random_list = {
 			80 = {add_trait = crusader }
-			10 = { add_trait = maimed hidden_tooltip = { character_event = { id = 38281 } } }
+			10 = { add_maimed_trait_effect = yes }
 			10 = { add_trait = wounded hidden_tooltip = { character_event = { id = 38280 } } }
 		}
 	}
@@ -1485,7 +1486,7 @@ narrative_event = {
 			}
 			random_list = {
 				80 = {add_trait = crusader }
-				10 = { add_trait = maimed hidden_tooltip = { character_event = { id = 38281 } } }
+				10 = { add_maimed_trait_effect = yes }
 				10 = { add_trait = wounded hidden_tooltip = { character_event = { id = 38280 } } }
 			}
 		}
@@ -1525,12 +1526,7 @@ narrative_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		OR = {
-			trait = ill
-			trait = pneumonic
-			trait = leper
-			trait = syphilitic
-		}
+		is_ill = yes
 		NOT = {
 			trait = craven
 		}
@@ -1567,7 +1563,7 @@ narrative_event = {
 		}
 		random_list = {
 			60 = {
-				add_trait = maimed
+				add_maimed_trait_effect = yes
 				prestige = 50
 			}
 			40 = {
@@ -1603,9 +1599,17 @@ narrative_event = {
 				}
 			}
 		}
-		random = {
-			chance = 50
-			add_trait = craven
+		if = {
+			limit = { NOR = { trait = craven trait = berserker } }
+			random = {
+				chance = 50
+				add_trait = craven
+				hidden_tooltip = {
+					character_event = {
+						id = 38257 #Notify Craven
+					}
+				}
+			}
 		}
 		prestige = -50
 	}
@@ -1730,47 +1734,7 @@ character_event = {
 			is_female = yes
 			new_character = {
 				OR = {
-					OR = { # Traditional Religions
-						religion = aglibol
-						religion = allat
-						religion = allfather
-						religion = beelshamen
-						religion = berber_pagan
-						religion = bud_zor
-						religion = celtic_christ
-						religion = celtic_pagan
-						religion = chumbylat
-						religion = dievas
-						religion = druze
-						religion_group = finnish_group
-						religion = german_pagan
-						religion = graeco_roman
-						religion = hubal
-						religion = ibadi
-						religion = illuyanka
-						religion = indohelen
-						religion = jumala
-						religion = mand_ruha
-						religion = mandaean
-						religion = mande_pagan
-						religion = marabout
-						religion = mari_christ
-						religion = norse_pagan
-						religion = norse_war
-						religion = palmyran_pagan
-						religion = perkunas
-						religion = rod
-						religion = sethian
-						religion = slavic_pagan
-						religion = sufi
-						religion = talab
-						religion = tengri_mani
-						religion_group = tengri_group
-						religion = vattisenyaly
-						religion = veles
-						religion = yazdanism
-						religion = yazidism
-					}
+					traditional_soul_trigger = yes
 					religion_group = zoroastrian_group
 				}
 			}
@@ -1790,6 +1754,11 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA62100
+		trigger = {
+			center_flank_leader = {
+				mercenary = no
+			}
+		}
 		new_character = {
 			ROOT = {
 				imprison = PREV
@@ -1798,6 +1767,20 @@ character_event = {
 		hidden_tooltip = {
 			new_character = {
 				character_event = { id = 62101 }
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA62100
+		trigger = {
+			center_flank_leader = {
+				mercenary = yes
+			}
+		}
+		center_flank_leader = {
+			ROOT = {
+				imprison = PREV
 			}
 		}
 	}

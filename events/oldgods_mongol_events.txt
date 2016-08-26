@@ -439,9 +439,9 @@ character_event = {
 					age = 55
 					trait = incapable
 					trait = wounded
-					trait = maimed
 					trait = infirm
 				}
+				is_maimed_trigger = no
 			}
 			set_character_flag = do_not_disturb
 			hidden_tooltip = { character_event = { id = TOG.299 days = 100 } } # Safety catch flag clearing
@@ -460,21 +460,12 @@ character_event = {
 	border = GFX_event_normal_frame_diplomacy
 	
 	is_triggered_only = yes
+
+	trigger = { is_inaccessible_trigger = no }
 	
 	option = {
 		name = EVTOPTA_TOG_101
 		custom_tooltip = { text = nerge_assemble }
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			clr_character_flag = do_not_disturb
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-		}
 	}
 }
 
@@ -497,6 +488,13 @@ character_event = {
 			hidden_tooltip = {
 				character_event = { id = TOG.150 days = 60 random = 10 }
 			}	
+		}
+		if = {
+			limit = { ai = no }
+			chronicle = {
+				entry = CHRONICLE_HELD_NERGE
+				picture = GFX_evt_tengri_throneroom_oldgods
+			}
 		}
 	}
 }
@@ -526,10 +524,13 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
-	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = vassal_holding_nerge
-	}
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = vassal_holding_nerge
+	has_dlc = "The Old Gods"
 	
 	mean_time_to_happen = {
 		days = 380
@@ -611,10 +612,13 @@ character_event = {
 	id = TOG.119
 	hide_window = yes
 	
-	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = vassal_holding_nerge
-	}
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = vassal_holding_nerge
+	has_dlc = "The Old Gods"
 	
 	mean_time_to_happen = {
 		days = 380
@@ -741,10 +745,13 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
-	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = vassal_holding_nerge
-	}
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = vassal_holding_nerge
+	has_dlc = "The Old Gods"
 	
 	mean_time_to_happen = {
 		days = 380
@@ -894,10 +901,13 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
-	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = vassal_holding_nerge
-	}
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = vassal_holding_nerge
+	has_dlc = "The Old Gods"
 	
 	mean_time_to_happen = {
 		days = 380
@@ -1117,7 +1127,12 @@ character_event = {
 	option = {
 		name = EVTOPTA_TOG_152
 		if = {
-			limit = { NOT = { lifestyle_traits = 1 } }
+			limit = {
+				NOR = {
+					lifestyle_traits = 1
+					has_dlc = "Way of Life"
+				}
+			}
 			add_trait = hunter
 		}
 		prestige = 100
@@ -1131,9 +1146,15 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = khagan_holding_nerge
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = khagan_holding_nerge
 		NOT = { has_character_flag = exceptional_soldier }
 	}
 		
@@ -1173,9 +1194,15 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = khagan_holding_nerge
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = khagan_holding_nerge
 		NOT = { has_character_flag = pet_bear }
 	}
 		
@@ -1199,6 +1226,11 @@ character_event = {
 	id = TOG.168
 	hide_window = yes
 	
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	ai = yes
+	
 	trigger = {
 		has_dlc = "The Old Gods"
 		liege = { 
@@ -1213,11 +1245,8 @@ character_event = {
 			character = liege
 			prisoner = no
 		}
-		ai = yes
 		is_primary_heir = no
 		is_pretender = no
-		prisoner = no
-		age = 16
 		in_command = no
 	}
 	
@@ -1266,7 +1295,7 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_TOG_160
-		FROM = { add_trait = maimed }
+		FROM = { add_maimed_trait_effect = yes }
 	}
 }
 
@@ -1282,7 +1311,7 @@ character_event = {
 	option = {
 		name = EVTOPTA_TOG_160
 		FROM = { 
-			death = { death_reason = death_accident }
+			death = { death_reason = death_accident_bear }
 		}
 	}
 }
@@ -1294,10 +1323,13 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
-	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = pet_bear
-	}
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = pet_bear
+	has_dlc = "The Old Gods"
 	
 	mean_time_to_happen = {
 		months = 480
@@ -1316,9 +1348,15 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = pet_bear
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = pet_bear
 		capital_scope = {
 			NOR = {
 				region = world_india
@@ -1350,10 +1388,13 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
-	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = pet_bear
-	}
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = pet_bear
+	has_dlc = "The Old Gods"
 	
 	mean_time_to_happen = {
 		months = 480
@@ -1409,10 +1450,13 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
-	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = pet_bear
-	}
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = pet_bear
+	has_dlc = "The Old Gods"
 	
 	mean_time_to_happen = {
 		months = 680
@@ -1633,17 +1677,19 @@ character_event = {
 	picture = GFX_evt_tengri_throneroom_oldgods
 	border = GFX_event_normal_frame_war
 	
-	min_age = 16
+	only_playable = yes
 	only_men = yes
+	min_age = 16
 	prisoner = no
+	only_capable = yes
+	has_dlc = "The Old Gods"
+	war = yes
 	
 	trigger = {
-		has_dlc = "The Old Gods"
 		OR = {
 			has_character_flag = khagan_holding_nerge
 			has_character_flag = khagan_finishing_nerge
 		}
-		war = yes
 	}
 	
 	mean_time_to_happen = {
@@ -1697,9 +1743,15 @@ character_event = {
 	picture = GFX_evt_viking_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = nerge_feast_vassal
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = nerge_feast_vassal
 		NOT = { has_character_flag = feast_drunkard }
 		liege = { 
 			has_character_flag = khagan_finishing_nerge
@@ -1848,9 +1900,15 @@ character_event = {
 	id = TOG.202
 	hide_window = yes
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = nerge_feast_vassal
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = nerge_feast_vassal
 		liege = {
 			has_character_flag = khagan_finishing_nerge
 			NOT = { has_character_flag = feast_gluttonous }
@@ -2041,9 +2099,15 @@ character_event = {
 	picture = GFX_evt_viking_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = nerge_feast_vassal
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = nerge_feast_vassal
 		NOT = { has_character_flag = feast_lunatic }
 		liege = { 
 			has_character_flag = khagan_finishing_nerge
@@ -2194,9 +2258,15 @@ character_event = {
 	picture = GFX_evt_viking_throneroom_oldgods
 	border = GFX_event_normal_frame_diplomacy
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = nerge_feast_vassal
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = nerge_feast_vassal
 		NOT = { has_character_flag = feast_lustful }
 		liege = { 
 			has_character_flag = khagan_finishing_nerge
@@ -2441,9 +2511,15 @@ character_event = {
 	id = TOG.210
 	hide_window = yes
 	
+	only_playable = yes
+	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = nerge_feast_vassal
+	has_dlc = "The Old Gods"
+	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = nerge_feast_vassal
 		NOT = { has_character_flag = feast_friendship }
 		liege = { 
 			has_character_flag = khagan_finishing_nerge
@@ -2573,11 +2649,15 @@ character_event = {
 	id = TOG.213
 	hide_window = yes
 	
+	only_playable = yes
 	only_men = yes
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	has_character_flag = nerge_feast_vassal
+	has_dlc = "The Old Gods"
 	
 	trigger = {
-		has_dlc = "The Old Gods"
-		has_character_flag = nerge_feast_vassal
 		NOT = { has_character_flag = feast_homosexual }
 		trait = homosexual
 		has_lover = no

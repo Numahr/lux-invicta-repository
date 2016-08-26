@@ -424,8 +424,7 @@ character_event = {
 					if = {
 						limit = {
 							is_close_relative = PREV
-#							NOT = { religion = messalian }
-							NOT = { religion = zoroastrian }
+							close_relative_marriages_allowed_trigger = no
 						}
 						add_character_modifier = {
 							name = incestuous_adulteress
@@ -436,8 +435,7 @@ character_event = {
 						limit = {
 							OR = {
 								NOT = { is_close_relative = PREV }
-#								religion = messalian
-								religion = zoroastrian
+								close_relative_marriages_allowed_trigger = yes
 							}
 						}
 						add_character_modifier = {
@@ -499,8 +497,7 @@ character_event = {
 					if = {
 						limit = {
 							is_close_relative = PREV
-#							NOT = { religion = messalian }
-							NOT = { religion = zoroastrian }
+							close_relative_marriages_allowed_trigger = no
 						}
 						add_character_modifier = {
 							name = incestuous_adulterer
@@ -512,8 +509,7 @@ character_event = {
 							is_married = yes
 							OR = {
 								NOT = { is_close_relative = PREV }
-#								religion = messalian
-								religion = zoroastrian
+								close_relative_marriages_allowed_trigger = yes
 							}
 						}
 						add_character_modifier = {
@@ -777,10 +773,10 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			trait = wounded
-			trait = maimed
 		}
+		is_maimed_trigger = no
 	}
 	
 	immediate = {
@@ -818,7 +814,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOT = { trait = maimed }
+		can_be_maimed_trigger = yes
 	}
 	
 	weight_multiplier = {
@@ -835,7 +831,7 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA158"
-		add_trait = maimed
+		add_maimed_trait_effect = yes
 	}
 }
 
@@ -910,10 +906,10 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			trait = wounded
-			trait = maimed
 		}
+		is_maimed_trigger = no
 	}
 	
 	immediate = {
@@ -964,7 +960,10 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOT = { trait = maimed }
+		NOR = {
+			trait = maimed
+			trait = one_eyed
+		}
 	}
 	
 	weight_multiplier = {
@@ -986,7 +985,24 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA161"
-		add_trait = maimed
+		if = {
+			limit = {
+				NOT = { has_dlc = "Reapers" }
+			}
+			add_trait = maimed
+			character_event = { id = 38281 }
+		}
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			add_trait = one_eyed
+			add_trait = severely_injured
+			hidden_tooltip = {
+				character_event = { id = RIP.11501 } #Notify one-eyed
+				resolve_severely_injured_effect = yes
+			}
+		}
 		if = {
 			limit = {
 				host = { NOT = { character = FROM } }
@@ -1547,6 +1563,7 @@ narrative_event = {
 	title = "EVTNAME200"
 	desc = "EVTDESC200"
 	picture = GFX_evt_crusaders
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -1606,6 +1623,7 @@ narrative_event = {
 	title = "EVTNAME200"
 	desc = "EVTDESC201"
 	picture = GFX_evt_crusaders
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -1668,6 +1686,7 @@ narrative_event = {
 	title = EVTNAME200
 	desc = EVTDESC321
 	picture = GFX_evt_crusaders
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -1727,6 +1746,7 @@ narrative_event = {
 	title = "EVTNAME200"
 	desc = "EVTDESC320"
 	picture = GFX_evt_battle
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -1786,6 +1806,7 @@ narrative_event = {
 	title = "EVTNAME200"
 	desc = "EVTDESC322"
 	picture = GFX_evt_battle
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -1848,6 +1869,7 @@ narrative_event = {
 	title = "EVTNAME200"
 	desc = "EVTDESC323"
 	picture = GFX_evt_battle
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -1907,6 +1929,7 @@ narrative_event = {
 	title = "EVTNAME200"
 	desc = "EVTDESC324"
 	picture = GFX_evt_viking_battle_oldgods
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -1973,6 +1996,7 @@ narrative_event = {
 	title = "EVTNAME200"
 	desc = "EVTDESC325"
 	picture = GFX_evt_viking_battle_oldgods
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -2036,9 +2060,10 @@ narrative_event = {
 # FROM is the attacked kingdom title
 narrative_event = {
 	id = 326
-	title = "EVTNAME200"
-	desc = "EVTDESC326"
+	title = EVTNAME200
+	desc = EVTDESC326
 	picture = GFX_evt_viking_battle_oldgods
+	border = GFX_event_narrative_frame_war
 	
 	is_triggered_only = yes
 	major = yes
@@ -3490,10 +3515,7 @@ character_event = {
 			has_character_flag = recieved_royal_marriage_aid_duty
 		}
 		OR = {
-#			AND = {
-				NOT = { religion = zoroastrian }
-#				NOT = { religion = messalian }
-#			}
+			close_relative_marriages_allowed_trigger = no
 			NOT = { new_character = { is_close_relative = FROM } }
 		}
 		OR = {
@@ -3579,10 +3601,11 @@ character_event = {
 	desc = EVTDESC501
 	picture = GFX_evt_marriage_zoroastrian_group
 	
+	religion = zoroastrian
+	
 	is_triggered_only = yes
 	
 	trigger = {
-		religion = zoroastrian
 		new_character = { is_close_relative = FROM }
 		OR = {
 			FROM = { character = ROOT }
@@ -3804,10 +3827,11 @@ letter_event = {
 	id = 290
 	desc = "EVTDESC290"
 	
+	lacks_dlc = "Conclave"
+	
 	is_triggered_only = yes
 	
 	trigger = {
-		NOT = { has_dlc = "Zeus" }
 		ai = no
 	}
 
@@ -3852,9 +3876,12 @@ letter_event = {
 # Approve or disapprove of de jure Law Change
 letter_event = {
 	id = 291
+	
+	lacks_dlc = "Conclave"
+	ai = no
+	
 	is_triggered_only = yes
 	trigger = {
-		ai = no
 		FROM = {
 			holder_scope = {
 				is_vassal_or_below = ROOT
@@ -3909,10 +3936,12 @@ letter_event = {
 	id = 292
 	desc = "EVTDESC292"
 	
+	lacks_dlc = "Conclave"
+	ai = no
+	
 	is_triggered_only = yes
 	
 	trigger = {
-		ai = no
 		FROM = {
 			holder_scope = {
 				NOT = { is_vassal_or_below = ROOT }
@@ -4295,6 +4324,16 @@ narrative_event = {
 			FROM = {
 				religion_group = PREV
 			}
+			is_heretic = no
+		}
+	}
+	option = {
+		name = "EVTOPTC621"
+		trigger = {
+			FROM = {
+				religion_group = PREV
+			}
+			is_heretic = yes
 		}
 	}
 	
@@ -5005,9 +5044,6 @@ character_event = {
 					is_primary_holder_title_tier = yes
 				}
 			}
-#			FROM = {
-#				add_claim = PREV
-#			}
 			add_claim = FROM
 		}
 	}
@@ -5203,6 +5239,7 @@ diploresponse_event = {
 
 	option = {
 		name = "OK"
+		custom_tooltip = { text = EVT527_TOOLTIP }
 	}
 }
 
@@ -5290,5 +5327,194 @@ diploresponse_event = {
 
 	option = {
 		name = "OK"
+	}
+}
+
+#Realm with designated regent or court physicians inherited by realm that already has a designated regent
+character_event = {
+	id = 532
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	only_rulers = yes
+	
+	trigger = {
+		OR = {
+		  	AND = {
+				OR = {
+					any_courtier = {
+						has_minor_title = title_appointed_regent
+					}
+					any_vassal = {
+						has_minor_title = title_appointed_regent
+				 	}
+				}
+				current_heir = {
+					is_ruler = yes
+					OR = {
+						any_courtier = {
+							has_minor_title = title_appointed_regent
+						}
+						any_vassal = {
+						   has_minor_title = title_appointed_regent
+						}
+					}
+				}
+			}
+			AND = {
+				any_courtier_or_vassal = {
+					has_minor_title = title_court_physician
+					liege = { character = ROOT }
+				}
+				current_heir = {
+					is_ruler = yes
+					any_courtier_or_vassal = {
+						has_minor_title = title_court_physician
+						liege = { character = PREVPREV }
+					}
+				}
+			}
+		}
+	}
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					any_courtier = {
+						has_minor_title = title_appointed_regent
+					}
+					any_vassal = {
+						has_minor_title = title_appointed_regent
+					}
+				}
+				current_heir = {
+					is_ruler = yes
+					OR = {
+						any_courtier = {
+							has_minor_title = title_appointed_regent
+						}
+						any_vassal = {
+						   has_minor_title = title_appointed_regent
+						}
+					}
+				}
+			}
+			random_courtier_or_vassal = {
+				limit = {
+					has_minor_title = title_appointed_regent
+					liege = { character = ROOT }
+				}
+				remove_title = title_appointed_regent
+			}	
+		}
+		if = {
+			limit = {
+				any_courtier_or_vassal = {
+					has_minor_title = title_court_physician
+					liege = { character = ROOT }
+				}
+				current_heir = {
+					is_ruler = yes
+					any_courtier_or_vassal = {
+						has_minor_title = title_court_physician
+						liege = { character = PREVPREV }
+					}
+				}
+			}
+			random_courtier_or_vassal = {
+				limit = {
+					has_minor_title = title_court_physician
+					liege = { character = ROOT }
+				}
+				remove_title = title_court_physician
+			}	
+		}
+	}
+}
+
+character_event = {
+	id = 533
+	hide_window = yes
+	is_triggered_only = yes
+
+	only_rulers = yes
+	
+	trigger = {
+		FROM = {
+			higher_tier_than = DUKE
+			is_primary_holder_title = yes
+		}
+		FROMFROM = {
+			any_vassal = {
+				leads_faction = faction_powerful_vassal_takeover
+				NOT = { has_opinion_modifier = { who = ROOT modifier = opinion_replaced_bad_ruler } }
+			}
+		}
+	}
+
+	immediate = {
+		FROMFROM = {
+			any_vassal = {
+				limit = {
+					in_faction = faction_powerful_vassal_takeover
+				}
+				opinion = {
+					who = ROOT
+					modifier = opinion_replaced_bad_ruler
+					years = 2
+				}
+			}
+		}
+	}
+}
+
+# Crusade/Jihad is invalidated 
+narrative_event = {
+
+	# ROOT is the target title
+	# new_character is the Enemy
+	# FROM is the Pope/Caliph
+	
+	id = 534
+	title = "EVTNAME534"
+	picture = "GFX_evt_battle"
+	border = "GFX_event_narrative_frame_religion"
+	
+	desc = {
+		picture = GFX_evt_battle
+		text = EVTDESC534_converted
+		trigger = { 
+			new_character = { religion = FROM }
+		}
+	}
+	desc = {
+		picture = GFX_evt_battle
+		text = EVTDESC534_coup
+		trigger = { 
+			new_character = { NOT = { religion = FROM } }
+		}
+	}
+	
+	major = yes
+	
+	only_rulers = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA620"
+		trigger = {
+			religion_group = FROM
+		}
+	}
+	
+	option = {
+		name = "EVTOPTB620"
+		trigger = {
+			NOT = {
+				religion_group = FROM
+			}
+		}
 	}
 }

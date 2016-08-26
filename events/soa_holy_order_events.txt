@@ -6,6 +6,8 @@ character_event = {
 
 	only_playable = yes
 
+	has_dlc = "Sons of Abraham"
+
 	trigger = {
 		has_holy_order_trigger = yes
 		borrowed_from_holy_order_trigger = yes
@@ -24,7 +26,6 @@ character_event = {
 				}
 			}
 		}
-		has_dlc = "Sons of Abraham"
 	}
 
 	mean_time_to_happen = {
@@ -939,7 +940,12 @@ character_event = {
 	id = SoA.1020
 	hide_window = yes
 
-	only_playable = yes
+	only_men = yes
+	min_age = 16
+	max_age = 45
+	only_capable = yes
+	prisoner = no
+	has_dlc = "Sons of Abraham"
 
 	trigger = {
 		has_holy_order_trigger = yes
@@ -959,8 +965,6 @@ character_event = {
 			wealth = 300
 		}
 		
-		has_dlc = "Sons of Abraham"
-
 		expelled_holy_order_trigger = no
 		NOT = {
 			any_liege = {
@@ -1802,15 +1806,13 @@ province_event = {
 # The son of a ruler volunteers to join a Holy Order
 character_event = {
 	id = SoA.1030
-#	desc =EVTDESC_SOA_1030
-#	picture = GFX_evt_crusaders
-#	border = GFX_event_normal_frame_religion
 	hide_window = yes
 	only_men = yes
 	min_age = 16
 	max_age = 45
 	only_capable = yes
 	prisoner = no
+	has_dlc = "Sons of Abraham"
 
 	trigger = {
 		is_ruler = no
@@ -1848,12 +1850,16 @@ character_event = {
 			}
 		}
 
-		has_dlc = "Sons of Abraham"
-
 		expelled_holy_order_trigger = no
-		NOT = {
+		NOR = {
 			any_liege = {
 				expelled_holy_order_trigger = yes
+			}
+			any_spouse = {
+				is_pregnant = yes
+				father_of_unborn = {
+					character = ROOT
+				}
 			}
 		}
 	}
@@ -2687,46 +2693,13 @@ character_event = {
 			}
 			zurvanism_reformed = {
 				d_holyzurvanism_reformed = {
-					save_event_target_as = holy_order
+					save_event_target_as = order_target
 				}
 			}
 		}
-		event_target:holy_order = {
-			holder_scope = {
-				ROOT = {
-					hidden_tooltip = {
-						clear_wealth = PREV
-					}
-				}
-				if = {
-					limit = {
-						celibate_priest_religion_trigger = yes
-					}
-					ROOT = {
-						any_spouse = {
-							remove_spouse = spouse
-							hidden_tooltip = {
-								character_event = {
-									id = SoA.2862
-								}
-							}
-						}
-						add_trait = celibate
-					}
-				}
-				ROOT = {
-					if = {
-						limit = { trait = in_hiding }
-						remove_trait = in_hiding
-						clr_character_flag = do_not_disturb
-						add_character_modifier = {
-							name = went_out_of_hiding_timer
-							duration = 180
-							hidden = yes
-						}
-						hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-					}
-				}
+		ROOT = {
+			character_event = {
+				id = SoA.2864
 			}
 		}
 	}
@@ -2735,9 +2708,6 @@ character_event = {
 # Liege refuses request to join a Holy Order
 character_event = {
 	id = SoA.1033
-#	desc =EVTDESC_SOA_1033
-#	picture = GFX_evt_crusaders
-#	border = GFX_event_normal_frame_religion
 	hide_window = yes
 	is_triggered_only = yes
 
@@ -2757,7 +2727,9 @@ character_event = {
 	id = SoA.1050
 	hide_window = yes
 
+	min_age = 16
 	only_playable = yes
+	has_dlc = "Sons of Abraham"
 
 	trigger = {
 		has_holy_order_trigger = yes
@@ -2773,8 +2745,6 @@ character_event = {
 			}
 			wealth = 300
 		}
-		
-		has_dlc = "Sons of Abraham"
 		
 		expelled_holy_order_trigger = no
 		NOT = {
@@ -3724,5 +3694,2780 @@ character_event = {
 			NOT = { opinion = { who = FROMFROMFROM value = 0 } }
 		}
 		tooltip = { remove_spouse = FROMFROMFROM }
+	}
+}
+
+# Character joining holy order effects
+character_event = {
+	id = SoA.2864
+	hide_window = yes
+
+	is_triggered_only = yes
+	
+	immediate = {
+		if = {
+			limit = {
+				has_minor_title = title_commander
+			}
+			remove_title = title_commander
+		}
+		if = {
+			limit = {
+				has_minor_title = title_appointed_regent
+			}
+			remove_title = title_appointed_regent
+		}
+		if = {
+			limit = {
+				has_minor_title = title_patrician_heir
+			}
+			remove_title = title_patrician_heir
+		}
+		clear_wealth = event_target:order_target
+		spouse = {
+			remove_spouse = spouse
+			character_event = { id = SoA.2863 }
+		}
+		move_character = event_target:order_target
+		add_trait = celibate
+		if = {
+			limit = { is_inaccessible_trigger = yes }
+			remove_trait = in_hiding
+			clr_character_flag = do_not_disturb
+			add_character_modifier = {
+				name = went_out_of_hiding_timer
+				duration = 180
+				hidden = yes
+			}
+			character_event = { id = CM.6400 } # Notify plotters and family
+		}
+	}
+}
+
+# Expelling a Holy Order confirmation event
+character_event = {
+	id = SoA.2990
+	border = "GFX_event_normal_frame_religion"
+	title = expel_holy_order
+	
+	desc = {
+		trigger = {
+			religion_group = christian
+		}
+		text = EVTDESC_SOA_2990
+		picture = "GFX_evt_crusaders"
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = muslim
+				religion_group = zoroastrian_group
+				religion_group = berberpagan_group
+				religion_group = arabpagan_group
+				religion_group = palmyranpagan_group
+				religion_group = yazd_group
+				religion_group = mand_group
+				religion_group = mani_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = "GFX_evt_moors"
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = baltic_group
+				religion_group = finnish_group
+				religion_group = norsegerman_group
+				religion_group = pagan_group
+				religion_group = mithra_group
+				religion_group = slavic_group
+				religion_group = zal_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = "GFX_evt_vikings_arriving_oldgods"
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = bantu_group
+				religion_group = east_african_group
+				religion_group = serer_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_travel_west_african
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion = aztec
+				religion = aztec_reformed
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = "GFX_evt_battle_mesoamerican"
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = jewish_group
+				religion_group = abrahamic_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = "GFX_evt_synagogue"
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = egyptian_group
+				religion_group = luwian_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_ancient_egypt
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = bud_group
+				religion_group = indian_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_roi_elephants_battle
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = celtic_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_celtic_warriors
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = chinese_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_silkroad_han_traders
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = graecoroman_group
+				religion_group = neoplato_group
+				religion_group = sol_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_hippodrome_byzantine
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion_group = inuit_group
+			}
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_rainstorm
+	}
+	desc = {
+		trigger = {
+			religion_group = tengri_group
+		}
+		text = EVTDESC_SOA_2990
+		picture = GFX_evt_mongols
+	}
+	
+	only_rulers = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = "EVTOPTA_SOA_2990"
+		piety = -1000
+		
+		religion_authority = {
+			modifier = holy_order_expelled
+			years = 20
+		}
+		custom_tooltip = {
+			text = expelling_holy_order_event_tooltip_a
+		}
+		trigger_switch = {
+			on_trigger = has_character_flag
+			expel_d_holyadoptionist_check = {
+				hidden_tooltip = {
+					d_holyadoptionist = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1060
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyadoptionist
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyadoptionist_check
+				}
+			}
+			expel_d_holyalexandros_check = {
+				hidden_tooltip = {
+					d_holyalexandros = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1060
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyalexandros
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyalexandros_check
+				}
+			}
+			expel_d_holyalmaqah_check = {
+				hidden_tooltip = {
+					add_character_modifier = {
+						name = expelled_d_holyalmaqah
+						duration = -1
+						inherit = yes
+					}
+					d_holyalmaqah = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1060
+							}
+						}
+					}
+					clr_character_flag = expel_d_holyalmaqah_check
+				}
+			}
+			expel_d_holyapollinarist_check = {
+				hidden_tooltip = {
+					d_holyapollinarist = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1560
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyapollinarist
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyapollinarist_check
+				}
+			}
+			expel_d_holyarian_check = {
+				hidden_tooltip = {
+					d_holyarian = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1460
+							}
+						}
+					}
+					
+					add_character_modifier = {
+						name = expelled_d_holyarian
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyarian_check
+				}
+			}
+			expel_d_holyashari_check = {
+				hidden_tooltip = {
+					d_holyashari = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1460
+							}
+						}
+					}
+					
+					add_character_modifier = {
+						name = expelled_d_holyashari
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyashari_check
+				}
+			}
+			expel_d_holyathari_check = {
+				hidden_tooltip = {
+					d_holyathari = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1460
+							}
+						}
+					}
+					
+					add_character_modifier = {
+						name = expelled_d_holyathari
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyathari_check
+				}
+			}
+			expel_d_holyaudianist_check = {
+				hidden_tooltip = {
+					d_holyaudianist = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1660
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyaudianist
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyaudianist_check
+				}
+			}
+			expel_d_holyaztec_check = {
+				hidden_tooltip = {
+					d_holyaztec = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1760
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyaztec
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyaztec_check
+				}
+			}
+			expel_d_holybud_bahusrutiya_check = {
+				hidden_tooltip = {
+					d_holybud_bahusrutiya = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1860
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_bahusrutiya
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_bahusrutiya_check
+				}
+			}
+			expel_d_holybud_mahayana_check = {
+				hidden_tooltip = {
+					d_holybud_mahayana = {
+						holder_scope = {
+							character_event = {
+								id = SoA.1960
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_mahayana
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_mahayana_check
+				}
+			}
+			expel_d_holybud_pratyeka_check = {
+				hidden_tooltip = {
+					d_holybud_pratyeka = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2060
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_pratyeka
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_pratyeka_check
+				}
+			}
+			expel_d_holybud_pureland_check = {
+				hidden_tooltip = {
+					d_holybud_pureland = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2160
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_pureland
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_pureland_check
+				}
+			}
+			expel_d_holybud_sthaviravada_check = {
+				hidden_tooltip = {
+					d_holybud_sthaviravada = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2260
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_sthaviravada
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_sthaviravada_check
+				}
+			}
+			expel_d_holybud_vajrayana_check = {
+				hidden_tooltip = {
+					d_holybud_vajrayana = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2360
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_vajrayana
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_vajrayana_check
+				}
+			}
+			expel_d_holycatholic_check = {
+				hidden_tooltip = {
+					d_holycatholic = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2460
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holycatholic
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holycatholic_check
+				}
+			}
+			expel_d_holydonatist_check = {
+				hidden_tooltip = {
+					d_holydonatist = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2560
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holydonatist
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holydonatist_check
+				}
+			}
+			expel_d_holyharuri_check = {
+				hidden_tooltip = {
+					d_holyharuri = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2660
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyharuri
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyharuri_check
+				}
+			}
+			expel_d_holyhindu_check = {
+				hidden_tooltip = {
+					d_holyhindu = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2760
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyhindu
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyhindu_check
+				}
+			}
+			expel_d_holyhurufi_check = {
+				hidden_tooltip = {
+					d_holyhurufi = {
+						holder_scope = {
+							character_event = {
+								id = SoA.2860
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyhurufi
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyhurufi_check
+				}
+			}
+			expel_d_holyiconoclast_check = {
+				hidden_tooltip = {
+					d_holyiconoclast = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyiconoclast
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyiconoclast_check
+				}
+			}
+			expel_d_holyilm_islam_check = {
+				hidden_tooltip = {
+					d_holyilm_islam = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyilm_islam
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyilm_islam_check
+				}
+			}
+			expel_d_holyindoh_bud_check = {
+				hidden_tooltip = {
+					d_holyindoh_bud = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyindoh_bud
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyindoh_bud_check
+				}
+			}
+			expel_d_holyindoh_confucian_check = {
+				hidden_tooltip = {
+					d_holyindoh_confucian = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyindoh_confucian
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyindoh_confucian_check
+				}
+			}
+			expel_d_holyindoh_hindu_check = {
+				hidden_tooltip = {
+					d_holyindoh_hindu = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyindoh_hindu
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyindoh_hindu_check
+				}
+			}
+			expel_d_holyindoh_zor_check = {
+				hidden_tooltip = {
+					d_holyindoh_zor = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyindoh_zor
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyindoh_zor_check
+				}
+			}
+			expel_d_holyjain_check = {
+				hidden_tooltip = {
+					d_holyjain = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyjain
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyjain_check
+				}
+			}
+			expel_d_holyjud_zion_check = {
+				hidden_tooltip = {
+					d_holyjud_zion = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyjud_zion
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyjud_zion_check
+				}
+			}
+			expel_d_holyjupiter_check = {
+				hidden_tooltip = {
+					d_holyjupiter = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyjupiter
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyjupiter_check
+				}
+			}
+			expel_d_holyluwian_check = {
+				hidden_tooltip = {
+					d_holyluwian = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyluwian
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyluwian_check
+				}
+			}
+			expel_d_holymani_check = {
+				hidden_tooltip = {
+					d_holymani = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymani
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymani_check
+				}
+			}
+			expel_d_holymani_mithra_check = {
+				hidden_tooltip = {
+					d_holymani_mithra = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymani_mithra
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymani_mithra_check
+				}
+			}
+			expel_d_holymaturidi_check = {
+				hidden_tooltip = {
+					d_holymaturidi = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymaturidi
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymaturidi_check
+				}
+			}
+			expel_d_holymelkite_check = {
+				hidden_tooltip = {
+					d_holymelkite = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymelkite
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymelkite_check
+				}
+			}
+			expel_d_holymithra_check = {
+				hidden_tooltip = {
+					d_holymithra = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymithra
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymithra_check
+				}
+			}
+			expel_d_holymithra_christ_check = {
+				hidden_tooltip = {
+					d_holymithra_christ = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymithra_christ
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymithra_christ_check
+				}
+			}
+			expel_d_holymithra_sol_check = {
+				hidden_tooltip = {
+					d_holymithra_sol = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymithra_sol
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymithra_sol_check
+				}
+			}
+			expel_d_holymonophysite_check = {
+				hidden_tooltip = {
+					d_holymonophysite = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymonophysite
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymonophysite_check
+				}
+			}
+			expel_d_holymonothelite_check = {
+				hidden_tooltip = {
+					d_holymonothelite = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymonothelite
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymonothelite_check
+				}
+			}
+			expel_d_holymurjiah_check = {
+				hidden_tooltip = {
+					d_holymurjiah = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymurjiah
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymurjiah_check
+				}
+			}
+			expel_d_holymutazil_check = {
+				hidden_tooltip = {
+					d_holymutazil = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymutazil
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymutazil_check
+				}
+			}
+			expel_d_holymwari_check = {
+				hidden_tooltip = {
+					d_holymwari = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymwari
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymwari_check
+				}
+			}
+			expel_d_holyneoplato_check = {
+				hidden_tooltip = {
+					d_holyneoplato = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyneoplato
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyneoplato_check
+				}
+			}
+			expel_d_holynestorian_check = {
+				hidden_tooltip = {
+					d_holynestorian = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holynestorian
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holynestorian_check
+				}
+			}
+			expel_d_holynyau_check = {
+				hidden_tooltip = {
+					d_holynyau = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holynyau
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holynyau_check
+				}
+			}
+			expel_d_holyorthodox_check = {
+				hidden_tooltip = {
+					d_holyorthodox = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyorthodox
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyorthodox_check
+				}
+			}
+			expel_d_holypelagian_check = {
+				hidden_tooltip = {
+					d_holypelagian = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holypelagian
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holypelagian_check
+				}
+			}
+			expel_d_holyplato_christ_check = {
+				hidden_tooltip = {
+					d_holyplato_christ = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyplato_christ
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyplato_christ_check
+				}
+			}
+			expel_d_holyplato_christ_check = {
+				hidden_tooltip = {
+					d_holyplato_christ = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyplato_christ
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyplato_islam_check
+				}
+			}
+			expel_d_holysabellianist_check = {
+				hidden_tooltip = {
+					d_holysabellianist = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysabellianist
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysabellianist_check
+				}
+			}
+			expel_d_holysemipelagian_check = {
+				hidden_tooltip = {
+					d_holysemipelagian = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysemipelagian
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysemipelagian_check
+				}
+			}
+			expel_d_holyshiite_check = {
+				hidden_tooltip = {
+					d_holyshiite = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyshiite
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyshiite_check
+				}
+			}
+			expel_d_holysol_check = {
+				hidden_tooltip = {
+					d_holysol = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysol
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysol_check
+				}
+			}
+			expel_d_holysol_apollo_check = {
+				hidden_tooltip = {
+					d_holysol_apollo = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysol_apollo
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysol_apollo_check
+				}
+			}
+			expel_d_holysol_christ_check = {
+				hidden_tooltip = {
+					d_holysol_christ = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysol_christ
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysol_christ_check
+				}
+			}
+			expel_d_holysol_mani_check = {
+				hidden_tooltip = {
+					d_holysol_mani = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysol_mani
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysol_mani_check
+				}
+			}
+			expel_d_holysolomonic_alexandros_check = {
+				hidden_tooltip = {
+					d_holysolomonic_alexandros = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysolomonic_alexandros
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysolomonic_alexandros_check
+				}
+			}
+			expel_d_holysolomonic_christ_check = {
+				hidden_tooltip = {
+					d_holysolomonic_christ = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysolomonic_christ
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysolomonic_christ_check
+				}
+			}
+			expel_d_holysunni_check = {
+				hidden_tooltip = {
+					d_holysunni = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysunni
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysunni_check
+				}
+			}
+			expel_d_holyunctionist_check = {
+				hidden_tooltip = {
+					d_holyunctionist = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyunctionist
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyunctionist_check
+				}
+			}
+			expel_d_holyyoruba_check = {
+				hidden_tooltip = {
+					d_holyyoruba = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyyoruba
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyyoruba_check
+				}
+			}
+			expel_d_holyzahiri_check = {
+				hidden_tooltip = {
+					d_holyzahiri = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzahiri
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzahiri_check
+				}
+			}
+			expel_d_holyzal_check = {
+				hidden_tooltip = {
+					d_holyzal = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzal
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzal_check
+				}
+			}
+			expel_d_holyzal_christ_check = {
+				hidden_tooltip = {
+					d_holyzal_christ = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzal_christ
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzal_christ_check
+				}
+			}
+			expel_d_holyzal_mani_check = {
+				hidden_tooltip = {
+					d_holyzal_mani = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzal_mani
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzal_mani_check
+				}
+			}
+			expel_d_holyzor_hindu_check = {
+				hidden_tooltip = {
+					d_holyzor_hindu = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzor_hindu
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzor_hindu_check
+				}
+			}
+			expel_d_holyzoroastrian_check = {
+				hidden_tooltip = {
+					d_holyzoroastrian = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzoroastrian
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzoroastrian_check
+				}
+			}
+			expel_d_holyahriman_reformed_check = {
+				hidden_tooltip = {
+					d_holyahriman_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyahriman_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyahriman_reformed_check
+				}
+			}
+			expel_d_holyamun_reformed_check = {
+				hidden_tooltip = {
+					d_holyamun_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyamun_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyamun_reformed_check
+				}
+			}
+			expel_d_holyarab_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyarab_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyarab_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyarab_pagan_reformed_check
+				}
+			}
+			expel_d_holyaten_reformed_check = {
+				hidden_tooltip = {
+					d_holyaten_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyaten_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyaten_reformed_check
+				}
+			}
+			expel_d_holybaal_monotheistic_reformed_check = {
+				hidden_tooltip = {
+					d_holybaal_monotheistic_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybaal_monotheistic_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybaal_monotheistic_reformed_check
+				}
+			}
+			expel_d_holybaltic_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holybaltic_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybaltic_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybaltic_pagan_reformed_check
+				}
+			}
+			expel_d_holybantu_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holybantu_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybantu_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybantu_pagan_reformed_check
+				}
+			}
+			expel_d_holyberber_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyberber_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyberber_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyberber_pagan_reformed_check
+				}
+			}
+			expel_d_holybon_reformed_check = {
+				hidden_tooltip = {
+					d_holybon_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybon_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybon_reformed_check
+				}
+			}
+			expel_d_holybud_zen_reformed_check = {
+				hidden_tooltip = {
+					d_holybud_zen_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_zen_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_zen_reformed_check
+				}
+			}
+			expel_d_holybud_zor_reformed_check = {
+				hidden_tooltip = {
+					d_holybud_zor_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holybud_zor_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holybud_zor_reformed_check
+				}
+			}
+			expel_d_holycathar_reformed_check = {
+				hidden_tooltip = {
+					d_holycathar_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holycathar_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holycathar_reformed_check
+				}
+			}
+			expel_d_holyceltic_christ_reformed_check = {
+				hidden_tooltip = {
+					d_holyceltic_christ_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyceltic_christ_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyceltic_christ_reformed_check
+				}
+			}
+			expel_d_holyceltic_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyceltic_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyceltic_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyceltic_pagan_reformed_check
+				}
+			}
+			expel_d_holychristian_populist_reformed_check = {
+				hidden_tooltip = {
+					d_holychristian_populist_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holychristian_populist_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holychristian_populist_reformed_check
+				}
+			}
+			expel_d_holychumbylat_reformed_check = {
+				hidden_tooltip = {
+					d_holychumbylat_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holychumbylat_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holychumbylat_reformed_check
+				}
+			}
+			expel_d_holycybele_reformed_check = {
+				hidden_tooltip = {
+					d_holycybele_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holycybele_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holycybele_reformed_check
+				}
+			}
+			expel_d_holydruze_reformed_check = {
+				hidden_tooltip = {
+					d_holydruze_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holydruze_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holydruze_reformed_check
+				}
+			}
+			expel_d_holyerlik_reformed_check = {
+				hidden_tooltip = {
+					d_holyerlik_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyerlik_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyerlik_reformed_check
+				}
+			}
+			expel_d_holyethiopian_war_reformed_check = {
+				hidden_tooltip = {
+					d_holyethiopian_war_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyethiopian_war_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyethiopian_war_reformed_check
+				}
+			}
+			expel_d_holyfinnish_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyfinnish_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyfinnish_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyfinnish_pagan_reformed_check
+				}
+			}
+			expel_d_holygerman_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holygerman_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holygerman_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holygerman_pagan_reformed_check
+				}
+			}
+			expel_d_holygraeco_roman_reformed_check = {
+				hidden_tooltip = {
+					d_holygraeco_roman_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holygraeco_roman_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holygraeco_roman_reformed_check
+				}
+			}
+			expel_d_holyiberian_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyiberian_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyiberian_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyiberian_pagan_reformed_check
+				}
+			}
+			expel_d_holyilluyanka_reformed_check = {
+				hidden_tooltip = {
+					d_holyilluyanka_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyilluyanka_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyilluyanka_reformed_check
+				}
+			}
+			expel_d_holyindohelen_reformed_check = {
+				hidden_tooltip = {
+					d_holyindohelen_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyindohelen_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyindohelen_reformed_check
+				}
+			}
+			expel_d_holyinuit_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyinuit_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyinuit_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyinuit_pagan_reformed_check
+				}
+			}
+			expel_d_holyisis_reformed_check = {
+				hidden_tooltip = {
+					d_holyisis_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyisis_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyisis_reformed_check
+				}
+			}
+			expel_d_holyjud_ark_reformed_check = {
+				hidden_tooltip = {
+					d_holyjud_ark_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyjud_ark_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyjud_ark_reformed_check
+				}
+			}
+			expel_d_holyjudaism_reformed_check = {
+				hidden_tooltip = {
+					d_holyjudaism_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyjudaism_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyjudaism_reformed_check
+				}
+			}
+			expel_d_holykubera_reformed_check = {
+				hidden_tooltip = {
+					d_holykubera_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holykubera_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holykubera_reformed_check
+				}
+			}
+			expel_d_holylubu_reformed_check = {
+				hidden_tooltip = {
+					d_holylubu_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holylubu_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holylubu_reformed_check
+				}
+			}
+			expel_d_holymand_ruha_reformed_check = {
+				hidden_tooltip = {
+					d_holymand_ruha_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymand_ruha_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymand_ruha_reformed_check
+				}
+			}
+			expel_d_holymandaean_reformed_check = {
+				hidden_tooltip = {
+					d_holymandaean_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymandaean_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymandaean_reformed_check
+				}
+			}
+			expel_d_holymani_germanic_reformed_check = {
+				hidden_tooltip = {
+					d_holymani_germanic_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymani_germanic_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymani_germanic_reformed_check
+				}
+			}
+			expel_d_holymani_slavic_reformed_check = {
+				hidden_tooltip = {
+					d_holymani_slavic_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymani_slavic_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymani_slavic_reformed_check
+				}
+			}
+			expel_d_holymari_christ_reformed_check = {
+				hidden_tooltip = {
+					d_holymari_christ_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymari_christ_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymari_christ_reformed_check
+				}
+			}
+			expel_d_holymazdakism_reformed_check = {
+				hidden_tooltip = {
+					d_holymazdakism_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymazdakism_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymazdakism_reformed_check
+				}
+			}
+			expel_d_holymontanist_reformed_check = {
+				hidden_tooltip = {
+					d_holymontanist_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymontanist_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymontanist_reformed_check
+				}
+			}
+			expel_d_holymurugan_reformed_check = {
+				hidden_tooltip = {
+					d_holymurugan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymurugan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymurugan_reformed_check
+				}
+			}
+			expel_d_holymuslim_aliite_reformed_check = {
+				hidden_tooltip = {
+					d_holymuslim_aliite_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymuslim_aliite_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymuslim_aliite_reformed_check
+				}
+			}
+			expel_d_holymuslim_domination_reformed_check = {
+				hidden_tooltip = {
+					d_holymuslim_domination_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymuslim_domination_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymuslim_domination_reformed_check
+				}
+			}
+			expel_d_holymuslim_sufi_reformed_check = {
+				hidden_tooltip = {
+					d_holymuslim_sufi_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymuslim_sufi_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holymuslim_sufi_reformed_check
+				}
+			}
+			expel_d_holynasrani_reformed_check = {
+				hidden_tooltip = {
+					d_holynasrani_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holymuslim_sufi_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holynasrani_reformed_check
+				}
+			}
+			expel_d_holynorse_christ_reformed_check = {
+				hidden_tooltip = {
+					d_holynorse_christ_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holynorse_christ_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holynorse_christ_reformed_check
+				}
+			}
+			expel_d_holynorse_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holynorse_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holynorse_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holynorse_pagan_reformed_check
+				}
+			}
+			expel_d_holynorthern_sun_reformed_check = {
+				hidden_tooltip = {
+					d_holynorthern_sun_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holynorthern_sun_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holynorthern_sun_reformed_check
+				}
+			}
+			expel_d_holynyakalagan_reformed_check = {
+				hidden_tooltip = {
+					d_holynyakalagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holynyakalagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holynyakalagan_reformed_check
+				}
+			}
+			expel_d_holypriscillian_reformed_check = {
+				hidden_tooltip = {
+					d_holypriscillian_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holypriscillian_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holypriscillian_reformed_check
+				}
+			}
+			expel_d_holyragnarok_reformed_check = {
+				hidden_tooltip = {
+					d_holyragnarok_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyragnarok_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyragnarok_reformed_check
+				}
+			}
+			expel_d_holysaura_reformed_check = {
+				hidden_tooltip = {
+					d_holysaura_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysaura_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysaura_reformed_check
+				}
+			}
+			expel_d_holyserer_reformed_check = {
+				hidden_tooltip = {
+					d_holyserer_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyserer_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyserer_reformed_check
+				}
+			}
+			expel_d_holyset_reformed_check = {
+				hidden_tooltip = {
+					d_holyset_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyset_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyset_reformed_check
+				}
+			}
+			expel_d_holysethian_reformed_check = {
+				hidden_tooltip = {
+					d_holysethian_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysethian_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysethian_reformed_check
+				}
+			}
+			expel_d_holyslavic_christian_reformed_check = {
+				hidden_tooltip = {
+					d_holyslavic_christian_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyslavic_christian_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyslavic_christian_reformed_check
+				}
+			}
+			expel_d_holyslavic_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyslavic_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyslavic_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyslavic_pagan_reformed_check
+				}
+			}
+			expel_d_holysol_boreas_reformed_check = {
+				hidden_tooltip = {
+					d_holysol_boreas_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysol_boreas_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysol_boreas_reformed_check
+				}
+			}
+			expel_d_holysol_islam_reformed_check = {
+				hidden_tooltip = {
+					d_holysol_islam_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysol_islam_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysol_islam_reformed_check
+				}
+			}
+			expel_d_holysol_sahara_reformed_check = {
+				hidden_tooltip = {
+					d_holysol_sahara_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holysol_sahara_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holysol_sahara_reformed_check
+				}
+			}
+			expel_d_holytao_reformed_check = {
+				hidden_tooltip = {
+					d_holytao_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holytao_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holytao_reformed_check
+				}
+			}
+			expel_d_holytarhunt_reformed_check = {
+				hidden_tooltip = {
+					d_holytarhunt_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holytarhunt_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holytarhunt_reformed_check
+				}
+			}
+			expel_d_holyteiwaz_reformed_check = {
+				hidden_tooltip = {
+					d_holyteiwaz_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyteiwaz_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyteiwaz_reformed_check
+				}
+			}
+			expel_d_holytengri_bud_reformed_check = {
+				hidden_tooltip = {
+					d_holytengri_bud_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holytengri_bud_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holytengri_bud_reformed_check
+				}
+			}
+			expel_d_holytengri_confucian_reformed_check = {
+				hidden_tooltip = {
+					d_holytengri_confucian_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holytengri_confucian_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holytengri_confucian_reformed_check
+				}
+			}
+			expel_d_holytengri_mani_reformed_check = {
+				hidden_tooltip = {
+					d_holytengri_mani_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holytengri_mani_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holytengri_mani_reformed_check
+				}
+			}
+			expel_d_holytengri_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holytengri_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holytengri_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holytengri_pagan_reformed_check
+				}
+			}
+			expel_d_holytengri_rod_reformed_check = {
+				hidden_tooltip = {
+					d_holytengri_rod_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holytengri_rod_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holytengri_rod_reformed_check
+				}
+			}
+			expel_d_holyvattisenyaly_reformed_check = {
+				hidden_tooltip = {
+					d_holyvattisenyaly_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyvattisenyaly_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyvattisenyaly_reformed_check
+				}
+			}
+			expel_d_holyvidharma_reformed_check = {
+				hidden_tooltip = {
+					d_holyvidharma_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyvidharma_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyvidharma_reformed_check
+				}
+			}
+			expel_d_holyvoipel_reformed_check = {
+				hidden_tooltip = {
+					d_holyvoipel_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyvoipel_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyvoipel_reformed_check
+				}
+			}
+			expel_d_holyyazdanism_reformed_check = {
+				hidden_tooltip = {
+					d_holyyazdanism_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyyazdanism_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyyazdanism_reformed_check
+				}
+			}
+			expel_d_holyzande_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyzande_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzande_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzande_pagan_reformed_check
+				}
+			}
+			expel_d_holyzor_angra_reformed_check = {
+				hidden_tooltip = {
+					d_holyzor_angra_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzor_angra_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzor_angra_reformed_check
+				}
+			}
+			expel_d_holyzulu_pagan_reformed_check = {
+				hidden_tooltip = {
+					d_holyzulu_pagan_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzulu_pagan_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzulu_pagan_reformed_check
+				}
+			}
+			expel_d_holyzurvanism_reformed_check = {
+				hidden_tooltip = {
+					d_holyzurvanism_reformed = {
+						holder_scope = {
+							character_event = {
+								id = CM.4012
+							}
+						}
+					}
+					add_character_modifier = {
+						name = expelled_d_holyzurvanism_reformed
+						duration = -1
+						inherit = yes
+					}
+					clr_character_flag = expel_d_holyzurvanism_reformed_check
+				}
+			}
+		}
+	}
+	option = { # Allow them to stay
+		name = "EVTOPTB_SOA_2990"
+		custom_tooltip = {
+			text = expelling_holy_order_event_tooltip_b
+		}
+		hidden_tooltip = {
+			clr_character_flag = expel_d_holyadoptionist_check
+			clr_character_flag = expel_d_holyalexandros_check
+			clr_character_flag = expel_d_holyalmaqah_check
+			clr_character_flag = expel_d_holyapollinarist_check
+			clr_character_flag = expel_d_holyarian_check
+			clr_character_flag = expel_d_holyashari_check
+			clr_character_flag = expel_d_holyathari_check
+			clr_character_flag = expel_d_holyaudianist_check
+			clr_character_flag = expel_d_holyaztec_check
+			clr_character_flag = expel_d_holybud_bahusrutiya_check
+			clr_character_flag = expel_d_holybud_mahayana_check
+			clr_character_flag = expel_d_holybud_pratyeka_check
+			clr_character_flag = expel_d_holybud_pureland_check
+			clr_character_flag = expel_d_holybud_sthaviravada_check
+			clr_character_flag = expel_d_holybud_vajrayana_check
+			clr_character_flag = expel_d_holycatholic_check
+			clr_character_flag = expel_d_holydonatist_check
+			clr_character_flag = expel_d_holyharuri_check
+			clr_character_flag = expel_d_holyhindu_check
+			clr_character_flag = expel_d_holyhurufi_check
+			clr_character_flag = expel_d_holyiconoclast_check
+			clr_character_flag = expel_d_holyilm_islam_check
+			clr_character_flag = expel_d_holyindoh_bud_check
+			clr_character_flag = expel_d_holyindoh_confucian_check
+			clr_character_flag = expel_d_holyindoh_hindu_check
+			clr_character_flag = expel_d_holyindoh_zor_check
+			clr_character_flag = expel_d_holyjain_check
+			clr_character_flag = expel_d_holyjud_zion_check
+			clr_character_flag = expel_d_holyjupiter_check
+			clr_character_flag = expel_d_holyluwian_check
+			clr_character_flag = expel_d_holymani_check
+			clr_character_flag = expel_d_holymani_mithra_check
+			clr_character_flag = expel_d_holymaturidi_check
+			clr_character_flag = expel_d_holymelkite_check
+			clr_character_flag = expel_d_holymithra_check
+			clr_character_flag = expel_d_holymithra_christ_check
+			clr_character_flag = expel_d_holymithra_sol_check
+			clr_character_flag = expel_d_holymonophysite_check
+			clr_character_flag = expel_d_holymonothelite_check
+			clr_character_flag = expel_d_holymurjiah_check
+			clr_character_flag = expel_d_holymutazil_check
+			clr_character_flag = expel_d_holymwari_check
+			clr_character_flag = expel_d_holyneoplato_check
+			clr_character_flag = expel_d_holynestorian_check
+			clr_character_flag = expel_d_holynyau_check
+			clr_character_flag = expel_d_holyorthodox_check
+			clr_character_flag = expel_d_holypelagian_check
+			clr_character_flag = expel_d_holyplato_christ_check
+			clr_character_flag = expel_d_holyplato_islam_check
+			clr_character_flag = expel_d_holysabellianist_check
+			clr_character_flag = expel_d_holysemipelagian_check
+			clr_character_flag = expel_d_holyshiite_check
+			clr_character_flag = expel_d_holysol_check
+			clr_character_flag = expel_d_holysol_apollo_check
+			clr_character_flag = expel_d_holysol_christ_check
+			clr_character_flag = expel_d_holysol_mani_check
+			clr_character_flag = expel_d_holysolomonic_alexandros_check
+			clr_character_flag = expel_d_holysolomonic_christ_check
+			clr_character_flag = expel_d_holysunni_check
+			clr_character_flag = expel_d_holyunctionist_check
+			clr_character_flag = expel_d_holyyoruba_check
+			clr_character_flag = expel_d_holyzahiri_check
+			clr_character_flag = expel_d_holyzal_check
+			clr_character_flag = expel_d_holyzal_christ_check
+			clr_character_flag = expel_d_holyzal_mani_check
+			clr_character_flag = expel_d_holyzor_hindu_check
+			clr_character_flag = expel_d_holyzoroastrian_check
+			clr_character_flag = expel_d_holyahriman_reformed_check
+			clr_character_flag = expel_d_holyamun_reformed_check
+			clr_character_flag = expel_d_holyarab_pagan_reformed_check
+			clr_character_flag = expel_d_holyaten_reformed_check
+			clr_character_flag = expel_d_holybaal_monotheistic_reformed_check
+			clr_character_flag = expel_d_holybaltic_pagan_reformed_check
+			clr_character_flag = expel_d_holybantu_pagan_reformed_check
+			clr_character_flag = expel_d_holyberber_pagan_reformed_check
+			clr_character_flag = expel_d_holybud_zen_reformed_check
+			clr_character_flag = expel_d_holybud_zor_reformed_check
+			clr_character_flag = expel_d_holycathar_reformed_check
+			clr_character_flag = expel_d_holyceltic_christ_reformed_check
+			clr_character_flag = expel_d_holyceltic_pagan_reformed_check
+			clr_character_flag = expel_d_holychristian_populist_reformed_check
+			clr_character_flag = expel_d_holychumbylat_reformed_check
+			clr_character_flag = expel_d_holycybele_reformed_check
+			clr_character_flag = expel_d_holydruze_reformed_check
+			clr_character_flag = expel_d_holyerlik_reformed_check
+			clr_character_flag = expel_d_holyethiopian_war_reformed_check
+			clr_character_flag = expel_d_holyfinnish_pagan_reformed_check
+			clr_character_flag = expel_d_holygerman_pagan_reformed_check
+			clr_character_flag = expel_d_holygraeco_roman_reformed_check
+			clr_character_flag = expel_d_holyiberian_pagan_reformed_check
+			clr_character_flag = expel_d_holyilluyanka_reformed_check
+			clr_character_flag = expel_d_holyindohelen_reformed_check
+			clr_character_flag = expel_d_holyinuit_pagan_reformed_check
+			clr_character_flag = expel_d_holyisis_reformed_check
+			clr_character_flag = expel_d_holyjud_ark_reformed_check
+			clr_character_flag = expel_d_holyjudaism_reformed_check
+			clr_character_flag = expel_d_holykubera_reformed_check
+			clr_character_flag = expel_d_holylubu_reformed_check
+			clr_character_flag = expel_d_holymand_ruha_reformed_check
+			clr_character_flag = expel_d_holymandaean_reformed_check
+			clr_character_flag = expel_d_holymani_germanic_reformed_check
+			clr_character_flag = expel_d_holymani_slavic_reformed_check
+			clr_character_flag = expel_d_holymari_christ_reformed_check
+			clr_character_flag = expel_d_holymazdakism_reformed_check
+			clr_character_flag = expel_d_holymontanist_reformed_check
+			clr_character_flag = expel_d_holymurugan_reformed_check
+			clr_character_flag = expel_d_holymuslim_aliite_reformed_check
+			clr_character_flag = expel_d_holymuslim_domination_reformed_check
+			clr_character_flag = expel_d_holymuslim_sufi_reformed_check
+			clr_character_flag = expel_d_holynasrani_reformed_check
+			clr_character_flag = expel_d_holynorse_christ_reformed_check
+			clr_character_flag = expel_d_holynorse_pagan_reformed_check
+			clr_character_flag = expel_d_holynorthern_sun_reformed_check
+			clr_character_flag = expel_d_holynyakalagan_reformed_check
+			clr_character_flag = expel_d_holypriscillian_reformed_check
+			clr_character_flag = expel_d_holyragnarok_reformed_check
+			clr_character_flag = expel_d_holysaura_reformed_check
+			clr_character_flag = expel_d_holyserer_reformed_check
+			clr_character_flag = expel_d_holyset_reformed_check
+			clr_character_flag = expel_d_holysethian_reformed_check
+			clr_character_flag = expel_d_holyslavic_christian_reformed_check
+			clr_character_flag = expel_d_holyslavic_pagan_reformed_check
+			clr_character_flag = expel_d_holysol_boreas_reformed_check
+			clr_character_flag = expel_d_holysol_islam_reformed_check
+			clr_character_flag = expel_d_holysol_sahara_reformed_check
+			clr_character_flag = expel_d_holytao_reformed_check
+			clr_character_flag = expel_d_holytarhunt_reformed_check
+			clr_character_flag = expel_d_holyteiwaz_reformed_check
+			clr_character_flag = expel_d_holytengri_bud_reformed_check
+			clr_character_flag = expel_d_holytengri_confucian_reformed_check
+			clr_character_flag = expel_d_holytengri_mani_reformed_check
+			clr_character_flag = expel_d_holytengri_pagan_reformed_check
+			clr_character_flag = expel_d_holytengri_rod_reformed_check
+			clr_character_flag = expel_d_holyvattisenyaly_reformed_check
+			clr_character_flag = expel_d_holyvidharma_reformed_check
+			clr_character_flag = expel_d_holyvoipel_reformed_check
+			clr_character_flag = expel_d_holyyazdanism_reformed_check
+			clr_character_flag = expel_d_holyzande_pagan_reformed_check
+			clr_character_flag = expel_d_holyzor_angra_reformed_check
+			clr_character_flag = expel_d_holyzulu_pagan_reformed_check
+			clr_character_flag = expel_d_holyzurvanism_reformed_check
+		}
 	}
 }

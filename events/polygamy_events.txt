@@ -12,11 +12,14 @@ character_event = {
 	desc = "EVTDESC89000"
 	picture = GFX_evt_lovers
 	
+	min_age = 16
+	only_capable = yes
+	prisoner = no
 	only_women = yes
+	is_married = yes
 	
 	trigger = {
 		has_polygamy = yes
-		is_married = yes
 		trait = homosexual
 		spouse = {
 			any_spouse = {
@@ -139,11 +142,11 @@ character_event = {
 		name = "EVTOPTA89003"
 		any_spouse = {
 			limit = { has_character_flag = thelma }
-			death = { death_reason = death_suicide }
+			death = { death_reason = death_suicide_fall }
 		}
 		any_spouse = {
 			limit = { has_character_flag = louise }
-			death = { death_reason = death_suicide }
+			death = { death_reason = death_suicide_fall }
 		}
 	}
 }
@@ -156,16 +159,16 @@ character_event = {
 	desc = "EVTDESC89005"
 	picture = GFX_evt_quarrel
 	
+	min_age = 16
 	capable_only = yes
 	prisoner = no
 	only_women = yes
+	is_married = yes
 	
 	trigger = {
-		age = 16
 		has_polygamy = yes
-		is_married = yes
 		is_pregnant = no
-		NOT = { trait = in_hiding }
+		is_inaccessible_trigger = no
 		is_main_spouse = no
 	}
 	
@@ -223,7 +226,7 @@ character_event = {
 			50 = {
 				event_target:first_wife = {
 					death = {
-						death_reason = death_murder
+						death_reason = death_murder_poison
 						killer = ROOT
 					}
 				}
@@ -290,7 +293,7 @@ character_event = {
 		name = "EVTOPTC89006"
 		event_target:plotting_second_wife = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_poison
 				killer = ROOT
 			}
 		}
@@ -340,7 +343,7 @@ character_event = {
 		name = "EVTOPTC89008"
 		event_target:first_wife = {
 			hidden_tooltip = {
-				character_event = { id = 89009 days = 4 tooltip = "EVTTOOLTIP89009" }
+				character_event = { id = 89009 days = 4 }
 			}
 			opinion = {
 				who = ROOT
@@ -421,7 +424,7 @@ character_event = {
 				spouse = {
 					event_target:plotting_second_wife = {
 						death = {
-							death_reason = death_murder
+							death_reason = death_murder_poison
 							killer = ROOT
 						}
 					}
@@ -473,18 +476,18 @@ character_event = {
 	desc = "EVTDESC89015"
 	picture = GFX_evt_quarrel
 	
+	min_age = 16
 	capable_only = yes
 	prisoner = no
 	only_women = yes
+	is_married = yes
 	
 	trigger = {
 		has_polygamy = yes
-		is_married = yes
 		spouse = {
 			has_polygamy = yes
 		}
 		num_of_children = 1
-		age = 16
 		is_pregnant = no
 		is_main_spouse = yes
 		spouse = { demesne_size = 5 }
@@ -643,21 +646,20 @@ character_event = {
 	desc = "EVTDESC89020"
 	picture = GFX_evt_quarrel
 	
+	min_age = 16
 	capable_only = yes
 	prisoner = no
 	only_women = yes
-	
+	is_married = yes
+
 	trigger = {
-		is_married = yes
-		spouse = {
-			has_polygamy = yes
-		}
+		has_polygamy = yes
 		num_of_children = 1
-		age = 16
 		is_pregnant = no
-		NOT = { trait = in_hiding }
+		is_inaccessible_trigger = no
 		spouse = {
 			is_ruler = yes
+			has_polygamy = yes
 			any_child = { 
 				is_primary_heir = yes
 				ai = yes
@@ -716,14 +718,20 @@ character_event = {
 								character_event = { id = 89024 tooltip = "EVTTOOLTIP89024" }
 								any_child = {
 									limit = { is_primary_heir = yes }
-									death = { death_reason = death_murder_unknown }
+									death = {
+										death_reason = death_murder_unknown_poison
+										killer = ROOT
+									}
 								}
 							}
 							50 = {
 								character_event = { id = 89025 tooltip = "EVTTOOLTIP89025" }
 								any_child = {
 									limit = { is_primary_heir = yes }
-									death = { death_reason = death_murder killer = ROOT }
+									death = {
+										death_reason = death_murder_unknown_poison
+										killer = ROOT
+									}
 								}
 							}
 						}
@@ -914,24 +922,23 @@ character_event = {
 	desc = "EVTDESC89030"
 	picture = GFX_evt_quarrel
 	
+	min_age = 16
 	capable_only = yes
 	prisoner = no
 	only_women = yes
+	is_married = yes
 	
 	trigger = {
-		is_married = yes
-		spouse = {
-			has_polygamy = yes
-		}
+		has_polygamy = yes
 		num_of_children = 1
-		age = 16
 		is_pregnant = no
-		NOT = { trait = in_hiding }
+		NOT = { is_inaccessible_trigger = yes }
 		any_child = {
 			is_female = no
 			is_alive = yes
 		}
 		spouse = {
+			has_polygamy = yes
 			any_child = {
 				ai = yes
 				is_alive = yes
@@ -1030,7 +1037,7 @@ character_event = {
 						character_event = { id = 89031 days = 4 tooltip = "EVTTOOLTIP89021" }
 					}
 					hidden_tooltip = {
-						character_event = { id = 89032 tooltip = "EVTTOOLTIP89022" }
+						character_event = { id = 89032 }
 					}
 				}
 			}
@@ -1190,12 +1197,10 @@ character_event = {
 				modifier = opinion_very_disappointed
 				years = 8
 			}
-			hidden_tooltip = {
-				opinion = {
-					who = FROM
-					modifier = evil_murderer
-					years = 40
-				}
+			opinion = {
+				who = FROM
+				modifier = evil_murderer
+				years = 40
 			}
 		}
 	}

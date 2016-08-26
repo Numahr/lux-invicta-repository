@@ -7,6 +7,7 @@
 ###########################################
 
 # Written by Tobias Bodlund
+# Tweaks and additional events by Henrik Fåhraeus
 
 namespace = WoL
 
@@ -28,8 +29,8 @@ character_event = {
 		is_priest = no
 		holy_order = no
 		has_focus = focus_theology
-		NOR = {
-			trait = in_hiding
+		is_inaccessible_trigger = no
+		NOT = {
 			has_character_flag = studied_religious_myths
 		}
 	}
@@ -205,7 +206,7 @@ character_event = {
 			is_priest = yes
 			NOR = {
 				trait = incapable
-				trait = in_hiding
+				is_inaccessible_trigger = yes
 				any_friend = {
 					character = ROOT
 				}
@@ -221,7 +222,7 @@ character_event = {
 				is_priest = yes
 				NOR = {
 					trait = incapable
-					trait = in_hiding
+					is_inaccessible_trigger = yes
 					any_friend = {
 						character = ROOT
 					}
@@ -272,6 +273,7 @@ character_event = {
 	min_age =  16
 	capable_only = yes
 	prisoner = no
+	war = no
 
 	trigger = {
 		has_focus = focus_theology
@@ -279,14 +281,13 @@ character_event = {
 			is_holy_site = ROOT
 			holder_scope = { ai = yes }
 		}
-		war = no
 		in_command = no
 		NOR = {
 			religion_group = christian
 			religion_group = muslim
 			religion_group = jewish_group
 			religion_group = indian_group
-			trait = in_hiding
+			is_inaccessible_trigger = yes
 			has_character_flag = do_not_disturb
 			has_character_flag = wol_theology_visited_holy_site
 		}
@@ -320,7 +321,7 @@ character_event = {
 character_event = {
 	id = WoL.7021
 	desc = EVTDESC_WoL_7021
-	picture = GFX_evt_tribal_shrine
+	picture = GFX_evt_cathedral
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
@@ -328,15 +329,6 @@ character_event = {
 	option = {
 		name = EVTOPTA_WoL_7021
 		piety = 50
-		if = {
-			limit = {
-				trait = cynical
-			}
-			random = {
-				chance = 20
-				remove_trait = cynical
-			}
-		}
 		if = {
 			limit = {
 				NOR = {
@@ -347,6 +339,17 @@ character_event = {
 			random = {
 				chance = 20
 				add_trait = zealous
+				character_event = { id = 38269 } # Notify
+			}
+		}
+		if = {
+			limit = {
+				trait = cynical
+			}
+			random = {
+				chance = 20
+				remove_trait = cynical
+				character_event = { id = 38316 } # Notify
 			}
 		}
 		clr_character_flag = do_not_disturb
@@ -405,7 +408,7 @@ character_event = {
 			is_priest = yes
 			NOR = {
 				trait = incapable
-				trait = in_hiding
+				NOT = { is_inaccessible_trigger = yes }
 			}
 		}
 		NOR = {
@@ -422,10 +425,16 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_WoL_7030  # Indeed
+		ai_chance = {
+			factor = 100
+		}
 		piety = 10
 	}
 	option = {
 		name = EVTOPTB_WoL_7030  # Study more deeply
+		ai_chance = {
+			factor = 100
+		}
 		piety = 30
 		if = {
 			limit = {
@@ -460,6 +469,9 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTC_WoL_7030  # Stop this
+		ai_chance = {
+			factor = 0
+		}
 		piety = -10
 		if = {
 			limit = {
@@ -486,13 +498,43 @@ character_event = {
 
 	trigger = {
 		has_focus = focus_theology
+		is_priest = no
 		NOR = {
+			trait = zealous
 			trait = sympathy_christendom
 			trait = sympathy_islam
 			trait = sympathy_pagans
 			trait = sympathy_zoroastrianism
 			trait = sympathy_judaism
 			trait = sympathy_indian
+			trait = sympathy_abrahamics
+			trait = sympathy_anatolians
+			trait = sympathy_east_africans
+			trait = sympathy_arabpagans
+			trait = sympathy_aztecs
+			trait = sympathy_baltics
+			trait = sympathy_bantus
+			trait = sympathy_berbers
+			trait = sympathy_buddhists
+			trait = sympathy_celtics
+			trait = sympathy_chinese
+			trait = sympathy_nordic
+			trait = sympathy_egyptian
+			trait = sympathy_finnish
+			trait = sympathy_graecoroman
+			trait = sympathy_indohellens
+			trait = sympathy_inuit
+			trait = sympathy_mande
+			trait = sympathy_manichaeans
+			trait = sympathy_mithraics
+			trait = sympathy_platonics
+			trait = sympathy_palmyrans
+			trait = sympathy_sererics
+			trait = sympathy_slavics
+			trait = sympathy_sol
+			trait = sympathy_tengri
+			trait = sympathy_yazd
+			trait = sympathy_zal
 			has_character_flag = wol_theology_view_other_religions
 		}
 		any_realm_character = {
@@ -535,40 +577,60 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	trigger = {
-		is_priest = no
-		NOT = { trait = zealous }
-	}
-
 	option = {
 		name = EVTOPTA_WoL_7042  # Accept
-		if = {
-			limit = { FROM = { religion_group = christian } }
-			add_trait = sympathy_christendom
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 5.0
+				trait = cynical
+			}
 		}
-		if = {
-			limit = { FROM = { religion_group = muslim } }
-			add_trait = sympathy_islam
-		}
-		if = {
-			limit = { FROM = { religion_group = pagan_group } }
-			add_trait = sympathy_pagans
-		}
-		if = {
-			limit = { FROM = { religion_group = zoroastrian_group } }
-			add_trait = sympathy_zoroastrianism
-		}
-		if = {
-			limit = { FROM = { religion_group = jewish_group } }
-			add_trait = sympathy_judaism
-		}
-		if = {
-			limit = { FROM = { religion_group = indian_group } }
-			add_trait = sympathy_indian
+		FROM = {
+			trigger_switch = {
+				on_trigger = religion_group
+				christian 			= { ROOT = { add_trait = sympathy_christendom } }
+				muslim 				= { ROOT = { add_trait = sympathy_islam } }
+				pagan_group 		= { ROOT = { add_trait = sympathy_pagans } }
+				zoroastrian_group 	= { ROOT = { add_trait = sympathy_zoroastrianism } }
+				jewish_group 		= { ROOT = { add_trait = sympathy_judaism } }
+				indian_group 		= { ROOT = { add_trait = sympathy_indian } }
+				abrahamic_group		= { ROOT = { add_trait = sympathy_abrahamics } }
+				anatolian_group 	= { ROOT = { add_trait = sympathy_anatolians } }
+				east_african_group	= { ROOT = { add_trait = sympathy_east_africans } }
+				arabpagan_group		= { ROOT = { add_trait = sympathy_arabpagans } }
+				aztec_group			= { ROOT = { add_trait = sympathy_aztecs } }
+				baltic_group		= { ROOT = { add_trait = sympathy_baltics } }
+				bantu_group			= { ROOT = { add_trait = sympathy_bantus } }
+				berberpagan_group	= { ROOT = { add_trait = sympathy_berbers } }
+				bud_group			= { ROOT = { add_trait = sympathy_buddhists } }
+				celtic_group		= { ROOT = { add_trait = sympathy_celtics } }
+				chinese_group		= { ROOT = { add_trait = sympathy_chinese } }
+				norsegerman_group	= { ROOT = { add_trait = sympathy_nordic } }
+				egyptian_group		= { ROOT = { add_trait = sympathy_egyptian } }
+				finnish_group		= { ROOT = { add_trait = sympathy_finnish } }
+				graecoroman_group	= { ROOT = { add_trait = sympathy_graecoroman } }
+				indohelen_group		= { ROOT = { add_trait = sympathy_indohellens } }
+				inuit_group			= { ROOT = { add_trait = sympathy_inuit } }
+				mand_group			= { ROOT = { add_trait = sympathy_mande } }
+				mani_group			= { ROOT = { add_trait = sympathy_manichaeans } }
+				mithra_group		= { ROOT = { add_trait = sympathy_mithraics } }
+				neoplato_group		= { ROOT = { add_trait = sympathy_platonics } }
+				palmyranpagan_group	= { ROOT = { add_trait = sympathy_plamyrans } }
+				serer_group			= { ROOT = { add_trait = sympathy_sererics } }
+				slavic_group		= { ROOT = { add_trait = sympathy_slavics } }
+				sol_group			= { ROOT = { add_trait = sympathy_sol } }
+				tengri_group		= { ROOT = { add_trait = sympathy_tengri } }
+				yazd_group			= { ROOT = { add_trait = sympathy_yazd } }
+				zal_group			= { ROOT = { add_trait = sympathy_zal } }
+			}
 		}
 	}
 	option = {
 		name = EVTOPTB_WoL_7042  # Condemn
+		ai_chance = {
+			factor = 100
+		}
 		piety = 50
 	}
 }
@@ -576,7 +638,6 @@ character_event = {
 # Question own faith
 character_event = {
 	id = WoL.7050
-	desc = EVTDESC_WoL_7050
 	picture = GFX_evt_religious_exultation
 	border = GFX_event_normal_frame_religion
 	
@@ -585,13 +646,27 @@ character_event = {
 	only_playable = yes
 	min_age =  16
 	capable_only = yes
+	
+	desc = {
+		text = EVTDESC_WoL_7050
+		trigger = {
+			OR = {
+				LI_pagan_trigger = no
+				is_reformed_religion = yes
+			}
+		}
+	}
+	
+	desc = {
+		text = EVTDESC_WoL_7050_PAGAN
+		trigger = {
+			LI_pagan_trigger = yes
+			is_reformed_religion = no
+		}
+	}
 
 	trigger = {
 		has_focus = focus_theology
-		NOR = {
-			trait = cynical 
-			has_character_flag = wol_theology_question_gods
-		}
 		clanic_trigger = no
 	}
 	
@@ -600,15 +675,57 @@ character_event = {
 	}
 	
 	option = {
-		name = EVTOPTA_WoL_7050  # Become cynical (non-zealous)
-		add_trait = cynical
+		name = EVTOPTA_WoL_7050  # Become Cynical (non-zealous)
+		ai_chance = {
+			factor = 10
+		}
+		trigger = {
+			NOT = { trait = cynical }
+		}
+		if = {
+			limit = {
+				NOT = { trait = zealous }
+			}
+			add_trait = cynical
+		}
+		if = {
+			limit = {
+				trait = zealous
+			}
+			remove_trait = zealous
+		}
 	}
 	option = {
 		name = EVTOPTB_WoL_7050  # Stay true to faith
-		piety = 30
+		ai_chance = {
+			factor = 10
+		}
+		piety = 100
 		random = {
 			chance = 30
-			add_trait = stressed
+			add_trait = depressed
+			character_event = { id = 38288 } # Notify depressed
+		}
+	}
+	option = {
+		name = EVTOPTC_WoL_7050  # Become zealous
+		ai_chance = {
+			factor = 100
+		}
+		trigger = {
+			NOT = { trait = zealous }
+		}
+		if = {
+			limit = {
+				NOT = { trait = cynical }
+			}
+			add_trait = zealous
+		}
+		if = {
+			limit = {
+				trait = cynical
+			}
+			remove_trait = cynical
 		}
 	}
 }
@@ -632,7 +749,15 @@ character_event = {
 		has_focus = focus_theology
 		is_heretic = no
 		trait = zealous
-		is_mainstream_religion_trigger = yes
+		OR = {
+			religion_group = christian
+			religion_group = muslim
+			religion_group = zoroastrian_group
+			religion_group = jewish_group
+			religion_group = sol_group
+			religion_group = abrahamic_group
+			religion_group = mani_group
+		}
 		NOT = { has_character_flag = wol_theology_heretic }
 	}
 	
@@ -642,14 +767,23 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_WoL_7060  # Settle firmly into orthodoxy
+		ai_chance = {
+			factor = 100
+		}
 		piety = 30
 	}
 	option = {
 		name = EVTOPTB_WoL_7060  # Take middle ground
+		ai_chance = {
+			factor = 5
+		}
 		remove_trait = zealous
 	}
 	option = {
 		name = EVTOPTC_WoL_7060  # Become heretic
+		ai_chance = {
+			factor = 10
+		}
 		piety = 100
 		become_heretic = yes
 		if = {
@@ -713,11 +847,18 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_WoL_7070  # Become theologian
+		ai_chance = {
+			factor = 100
+		}
 		trigger = {
 			NOT = { trait = cynical }
 		}
 		remove_character_modifier = religious_philosopher
 		add_trait = theologian
+		if = {
+			limit = { ai = no }
+			set_character_flag = achievement_by_the_gods
+		}
 		if = {
 			limit = { has_nickname = no }
 			random_list = {
@@ -753,11 +894,18 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTB_WoL_7070  # Become cynical theologian
+		ai_chance = {
+			factor = 100
+		}
 		trigger = {
 			trait = cynical
 		}
 		remove_character_modifier = religious_philosopher
 		add_trait = theologian
+		if = {
+			limit = { ai = no }
+			set_character_flag = achievement_by_the_gods
+		}
 		if = {
 			limit = { has_nickname = no }
 			random_list = {
@@ -772,6 +920,9 @@ character_event = {
 	}
 	option = {
 		name = EVTOPTC_WoL_7070  # There are other paths in life
+		ai_chance = {
+			factor = 0
+		}
 		if = {
 			limit = { has_nickname = no }
 			random_list = {
@@ -781,6 +932,454 @@ character_event = {
 				10 = {
 					give_nickname = nick_the_wise
 				}
+			}
+		}
+	}
+}
+
+# Lose Stressed/Depressed
+character_event = {
+	id = WoL.7080
+	picture = GFX_evt_religious_exultation
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+
+	only_playable = yes
+	capable_only = yes
+	
+	desc = {
+		text = EVTDESC_WoL_7080
+		trigger = {
+			NOR = {
+				religion_group = pagan_group
+				religion_group = muslim
+				religion_group = indian_group
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_WoL_7080_PAGAN
+		trigger = { religion_group = pagan_group }
+	}
+	desc = {
+		text = EVTDESC_WoL_7080_MUSLIM
+		trigger = { religion_group = muslim }
+	}
+	desc = {
+		text = EVTDESC_WoL_7080_INDIAN
+		trigger = { religion_group = indian_group }
+	}
+
+	trigger = {
+		has_focus = focus_theology
+		is_adult = yes
+		OR = {
+			trait = stressed
+			trait = depressed
+		}
+	}
+	
+	weight_multiplier = {
+		factor = 1
+		modifier = {
+			factor = 0.25
+			trait = cynical
+		}
+		modifier = {
+			factor = 2.0
+			trait = zealous
+		}
+	}
+	
+	option = {
+		name = EVTOPTA_WoL_7080
+		if = {
+			limit = { trait = stressed }
+			remove_trait = stressed
+		}
+		if = {
+			limit = { trait = depressed }
+			remove_trait = depressed
+		}
+	}
+}
+
+# Meditation/Prayer in Seclusion - Go into hiding for a week.
+# Lose Drunkard, Gluttonous and Lustful and possible gain Temperate and Chaste (depending on religion).
+# Tiny Chance of restored eyesight or cured illness.
+character_event = {
+	id = WoL.7090
+	picture = GFX_evt_religious_exultation
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+
+	only_playable = yes
+	capable_only = yes
+	prisoner = no
+	
+	desc = EVTDESC_WoL_7090
+
+	trigger = {
+		has_focus = focus_theology
+		is_adult = yes
+		NOR = {
+			trait = in_hiding
+			trait = on_pilgrimage
+			trait = on_hajj
+			trait = traveling
+		}
+	}
+	
+	weight_multiplier = {
+		factor = 1
+		modifier = {
+			factor = 0.25
+			trait = cynical
+		}
+		modifier = {
+			factor = 2.0
+			trait = zealous
+		}
+	}
+	
+	option = {
+		name = EVTOPTA_WoL_7090
+		add_trait = in_hiding
+		set_character_flag = do_not_disturb
+		set_character_flag = in_religious_seclusion
+		character_event = { id = WoL.7092 days = 7 random = 14 }
+	}
+	
+	option = {
+		name = EVTOPTB_WoL_7090
+	}
+}
+
+# Hidden event - clear out the hiding status no matter what.
+character_event = {
+	id = WoL.7092
+	
+	hide_window = yes
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		clr_character_flag = do_not_disturb
+		clr_character_flag = in_religious_seclusion
+		end_inaccessibility_effect = yes #removes in_hiding or in_seclusion
+		
+		character_event = { id = WoL.7091 }
+	}
+}
+
+character_event = {
+	id = WoL.7091
+	picture = GFX_evt_religious_exultation
+	border = GFX_event_normal_frame_religion
+	
+	is_triggered_only = yes
+	
+	capable_only = yes
+	prisoner = no
+	
+	desc = {
+		text = EVTDESC_WoL_7091
+		trigger = {
+			NOR = {
+				trait = lunatic
+				religion_group = indian_group
+			}
+			LI_pagan_trigger = no
+		}
+	}
+	desc = {
+		text = EVTDESC_WoL_7091_PAGAN
+		trigger = {
+			NOT = {
+				trait = lunatic
+			}
+			LI_pagan_trigger = yes
+		}
+	}
+	desc = {
+		text = EVTDESC_WoL_7091_INDIAN
+		trigger = {
+			NOT = {
+				trait = lunatic
+			}
+			religion_group = indian_group
+		}
+	}
+	desc = {
+		text = EVTDESC_WoL_7091_LUNATIC
+		trigger = {
+			trait = lunatic
+		}
+	}
+
+	trigger = {
+		NOR = {
+			trait = on_pilgrimage
+			trait = on_hajj
+			trait = traveling
+		}
+	}
+	
+	option = {
+		name = EVTOPT_WoL_7091_DRUNKARD
+		ai_chance = {
+			factor = 100
+		}
+		trigger = {
+			trait = drunkard
+		}
+		remove_trait = drunkard
+		
+		if = {
+			limit = {
+				NOT = { trait = temperate }
+				NOT = { trait = gluttonous }
+			}
+			random = {
+				chance = 20
+				add_trait = temperate
+				character_event = { id = 38276 } # Notify Temperate
+			}
+		}
+		if = {
+			limit = {
+				NOT = { trait = diligent }
+				NOT = { trait = slothful }
+			}
+			random = {
+				chance = 10
+				add_trait = diligent
+				character_event = { id = 38256 } # Notify Diligent
+			}
+		}
+	}
+	option = {
+		name = EVTOPT_WoL_7091_GLUTTON
+		ai_chance = {
+			factor = 100
+		}
+		trigger = {
+			trait = gluttonous
+		}
+		remove_trait = gluttonous
+		if = {
+			limit = { NOT = { trait = temperate } }
+			random = {
+				chance = 20
+				add_trait = temperate
+				character_event = { id = 38276 } # Notify Temperate
+			}
+		}
+		if = {
+			limit = {
+				NOT = { trait = diligent }
+				NOT = { trait = slothful }
+			}
+			random = {
+				chance = 10
+				add_trait = diligent
+				character_event = { id = 38256 } # Notify Diligent
+			}
+		}
+	}
+	option = {
+		name = EVTOPT_WoL_7091_SLOTHFUL
+		ai_chance = {
+			factor = 100
+		}
+		trigger = {
+			trait = slothful
+		}
+		remove_trait = slothful
+		if = {
+			limit = {
+				NOT = { trait = temperate }
+				NOT = { trait = gluttonous }
+			}
+			random = {
+				chance = 20
+				add_trait = temperate
+				character_event = { id = 38276 } # Notify Temperate
+			}
+		}
+		if = {
+			limit = { NOT = { trait = diligent } }
+			random = {
+				chance = 10
+				add_trait = diligent
+				character_event = { id = 38256 } # Notify Diligent
+			}
+		}
+	}
+	option = {
+		name = EVTOPT_WoL_7091_LUSTFUL
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				trait = hedonist
+			}
+		}
+		trigger = {
+			trait = lustful
+			religion_group = christian
+		}
+		remove_trait = lustful
+		piety = 100
+		random = {
+			chance = 10
+			add_trait = chaste
+			character_event = { id = 38274 } # Notify Chaste
+		}
+		if = {
+			limit = {
+				NOT = { trait = temperate }
+				NOT = { trait = gluttonous }
+			}
+			random = {
+				chance = 20
+				add_trait = temperate
+				character_event = { id = 38276 } # Notify Temperate
+			}
+		}
+		if = {
+			limit = {
+				NOT = { trait = diligent }
+				NOT = { trait = slothful }
+			}
+			random = {
+				chance = 10
+				add_trait = diligent
+				character_event = { id = 38256 } # Notify Diligent
+			}
+		}
+	}
+	option = {
+		name = EVTOPT_WoL_7091_BLIND
+		trigger = {
+			trait = blinded
+			NOT = {
+				has_game_rule = {
+					name = supernatural_events
+					value = off
+				}
+			}
+			random = 90
+		}
+		ai_chance = {
+			factor = 1000
+		}
+		remove_trait = blinded
+	}
+	
+	option = {
+		name = EVTOPT_WoL_7091_POX
+		trigger = {
+			trait = syphilitic
+			random = 75
+		}
+		ai_chance = {
+			factor = 1000
+		}
+		remove_trait = syphilitic
+	}
+	
+	option = {
+		name = EVTOPT_WoL_7091_LUNATIC
+		trigger = {
+			trait = lunatic
+			NOT = { trait = possessed }
+		}
+		ai_chance = {
+			factor = 100
+		}
+		
+		random = {
+			chance = 50
+			remove_trait = lunatic
+			character_event = { id = 38309 } # Notify Lunatic lost
+		}
+		
+		random = {
+			chance = 50
+			add_trait = possessed
+			character_event = { id = 38315 } # Notify Possessed
+		}
+	}
+	
+	option = {
+		name = EVTOPT_WoL_7091_LEPER
+		trigger = {
+			trait = leper
+			NOT = {
+				has_game_rule = {
+					name = supernatural_events
+					value = off
+				}
+			}
+			random = 90
+		}
+		ai_chance = {
+			factor = 1000
+		}
+		remove_trait = leper
+	}
+	
+	option = {
+		name = EVTOPT_WoL_7091_CHASTE
+		trigger = {
+			trait = chaste
+			NOR = {
+				religion_group = christian
+				religion_group = indian_group
+			}
+		}
+		ai_chance = {
+			factor = 100
+		}
+		remove_trait = chaste
+		
+		piety = 50
+		random = {
+			chance = 50
+			add_trait = lustful
+			character_event = { id = 38272 } # Notify Lustful
+		}
+	}
+	
+	option = {
+		name = EVTOPT_WoL_7091
+		ai_chance = {
+			factor = 1
+		}
+		piety = 100
+		if = {
+			limit = {
+				NOT = { trait = temperate }
+				NOT = { trait = gluttonous }
+			}
+			random = {
+				chance = 20
+				add_trait = temperate
+				character_event = { id = 38276 } # Notify Temperate
+			}
+		}
+		if = {
+			limit = {
+				NOT = { trait = diligent }
+				NOT = { trait = slothful }
+			}
+			random = {
+				chance = 10
+				add_trait = diligent
+				character_event = { id = 38256 } # Notify Diligent
 			}
 		}
 	}

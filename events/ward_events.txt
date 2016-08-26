@@ -595,6 +595,7 @@ character_event = {
 	prisoner = no
 	only_men = yes
 	capable_only = yes
+	is_married = yes
 	
 	is_triggered_only = yes
 	
@@ -608,7 +609,6 @@ character_event = {
 				}
 			}
 		}
-		is_married = yes
 		NOT = {
 			num_of_children = 1
 		}
@@ -636,62 +636,37 @@ character_event = {
 
 #A fosterling claims to always being bullied by other children at the court
 character_event = {
-	id = 78020
-	desc = EVTDESC78020
-	picture = GFX_evt_child_bully
-	
+	id = 78018
+
 	capable_only = yes
-	
-	is_triggered_only = yes
-	
+
 	trigger = {
 		any_ward = {
 			prisoner = no
 			age = 6
-			NOR = {
+			NOT = {
 				age = 16
-				trait = incapable
-				trait = in_hiding
 			}
+			NOT = { trait = incapable }
 			OR = {
 				trait = shy
 				trait = craven
 				trait = kind
 				trait = trusting
 			}
-			educator = {
-				employer = {
-					any_courtier = {
-						is_abroad = no
-						prisoner = no
-						age = 6
-						NOR = {
-							age = 16
-							character = PREVPREVPREV
-							trait = incapable
-							trait = in_hiding
-						}
-						OR = {
-							trait = wroth
-							trait = cruel
-							trait = deceitful
-							trait = envious
-						}
-					}
-				}
-			}
 		}
 	}
 	
-	immediate = {
+	is_triggered_only = yes
+	hide_window = yes
+
+	option = {
 		random_ward = {
 			limit = {
 				prisoner = no
 				age = 6
-				NOR = {
+				NOT = {
 					age = 16
-					trait = incapable
-					trait = in_hiding
 				}
 				OR = {
 					trait = shy
@@ -702,33 +677,48 @@ character_event = {
 			}
 			save_event_target_as = bullied_ward
 		}
-		employer = {
-			random_courtier = {
-				limit = {
-					is_abroad = no
-					prisoner = no
-					age = 6
-					NOR = {
-						age = 16
-						character = event_target:bullied_ward
-						trait = incapable
-						trait = in_hiding
-					}
-					OR = {
-						trait = wroth
-						trait = cruel
-						trait = deceitful
-						trait = envious
-					}
+
+		random_courtier = {
+			limit = {
+				is_abroad = no
+				prisoner = no
+				age = 6
+				NOT = {
+					age = 16
 				}
-				save_event_target_as = bully
+				NOT = { trait = incapable }
+				OR = {
+					trait = wroth
+					trait = cruel
+					trait = deceitful
+					trait = envious
+				}
+				NOT = { character = event_target:bullied_ward }
 			}
+			save_event_target_as = child_bully
 		}
+
+		event_target:bullied_ward = { character_event = { id = 78019 } }
 	}
+}
+
+character_event = {
+	id = 78019
+
+	is_triggered_only = yes
+	hide_window = yes
+
+	option = {
+		FROM = { character_event = { id = 78020 } }
+	}
+}
+
+character_event = {
+	id = 78020
+	desc = EVTDESC78020
+	picture = GFX_evt_child_bully
 	
-	weight_multiplier = {
-		factor = 1
-	}
+	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA78020
@@ -750,6 +740,7 @@ character_event = {
 			}
 		}
 	}
+
 	option = {
 		name = EVTOPTB78020
 		event_target:bullied_ward = {
@@ -787,24 +778,28 @@ character_event = {
 						}
 					}
 				}
-				break = yes
 			}
-			#craven
-			random = {
-				chance = 25
-				
-				remove_trait = craven
-				hidden_tooltip = {
-					character_event = {
-						id = 38296 #Notify remove Craven
+			if = {
+				limit = {
+					trait = craven
+				}
+				random = {
+					chance = 25
+					
+					remove_trait = craven
+					hidden_tooltip = {
+						character_event = {
+							id = 38296 #Notify remove Craven
+						}
 					}
 				}
 			}
 		}
 	}
 	option = {
+		trigger = { event_target:child_bully = { always = yes } }
 		name = EVTOPTC78020
-		event_target:bully = {
+		event_target:child_bully = {
 			opinion = {
 				modifier = opinion_angry
 				who = ROOT
@@ -851,12 +846,10 @@ character_event = {
 			limit = {
 				age = 6
 				prisoner = no
-				father = {
+				father_even_if_dead = {
 					is_alive = yes
-					NOT = {
+					NOR = {
 						same_realm = ROOT
-					}
-					NOT = {
 						character = ROOT
 					}
 				}
