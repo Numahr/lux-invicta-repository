@@ -18,13 +18,12 @@ character_event = {
 	max_age = 100
 	capable_only = yes
 	prisoner = no
+	is_married = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
 		is_pregnant = no
-		prisoner = no
 		spouse = {
 			is_pregnant = no
 			prisoner = no
@@ -58,7 +57,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 1.1
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 1.25
@@ -78,7 +77,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 1.25
-			trait = maimed
+			is_maimed_trigger = yes
 		}
 		modifier = {
 			factor = 2.0
@@ -165,12 +164,12 @@ character_event = {
 	only_men = yes
 	capable_only = yes
 	prisoner = no
+	religion = catholic
+	is_married = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
-		religion = catholic
 		num_of_children = 1
 		any_child = {
 			is_primary_heir = yes
@@ -340,7 +339,22 @@ character_event = {
 				}
 				random_list = {
 					33 = {
+						if = {
+							limit = {
+								NOT = {
+									has_dlc = "Reapers"
+								}
+							}
 						add_trait = ill
+						}
+						if = {
+							limit = {
+								has_dlc = "Reapers"
+							}
+						set_character_flag = disease_not_serious
+						add_trait = vomiting
+						character_event = { id = RIP.11005 days = 10 random = 30 }
+						}
 						ROOT = {
 							random_list = {
 								50 = {
@@ -393,7 +407,7 @@ character_event = {
 					}
 					33 = {
 						death = {
-							death_reason = death_murder
+							death_reason = death_murder_poison
 							killer = ROOT
 						}
 						ROOT = {
@@ -460,7 +474,7 @@ character_event = {
 		name = "EVTOPTB30005" #Execute!
 		spouse = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_beheading
 				killer = ROOT
 			}
 		}
@@ -551,15 +565,14 @@ character_event = {
 			50 = {
 				random_courtier = {
 					death = {
-						death_reason = death_murder_unknown
+						death_reason = death_murder_unknown_poison
 						killer = ROOT
 					}
 				}
 			}
 			50 = {
 				random_courtier = {
-					add_trait = maimed
-					hidden_tooltip = { character_event = { id = 38281 } }
+					add_maimed_trait_effect = yes
 
 					opinion = {
 						modifier = opinion_poisonous_woman
@@ -608,7 +621,7 @@ character_event = {
 		name = "EVTOPTB30007" #Execute!
 		spouse = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_beheading
 				killer = ROOT
 			}
 		}
@@ -711,15 +724,30 @@ character_event = {
 			50 = {
 				event_target:target_courtier = {
 					death = {
-						death_reason = death_murder_unknown
+						death_reason = death_murder_unknown_poison
 						killer = ROOT
 					}
 				}
 			}
 			50 = {
 				event_target:target_courtier = {
-					add_trait = maimed
-					hidden_tooltip = { character_event = { id = 38281 } }
+					if = {
+						limit = {
+							NOT = {
+								has_dlc = "Reapers"
+							}
+						}
+						add_trait = ill
+						hidden_tooltip = { character_event = { id = 38290 } }
+					}
+					if = {
+						limit = {
+							has_dlc = "Reapers"
+						}
+						add_trait = abdominal_pain
+						set_character_flag = disease_not_serious 
+						hidden_tooltip = { character_event = { id = RIP.11010 days = 10 random = 30 } }
+					}
 
 					opinion = {
 						modifier = opinion_poisonous_woman
@@ -802,7 +830,7 @@ character_event = {
 		ai_chance = { factor = 20 }
 		FROM = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_beheading
 				killer = ROOT
 			}
 		}
@@ -847,8 +875,8 @@ character_event = {
 				age = 16
 			}
 			OR = {
-				trait = ill
-				trait = maimed
+				is_ill = yes
+				is_maimed_trigger = yes
 				trait = infirm
 			}
 		}
@@ -906,7 +934,7 @@ character_event = {
 		name = "EVTOPTB30020" #Execute!
 		spouse = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_beheading
 				killer = ROOT
 			}
 		}
@@ -941,12 +969,14 @@ character_event = {
 	capable_only = yes
 	only_rulers = yes
 	prisoner = no
+	is_married = yes
+	
 	is_triggered_only = yes
 	
 	
 	trigger = {
-		is_married = yes
 		spouse = { 
+			NOT = { trait = incapable }
 			is_ruler = no
 			prisoner = no
 			is_alive = yes
@@ -957,7 +987,7 @@ character_event = {
 			}
 		}
 		OR = {
-			trait = ill
+			is_ill = yes
 			trait = infirm
 			trait = syphilitic
 			trait = paranoid
@@ -999,7 +1029,7 @@ character_event = {
 		name = "EVTOPTB30021" #Execute!
 		spouse = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_beheading
 				killer = ROOT
 			}
 		}
@@ -1266,12 +1296,12 @@ character_event = {
 	min_age = 20
 	capable_only = yes
 	prisoner = yes
+	is_married = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
-		spouse = {
+		any_spouse = {
 			reverse_opinion = { who = ROOT value = 20 }
 			opinion = { who = ROOT value = 20 }
 			prisoner = no
@@ -1293,17 +1323,27 @@ character_event = {
 	immediate = {
 		set_character_flag = prisoner_spouse
 		save_event_target_as = prisoner_spouse
-		host = {
-			save_event_target_as = imprisoning_spouse
+		random_spouse = {
+			limit = {
+				reverse_opinion = { who = ROOT value = 20 }
+				opinion = { who = ROOT value = 20 }
+				prisoner = no
+				is_alive = yes
+				is_abroad = no
+				at_location = ROOT
+				NOR = {
+					trait = incapable
+					host = { character = PREV }
+				}
+			}
+			save_event_target_as = outside_spouse
 		}
-		spouse = {
-			save_event_target_as = imprisoned_spouse
-		}
+		host = { save_event_target_as = prisoner_host }
 	}
 	
 	option = {
 		name = "EVTOPTA30030"
-		host = {
+		event_target:prisoner_host = {
 			character_event = {
 				id = 30031
 				days = 5
@@ -1314,7 +1354,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTB30030"
-		spouse = {
+		event_target:outside_spouse = {
 			character_event = {
 				id = 30032
 				days = 4
@@ -1340,17 +1380,21 @@ character_event = {
 	option = {
 		name = "EVTOPTA30031"
 		prestige = 10
-		event_target:imprisoned_spouse = {
-			character_event = {
-				id = 30033
-				days = 5
-				tooltip = "EVTTOOLTIP30033"
-			}
-		}
-		FROM = {
-			death = {
-				death_reason = death_execution
-				killer = ROOT
+		custom_tooltip = {
+			text = "EVTTOOLTIP30033"
+			hidden_tooltip = {
+				event_target:outside_spouse = {
+					character_event = {
+						id = 30033
+						days = 5
+					}
+				}
+				event_target:prisoner_spouse = {
+					death = {
+						death_reason = death_execution_beheading
+						killer = ROOT
+					}
+				}
 			}
 		}
 	}
@@ -1358,7 +1402,7 @@ character_event = {
 		name = "EVTOPTB30031" #Release her/him
 		ai_chance = { factor = 10 }
 		scaled_wealth = 1.0
-		FROM = {
+		event_target:prisoner_spouse = {
 			prisoner = no
 			character_event = {
 				id = 30034
@@ -1371,7 +1415,7 @@ character_event = {
 	option = {
 		name = "EVTOPTC30031" #Throw her/him into the dungeon
 		ai_chance = { factor = 80 }
-		event_target:imprisoned_spouse = {
+		event_target:outside_spouse = {
 			character_event = {
 				id = 30035
 				days = 1
@@ -1383,7 +1427,7 @@ character_event = {
 	option = {
 		name = "EVTOPTD30031" #Warn spouse about freeing prisoner spouse
 		ai_chance = { factor = 10 }
-		event_target:imprisoned_spouse = {
+		event_target:outside_spouse = {
 			letter_event = {
 				id = 30036
 				days = 1
@@ -1403,17 +1447,18 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30032"
-		add_trait = craven
+		if = {
+			limit = { NOT = { trait = berserker } }
+			add_trait = craven
+		}
 	}
 	option = {
 		name = "EVTOPTB30032"
-		FROM = {
-			host = {
-				character_event = {
-					id = 30037
-					days = 2
-					tooltip = "EVTTOOLTIPA30037"
-				}
+		event_target:prisoner_host = {
+			character_event = {
+				id = 30037
+				days = 2
+				tooltip = "EVTTOOLTIPA30037"
 			}
 		}
 	}
@@ -1430,7 +1475,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA30033"
 		add_trait = depressed
-		FROM = {
+		event_target:prisoner_host = {
 			reverse_opinion = {
 				modifier = opinion_dishonorable_scum
 				who = ROOT
@@ -1440,7 +1485,7 @@ character_event = {
 	option = {
 		name = "EVTOPTB30033"
 		add_trait = wroth
-		FROM = {
+		event_target:prisoner_host = {
 			reverse_opinion = {
 				modifier = opinion_dishonorable_scum
 				who = ROOT
@@ -1450,7 +1495,7 @@ character_event = {
 	option = {
 		name = "EVTOPTC30033"
 		add_trait = envious
-		FROM = {
+		event_target:prisoner_host = {
 			reverse_opinion = {
 				modifier = opinion_dishonorable_scum
 				who = ROOT
@@ -1469,7 +1514,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30034"
-		FROM = {
+		event_target:prisoner_host = {
 			reverse_opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1506,12 +1551,15 @@ letter_event = {
 	option = {
 		name = "EVTOPTA30036"
 		prestige = -10
-		add_trait = craven
+		if = {
+			limit = { NOT = { trait = berserker } }
+			add_trait = craven
+		}
 	}
 	
 	option = {
 		name = "EVTOPTB30036"
-		event_target:imprisoning_host = {
+		event_target:prisoner_host = {
 			character_event = {
 				id = 30037
 				days = 1
@@ -1552,15 +1600,15 @@ character_event = {
 	option = {
 		name = "EVTOPTC30037"
 		event_target:prisoner_spouse = {
-			spouse = {
-				character_event = {
-					id = 30033
-					tooltip = "EVTTOOLTIP30033"
-				}
-			}
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_hanging
 				killer = ROOT
+			}
+		}
+		event_target:outside_spouse = {
+			character_event = {
+				id = 30033
+				tooltip = "EVTTOOLTIP30033"
 			}
 		}
 	}	
@@ -1576,11 +1624,11 @@ character_event = {
 	only_women = yes
 	capable_only = yes
 	prisoner = no
+	is_married = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
 		NOR = {
 			demesne_size = 1
 			trait = humble
@@ -1589,6 +1637,8 @@ character_event = {
 		spouse = {
 			prisoner = no
 			is_alive = yes
+			higher_tier_than = BARON
+			is_councillor = no
 			is_abroad = no
 			at_location = ROOT
 			NOT = {
@@ -1612,30 +1662,6 @@ character_event = {
 		}
 	}
 	
-	immediate = {
-		spouse = {
-			random_courtier = {
-				limit = {
-					is_councillor = yes
-					NOR = {
-						character = ROOT
-						opinion = { who = ROOT  value = 30 }
-						has_character_flag = annoying_courtier
-					}
-					OR = {
-						trait = envious
-						trait = wroth 
-						trait = paranoid
-						trait = deceitful
-						trait = arbitrary
-						trait = ambitious
-					}
-				}
-				save_event_target_as = target_courtier
-			}
-		}
-	}
-	
 	weight_multiplier = {
 		days = 1
 		
@@ -1653,6 +1679,29 @@ character_event = {
 			trait = cruel
 		}
 	}
+	immediate = {
+		spouse = {
+			random_courtier = {
+				limit = {
+					is_councillor = yes
+					NOR = {
+						character = ROOT
+						opinion = { who = ROOT  value = 30 }
+					}
+					OR = {
+						trait = envious
+						trait = wroth 
+						trait = paranoid
+						trait = deceitful
+						trait = arbitrary
+						trait = ambitious
+					}
+				}
+				save_event_target_as = annoying_courtier
+			}
+		}
+	}
+	
 	
 	option = {
 		name = "EVTOPTA30040"
@@ -1681,7 +1730,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTC30040"
-		event_target:target_courtier = {
+		event_target:annoying_courtier = {
 			opinion = {
 				modifier = opinion_mocked
 				who = ROOT
@@ -1708,7 +1757,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30041"
-		event_target:target_courtier = {
+		event_target:annoying_courtier = {
 			opinion = {
 				modifier = opinion_fired_from_council
 				who = ROOT
@@ -1752,7 +1801,7 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA30042"
-		event_target:target_courtier = {
+		event_target:annoying_courtier = {
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
@@ -1777,7 +1826,7 @@ character_event = {
 				years = 2
 			}
 		}
-		event_target:target_courtier = {
+		event_target:annoying_courtier = {
 			opinion = {
 				modifier = opinion_disappointed
 				who = ROOT
@@ -1796,12 +1845,13 @@ character_event = {
 	only_women = yes
 	capable_only = yes
 	prisoner = no
+	is_married = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
 		spouse = {
+			NOT = { trait = incapable }
 			prisoner = no
 			is_alive = yes
 			any_courtier = {
@@ -1819,12 +1869,13 @@ character_event = {
 			trait = envious
 			trait = arbitrary
 		}
-		NOT = { trait = in_hiding }
+		is_inaccessible_trigger = no
 	}
 	immediate = {
 		spouse = {
 			random_courtier = {
 				limit = {
+					is_councillor = yes
 					OR = {
 						trait = gregarious
 						trait = paranoid
@@ -1832,7 +1883,7 @@ character_event = {
 						trait = zealous
 					}
 				}
-				save_event_target_as = target_courtier
+				save_event_target_as = chosen_courtier
 			}
 		}
 	}
@@ -1871,7 +1922,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTB30045"
-		event_target:target_courtier = {
+		event_target:chosen_courtier = {
 			opinion = {
 				modifier = opinion_disappointed
 				who = ROOT
@@ -1896,9 +1947,9 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30046"
-		event_target:target_courtier = {
+		event_target:chosen_courtier = {
 			death = {
-				death_reason = death_murder_unknown
+				death_reason = death_murder_unknown_drowning
 				killer = ROOT
 			}
 		}
@@ -1917,9 +1968,9 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTB30046"
-		event_target:target_courtier = {
+		event_target:chosen_courtier = {
 			death = {
-				death_reason = death_murder_unknown
+				death_reason = death_murder_unknown_drowning
 				killer = ROOT
 			}
 		}
@@ -1938,9 +1989,9 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTC30046"
-		event_target:target_courtier = {
+		event_target:chosen_courtier = { 
 			death = {
-				death_reason = death_murder_unknown
+				death_reason = death_murder_unknown_drowning
 				killer = ROOT
 			}
 		}
@@ -1958,9 +2009,9 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTD30046"
-		event_target:target_courtier = {
+		event_target:chosen_courtier = { 
 			death = {
-				death_reason = death_murder_unknown
+				death_reason = death_murder_unknown_drowning
 				killer = ROOT
 			}
 		}
@@ -2103,11 +2154,11 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	min_age = 20
+	war = no
 
 	is_triggered_only = yes	
 	
 	trigger = {
-		war = no
 		in_command = no
 		spouse = {
 			is_female = yes
@@ -2495,6 +2546,7 @@ character_event = {
 			is_dumb_trigger = no
 			NOR = {
 				trait = incapable
+				has_job_title = job_treasurer
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2750,10 +2802,11 @@ character_event = {
 		}
 		any_courtier = {
 			OR = {
-				any_lover = { character = prev }
+				any_lover = { character = ROOT }
 				reverse_opinion = { who = ROOT value = 40 }
 			}
 			is_councillor = no
+			diplomacy = 10
 			age = 16
 			is_female = no
 			prisoner = no
@@ -2803,10 +2856,11 @@ character_event = {
 		random_courtier = {
 			limit = {
 				OR = {
-					any_lover = { character = prev }
+					any_lover = { character = ROOT }
 					reverse_opinion = { who = ROOT value = 40 }
 				}
 				is_councillor = no
+				diplomacy = 10
 				age = 16
 				is_female = no
 				prisoner = no
@@ -2958,10 +3012,11 @@ character_event = {
 		independent = no
 		any_courtier = {
 			OR = {
-				any_lover = { character = PREV }
+				any_lover = { character = ROOT }
 				reverse_opinion = { who = ROOT value = 40 }
 			}
 			is_councillor = no
+			martial = 10
 			age = 16
 			is_female = no
 			prisoner = no
@@ -3009,10 +3064,11 @@ character_event = {
 		random_courtier = {
 			limit = {
 				OR = {
-					any_lover = { character = prev }
+					any_lover = { character = ROOT }
 					reverse_opinion = { who = ROOT value = 40 }
 				}
 				is_councillor = no
+				martial = 10
 				age = 16
 				is_female = no
 				prisoner = no
@@ -3164,10 +3220,11 @@ character_event = {
 		independent = no
 		any_courtier = {
 			OR = {
-				any_lover = { character = prev }
+				any_lover = { character = ROOT }
 				reverse_opinion = { who = ROOT value = 40 }
 			}
 			is_councillor = no
+			stewardship = 10
 			age = 16
 			is_female = no
 			prisoner = no
@@ -3217,10 +3274,11 @@ character_event = {
 		random_courtier = {
 			limit = {
 				OR = {
-					any_lover = { character = prev }
+					any_lover = { character = ROOT }
 					reverse_opinion = { who = ROOT value = 40 }
 				}
 				is_councillor = no
+				stewardship = 10
 				age = 16
 				is_female = no
 				prisoner = no
@@ -3370,10 +3428,11 @@ character_event = {
 		independent = no
 		any_courtier = {
 			OR = {
-				any_lover = { character = prev }
+				any_lover = { character = ROOT }
 				reverse_opinion = { who = ROOT value = 40 }
 			}
 			is_councillor = no
+			intrigue = 10
 			age = 16
 			is_female = no
 			prisoner = no
@@ -3423,10 +3482,11 @@ character_event = {
 		random_courtier = {
 			limit = {
 				OR = {
-					any_lover = { character = prev }
+					any_lover = { character = ROOT }
 					reverse_opinion = { who = ROOT value = 40 }
 				}
 				is_councillor = no
+				intrigue = 10
 				age = 16
 				is_female = no
 				prisoner = no
@@ -3590,7 +3650,7 @@ character_event = {
 		independent = no
 		any_courtier = {
 			OR = {
-				any_lover = { character = prev }
+				any_lover = { character = ROOT }
 				reverse_opinion = { who = ROOT value = 40 }
 			}
 			is_councillor = no
@@ -3633,7 +3693,7 @@ character_event = {
 		random_courtier = {
 			limit = {
 				OR = {
-					any_lover = { character = prev }
+					any_lover = { character = ROOT }
 					reverse_opinion = { who = ROOT value = 40 }
 				}
 				is_councillor = no
@@ -3802,7 +3862,7 @@ character_event = {
 		any_courtier = {
 			is_female = no
 			OR = {
-				any_lover = { character = prev }
+				any_lover = { character = ROOT }
 				reverse_opinion = { who = ROOT value = 40 }
 			}
 			NOR = {
@@ -3823,7 +3883,7 @@ character_event = {
 			limit = {
 				is_female = no
 				OR = {
-					any_lover = { character = prev }
+					any_lover = { character = ROOT }
 					reverse_opinion = { who = ROOT value = 40 }
 				}
 				age = 20
@@ -4160,11 +4220,11 @@ character_event = {
 	only_men = yes
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		war = no
 		in_command = no
 		spouse = {
 			prisoner = no
@@ -4174,19 +4234,25 @@ character_event = {
 			is_smart_trigger = no
 			NOR = {
 				age = 30
-				trait = in_hiding
 				trait = incapable
+			}
+			is_inaccessible_trigger = no
+			any_courtier = {
+				age = 16
+				ai = yes
+				is_councillor = no
+				spouse = {
+					prisoner = no
+					is_alive = yes
+					NOT = {
+						character = PREVPREV
+					}
+				}
 			}
 		}
 		NOR = {
 			has_character_modifier = for_the_sake_of_love
 			has_character_flag = best_friends_forever
-		}
-		any_courtier = {
-			age = 16
-			ai = yes
-			family = no
-			is_councillor = no
 		}
 	}
 	
@@ -4217,6 +4283,26 @@ character_event = {
 		modifier = {
 			factor = 3
 			spouse = { trait = imbecile }
+		}
+	}
+
+	immediate = {
+		spouse = {
+			random_courtier = {
+				limit = {
+					age = 16
+					is_councillor = no
+					ai = yes
+					spouse = {
+						prisoner = no
+						is_alive = yes
+						NOT = {
+							character = PREVPREV
+						}
+					}
+				}
+				save_event_target_as = target_courtier
+			}
 		}
 	}
 	
@@ -4284,7 +4370,6 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = { #Great!
-		set_character_flag = new_friend
 		FROM = {
 			character_event = {
 				id = 30088
@@ -4368,7 +4453,7 @@ character_event = {
 				has_character_flag = perfect_lake
 			}
 			event_target:target_courtier = {
-				has_character_flag = new_friend
+				always = yes
 			}
 		}
 		event_target:target_courtier = {
@@ -4435,9 +4520,6 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTC30089"
-		event_target:target_courtier = {
-			clr_character_flag = new_friend
-		}
 		clr_character_flag = best_friends_forever
 		clr_character_flag = perfect_activity
 		clr_character_flag = failed_activity
@@ -4482,7 +4564,6 @@ character_event = {
 				days = 5
 				tooltip = "EVTTOOLTIPB30093"
 			}
-			clr_character_flag = failed_picnic
 		}
 	}
 	option = {
@@ -4497,13 +4578,9 @@ character_event = {
 				tooltip = "EVTTOOLTIPB30094"
 			}
 		}
-		clr_character_flag = perfect_picnic
 	}
 	option = {
 		name = "EVTOPTC30089"
-		event_target:target_courtier = {
-			clr_character_flag = new_friend
-		}
 		clr_character_flag = best_friends_forever
 		clr_character_flag = perfect_lake
 		clr_character_flag = perfect_picnic
@@ -4563,9 +4640,6 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTC30089"
-		event_target:target_courtier = {
-			clr_character_flag = new_friend
-		}
 		clr_character_flag = best_friends_forever
 		clr_character_flag = perfect_lake
 		clr_character_flag = perfect_picnic
@@ -4625,9 +4699,6 @@ character_event = {
 	}
 	option = {
 		name = "EVTOPTC30089"
-		event_target:target_courtier = {
-			clr_character_flag = new_friend
-		}
 		clr_character_flag = best_friends_forever
 		clr_character_flag = perfect_lake
 		clr_character_flag = perfect_picnic
@@ -4741,7 +4812,6 @@ character_event = {
 		name = "EVTOPTA30095"
 		clr_character_flag = best_friends_forever
 		FROM = {
-			clr_character_flag = new_friend
 			opinion = {
 				modifier = opinion_dislike
 				who = ROOT
@@ -4776,7 +4846,6 @@ character_event = {
 		name = "EVTOPTA30096"
 		clr_character_flag = best_friends_forever
 		FROM = {
-			clr_character_flag = new_friend
 			add_friend = ROOT
 		}
 		clr_character_flag = perfect_lake
@@ -4816,7 +4885,6 @@ character_event = {
 				trait = incapable
 				trait = eunuch
 				trait = monk
-				age = 55
 			}
 			age = 40
 			war = no
@@ -5219,12 +5287,12 @@ character_event = {
 	prisoner = no
 	max_age = 40
 	min_age = 20
+	is_married = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
 		has_lover = no
-		is_married = yes
 		fertility = 0.3
 		spouse = {
 			war = no
@@ -5259,6 +5327,7 @@ character_event = {
 				family = ROOT
 			}
 			is_close_relative = no
+			has_lover = no
 		}
 	}
 	
@@ -5302,13 +5371,14 @@ character_event = {
 				age = 20
 				NOR = {
 					age = 35
-					trait = chaste
-					trait = celibate
 					trait = eunuch
 					trait = monk
+					trait = chaste
+					trait = celibate
 					family = ROOT
 				}
 				is_close_relative = no
+				has_lover = no
 			}
 			add_lover = ROOT
 			add_character_modifier = {
@@ -5343,6 +5413,7 @@ character_event = {
 	only_men = yes
 	prisoner = no
 	capable_only = yes
+	religion_group = muslim
 	
 	is_triggered_only = yes
 	
@@ -5352,7 +5423,6 @@ character_event = {
 			learning = 8
 			has_character_modifier = learning_advice
 		}
-		religion_group = muslim
 		spouse = {
 			learning = 10
 			prisoner = no

@@ -16,35 +16,21 @@ character_event = {
 
 	is_triggered_only = yes
 
+	trigger = { is_inaccessible_trigger = no }
+
 	option = {
 		name = "EVTOPTA88250"
 		ai_chance = {
-			factor = 1
-			modifier  = {
-				factor = 0.1
-				ai = yes
-				trait = in_hiding
-			}
+			factor = 100
 		}
 		prestige = 50
 		set_character_flag = attending_tournament_furusiyya
 		hidden_tooltip = { character_event = { id = 88999 days = 300 } } # safety catch flag-clearing
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			clr_character_flag = do_not_disturb
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-		}
 	}
 	option = {
 		name = "EVTOPTB88250"
 		ai_chance = {
-			factor = 1
+			factor = 0.1
 		}
 		prestige = -100
 	}
@@ -58,12 +44,10 @@ character_event = {
 	picture = "GFX_evt_feast"
 
 	is_triggered_only = yes
+	war = no
 
 	option = {
 		name = "EVTOPTA88251"
-		trigger = {
-			war = no
-		}
 		hidden_tooltip = {
 			set_character_flag = tournament_begins_furusiyya
 			set_character_flag = attending_tournament_furusiyya
@@ -214,6 +198,19 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA88252"
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			custom_tooltip = {
+				text = capital_prospers_custom_tooltip
+				hidden_tooltip = {
+					capital_scope = {
+						change_variable = { which = prosperity_value value = 15 }
+					}
+				}
+			}
+		}
 		hidden_tooltip = {
 			clr_character_flag = tournament_60_days_furusiyya
 			clr_character_flag = tournament_begins_furusiyya
@@ -243,7 +240,7 @@ character_event = {
 				opinion = {
 					modifier = opinion_tournament_participant
 					who = PREV
-					years = 2
+					years = 5
 				}
 				clr_character_flag = attending_tournament_furusiyya
 				clr_character_flag = attending_tournament_event_furusiyya
@@ -251,16 +248,10 @@ character_event = {
 			any_realm_character = {
 				limit = {
 					has_character_flag = attending_tournament_furusiyya
-					NOT = {
+					NOR = {
 						character = PREV
-					}
-					NOT = {
 						has_character_flag = tournament_third_place_furusiyya
-					}
-					NOT = {
 						has_character_flag = tournament_second_place_furusiyya
-					}
-					NOT = {
 						has_character_flag = tournament_winner_furusiyya
 					}
 				}
@@ -287,7 +278,7 @@ character_event = {
 				opinion = {
 					modifier = opinion_tournament_participant
 					who = PREV
-					years = 2
+					years = 5
 				}
 				set_character_flag = tournament_has_ended_furusiyya
 				clr_character_flag = attending_tournament_furusiyya
@@ -455,6 +446,7 @@ character_event = {
 		has_character_flag = attending_tournament_furusiyya
 		NOR = {
 			trait = maimed
+			trait = one_handed
 			has_character_flag = tournament_has_ended_furusiyya
 		}
 		top_liege = {
@@ -471,7 +463,18 @@ character_event = {
 
 	option = {
 		name = "EVTOPTA88260"
-		add_trait = maimed
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			add_trait = one_handed
+		}
+		if = {
+			limit = {
+				NOT = { has_dlc = "Reapers" }
+			}
+			add_trait = maimed
+		}
 		hidden_tooltip = {
 			if = {
 				limit = {
@@ -506,8 +509,8 @@ character_event = {
 			has_character_flag = attending_tournament_event_furusiyya
 			has_character_flag = tournament_has_ended_furusiyya
 			trait = wounded
-			trait = maimed
 		}
+		is_maimed_trigger = no
 		top_liege = {
 			has_character_flag = tournament_begins_furusiyya
 			NOT = {
@@ -698,14 +701,14 @@ character_event = {
 	title = "FURUSIYYATITLE"
 	desc = "EVTDESC88266"
 	picture = "GFX_evt_council"
-	
-	is_triggered_only = yes
 
 	min_age = 16
 	only_men = yes
 	capable_only = yes
 	prisoner = no
 	has_character_flag = attending_tournament_furusiyya
+	
+	is_triggered_only = yes
 
 	trigger = {
 		NOR = {
@@ -1189,6 +1192,7 @@ character_event = {
 	only_men = yes
 	capable_only = yes
 	prisoner = no
+	lacks_dlc = "Way of Life"
 	has_character_flag = attending_tournament_furusiyya
 	is_triggered_only = yes
 
@@ -1196,7 +1200,6 @@ character_event = {
 		NOR = {
 			has_character_flag = attending_tournament_event_furusiyya
 			has_character_flag = tournament_has_ended_furusiyya
-			has_dlc = "Way of Life"
 			lifestyle_traits = 1
 		}
 	}
@@ -1491,7 +1494,6 @@ letter_event = {
 	id = 88292
 	title = "FURUSIYYATITLE"
 	desc = "EVTDESC88292"
-#	picture = "GFX_evt_death"
 
 	is_triggered_only = yes
 
@@ -1598,7 +1600,7 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					trait = maimed
+					is_maimed_trigger = yes
 				}
 				character_event = { id = 88259 days = 1 random = 25 }
 			}
@@ -1637,7 +1639,7 @@ character_event = {
 				}
 				modifier = {
 					factor = 0
-					trait = maimed
+					is_maimed_trigger = yes
 				}
 				character_event = { id = 88260 days = 1 random = 25 }
 			}
@@ -1676,7 +1678,7 @@ character_event = {
 				}
 				modifier = {
 					factor = 0
-					trait = maimed
+					is_maimed_trigger = yes
 				}
 				character_event = { id = 88261 days = 1 random = 25 }
 			}
@@ -1892,7 +1894,7 @@ character_event = {
 				}
 				modifier = {
 					factor = 1.3
-					trait = strong
+					is_strong_trigger = yes
 				}
 				modifier = {
 					factor = 1.3

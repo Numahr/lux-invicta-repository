@@ -225,7 +225,7 @@ character_event = {
 				chance = 30
 				add_trait = patient
 				hidden_tooltip = {
-					character_event = { id = 38264 }
+					character_event = { id = 38264 } # Notify patient
 				}
 			}
 		}
@@ -269,11 +269,24 @@ character_event = {
 			}
 			random_list = {
 				50 = { remove_trait = craven }
-				10 = {
-					add_trait = ill
-					hidden_tooltip = {
-						character_event = { id = 38290 }
-					}	
+				30 = {
+					if = {
+						limit = {
+							NOT = {
+								has_dlc = "Reapers"
+							}
+						}
+						add_trait = ill
+						hidden_tooltip = {
+							character_event = { id = 38290 } # Notify ill
+						}
+					}
+					if = {
+						limit = {
+							has_dlc = "Reapers"
+						}
+						add_symptom_effect = yes
+					}
 				}
 				30 = { }
 			}
@@ -290,11 +303,24 @@ character_event = {
 						character_event = { id = 38278 }
 					}
 				}
-				10 = {
-					add_trait = ill
-					hidden_tooltip = {
-						character_event = { id = 38290 }
-					}	
+				30 = {
+					if = {
+						limit = {
+							NOT = {
+								has_dlc = "Reapers"
+							}
+						}
+						add_trait = ill
+						hidden_tooltip = {
+							character_event = { id = 38290 } # Notify ill
+						}
+					}
+					if = {
+						limit = {
+							has_dlc = "Reapers"
+						}
+						add_symptom_effect = yes
+					}
 				}
 				70 = { }
 			}
@@ -344,6 +370,9 @@ character_event = {
 	}
 	option = { # Ask to join
 		name = EVTOPTB_HL_8008
+		ai_chance = {
+			factor = 0
+		}
 		create_character = {
 			random_traits = yes
 			dynasty = NONE
@@ -514,11 +543,11 @@ character_event = {
 		name = EVTOPTA_HL_8032
 		trigger = {
 			is_weak_trigger = no
-			NOR = {
-				trait = ill
+			is_ill = no
+			NOT = {
 				trait = wounded
-				trait = maimed
 			}
+			is_maimed_trigger = no
 		}
 		prestige = -100
 		piety = 100
@@ -541,9 +570,9 @@ character_event = {
 		trigger = {
 			OR = {
 				is_weak_trigger = yes
-				trait = ill
+				is_ill = yes
 				trait = wounded
-				trait = maimed
+				is_maimed_trigger = yes
 			}
 		}
 		death = {
@@ -591,12 +620,12 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	only_playable = yes
+	only_independent = yes
+	war = no
+	has_dlc = "Horse Lords"
 
 	trigger = {
-		has_dlc = "Horse Lords"
 		government = nomadic_government
-		war = no
-		independent = yes
 		NOR = {
 			has_character_modifier = manly_skill_wrestling
 			has_character_modifier = denied_wrestling
@@ -737,8 +766,7 @@ character_event = {
 					hidden_tooltip = { character_event = { id = 38280 } }
 				}
 				45 = {
-					add_trait = maimed
-					hidden_tooltip = { character_event = { id = 38281 } }
+					add_maimed_trait_effect = yes
 				}
 				25 = {
 					death = { death_reason = death_accident }
@@ -1069,7 +1097,7 @@ long_character_event = {
 						add_trait = wounded
 					}
 					10 = {
-						add_trait = maimed
+						add_maimed_trait_effect = yes
 					}
 				} 
 			}

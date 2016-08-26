@@ -29,10 +29,10 @@ character_event = {
 			has_landed_title = e_byzantium
 			has_landed_title = e_roman_empire
 		}
-		NOR = {
+		NOT = {
 			any_courtier = { has_minor_title = title_imperial_eunuch }
-			trait = in_hiding
 		}
+		is_inaccessible_trigger = no
 	}
 	
 	mean_time_to_happen = {
@@ -315,10 +315,10 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	only_playable = yes
+	min_age = 16
 	
 	trigger = {
 		has_dlc = "Legacy of Rome"
-		age = 16
 		in_command = no
 		OR = {
 			has_landed_title = e_byzantium
@@ -381,10 +381,13 @@ character_event = {
 	hide_window = yes
 	
 	only_playable = yes
+	only_capable = yes
+	min_age = 16
+	prisoner = no
+	ai = no
 	
 	trigger = {
 		has_dlc = "Legacy of Rome"
-		ai = no
 		OR = {
 			has_landed_title = e_byzantium
 			has_landed_title = e_roman_empire
@@ -392,8 +395,6 @@ character_event = {
 		any_vassal = {
 			has_landed_title = d_varangian_guard
 		}
-		NOT = { trait = incapable }
-		prisoner = no
 		any_child = {
 			ai = yes
 			is_female = yes
@@ -461,7 +462,7 @@ character_event = {
 			dynasty = NONE
 			female = no
 			age = 22
-#			trait = varangian
+			trait = varangian_trait
 			religion = ROOT
 			culture = varangian
 		}
@@ -520,6 +521,7 @@ character_event = {
 	
 	capable_only = yes
 	only_rulers = yes
+	min_age = 16
 	prisoner = no
 	ai = yes
 	
@@ -531,7 +533,6 @@ character_event = {
 			has_landed_title = b_deuteron
 			has_landed_title = b_pempton
 		}
-		age = 16
 		liege = {
 			ai = no
 			OR = {
@@ -617,6 +618,8 @@ narrative_event = {
 	prisoner = no
 	only_playable = yes
 	ai = no
+	min_age = 16
+	religion_group = christian
 	
 	trigger = {
 		has_dlc = "Legacy of Rome"
@@ -626,12 +629,10 @@ narrative_event = {
 		}
 		NOR = {
 			has_global_flag = greek_fire
-			trait = in_hiding
 		}
-		age = 16
 		in_command = no
 		capital_scope = { province_id = 517 }	#Konstantinoupolis
-		religion_group = christian
+		is_inaccessible_trigger = no
 	}
 	
 	mean_time_to_happen = {
@@ -1175,21 +1176,23 @@ character_event = {
 	capable_only = yes
 	only_playable = yes
 	prisoner = no
+	min_age = 16
 	
 	trigger = {
 		has_dlc = "Legacy of Rome"
-		is_adult = yes
 		in_command = no
 		NOR = {
 			religion_group = indian_group
-			trait = in_hiding
 			capital_scope = {
 				region = world_india
 			}
 			location = {
-				region = world_india
+				county = {
+					region = world_india
+				}
 			}
 		}
+		is_inaccessible_trigger = no
 	}
 	
 	mean_time_to_happen = {
@@ -1242,8 +1245,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = {
-		name = EVTOPTALoR.887
+	immediate = {
 		create_random_steward = {
 			random_traits = no
 			dynasty = NONE
@@ -1251,6 +1253,9 @@ character_event = {
 			age = 22
 			religion = indoh_hindu
 			culture = hindavi
+			attributes = {
+				stewardship = 6
+			}
 			trait = eunuch
 			trait = diligent
 			trait = temperate
@@ -1261,11 +1266,51 @@ character_event = {
 				modifier = opinion_loyal_servant
 				who = ROOT
 			}
+			random_list = {
+				25 = {
+					add_trait = just
+				}
+				25 = {
+					add_trait = shrewd
+				}
+				25 = {
+					add_trait = stubborn
+				}
+				25 = {
+					add_trait = patient
+				}
+			}
+			random_list = {
+				33 = {
+					add_trait = administrator
+				}
+				33 = {
+					add_trait = architect
+				}
+				33 = {
+					add_trait = gardener
+				}
+			}
+			save_event_target_as = eunuch_gift
+		}
+	}
+	
+	option = {
+		name = EVTOPTALoR.887
+		custom_tooltip = {
+			text = eunuch_gift_tooltip
 		}
 	}
 	option = {
 		name = EVTOPTBLoR.887
 		custom_tooltip = { text = eunuch_declined }
+		hidden_tooltip = {
+			event_target:eunuch_gift = {
+				death = {
+					death_reason = death_missing
+				}
+			}
+		}
 	}
 }
 
@@ -1279,8 +1324,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = {
-		name = EVTOPTALoR.887
+	immediate = {
 		create_random_diplomat = {
 			random_traits = no
 			dynasty = NONE
@@ -1288,6 +1332,9 @@ character_event = {
 			age = 22
 			religion = indohelen
 			culture = indohellenic
+			attributes = {
+				diplomacy = 6
+			}
 			trait = eunuch
 			trait = diligent
 			trait = temperate
@@ -1298,11 +1345,53 @@ character_event = {
 				modifier = opinion_loyal_servant
 				who = ROOT
 			}
+			random_list = {
+				25 = {
+					add_trait = honest
+				}
+				25 = {
+					add_trait = kind
+				}
+				25 = {
+					add_trait = gregarious
+				}
+				25 = {
+					add_trait = trusting
+				}
+			}
+			random_list = {
+				25 = {
+					add_trait = socializer
+				}
+				25 = {
+					add_trait = gamer
+				}
+				25 = {
+					add_trait = poet
+				}
+				25 = {
+					add_trait = falconer
+				}
+			}
+			save_event_target_as = eunuch_gift
+		}
+	}
+	option = {
+		name = EVTOPTALoR.887
+		custom_tooltip = {
+			text = eunuch_gift_tooltip
 		}
 	}
 	option = {
 		name = EVTOPTBLoR.887
 		custom_tooltip = { text = eunuch_declined }
+		hidden_tooltip = {
+			event_target:eunuch_gift = {
+				death = {
+					death_reason = death_missing
+				}
+			}
+		}
 	}
 }
 
@@ -1316,8 +1405,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = {
-		name = EVTOPTALoR.887
+	immediate = {
 		create_random_intriguer = {
 			random_traits = no
 			dynasty = NONE
@@ -1325,6 +1413,9 @@ character_event = {
 			age = 22
 			religion = graeco_roman
 			culture = greek
+			attributes = {
+				intrigue = 6
+			}
 			trait = eunuch
 			trait = diligent
 			trait = temperate
@@ -1335,11 +1426,47 @@ character_event = {
 				modifier = opinion_loyal_servant
 				who = ROOT
 			}
+			random_list = {
+				25 = {
+					add_trait = deceitful
+				}
+				25 = {
+					add_trait = paranoid
+				}
+				25 = {
+					add_trait = shrewd
+				}
+				25 = {
+					add_trait = cynical
+				}
+			}
+			random_list = {
+				50 = {
+					add_trait = schemer
+				}
+				50 = {
+					add_trait = impaler
+				}
+			}
+			save_event_target_as = eunuch_gift
+		}
+	}
+	option = {
+		name = EVTOPTALoR.887
+		custom_tooltip = {
+			text = eunuch_gift_tooltip
 		}
 	}
 	option = {
 		name = EVTOPTBLoR.887
 		custom_tooltip = { text = eunuch_declined }
+		hidden_tooltip = {
+			event_target:eunuch_gift = {
+				death = {
+					death_reason = death_missing
+				}
+			}
+		}
 	}
 }
 
@@ -1353,8 +1480,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = {
-		name = EVTOPTALoR.887
+	immediate = {
 		create_random_soldier = {
 			random_traits = no
 			dynasty = NONE
@@ -1362,6 +1488,9 @@ character_event = {
 			age = 22
 			religion = almaqah
 			culture = sabaean
+			attributes = {
+				martial = 6
+			}
 			trait = eunuch
 			trait = diligent
 			trait = temperate
@@ -1372,11 +1501,65 @@ character_event = {
 				modifier = opinion_loyal_servant
 				who = ROOT
 			}
+			random_list = {
+				25 = {
+					add_trait = brave
+				}
+				25 = {
+					add_trait = wroth
+				}
+				25 = {
+					add_trait = cruel
+				}
+				25 = {
+					add_trait = brawny
+				}
+			}
+			random_list = {
+				25 = {
+					add_trait = organizer
+				}
+				25 = {
+					add_trait = inspiring_leader
+				}
+				25 = {
+					add_trait = defensive_leader
+				}
+				25 = {
+					add_trait = desert_terrain_leader
+				}
+			}
+			random_list = {
+				33 = {
+					add_trait = duelist
+				}
+				33 = {
+					add_trait = strategist
+				}
+				33 = {
+					add_trait = hunter
+				}
+			}
+			save_event_target_as = eunuch_gift
+		}
+	}
+	
+	option = {
+		name = EVTOPTALoR.887
+		custom_tooltip = {
+			text = eunuch_gift_tooltip
 		}
 	}
 	option = {
 		name = EVTOPTBLoR.887
 		custom_tooltip = { text = eunuch_declined }
+		hidden_tooltip = {
+			event_target:eunuch_gift = {
+				death = {
+					death_reason = death_missing
+				}
+			}
+		}
 	}
 }
 
@@ -1393,6 +1576,8 @@ character_event = {
 	capable_only = yes
 	only_playable = yes
 	prisoner = no
+	culture = greek
+	only_men = yes
 	
 	trigger = {
 		primary_title = { higher_tier_than = COUNT }
@@ -1401,17 +1586,19 @@ character_event = {
 		liege = {
 			has_landed_title = e_byzantium
 			OR = {
-				ai = no
-				culture = greek
-				is_female = no
-				prisoner = no
-				age = 16
-				NOR = {
-					age = 50
-					has_character_flag = no_more_tzykanion
-					trait = infirm
-					trait = incapable
-					trait = in_hiding
+				AND = {
+					ai = no
+					culture = greek
+					is_female = no
+					prisoner = no
+					age = 16
+					NOR = {
+						age = 50
+						has_character_flag = no_more_tzykanion
+						trait = infirm
+						trait = incapable
+					}
+					is_inaccessible_trigger = no
 				}
 				any_realm_lord = {
 					ai = no
@@ -1425,13 +1612,11 @@ character_event = {
 						has_character_flag = no_more_tzykanion
 						trait = infirm
 						trait = incapable
-						trait = in_hiding
 					}
+					is_inaccessible_trigger = no
 				}
 			}
 		}
-		culture = greek
-		is_female = no
 	}
 	
 	mean_time_to_happen = {
@@ -1453,8 +1638,8 @@ character_event = {
 						has_character_flag = no_more_tzykanion
 						trait = infirm
 						trait = incapable
-						trait = in_hiding
 					}
+					is_inaccessible_trigger = no
 				}
 				save_event_target_as = tzykanion_challenger
 				character_event = { id = LoR.901 }
@@ -1473,8 +1658,8 @@ character_event = {
 						has_character_flag = no_more_tzykanion
 						trait = infirm
 						trait = incapable
-						trait = in_hiding
 					}
+				is_inaccessible_trigger = no
 				}
 				save_event_target_as = tzykanion_challenger
 				character_event = { id = LoR.901 }

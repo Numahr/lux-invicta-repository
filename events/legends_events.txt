@@ -19,6 +19,7 @@ narrative_event = {
 	min_age = 20
 	prisoner = no
 	capable_only = yes
+	war = no
 	
 	trigger = {
 		NOR = {
@@ -26,9 +27,7 @@ narrative_event = {
 			has_character_flag = killed_robin_hood
 			has_character_flag = robin_marion_married
 			has_character_flag = robin_hood
-			trait = in_hiding
 		}
-		war = no
 		in_command = no
 		is_ill = no
 		OR = {
@@ -44,6 +43,7 @@ narrative_event = {
 				revolt_risk = 0.05
 			}
 		}
+		is_inaccessible_trigger = no
 	}
 	
 	mean_time_to_happen = {
@@ -103,25 +103,25 @@ narrative_event = {
 				chance = 25
 				
 				add_trait = diligent
+				set_character_flag = got_trait
 				hidden_tooltip = {
 					character_event = {
 						id = 38256 #Notify Diligent
 					}
 				}
-				set_character_flag = temp_diligent
 			}
 		}
 		if = {
 			limit = {
 				trait = diligent
 				NOR = {
-					has_character_flag = temp_diligent
 					trait = deceitful
+					has_character_flag = got_trait
 				}
 			}
 			random = {
 				chance = 25
-				
+				set_character_flag = got_trait
 				add_trait = deceitful
 				hidden_tooltip = {
 					character_event = {
@@ -130,7 +130,6 @@ narrative_event = {
 				}
 			}
 		}
-		clr_character_flag = temp_diligent
 		random = {
 			chance = 40
 			
@@ -140,7 +139,9 @@ narrative_event = {
 				random = 10
 				tooltip = "EVTTOOLTIP10001"
 			}
+			break = yes
 		}
+		clr_character_flag = got_trait
 	}
 	
 	option = {
@@ -241,8 +242,9 @@ narrative_event = {
 		set_character_flag = do_something
 		if = {
 			limit = {
-				NOT = {
+				NOR = {
 					trait = diligent
+					has_character_flag = got_trait
 				}
 			}
 			random = {
@@ -255,12 +257,14 @@ narrative_event = {
 					}
 				}
 			}
+			clr_character_flag = got_trait
 			break = yes
 		}
 		if = {
 			limit = {
-				NOT = {
+				NOR = {
 					trait = ambitious
+					has_character_flag = got_trait
 				}
 			}
 			random = {
@@ -273,6 +277,7 @@ narrative_event = {
 					}
 				}
 			}
+			clr_character_flag = got_trait
 		}
 	}
 }
@@ -288,10 +293,10 @@ narrative_event = {
 	prisoner = no
 	capable_only = yes
 	only_playable = yes
+	war = no
 	has_character_flag = lure_robin
 	
 	trigger = {
-		war = no
 		in_command = no
 	}
 	
@@ -318,8 +323,9 @@ narrative_event = {
 		prestige = -10
 		if = {
 			limit = {	
-				NOT = {
+				NOR = {
 					trait = craven
+					trait = berserker
 				}
 			}
 			add_trait = craven
@@ -327,7 +333,10 @@ narrative_event = {
 		}
 		if = {
 			limit = {	
-				trait = craven
+				OR = {
+					trait = craven
+					trait = berserker
+				}
 				NOT = {
 					trait = slothful
 				}
@@ -363,25 +372,30 @@ narrative_event = {
 				}
 			}
 			add_trait = deceitful
-			set_character_flag = temp_deceitful
+			narrative_event = {
+				id = 10020
+				days = 1
+				random = 3
+				tooltip = "EVTTOOLTIP10020"
+			}
+			break = yes
 		}
 		if = {
 			limit = {
 				trait = deceitful
-				NOR = {
-					has_character_flag = temp_deceitful
+				NOT = {
 					trait = patient
 				}
 			}
 			add_trait = patient
+			narrative_event = {
+				id = 10020
+				days = 1
+				random = 3
+				tooltip = "EVTTOOLTIP10020"
+			}
 		}
-		clr_character_flag = temp_deceitful
-		narrative_event = {
-			id = 10020
-			days = 1
-			random = 3
-			tooltip = "EVTTOOLTIP10020"
-		}
+		
 	}
 }
 
@@ -785,15 +799,19 @@ narrative_event = {
 		clr_character_flag = robin_hood
 		if = {
 			limit = {
-				NOT = {
+				NOR = {
 					trait = craven
+					trait = berserker
 				}
 			}
 			add_trait = craven
 		}
 		if = {
 			limit = {
-				trait = craven
+				OR = {
+					trait = craven
+					trait = berserker
+				}
 				NOT = {
 					trait = deceitful
 				}
@@ -1181,6 +1199,7 @@ narrative_event = {
 			dynasty = random
 			female = no
 			age = 30
+			trait = misguided_warrior
 			trait = brave
 			trait = ambitious
 			trait = proud
@@ -1200,6 +1219,7 @@ narrative_event = {
 			dynasty = random
 			female = yes
 			age = 25
+			trait = naive_appeaser
 			trait = brave
 			trait = ambitious
 			trait = proud
@@ -1306,6 +1326,7 @@ narrative_event = {
 			dynasty = random
 			female = no
 			age = 30
+			trait = misguided_warrior
 			trait = brave
 			trait = ambitious
 			trait = proud
@@ -1325,6 +1346,7 @@ narrative_event = {
 			dynasty = random
 			female = yes
 			age = 25
+			trait = naive_appeaser
 			trait = brave
 			trait = ambitious
 			trait = proud
@@ -1360,11 +1382,9 @@ narrative_event = {
 		name =  "EVTOPTA10042"
 		set_character_flag = robin_marion_married
 		event_target:robin_hood = {
-			event_target:maid_marion = {
-				add_spouse = PREV
-				hidden_tooltip = {
-					add_lover = PREV
-				}
+			add_spouse = event_target:maid_marion
+			hidden_tooltip = {
+				add_lover = event_target:maid_marion
 			}
 		}
 	}
@@ -1384,10 +1404,12 @@ narrative_event = {
 	max_age = 100
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
+		primary_title = { temporary = no }
+		is_inaccessible_trigger = no
 		NOR = {
 			has_character_modifier = flaming_gap
 			has_character_modifier = gates_hell
@@ -1395,7 +1417,6 @@ narrative_event = {
 			has_character_modifier = exorcism_gateshell
 			has_character_modifier = cattle_gateshell
 			has_character_modifier = sacrifice_gateshell
-			trait = in_hiding
 		}
 	}
 	
@@ -1484,11 +1505,11 @@ narrative_event = {
 	max_age = 100
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
-		in_command = no
 		has_character_modifier = flaming_gap
+		in_command = no
 	}
 	
 	mean_time_to_happen = {
@@ -1548,11 +1569,11 @@ narrative_event = {
 	max_age = 100
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
-		in_command = no
 		has_character_modifier = wailing_gap
+		in_command = no
 	}
 	
 	mean_time_to_happen = {
@@ -1606,11 +1627,11 @@ narrative_event = {
 	max_age = 100
 	capable_only = yes
 	prisoner = no
+	war = no
 
 	trigger = {
-		war = no
-		in_command = no
 		has_character_modifier = gates_hell
+		in_command = no
 		NOT = {
 			has_character_flag = choose_solution_gh
 		}
@@ -1861,9 +1882,8 @@ narrative_event = {
 	option = {
 		name = "EVTOPTA10107"
 		event_target:human_sacrifice = {
-			clr_character_flag = human_sacrifice
 			death = {
-				death_reason = death_execution
+				death_reason = death_murder_fall
 				killer = ROOT
 			}
 		}

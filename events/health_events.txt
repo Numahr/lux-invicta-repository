@@ -19,6 +19,7 @@ character_event = {
 	
 	min_age = 16
 	capable_only = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		NOR = {
@@ -67,6 +68,7 @@ character_event = {
 	option = {
 		name = EVTOPTA6000
 		add_trait = syphilitic
+		blessing_removes_disease_effect = yes
 	}
 }
 
@@ -76,6 +78,11 @@ character_event = {
 	desc = EVTDESC6001
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	min_age = 16
+	is_sick = yes
+	only_capable = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		health = 6
@@ -109,6 +116,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	min_age = 10
+	only_capable = yes
 	
 	trigger = {
 		NOR = {
@@ -129,13 +137,65 @@ character_event = {
 		modifier = {
 			factor = 0.5
 			in_command = yes
-		}		
+		}
+		modifier = {
+			factor = 0.5
+			any_courtier = {
+				trait = leper
+			}
+		}
+		modifier = {
+			factor = 0.5
+			is_weak_trigger = yes
+		}
+		modifier = {
+			factor = 0.5
+			OR = {
+				trait = infection
+				trait = severely_injured
+				trait = wounded
+			}
+		}
+		modifier = {
+			factor = 0.5
+			trait = charitable
+		}
 		
 	}
 	
 	option = {
 		name = EVTOPTA6010
 		add_trait = leper
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			set_character_flag = new_leper_character
+			host = {
+				random_courtier_or_vassal = {
+					limit = {
+						liege = { character = PREVPREV }
+						has_minor_title = title_court_physician
+					}
+					character_event = { id = RIP.11031 days = 1 }
+				}
+			}
+			character_event = { id = RIP.11063 days = 20 }
+		}
+			
+		hidden_tooltip = {
+			random_list ={
+				100 = {
+					character_event = { id = RIP.5041 days = 365 random = 50 }
+				}
+				75 = {
+					character_event = { id = RIP.5041 days = 1500 random = 300 }
+				}
+				30 = {
+					character_event = { id = RIP.5041 days = 3000 random = 600 }
+				}
+			}
+		}
 	}
 }
 
@@ -146,12 +206,18 @@ character_event = {
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
 	
-	min_age = 10
+	min_age = 16
+	is_sick = yes
+	only_capable = yes
 	
 	trigger = {
 		health = 4
 		treasury = 25
 		trait = leper
+		has_game_rule = {
+			name = supernatural_events
+			value = on
+		}
 	}
 	
 	mean_time_to_happen = {
@@ -235,7 +301,7 @@ character_event = {
 			factor = 0.003 # 12 years on average
 			OR = {
 				trait = syphilitic
-				has_epidemic = yes
+				trait = has_aztec_disease
 			}
 		}
 		modifier = {
@@ -244,18 +310,29 @@ character_event = {
 			has_character_modifier = the_oubliette
 		}
 		modifier = {
+			factor = 0.02 # 80 years on average
+			OR = {
+				trait = has_typhoid_fever
+				trait = has_typhus
+			}
+		}
+		modifier = {
 			factor = 0.1
 			prisoner = yes
 			NOT = { has_character_modifier = the_oubliette }
 			NOT = { has_character_modifier = house_arrest }
 		}
 		modifier = {
-			factor = 0.02 # 80 years on average
-			trait = pneumonic
+			factor = 0.2 # 800 years on average
+			is_ill = yes
+			NOR = {
+				trait = has_typhoid_fever
+				trait = has_typhus
+			}
 		}
 		modifier = {
-			factor = 0.1 # 400 years on average
-			trait = ill
+			factor = 0.0025 # 1 year on average, rabies will also be ill
+			trait = rabies
 		}
 		modifier = {
 			factor = 0.1
@@ -365,7 +442,8 @@ character_event = {
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
 	
-	min_age = 10
+	min_age = 16
+	only_capable = yes
 	
 	trigger = {
 		health = 4
@@ -406,7 +484,7 @@ character_event = {
 	}
 	
 	min_age = 10
-	capable_only = yes
+	only_capable = yes
 	
 	trigger = {
 		NOT = {
@@ -475,6 +553,7 @@ character_event = {
 	}
 	
 	min_age = 10
+	only_capable = yes
 	
 	trigger = {
 		health = 4
@@ -525,6 +604,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	min_age = 16
+	only_capable = yes
 	
 	trigger = {
 		OR = {
@@ -534,7 +614,6 @@ character_event = {
 		}
 		NOR = {
 			trait = stressed
-			trait = incapable
 			trait = infirm
 		}
 	}
@@ -571,6 +650,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	min_age = 16
+	only_capable = yes
 	
 	trigger = {
 		trait = stressed
@@ -618,12 +698,12 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	min_age = 10
+	only_capable = yes
 	
 	trigger = {
 		NOR = {
 			trait = depressed
 			trait = zealous
-			trait = incapable
 			trait = content
 		}
 	}
@@ -652,7 +732,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.5
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 0.7
@@ -690,6 +770,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	min_age = 10
+	only_capable = yes
 	
 	trigger = {
 		trait = depressed
@@ -720,7 +801,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 2.0
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 1.5
@@ -749,9 +830,24 @@ character_event = {
 #Ill
 character_event = {
 	id = 6060
-	desc = EVTDESC6060
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
+	desc = EVTDESC6060
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA6060
+		add_trait = ill
+		blessing_removes_disease_effect = yes
+	}
+}
+
+#Meta ill
+character_event = {
+	id = 6063
+
+	hide_window = yes
 	
 	trigger = {
 		health = 3.0
@@ -770,6 +866,10 @@ character_event = {
 			trait = stressed
 		}
 		modifier = {
+			factor = 0.5
+			is_weak_trigger = yes
+		}
+		modifier = {
 			factor = 0.75
 			prisoner = yes
 			has_character_modifier = the_oubliette
@@ -784,6 +884,10 @@ character_event = {
 			base_health = 6
 		}
 		modifier = {
+			factor = 1.5
+			is_strong_trigger = yes
+		}
+		modifier = {
 			factor = 2.0
 			base_health = 7
 		}
@@ -792,10 +896,22 @@ character_event = {
 			base_health = 8
 		}
 	}
-	
-	option = {
-		name = EVTOPTA6060
-		add_trait = ill
+
+	immediate = {
+		if = {
+			limit = {
+				NOT = {
+					has_dlc = "Reapers"
+				}
+			}
+			character_event = { id = 6060 }
+		}
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			add_symptom_effect = yes
+		}
 	}
 }
 
@@ -805,6 +921,8 @@ character_event = {
 	desc = EVTDESC6061
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
 	
 	trigger = {
 		base_health = 3
@@ -850,6 +968,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	max_age = 7
+	is_sick = yes
 	
 	trigger = {
 		trait = sickly
@@ -885,6 +1004,9 @@ character_event = {
 	desc = EVTDESC6070
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		OR = {
@@ -934,6 +1056,7 @@ character_event = {
 	option = {
 		name = EVTOPTA6070
 		add_trait = pneumonic
+		blessing_removes_disease_effect = yes
 	}
 }
 
@@ -943,6 +1066,9 @@ character_event = {
 	desc = EVTDESC6071
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		base_health = 4
@@ -994,6 +1120,10 @@ character_event = {
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
 	
+	min_age = 16
+	only_capable = yes
+	prisoner = no
+	
 	trigger = {
 		OR = {
 			trait = hunter
@@ -1002,7 +1132,7 @@ character_event = {
 		}
 		NOR = {
 			trait = wounded
-			trait = maimed
+			is_maimed_trigger = yes
 		}		
 	}
 	
@@ -1051,6 +1181,7 @@ character_event = {
 	trigger = {
 		base_health = 4
 		trait = wounded
+		NOT = { trait = infection }
 	}
 	
 	mean_time_to_happen = {
@@ -1084,10 +1215,8 @@ character_event = {
 	
 	trigger = {
 		trait = wounded
-		NOR = {
-			base_health = 8
-			trait = ill
-		}
+		NOT = { base_health = 8 }
+		is_ill = no
 	}
 	
 	mean_time_to_happen = {
@@ -1096,6 +1225,11 @@ character_event = {
 		modifier = {
 			factor = 0.9
 			in_command = yes
+		}
+		
+		modifier = {
+			factor = 0.8
+			trait = leper
 		}
 		
 		modifier = {
@@ -1114,7 +1248,20 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA6082
-		add_trait = ill
+		if = {
+			limit = {
+				NOT = {
+					has_dlc = "Reapers"
+				}
+			}
+			add_trait = ill
+			blessing_removes_disease_effect = yes
+			break = yes
+		}
+		add_trait = infection
+		hidden_tooltip = {
+			character_event = { id = RIP.11001 days = 365 random = 1095 }
+		}
 	}
 }
 
@@ -1127,12 +1274,11 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	min_age = 45
+	only_capable = yes
 	
 	trigger = {
-		NOR = {
-			trait = infirm
-			trait = incapable
-		}
+		NOT = { trait = infirm }
+		immortal = no
 	}
 	
 	mean_time_to_happen = {
@@ -1153,6 +1299,14 @@ character_event = {
 		modifier = {
 			factor = 0.5
 			age = 90
+		}
+		modifier = {
+			factor = 0.5
+			trait = cancer
+		}
+		modifier = {
+			factor = 0.5
+			is_weak_trigger = yes
 		}
 		modifier = {
 			factor = 0.75
@@ -1191,6 +1345,7 @@ character_event = {
 			trait = inbred
 		}
 		NOT = { trait = incapable }
+		immortal = no
 	}
 	
 	mean_time_to_happen = {
@@ -1231,6 +1386,9 @@ character_event = {
 	desc = EVTDESC6111
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		trait = has_tuberculosis
@@ -1281,7 +1439,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 2.0
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 4.0
@@ -1305,6 +1463,9 @@ character_event = {
 	desc = EVTDESC6112
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		trait = has_typhoid_fever
@@ -1355,7 +1516,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 2.0
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 4.0
@@ -1379,6 +1540,9 @@ character_event = {
 	desc = EVTDESC6113
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		trait = has_typhus
@@ -1429,7 +1593,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 2.0
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 4.0
@@ -1453,6 +1617,9 @@ character_event = {
 	desc = EVTDESC6114
 	picture = GFX_evt_plague_doctor
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		trait = has_bubonic_plague
@@ -1502,7 +1669,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 2.0
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 4.0
@@ -1526,6 +1693,9 @@ character_event = {
 	desc = EVTDESC6115
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		trait = has_measles
@@ -1576,7 +1746,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 2.0
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 4.0
@@ -1600,6 +1770,9 @@ character_event = {
 	desc = EVTDESC6116
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
+	
+	is_sick = yes
+	lacks_dlc = "Reapers"
 	
 	trigger = {
 		trait = has_small_pox
@@ -1650,7 +1823,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 2.0
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 4.0
@@ -1674,12 +1847,20 @@ character_event = {
 	desc = EVTDESC6200
 	picture = GFX_evt_whispers
 	border = GFX_event_normal_frame_religion
+	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	religion_group = christian
 	
 	trigger = {
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+		}
 		trait = possessed
-		religion_group = christian
 		NOR = {
 			has_character_modifier = voice_of_jesus
 			has_character_modifier = voice_of_satan
@@ -1771,8 +1952,11 @@ character_event = {
 	picture = GFX_evt_stone_church
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -1797,8 +1981,11 @@ character_event = {
 	picture = GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -1823,7 +2010,11 @@ character_event = {
 	picture = GFX_evt_comet
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
+	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -1854,13 +2045,16 @@ character_event = {
 	picture = GFX_evt_brothel_scene
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_jesus
 		trait = lustful
+		has_character_modifier = voice_of_jesus
 	}
 
 	mean_time_to_happen = {
@@ -1880,14 +2074,20 @@ character_event = {
 	picture =  GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
+	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
-		NOR = {	
-			trait = lustful
-			trait = chaste
+		NOT = {
+			OR = {
+				trait = lustful
+				trait = chaste
+			}
 		}
 	}
 
@@ -1908,13 +2108,16 @@ character_event = {
 	picture = GFX_evt_feast
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_jesus
 		trait = gluttonous
+		has_character_modifier = voice_of_jesus
 	}
 
 	mean_time_to_happen = {
@@ -1934,8 +2137,11 @@ character_event = {
 	picture =  GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
@@ -1963,13 +2169,16 @@ character_event = {
 	picture = GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_jesus
 		trait = greedy
+		has_character_modifier = voice_of_jesus
 	}
 
 	mean_time_to_happen = {
@@ -1989,8 +2198,12 @@ character_event = {
 	picture =  GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
+
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
@@ -2017,13 +2230,16 @@ character_event = {
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_jesus
 		trait = slothful
+		has_character_modifier = voice_of_jesus
 	}
 
 	mean_time_to_happen = {
@@ -2042,8 +2258,11 @@ character_event = {
 	picture =  GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
@@ -2071,13 +2290,16 @@ character_event = {
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_jesus
 		trait = envious
+		has_character_modifier = voice_of_jesus
 	}
 
 	mean_time_to_happen = {
@@ -2096,8 +2318,11 @@ character_event = {
 	picture =  GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
@@ -2125,13 +2350,16 @@ character_event = {
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_jesus
 		trait = wroth
+		has_character_modifier = voice_of_jesus
 	}
 
 	mean_time_to_happen = {
@@ -2151,8 +2379,11 @@ character_event = {
 	picture = GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
@@ -2180,13 +2411,16 @@ character_event = {
 	picture = GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_jesus
 		trait = proud
+		has_character_modifier = voice_of_jesus
 	}
 
 	mean_time_to_happen = {
@@ -2206,8 +2440,11 @@ character_event = {
 	picture = GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 
 	trigger = {
 		trait = possessed
@@ -2235,8 +2472,11 @@ character_event = {
 	picture = GFX_evt_heretic
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2260,12 +2500,15 @@ character_event = {
 	picture = GFX_evt_battle
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier =  holy_comet
+		has_character_modifier = holy_comet
 		NOR = {
 			has_character_modifier = military_jesus
 			has_character_modifier = speaking_in_tounges
@@ -2292,8 +2535,11 @@ character_event = {
 	picture = GFX_evt_battle
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2317,12 +2563,15 @@ character_event = {
 	picture = GFX_evt_battle
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier =  holy_comet
+		has_character_modifier = holy_comet
 		NOR = {
 			has_character_modifier = military_jesus
 			has_character_modifier = speaking_in_tounges
@@ -2349,8 +2598,11 @@ character_event = {
 	picture = GFX_evt_battle
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2374,12 +2626,14 @@ character_event = {
 	picture = GFX_evt_whispers
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		religion_group = christian
 		NOR = {
 			has_character_modifier = voice_of_jesus
 			has_character_modifier = voice_of_satan
@@ -2455,10 +2709,11 @@ character_event = {
 	picture = GFX_evt_torture
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 16
-	only_rulers = yes
+	only_capable = yes
 	prisoner = no
-	capable_only = yes
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2494,8 +2749,11 @@ character_event = {
 	picture = GFX_evt_scandal
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2522,8 +2780,11 @@ character_event = {
 	picture = GFX_evt_scandal
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2553,13 +2814,16 @@ character_event = {
 	picture = GFX_evt_brothel
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_satan
 		trait = chaste
+		has_character_modifier = voice_of_satan
 	}
 	
 	mean_time_to_happen = {
@@ -2579,8 +2843,11 @@ character_event = {
 	picture = GFX_evt_brothel
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2608,13 +2875,16 @@ character_event = {
 	picture = GFX_evt_quarrel
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_satan
 		trait = patient
+		has_character_modifier = voice_of_satan
 	}
 	
 	mean_time_to_happen = {
@@ -2634,8 +2904,11 @@ character_event = {
 	picture = GFX_evt_quarrel
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2663,13 +2936,16 @@ character_event = {
 	picture = GFX_evt_shadow
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_satan
 		trait = humble
+		has_character_modifier = voice_of_satan
 	}
 	
 	mean_time_to_happen = {
@@ -2689,8 +2965,11 @@ character_event = {
 	picture = GFX_evt_shadow
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2718,13 +2997,16 @@ character_event = {
 	picture = GFX_evt_quarrel
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_satan
 		trait = temperate
+		has_character_modifier = voice_of_satan
 	}
 	
 	mean_time_to_happen = {
@@ -2744,8 +3026,11 @@ character_event = {
 	picture = GFX_evt_feast
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2773,13 +3058,16 @@ character_event = {
 	picture = GFX_evt_quarrel
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_satan
 		trait = charitable
+		has_character_modifier = voice_of_satan
 	}
 	
 	mean_time_to_happen = {
@@ -2799,8 +3087,11 @@ character_event = {
 	picture = GFX_evt_feast
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2828,13 +3119,16 @@ character_event = {
 	picture = GFX_evt_quarrel
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_satan
 		trait = kind
+		has_character_modifier = voice_of_satan
 	}
 	
 	mean_time_to_happen = {
@@ -2854,8 +3148,11 @@ character_event = {
 	picture = GFX_evt_feast
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2883,13 +3180,16 @@ character_event = {
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
-		has_character_modifier = voice_of_satan
 		trait = diligent
+		has_character_modifier = voice_of_satan
 	}
 	
 	mean_time_to_happen = {
@@ -2909,8 +3209,11 @@ character_event = {
 	picture = GFX_evt_illness
 	border = GFX_event_normal_frame_religion
 	
+	only_playable = yes
 	min_age = 10
 	only_capable = yes
+	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		trait = possessed
@@ -2946,7 +3249,6 @@ character_event = {
 	only_independent = yes
 	
 	trigger = {
-		independent = yes
 		trait = lunatic
 	}
 	
@@ -3069,10 +3371,15 @@ narrative_event = {
 	
 	option = {
 		name = EVTOPTA6305
-		any_vassal = {
-			opinion = {
-				modifier = opinion_insane_law
-				who = ROOT
+		custom_tooltip = {
+			text = ALL_VASSALS_INSANE_LAW
+			hidden_tooltip = {
+				any_vassal = {
+					opinion = {
+						modifier = opinion_insane_law
+						who = ROOT
+					}
+				}
 			}
 		}
 	}
@@ -3091,10 +3398,15 @@ narrative_event = {
 	
 	option = {
 		name = EVTOPTA6305
-		any_vassal = {
-			opinion = {
-				modifier = opinion_insane_law
-				who = ROOT
+		custom_tooltip = {
+			text = ALL_VASSALS_INSANE_LAW
+			hidden_tooltip = {
+				any_vassal = {
+					opinion = {
+						modifier = opinion_insane_law
+						who = ROOT
+					}
+				}
 			}
 		}
 	}
@@ -3113,10 +3425,15 @@ narrative_event = {
 	
 	option = {
 		name = EVTOPTA6305
-		any_vassal = {
-			opinion = {
-				modifier = opinion_insane_law
-				who = ROOT
+		custom_tooltip = {
+			text = ALL_VASSALS_INSANE_LAW
+			hidden_tooltip = {
+				any_vassal = {
+					opinion = {
+						modifier = opinion_insane_law
+						who = ROOT
+					}
+				}
 			}
 		}
 	}
@@ -3135,10 +3452,15 @@ narrative_event = {
 	
 	option = {
 		name = EVTOPTA6305
-		any_vassal = {
-			opinion = {
-				modifier = opinion_insane_law
-				who = ROOT
+		custom_tooltip = {
+			text = ALL_VASSALS_INSANE_LAW
+			hidden_tooltip = {
+				any_vassal = {
+					opinion = {
+						modifier = opinion_insane_law
+						who = ROOT
+					}
+				}
 			}
 		}
 	}
@@ -3207,10 +3529,17 @@ character_event = {
 	
 	min_age = 16
 	prisoner = no
+	only_capable = yes
 	only_playable = yes
+	lacks_dlc = "Zeus"
 	
 	trigger = {
-		NOT = { has_dlc = "Zeus" }
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+		}
 		trait = lunatic
 		any_courtier = {
 			has_job_title = job_chancellor
@@ -3263,16 +3592,24 @@ character_event = {
 	picture = GFX_evt_recovery
 	border = GFX_event_normal_frame_religion
 	
+	ai = no
 	min_age = 16
 	prisoner = no
 	only_playable = yes
 	
 	trigger = {
-		
-		NOR = {
-			has_character_flag = the_old_ones_are_waking
-			trait = in_hiding
+		LI_pagan_trigger = yes
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
 		}
+		NOT = {
+			has_character_flag = the_old_ones_are_waking
+
+		}
+		is_inaccessible_trigger = no
 	}
 	
 	immediate = {
@@ -3310,16 +3647,24 @@ character_event = {
 	picture = GFX_evt_garden
 	border = GFX_event_normal_frame_religion
 	
+	ai = no
 	min_age = 16
 	prisoner = no
 	only_playable = yes
 	
 	trigger = {
-		
-		NOR = {
-			has_character_flag = the_old_ones_are_waking
-			trait = in_hiding
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
 		}
+		LI_pagan_trigger = yes
+		NOT = {
+			has_character_flag = the_old_ones_are_waking
+
+		}
+		is_inaccessible_trigger = no
 	}
 	
 	immediate = {
@@ -3357,16 +3702,24 @@ character_event = {
 	picture = GFX_evt_death
 	border = GFX_event_normal_frame_religion
 	
+	ai = no
 	min_age = 16
 	prisoner = no
 	only_playable = yes
 	
 	trigger = {
-		
-		NOR = {
-			has_character_flag = the_old_ones_are_waking
-			trait = in_hiding
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
 		}
+		LI_pagan_trigger = yes
+		NOT = {
+			has_character_flag = the_old_ones_are_waking
+
+		}
+		is_inaccessible_trigger = no
 	}
 	
 	immediate = {
@@ -3404,16 +3757,23 @@ character_event = {
 	picture = GFX_evt_burning_house
 	border = GFX_event_normal_frame_religion
 	
+	ai = no
 	min_age = 16
 	prisoner = no
 	only_playable = yes
 	
 	trigger = {
-		
-		NOR = {
-			has_character_flag = the_old_ones_are_waking
-			trait = in_hiding
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
 		}
+		LI_pagan_trigger = yes
+		NOT = {
+			has_character_flag = the_old_ones_are_waking
+		}
+		is_inaccessible_trigger = no
 	}
 	
 	immediate = {

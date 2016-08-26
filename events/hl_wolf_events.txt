@@ -24,6 +24,12 @@ character_event = {
 	
 	trigger = {
 		has_dlc = "Horse Lords"
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+		}
 		culture_group = altaic
 #		NOT = { culture = khitan }
 		OR = {
@@ -303,6 +309,11 @@ narrative_event = {
 			random = {
 				chance = 30
 				add_trait = proud
+				hidden_tooltip = {
+					character_event = {
+						id = 38261 #Notify Proud
+					}
+				}
 			}
 		}
 	}
@@ -321,6 +332,11 @@ narrative_event = {
 			random = {
 				chance = 30
 				add_trait = deceitful
+				hidden_tooltip = {
+					character_event = {
+						id = 38255 #Notify Deceitful
+					}
+				}
 			}
 		}
 		if = {
@@ -328,6 +344,11 @@ narrative_event = {
 			random = {
 				chance = 30
 				add_trait = wroth
+				hidden_tooltip = {
+					character_event = {
+						id = 38254 #Notify Wroth
+					}
+				}
 			}
 		}
 		mother = {
@@ -350,6 +371,11 @@ narrative_event = {
 			random = {
 				chance = 30
 				add_trait = envious
+				hidden_tooltip = {
+					character_event = {
+						id = 38271 #Notify Envious
+					}
+				}
 			}
 		}
 		if = {
@@ -357,6 +383,11 @@ narrative_event = {
 			random = {
 				chance = 30
 				add_trait = paranoid
+				hidden_tooltip = {
+					character_event = {
+						id = 38275 #Notify Paranoid
+					}
+				}
 			}
 		}
 	}
@@ -696,6 +727,11 @@ narrative_event = {
 			random = {
 				chance = 30
 				add_trait = temperate
+				hidden_tooltip = {
+					character_event = {
+						id = 38276 #Notify Temperate
+					}
+				}
 			}
 		}
 		hidden_tooltip = {
@@ -872,6 +908,12 @@ narrative_event = {
 	
 	trigger = {
 		has_dlc = "Horse Lords"
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+		}
 		trait = possessed
 		NOR = {
 			has_character_modifier = lycanthropy
@@ -1092,26 +1134,37 @@ character_event = {
 
 	is_triggered_only = yes
 
-	option = {
-		name = EVTOPTA_HL_1430
-		hidden_tooltip = { character_event = { id = HL.1490 days = 4 } }
-		set_character_flag = werewolf_killed_something
-		location = {
-			random_neighbor_province = {
-				owner = {
-					random_courtier = {
-						limit = {
-							ai = yes
-							at_location = PREV
-						}
-						death = {
-							death_reason = death_murder_unknown
-							killer = ROOT
+	immediate = {
+		hidden_tooltip = {
+			set_character_flag = werewolf_killed_something
+			location = {
+				random_neighbor_province = {
+					owner = {
+						random_courtier = {
+							limit = {
+								ai = yes
+								at_location = PREV
+								is_ruler = no
+							}
+							save_event_target_as = werewolf_prey
 						}
 					}
 				}
 			}
 		}
+	}
+
+	option = {
+		name = EVTOPTA_HL_1430
+
+		event_target:werewolf_prey = {
+			death = {
+				death_reason = death_murder_unknown
+				killer = ROOT
+			}
+		}
+
+		hidden_tooltip = { character_event = { id = HL.1490 days = 4 } }
 	}
 }
 
@@ -1154,6 +1207,11 @@ character_event = {
 			random = {
 				chance = 20
 				add_trait = infirm
+				hidden_tooltip = {
+					character_event = {
+						id = 38284 #Notify Infirm
+					}
+				}
 			}
 		}
 		if = {
@@ -1166,10 +1224,23 @@ character_event = {
 		if = {
 			limit = {
 				has_character_flag = werewolf_swims_river_sleeps_outside
-				NOT = { trait = ill }
+				is_ill = no
 				NOT = { trait = pneumonic }
 			}
-			add_trait = ill
+			if = {
+				limit = {
+					NOT = {
+						has_dlc = "Reapers"
+					}
+				}
+				add_trait = ill
+			}
+			if = {
+				limit = {
+					has_dlc = "Reapers"
+				}
+				add_symptom_effect = yes
+			}
 		}
 		if = {
 			limit = { has_character_flag = werewolf_killed_something }
@@ -1925,6 +1996,12 @@ character_event = {
 				is_father_real_father = yes
 			}
 			mother_even_if_dead = { has_character_modifier = wolf_blood }
+		}
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
 		}
 	}
 	

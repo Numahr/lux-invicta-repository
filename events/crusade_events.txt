@@ -20,7 +20,6 @@ character_event = {
 	trigger = {
 		NOT = { trait = crusader }
 		in_command = yes
-		has_called_crusade = yes
 		OR = {
 			AND = {
 				any_war = {
@@ -122,6 +121,55 @@ character_event = {
 	}
 }
 
+# Arriving for the great holy war - Norse
+character_event = {
+	id = 8468
+	desc = "EVTDESC8300"
+	picture = "GFX_evt_viking_battle_oldgods"
+	border = GFX_event_normal_frame_war
+	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
+	
+	trigger = {
+		NOT = { trait = valhalla_bound }
+		in_command = yes
+		OR = {
+			AND = {
+				any_war = {
+					using_cb = crusade
+				}
+				LI_norse_pagan_trigger = yes
+				crusade_target = {
+					is_located_in = ROOT
+				}
+			}
+			any_liege = {
+				LI_norse_pagan_trigger = yes
+				any_war = {
+					using_cb = crusade
+				}
+				crusade_target = {
+					is_located_in = ROOT
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+	
+	option = {
+		trigger = {
+			LI_norse_pagan_trigger = yes
+		}
+		name = "EVTOPTA8468"
+		add_trait = valhalla_bound
+	}
+}
+
 # Arriving at the crusade target
 character_event = {
 	id = 8305
@@ -133,6 +181,7 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	religion_group = christian
 	
 	trigger = {
 		has_called_crusade = yes
@@ -147,7 +196,6 @@ character_event = {
 				}
 			}
 		}
-		religion = catholic
 		crusade_target = {
 			is_located_in = ROOT
 		}
@@ -179,20 +227,17 @@ character_event = {
 # Pope lifts Excommunication (AI characters only)
 character_event = {
 	id = 8306
-	desc = "EVTDESC8306"
-	picture = GFX_evt_pope
-	border = GFX_event_normal_frame_religion
+	hide_window = yes
 
 	only_men = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	religion = catholic
 	
 	trigger = {
 		controls_religion = yes
 		has_called_crusade = yes
-		religion = catholic
-		
 		OR = {
 			any_independent_ruler = {
 				ai = yes
@@ -220,8 +265,7 @@ character_event = {
 		months = 1
 	}
 	
-	option = {
-		name = "EVTOPTA8306"
+	immediate = {
 		any_independent_ruler = {
 			limit = {
 				ai = no
@@ -271,7 +315,6 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		religion = catholic
 		NOR = {
 			trait = zealous
 			trait = cynical
@@ -311,7 +354,6 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		religion = catholic
 		NOR = {
 			trait = cynical
 			trait = zealous
@@ -352,7 +394,6 @@ character_event = {
 	
 	trigger = {
 		FROM = { is_capital = yes }
-		religion = catholic
 		
 		has_called_crusade = yes
 		OR = {
@@ -471,10 +512,11 @@ character_event = {
 	picture = "GFX_evt_siege"
 	border = GFX_event_normal_frame_war
 	
+	religion_group = christian
+	
 	is_triggered_only = yes
 		
 	trigger = {
-		religion_group = christian
 		FROM = { title = b_jerusalem }
 		OR = {
 			any_war = {
@@ -512,9 +554,9 @@ character_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
+	religion_group = christian
 	
 	trigger = {
-		religion_group = christian
 		FROM = { title = b_syrcaesarea }
 		OR = {
 			any_war = {
@@ -589,7 +631,6 @@ character_event = {
 	
 	trigger = {
 		FROM = { is_capital = yes }
-		religion = catholic
 		OR = {
 			any_war = {
 				using_cb = crusade
@@ -706,11 +747,15 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	only_playable = yes
+	religion = catholic
+	only_men = yes
+	only_capable = yes
+	min_age = 16
+	prisoner = no
 	
 	trigger = {
 		controls_religion = yes
 		has_called_crusade = yes
-		religion = catholic
 		had_global_flag = { flag = crusade_called days = 180 }
 		
 		any_independent_ruler = {
@@ -746,13 +791,15 @@ character_event = {
 					who = ROOT
 					modifier = opinion_not_participating_in_crusade_count
 				}
+			}
+			mercenary = no
+			NOT = {
 				any_realm_province = {
 					any_neighbor_province = {
 						has_owner = yes
 						NOT = { religion_group = christian } 
 					}
 				}
-				mercenary = yes
 			}
 		}
 	}
@@ -802,13 +849,15 @@ character_event = {
 						who = ROOT
 						modifier = opinion_not_participating_in_crusade_count
 					}
+				}
+				mercenary = no
+				NOT = {
 					any_realm_province = {
 						any_neighbor_province = {
 							has_owner = yes
 							NOT = { religion_group = christian } 
 						}
 					}
-					mercenary = yes
 				}
 			}
 			letter_event = { id = 8405 days = 1 }
@@ -881,11 +930,15 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	only_playable = yes
+	religion = catholic
+	only_men = yes
+	only_capable = yes
+	min_age = 16
+	prisoner = no
 	
 	trigger = {
 		controls_religion = yes
 		has_called_crusade = yes
-		religion = catholic
 		had_global_flag = { flag = crusade_called days = 180 }
 		
 		any_independent_ruler = {
@@ -923,10 +976,12 @@ character_event = {
 			limit = {
 				had_character_flag = { flag = reminded_about_crusade days = 30 }
 				religion = catholic
-				NOR = {
+				NOT = {
 					any_war = {
 						using_cb = crusade
 					}
+				}
+				NOT = {
 					excommunicated_for = ROOT
 				}
 				crusade_target = {
@@ -1012,6 +1067,7 @@ character_event = {
 	capable_only = yes
 	only_rulers = yes
 	prisoner = no
+	religion = catholic
 	
 	trigger = {
 		has_called_crusade = yes
@@ -1019,7 +1075,6 @@ character_event = {
 		NOT = { has_character_flag = no_complains_about_not_crusading }
 		is_priest = yes
 		independent = no
-		religion = catholic
 		controls_religion = no
 		
 		liege = {
@@ -1028,13 +1083,20 @@ character_event = {
 			prisoner = no
 			NOR = {
 				primary_title = { tier = COUNT } # Exclude small rulers
-				any_war = {
-					using_cb = crusade
-				}
 				reverse_has_opinion_modifier = {
 					who = ROOT
 					modifier = opinion_not_participating_in_crusade_bishop
 				}
+			}
+			NOT = {
+				any_war = {
+					using_cb = crusade
+					any_attacker = {
+						character = PREVPREV
+					}
+				}
+			}
+			NOT = {
 				any_realm_province = {
 					any_neighbor_province = {
 						has_owner = yes
@@ -1153,11 +1215,11 @@ character_event = {
 	desc = "EVTDESC8430"
 	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_religion
-	religion = catholic
+	
 	only_rulers = yes
+	has_character_flag = bishop_complains_about_not_crusading
 	
 	trigger = {
-		has_character_flag = bishop_complains_about_not_crusading
 		had_character_flag = { flag = reminded_about_crusade days = 30 }
 		liege = {
 			NOT = {
@@ -1225,13 +1287,13 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	religion = catholic
 	
 	trigger = {
 		has_called_crusade = yes
 		had_global_flag = { flag = crusade_called days = 180 }
 		NOT = { has_character_flag = no_complains_about_not_crusading }
 		independent = no
-		religion = catholic
 		controls_religion = no
 		
 		liege = {
@@ -1240,13 +1302,20 @@ character_event = {
 			prisoner = no
 			NOR = {
 				primary_title = { tier = COUNT } # Exclude small rulers
-				any_war = {
-					using_cb = crusade
-				}
 				reverse_has_opinion_modifier = {
 					who = ROOT
 					modifier = opinion_not_participating_in_crusade_vassal
 				}
+			}
+			NOT = {
+				any_war = {
+					using_cb = crusade
+					any_attacker = {
+						character = PREVPREV
+					}
+				}
+			}
+			NOT = {
 				any_realm_province = {
 					any_neighbor_province = {
 						has_owner = yes
@@ -1265,20 +1334,6 @@ character_event = {
 						character = PREVPREV
 					}
 					NOT = { excommunicated_for = PREV }
-				}
-			}
-			NOT = {
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_not_participating_in_crusade_vassal
-				}
-			}
-			NOT = {
-				any_realm_province = {
-					any_neighbor_province = {
-						has_owner = yes
-						NOT = { religion_group = christian } 
-					}
 				}
 			}
 		}
@@ -1380,9 +1435,9 @@ character_event = {
 	picture = GFX_evt_emissary
 	
 	only_rulers = yes
+	has_character_flag = vassal_complains_about_not_crusading
 	
 	trigger = {
-		has_character_flag = vassal_complains_about_not_crusading
 		had_character_flag = { flag = reminded_about_crusade days = 30 }
 		liege = {
 			NOT = {
@@ -1453,11 +1508,15 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	only_playable = yes
+	religion = catholic
+	only_men = yes
+	min_age = 16
+	capable_only = yes
+	prisoner = no
 	
 	trigger = {
 		controls_religion = yes
 		has_called_crusade = yes
-		religion = catholic
 		
 		OR = {
 			any_independent_ruler = {
@@ -1467,6 +1526,9 @@ character_event = {
 				NOT = {
 					any_war = {
 						using_cb = crusade
+						any_attacker = {
+							character = PREVPREV
+						}
 					}
 				}
 				crusade_target = {
@@ -1475,8 +1537,8 @@ character_event = {
 					}
 				}
 				excommunicated_for = ROOT
-				NOR = {
-					has_character_flag = offered_revoked_excommunication
+				NOT = { has_character_flag = offered_revoked_excommunication }
+				NOT = {
 					any_realm_province = {
 						any_neighbor_province = {
 							has_owner = yes
@@ -1494,6 +1556,9 @@ character_event = {
 					NOT = {
 						any_war = {
 							using_cb = crusade
+							any_attacker = {
+								character = PREVPREV
+							}
 						}
 					}
 					crusade_target = {
@@ -1502,8 +1567,8 @@ character_event = {
 						}
 					}
 					excommunicated_for = ROOT
-					NOR = {
-						has_character_flag = offered_revoked_excommunication
+					NOT = { has_character_flag = offered_revoked_excommunication }
+					NOT = {
 						any_realm_province = {
 							any_neighbor_province = {
 								has_owner = yes
@@ -1530,6 +1595,9 @@ character_event = {
 				NOT = {
 					any_war = {
 						using_cb = crusade
+						any_attacker = {
+							character = PREVPREV
+						}
 					}
 				}
 				crusade_target = {
@@ -1538,8 +1606,8 @@ character_event = {
 					}
 				}
 				excommunicated_for = ROOT
-				NOR = {
-					has_character_flag = offered_revoked_excommunication
+				NOT = { has_character_flag = offered_revoked_excommunication }
+				NOT = {
 					any_realm_province = {
 						any_neighbor_province = {
 							has_owner = yes
@@ -1560,16 +1628,23 @@ character_event = {
 					ai = no
 					religion = catholic
 					prisoner = no
-					NOR = {
+					NOT = {
 						any_war = {
 							using_cb = crusade
+							any_attacker = {
+								character = PREVPREV
+							}
 						}
+					}
+					NOR = {
 						crusade_target = {
 							holder_scope = {
 								reverse_has_truce = PREVPREV
 							}
 						}
 						has_character_flag = offered_revoked_excommunication
+					}
+					NOT = {
 						any_realm_province = {
 							any_neighbor_province = {
 								has_owner = yes
@@ -1611,11 +1686,15 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	only_playable = yes
+	religion = catholic
+	only_men = yes
+	min_age = 16
+	capable_only = yes
+	prisoner = no
 	
 	trigger = {
 		controls_religion = yes
 		has_called_crusade = yes
-		religion = catholic
 		
 		OR = {
 			any_independent_ruler = {

@@ -8,270 +8,268 @@
 #
 # Written by Sara Wendel-Örtqvist & Henrik Fåhraeus
 
-#Escape from prison: Rope in flagon of wine
-character_event = {
-	id = 50000
-	desc = "EVTDESC50000"
-	picture = "GFX_evt_into_the_dungeon"
-	
-	min_age = 14
-	capable_only = yes
-	prisoner = yes
-	
-	trigger = {
-		NOR = {
-			trait = craven
-			religion_group = muslim
-		}
-		has_character_modifier = house_arrest
-	}
-	
-	mean_time_to_happen = {
-		months = 60
-		
-		modifier = {
-			factor = 0.5
-			trait = deceitful
-		}
-		modifier = {
-			factor = 0.75
-			trait = ambitious
-		}
-		modifier = {
-			factor = 0.75
-			trait = diligent
-		}
-		modifier = {
-			factor = 0.75
-			intrigue = 7
-		}
-		modifier = {
-			factor = 0.75
-			intrigue = 9
-		}
-		modifier = {
-			factor = 0.75
-			intrigue = 11
-		}
-		modifier = {
-			factor = 2.0
-			NOT = { intrigue = 5 }
-		}
-		modifier = {
-			factor = 2.0
-			NOT = { intrigue = 3 }
-		}
-		modifier = {
-			factor = 2.0
-			trait = slothful
-		}
-		modifier = {
-			factor = 2.0
-			trait = content
-		}
-	}
-	
-	option = {
-		name = "EVTOPTA50000"
-		trigger = {
-			NOT = { trait = brave }
-		}
-		add_trait = craven
-	}
-	
-	option = {
-		name = "EVTOPTB50000" #Do I risk it? Yes!
-		hidden_tooltip = {
-			random_list = {
-				30 = {
-					host = {
-						character_event = {
-							id = 50040
-						}
-					}
-					character_event = {
-						id = 50001
-					}
-				}
-				70 = {
-					host = {
-						character_event = {
-							id = 50002
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-#I'm free!
-character_event = {
-	id = 50001
-	desc = "EVTDESC50001"
-	picture = "GFX_evt_into_the_dungeon"
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = "EVTOPTA50001"
-		prestige = 10
-		hidden_tooltip = {
-			if = {
-				limit = {
-					is_ruler = no
-					employer = {
-						ROOT = {
-							host = {
-								character = PREVPREV
-							}
-						}
-					}
-				}
-				prisoner = no
-				banish = yes
-				break = yes
-			}
-		}
-		prisoner = no
-	}
-}
-
-# The host is notified of the escape
-character_event = {
-	id = 50040
-	desc = "EVTDESC50040"
-	picture = GFX_evt_spymaster
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = "EVTOPTA50040"
-		prestige = -10
-	}
-}
-
-#A prisoner tried to escape!
-character_event = {
-	id = 50002
-	desc = "EVTDESC50002"
-	picture = "GFX_evt_into_the_dungeon"
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = "EVTOPTA50002"
-		ai_chance = { factor = 20 }
-		
-		hidden_tooltip = {
-			FROM = {
-				character_event = {
-					id = 50003
-				}
-			}
-		}
-	}
-	
-	option = {
-		name = "EVTOPTB50002"
-		ai_chance = { factor = 20 }
-		
-		FROM = {
-			hidden_tooltip = {
-				remove_character_modifier = house_arrest
-				remove_character_modifier = the_oubliette
-				remove_character_modifier = the_dungeon
-			}
-			add_character_modifier = { 
-				name = the_dungeon
-				duration = -1
-			}
-			hidden_tooltip = {
-				character_event = {
-					id = 50003
-				}
-			}
-		}
-	}
-	
-	option = {
-		name = "EVTOPTC50002"
-		ai_chance = { 
-			factor = 20
-			modifier = {
-				factor = 0
-				trait = kind
-			}
-			modifier = {
-				factor = 2
-				trait = envious
-			}
-			modifier = {
-				factor = 5
-				trait = wroth
-			}
-			modifier = {
-				factor = 5
-				trait = cruel
-			}
-		}
-		
-		FROM = {
-			hidden_tooltip = {
-				remove_character_modifier = house_arrest
-				remove_character_modifier = the_dungeon
-				remove_character_modifier = the_oubliette
-			}
-			add_character_modifier = { 
-				name = the_oubliette
-				duration = -1
-			}
-			hidden_tooltip = {
-				character_event = {
-					id = 50003
-				}
-			}
-		}
-	}
-}
-
-#Failed to escape!
-character_event = {
-	id = 50003
-	desc = "EVTDESC50003"
-	picture = "GFX_evt_into_the_dungeon"
-	
-	is_triggered_only = yes
-	
-	option = {
-		name = "EVTOPTA50003"
-		trigger = {
-			has_character_modifier = house_arrest
-		}
-	}
-	
-	option = {
-		name = "EVTOPTB50003"
-		trigger = {
-			has_character_modifier = the_oubliette
-		}
-		random = {
-			chance = 25
-			add_trait = stressed
-		}
-	}
-	
-	option = {
-		name = "EVTOPTC50003"
-		trigger = {
-			has_character_modifier = the_dungeon
-		}
-		random = {
-			chance = 25
-			add_trait = depressed
-		}
-	}
-}
+#Escape from prison: Rope in flagon of wine #No more escaping.
+#character_event = {
+#	id = 50000
+#	desc = "EVTDESC50000"
+#	picture = "GFX_evt_into_the_dungeon"
+#	
+#	min_age = 14
+#	capable_only = yes
+#	prisoner = yes
+#	
+#	trigger = {
+#		NOT = { trait = craven }
+#		NOT = { religion_group = muslim }
+#		has_character_modifier = house_arrest
+#	}
+#	
+#	mean_time_to_happen = {
+#		months = 60
+#		
+#		modifier = {
+#			factor = 0.5
+#			trait = deceitful
+#		}
+#		modifier = {
+#			factor = 0.75
+#			trait = ambitious
+#		}
+#		modifier = {
+#			factor = 0.75
+#			trait = diligent
+#		}
+#		modifier = {
+#			factor = 0.75
+#			intrigue = 7
+#		}
+#		modifier = {
+#			factor = 0.75
+#			intrigue = 9
+#		}
+#		modifier = {
+#			factor = 0.75
+#			intrigue = 11
+#		}
+#		modifier = {
+#			factor = 2.0
+#			NOT = { intrigue = 5 }
+#		}
+#		modifier = {
+#			factor = 2.0
+#			NOT = { intrigue = 3 }
+#		}
+#		modifier = {
+#			factor = 2.0
+#			trait = slothful
+#		}
+#		modifier = {
+#			factor = 2.0
+#			trait = content
+#		}
+#	}
+#	
+#	option = {
+#		name = "EVTOPTA50000"
+#		trigger = {
+#			NOT = { trait = brave }
+#		}
+#		add_trait = craven
+#	}
+#	
+#	option = {
+#		name = "EVTOPTB50000" #Do I risk it? Yes!
+#		hidden_tooltip = {
+#			random_list = {
+#				30 = {
+#					host = {
+#						character_event = {
+#							id = 50040
+#						}
+#					}
+#					character_event = {
+#						id = 50001
+#					}
+#				}
+#				70 = {
+#					host = {
+#						character_event = {
+#							id = 50002
+#						}
+#					}
+#				}
+#			}
+#		}
+#	}
+#}
+#
+##I'm free!
+#character_event = {
+#	id = 50001
+#	desc = "EVTDESC50001"
+#	picture = "GFX_evt_into_the_dungeon"
+#	
+#	is_triggered_only = yes
+#	
+#	option = {
+#		name = "EVTOPTA50001"
+#		prestige = 10
+#		hidden_tooltip = {
+#			if = {
+#				limit = {
+#					is_ruler = no
+#					employer = {
+#						ROOT = {
+#							host = {
+#								character = PREVPREV
+#							}
+#						}
+#					}
+#				}
+#				prisoner = no
+#				banish = yes
+#				break = yes
+#			}
+#		}
+#		prisoner = no
+#	}
+#}
+#
+## The host is notified of the escape
+#character_event = {
+#	id = 50040
+#	desc = "EVTDESC50040"
+#	picture = GFX_evt_spymaster
+#	
+#	is_triggered_only = yes
+#	
+#	option = {
+#		name = "EVTOPTA50040"
+#		prestige = -10
+#	}
+#}
+#
+##A prisoner tried to escape!
+#character_event = {
+#	id = 50002
+#	desc = "EVTDESC50002"
+#	picture = "GFX_evt_into_the_dungeon"
+#	
+#	is_triggered_only = yes
+#	
+#	option = {
+#		name = "EVTOPTA50002"
+#		ai_chance = { factor = 20 }
+#		
+#		hidden_tooltip = {
+#			FROM = {
+#				character_event = {
+#					id = 50003
+#				}
+#			}
+#		}
+#	}
+#	
+#	option = {
+#		name = "EVTOPTB50002"
+#		ai_chance = { factor = 20 }
+#		
+#		FROM = {
+#			hidden_tooltip = {
+#				remove_character_modifier = house_arrest
+#				remove_character_modifier = the_oubliette
+#				remove_character_modifier = the_dungeon
+#			}
+#			add_character_modifier = { 
+#				name = the_dungeon
+#				duration = -1
+#			}
+#			hidden_tooltip = {
+#				character_event = {
+#					id = 50003
+#				}
+#			}
+#		}
+#	}
+#	
+#	option = {
+#		name = "EVTOPTC50002"
+#		ai_chance = { 
+#			factor = 20
+#			modifier = {
+#				factor = 0
+#				trait = kind
+#			}
+#			modifier = {
+#				factor = 2
+#				trait = envious
+#			}
+#			modifier = {
+#				factor = 5
+#				trait = wroth
+#			}
+#			modifier = {
+#				factor = 5
+#				trait = cruel
+#			}
+#		}
+#		
+#		FROM = {
+#			hidden_tooltip = {
+#				remove_character_modifier = house_arrest
+#				remove_character_modifier = the_dungeon
+#				remove_character_modifier = the_oubliette
+#			}
+#			add_character_modifier = { 
+#				name = the_oubliette
+#				duration = -1
+#			}
+#			hidden_tooltip = {
+#				character_event = {
+#					id = 50003
+#				}
+#			}
+#		}
+#	}
+#}
+#
+##Failed to escape!
+#character_event = {
+#	id = 50003
+#	desc = "EVTDESC50003"
+#	picture = "GFX_evt_into_the_dungeon"
+#	
+#	is_triggered_only = yes
+#	
+#	option = {
+#		name = "EVTOPTA50003"
+#		trigger = {
+#			has_character_modifier = house_arrest
+#		}
+#	}
+#	
+#	option = {
+#		name = "EVTOPTB50003"
+#		trigger = {
+#			has_character_modifier = the_oubliette
+#		}
+#		random = {
+#			chance = 25
+#			add_trait = stressed
+#		}
+#	}
+#	
+#	option = {
+#		name = "EVTOPTC50003"
+#		trigger = {
+#			has_character_modifier = the_dungeon
+#		}
+#		random = {
+#			chance = 25
+#			add_trait = depressed
+#		}
+#	}
+#}
 
 ###############################################
 
@@ -502,6 +500,7 @@ character_event = {
 				name = house_arrest
 				duration = -1
 			}
+			character_event = { id = ZE.12219 } # Loses pet rat
 		}
 	}
 }
@@ -572,7 +571,7 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	min_age = 14
-	only_rulers = yes
+	only_playable = yes
 	prisoner = no
 	capable_only = yes
 	
@@ -724,7 +723,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA50013"
-		add_trait = maimed
+		maim_hand_effect = yes
 	}
 }
 
@@ -806,9 +805,9 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
 		is_abroad = no
 		independent = no
@@ -930,244 +929,3 @@ character_event = {
 	}
 }
 
-####################################################
-# Zunist torture events
-# By Henrik "Groogy" Hansson
-####################################################
-#character_event = {
-#	id = CM.15000
-#	
-#	desc = "EVTDESCCM15000"
-#	picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	immediate = {
-#		add_character_modifier = {
-#			name = zun_judgement
-#			duration = -1
-#		}
-#		
-#		character_event = { id = CM.15001 days = 30 }
-#	}
-#	
-#	option = {
-#		name = "OK"
-#	}
-#}
-
-#character_event = {
-#	id = CM.15001
-#	
-#	hide_window = yes
-#	#desc = "EVTDESCCM15001"
-#	#picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	immediate = {
-#		if = {
-#			limit = {
-#				NOT = { trait = incapable }
-#				NOT = { has_character_flag = passing_zen_judgement }
-#				NOT = { trait = zealous }
-#				NOT = { trait = cynical }
-#				NOT = { religion = zun_pagan }
-#				NOT = { religion = zun_pagan_reformed }
-#				NOT = { trait = lunatic }
-#			}
-#			
-#			set_character_flag = passing_zen_judgement
-#			random_list = {
-#				60 = { character_event = { id = CM.15003 } } # Character lives
-#				10 = { character_event = { id = CM.15004 } } # Character dies
-#				5 = { character_event = { id = CM.15005 } } # Character goes insane
-#				5 = { character_event = { id = CM.15006 } } # Character goes zealous
-#				5 = { character_event = { id = CM.15007 } } # Character goes zunist
-#				10 = { character_event = { id = CM.15002 } }  # Character is freed
-#			}
-#		}
-#		
-#		if = {
-#			limit = {
-#				NOT = { trait = incapable }
-#				NOT = { has_character_flag = passing_zen_judgement }
-#				NOT = { trait = zealous }
-#				NOT = { trait = cynical }
-#				NOT = { religion = zun_pagan }
-#				NOT = { religion = zun_pagan_reformed }
-#				trait = lunatic
-#			}
-#			
-#			set_character_flag = passing_zen_judgement
-#			random_list = {
-#				60 = { character_event = { id = CM.15003 } } # Character lives
-#				5 = { character_event = { id = CM.15004 } } # Character dies
-#				5 = { character_event = { id = CM.15006 } } # Character goes zealous
-#				5 = { character_event = { id = CM.15007 } } # Character goes zunist
-#				20 = { character_event = { id = CM.15002 } }  # Character is freed
-#			}
-#		}
-#		
-#		if = {
-#			limit = {
-#				NOT = { trait = incapable }
-#				NOT = { has_character_flag = passing_zen_judgement }
-#				NOT = { trait = lunatic }
-#			}
-#			
-#			set_character_flag = passing_zen_judgement
-#			random_list = {
-#				60 = { character_event = { id = CM.15003 } } # Character lives
-#				5 = { character_event = { id = CM.15004 } } # Character dies
-#				5 = { character_event = { id = CM.15005 } } # Character goes insane
-#				20 = { character_event = { id = CM.15002 } }  # Character is freed
-#			}
-#		}
-#		
-#		if = {
-#			limit = {
-#				NOT = { trait = incapable }
-#				NOT = { has_character_flag = passing_zen_judgement }
-#			}
-#			
-#			set_character_flag = passing_zen_judgement
-#			random_list = {
-#				60 = { character_event = { id = CM.15003 } } # Character lives
-#				5 = { character_event = { id = CM.15004 } } # Character dies
-#				20 = { character_event = { id = CM.15002 } }  # Character is freed
-#			}
-#		}
-#		
-#		if = {
-#			limit = {
-#				trait = incapable
-#				NOT = { has_character_flag = passing_zen_judgement }
-#			}
-#			
-#			set_character_flag = passing_zen_judgement
-#			random_list = {
-#				60 = { character_event = { id = CM.15003 } } # Character lives
-#				40 = { character_event = { id = CM.15004 } } # Character dies
-#				10 = { character_event = { id = CM.15002 } }  # Character is freed
-#			}
-#		}
-#	}
-#}
-
-#character_event = {	# End torture
-#	id = CM.15002
-#	
-#	desc = "EVTDESCCM15002"
-#	picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	trigger = {
-#		has_character_modifier = zun_judgement
-#		prisoner = yes
-#	}
-#	
-#	option = {
-#		name = "EVTOPTACM15002"
-#		remove_character_modifier = zun_judgement
-#		clr_character_flag = passing_zen_judgement
-#		prisoner = no
-#	}
-#}
-
-#character_event = {	# Character lives
-#	id = CM.15003
-#	
-#	#desc = "EVTDESCCM15003"
-#	#picture = GFX_evt_emissary
-#	hide_window = yes
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = "EVTOPTACM15003"
-#		clr_character_flag = passing_zen_judgement
-#		character_event = { id = CM.15001 days = 30 }
-#	}
-#}
-
-#character_event = {	# Character dies
-#	id = CM.15004
-#	
-#	desc = "EVTDESCCM15004"
-#	picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = "EVTOPTACM15004"
-#		remove_character_modifier = zun_judgement
-#		clr_character_flag = passing_zen_judgement
-#		death = THIS
-#	}
-#}
-
-#character_event = {	# Character goes insane
-#	id = CM.15005
-#	
-#	desc = "EVTDESCCM15005"
-#	picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = "EVTOPTACM15005"
-#		clr_character_flag = passing_zen_judgement
-#		add_trait = lunatic
-#		character_event = { id = CM.15001 days = 30 }
-#	}
-#}
-
-#character_event = {	# Character goes zealous
-#	id = CM.15006
-#	
-#	desc = "EVTDESCCM15006"
-#	picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = "EVTOPTACM15006"
-#		clr_character_flag = passing_zen_judgement
-#		add_trait = zealous
-#		character_event = { id = CM.15001 days = 30 }
-#	}
-#}
-
-#character_event = {	# Character goes zunist
-#	id = CM.15007
-#	
-#	desc = "EVTDESCCM15007"
-#	picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = "EVTOPTACM15007"
-#		clr_character_flag = passing_zen_judgement
-#		religion = zun_pagan
-#		character_event = { id = CM.15001 days = 30 }
-#	}
-#}
-#
-#character_event = {	# Character goes zunist
-#	id = CM.15007
-#
-#	desc = "EVTDESCCM15007"
-#	picture = GFX_evt_emissary
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = "EVTOPTACM15007"
-#		clr_character_flag = passing_zen_judgement
-#		religion = zun_pagan
-#		character_event = { id = CM.15001 days = 30 }
-#	}
-#}

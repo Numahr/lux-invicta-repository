@@ -24,6 +24,13 @@ character_event = {
 	trigger = {
 		has_dlc = "Horse Lords"
 		
+		NOT = {
+			has_game_rule = {
+				name = adventurers
+				value = none
+			}
+		}
+		
 		is_ruler = no
 		
 #		year = 867
@@ -153,6 +160,13 @@ character_event = {
 				ai = no
 			}
 		}
+		modifier = {
+			factor = 50
+			has_game_rule = {
+				name = adventurers
+				value = rare
+			}
+		}
 #		modifier = {
 #			factor = 3.0
 #			top_liege = {
@@ -162,17 +176,7 @@ character_event = {
 	}
 	
 	immediate = {
-		if = {
-			limit = { trait = in_hiding	}
-			remove_trait = in_hiding
-			add_character_modifier = {
-				name = went_out_of_hiding_timer
-				duration = 180
-				hidden = yes
-			}
-			clr_character_flag = do_not_disturb
-			hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-		}
+		end_inaccessibility_effect = yes #removes in hiding or in_seclusion
 		add_trait = adventurer
 		liege = {
 			primary_title = {
@@ -1399,10 +1403,6 @@ character_event = {
 						trait = ambitious
 						factor = 2
 					}
-#					modifier = {
-#						trait = cruel
-#						factor = 2
-#					}
 					log = "[Root.GetBestName] prepares to settle."
 					character_event = { id = HL.111 }
 					break = yes
@@ -1414,9 +1414,6 @@ character_event = {
 					}
 					modifier = {
 						trait = ambitious
-						NOT = {
-						
-						}
 						factor = 2
 					}
 					modifier = {
@@ -1513,12 +1510,8 @@ character_event = {
 				}
 				random_realm_province = {
 					limit = {
-						owner = {
-							PREV = {
-								any_neighbor_province = {
-									NOT = { owner = { same_realm = PREVPREVPREV } }
-								}
-							}
+						any_neighbor_province = {
+							NOT = { owner = { same_realm = PREVPREVPREV } }
 						}
 					}
 					ROOT = {
@@ -1614,7 +1607,6 @@ character_event = {
 letter_event = {
 	id = HL.121
 	is_triggered_only = yes
-#	picture = GFX_evt_crusaders
 	desc = EVTDESC_HL_121
 	
 	option = {
@@ -1808,11 +1800,11 @@ character_event = {
 	hide_window = yes
 	
 	only_rulers = yes
+	war = no
+	has_character_flag = raiding_adventurer
 	
 	trigger = {
-		has_character_flag = raiding_adventurer
 		has_regiments = no
-		war = no
 	}
 	
 	immediate = {
@@ -1826,11 +1818,9 @@ character_event = {
 	is_triggered_only = yes
 	hide_window = yes
 	
-	trigger = {
-		has_character_flag = raiding_adventurer
-		war = no
-	}
-	
+	has_character_flag = raiding_adventurer
+	war = no
+		
 	immediate = {
 		log = "[Root.GetTitledFirstName] got imprisoned while being a raiding adventurer."
 		character_event = { id = HL.199 }
@@ -1843,11 +1833,9 @@ character_event = {
 	is_triggered_only = yes
 	hide_window = yes
 	
-	trigger = {
-		has_character_flag = raiding_adventurer
-		war = no
-	}
-	
+	has_character_flag = raiding_adventurer
+	war = no
+		
 	immediate = {
 		log = "[Root.GetTitledFirstName] stopped raiding while being a raiding adventurer."
 		character_event = { id = HL.199 }

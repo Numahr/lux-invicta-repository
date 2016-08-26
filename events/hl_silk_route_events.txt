@@ -19,17 +19,16 @@ character_event = {
 	
 	only_playable = yes
 	only_independent = yes
+	only_capable = yes
+	prisoner = no
 	ai = no
+	has_dlc = "Horse Lords"
 	
 	trigger = {
-		has_dlc = "Horse Lords"
-		independent = yes
 		higher_tier_than = COUNT
-		prisoner = no
 		NOR = {
 			has_character_flag = had_chinese_envoy
 			has_character_flag = do_not_disturb
-			trait = incapable
 			trait = infirm
 		}
 		capital_scope = {
@@ -57,6 +56,7 @@ character_event = {
 	}
 	
 	immediate = {
+		set_character_flag = had_chinese_envoy
 		random_demesne_province = {
 			limit = {
 				has_trade_post = yes
@@ -347,8 +347,10 @@ character_event = {
 				}
 				if = {
 					limit = {
-						NOR = {
+						NOT = {
 							has_character_modifier = pet_hunting_dog
+						}
+						NOT = {
 							any_vassal = {
 								NOR = {
 									character = ROOT
@@ -1091,7 +1093,7 @@ character_event = {
 		}
 		event_target:chinese_envoy = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_beheading
 				killer = ROOT
 			}
 		}
@@ -1222,7 +1224,20 @@ character_event = {
 		random = {
 			chance = 5
 			add_trait = wounded
-			add_trait = ill
+			if = {
+				limit = {
+					NOT = {
+						has_dlc = "Reapers"
+					}
+				}
+				add_trait = ill
+			}
+			if = {
+				limit = {
+					has_dlc = "Reapers"
+				}
+				add_symptom_effect = yes
+			}
 			hidden_tooltip = {
 				character_event = { id = 38290 }
 			}
@@ -1605,7 +1620,7 @@ character_event = {
 			20 = {
 				if = {
 					limit = {
-						NOT = { trait = maimed }
+						is_maimed_trigger = no
 					}
 					add_trait = wounded
 				}
@@ -1687,7 +1702,10 @@ character_event = {
 		prestige = -10
 		if = {
 			limit = {
-				NOT = { trait = brave }
+				NOR = {
+					trait = brave
+					trait = berserker
+				}
 			}
 			random = {
 				chance = 40
@@ -1848,7 +1866,7 @@ character_event = {
 				}
 				modifier = {
 					factor = 0
-					trait = maimed
+					is_maimed_trigger = yes
 				}
 				add_trait = wounded
 				hidden_tooltip = { character_event = { id = 38280 } }
@@ -1860,10 +1878,9 @@ character_event = {
 				}
 				modifier = {
 					factor = 3
-					trait = maimed
+					is_maimed_trigger = yes
 				}
-				add_trait = maimed
-				hidden_tooltip = { character_event = { id = 38281 } }
+				add_maimed_trait_effect = yes
 			}
 		}
 	}

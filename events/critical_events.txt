@@ -21,11 +21,12 @@ character_event = {
 	ai = no
 	
 	trigger = {
-		trait = indulgent_wastrel
-		NOR = {
+		NOT = {
 			num_traits = 4
-			trait = in_hiding
 		}
+		trait = indulgent_wastrel
+		is_inaccessible_trigger = no
+		immortal = no
 	}
 	
 	mean_time_to_happen = {
@@ -91,46 +92,95 @@ character_event = {
 #Stroke the kitty
 character_event = {
 	id = 6502
-	desc = "EVTDESC6502"
 	picture = "GFX_evt_family"
+
+	desc = {
+		trigger = { has_dlc = "Reapers" }
+		text = "EVTDESC6502"
+		picture = "GFX_evt_cat"
+	}
+	desc = {
+		trigger = { NOT = { has_dlc = "Reapers" } }
+		text = "EVTDESC6502"
+		picture = "GFX_evt_family"
+	}
 	
 	min_age = 20
 	only_playable = yes
 	capable_only = yes
 	prisoner = no
+	ai = no
 	
 	mean_time_to_happen = {
-		months = 100000
+		months = 3500
 	}
 	
 	option = {
 		name = "EVTOPTA6502"
-		prestige = 25
-		hidden_tooltip = {
-			character_event = {
-				id = 1009
-				days = 7
-				random = 4
+		
+		if = {
+			limit = { trait = kind }
+			prestige = 25
+		}
+		if = {
+			limit = { NOT = { trait = kind } }
+			random = {
+				chance = 20
+				add_trait = kind
+				character_event = { id = 38268 }
 			}
 		}
 	}
+
+	option = {
+		trigger =  { NOT = { has_character_modifier = pet_cat } }
+		name = "EVTOPTC6502"
+
+		add_character_modifier = {
+			name = pet_cat
+			duration = -1
+		}
+		hidden_tooltip = { character_event = { id = 77802 days = 3000 random = 2000 } } # Cat dies
+	}
+
+
 	option = {
 		name = "EVTOPTB6502"
-		add_trait = cruel
+
+		if = {
+			limit = { NOT = { trait = cruel } }
+			add_trait = cruel
+		}
 		if = {
 			limit = {
 				NOT = {
-					trait = maimed
+					has_dlc = "Reapers"
 				}
 			}
-			random = {
-				chance = 25
+			if = {
+				limit = {
+					NOT = {
+						trait = maimed
+					}
+				}
 				add_trait = maimed
 				hidden_tooltip = {
 					character_event = {
-						id = 38281 #Notify Maimed
+						id = 38284 #Notify maimed
 					}
 				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				NOT = {
+					trait = one_eyed
+				}
+			}
+			add_trait = one_eyed
+			hidden_tooltip = {
+				character_event = { id = RIP.11501 } #Notify one-eyed
 			}
 		}
 	}
