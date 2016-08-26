@@ -1,7 +1,7 @@
 # Targetted decisions are possible vs _all_ other characters and shown are in the Diplomacy View, not the Intrigue View. The taker is in the FROM scope.
 #
-# filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/rivals/all] ('self' MUST be set for decisions targetting only the taker, the other filter types can be set to lessen CPU load)
-# ai_target_filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/rivals/all] (which characters for which the AI evaluates the decision.)
+# filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/spouse/liege/rivals/all] ('self' MUST be set for decisions targetting only the taker, the other filter types can be set to lessen CPU load)
+# ai_target_filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/spouse/liege/rivals/all] (which characters for which the AI evaluates the decision.)
 #	court: all characters in the AI's host court, including prisoners, and characters currently away (wards, prisoners, etc)
 #	home_court: all characters in the AI's home court, including prisoners, and characters currently away (wards, prisoners, etc)
 #	vassals: direct vassal rulers of the AI's employer
@@ -44,10 +44,12 @@ targetted_decisions = {
 	}
 
 	seduce_decision = {
+		only_playable = yes
 		
 		ai_target_filter = realm
 	
 		from_potential = {
+			is_playable = yes
 			is_marriage_adult = yes
 			has_focus = focus_seduction
 			NOT = { trait = incapable }
@@ -118,8 +120,8 @@ targetted_decisions = {
 				NOR = {
 					FROM = { trait = homosexual }
 					trait = homosexual
-					same_sex = FROM
 				}
+				is_opposite_sex = FROM
 				AND = {
 					FROM = { trait = homosexual }
 					trait = homosexual
@@ -135,7 +137,10 @@ targetted_decisions = {
 				trait = celibate
 				FROM = { trait = celibate }
 			}
-			religion_group = FROM
+			OR = {
+				religion_group = FROM
+				is_liege_or_above = FROM
+			}
 			is_within_diplo_range = FROM
 		}
 		
@@ -151,7 +156,7 @@ targetted_decisions = {
 					if = {
 						limit = {
 							is_close_relative = ROOT
-							NOT = { religion = zoroastrian }
+							close_relative_marriages_allowed_trigger = no
 						}
 						character_event = { id = WoL.102 days = 1 } # Warning - Incest scandal risk
 						break = yes
@@ -405,13 +410,15 @@ targetted_decisions = {
 	}
 	
 	decision_spy_on = {
+		only_playable = yes
 		ai_target_filter = realm
 		
 		from_potential = {
+			is_playable = yes
 			has_focus = focus_intrigue
-			NOT = { trait = incapable }
 			prisoner = no
 			NOR = {
+				trait = incapable
 				has_any_opinion_modifier = opinion_spying_on
 				has_any_opinion_modifier = opinion_breaking_out
 			}
@@ -570,12 +577,14 @@ targetted_decisions = {
 	}
 	
 	decision_break_free = {
+		only_playable = yes
 		is_high_prio = yes
 	
 		filter = sub_realm
 		ai_target_filter = dynasty
 		
 		from_potential = {
+			is_playable = yes
 			has_focus = focus_intrigue
 			NOR = {
 				trait = incapable
@@ -678,6 +687,7 @@ targetted_decisions = {
 	}
 
 	invite_to_party = {
+		only_playable = yes
 		is_high_prio = yes
 		ai_target_filter = court
 		
@@ -776,17 +786,21 @@ targetted_decisions = {
 		}
 	}
 	duel_decision = {
+		only_playable = yes
 		is_high_prio = yes
 		
 		filter = rivals
 		ai_target_filter = rivals
 		
 		from_potential = {
+			is_playable = yes
 			is_adult = yes
 			prisoner = no
 			has_dlc = "Way of Life"
 			has_focus = focus_war
 			has_regent = no
+			is_inaccessible_trigger = no
+
 			OR = {
 				ai = no
 				AND = {
@@ -799,8 +813,10 @@ targetted_decisions = {
 			}
 			OR = {
 				is_female = no
+				trait = brave
+				trait = berserker
 				is_nomadic = yes
-				feminist_religions_trigger = yes
+				gender_equality_trigger = yes
 			}
 		}
 		
@@ -810,6 +826,21 @@ targetted_decisions = {
 			OR = {
 				is_female = no
 				FROM = { is_female = yes }
+				AND = {
+					OR = {
+						trait = brave
+						trait = berserker
+						gender_equality_trigger = yes
+						is_nomadic = yes
+					}
+					FROM = {
+						OR = {
+						trait = brave
+						trait = berserker
+						gender_equality_trigger = yes
+						is_nomadic = yes
+					}
+				}
 			}
 			NOT = {
 				character = FROM
@@ -854,14 +885,10 @@ targetted_decisions = {
 				text = duel_tooltip_busy
 				hidden_tooltip = {
 					FROM = {
-						NOT = {
-							has_character_flag = do_not_disturb
-						}
+						is_inaccessible_trigger = no
 						war = no
 					}
-					NOT = {
-						has_character_flag = do_not_disturb
-					}
+					is_inaccessible_trigger = no
 					war = no
 				}
 			}
@@ -939,7 +966,7 @@ targetted_decisions = {
 					OR = {
 						age = 50
 						trait = wounded
-						trait = maimed
+						is_maimed_trigger = yes
 					}
 				}
 				custom_tooltip = { 
@@ -993,6 +1020,72 @@ targetted_decisions = {
 			}
 			modifier = {
 				factor = 0.01
+			}
+		}
+	}
+}
+
+##################################
+# OLD STYLE REGULAR DECISIONS
+##################################
+
+decisions = {
+	
+	# Build an observatory (learning focus)
+	build_observatory = {
+		only_playable = yes
+		is_high_prio = yes
+		
+		potential = {
+			is_playable = yes
+			has_focus = focus_scholarship
+			NOT = { trait = incapable }
+			NOT = { trait = scholar }
+			NOT = { trait = mystic }
+			NOT = { has_character_flag = building_observatory }
+			NOT = { has_character_flag = built_observatory }
+			NOT = { has_character_modifier = studying_the_stars }
+			NOT = { has_character_modifier = heliocentrist_scholar }
+			NOT = { has_character_modifier = weird_scholar }
+		}
+		allow = {
+			prisoner = no
+			wealth = 25
+			is_adult = yes
+			custom_tooltip = {
+				text = is_not_busy_trigger_tooltip
+				hidden_tooltip = { NOT = { has_character_flag = do_not_disturb } }
+			}
+		}
+		effect = {
+			wealth = -25
+			set_character_flag = building_observatory
+			hidden_tooltip = { character_event = { id = WoL.6000 } }
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 0
+				NOT = { wealth = 50 }
+			}
+			modifier = {
+				factor = 0.1
+			}
+			modifier = {
+				factor = 0.25
+				trait = zealous
+			}
+			modifier = {
+				factor = 2
+				trait = cynical
+			}
+			modifier = {
+				factor = 0.1
+				NOT = { age = 30 }
 			}
 		}
 	}
