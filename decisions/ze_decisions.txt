@@ -1,5 +1,6 @@
 targetted_decisions = {
 	create_mercenary_company_feudal = {
+		only_playable = yes
 		filter = home_court
 		ai_target_filter = home_court
 		
@@ -7,10 +8,6 @@ targetted_decisions = {
 			is_playable = yes
 			is_landed = yes
 			mercenary = no
-			primary_title = {
-				is_landless_type_title = no
-			}
-			controls_religion = no
 			holy_order = no
 			has_dlc = "Zeus"
 		
@@ -102,8 +99,9 @@ targetted_decisions = {
 	}
 
 	dissolve_mercenary_company_feudal = {
+		only_playable = yes
 		filter = dynasty
-		ai_target_filter = dynasty # Todo: proper ai filter
+		ai_target_filter = dynasty
 		
 		from_potential = {
 			is_playable = yes
@@ -123,15 +121,12 @@ targetted_decisions = {
 			always = no
 		}
 		ai_will_do = {
-			factor = 1
-			
-			modifier = {
-				factor = 0.001
-			}
+			factor = 0
 		}
 	}
 
 	change_council_job = {
+		only_rulers = yes
 		filter = realm
 		ai_target_filter = self # Todo: proper ai filter
 		
@@ -143,6 +138,9 @@ targetted_decisions = {
 			change_council_job_potential_trigger = yes
 		}
 		allow = {
+			NOT = {
+				has_character_modifier = in_seclusion
+			}
 		}
 		effect = {
 			hidden_tooltip = {
@@ -158,12 +156,13 @@ targetted_decisions = {
 	}
 	
 	ask_wards_liege_to_allow_culture_religion_swap = {
+		only_playable = yes
 		filter = home_court
 		ai_target_filter = home_court
 		
 		from_potential = {
+			is_playable = yes
 			has_dlc = "Zeus"
-			is_ruler = yes
 		}
 		
 		potential = {
@@ -224,12 +223,13 @@ targetted_decisions = {
 	}
 	
 	change_wards_focus_to_heritage  = {
+		only_playable = yes
 		filter = home_court
 		ai_target_filter = home_court
 		
 		from_potential = {
+			is_playable = yes
 			has_dlc = "Zeus"
-			is_ruler = yes
 		}
 		
 		potential = {
@@ -290,8 +290,9 @@ targetted_decisions = {
 	}
 
 	ask_for_pardon = {
-		filter = realm
-		ai_target_filter = realm
+		only_playable = yes
+		filter = liege
+		ai_target_filter = liege
 		
 		from_potential = {
 			has_dlc = "Zeus"
@@ -299,9 +300,8 @@ targetted_decisions = {
 			NOT = { trait = incapable }
 		}
 		potential = {
-			FROM = { liege = { character = ROOT } }
-			owes_favor_to = FROM
 			NOT = { trait = incapable }
+			owes_favor_to = FROM
 		}
 		allow = {
 			ROOT = {
@@ -343,6 +343,7 @@ targetted_decisions = {
 		}
 	}
 	change_composition_mercenary_company_feudal = {
+		only_playable = yes
 		filter = dynasty
 		ai_target_filter = dynasty
 		
@@ -350,6 +351,7 @@ targetted_decisions = {
 			is_playable = yes
 			is_landed = yes
 			has_dlc = "Zeus"
+			has_mercenary_band = yes
 		}
 		potential = {
 			replace_mercenary_captain_potential_trigger = yes
@@ -376,6 +378,7 @@ targetted_decisions = {
 	}
 	
 	send_troops_mercenary_company_feudal = {
+		only_playable = yes
 		filter = dynasty
 		ai_target_filter = dynasty
 		
@@ -383,6 +386,7 @@ targetted_decisions = {
 			is_playable = yes
 			is_landed = yes
 			has_dlc = "Zeus"
+			has_mercenary_band = yes
 		}
 		potential = {
 			replace_mercenary_captain_potential_trigger = yes
@@ -409,17 +413,19 @@ targetted_decisions = {
 	}
 	
 	introduce_heir = {
+		only_playable = yes
 		is_high_prio = yes
 		
 		filter = home_court
 		ai_target_filter = home_court
 	
 		from_potential = {
+			is_playable = yes
 			has_ambition = obj_groom_an_heir
 			prisoner = no
 			NOR = { 
 				trait = incapable
-				trait = in_hiding
+				is_inaccessible_trigger = yes
 			}
 			war = no
 			num_of_vassals = 7
@@ -438,16 +444,14 @@ targetted_decisions = {
 				trait = eunuch
 				trait = celibate
 				trait = incapable
-				trait = in_hiding
+				is_inaccessible_trigger = yes
 				trait = monk
 				trait = nun
-				has_character_flag = introduced_heir
-			}
-			NOT = {
 				any_sibling = {
 					is_alive = yes
 					has_character_flag = introduced_heir
 				}
+				has_character_flag = introduced_heir
 			}
 			OR = {
 				AND = {
@@ -463,14 +467,14 @@ targetted_decisions = {
 							is_older_than = PREV
 							same_sex = PREV
 							is_child_of = FROM
+							is_inaccessible_trigger = no
 							NOR = {
 								trait = bastard
 								trait = eunuch
 								trait = celibate
 								trait = incapable
-								trait = in_hiding
 								trait = monk
-								trait = nun
+
 							}
 						}
 					}
@@ -486,7 +490,7 @@ targetted_decisions = {
 								trait = eunuch
 								trait = celibate
 								trait = incapable
-								trait = in_hiding
+								is_inaccessible_trigger = yes
 								trait = monk
 								trait = nun
 							}
@@ -508,9 +512,10 @@ targetted_decisions = {
 							is_child_of = FROM
 							NOR = {
 								trait = bastard
+								trait = eunuch
 								trait = celibate
 								trait = incapable
-								trait = in_hiding
+								is_inaccessible_trigger = yes
 								trait = nun
 							}
 						}
