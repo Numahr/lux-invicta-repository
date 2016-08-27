@@ -28,10 +28,10 @@ character_event = {
 	picture = GFX_evt_small_town_east_african
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
 	
 	trigger = {
-		is_adult = yes
 		OR = {
 			culture_group = ethiopic
 			culture_group = nilo_saharan
@@ -91,10 +91,10 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
 	
 	trigger = {
-		is_adult = yes
 		OR = {
 			culture_group = ethiopic
 			culture_group = nilo_saharan
@@ -256,10 +256,10 @@ character_event = {
 	picture = GFX_evt_travel_west_african
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
 	
 	trigger = {
-		is_adult = yes
 		OR = {
 			is_female = no
 			martial = 12
@@ -468,10 +468,10 @@ character_event = {
 	picture = GFX_evt_african_savanna
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
 	
 	trigger = {
-		is_adult = yes
 		any_vassal = {
 			OR = {
 				culture_group = ethiopic
@@ -539,6 +539,31 @@ character_event = {
 			primary_title = { higher_tier_than = DUKE }
 		}
 	}
+	immediate = {
+		random_vassal = {
+			limit = {
+				OR = {
+					culture_group = ethiopic
+					culture_group = nilo_saharan
+					culture_group = bantu
+				}
+				is_adult = yes
+				OR = {
+					trait = greedy
+					trait = arbitrary
+					trait = cruel
+					trait = gluttonous
+					trait = envious
+				}
+				NOR = {
+					trait = charitable
+					trait = just
+					trait = kind
+				}			
+			}
+			save_event_target_as = cattle_dispute_vassal
+		}
+	}
 	
 	option = {
 		name = "EVTOPTA1000109346"  #Pay back
@@ -583,27 +608,7 @@ character_event = {
 			}			
 		}
 		prestige = 5
-		random_vassal = {
-			limit = {
-				OR = {
-					culture_group = ethiopic
-					culture_group = nilo_saharan
-					culture_group = bantu
-				}
-				is_adult = yes
-				OR = {
-					trait = greedy
-					trait = arbitrary
-					trait = cruel
-					trait = gluttonous
-					trait = envious
-				}
-				NOR = {
-					trait = charitable
-					trait = just
-					trait = kind
-				}			
-			}
+		event_target:cattle_dispute_vassal = {
 			opinion = {
 				who = ROOT
 				modifier = resentful_of_my_behaviour
@@ -633,27 +638,7 @@ character_event = {
 			}
 		}
 		prestige = -10
-		random_vassal = {
-			limit = {
-				OR = {
-					culture_group = ethiopic
-					culture_group = nilo_saharan
-					culture_group = bantu
-				}
-				is_adult = yes
-				OR = {
-					trait = greedy
-					trait = arbitrary
-					trait = cruel
-					trait = gluttonous
-					trait = envious
-				}
-				NOR = {
-					trait = charitable
-					trait = just
-					trait = kind
-				}			
-			}
+		event_target:cattle_dispute_vassal = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_happy
@@ -708,27 +693,7 @@ character_event = {
 				trait = kind
 			}
 		}
-		random_vassal = {
-			limit = {
-				OR = {
-					culture_group = ethiopic
-					culture_group = nilo_saharan
-					culture_group = bantu
-				}
-				is_adult = yes
-				OR = {
-					trait = greedy
-					trait = arbitrary
-					trait = cruel
-					trait = gluttonous
-					trait = envious
-				}
-				NOR = {
-					trait = charitable
-					trait = just
-					trait = kind
-				}			
-			}
+		event_target:cattle_dispute_vassal = {
 			opinion = {
 				who = ROOT
 				modifier = opinion_disappointed
@@ -764,10 +729,10 @@ character_event = {
 	picture = GFX_evt_african_savanna
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
 	
 	trigger = {
-		is_adult = yes
 		OR = {
 			culture_group = ethiopic
 			culture_group = nilo_saharan
@@ -921,7 +886,18 @@ character_event = {
 		random_list = {
 			25 = { add_trait = stressed }
 			25 = { add_trait = depressed }
-			25 = { add_trait = ill }
+			25 = {
+				if = {
+					limit = {
+						NOT = {
+							has_dlc = "Reapers"
+						}
+					}
+					add_trait = ill
+					break = yes
+				}
+				add_symptom_effect = yes
+			}
 			25 = { }
 		}
 	}
@@ -941,7 +917,18 @@ character_event = {
 		random_list = {
 			10 = { add_trait = stressed }
 			10 = { add_trait = depressed }
-			10 = { add_trait = ill }
+			10 = {
+				if = {
+					limit = {
+						NOT = {
+							has_dlc = "Reapers"
+						}
+					}
+					add_trait = ill
+					break = yes
+				}
+				add_symptom_effect = yes
+			}
 			70 = { }
 		}
 		piety = 20
@@ -958,14 +945,14 @@ character_event = {
 	picture = GFX_evt_sultan
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
+	war = no
+	culture = turkish
+	religion_group = muslim
 	
 	trigger = {
-		is_adult = yes
-		war = no
 		in_command = no
-		culture = turkish
-		religion_group = muslim
 	}
 	
 	weight_multiplier = {
@@ -1035,13 +1022,13 @@ character_event = {
 	picture = GFX_evt_feast
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
+	war = no
+	culture = turkish
 	
 	trigger = {
-		is_adult = yes
-		war = no
 		in_command = no
-		culture = turkish
 	}
 	
 	weight_multiplier = {
@@ -1171,10 +1158,10 @@ character_event = {
 	picture = GFX_evt_large_army
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	min_age = 16
 	
 	trigger = {
-		is_adult = yes
 		OR = {
 			culture = turkish
 			culture = aghbanian
@@ -1212,18 +1199,24 @@ character_event = {
 		}
 		modifier = {
 			factor = 2
-			trait = slow
+			OR = {
+				trait = slow
+				trait = dull
+			}
 		}
 		modifier = {
 			factor = 0.5
-			trait = quick
+			OR = {
+				trait = quick
+				trait = shrewd
+			}
 		}
 		modifier = {
-			factor = 2
+			factor = 4
 			trait = imbecile
 		}
 		modifier = {
-			factor = 0.5
+			factor = 0.25
 			trait = genius
 		}
 		modifier = {
@@ -1422,15 +1415,15 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	only_rulers = yes
+	only_playable = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	culture = turkish
 	
 	trigger = {
-		war = no
 		in_command = no
-		culture = turkish
 		NOT = { has_character_modifier = best_meal_in_ages }
 	}
 	
@@ -1559,9 +1552,9 @@ character_event = {
 	max_age = 12
 	capable_only = yes
 	prisoner = no
+	culture = turkish
 	
 	trigger = {
-		culture = turkish
 		NOT = { personality_traits = 5 }
 	}
 	
@@ -1593,20 +1586,26 @@ character_event = {
 			trait = paranoid
 		}
 		modifier = {
-			factor = 2
+			factor = 4
 			trait = imbecile
 		}
 		modifier = {
-			factor = 0.5
+			factor = 0.25
 			trait = genius
 		}
 		modifier = {
 			factor = 2
-			trait = slow
+			OR = {
+				trait = slow
+				trait = dull
+			}
 		}
 		modifier = {
 			factor = 0.5
-			trait = quick
+			OR = {
+				trait = quick
+				trait = shrewd
+			}
 		}
 		modifier = {
 			factor = 2
@@ -1668,13 +1667,13 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
-	only_rulers = yes
+	only_playable = yes
+	war = no
+	culture = turkish
+	religion_group = muslim
 	
 	trigger = {
-		war = no
 		in_command = no
-		culture = turkish
-		religion_group = muslim
 		any_courtier = {
 			is_adult = yes
 			NOT = { trait = incapable }
@@ -1892,12 +1891,12 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	only_rulers = yes
+	war = no
+	culture = turkish
+	religion_group = muslim
 	
 	trigger = {
-		war = no
 		in_command = no
-		culture = turkish
-		religion_group = muslim
 	}
 	
 	weight_multiplier = {
@@ -2025,11 +2024,12 @@ character_event = {
 	
 	is_triggered_only = yes
 
+	culture_group = congo_nigerian
+	religion_group = muslim
+
 	trigger = {
-		NOT = { trait = maimed }
+		is_maimed_trigger = no
 		is_alive = yes
-		culture_group = congo_nigerian
-		religion_group = muslim
 	}
 	
 	weight_multiplier = {
@@ -2102,13 +2102,8 @@ character_event = {
 			religion_group = serer_group
 			
 		}
-		OR = {
-			any_vassal = {
-				has_minor_title = title_court_griot
-			}
-			any_courtier = {
-				has_minor_title = title_court_griot
-			}
+		any_courtier_or_vassal = {
+			has_minor_title = title_court_griot
 		}
 	}
 	
@@ -2157,25 +2152,19 @@ character_event = {
 	picture = GFX_evt_dogon_village
 	
 	is_triggered_only = yes
-	only_rulers = yes
+	only_playable = yes
+	war = no
+	min_age = 16
 	
 	trigger = {
 		NOT = { has_character_flag = VIET_ton_member }
-		is_adult = yes
-		war = no
 		in_command = no
 		OR = {
 			culture_group = congo_nigerian
 			religion_group = serer_group
-			
 		}
-		OR = {
-			any_vassal = {
-				has_minor_title = title_court_griot
-			}
-			any_courtier = {
-				has_minor_title = title_court_griot
-			}
+		any_courtier_or_vassal = {
+			has_minor_title = title_court_griot
 		}
 	}
 	
@@ -2374,13 +2363,7 @@ character_event = {
 	option = { # ok
 		name = "EVTOPTA1000109415"
 		prestige = 5
-		any_courtier = {
-			limit = {
-				has_minor_title = title_court_griot
-			}
-			prestige = 5
-		}
-		any_vassal = {
+		any_courtier_or_vassal = {
 			limit = {
 				has_minor_title = title_court_griot
 			}
@@ -2459,7 +2442,6 @@ character_event = {
 			}
 		}
 	}		
-	
 }
 
 
@@ -2472,27 +2454,21 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	only_rulers = yes
+	only_playable = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_adult = yes
 		OR = {
 			culture_group = congo_nigerian
 			religion_group = serer_group
 			
 		}
-		OR = {
-			any_vassal = {
-				has_minor_title = title_court_griot
-			}
-			any_courtier = {
-				has_minor_title = title_court_griot
-			}
+		any_courtier_or_vassal = {
+			has_minor_title = title_court_griot
 		}
 	}
 	
@@ -2569,17 +2545,7 @@ character_event = {
 				trait = kind
 			}
 		}
-		any_courtier = {
-			limit = {
-				has_minor_title = title_court_griot
-			}
-			opinion = {
-				modifier = opinion_happy
-				who = ROOT
-				years = 1
-			}
-		}
-		any_vassal = {
+		any_courtier_or_vassal = {
 			limit = {
 				has_minor_title = title_court_griot
 			}
@@ -2604,12 +2570,11 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	only_playable = yes
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_ruler = yes
-		is_adult = yes
 		OR = {
 			culture_group = congo_nigerian
 			religion_group = serer_group
@@ -2774,15 +2739,14 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	only_rulers = yes
+	only_playable = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_adult = yes
 		OR = {
 			culture_group = congo_nigerian
 			religion_group = serer_group
@@ -2881,27 +2845,21 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	only_rulers = yes
+	only_playable = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_adult = yes
 		OR = {
 			culture_group = congo_nigerian
 			religion_group = serer_group
 			
 		}
-		OR = {
-			any_vassal = {
-				has_minor_title = title_court_griot
-			}
-			any_courtier = {
-				has_minor_title = title_court_griot
-			}
+		any_courtier_or_vassal = {
+			has_minor_title = title_court_griot
 		}
 	}
 	
@@ -3076,15 +3034,14 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	only_rulers = yes
+	only_playable = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_adult = yes
 		OR = {
 			culture_group = congo_nigerian
 			religion_group = serer_group
@@ -3151,7 +3108,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA1000109420"  # A few gifts
 		ai_chance = {
-			factor = 2
+			factor = 200
 			#modifier = {
 			#	factor = 2
 			#	trait = proud
@@ -3172,7 +3129,7 @@ character_event = {
 			NOT = { trait = greedy }
 		}
 		ai_chance = {
-			factor = 1
+			factor = 100
 			modifier = {
 				factor = 2
 				trait = scholar
@@ -3223,11 +3180,10 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_adult = yes
 		OR = {
 			culture_group = congo_nigerian
 			religion_group = serer_group
@@ -3329,10 +3285,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA1000109420"  # Alright, game on
 		trigger = {
-			OR = {
-				trait = genius
-				trait = quick
-			}			
+			is_smart_trigger = yes
 		}
 		random_list = {
 			75 = { character_event = { id = VIETnam.250 days = 3 tooltip = EVTTOOLTIP1000109423 } } #Victory
@@ -3342,10 +3295,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA1000109420"  # Alright, game on
 		trigger = {
-			NOR = {
-				trait = genius
-				trait = quick
-			}		
+			is_smart_trigger = no	
 		}
 		random_list = {
 			50 = { character_event = { id = VIETnam.250 days = 3 tooltip = EVTTOOLTIP1000109423 } } #Victory
@@ -3425,11 +3375,10 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_adult = yes
 		OR = {
 			culture_group = celtic
 			any_realm_province = {
@@ -3581,11 +3530,11 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	culture_group = celtic
 	
 	trigger = {
-		war = no
 		in_command = no
-		culture_group = celtic
 	}
 	
 	weight_multiplier = {
@@ -3768,11 +3717,11 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	culture_group = celtic
 	
 	trigger = {
-		war = no
 		in_command = no
-		culture_group = celtic
 	}
 	
 	weight_multiplier = {
@@ -3860,6 +3809,7 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
 		war = no
@@ -4040,9 +3990,9 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	trigger = {
+#	trigger = {
 		culture = welsh
-	}
+#	}
 	
 	option = {
 		name = "EVTOPTA1000109430"  #ok
@@ -4134,11 +4084,11 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	religion_group = finnish_group
 	
 	trigger = {
-		war = no
 		in_command = no
-		religion_group = finnish_group
 	}
 	
 	weight_multiplier = {
@@ -4194,7 +4144,7 @@ character_event = {
 		}				
 		modifier = {
 			factor = 2
-			trait = strong
+			is_strong_trigger = yes
 		}
 		modifier = {
 			factor = 0.5
@@ -4239,11 +4189,11 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	religion_group = finnish_group
 	
 	trigger = {
-		war = no
 		in_command = no
-		religion_group = finnish_group
 	}
 	
 	weight_multiplier = {
@@ -4360,11 +4310,11 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	religion_group = finnish_group
 	
 	trigger = {
-		war = no
 		in_command = no
-		religion_group = finnish_group
 	}
 	
 	weight_multiplier = {
@@ -4453,9 +4403,9 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
 		OR = {
 			culture_group = finno_ugric
@@ -4547,9 +4497,9 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
 	
 	trigger = {
-		war = no
 		in_command = no
 		OR = {
 			culture_group = finno_ugric
@@ -4635,11 +4585,11 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	religion_group = finnish_group
 	
 	trigger = {
-		war = no
 		in_command = no
-		religion_group = finnish_group
 	}
 	
 	weight_multiplier = {
@@ -4740,18 +4690,13 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	religion_group = finnish_group
 	
 	trigger = {
-		war = no
 		in_command = no
-			religion_group = finnish_group
-		OR = {
-			any_vassal = {
-				trait = shaman
-			}
-			any_courtier = {
-				trait = shaman
-			}
+		any_courtier_or_vassal = {
+			trait = shaman
 		}
 	}
 	
@@ -4855,8 +4800,10 @@ character_event = {
 		prestige = 3
 		if = {
 			limit = {
-				NOT = { trait = zealous }
-				NOT = { trait = cynical }
+				NOR = {
+					trait = zealous
+					trait = cynical
+				}
 			}
 			random_list = {
 				80 = { }
@@ -4911,18 +4858,13 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	religion_group = finnish_group
 	
 	trigger = {
-		war = no
 		in_command = no
-		religion_group = finnish_group
-		OR = {
-			any_vassal = {
-				trait = shaman
-			}
-			any_courtier = {
-				trait = shaman
-			}
+		any_courtier_or_vassal = {
+			trait = shaman
 		}
 	}
 	
@@ -5140,18 +5082,13 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	war = no
+	religion_group = finnish_group
 	
 	trigger = {
-		war = no
 		in_command = no
-		religion_group = finnish_group
-		OR = {
-			any_vassal = {
-				trait = shaman
-			}
-			any_courtier = {
-				trait = shaman
-			}
+		any_courtier_or_vassal = {
+			trait = shaman
 		}
 	}
 	
@@ -5219,30 +5156,59 @@ character_event = {
 			}
 			random_list = {
 				70 = { }
-				15 = { add_trait = ill }
 				15 = { add_trait = stressed }
-			}			
+				15 = {
+					if = {
+						limit = {
+							NOT = {
+								has_dlc = "Reapers"
+							}
+						}
+						add_trait = ill
+						break = yes
+					}
+					add_symptom_effect = yes
+				}
+			}
+			break = yes
 		}
 		if = {
 			limit = {
-				learning = 8
 				NOT = { learning = 16 }
 			}
 			random_list = {
 				80 = { }
-				10 = { add_trait = ill }
 				10 = { add_trait = stressed }
-			}			
-		}
-		if = {
-			limit = {
-				learning = 16
+				10 = {
+					if = {
+						limit = {
+							NOT = {
+								has_dlc = "Reapers"
+							}
+						}
+						add_trait = ill
+						break = yes
+					}
+					add_symptom_effect = yes
+				}
 			}
-			random_list = {
-				90 = { }
-				5 = { add_trait = ill }
-				5 = { add_trait = stressed }
-			}			
+			break = yes
+		}
+		random_list = {
+			90 = { }
+			5 = { add_trait = stressed }
+			5 = {
+				if = {
+					limit = {
+						NOT = {
+							has_dlc = "Reapers"
+						}
+					}
+					add_trait = ill
+					break = yes
+				}
+				add_symptom_effect = yes
+			}
 		}
 	}		
 }
