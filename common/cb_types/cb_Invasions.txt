@@ -40,12 +40,6 @@ invasion = {
 			}
 		}
 	}
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-			piety = 100
-		}
-	}
 	can_use_title = {
 		OR = {
 			FROM = {
@@ -218,7 +212,9 @@ invasion = {
 	}
 
 	on_reverse_demand_title = {
-		remove_claim = ROOT
+		any_claim = {
+			remove_claim = ROOT
+		}
 		#transfer_scaled_wealth = {
 		#	to = FROM
 		#	value = 2.5
@@ -326,7 +322,7 @@ tribal_invasion = {
 	can_use_gui = {
 		ROOT = {
 		#scaled_wealth = 1
-		prestige = 50
+		prestige = 0
 		}
 	}
 
@@ -1081,11 +1077,6 @@ pagan_subjugation = {
 		}
 	}
 
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
 	on_add = {
 		ROOT = {
 			add_character_modifier = {
@@ -1154,14 +1145,14 @@ pagan_subjugation = {
 					limit = {
 						higher_tier_than = ROOT
 					}
-					ROOT = { grant_title = { target = PREV type = invasion } }
+					ROOT = { grant_title_no_opinion = { target = PREV type = invasion } }
 					add_pressed_claim = FROM
 				}
 				any_demesne_title = {
 					limit = {
 						tier = ROOT
 					}
-					ROOT = { grant_title = { target = PREV type = invasion } }
+					ROOT = { grant_title_no_opinion = { target = PREV type = invasion } }
 					add_pressed_claim = PREV
 				}
 				set_defacto_liege = ROOT
@@ -1279,15 +1270,39 @@ decadence_invasion = {
 	}
 
 	on_success = {
+		any_playable_ruler = {
+			limit = {
+				ai = no
+				NOR = {
+					character = FROM
+					dynasty = FROM
+				}
+				NOT = {
+					any_liege = {
+						character = FROM
+					}
+				}
+				OR = {
+					FROM = { higher_tier_than = DUKE }
+					any_realm_province = {
+						any_neighbor_province = {
+							owner = {
+								any_liege = {
+									character = FROM
+								}
+							}
+						}
+					}
+				}
+			}
+			narrative_event = { id = 91241 }
+		}
+		
 		FROM = {
 			any_demesne_title = { # All titles
 				if = {
 					limit = {
-						OR = {
-							tier = king
-							tier = emperor
-							is_primary_holder_title = yes
-						}
+						higher_tier_than = duke
 						NOT = { has_law = centralization_0 }
 					}
 					add_law = centralization_0
@@ -1409,8 +1424,10 @@ decadence_invasion = {
 	}
 
 	on_reverse_demand_title = {
-		remove_claim = ROOT
+		any_claim = {
+			remove_claim = ROOT
 		}
+	}
 
 	attacker_ai_victory_worth = {
 		factor = 100

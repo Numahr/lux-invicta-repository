@@ -35,12 +35,6 @@ claim = {
 
 	infamy_modifier = 0.85
 	
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
-
 	can_use_title = {
 		ROOT = {
 			scaled_wealth = 0.1
@@ -62,6 +56,20 @@ claim = {
 				is_liege_or_above = FROM
 			}
 		}
+		
+		ROOT = {
+			OR = {
+				is_ruler = no
+				primary_title = {
+					OR = {
+						is_primary_type_title = no # Static Mercs, the Pope, Holy Orders, etc
+						higher_tier_than = PREVPREV
+						tier = PREVPREV
+					}
+				}
+			}
+		}
+		
 		OR = { 
 			ROOT = {
 				OR = {
@@ -181,7 +189,9 @@ claim = {
 	}
 
 	on_reverse_demand_title = {
-		remove_claim = ROOT
+		any_claim = {
+			remove_claim = ROOT
+		}
 		ROOT = {
 			hidden_tooltip = {
 				disband_event_forces = yes
@@ -193,12 +203,24 @@ claim = {
 	on_attacker_leader_death = {
 		if = {
 			limit = {
-				ROOT = { has_character_flag = claimant_adventurer }
+				ROOT = { has_character_flag = EoD_prophet_attacker }
+			}
+			FROM = { narrative_event = { id = RIP.15116 } }
+		}
+		if = {
+			limit = {
+				ROOT = { 
+					OR = {
+						has_character_flag = claimant_adventurer
+						has_character_flag = EoD_prophet_attacker
+					}
+				}
 			}
 			ROOT = {
 				hidden_tooltip = {
 					disband_event_forces = yes
 					clr_character_flag = claimant_adventurer
+					clr_character_flag = EoD_prophet_attacker
 				}
 			}
 			end_war = invalid
@@ -247,11 +269,6 @@ other_claim = {
 			scaled_wealth = 0.1
 		}
 	}
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
 	can_use_title = {
 		OR = {
 			AND = {
@@ -284,6 +301,19 @@ other_claim = {
 			}
 			holder_scope = {
 				is_liege_or_above = FROM
+			}
+		}
+		
+		ROOT = {
+			OR = {
+				is_ruler = no
+				primary_title = {
+					OR = {
+						is_primary_type_title = no # Static Mercs, the Pope, Holy Orders, etc
+						higher_tier_than = PREVPREV
+						tier = PREVPREV
+					}
+				}
 			}
 		}
 
@@ -567,7 +597,9 @@ other_claim = {
 	}
 
 	on_reverse_demand_title = {
-		remove_claim = ROOT
+		any_claim = {
+			remove_claim = ROOT
+		}
 	}
 
 	attacker_ai_victory_worth = {
@@ -613,11 +645,6 @@ claim_on_liege = {
 		}
 	}
 	
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
 	can_use_title = {
 		OR = {
 			FROM = {
@@ -896,12 +923,6 @@ other_claim_on_liege = {
 			NOT = {
 				has_character_flag = do_not_disturb
 			}
-		}
-	}
-
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
 		}
 	}
 
@@ -1296,12 +1317,6 @@ claim_on_liege_plot = {
 		}
 	}
 
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
-
 	can_use_title = {
 		OR = {
 			FROM = {
@@ -1543,12 +1558,6 @@ claim_on_vassal_plot = {
 		}
 	}
 
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
-
 	can_use_title = {
 		OR = {
 			FROM = {
@@ -1689,11 +1698,6 @@ claim_all = {
 			# prestige = 100
 		# }
 	# }
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
 
 	
 	is_valid = {
@@ -1927,6 +1931,18 @@ dejure_county_claim = {
 				holder = ROOT
 			}
 		}
+		
+		OR = {
+			ROOT = {
+				NOT = { same_liege = FROM }
+			}
+			FROM = {
+				any_demesne_title = {
+					NOT = { title = PREVPREV }
+					higher_tier_than = BARON
+				}
+			}
+		}
 
 		NOR = {
 			ROOT = {
@@ -1943,11 +1959,6 @@ dejure_county_claim = {
 			# prestige = 100
 		# }
 	# }
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
-	}
 	is_valid_title = {
 		OR = {
 			FROM = {
@@ -2118,11 +2129,6 @@ other_dejure_county_claim = {
 		}
 		
 		mercenary = no
-	}
-	can_use_gui = {
-		ROOT = {
-			prestige = 100
-		}
 	}
 	can_use_title = {
 		tier = count
@@ -2309,11 +2315,6 @@ dejure_barony_claim = {
 				}
 				expelled_holy_order_trigger = yes
 			}
-		}
-	}
-	can_use_gui = {
-		ROOT = {
-			prestige = 50
 		}
 	}
 	can_use_title = {
