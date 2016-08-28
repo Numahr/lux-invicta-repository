@@ -251,11 +251,9 @@ character_event = {
 			limit = {
 				NOT = { has_character_flag = usurping_husband }
 				father = {
-					NOT = {
-						dynasty = FROM
-					}
 					prisoner = no
 					NOR = {
+						dynasty = FROM
 						trait = incapable
 						health_traits = 1
 						trait = craven
@@ -345,9 +343,11 @@ character_event = {
 					is_adult = yes
 					prisoner = no
 					dynasty = ROOT
-					NOT = { trait = incapable }
-					NOT = { trait = craven }
-					NOT = { health_traits = 1 }		
+					NOR = {
+						trait = incapable
+						trait = craven
+						health_traits = 1
+					}		
 				}
 				character_event = {
 					id = DAMO.210
@@ -365,13 +365,15 @@ character_event = {
 					is_adult = yes
 					prisoner = no
 					dynasty = ROOT
-					NOR = {
-						any_sibling = {
-							character = ROOT
-						}
+					NOT = {
+						sibling = ROOT
+					}
+					NOT = {
 						any_child = {
 							character = ROOT
 						}
+					}
+					NOR = {
 						mother = {
 							character = ROOT
 						}
@@ -388,13 +390,15 @@ character_event = {
 					is_adult = yes
 					prisoner = no
 					dynasty = ROOT
-					NOR = {
-						any_sibling = {
-							character = ROOT
-						}
+					NOT = {
+						sibling = ROOT
+					}
+					NOT = {
 						any_child = {
 							character = ROOT
 						}
+					}
+					NOR = {
 						mother = {
 							character = ROOT
 						}
@@ -694,28 +698,18 @@ character_event = {
 				trait = slow
 				AND = {
 					trait = cruel
-					trait = paranoid
-				}				
-				AND = {
-					trait = cruel
-					trait = envious
-				}
-				AND = {
-					trait = cruel
-					trait = greedy
-				}
-				AND = {
-					trait = cruel
-					trait = lustful
+					OR = {
+						trait = paranoid
+						trait = envious
+						trait = greedy
+						trait = lustful
+						trait = brave
+					}
 				}
 				AND = {
 					trait = brave
 					trait = lustful
 				}						
-				AND = {
-					trait = cruel
-					trait = brave
-				}					
 			}
 		}
 			
@@ -1138,10 +1132,17 @@ character_event = {
 				#tooltip = DAMO205TP
 			}
 		}
-				
-		random = {
-			chance = 33
-			add_trait = wounded
+		if = {
+			limit = {
+				NOT = {
+					trait = wounded
+				}
+				is_maimed_trigger = no
+			}
+			random = {
+				chance = 33
+				add_trait = wounded
+			}
 		}			
 		
 		FROMFROM = {
@@ -1154,11 +1155,27 @@ character_event = {
 			reverse_opinion = {
 				modifier = opinion_murder_attempt
 				who = ROOT
-			}					
-			add_trait = wounded
-			random = {
-				chance = 75
-				add_trait = maimed
+			}
+			random_list = {
+				25 = {
+					if = {
+						limit = {
+							NOT = {
+								trait = wounded
+							}
+							is_maimed_trigger = no
+						}
+						add_trait = wounded
+					}
+				}
+				75 = {
+					if = {
+						limit = {
+							can_be_maimed_trigger = yes
+						}
+						add_maimed_effect = yes
+					}
+				}
 			}				
 			imprison = ROOT		
 		}
@@ -1195,28 +1212,20 @@ character_event = {
 					OR = {
 						AND = {
 							trait = ambitious
-							trait = wroth
+							OR = {
+								trait = wroth
+								trait = greedy
+								trait = cruel
+							}
 						}
 						AND = {
 							trait = cruel
-							trait = greedy
-						}
-						AND = {
-							trait = cruel
-							trait = envious
-						}
-						AND = {
-							trait = cruel
-							trait = wroth
+							OR = {
+								trait = greedy
+								trait = envious
+								trait = wroth
+							}
 						}					
-						AND = {
-							trait = ambitious
-							trait = greedy
-						}
-						AND = {
-							trait = ambitious
-							trait = cruel
-						}
 					}
 				}
 			}
@@ -1251,23 +1260,18 @@ character_event = {
 					OR = {
 						AND = {
 							trait = ambitious
-							trait = wroth
+							OR = {
+								trait = wroth
+								trait = greedy
+								trait = cruel
+							}
 						}
 						AND = {
 							trait = cruel
-							trait = greedy
-						}
-						AND = {
-							trait = cruel
-							trait = envious
-						}
-						AND = {
-							trait = ambitious
-							trait = greedy
-						}
-						AND = {
-							trait = ambitious
-							trait = cruel
+							OR = {
+								trait = greedy
+								trait = envious
+							}
 						}
 					}					
 				}	
@@ -4022,10 +4026,17 @@ character_event = {
 			chance = 25
 			add_trait = craven
 		}
-
-		random = {
-			chance = 25
-			add_trait = wounded
+		if = {
+			limit = {
+				NOT = {
+					trait = wounded
+				}
+				is_maimed_trigger = no
+			}
+			random = {
+				chance = 25
+				add_trait = wounded
+			}
 		}		
 	}
 }
@@ -4102,9 +4113,17 @@ character_event = {
 		
 		set_character_flag = usurped_my_wife
 		
-		random = {
-			chance = 15
-			add_trait = wounded
+		if = {
+			limit = {
+				NOT = {
+					trait = wounded
+				}
+				is_maimed_trigger = no
+			}
+			random = {
+				chance = 15
+				add_trait = wounded
+			}
 		}	
 		
 		random = {
@@ -4151,14 +4170,20 @@ character_event = {
 			name = failed_to_usurp_spouse
 			duration = 	1825
 		}
-		
 		random_list = {
 			50 = {
-				add_trait = wounded
-			}	
-			
+				if = {
+					limit = {
+						NOT = {
+							trait = wounded
+						}
+						is_maimed_trigger = no
+					}
+					add_trait = wounded
+				}
+			}
 			10 = {
-				add_trait = maimed
+				add_maimed_effect = yes
 			}
 			40 = {
 			}
@@ -4288,10 +4313,17 @@ character_event = {
 				who = ROOT
 				years = 10
 			}
-		
-			random = {
-				chance = 50
-				add_trait = wounded
+			if = {
+				limit = {
+					NOT = {
+						trait = wounded
+					}
+					is_maimed_trigger = no
+				}
+				random = {
+					chance = 50
+					add_trait = wounded
+				}
 			}		
 		}
 		
