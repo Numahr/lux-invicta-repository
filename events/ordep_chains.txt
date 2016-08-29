@@ -18,18 +18,18 @@ character_event = {
 	picture = GFX_evt_tuscan_country
 	is_triggered_only = yes
 	min_age = 16
-	only_rulers = yes
+	only_playable = yes
 	capable_only = yes
 	prisoner = no
+	war = no
 	trigger = {
-		war = no
 		in_command = no
 		is_abroad = no        
 		capital_scope = {
 			OR = {
 				empire = { title = e_france }
 				empire = { title = e_gallia }
-				empire = { title = k_krete }
+				kingdom = { title = k_krete }
 			}
 		}
 	}
@@ -100,7 +100,7 @@ character_event = {
 		if = {
 			limit = {
 				capital_scope = {
-					duchy = { title = k_krete }
+					kingdom = { title = k_krete }
 				}
 			}
 			narrative_event = { id = ordepchains.1016 tooltip = ordepchains.1000.tooltip }
@@ -122,8 +122,10 @@ narrative_event = {
 				trait = brave
 				trait = hunter
 			}
-			NOT = { trait = slothful }
-			NOT = { trait = craven }
+			NOR = {
+				trait = slothful
+				trait = craven
+			}
 		}
 		character_event = { id = ordepchains.1002 tooltip = ordepchains.1001.a.tooltip }
 	}
@@ -163,21 +165,33 @@ narrative_event = {
 			}
 			any_courtier = {
 				is_female = yes
-				NOT = { is_close_relative = ROOT }
-				NOT = {
+				NOR = {
+					is_close_relative = ROOT
 					trait = homosexual
-				}
-				NOT = {
 					trait = celibate
-				}
-				is_adult = yes
-				NOT = {
 					age = 50
 				}
+				is_adult = yes
 				has_epidemic = no
 				is_ill = no
 				has_lover = no
 			}
+		}
+		random_courtier = {
+			limit = {
+				is_female = yes
+				NOR = {
+					is_close_relative = ROOT
+					trait = homosexual
+					trait = celibate
+					age = 50
+				}
+				is_adult = yes
+				has_epidemic = no
+				is_ill = no
+				has_lover = no
+			}
+			save_event_target_as = ordep_lover
 		}
 		hidden_tooltip = {
 			random_list = {
@@ -322,7 +336,7 @@ character_event = {
 		if = {
 			limit = {
 				OR = {
-					trait = strong
+					is_strong_trigger = yes
 					trait = agile
 				}
 			}
@@ -340,10 +354,8 @@ character_event = {
 		}
 		if = {
 			limit = {
-#				AND = {
-					NOT = { trait = strong }
-					NOT = { trait = agile }
-#				}
+				is_strong_trigger = no
+				NOT = { trait = agile }
 			}
 			random_list = {
 				40 = {
@@ -400,7 +412,7 @@ narrative_event = {
 	is_triggered_only = yes
 	option = {
 		name = ordepchains.1009.a
-		add_trait = maimed
+		add_maimed_trait_effect = yes
 	}
 }
 
@@ -450,7 +462,7 @@ narrative_event = {
 	}
 }
 
-#L is for LoveR
+#L is for Lover
 narrative_event = {
 	id = ordepchains.1013
 	title = ordepchains.1013.title
@@ -459,24 +471,7 @@ narrative_event = {
 	is_triggered_only = yes
 	option = {
 		name = ordepchains.1013.a
-		random_courtier = {
-			limit = {
-				is_female = yes
-				NOT = { is_close_relative = ROOT }
-				NOT = {
-					trait = homosexual
-				}
-				NOT = {
-					trait = celibate
-				}
-				is_adult = yes
-				NOT = {
-					age = 50
-				}
-				has_epidemic = no
-				is_ill = no
-				has_lover = no
-			}
+		event_target:ordep_lover = {
 			add_lover = ROOT
 		}
 	}
@@ -490,24 +485,7 @@ character_event = {
 	is_triggered_only = yes
 	option = {
 		name = ordepchains.1014.a
-		random_courtier = {
-			limit = {
-				is_female = yes
-				NOT = { is_close_relative = ROOT }
-				NOT = {
-					trait = homosexual
-				}
-				NOT = {
-					trait = celibate
-				}
-				is_adult = yes
-				NOT = {
-					age = 50
-				}
-				has_epidemic = no
-				is_ill = no
-				has_lover = no
-			}
+		event_target:ordep_lover = {
 			opinion = {
 				modifier = opinion_dislike
 				who = ROOT
@@ -567,8 +545,10 @@ narrative_event = {
 				trait = brave
 				trait = hunter
 			}
-			NOT = { trait = slothful }
-			NOT = { trait = craven }
+			NOR = {
+				trait = slothful
+				trait = craven
+			}
 		}
 		character_event = { id = ordepchains.1002 tooltip = ordepchains.1001.a.tooltip }
 	}
@@ -608,17 +588,13 @@ narrative_event = {
 			}
 			any_courtier = {
 				is_female = yes
-				NOT = { is_close_relative = ROOT }
-				NOT = {
+				NOR = {
+					is_close_relative = ROOT
 					trait = homosexual
-				}
-				NOT = {
 					trait = celibate
-				}
-				is_adult = yes
-				NOT = {
 					age = 50
 				}
+				is_adult = yes
 				has_epidemic = no
 				is_ill = no
 				has_lover = no
@@ -717,10 +693,10 @@ character_event = {
 		}
 		if = {
 			limit = {
-#				AND = {
-					NOT = { trait = brave }
-					NOT = { trait = agile }
-#				}
+				NOR = {
+					trait = brave
+					trait = agile
+				}
 			}
 			random_list = {
 				40 = {
