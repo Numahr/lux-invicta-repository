@@ -19,11 +19,11 @@ character_event = {
 	min_age = 55
 	capable_only = yes
 	prisoner = no
+	war = no
+	only_playable = yes
 	
 	trigger = {
-		war = no
 		in_command = no
-		is_ruler = yes
 		OR = {
 			has_character_modifier = old_age
 			age = 65
@@ -35,11 +35,11 @@ character_event = {
 		
 		modifier = {
 			factor = 2
-			trait = weak
+			is_weak_trigger = yes
 		}
 		modifier = {
 			factor = 2
-			trait = ill
+			is_ill = yes
 		}
 		modifier = {
 			factor = 2
@@ -51,7 +51,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.5
-			trait = strong
+			is_strong_trigger = yes
 		}
 		modifier = {
 			factor = 0.5
@@ -81,7 +81,7 @@ character_event = {
 				hidden_tooltip = { character_event = { id = 38280 } }
 			}
 			4 = {
-				add_trait = maimed
+				add_maimed_trait_effect = yes
 				hidden_tooltip = { character_event = { id = 38281 } }
 			}
 			1 = {
@@ -113,7 +113,7 @@ character_event = {
 				hidden_tooltip = { character_event = { id = 38280 } }
 			}
 			1 = {
-				add_trait = maimed
+				add_maimed_trait_effect = yes
 				hidden_tooltip = { character_event = { id = 38281 } }
 			}
 		}
@@ -133,7 +133,7 @@ character_event = {
 				hidden_tooltip = { character_event = { id = 38280 } }
 			}
 			2 = {
-				add_trait = maimed
+				add_maimed_trait_effect = yes
 				hidden_tooltip = { character_event = { id = 38281 } }
 			}
 			1 = {
@@ -157,10 +157,10 @@ character_event = {
 	min_age = 55
 	capable_only = yes
 	prisoner = no
+	only_rulers = yes
 	
 	trigger = {
 		in_command = no
-		is_ruler = yes
 		OR = {
 			has_character_modifier = old_age
 			age = 65
@@ -379,12 +379,15 @@ character_event = {
 			trait = shy
 		}
 		modifier = {
-			factor = 2
+			factor = 4
 			trait = imbecile
 		}
 		modifier = {
 			factor = 2
-			trait = slow
+			OR = {
+				trait = slow
+				trait = dull
+			}
 		}
 		modifier = {
 			factor = 2
@@ -419,12 +422,15 @@ character_event = {
 			trait = humble
 		}
 		modifier = {
-			factor = 0.5
+			factor = 0.25
 			trait = genius
 		}
 		modifier = {
 			factor = 0.5
-			trait = quick
+			OR = {
+				trait = quick
+				trait = shrewd
+			}
 		}
 		modifier = {
 			factor = 0.5
@@ -482,7 +488,7 @@ character_event = {
 		}		
 		modifier = {
 			factor = 2
-			trait = weak
+			is_weak_trigger = yes
 		}
 		modifier = {
 			factor = 2
@@ -523,7 +529,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.5
-			trait = strong
+			is_strong_trigger = yes
 		}
 	}
 	
@@ -542,9 +548,17 @@ character_event = {
 	option = { #Can't work much
 		name = "EVTOPTB1000109140"
 		prestige = -5
-		random_list = {
-			10 = { add_trait = ill }
-			90 = { }
+		random = {
+			chance = 10
+			if = {
+				limit = {
+					NOT = {
+						has_dlc = "Reapers"						}
+					
+				add_trait = ill
+				break = yes
+			}
+			add_symptom_effect = yes
 		}
 	}
 	
@@ -554,8 +568,29 @@ character_event = {
 		random_list = {
 			15 = { add_trait = stressed }
 			10 = { add_trait = stressed add_trait = diligent }
-			15 = { add_trait = ill }
-			10 = { add_trait = ill add_trait = diligent }
+			15 = {
+				if = {
+					limit = {
+						NOT = {
+							has_dlc = "Reapers"						}
+						
+					add_trait = ill
+					break = yes
+				}
+				add_symptom_effect = yes
+			}
+			10 = {
+				add_trait = diligent
+				if = {
+					limit = {
+						NOT = {
+							has_dlc = "Reapers"						}
+						
+					add_trait = ill
+					break = yes
+				}
+				add_symptom_effect = yes
+			}
 			50 = { }
 		}
 	}
