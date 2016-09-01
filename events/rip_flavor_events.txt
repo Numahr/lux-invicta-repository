@@ -1520,28 +1520,24 @@ character_event = {
 	is_triggered_only = yes
 
 	trigger = {
-		host = {
-			any_courtier_or_vassal = {
-				liege = { character = PREVPREV }
-				has_minor_title = title_court_physician
-				NOT = { has_character_flag = physician_wants_to_research }
-			}
+		any_courtier_or_vassal = {
+			liege = { character = ROOT }
+			has_minor_title = title_court_physician
+			NOT = { has_character_flag = physician_wants_to_research }
 		}
 	}
 
 
 	immediate = { 
-		host = {
-			random_courtier_or_vassal = {
-				limit = {
-					liege = { character = PREVPREV }
-					has_minor_title = title_court_physician
-					NOT = { has_character_flag = physician_wants_to_research }
-				}
-
-				save_event_target_as = physician
-				set_character_flag = physician_wants_to_research 
+		random_courtier_or_vassal = {
+			limit = {
+				liege = { character = ROOT }
+				has_minor_title = title_court_physician
+				NOT = { has_character_flag = physician_wants_to_research }
 			}
+
+			save_event_target_as = physician
+			set_character_flag = physician_wants_to_research 
 		}
 	}
 
@@ -1969,58 +1965,54 @@ character_event = {
 	is_triggered_only = yes
 
 	trigger = {
-		host = {
-			any_courtier_or_vassal = {
-				liege = { character = PREVPREV }
-				has_minor_title = title_court_physician
-			}
+		any_courtier_or_vassal = {
+			liege = { character = ROOT }
+			has_minor_title = title_court_physician
 		}
 	}
 
 	option = {
-		host = {
-			random_courtier_or_vassal = {
-				limit = {
-					liege = { character = PREVPREV }
-					has_minor_title = title_court_physician
-				}
+		random_courtier_or_vassal = {
+			limit = {
+				liege = { character = ROOT }
+				has_minor_title = title_court_physician
+			}
 
-				random_list = {
+			random_list = {
 
-					#Nothing happens
-					20 = { }
-					#Receives training
-					10 = {
-						modifier = { 
-							factor = 1.8
-							NOT = { learning = 6 }
-						}
-						modifier = { 
-							factor = 1.6
-							NOT = { learning = 8 }
-						}
-						modifier = {
-							factor = 1.5
-							NOT = { learning = 10 }
-						}
-						modifier = {
-							factor = 1.4
-							NOT = { learning = 12 }
-						}
-						modifier = {
-							factor = 1.2
-							NOT = { learning = 14 }
-						}
-						modifier = {
-							factor = 1.2
-							NOT = { learning = 16 }
-						}
-						modifier = {
-							factor = 0
-							trait = physician
-						}
-						ROOT = { character_event = { id = RIP.4041 } }
+				#Nothing happens
+				20 = { }
+				#Receives training
+				10 = {
+					modifier = { 
+						factor = 1.8
+						NOT = { learning = 6 }
 					}
+					modifier = { 
+						factor = 1.6
+						NOT = { learning = 8 }
+					}
+					modifier = {
+						factor = 1.5
+						NOT = { learning = 10 }
+					}
+					modifier = {
+						factor = 1.4
+						NOT = { learning = 12 }
+					}
+					modifier = {
+						factor = 1.2
+						NOT = { learning = 14 }
+					}
+					modifier = {
+						factor = 1.2
+						NOT = { learning = 16 }
+					}
+					modifier = {
+						factor = 0
+						trait = physician
+					}
+					ROOT = { character_event = { id = RIP.4041 } }
 				}
 			}
 		}
@@ -2058,14 +2050,12 @@ character_event = {
 	}
 
 	immediate = {
-		host = {
-			random_courtier_or_vassal = {
-				limit = {
-					liege = { character = PREVPREV }
-					has_minor_title = title_court_physician
-				}
-				save_event_target_as = physician
+		random_courtier_or_vassal = {
+			limit = {
+				liege = { character = ROOT }
+				has_minor_title = title_court_physician
 			}
+			save_event_target_as = physician
 		}
 
 		random_list = {
@@ -4569,12 +4559,14 @@ character_event = {
 				}
 
 				if = { 
-					limit = { event_target:rip_widow = { always = yes } }
+					limit = { event_target:rip_widow = { NOT = { character = ROOT } } }
 					event_target:rip_widow = { character_event = { id = RIP.29011 days = 7 } }
 					break = yes
 				}
-
+				if = { 
+				limit = { event_target:rip_child = { NOT = { character = ROOT } } }
 				event_target:rip_child = { character_event = { id = RIP.29011 days = 7 } }
+				}
 			}
 			#Success			
 				60 = {
@@ -7638,6 +7630,7 @@ character_event = {
 			}
 		}
 		current_heir = {
+			is_child_of = ROOT
 			NOR = { 
 				trait = reincarnation
 				trait = incapable
