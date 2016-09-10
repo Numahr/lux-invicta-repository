@@ -19,9 +19,8 @@ province_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
-		trigger = {
-		NOT = { has_dlc = "The Old Gods" }
-	}
+	lacks_dlc = "The Old Gods"
+	
 	option = {
 		name = "EVTOPTAbetter_rebels.0"
 		hidden_tooltip = {
@@ -249,7 +248,7 @@ character_event = {
 	desc = "EVTDESCbetter_rebels.4"
 	picture = "GFX_evt_peasants"
 
-	only_rulers = yes
+	only_playable = yes
 	min_age = 16
 	prisoner = no
 	
@@ -345,7 +344,7 @@ character_event = {
 	desc = "EVTDESCbetter_rebels.4"
 	picture = "GFX_evt_peasants"
 
-	only_rulers = yes
+	only_playable = yes
 	min_age = 16
 	prisoner = no
 	
@@ -703,8 +702,9 @@ province_event = {
 	desc = "EVTDESCbetter_rebels.11"
 	picture = GFX_evt_peasants
 	
+	lacks_dlc = "The Old Gods"
+	
 	trigger = {
-		NOT = { has_dlc = "The Old Gods" }
 		NOT = { has_global_flag = possible_province_defection }
 		num_of_settlements = 1
 		# Massive revolts
@@ -793,7 +793,7 @@ province_event = {
 
 	immediate = {
 		hidden_tooltip = {
-			set_global_flag = possible_province_defection
+			save_event_target_as = possible_defecting_province
 		}
 	}
 	
@@ -801,7 +801,7 @@ province_event = {
 		name = "EVTOPTAbetter_rebels.15"
 		hidden_tooltip = {
 			owner = {
-				set_character_flag = defected_from
+				save_event_target_as = possible_defecting_lord
 			}
 		}
 		county = {
@@ -827,30 +827,25 @@ province_event = {
 	option = {
 		name = "EVTOPTAbetter_rebels.12"
 		hidden_tooltip = {
-			owner = {
-				any_independent_ruler = {
-					any_realm_character = {
-						limit = { has_character_flag = defected_from }
-						# Liege is topliege
-						if = {
-							limit = {
-								liege = { character = PREVPREV }
-							}
-							liege = { character_event = { id = better_rebels.13 days = 3 } }
-						}
+			event_target:possible_defecting_lord = {
+				top_liege = {
+					event_target:possible_defecting_lord = {
 						# Liege is not topliege
 						if = {
 							limit = {
-								liege = { NOT = { character = PREVPREV } }
+								NOT = {
+									liege = {
+										character = PREVPREV
+									}
+								}
 							}
-							liege = { character_event = { id = better_rebels.13 days = 3 } }
 							top_liege = { character_event = { id = better_rebels.13 days = 3 } }
 						}
-						clr_character_flag = defected_from
+						# Liege is not topliege
+						liege = { character_event = { id = better_rebels.13 days = 3 } }
 					}
 				}
 			}
-			clr_global_flag = possible_province_defection
 		}
 	}
 }
