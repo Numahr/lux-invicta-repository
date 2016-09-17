@@ -1966,64 +1966,60 @@ dejure_county_claim = {
 		}
 		if = {
 			limit = {
-				OR = {
-					ROOT = {
-						tier = count
+				holder_scope = {
+					lower_tier_than = ROOT
+					is_patrician = no
+					NOT = {
+						num_of_count_titles = 2
 					}
-					holder_scope = {
-						any_demesne_title = {
-							tier = count
-							NOT = {
-								title = PREVPREV
-							}
+					NOT = {
+						any_vassal = {
+							is_landed = yes
+							higher_tier_than = baron
 						}
 					}
 				}
 			}
+
 			holder_scope = {
-				PREV = {
-					usurp_title = ROOT
-					add_pressed_claim = PREV
-				}
+				set_defacto_liege = ROOT
 			}
-			break = yes
 		}
-		holder_scope = {
-			any_demesne_title = {
-				limit = {
-					higher_tier_than = ROOT
-					is_landless_type_title = no
-				}
-				ROOT = {
-					usurp_title = PREV
-				}
-				add_pressed_claim = PREV
-			}
-			any_demesne_title = {
-				limit = {
-					tier = ROOT
-					is_landless_type_title = no
-				}
-				ROOT = {
-					usurp_title = PREV
-				}
-				add_pressed_claim = PREV
-			}
-			if = {
-				limit = {
-					any_demesne_title = {
+
+		if = {
+			limit = {
+				holder_scope = {
+					OR = {
 						NOT = {
 							lower_tier_than = ROOT
 						}
+						num_of_count_titles = 2
+						is_patrician = yes
+						any_vassal = {
+							is_landed = yes
+							higher_tier_than = baron
+						}
 					}
 				}
-				PREV = {
-					grant_title = ROOT
-					add_pressed_claim = PREV
-				}
-				break = yes
 			}
-			set_defacto_liege = ROOT
+
+			usurp_title_plus_barony_if_unlanded = { target = ROOT type = claim }
+			any_de_jure_vassal_title = { # take all baronies under the one we're fighting for
+				limit = {
+					has_holder = yes
+					NOT = {
+						de_facto_liege = PREV
+					}
+					holder_scope = {
+						OR = {
+							character = FROM
+							is_liege_or_above = FROM
+						}
+					}
+				}
+
+				usurp_title_plus_barony_if_unlanded = { target = ROOT type = claim }
+			}
 		}
 	}
 
