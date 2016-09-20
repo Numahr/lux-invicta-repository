@@ -103,17 +103,23 @@ targetted_decisions = {
 			
 				is_consort = FROM
 				any_spouse = { character = FROM }
-			
-				is_child_of = FROM
-				mother_even_if_dead = { is_child_of = FROM }
-				father_even_if_dead = { is_child_of = FROM }
 			}
-			FROM = {
-				NOR = {
-					is_child_of = ROOT
-					mother_even_if_dead = { is_child_of = ROOT }
-					father_even_if_dead = { is_child_of = ROOT }
+			OR = {
+				AND = {
+					NOR = {
+						is_child_of = FROM
+						mother_even_if_dead = { is_child_of = FROM }
+						father_even_if_dead = { is_child_of = FROM }
+					}
+					FROM = {
+						NOR = {
+							is_child_of = ROOT
+							mother_even_if_dead = { is_child_of = ROOT }
+							father_even_if_dead = { is_child_of = ROOT }
+						}
+					}
 				}
+				close_relative_marriages_allowed_trigger = yes
 			}
 			
 			OR = {
@@ -789,7 +795,7 @@ targetted_decisions = {
 		only_playable = yes
 		is_high_prio = yes
 		
-		filter = rivals
+		#filter = rivals
 		ai_target_filter = rivals
 		
 		from_potential = {
@@ -803,19 +809,10 @@ targetted_decisions = {
 
 			OR = {
 				ai = no
-				AND = {
-					is_female = no
-					NOR = {
-						trait = craven
-						trait = content
-					}
-				}
-			}
-			OR = {
 				is_female = no
 				trait = brave
-				trait = berserker
 				is_nomadic = yes
+				feminist_religions_trigger = yes
 				gender_equality_trigger = yes
 			}
 		}
@@ -823,92 +820,176 @@ targetted_decisions = {
 		potential = {
 			is_adult = yes
 			prisoner = no
+			NOT = {
+				character = FROM
+			}
+			is_inaccessible_trigger = no
 			OR = {
-				is_female = no
-				FROM = { is_female = yes }
 				AND = {
 					OR = {
-						trait = brave
-						trait = berserker
-						gender_equality_trigger = yes
-						is_nomadic = yes
+						is_rival = FROM
+						is_foe = FROM
+						AND = {
+							FROM = { trait = zealous }
+							OR = {	
+								AND = {
+									religion = FROM
+									trait = excommunicated
+								}
+								AND = {
+									FROM = { religion_group = muslim }
+									trait = decadent
+								}
+							}
+						}
+						has_game_rule = {
+							name = dueling
+							value = restricted
+						}
 					}
-					FROM = {
-						OR = {
-							trait = brave
-							trait = berserker
-							gender_equality_trigger = yes
-							is_nomadic = yes
+					OR = {
+						is_female = no
+
+						#Both FROM and ROOT have gender equality
+						AND = {
+							OR = {
+								trait = brave
+								gender_equality_trigger = yes
+								is_nomadic = yes
+								feminist_religions_trigger = yes
+							}
+							FROM = {
+								OR = {
+									gender_equality_trigger = yes
+									is_nomadic = yes
+									feminist_religions_trigger = yes
+								}
+							}
 						}
 					}
 				}
-			}
-			NOT = {
-				character = FROM
+				has_game_rule = {
+					name = dueling
+					value = unrestricted
+				}
 			}
 		}
 		
 		allow = {
-			FROM = { ### Valid reason for duel
-				OR = {
-					is_foe = ROOT
-					custom_tooltip = {
-						text = duel_tooltip_excommunicated
-						trait = zealous
-						ROOT = { 
+			OR = {
+				AND = {
+					#Valid reasons for duel
+					OR = {
+						custom_tooltip = {
+							text = duel_tooltip_rivals
+							is_rival = FROM
+						}
+						custom_tooltip = {
+							text = duel_tooltip_foes
+							is_foe = FROM
+						}
+						custom_tooltip = {
+							text = duel_tooltip_excommunicated
+							religion = FROM
+							FROM = { trait = zealous }
 							trait = excommunicated
-							religion = ROOT
+						}
+						custom_tooltip = {
+							text = duel_tooltip_decadent
+							FROM = { religion_group = muslim }
+							FROM = { trait = zealous }
+							trait = decadent
+						}
+						has_game_rule = {
+							name = dueling
+							value = restricted
 						}
 					}
-					AND = {
-						religion_group = muslim
-						trait = zealous
+
+					#Both are healthy
+					custom_tooltip = {
+						text = duel_tooltip_sickness
+						FROM = {
+							NOR = {
+								trait = incapable
+								trait = infirm
+								trait = has_aztec_disease
+								trait = has_small_pox
+								trait = has_measles
+								trait = has_bubonic_plague
+								trait = has_typhus
+								trait = has_typhoid_fever
+								trait = has_tuberculosis
+								trait = leper
+								trait = pneumonic
+							}
+						}
 						ROOT = {
-							trait = decadent
+							NOR = {
+								trait = incapable
+								trait = infirm
+								trait = has_aztec_disease
+								trait = has_small_pox
+								trait = has_measles
+								trait = has_bubonic_plague
+								trait = has_typhus
+								trait = has_typhoid_fever
+								trait = has_tuberculosis
+								trait = leper
+								trait = pneumonic
+								age = 70
+							}
+						}
+					}
+					
+					#Checks gender and some religious stuff
+					custom_tooltip = {
+						text = duel_tooltip_valid_target
+						hidden_tooltip = { ### Not female or challenger religion accepts female warriors
+							 OR = {
+								is_female = no
+
+								#Both FROM and ROOT have gender equality
+								AND = {
+									OR = {
+										trait = brave
+										gender_equality_trigger = yes
+										is_nomadic = yes
+										feminist_religions_trigger = yes
+									}
+									FROM = {
+										OR = {
+											gender_equality_trigger = yes
+											is_nomadic = yes
+											feminist_religions_trigger = yes
+										}
+									}
+								}
+							}
+							### Not priest or challenger religion is pagan
+							OR = {
+								is_priest = no
+								FROM = { LI_pagan_trigger = yes }
+							}
+							
 						}
 					}
 				}
-				NOT = { has_opinion_modifier = { who = ROOT modifier = opinion_fled_duel } }
+				has_game_rule = {
+					name = dueling
+					value = unrestricted
+				}
 			}
-			ROOT = { NOT = { age = 60 } }
 			custom_tooltip = {
-				text = duel_tooltip_fought_before
+				text = duel_tooltip_challenged_before
 				hidden_tooltip = {
 					NOT = {
 						has_opinion_modifier = { who = FROM modifier = opinion_fought_duel }
 					}
 					FROM = { 
 						NOT = { has_opinion_modifier = { who = ROOT modifier = opinion_fought_duel } }
+						NOT = { has_opinion_modifier = { who = ROOT modifier = opinion_fled_duel } } 
 					}
-				}
-			}
-			custom_tooltip = {
-				text = duel_tooltip_busy
-				hidden_tooltip = {
-					FROM = {
-						is_inaccessible_trigger = no
-						war = no
-					}
-					is_inaccessible_trigger = no
-					war = no
-				}
-			}
-			custom_tooltip = {
-				text = duel_tooltip_valid_target
-				hidden_tooltip = { ### Not female or challenger religion accepts female warriors
-					OR = {
-						is_female = no
-						FROM = {
-							OR = {
-								is_nomadic = yes
-								feminist_religions_trigger = yes
-							}
-						}
-					} ### Not priest or challenger religion is pagan (Or martials in LI?)
-					# OR = {
-						# is_priest = no
-						# FROM = { religion_group = pagan_group }
-					# }
 				}
 			}
 			custom_tooltip = {
@@ -918,44 +999,15 @@ targetted_decisions = {
 					NOT = { has_character_modifier = recent_duel_timer }
 				}
 			}
-			ROOT = {
-				custom_tooltip = {
-					text = duel_tooltip_sickness
-					hidden_tooltip = {				
-						NOR = {
-							trait = incapable
-							trait = infirm
-							trait = has_aztec_disease
-							trait = has_small_pox
-							trait = has_measles
-							trait = has_bubonic_plague
-							trait = has_typhus
-							trait = has_typhoid_fever
-							trait = has_tuberculosis
-							trait = leper
-							trait = pneumonic
-						}
+			custom_tooltip = {
+				text = duel_tooltip_busy
+				hidden_tooltip = {
+					FROM = {
+						NOT = { has_character_flag = do_not_disturb }
+						NOT = { war = yes }
 					}
-				}
-			}
-			FROM = {
-				custom_tooltip = {
-					text = duel_tooltip_sickness
-					hidden_tooltip = {
-						NOR = {
-							trait = incapable
-							trait = infirm
-							trait = has_aztec_disease
-							trait = has_small_pox
-							trait = has_measles
-							trait = has_bubonic_plague
-							trait = has_typhus
-							trait = has_typhoid_fever
-							trait = has_tuberculosis
-							trait = leper
-							trait = pneumonic
-						}
-					}
+					NOT = { has_character_flag = do_not_disturb }
+					NOT = { war = yes }
 				}
 			}
 			is_within_diplo_range = ROOT # CPU HEAVY!
