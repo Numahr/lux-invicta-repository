@@ -192,16 +192,21 @@ targetted_decisions = {
 					who = FROM
 				}
 			}
-			prisoner = no
+
+			if = {
+				limit = { 
+					has_game_rule = {
+						name = punishment_release_prisoner
+						value = on
+					}
+				}
+				prisoner = no
+			}
 			
 			FROM = {
-				hidden_tooltip = {
-					remove_opinion = { who = ROOT modifier = opinion_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_rebel_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_dishonorable }
-					
-					
-				}
+				save_event_target_as = remove_prison_reason_effect_accuser
+				ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
+				hidden_tooltip = { remove_prison_reason_effect = yes }
 				if = {
 					limit = {
 						NOR = {
@@ -259,9 +264,6 @@ targetted_decisions = {
 					FROM = { NOT = { piety = 100 } }
 					FROM = { liege = { dynasty = ROOT } }
 				}
-			}
-			modifier = {
-				factor = 0.2 # Less likely to do it
 			}
 			modifier = {
 				factor = 0
@@ -452,7 +454,15 @@ targetted_decisions = {
 				}
 			}
 			
-			prisoner = no
+			if = {
+				limit = { 
+					has_game_rule = {
+						name = punishment_release_prisoner
+						value = on
+					}
+				}
+				prisoner = no
+			}
 			
 			opinion = {
 				modifier = opinion_mutilated_me
@@ -521,11 +531,9 @@ targetted_decisions = {
 					}
 				}
 				
-				FROM = {
-					remove_opinion = { who = ROOT modifier = opinion_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_rebel_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_dishonorable }
-				}
+				FROM = { save_event_target_as = remove_prison_reason_effect_accuser }
+				ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
+				hidden_tooltip = { remove_prison_reason_effect = yes }
 			}
 		}
 		revoke_allowed = {
@@ -551,12 +559,12 @@ targetted_decisions = {
 			modifier = {
 				factor = 0
 				FROM = {
-					OR = {
-						trait = kind
-						trait = just
-						trait = patient
-						trait = shy
-						trait = greedy
+					NOR = {
+						trait = cruel
+						trait = impaler
+						trait = wroth
+						is_rival = ROOT
+						trait = arbitrary
 					}
 				}
 			}
@@ -616,19 +624,24 @@ targetted_decisions = {
 				}
 			}
 
-			prisoner = no
+			if = {
+				limit = { 
+					has_game_rule = {
+						name = punishment_release_prisoner
+						value = on
+					}
+				}
+				prisoner = no
+			}
+
 			opinion = {
 				modifier = opinion_bad_poetry
 				who = FROM
 			}
 
-			hidden_tooltip = {
-				FROM = {
-					remove_opinion = { who = ROOT modifier = opinion_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_rebel_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_dishonorable }
-				}
-			}
+			FROM = { save_event_target_as = remove_prison_reason_effect_accuser }
+			ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
+			hidden_tooltip = { remove_prison_reason_effect = yes }
 		}
 		revoke_allowed = {
 			always = no
@@ -649,8 +662,7 @@ targetted_decisions = {
 				FROM = {
 					OR = {
 						trait = cruel
-						trait = impaler
-						trait = wroth
+						trait = envious
 						is_rival = ROOT
 						trait = arbitrary
 					}
@@ -793,7 +805,16 @@ targetted_decisions = {
 				}
 			}
 				
-			prisoner = no
+			if = {
+				limit = { 
+					has_game_rule = {
+						name = punishment_release_prisoner
+						value = on
+					}
+				}
+				prisoner = no
+			}
+			
 			add_character_modifier = {
 				name = publicly_humiliated
 				years = 10
@@ -850,12 +871,10 @@ targetted_decisions = {
 						}
 					}
 				}
-				FROM = {
-					remove_opinion = { who = ROOT modifier = opinion_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_rebel_traitor }
-					remove_opinion = { who = ROOT modifier = opinion_dishonorable }
-				}
 			}
+			FROM = { save_event_target_as = remove_prison_reason_effect_accuser }
+			ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
+			hidden_tooltip = { remove_prison_reason_effect = yes }
 		}
 		revoke_allowed = {
 			always = no
@@ -868,7 +887,7 @@ targetted_decisions = {
 				reverse_opinion = { who = FROM value = 40 }
 			}
 			modifier = {
-				factor = 0
+				factor = 5
 				FROM = { trait = kind }
 			}
 			modifier = {
@@ -876,11 +895,7 @@ targetted_decisions = {
 				FROM = { trait = greedy }
 			}
 			modifier = {
-				factor = 0.4 # Less likely to do it
-			}
-
-			modifier = {
-				factor = 2
+				factor = 10
 				is_pretender = yes
 				is_rival = ROOT
 				
@@ -905,7 +920,10 @@ targetted_decisions = {
 			is_adult = yes
 			prisoner = no
 			NOT = { trait = incapable }
-			has_character_modifier = cannibal
+			OR = {
+				has_character_modifier = cannibal
+				trait = cannibal_trait
+			}
 			OR = {
 				trait = possessed
 				trait = lunatic
@@ -923,6 +941,154 @@ targetted_decisions = {
 		}
 		
 		effect = {
+			hidden_tooltip = {
+				any_dynasty_member = {
+					limit = {
+						is_close_relative = ROOT
+						NOT = { character = FROM }
+					}
+					character_event = { id = RIP.11511 days = 1 }
+				}
+				FROM = {
+					random_list = {
+						50 = { # Nothing happens
+							modifier = {
+								factor = 0
+								OR = {
+									ROOT = {
+										immortal = yes
+									}
+									AND = {
+										ROOT = {
+											controls_religion = yes
+										}
+										FROM = { NOT = { religion_group = ROOT } }
+									}
+								}
+							}
+						}
+						40 = { # Get sick
+							modifier = {
+								factor = 0
+								OR = {
+									ROOT = {
+										immortal = yes
+									}
+									AND = {
+										ROOT = {
+											controls_religion = yes
+										}
+										FROM = { NOT = { religion_group = ROOT } }
+									}
+								}
+							}
+							if = {
+								limit = {
+									NOR = {
+										num_of_symptoms = 1
+										is_ill = yes
+										has_character_flag = developing_illness
+									}
+								}
+								set_character_flag = got_food_poisoning
+								set_character_flag = developing_illness
+								character_event = { id = RIP.5023 days = 5 }
+							}
+						}
+						10 = { # Gain power!
+							modifier = {
+								factor = 0
+								has_game_rule = {
+									name = supernatural_events
+									value = off
+								}
+							}
+							if = {
+								limit = {
+									ROOT = {
+										controls_religion = yes
+										religion_group = christian
+									}	
+									NOT = { religion_group = ROOT }
+								}
+									set_character_flag = pope_eater	
+							}
+							if = {
+								limit = {
+									ROOT = {
+										controls_religion = yes
+										religion_group = muslim
+									}
+									NOT = { religion_group = ROOT }
+								}
+									set_character_flag = caliph_eater	
+							}
+							if = {
+								limit = {
+									ROOT = {
+										controls_religion = yes
+										religion_group = pagan_group
+									}
+									NOT = { religion_group = ROOT }
+								}
+									set_character_flag = fylkir_feast	
+							}
+							if = {
+								limit = {
+									ROOT = {
+										controls_religion = yes
+										religion_group = zoroastrian_group
+									}
+									NOT = { religion_group = ROOT }
+								}
+									set_character_flag = fire_eater	
+							}
+							if = {
+								limit = {
+									ROOT = {
+										controls_religion = yes
+										religion_group = jewish_group
+									}
+									NOT = { religion_group = ROOT }
+								}
+									set_character_flag = non_kosher	
+							}
+							if = {
+								limit = {
+									ROOT = {
+										controls_religion = yes
+										religion_group = indian_group
+									}
+									NOT = { religion_group = ROOT }
+								}
+									set_character_flag = dont_even_exist	
+							}
+							
+							character_event = { id = RIP.11510 }
+						}
+					}
+					if = {
+						limit = {
+							has_nickname = no
+						}
+						random_list = {
+							20 = { # Get nickname The Cannibal
+								give_nickname = nick_the_cannibal
+							}
+							15 = { # Get nickname The Dragon
+								give_nickname = nick_the_dragon
+							}
+							15 = { # Get nickname The Abomination
+								give_nickname = nick_the_abomination
+							}
+							10 = { # Get nickname The Monster
+								give_nickname = nick_the_monster
+							}
+							40 = { } # No nickname
+						}
+					}
+				}
+			}
 			death = {
 				death_reason = death_execution_eaten
 				killer = FROM
@@ -948,77 +1114,6 @@ targetted_decisions = {
 						dynasty = ROOT
 					}
 					add_trait = kinslayer
-				}
-			}
-			hidden_tooltip = {
-				any_dynasty_member = {
-					limit = {
-						is_close_relative = ROOT
-						NOT = { character = FROM }
-					}
-					character_event = { id = RIP.11511 days = 1 }
-				}
-				FROM = {
-					random_list = {
-						50 = { # Nothing happens
-							modifier = {
-								factor = 0
-								ROOT = {
-									immortal = yes
-								}
-							}
-						}
-						40 = { # Get sick
-							modifier = {
-								factor = 0
-								ROOT = {
-									immortal = yes
-								}
-							}
-							if = {
-								limit = {
-									NOR = {
-										num_of_symptoms = 1
-										is_ill = yes
-										has_character_flag = developing_illness
-									}
-								}
-								set_character_flag = got_food_poisoning
-								set_character_flag = developing_illness
-								character_event = { id = RIP.5023 days = 5 }
-							}
-						}
-						10 = { # Gain power!
-							modifier = {
-								factor = 0
-								has_game_rule = {
-									name = supernatural_events
-									value = off
-								}
-							}
-							character_event = { id = RIP.11510 }
-						}
-					}
-					if = {
-						limit = {
-							has_nickname = no
-						}
-						random_list = {
-							20 = { # Get nickname The Cannibal
-								give_nickname = nick_the_cannibal
-							}
-							15 = { # Get nickname The Dragon
-								give_nickname = nick_the_dragon
-							}
-							15 = { # Get nickname The Abomination
-								give_nickname = nick_the_abomination
-							}
-							10 = { # Get nickname The Monster
-								give_nickname = nick_the_monster
-							}
-							40 = { } # No nickname
-						}
-					}
 				}
 			}
 		}

@@ -10,6 +10,8 @@
 #Mourning events written by Mathilda Bjarnehed
 #Maimed events written by Mathilda Bjarnehed
 #Child reaction events written by Mathilda Bjarnehed
+#Suicide events written by Mathilda Bjarnehed
+#Chess with death events written by Mathilda Bjarnehed
 
 namespace = RIP
 
@@ -736,10 +738,6 @@ character_event = {
 	
 	is_triggered_only = yes
 	hide_new = yes
-	
-	trigger = {
-
-	}
 	
 	immediate = {
 		random_realm_character = {
@@ -1623,7 +1621,7 @@ character_event = {
 					}
 
 					FROM = { character_event = { id = RIP.4032 days = 400 } } 
-					character_event = { id = RIP.4033 days = 400 } 
+					character_event = { id = RIP.4033 days = 401 } 
 				}
 				#Writes a good book
 				35 = { 
@@ -1651,14 +1649,14 @@ character_event = {
 					set_character_flag = physician_good_book
 
 					FROM = { character_event = { id = RIP.4032 days = 400 } } 
-					character_event = { id = RIP.4033 days = 400 } 
+					character_event = { id = RIP.4033 days = 401 } 
 				}
 				#Writes a meh book
 				35 = {
 					set_character_flag = physician_meh_book
 
 					FROM = { character_event = { id = RIP.4032 days = 400 } } 
-					character_event = { id = RIP.4033 days = 400 } 
+					character_event = { id = RIP.4033 days = 401 } 
 				}
 				#Writes a laughable book
 				15 = {
@@ -1694,7 +1692,7 @@ character_event = {
 					set_character_flag = physician_bad_book
 
 					FROM = { character_event = { id = RIP.4032 days = 400 } } 
-					character_event = { id = RIP.4033 days = 400 } 
+					character_event = { id = RIP.4033 days = 401 } 
 				}
 			}
 		}
@@ -1738,8 +1736,56 @@ character_event = {
 		picture = GFX_evt_experiments_failed
 	}
 	
+	trigger = {
+		FROM = {
+			is_alive = yes
+			prisoner = no
+			OR = {
+				has_character_flag = physician_great_book_1
+				has_character_flag = physician_great_book_2
+				has_character_flag = physician_great_book_3
+				has_character_flag = physician_good_book
+				has_character_flag = physician_meh_book
+				has_character_flag = physician_bad_book
+			}
+		}
+	}
+
 	is_triggered_only = yes
 
+	#Good book outcome 
+	option = {
+		trigger = { FROM = { has_character_flag = physician_good_book } }
+
+		name = EVTOPTB_RIP_4032
+
+		tooltip = { FROM = { change_learning = 1 } }
+	}
+
+	#Bad outcome
+	option = {
+		trigger = { FROM = { has_character_flag = physician_bad_book } }
+
+		name = EVTOPTD_RIP_4032
+		custom_tooltip = { text = EVTOPTD_RIP_4032_TOOLTIP }
+
+		prestige = -50
+
+		tooltip = {
+			FROM = {
+				if = {
+					limit = { is_dumb_trigger = no }
+					add_trait = dull
+				}
+			}
+		}
+
+		opinion = {
+			who = FROM
+			modifier = opinion_disappointed
+			years = 5
+		}
+	}
 	#Great book outcome
 	option = {
 		trigger = {
@@ -1771,47 +1817,6 @@ character_event = {
 		opinion = {
 			who = FROM
 			modifier = opinion_impressed
-			years = 5
-		}
-	}
-
-	#Good book outcome 
-	option = {
-		trigger = { FROM = { has_character_flag = physician_good_book } }
-
-		name = EVTOPTB_RIP_4032
-
-		tooltip = { FROM = { change_learning = 1 } }
-	}
-
-	#Meh book outcome
-	option = {
-		trigger = { FROM = { has_character_flag = physician_meh_book } }
-
-		name = EVTOPTC_RIP_4032
-	}
-
-	#Meh bad outcome
-	option = {
-		trigger = { FROM = { has_character_flag = physician_bad_book } }
-
-		name = EVTOPTD_RIP_4032
-		custom_tooltip = { text = EVTOPTD_RIP_4032_TOOLTIP }
-
-		prestige = -50
-
-		tooltip = {
-			FROM = {
-				if = {
-					limit = { is_dumb_trigger = no }
-					add_trait = dull
-				}
-			}
-		}
-
-		opinion = {
-			who = FROM
-			modifier = opinion_disappointed
 			years = 5
 		}
 	}
@@ -2670,8 +2675,11 @@ character_event = {
 			give_minor_title = title_court_physician
 		}
 		
-		hidden_tooltip = {
-			character_event = { id = RIP.4101 days = 30 random = 30 }
+		if = {
+			limit = { controls_religion = no }
+			hidden_tooltip = {
+				character_event = { id = RIP.4101 days = 30 random = 30 }
+			}
 		}
 		
 	}
@@ -2717,6 +2725,7 @@ character_event = {
 		event_target:missionary_physician_target = {
 			NOT = { religion_group = ROOT }
 		}
+		controls_religion = no
 	}
 	
 	option = {
@@ -2747,7 +2756,7 @@ character_event = {
 		name = EVTOPTB_RIP_4101
 		
 		ai_chance = {
-			factor = 10
+			factor = 5
 			modifier = {
 				factor = 3
 				trait = cynical
@@ -2767,21 +2776,21 @@ character_event = {
 				}
 			}
 			modifier = {
-				factor = 0.5
+				factor = 0.25
 				OR = {
 					culture_group = baltic
 					culture_group = finno_ugric  # The most stubborn pagans
 				}
 			}
 			modifier = {
-				factor = 0.5
+				factor = 0.25
 				culture_group = east_slavic # Like alcohol
 				event_target:missionary_physician_target = {
 					religion_group = muslim
 				}
 			}
 			modifier = {
-				factor = 0.5
+				factor = 0.25
 				culture_group = north_germanic # Vikings do like their alcohol
 				event_target:missionary_physician_target = {
 					religion_group = muslim
@@ -3977,7 +3986,16 @@ character_event = {
 
 			ROOT = { 
 				random_friend = {
-					limit = { NOT = { character = event_target:rip_friend_1 } block_general_event_trigger = no }
+					limit = { 
+						block_general_event_trigger = no 
+						NOR = {
+							is_rival = event_target:rip_friend_1
+							character = event_target:rip_friend_1
+							is_friend = event_target:rip_friend_1
+							is_lover = event_target:rip_friend_1
+							is_close_relative = event_target:rip_friend_1
+						}
+					}
 					save_event_target_as = rip_friend_2
 				}
 			}
@@ -4011,22 +4029,56 @@ character_event = {
 			limit = { block_general_event_trigger = no NOT = { has_character_modifier = grief_timer } }
 			save_event_target_as = rip_enemy_1
 
-			any_courtier = {
-				limit = { block_general_event_trigger = no ai = yes }
-				save_event_target_as = rip_new_enemy
+			liege = {
+				any_courtier = {
+					limit = { 
+						block_general_event_trigger = no 
+						NOR = {
+							is_rival = event_target:rip_enemy_1
+							character = event_target:rip_enemy_1
+							is_friend = event_target:rip_enemy_1
+							is_lover = event_target:rip_enemy_1
+						}
+					}
+					save_event_target_as = rip_new_enemy
+				}
 			}
 
 			ROOT = { 
 				random_rival = {
-					limit = { NOT = { character = event_target:rip_enemy_1 } block_general_event_trigger = no }
+					limit = { 
+						block_general_event_trigger = no 
+						NOR = {
+							is_rival = event_target:rip_enemy_1
+							character = event_target:rip_enemy_1
+							is_friend = event_target:rip_enemy_1
+							is_lover = event_target:rip_enemy_1
+						}
+					}
 					save_event_target_as = rip_enemy_2
 				}
 				random_child = {
-					limit = { block_general_event_trigger = no ai = yes }
+					limit = { 
+						block_general_event_trigger = no 
+						NOR = {
+							is_rival = event_target:rip_enemy_1
+							character = event_target:rip_enemy_1
+							is_friend = event_target:rip_enemy_1
+							is_lover = event_target:rip_enemy_1
+						}
+					}
 					save_event_target_as = rip_new_enemy
 				}
 				random_friend = {
-					limit = { block_general_event_trigger = no }
+					limit = { 
+						block_general_event_trigger = no 
+						NOR = {
+							is_rival = event_target:rip_enemy_1
+							character = event_target:rip_enemy_1
+							is_friend = event_target:rip_enemy_1
+							is_lover = event_target:rip_enemy_1
+						}
+					}
 					save_event_target_as = rip_new_enemy
 				}
 			}
@@ -4371,7 +4423,10 @@ character_event = {
 	option = {
 		name = EVTOPTD_RIP_29005
 		custom_tooltip = { text = EVTOPTD_RIP_29005_TOOLTIP }
-		trigger = { num_of_friends = 1 }
+		trigger = { 
+			num_of_friends = 1 
+			any_friend = { is_alive = yes }
+		}
 		any_friend = { remove_friend = ROOT } 
 
 		ai_chance = { factor = 5 }
@@ -4843,9 +4898,31 @@ character_event = {
 	option = {
 		name = EVTOPTA_RIP_29013
 
-		add_character_modifier = {
-			name = skull_trophy
-			duration = -1
+		if = {
+			limit = {
+				NOR = {
+					has_character_modifier = skull_trophy
+					has_character_modifier = skull_trophies
+				}
+			}
+			add_character_modifier = {
+				name = skull_trophy
+				duration = -1
+			}
+		}
+
+		if = { 
+			limit = {
+				OR = {
+					has_character_modifier = skull_trophy
+					has_character_modifier = skull_trophies
+				}
+			}
+			add_character_modifier = {
+				name = skull_trophies
+				duration = -1
+			}
+			hidden_tooltip = { remove_character_modifier = skull_trophy }
 		}
 
 		hidden_tooltip = {
@@ -4864,6 +4941,8 @@ character_event = {
 
 	is_triggered_only = yes
 	hide_from = yes
+
+	trigger = { NOT = { character = FROM } }
 
 	option = {
 		name = EVTOPTA_RIP_29014
@@ -4947,11 +5026,8 @@ character_event = {
 		name = EVTOPTA_RIP_29016
 		remove_trait = depressed
 
-		add_character_modifier = {
-			name = pet_cat
-			duration = -1
-		}
-		hidden_tooltip = { character_event = { id = 77802 days = 5000 random = 1000 } } # Cat dies
+		add_cat_effect = yes
+
 	}
 	option = {
 		name = EVTOPTB_RIP_29016
@@ -6807,6 +6883,10 @@ character_event = {
 
 	is_triggered_only = yes
 
+	trigger = {
+		has_character_modifier = phantom_pain
+	}
+
 	option = {
 		name = EVTOPTA_RIP_29501
 
@@ -6840,6 +6920,10 @@ character_event = {
 	picture = GFX_evt_prospering_province
 
 	is_triggered_only = yes
+
+	trigger = {
+		has_character_modifier = phantom_pain
+	}
 
 	option = {
 		name = EVTOPTA_RIP_29502
@@ -6905,9 +6989,9 @@ character_event = {
 
 	trigger = {
 		OR = {
-			num_of_children = 1
-			num_of_lovers = 1
-			num_of_spouses = 1
+			any_child = { is_alive = yes }
+			any_lover = { is_alive = yes }
+			any_spouse = { is_alive = yes }
 		}
 		OR = {
 			trait = severely_injured
@@ -7616,9 +7700,14 @@ character_event = {
 
 	is_triggered_only = yes
 
-	ai = no
-
 	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
 		death_reason = death_natural
 		NOT = {
 			has_game_rule = {
@@ -9652,4 +9741,3944 @@ letter_event = {
 			}
 		}
 	}
+}
+
+###SUICIDE EVENT CHAIN###
+
+#Suicide, from commit_suicide_immortal and commit_suicide
+character_event = {
+	id = RIP.30200
+	picture = GFX_evt_depopulated_town
+	border = GFX_event_normal_frame_intrigue
+
+	hide_from = yes
+
+	desc = {
+		trigger = { immortal = yes }
+		text = EVTDESC_RIP_30200_A
+	}
+	desc = {
+		trigger = {
+			immortal = no
+			NOR = {
+				any_child = { is_alive = yes }
+				any_lover = { is_alive = yes }
+				any_friend = { is_alive = yes }
+			}
+		}
+		text = EVTDESC_RIP_30200_B
+	}
+	desc = {
+		trigger = {
+			immortal = no
+			OR = {
+				any_child = { is_alive = yes }
+				any_lover = { is_alive = yes }
+				any_friend = { is_alive = yes }
+			}
+		}
+		text = EVTDESC_RIP_30200_C
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		character_event = { id = RIP.30201 days = 365 } #Cleanup
+
+		random_rival = {
+			limit = { block_general_event_trigger = no }
+			save_event_target_as = suicide_duel_target
+			
+		}
+	}
+
+	#Challenge rival to duel
+	option = {
+		trigger = { 
+			event_target:suicide_duel_target = { always = yes }
+		}
+		name = EVTOPTA_RIP_30200
+		custom_tooltip = { text = EVTOPTA_RIP_30200_TOOLTIP }
+
+		event_target:suicide_duel_target = { hidden_tooltip = { letter_event = { id = RIP.30202 days = 1 } } }
+
+	}
+
+	#Drink poison
+	option = {
+		name = EVTOPTB_RIP_30200
+
+		hidden_tooltip = {
+			random_list = {
+				50 = {
+					set_character_flag = suicide_success
+					modifier = {
+						factor = 2
+						intrigue = 15
+					}
+					modifier = {
+						factor = 10
+						immortal = no
+					}
+				}
+				50 = {
+					modifier = {
+						factor = 1.3
+						health = 7
+					}
+					modifier = {
+						factor = 1.3
+						health = 8
+					}
+					modifier = {
+						factor = 1.3
+						health = 9
+					}
+					modifier = {
+						factor = 1.3
+						health = 10
+					}
+					modifier = {
+						factor = 2
+						NOT = { intrigue = 10 }
+					}
+					set_character_flag = suicide_fail
+				}
+			}
+			character_event = { id = RIP.30207 days = 14 }
+		}
+	}
+
+	#Hang yourself
+	option = {
+   		name = EVTOPTC_RIP_30200
+
+   		hidden_tooltip = {
+			random_list = {
+				30 = {
+					modifier = {
+						factor = 10
+						immortal = no
+					}	
+					set_character_flag = suicide_success
+				}
+				70 = {
+					modifier = {
+						factor = 0
+						NOT = {
+							any_courtier = {
+								block_general_event_trigger = no 
+								ai = yes
+							}
+						}
+					}
+					set_character_flag = suicide_fail
+				}
+			}
+			character_event = { id = RIP.30208 days = 14 }
+		}
+	}
+
+	#Throw yourself off a cliff
+	option = {
+		name = EVTOPTD_RIP_30200
+
+		hidden_tooltip = {
+			random_list = {
+				50 = {
+					modifier = {
+						factor = 2
+						is_weak_trigger = yes
+					}
+					modifier = {
+						factor = 10
+						immortal = no
+					}
+					set_character_flag = suicide_success
+				}
+				50 = {
+
+					modifier = {
+						factor = 1.3
+						health = 7
+					}
+					modifier = {
+						factor = 1.3
+						health = 8
+					}
+					modifier = {
+						factor = 1.3
+						health = 9
+					}
+					modifier = {
+						factor = 1.3
+						health = 10
+					}
+					modifier = {
+						factor = 2
+						is_strong_trigger = yes
+					}
+					set_character_flag = suicide_fail
+				}
+			}
+			character_event = { id = RIP.30209 days = 14 }
+		}
+	}
+}
+
+#Cleanup-event
+character_event = {
+	id = RIP.30201
+	hide_window = yes
+	is_triggered_only = yes
+
+	option = {
+		clr_character_flag = suicide_fail
+		clr_character_flag = suicide_success
+		clr_character_flag = lost_suicide_duel
+		clr_character_flag = incapable_suicide_duel
+		clr_character_flag = won_suicide_duel
+		clr_character_flag = won_suicide_duel
+		clr_character_flag = attempting_suicide
+	}
+}
+
+#Rival recieves challenge
+letter_event = {
+	id = RIP.30202
+	desc = EVTDESC_RIP_30202
+	border = GFX_event_letter_frame_war
+
+	is_triggered_only = yes
+
+	#Yes
+	option = {
+		name = EVTOPTA_RIP_30202
+
+		FROM = { letter_event = { id = RIP.30203 days = 14 } }
+
+		ai_chance =  { 
+			factor = 100 
+
+			modifier = {
+				factor = 0.01
+				trait = craven
+			}
+		}
+	}
+
+	#No
+	option = {
+		name = EVTOPTB_RIP_30202
+
+		FROM = { letter_event = { id = RIP.30204 days = 14 } }
+
+		add_character_modifier = {
+			name = wol_refused_duel
+			years = 10
+		}
+
+		ai_chance =  { factor = 2 }
+	}
+}
+
+#Recieve accept
+letter_event = {
+	id = RIP.30203
+	desc = EVTDESC_RIP_30203
+	border = GFX_event_letter_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_30203
+
+		hidden_tooltip = { 
+			random_list = {
+				50 = {
+					modifier = {
+						factor = 2
+						immortal = no
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 1 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 2 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 3 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 4 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 5 }
+					}
+
+					set_character_flag = lost_suicide_duel
+				}
+				20 = {
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 1 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 2 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 3 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 4 }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { combat_rating = 5 }
+					}
+					set_character_flag = incapable_suicide_duel
+				}
+				30 = {
+					modifier = {
+						factor = 1.5
+						FROM = { NOT = { combat_rating = 0 } }
+					}
+					set_character_flag = won_suicide_duel
+				}
+			}
+
+			character_event = { id = RIP.30205 days = 14 } 
+		}
+	}
+}
+
+#Recieve decline
+letter_event = {
+	id = RIP.30204
+	desc = EVTDESC_RIP_30204
+	border = GFX_event_letter_frame_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_30204
+		custom_tooltip = { text = EVTOPTA_RIP_30204_TOOLTIP }
+	}
+}
+
+#Duel outcome
+character_event = {
+	id = RIP.30205
+	picture = GFX_evt_melee
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		trigger = { has_character_flag = lost_suicide_duel }
+		text = EVTDESC_RIP_30205_LOST
+	}
+	desc = {
+		trigger = { has_character_flag = won_suicide_duel }
+		text = EVTDESC_RIP_30205_WON
+	}
+	desc = {
+		trigger = { has_character_flag = incapable_suicide_duel }
+		text = EVTDESC_RIP_30205_INCAPABLE
+	}
+
+	is_triggered_only = yes
+
+	#You died in the duel
+	option = {
+		trigger = { has_character_flag = lost_suicide_duel }
+		name = EVTOPTA_RIP_30205
+
+		prestige = -100
+
+		death = {
+			death_reason = death_duel
+			killer = event_target:suicide_duel_target
+		}
+
+		event_target:suicide_duel_target = {
+			tooltip = { prestige = 100 }
+			hidden_tooltip = { character_event = { id = RIP.30206 } }
+		}
+	}
+
+	#Rival didn't kill you
+	option = {
+		trigger = { has_character_flag = won_suicide_duel }
+		name = EVTOPTB_RIP_30205
+		custom_tooltip = { text = EVTOPTA_RIP_30204_TOOLTIP }
+
+		add_trait_wounded_effect = yes
+		hidden_tooltip = { event_target:suicide_duel_target = { character_event = { id = RIP.30206 } } }
+	}
+
+	#Rival didn't kill you but you kill them
+	option = {
+		trigger = { 
+			has_character_flag = won_suicide_duel 
+			event_target:suicide_duel_target = { ai = yes }
+			NOT = { trait = kind }
+		}
+		name = EVTOPTC_RIP_30205
+
+		prestige = 100
+
+		add_trait_wounded_effect = yes
+
+		random = {
+			chance = 50
+			add_trait_wroth_effect = yes
+		}
+
+		event_target:suicide_duel_target = { 
+			prestige = -100
+			
+			death = {
+				death_reason = death_duel
+				killer = ROOT
+			}
+		}
+	}
+
+	#You become incapable in the duel
+	option = {
+		trigger = { has_character_flag = incapable_suicide_duel }
+		name = EVTOPTD_RIP_30205
+		custom_tooltip = { text = EVTOPTA_RIP_30204_TOOLTIP }
+
+		prestige = -100
+
+		event_target:suicide_duel_target = {
+			tooltip = { prestige = 100 }
+			hidden_tooltip = { character_event = { id = RIP.30206 } }
+		}
+
+		add_trait = incapable
+	}
+}
+
+#Rival outcome 
+character_event = {
+	id = RIP.30206
+	picture = GFX_evt_melee
+	border = GFX_event_normal_frame_war
+
+	desc = {
+		trigger = { 
+			OR = {
+				FROM = { has_character_flag = lost_suicide_duel }
+				FROM = { has_character_flag = incapable_suicide_duel }
+			}
+		}
+		text = EVTDESC_RIP_30206_WON
+	}
+	desc = {
+		trigger = { FROM = { has_character_flag = won_suicide_duel } }
+		text = EVTDESC_RIP_30206_LOST
+	}
+	
+	is_triggered_only = yes
+
+	option = {
+		trigger = { FROM = { has_character_flag = lost_suicide_duel } }
+		name = EVTOPTA_RIP_30206
+
+		prestige = 100
+
+		FROM = {
+			tooltip = {
+				prestige = -100
+				death = {
+					death_reason = death_duel
+					killer = ROOT
+				}
+			}
+		}
+	}
+
+	option = {
+		trigger = { FROM = { has_character_flag = incapable_suicide_duel } }
+		name = EVTOPTB_RIP_30206
+
+		prestige = 100
+
+		FROM = {
+			tooltip = {
+				prestige = -100
+				add_trait = incapable
+			}
+		}
+	}
+
+	option = {
+		trigger = { FROM = { has_character_flag = won_suicide_duel } }
+		name = EVTOPTC_RIP_30206
+	}
+}
+
+
+
+#Suicide attempt through poison
+character_event = {
+	id = RIP.30207
+	picture = GFX_evt_performing_experiments
+	border = GFX_event_normal_frame_intrigue
+
+	hide_from = yes
+
+	desc = {
+		trigger = { has_character_flag = suicide_success }
+		text = EVTDESC_RIP_30207_SUCCESS
+		picture = GFX_evt_performing_experiments
+	}
+	desc = {
+		trigger = { has_character_flag = suicide_fail }
+		text = EVTDESC_RIP_30207_FAIL
+		picture = GFX_evt_experiments_failed
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		trigger = { has_character_flag = suicide_success }
+		name = EVTOPTA_RIP_30207
+
+		prestige = -200
+		add_character_modifier = {
+			modifier = suicide
+			duration = -1
+		}
+		death = { death_reason = death_suicide_poison }
+	}
+	option = {
+		trigger = { has_character_flag = suicide_fail }
+		name = EVTOPTB_RIP_30207
+		custom_tooltip = { text = EVTOPTA_RIP_30204_TOOLTIP }
+		give_food_poisoning_effect = yes
+	}
+}
+
+#Suicide attempt through hanging
+character_event = {
+	id = RIP.30208
+	picture = GFX_evt_scandal
+	border = GFX_event_normal_frame_intrigue
+
+	hide_from = yes
+
+	desc = {
+		trigger = { has_character_flag = suicide_success }
+		text = EVTDESC_RIP_30208_SUCCESS
+	}
+	desc = {
+		trigger = { has_character_flag = suicide_fail }
+		text = EVTDESC_RIP_30208_FAIL
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_courtier = {
+			limit = { 
+				block_general_event_trigger = no 
+				ai = yes
+			}
+			save_event_target_as = found_hanger
+		}
+	}
+
+	option = {
+		trigger = { has_character_flag = suicide_success }
+		name = EVTOPTA_RIP_30207
+
+		prestige = -200
+		add_character_modifier = {
+			modifier = suicide
+			duration = -1
+		}
+
+		death = { death_reason = death_suicide_hanging }
+	}
+	option = {
+		trigger = { has_character_flag = suicide_fail }
+		name = EVTOPTB_RIP_30207
+		custom_tooltip = { text = EVTOPTA_RIP_30204_TOOLTIP }
+		
+		prestige = -100
+
+		opinion = {
+			who = event_target:found_hanger
+			modifier = opinion_distressing_encounter
+			years = 5
+		}
+		reverse_opinion = {
+			who = event_target:found_hanger
+			modifier = opinion_distressing_encounter
+			years = 5
+		}
+	}
+}
+
+#Suicide attempt through fall
+character_event = {
+	id = RIP.30209
+	picture = GFX_evt_prospering_province
+	border = GFX_event_normal_frame_intrigue
+
+	hide_from = yes
+
+	desc = {
+		trigger = { has_character_flag = suicide_success }
+		text = EVTDESC_RIP_30209_SUCCESS
+	}
+	desc = {
+		trigger = { has_character_flag = suicide_fail }
+		text = EVTDESC_RIP_30209_FAIL
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		trigger = { has_character_flag = suicide_success }
+		name = EVTOPTA_RIP_30207
+
+		prestige = -200
+		add_character_modifier = {
+			modifier = suicide
+			duration = -1
+		}
+
+		death = { death_reason = death_suicide_fall }
+	}
+	option = {
+		trigger = { has_character_flag = suicide_fail }
+		name = EVTOPTD_RIP_30205
+		custom_tooltip = { text = EVTOPTA_RIP_30204_TOOLTIP }
+		
+		prestige = -100
+
+		add_trait = incapable
+	}
+}
+
+
+#Incapable suicide help request
+character_event = {
+	id = RIP.30210
+	picture = GFX_evt_doctor_tending_to_sick
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		trigger = { event_target:suicide_assistant = { always = yes } }
+		text = EVTDESC_RIP_30210_A
+	}
+	desc = {
+		trigger = { NOT = { event_target:suicide_assistant = { always = yes } } }
+		text = EVTDESC_RIP_30210_B
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_friend = {
+			limit = { 
+				block_general_event_trigger = no 
+				NOT = { has_character_flag = refused_assisted_suicide }
+			}
+			save_event_target_as = suicide_assistant
+		}
+		if = {
+			limit = { NOT = { event_target:suicide_assistant = { always = yes } } }
+			random_lover = {
+				limit = { 
+					block_general_event_trigger = no 
+					NOT = { has_character_flag = refused_assisted_suicide }
+				}
+				save_event_target_as = suicide_assistant
+			}
+		}
+		if = {
+			limit = { NOT = { event_target:suicide_assistant = { always = yes } } }
+			host = {
+				random_courtier = {
+					limit = { 
+						has_minor_title = title_court_physician 
+						NOT = { has_character_flag = refused_assisted_suicide }
+					}
+					save_event_target_as = suicide_assistant
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { event_target:suicide_assistant = { always = yes } } }
+			random_child = {
+				limit = { 
+					block_general_event_trigger = no 
+					NOT = { has_character_flag = refused_assisted_suicide }
+				}
+				save_event_target_as = suicide_assistant
+			}
+		}
+	}
+
+	option = {
+		trigger = { event_target:suicide_assistant = { always = yes } }
+		name = EVTOPTA_RIP_30210
+
+		hidden_tooltip = { event_target:suicide_assistant = { character_event = { id = RIP.30211 days = 5 } } }
+	}
+
+	option = {
+		trigger = { NOT = { event_target:suicide_assistant = { always = yes } } }
+		name = EVTOPTB_RIP_30210
+
+		hidden_tooltip = {
+			set_character_flag = suicide_success
+			character_event = { id = RIP.30212 days = 5 } 
+		}
+	}
+}
+
+#Suicide request response
+character_event = {
+	id = RIP.30211
+	picture = GFX_evt_doctor_tending_to_sick
+	desc = EVTDESC_RIP_30211
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	#Yes
+	option = {
+		name = EVTOPTA_RIP_30211
+
+		FROM = {
+			tooltip = {
+				death = {
+					death_reason = death_murder_unknown_strangle
+					killer = ROOT
+				}
+			}
+			hidden_tooltip = { 
+				set_character_flag = suicide_success
+				character_event = { id = RIP.30212 } 
+			}
+		}
+
+		ai_chance = {
+			factor = 33
+
+			modifier = {
+				factor = 2
+				is_benevolent_trigger = yes
+			}
+			modifier = {
+				factor = 2
+				trait = brave
+			}
+		}
+	}
+
+	#No
+	option = {
+		name = EVTOPTB_RIP_30211
+
+		opinion = {
+			who = FROM
+			modifier = opinion_distressing_encounter
+			years = 5
+		}
+		reverse_opinion = {
+			who = FROM
+			modifier = opinion_distressing_encounter
+			years = 5
+		}
+
+		set_character_flag = refused_assisted_suicide
+
+		FROM = { 
+			hidden_tooltip = { 
+				set_character_flag = suicide_fail 
+				character_event = { id = RIP.30212 } 
+			}
+		}
+
+		ai_chance = {
+			factor = 67
+
+			modifier = {
+				factor = 2
+				is_evil_trigger = yes
+			}
+			modifier = {
+				factor = 2
+				trait = craven
+			}
+		}
+	}
+}
+	
+
+#Incapable suicide request outcome
+character_event = {
+	id = RIP.30212
+	picture = GFX_evt_doctor_tending_to_sick
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		trigger = { 
+			has_character_flag = suicide_success 
+			NOT = { FROM = { character = ROOT } }
+		}
+		text = EVTDESC_RIP_30212_SUCCESS_A
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = suicide_success 
+			FROM = { character = ROOT } 
+		}
+		text = EVTDESC_RIP_30212_SUCCESS_B
+	}
+	desc = {
+		trigger = { has_character_flag = suicide_fail }
+		text = EVTDESC_RIP_30212_FAIL
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		trigger = { has_character_flag = suicide_success }
+		name = EVTOPTA_RIP_30207
+
+		death = {
+			death_reason = death_murder_unknown_strangle
+			killer = FROM
+		}
+	}
+
+	option = {
+		trigger = { has_character_flag = suicide_fail }
+		name = EVTOPTB_RIP_30212
+		custom_tooltip = { text = EVTOPTA_RIP_30204_TOOLTIP }
+	}
+}
+
+###CHESS WITH DEATH###
+
+character_event = {
+	id = RIP.30220
+	hide_window = yes
+
+	min_age = 16
+	only_playable = yes
+	only_capable = yes
+	war = no
+	has_dlc = "Reapers"
+
+	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
+		NOT = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+		}
+		OR = {
+			religion_group = christian
+			any_realm_province = { any_neighbor_province = { owner = { religion_group = christian } } } 
+		}
+		is_nomadic = no
+		NOT = { has_character_flag = chess_with_death }
+		immortal = no
+	}
+
+	is_triggered_only = yes
+
+	weight_multiplier = {
+		days = 1
+		modifier = {
+			factor = 2
+			OR = {
+				any_realm_province = { disease = bubonic_plague }
+				any_realm_province = { any_neighbor_province = { disease = bubonic_plague } }
+			}
+		}
+		modifier = {
+			factor = 1.5
+			age = 70
+		}
+		modifier = {
+			factor = 1.4
+			NOT = { health = 2 }
+		}
+		modifier = {
+			factor = 1.2
+			NOT = { health = 4 }
+		}
+		modifier = {
+			factor = 1.3
+			trait = gamer
+		}
+	}
+
+	immediate = {
+		set_character_flag = chess_with_death
+		
+
+		if = {
+			limit = { religion_group = christian }
+			random_list = {
+				50 = {
+					create_character = {
+						random_traits = no
+						age = 32
+						dynasty = none
+						female = yes
+						trait = mastermind_theologian
+						trait = nun
+						trait = chaste
+						trait = shrewd
+						trait = gamer
+						trait = patient
+						trait = fatigue
+						trait = on_pilgrimage 
+						attributes = {
+							martial = 5
+						}
+					}
+					new_character = { save_event_target_as = death }
+				}
+				50 = {
+					create_character = {
+						random_traits = no
+						age = 32
+						dynasty = none
+						female = no
+						trait = mastermind_theologian
+						trait = monk
+						trait = chaste
+						trait = shrewd
+						trait = gamer
+						trait = patient
+						trait = fatigue 
+						trait = on_pilgrimage
+						attributes = {
+							martial = 5
+						}
+					}
+					new_character = { save_event_target_as = death }
+				}
+			}			
+		}
+		if = {
+			limit = { NOT = { religion_group = christian } }
+			random_list = {
+				50 = {
+					create_character = {
+						random_traits = no
+						age = 32
+						dynasty = none
+						female = yes
+						name = Eugenia
+						culture = italian
+						race = italian
+						religion = catholic
+						trait = mastermind_theologian
+						trait = nun
+						trait = chaste
+						trait = shrewd
+						trait = gamer
+						trait = patient
+						trait = fatigue 
+						trait = on_pilgrimage
+						attributes = {
+							martial = 5
+						}
+					}
+					new_character = { save_event_target_as = death }
+				}
+				50 = {
+					create_character = {
+						random_traits = no
+						age = 32
+						dynasty = none
+						female = no
+						name = Augusto
+						culture = italian
+						race = italian
+						religion = catholic
+						trait = mastermind_theologian
+						trait = monk
+						trait = chaste
+						trait = shrewd
+						trait = gamer
+						trait = patient
+						trait = fatigue 
+						trait = on_pilgrimage
+						attributes = {
+							martial = 5
+						}
+					}
+					new_character = { save_event_target_as = death }
+				}
+			}			
+		}
+
+		set_character_flag = chess_30222	
+		event_target:death = {
+			health = 10
+
+			character_event = { id = RIP.30221 }
+		}
+	}
+}
+
+#General ping event 
+character_event = {
+	id = RIP.30221
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		FROM = {	
+			trigger_switch = {
+				on_trigger = has_character_flag
+				chess_30222	= { character_event = { id = RIP.30222 } } #Seeing someone during a walk
+				chess_30223 = { character_event = { id = RIP.30223 days = 5 } } #Talking to the nun/monk, they want room & board
+				chess_30224 = { narrative_event = { id = RIP.30224 days = 14 random = 14 } } #Death comes for you
+				chess_30225 = { character_event = { id = RIP.30225 days = 1 } } #Outcome of attacking death
+				chess_30226 = { character_event = { id = RIP.30226 days = 5 } } #Picking chess pieces
+				chess_30227 = { character_event = { id = RIP.30227 days = 3 } } #First move
+				chess_30228 = { character_event = { id = RIP.30228 days = 1 } } #Outcome of first move
+				chess_30229 = { character_event = { id = RIP.30229 days = 5 } } #Another tactic
+				chess_30230 = { character_event = { id = RIP.30230 days = 1 } } #Outcome of the tactic
+				chess_30231 = { character_event = { id = RIP.30231 days = 5 } } #Last move
+				chess_30232 = { narrative_event = { id = RIP.30232 days = 1 } } #The end
+			}
+			clr_character_flag = chess_30222
+			clr_character_flag = chess_30223
+			clr_character_flag = chess_30224
+			clr_character_flag = chess_30225
+			clr_character_flag = chess_30226
+			clr_character_flag = chess_30227
+			clr_character_flag = chess_30228
+			clr_character_flag = chess_30229
+			clr_character_flag = chess_30230
+			clr_character_flag = chess_30231
+			clr_character_flag = chess_30232
+		}
+	}
+}
+
+#Notice someone when out on a walk
+character_event = {
+	id = RIP.30222
+	picture = GFX_evt_garden
+	desc = EVTDESC_RIP_30222
+	border = GFX_event_normal_frame_religion
+
+	hide_from = yes
+	hide_new = yes
+	is_triggered_only = yes
+
+	#Have a chat
+	option = {
+		name = EVTOPTA_RIP_30222
+
+		random = {
+			chance = 20
+			add_trait_gregarious_effect = yes			
+		}
+		random = {
+			chance = 30
+			remove_trait_shy_effect = yes
+		}
+	
+		set_character_flag = walked_with_death
+		set_character_flag = chess_30223
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Want to be alone
+	option = {
+		name = EVTOPTB_RIP_30222
+
+		random = {
+			chance = 20
+			add_trait_shy_effect = yes			
+		}
+		random = {
+			chance = 30
+			remove_trait_gregarious_effect = yes
+		}
+
+		set_character_flag = chess_30224
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }	
+	}
+}
+
+#You talk, they want room and board
+character_event = {
+	id = RIP.30223
+	picture = GFX_evt_wise_woman
+	border = GFX_event_normal_frame_religion
+
+	desc = {
+		trigger = { 
+			religion = FROM 
+			FROM = { is_female = yes }
+		}
+		text = EVTDESC_RIP_30223_A
+		picture = GFX_evt_wise_woman
+	}
+	desc = {
+		trigger = { 
+			religion = FROM 
+			FROM = { is_female = no }
+		}
+		text = EVTDESC_RIP_30223_B
+		picture = GFX_evt_monk
+	}
+	desc = {
+		trigger = { 
+			NOT = { religion = FROM }
+			FROM = { is_female = yes }
+		}
+		text = EVTDESC_RIP_30223_C
+		picture = GFX_evt_wise_woman
+	}
+	desc = {
+		trigger = { 
+			NOT = { religion = FROM }
+			FROM = { is_female = no }
+		}
+		text = EVTDESC_RIP_30223_D
+		picture = GFX_evt_monk
+	}
+
+	is_triggered_only = yes
+
+	#Come stay with me
+	option = {
+		name = EVTOPTA_RIP_30223
+		custom_tooltip = { text = EVTOPTA_RIP_30223_TOOLTIP }
+
+		if = {
+			limit = { NOT = { religion_group = christian } }
+			remove_trait_zealous_effect = yes
+			add_trait = sympathy_christendom
+		}
+
+		set_character_flag = invited_death
+		set_character_flag = chess_30224
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Have some money, sleep at the inn
+	option = {
+		name = EVTOPTB_RIP_30223
+		custom_tooltip = { text = EVTOPTB_RIP_30223_TOOLTIP }
+
+		scaled_wealth = { value = -0.1 min = -15 }
+
+		set_character_flag = gave_death_money
+		set_character_flag = chess_30224
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Go away! 
+	option = {
+		name = {
+			trigger = { religion_group = christian }
+			text = EVTOPTC_RIP_30223_A
+		}
+		name = {
+			trigger = { NOT = { religion_group = christian } }
+			text = EVTOPTC_RIP_30223_B
+		}
+
+		custom_tooltip = { text = EVTOPTC_RIP_30223_TOOLTIP }
+
+		if = {
+			limit = { religion_group = christian }
+
+			piety = -50
+
+			random = {
+				chance = 50
+				remove_trait_zealous_effect = yes
+			}
+		}
+
+		if = {
+			limit = { NOT = { trait = charitable } }
+			random = {
+				chance = 50
+				add_trait_greedy_effect = yes
+			}
+		}
+		random = {
+			chance = 50
+			remove_trait_charitable_effect = yes
+		}	
+
+		set_character_flag = chess_30224
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+}
+
+#The reveal
+narrative_event = {
+	id = RIP.30224
+	title = EVTNAME_RIP_30224
+	border = GFX_event_narrative_frame_intrigue
+	picture = GFX_evt_shadow
+
+	desc = {
+		trigger = { has_character_flag = invited_death }
+		text = EVTDESC_RIP_30224_A
+	}
+	desc = {
+		trigger = { 
+			NOT = { has_character_flag = invited_death }
+			has_character_flag = walked_with_death
+		}
+		text = EVTDESC_RIP_30224_B
+	}
+	desc = {
+		trigger = { 
+			NOR = {
+				has_character_flag = invited_death
+				has_character_flag = walked_with_death
+			}
+		}
+		text = EVTDESC_RIP_30224_C
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		FROM = { 
+			remove_trait = fatigue 
+			remove_trait = on_pilgrimage
+			remove_trait = nun
+			remove_trait = monk
+		}
+		if = { 
+			limit = {
+				OR = {
+					trait = seducer
+					trait = seductress
+				}
+				same_sex = FROM
+			}
+			FROM = { add_trait = homosexual }
+		}
+	}
+
+	#Play chess with me!
+	option = {
+		name = EVTOPTA_RIP_30224
+		custom_tooltip = { text = EVTOPTA_RIP_30224_TOOLTIP }
+
+		set_character_flag = chess_30226
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Do your worst!
+	option = {
+		name = EVTOPTB_RIP_30224
+		custom_tooltip = { text = EVTOPTB_RIP_30224_TOOLTIP }
+
+		random_list = {
+			#You die
+			80 = {	
+				death = { death_reason = death_murder_unknown killer = FROM }
+
+				hidden_tooltip = {
+					FROM = {
+						leave_court_effect = yes
+		  				death = { death_reason = death_missing }
+					}
+				}
+			}
+			#You survive
+			20 = {
+				modifier = {
+					factor = 0
+					trait = wounded
+					trait = mangled
+					trait = one_eyed
+					trait = one_handed
+				}
+				custom_tooltip = { text = EVTOPTB_RIP_30224_TOOLTIP_SURVIVE }
+				set_character_flag = chess_30225
+				hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+			}
+		}
+
+		clr_character_flag = walked_with_death
+		clr_character_flag = invited_death
+		clr_character_flag = gave_death_money
+	}
+}
+
+#You survived but got injured
+character_event = {
+	id = RIP.30225
+	picture = GFX_evt_bloody_tools
+	desc = EVTDESC_RIP_30225
+	border = GFX_event_normal_frame_war
+
+	is_triggered_only = yes
+
+	immediate = {
+		random_list = {
+			25 = {
+				modifier = {
+					factor = 0
+					trait = wounded
+				}
+				set_character_flag = give_wounded
+			}
+			25 = {
+				modifier = {
+					factor = 0
+					trait = mangled
+				}
+				set_character_flag = give_mangled
+			}
+			25 = {
+				modifier = {
+					factor = 0
+					trait = one_eyed
+				}
+				set_character_flag = give_one_eyed
+			}
+			25 = {
+				modifier = {
+					factor = 0
+					trait = one_handed
+				}
+				set_character_flag = give_one_handed
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTB_RIP_30225
+
+		trigger_switch = {
+			on_trigger = has_character_flag
+			give_wounded	= { add_trait_wounded_effect = yes }
+			give_mangled	= { mangle_effect = yes }
+			give_one_eyed	= { add_trait_one_eyed_effect = yes }
+			give_one_handed	= { add_trait_one_handed_effect = yes }
+		}
+
+		clr_character_flag = give_wounded
+		clr_character_flag = give_mangled
+		clr_character_flag = give_one_eyed
+		clr_character_flag = give_one_handed
+		
+		FROM = { death = { death_reason = death_murder_unknown killer = ROOT } } 
+	}
+}
+
+#Chess starts, pick piece
+character_event = {
+	id = RIP.30226
+	picture = GFX_evt_court_physician
+	desc = EVTDESC_RIP_30226
+	border = GFX_event_normal_frame_intrigue
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { which = chess_score value = 0 }
+
+		if = {
+			limit = { 
+				OR = {
+					has_character_flag = invited_death 
+					has_character_flag = gave_death_money
+				}
+			}
+			change_variable = { which = chess_score value = 1 }
+			clr_character_flag = invited_death
+			clr_character_flag = gave_death_money
+		}
+		clr_character_flag = walked_with_death
+	}
+
+	#White
+	option = {
+		name = EVTOPTA_RIP_30226
+		custom_tooltip = { text = EVTOPTA_RIP_30226_TOOLTIP }
+
+		set_character_flag = picked_white
+
+		set_character_flag = chess_30227
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	} 
+	
+	#Black
+	option = {
+		name = EVTOPTB_RIP_30226
+		custom_tooltip = { text = EVTOPTB_RIP_30226_TOOLTIP }
+
+		hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+		set_character_flag = picked_black
+
+		set_character_flag = chess_30227
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+}
+
+#First move
+character_event = {
+	id = RIP.30227
+	picture = GFX_evt_court_physician
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		trigger = { has_character_flag = picked_black }
+		text = EVTDESC_RIP_30226_BLACK	
+	}
+	desc = {
+		trigger = { has_character_flag = picked_white }
+		text = EVTDESC_RIP_30226_WHITE	
+	}
+
+	is_triggered_only = yes
+
+	#Play it safe
+	option = {
+		name = EVTOPTA_RIP_30227
+
+		random_list = {
+			25 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+				set_character_flag = good_move
+			}
+			55 = {
+				custom_tooltip = { text = CHESS_NEUTRAL_MOVE }
+				set_character_flag = neutral_move
+			}
+			20 = {
+				custom_tooltip = { text = CHESS_BAD_MOVE }
+				hidden_tooltip = { change_variable = { which = chess_score value = -1 } }
+				set_character_flag = bad_move
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Play it risky
+	option = {
+		name = EVTOPTB_RIP_30227
+
+		random_list = {
+			20 = {
+				custom_tooltip = { text = CHESS_GREAT_MOVE }
+				set_character_flag = great_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+			}
+			40 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+			40 = {
+				custom_tooltip = { text = CHESS_TERRIBLE_MOVE }
+				set_character_flag = bad_move
+				hidden_tooltip = { change_variable = { which = chess_score value = -2 } }
+			}	
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Deceitful
+	option = {	
+		trigger = { 
+			trait = deceitful 
+			NOT = { trait = schemer }
+			NOT = {
+				AND = {
+					trait = strategist
+					is_smart_trigger = yes
+				}
+			}
+		}
+		name = EVTOPTC_RIP_30227
+		tooltip_info = deceitful
+
+		random_list = {
+			100 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Master schemer
+	option = {	
+		trigger = { trait = schemer }
+		name = EVTOPTC_RIP_30227
+		tooltip_info = schemer
+
+		random_list = {
+			100 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Gamer option
+	option = {
+		trigger = { trait = gamer }
+		name = EVTOPTD_RIP_30227
+		tooltip_info = gamer
+
+		random_list = {
+			100 = {
+				custom_tooltip = { text = CHESS_GREAT_MOVE }
+				set_character_flag = great_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Strategist option
+	option = {
+		trigger = { 
+			trait = strategist 
+		}
+		name = EVTOPTD_RIP_30227
+		tooltip_info = strategist
+
+		random_list = {
+			100 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Genius option
+	option = {
+		trigger = {
+			trait = genius
+			NOT = { trait = gamer }
+		}
+		name = EVTOPTE_RIP_30227
+		tooltip_info = genius
+
+		random_list = {
+			100 = {
+				custom_tooltip = { text = CHESS_GREAT_MOVE }
+				set_character_flag = great_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Quick
+	option = {
+		trigger = {
+			trait = quick
+			NOT = { trait = gamer }
+		}
+		name = EVTOPTE_RIP_30227
+		tooltip_info = quick
+
+		random_list = {
+			100 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Shrewd
+	option = {
+		trigger = {
+			trait = shrewd
+			NOT = { trait = gamer }
+		}
+		name = EVTOPTE_RIP_30227
+		tooltip_info = shrewd
+
+		random_list = {
+			100 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+		}
+
+		set_character_flag = chess_30228
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+}
+
+#Death reacts to you move
+character_event = {
+	id = RIP.30228
+	picture = GFX_evt_court_physician
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		trigger = { has_character_flag = great_move }
+		text = EVTDESC_RIP_30228_GREAT
+	}
+	desc = {
+		trigger = { has_character_flag = good_move }
+		text = EVTDESC_RIP_30228_GOOD
+	}
+	desc = {
+		trigger = { has_character_flag = neutral_move }
+		text = EVTDESC_RIP_30228_NEUTRAL
+	}
+	desc = {
+		trigger = { has_character_flag = bad_move }
+		text = EVTDESC_RIP_30228_BAD
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			trigger = { 
+				OR = {
+					has_character_flag = great_move 
+					has_character_flag = good_move
+				}
+			}
+			text = EVTOPTA_RIP_30228_A
+		}
+		name = {
+			trigger = { 
+				OR = {
+					has_character_flag = bad_move 
+					has_character_flag = neutral_move
+				}
+			}
+			text = EVTOPTA_RIP_30228_B
+		}
+		
+		custom_tooltip = { text = EVTOPTA_RIP_30228_TOOLTIP }
+		clr_character_flag = great_move
+		clr_character_flag = good_move
+		clr_character_flag = neutral_move
+		clr_character_flag = bad_move
+		
+		set_character_flag = chess_30229
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+}
+
+#Some other tactic
+character_event = {
+	id = RIP.30229
+	picture = GFX_evt_court_physician
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		trigger = { check_variable = { which = chess_score value = 3 } }
+		text = EVTDESC_RIP_30229_GOOD
+	}
+	desc = {
+		trigger = { 
+			NOT = { check_variable = { which = chess_score value = 3 } }
+			check_variable = { which = chess_score value = 1 } 
+		}
+		text = EVTDESC_RIP_30229_NEUTRAL
+	}
+	desc = {
+		trigger = { NOT = { check_variable = { which = chess_score value = 1 } } }
+		text = EVTDESC_RIP_30229_BAD
+	}
+
+	is_triggered_only = yes
+
+	#Drinking competition 1
+	option = {
+		trigger = { trait = drunkard }
+		tooltip_info = drunkard
+		name = EVTOPTA_RIP_30229
+		custom_tooltip = { text = EVTOPTA_RIP_30229_TOOLTIP }
+
+		set_character_flag = chess_drinking_competition
+		hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+
+		set_character_flag = chess_30230
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Drinking competition 2
+	option = {
+		trigger = { trait = hedonist }
+		tooltip_info = hedonist
+		name = EVTOPTA_RIP_30229
+		custom_tooltip = { text = EVTOPTA_RIP_30229_TOOLTIP }
+
+		set_character_flag = chess_drinking_competition
+		hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+
+		set_character_flag = chess_30230
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Seduce (as man)
+	option = {
+		trigger = { 
+			trait = seducer 
+		}
+		tooltip_info = seducer
+		name = EVTOPTB_RIP_30229
+		custom_tooltip = { text = EVTOPTB_RIP_30229_TOOLTIP }
+
+		set_character_flag = chess_seduction
+		hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+
+		set_character_flag = chess_30230
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Seduce (as woman)
+	option = { 
+		trigger = { 
+			trait = seductress 
+		}
+		tooltip_info = seductress
+		name = EVTOPTB_RIP_30229
+		custom_tooltip = { text = EVTOPTB_RIP_30229_TOOLTIP }
+
+		set_character_flag = chess_seduction
+		hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+
+		set_character_flag = chess_30230
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Intimidate
+	option = {
+		trigger = { trait = impaler }
+		tooltip_info = impaler
+		name = EVTOPTC_RIP_30229
+		custom_tooltip = { text = EVTOPTC_RIP_30229_TOOLTIP }
+
+		set_character_flag = chess_intimidation
+		hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+
+		set_character_flag = chess_30230
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Brag about past victories
+	option = {
+		trigger = { trait = gamer }
+		tooltip_info = gamer
+		name = EVTOPTF_RIP_30229
+		custom_tooltip = { text = EVTOPTF_RIP_30229_TOOLTIP }
+
+		set_character_flag = chess_brag
+		hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+
+		set_character_flag = chess_30230
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Knock wine
+	option = {
+		name = EVTOPTD_RIP_30229
+		custom_tooltip = { text = EVTOPTD_RIP_30229_TOOLTIP }
+
+		random_list = {
+			67 = {
+				custom_tooltip = { text = CHESS_GOOD_TRICK }
+				set_character_flag = good_trick
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+			33 = {
+				custom_tooltip = { text = CHESS_BAD_TRICK }
+				set_character_flag = bad_trick
+			}
+		}
+		set_character_flag = chess_30230
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Focus on the game, skips next event
+	option = {
+		name = EVTOPTE_RIP_30229
+
+		random_list = {
+			25 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+			75 = {
+				custom_tooltip = { text = CHESS_NEUTRAL_MOVE }
+			}
+		}
+
+		set_character_flag = chess_30231
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+}
+
+#Another tactic reaction
+character_event = {
+	id = RIP.30230
+	picture = GFX_evt_court_physician
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		trigger = { has_character_flag = chess_drinking_competition }
+		text = EVTDESC_RIP_30230_DRINKING
+		picture = GFX_evt_drunk
+	}
+	desc = {
+		trigger = { has_character_flag = chess_seduction }
+		text = EVTDESC_RIP_30230_SEDUCTION
+		picture = GFX_evt_lovers
+	}
+	desc = {
+		trigger = { has_character_flag = chess_intimidation }
+		text = EVTDESC_RIP_30230_INTIMIDATION
+		picture = GFX_evt_impalement
+	}
+	desc = {
+		trigger = { has_character_flag = chess_brag }
+		text = EVTDESC_RIP_30230_BRAG
+		picture = GFX_evt_courtiers_talking
+	}
+	desc = {
+		trigger = { has_character_flag = good_trick }
+		text = EVTDESC_RIP_30230_GOOD_TRICK
+		picture = GFX_evt_drunk
+	}
+	desc = {
+		trigger = { has_character_flag = bad_trick }
+		text = EVTDESC_RIP_30230_BAD_TRICK
+		picture = GFX_evt_drunk
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		trigger = { NOT = { has_character_flag = bad_trick } }
+		name = EVTOPTA_RIP_30230
+		custom_tooltip = { text = EVTOPTA_RIP_30228_TOOLTIP }
+
+		clr_character_flag = chess_drinking_competition
+		clr_character_flag = chess_seduction
+		clr_character_flag = chess_intimidation
+		clr_character_flag = chess_brag
+		clr_character_flag = good_trick
+
+		#Randomness
+		hidden_tooltip = {
+			random_list = {
+				50 = { change_variable = { which = chess_score value = -1 } }
+				50 = {}
+			}
+		}
+
+		set_character_flag = chess_30231
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	option = {
+		trigger = { has_character_flag = bad_trick } 
+		name = EVTOPTB_RIP_30230
+		custom_tooltip = { text = EVTOPTB_RIP_30230_TOOLTIP }
+
+		clr_character_flag = bad_trick
+
+		death = { death_reason = death_murder_unknown killer = FROM } 
+
+		hidden_tooltip = { 
+			FROM = {
+				leave_court_effect = yes
+				death = { death_reason = death_missing }
+			}	
+		}
+	}
+}
+
+#Last move
+character_event = {
+	id = RIP.30231
+	picture = GFX_evt_court_physician
+	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		trigger = { check_variable = { which = chess_score value = 5 } }
+		text = EVTDESC_RIP_30231_GOOD
+	}
+	desc = {
+		trigger = { 
+			NOT = { check_variable = { which = chess_score value = 5 } }
+			check_variable = { which = chess_score value = 4 } 
+		}
+		text = EVTDESC_RIP_30231_NEUTRAL
+	}
+	desc = {
+		trigger = { NOT = { check_variable = { which = chess_score value = 4 } } }
+		text = EVTDESC_RIP_30231_BAD
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_tooltip = {
+			random_spouse = {
+				limit = {
+					is_alive = yes
+					ai = yes
+					liege = { character = ROOT }
+				}
+				save_event_target_as = chess_sacrifice
+			}
+			random_friend = {
+				limit = {
+					is_alive = yes
+					ai = yes
+					liege = { character = ROOT }
+				}
+				save_event_target_as = chess_sacrifice
+			}
+			random_lover = {
+				limit = {
+					is_alive = yes
+					ai = yes
+					liege = { character = ROOT }
+				}
+				save_event_target_as = chess_sacrifice
+			}
+			random_child = {
+				limit = {
+					is_alive = yes
+					ai = yes
+					liege = { character = ROOT }
+				}
+				save_event_target_as = chess_sacrifice
+			}
+		}
+	}
+
+	#Trust my skill
+	option = {
+		name = EVTOPTA_RIP_30231
+
+		random_list = {
+			20 = {
+				modifier = {
+					factor = 0
+					NOR = {
+						trait = gamer
+						is_smart_trigger = yes
+					}
+				}
+				custom_tooltip = { text = CHESS_GREAT_MOVE }
+				set_character_flag = great_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+			}
+			20 = {
+				modifier = {
+					factor = 1.5
+					OR = {
+						trait = gamer
+						is_smart_trigger = yes
+					}
+				}
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+			50 = {
+				modifier = {
+					factor = 0.6
+					OR = {
+						trait = gamer
+						is_smart_trigger = yes
+					}
+				}
+				custom_tooltip = { text = CHESS_NEUTRAL_MOVE }
+				set_character_flag = neutral_move
+			}
+			30 = {
+				modifier = {
+					factor = 0.67
+					OR = {
+						trait = gamer
+						is_smart_trigger = yes
+					}
+				}
+				custom_tooltip = { text = CHESS_BAD_MOVE }
+				set_character_flag = bad_move
+				hidden_tooltip = { change_variable = { which = chess_score value = -1 } }
+			}
+		}
+
+		set_character_flag = chess_30232
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+
+	#Offer lover/friend
+	option = {
+		trigger = { event_target:chess_sacrifice = { always = yes } }
+		name = {
+			trigger = { any_spouse = { character = event_target:chess_sacrifice } }
+			text = EVTOPTB_RIP_30231_A
+		}
+		name = {
+			trigger = { any_friend = { character = event_target:chess_sacrifice } }
+			text = EVTOPTB_RIP_30231_B
+		}
+		name = {
+			trigger = { any_lover = { character = event_target:chess_sacrifice } }
+			text = EVTOPTB_RIP_30231_C
+		}
+		name = {
+			trigger = { any_child = { character = event_target:chess_sacrifice } }
+			text = EVTOPTB_RIP_30231_D
+		}
+
+		event_target:chess_sacrifice = { save_event_target_as = kill_sacrifice }
+
+		random_list = {
+			15 = {
+				custom_tooltip = { text = CHESS_GREAT_MOVE }
+				set_character_flag = great_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 2 } }
+			}
+			35 = {
+				custom_tooltip = { text = CHESS_GOOD_MOVE }
+				set_character_flag = good_move
+				hidden_tooltip = { change_variable = { which = chess_score value = 1 } }
+			}
+			35 = {
+				custom_tooltip = { text = CHESS_NEUTRAL_MOVE }
+				set_character_flag = neutral_move
+			}
+			15 = {
+				custom_tooltip = { text = CHESS_BAD_MOVE }
+				set_character_flag = bad_move
+				hidden_tooltip = { change_variable = { which = chess_score value = -1 } }
+			}
+		}
+
+		set_character_flag = chess_30232
+		hidden_tooltip = { FROM = { character_event = { id = RIP.30221 } } }
+	}
+}
+
+#The end of the game
+narrative_event = {
+	id = RIP.30232
+	title = EVTNAME_RIP_30232
+	border = GFX_event_narrative_frame_intrigue
+	picture = GFX_evt_danse_macabre
+
+	desc = {
+		trigger = { check_variable = { which = chess_score value = 5 } }
+		text = EVTDESC_RIP_30232_GOOD
+	}
+	desc = {
+		trigger = { NOT = { check_variable = { which = chess_score value = 5 } } }
+		text = EVTDESC_RIP_30232_BAD
+	}
+
+	immediate = {
+
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		trigger = { check_variable = { which = chess_score value = 5 } }
+		name = EVTOPTA_RIP_30232
+		custom_tooltip = { text = EVTOPTB_RIP_302232_TOOLTIP }
+
+		if = {
+			limit = { NOT = { has_character_modifier = deaths_gift } }
+			add_character_modifier = {
+				name = deaths_gift
+				duration = -1
+			}
+		}
+
+		remove_disease_trait_effect = yes
+
+		hidden_tooltip = { 
+			FROM = {
+				leave_court_effect = yes
+				death = { death_reason = death_missing }
+			}	
+		}		
+	}
+
+	option = {
+		trigger = { NOT = { check_variable = { which = chess_score value = 5 } } }
+		name = EVTOPTB_RIP_30232
+		custom_tooltip = { text = EVTOPTB_RIP_30230_TOOLTIP }
+
+		death = { death_reason = death_murder_unknown killer = FROM } 
+		if = {
+			limit = { event_target:kill_sacrifice = { always = yes } }
+			event_target:kill_sacrifice = { death = { death_reason = death_murder_unknown killer = FROM } }
+		}
+
+		hidden_tooltip = { 
+			FROM = {
+				leave_court_effect = yes
+				death = { death_reason = death_missing }
+			}
+		}		
+	}
+}
+
+#Death's gift
+character_event = {
+	id = RIP.30233
+	desc = EVTDESC_TOG_7015
+	border = GFX_event_normal_frame_religion
+	picture = GFX_evt_danse_macabre
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_disease_trigger = yes
+	}
+
+	option = {
+		name = EVTOPTA_RIP_30233
+		remove_disease_trait_effect = yes	
+		remove_character_modifier = deaths_gift
+
+		if = {
+			limit = { trait = cynical }
+			remove_trait = cynical
+		}
+	}
+}
+
+#Todo - test event
+#character_event = {
+#	id = RIP.30234
+#	picture = GFX_evt_court_physician
+#	border = GFX_event_normal_frame_intrigue
+#
+#	desc = chess_score_number
+#
+#	is_triggered_only = yes
+#
+#	option = {
+#		name = OK
+#	}
+#}
+
+### Immortal rival events
+narrative_event = {
+	id = RIP.30300
+	picture = GFX_evt_suspicious_noble
+	border = GFX_event_narrative_frame_war
+	title = RIP.30300.title
+	
+	immediate = {
+		set_character_flag = immortal_rival_appeared
+		if = {
+			limit = {
+				NOR = {
+					has_character_flag = immortal_rival_highlander
+					has_character_flag = immortal_rival_evildude
+					has_character_flag = immortal_rival_goodguy
+					has_character_flag = immortal_rival_shieldmaiden
+					has_character_flag = immortal_rival_horse
+				}
+			}
+			random_list = {
+				100 = {
+					set_character_flag = immortal_rival_highlander
+				}
+				100 = {
+					modifier = {
+						factor = 2
+						is_virtous = yes
+					}
+					set_character_flag = immortal_rival_evildude
+				}
+				100 = {
+					modifier = {
+						factor = 2
+						is_wicked = yes
+					}
+					modifier = {
+						factor = 2
+						OR = {				
+							trait = lunatic
+							trait = cruel
+							trait = wroth
+							trait = cannibal_trait
+							trait = impaler
+						}
+					}
+					set_character_flag = immortal_rival_goodguy
+				}
+				100 = {
+					set_character_flag = immortal_rival_shieldmaiden					
+					modifier = {
+						factor = 2
+						combat_rating = 3
+					}
+					modifier = {
+						factor = 1.5
+						combat_rating = 4
+					}
+				}
+				25 = {
+					modifier = {
+						factor = 15
+						any_courtier = {
+							culture = horse
+						}
+					}
+					modifier = {
+						factor = 10
+						any_courtier = {
+							culture = horse
+							trait = immortal
+						}
+					}
+					set_character_flag = immortal_rival_horse
+				}
+			}
+		}
+	}
+
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_highlander 
+		}
+		text = RIP.30300.d.highlander
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_evildude 
+		}
+		text = RIP.30300.d.evildude
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_goodguy 
+		}
+		text = RIP.30300.d.goodguy
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_shieldmaiden 
+		}
+		text = RIP.30300.d.shieldmaiden
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_horse 
+		}
+		text = RIP.30300.d.horse
+	}
+
+	is_triggered_only = yes
+	
+	trigger = {
+		trait = immortal
+		NOT = { has_character_flag = immortal_rival_appeared }
+	}
+
+	option = {
+		name = RIP.30300.a
+		trigger = {
+			NOR = {
+				trait = craven
+				trait = lunatic
+				trait = cruel
+				trait = wroth
+				trait = cannibal_trait
+				trait = impaler
+			}
+		}
+		character_event = { id = RIP.30301 days = 180 random = 100  tooltip = IMMORTAL_RIVAL_COMING_TOOLTIP }
+	}
+	option = {
+		trigger = {
+			trait = craven
+		}
+		name = RIP.30300.b
+		character_event = { id = RIP.30301 days = 180 random = 100  tooltip = IMMORTAL_RIVAL_COMING_TOOLTIP }
+	}
+	option = {
+		trigger = {
+			OR = {				
+				trait = lunatic
+				trait = cruel
+				trait = wroth
+				trait = cannibal_trait
+				trait = impaler
+			}
+		}
+		name = RIP.30300.c
+		character_event = { id = RIP.30301 days = 180 random = 100  tooltip = IMMORTAL_RIVAL_COMING_TOOLTIP }
+	}
+
+}
+
+character_event = {
+	id = RIP.30301
+	picture = GFX_evt_end_of_days
+	border = GFX_event_normal_frame_war
+	#desc = RIP.30301.d
+	#title = RIP.30301.title
+	
+	immediate = { 
+		if = {
+			limit = {
+				has_character_flag = immortal_rival_highlander
+			}
+			create_character = {
+				random_traits = no
+				name = "Ramirez"
+				dynasty = none
+				religion = catholic
+				culture = scottish
+				female = no
+				age = 1500
+				immortal_age = 40
+				attributes = {
+					martial = 12
+					diplomacy = 10
+					stewardship = 9
+					intrigue = 9
+					learning = 15
+				}
+				health = 6
+				fertility = 0.8
+				trait = skilled_tactician
+				trait = patient
+				trait = immortal
+				trait = just
+				trait = duelist
+				trait = cynical
+				historical = yes
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = immortal_rival_evildude
+			}
+			create_character = {
+				random_traits = no
+				name = "Uran"
+				dynasty = culture
+				religion = pagan
+				culture = random
+				female = no
+				age = 1800
+				immortal_age = 25
+				attributes = {
+					martial = 15
+					diplomacy = 5
+					stewardship = 4
+					intrigue = 6
+					learning = 8
+				}
+				health = 6
+				fertility = 0.8
+				trait = brilliant_strategist
+				trait = wroth
+				trait = immortal
+				trait = proud
+				trait = impaler
+				trait = cynical
+				trait = strong
+				trait = berserker
+				trait = envious
+				trait = scarred
+				historical = yes
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = immortal_rival_goodguy
+			}
+			create_character = {
+				random_traits = no
+				name = "Arthur"
+				dynasty = none
+				religion = catholic
+				culture = breton
+				female = no
+				age = 950
+				immortal_age = 30
+				attributes = {
+					martial = 16
+					diplomacy = 12
+					stewardship = 15
+					intrigue = 8
+					learning = 14
+				}
+				health = 6
+				fertility = 0.8
+				trait = brilliant_strategist
+				trait = patient
+				trait = immortal
+				trait = just
+				trait = kind
+				trait = temperate
+				trait = chaste
+				trait = strategist
+				historical = yes
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = immortal_rival_shieldmaiden
+			}
+			create_character = {
+				random_traits = no
+				name = "Torhild"
+				dynasty = none
+				religion = norse_pagan
+				culture = norse
+				female = yes
+				age = 1300
+				immortal_age = 18
+				attributes = {
+					martial = 15
+					diplomacy = 8
+					stewardship = 8
+					intrigue = 10
+					learning = 12
+				}
+				health = 6
+				fertility = 0.8
+				trait = tough_soldier
+				trait = lustful
+				trait = immortal
+				trait = kind
+				trait = honest
+				trait = robust
+				trait = brave
+				trait = sea_queen
+				trait = hunter
+				historical = yes
+			}
+		}
+		if = {
+			limit = {
+				has_character_flag = immortal_rival_horse
+			}
+			create_character = {
+				random_traits = no
+				name = "Incitatus"
+				dynasty = none
+				religion = hellenic_pagan
+				culture = horse
+				female = no
+				age = 2200
+				immortal_age = 4
+				attributes = {
+					martial = 8
+					diplomacy = 18
+					stewardship = 12
+					intrigue = 18
+					learning = 16
+				}
+				health = 6
+				fertility = 0.8
+				trait = elusive_shadow
+				trait = genius
+				trait = attractive
+				trait = patient
+				trait = immortal
+				trait = cruel
+				trait = wroth
+				trait = strong
+				trait = robust
+				trait = stubborn
+				trait = schemer
+				trait = cynical
+				trait = ares_own
+				historical = yes
+			}
+		}
+		new_character = {
+			add_rival = ROOT
+			diplomatic_immunity = yes
+			save_event_target_as = immortal_rival
+		}
+		character_event = { id = RIP.30308 days = 1 } #clears flags in one spot, hidden event
+		hidden_effect = {
+			if = {
+				limit = {
+					has_character_flag = immortal_rival_horse 
+				}
+				if = {	#horse councillor? 
+					limit = {
+						any_courtier = {
+							ai = yes
+							is_alive = yes
+							culture = horse
+							has_job_title = yes								
+						}
+					}
+					random_courtier = {
+							limit = {
+								ai = yes
+								is_alive = yes
+								culture = horse
+								has_job_title = yes	
+							}
+						save_event_target_as = immortal_horse_victim
+						death = { death_reason = death_execution_horses killer = event_target:immortal_rival }				
+					}
+					break = yes
+				}
+				if = { #any horse?
+					limit = {
+						any_courtier = {
+							ai = yes
+							is_alive = yes
+							culture = horse							
+						}
+					}
+					random_courtier = {
+							limit = {
+								ai = yes
+								is_alive = yes
+								culture = horse
+							}
+						save_event_target_as = immortal_horse_victim
+						death = { death_reason = death_execution_horses killer = event_target:immortal_rival }	
+					}
+					break = yes
+				}
+				if = { #backup victim
+					limit = {
+						any_courtier = {
+							ai = yes
+							is_alive = yes
+							OR = {
+								has_job_title = yes
+								is_close_relative = ROOT
+								is_consort = ROOT
+								is_married = ROOT
+							}				
+						}
+					}
+					random_courtier = {
+							limit = {
+								ai = yes
+								is_alive = yes
+								OR = {
+									has_job_title = yes
+									is_close_relative = ROOT
+									is_consort = ROOT
+									is_married = ROOT
+								}
+							}
+						save_event_target_as = immortal_horse_victim
+						death = { death_reason = death_execution_horses killer = event_target:immortal_rival }	
+					}
+				}
+			}
+		}
+	}	
+	
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_highlander 
+		}
+		text = RIP.30301.d.highlander
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_evildude 
+		}
+		text = RIP.30301.d.evildude
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_goodguy 
+		}
+		text = RIP.30301.d.goodguy
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_shieldmaiden 
+		}
+		text = RIP.30301.d.shieldmaiden
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_horse 
+			any_courtier = {
+				culture = horse
+			}
+		}
+		text = RIP.30301.d.horse
+	}
+	desc = {
+		trigger = { 
+			has_character_flag = immortal_rival_horse 
+			NOT = {
+				any_courtier = {
+					culture = horse
+				}
+			}
+		}
+		text = RIP.30301.d.horse2
+	}
+
+	is_triggered_only = yes	
+
+	option = { #fight. berserker and craven get the same option with custom text
+		name = placeholdername_31 #RIP.30301.fight
+		trigger = {
+			health = 2
+			NOR = {
+				is_incapable = yes
+				trait = severely_injured
+				trait = infirm
+				trait = craven
+				trait = berserker
+			}
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 5 }
+			}
+			custom_tooltip = { text = holmgang_chances_great } #Tooltip reuse FTW
+			hidden_tooltip = {
+				random_list = {
+					84 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					10 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					1 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 3 }
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 5 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_very_good }
+			hidden_tooltip = {
+				random_list = {
+					70 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					15 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					10 = {
+						long_character_event = { id = RIP.30304 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 1 }
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 3 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_good }
+			hidden_tooltip = {
+				random_list = {
+					60 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					20 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					15 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 1 }
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 1 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_even }
+			hidden_tooltip = {
+				random_list = {
+					20 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					20 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					20 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					40 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 1 }
+				}
+				NOT = {
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 3 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_poor }
+			hidden_tooltip = {
+				random_list = {
+					5 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					15 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					20 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					60 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 3 }
+				}
+				NOT = {
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 5 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_very_poor }
+			hidden_tooltip = {
+				random_list = {
+					1 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					4 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					15 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					80 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 5 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_terrible }
+			hidden_tooltip = {
+				random_list = {					
+					1 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					9 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					90 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		
+	}
+	option = { #fight. berserker
+		name = placeholdername_33 #RIP.30301.berserkfight
+		trigger = {
+			health = 2
+			trait = berserker
+			NOR = {
+				is_incapable = yes
+				trait = severely_injured
+				trait = infirm
+				trait = craven
+			}
+		}
+		tooltip_info = berserker
+		custom_tooltip = { text = placeholdername_5 }
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 5 }
+			}
+			custom_tooltip = { text = holmgang_chances_great } #Tooltip reuse FTW
+			hidden_tooltip = {
+				random_list = {
+					84 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					10 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					1 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 3 }
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 5 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_very_good }
+			hidden_tooltip = {
+				random_list = {
+					70 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					15 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					10 = {
+						long_character_event = { id = RIP.30304 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 1 }
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 3 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_good }
+			hidden_tooltip = {
+				random_list = {
+					60 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					20 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					15 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 1 }
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 1 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_even }
+			hidden_tooltip = {
+				random_list = {
+					20 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					20 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					20 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					40 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 1 }
+				}
+				NOT = {
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 3 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_poor }
+			hidden_tooltip = {
+				random_list = {
+					5 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					15 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					20 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					60 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 3 }
+				}
+				NOT = {
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 5 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_very_poor }
+			hidden_tooltip = {
+				random_list = {
+					1 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					4 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					15 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					80 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 5 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_terrible }
+			hidden_tooltip = {
+				random_list = {					
+					1 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					9 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					90 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		
+	}
+	option = { #fight. craven.
+		name = placeholdername_31 #RIP.30301.fight
+		trigger = {
+			health = 2
+			trait = craven
+			NOR = {
+				is_incapable = yes
+				trait = severely_injured
+				trait = infirm
+				trait = berserker
+			}
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 5 }
+			}
+			custom_tooltip = { text = holmgang_chances_great } #Tooltip reuse FTW
+			hidden_tooltip = {
+				random_list = {
+					84 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					10 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					1 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 3 }
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 5 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_very_good }
+			hidden_tooltip = {
+				random_list = {
+					70 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					15 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					10 = {
+						long_character_event = { id = RIP.30304 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				combat_rating_diff = { who = event_target:immortal_rival value = 1 }
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 3 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_good }
+			hidden_tooltip = {
+				random_list = {
+					60 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					20 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					15 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					5 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				NOT = {
+					combat_rating_diff = { who = event_target:immortal_rival value = 1 }
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 1 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_even }
+			hidden_tooltip = {
+				random_list = {
+					20 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					20 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					20 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					40 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 1 }
+				}
+				NOT = {
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 3 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_poor }
+			hidden_tooltip = {
+				random_list = {
+					5 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					15 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					20 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					60 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 3 }
+				}
+				NOT = {
+					event_target:immortal_rival = {
+						combat_rating_diff = { who = ROOT value = 5 }
+					}
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_very_poor }
+			hidden_tooltip = {
+				random_list = {
+					1 = {
+						long_character_event = { id = RIP.30302 days = 0 }
+					}
+					4 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					15 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					80 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				event_target:immortal_rival = {
+					combat_rating_diff = { who = ROOT value = 5 }
+				}
+			}
+			custom_tooltip = { text = holmgang_chances_terrible }
+			hidden_tooltip = {
+				random_list = {					
+					1 = {
+						long_character_event = { id = RIP.30303 days = 0 }
+					}
+					9 = {
+						long_character_event = { id =  RIP.30304 days = 0 }
+					}
+					90 = {
+						long_character_event = { id =  RIP.30305 days = 0 }
+					}
+				}
+			}
+			break = yes
+		}
+		
+	}
+	option = { #die
+		name = placeholdername_32 #RIP.30301.die
+		custom_tooltip = { text =  placeholdername_35 } #RIP.30301.die.tooltip
+			death = { death_reason = death_duel killer = event_target:immortal_rival }
+	}
+	option = { #persuade 
+		trigger = {
+			is_incapable = no
+			diplomacy = 18
+			OR = {
+				NOT = {
+					calc_true_if = {
+						amount = 2
+						intrigue = 18
+						stewardship = 18
+						learning = 18
+					}
+				}
+				OR = {
+					has_education_diplomacy_trigger = yes
+					has_lifestyle_diplomacy_trigger = yes
+				}
+			}
+		}
+		tooltip_info = diplomacy
+		name = placeholdername_18 #RIP.30301.persuade
+		character_event = { id = RIP.30309 days = 0 }
+	}
+	option = { #trick
+		trigger = {
+			is_incapable = no
+			intrigue = 18
+			OR = {
+				NOT = {
+					calc_true_if = {
+						amount = 2
+						diplomacy = 18
+						stewardship = 18
+						learning = 18
+					}
+				}
+				OR = {
+					has_education_intrigue_trigger = yes
+					has_lifestyle_intrigue_trigger = yes
+				}			
+			}
+		}
+		tooltip_info = intrigue
+		name = placeholdername_10 #RIP.30301.trick
+		character_event = { id = RIP.30310 days = 0 }
+	}
+	option = { #money power
+		trigger = {
+			is_incapable = no
+			stewardship = 18
+			OR = {
+				NOT = {
+					calc_true_if = {
+						amount = 2
+						diplomacy = 18
+						intrigue = 18
+						learning = 18
+					}
+				}
+				OR = {
+					has_education_stewardship_trigger = yes
+					has_lifestyle_stewardship_trigger = yes
+				}			
+			}
+		}
+		tooltip_info = stewardship
+		name = EVTOPTBLoR.410 #Guards!
+		character_event = { id = RIP.30311 days = 0 }
+	}
+	option = { #debate
+		trigger = {
+			is_incapable = no
+			learning = 18
+			OR = {
+				NOT = {
+					calc_true_if = {
+						amount = 2
+						diplomacy = 18
+						intrigue = 18
+						stewardship = 18
+					}
+				}
+				OR = {
+					has_education_learning_trigger = yes
+					has_lifestyle_learning_trigger = yes
+					is_learned_trigger = yes
+				}			
+			}
+		}
+		tooltip_info = learning
+		name = placeholdername_22 #RIP.30301.debate
+		character_event = { id = RIP.30312 days = 0 }
+	}
+}
+
+long_character_event = { # win - no wound
+	id = RIP.30302
+	desc = RIP.30302.d
+	border = GFX_event_long_frame_war
+	picture = GFX_evt_melee
+	
+	desc = {
+		trigger = { 
+			trait = berserker 
+		}
+		text = placeholdername_3 #RIP.30302.d.berserker
+		
+	}
+	desc = {
+		trigger = { 
+			trait = craven 
+		}
+		text = placeholdername_7 #RIP.30302.d.craven
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		trigger = {
+			NOR = {
+				trait = berserker
+				trait = craven
+			}
+		}
+		name = RIP.30302.a
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+	}
+	option = {
+		trigger = {			
+			trait = craven
+		}
+		name = placeholdername_8
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		custom_tooltip = { text = placeholdername_34 }
+	}
+	option = {
+		trigger = {
+			trait = berserker
+		}
+		name = placeholdername_4
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		custom_tooltip = { text = placeholdername_34 }
+	}
+}
+
+long_character_event = { # win - wound
+	id = RIP.30303
+	desc = RIP.30303.d
+	border = GFX_event_long_frame_war
+	picture = GFX_evt_melee
+	
+	desc = {
+		trigger = { 
+			trait = berserker 
+		}
+		text = placeholdername_3 #RIP.30302.d.berserker
+	}
+	desc = {
+		trigger = { 
+			trait = craven 
+		}
+		text = placeholdername_7 #RIP.30302.d.craven
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		trigger = {
+			NOR = {
+				trait = berserker
+				trait = craven
+			}
+		}
+		name = RIP.30303.a
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		add_trait_wounded_effect = yes
+	}
+	option = {
+		trigger = {
+			trait = craven
+		}
+		name = placeholdername_9
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		add_trait_wounded_effect = yes
+		custom_tooltip = { text = placeholdername_34 }
+	}
+	option = {
+		trigger = {
+			trait = berserker
+		}
+		name = placeholdername_6
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		add_trait_wounded_effect = yes
+		custom_tooltip = { text = placeholdername_34 }
+	}
+}
+
+long_character_event = { # win - maimed
+	id = RIP.30304
+	desc = RIP.30304.d
+	border = GFX_event_long_frame_war
+	picture = GFX_evt_melee
+	
+	desc = {
+		trigger = { 
+			trait = berserker 
+		}
+		text = placeholdername_3 #RIP.30302.d.berserker
+	}
+	desc = {
+		trigger = { 
+			trait = craven 
+		}
+		text = placeholdername_7 #RIP.30302.d.craven
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = RIP.30304.a
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		if = {
+			limit = {
+				can_be_maimed_trigger = yes
+			}
+				add_maimed_trait_effect = yes
+			break = yes
+		}
+		add_trait_wounded_effect = yes
+	}
+	option = {
+		trigger = {
+			trait = craven
+		}
+		name = placeholdername_9
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		if = {
+			limit = {
+				can_be_maimed_trigger = yes
+			}
+				add_maimed_trait_effect = yes
+			custom_tooltip = { text = placeholdername_34 }
+			break = yes
+		}
+		add_trait_wounded_effect = yes
+		custom_tooltip = { text = placeholdername_34 }
+	}
+	option = {
+		trigger = {
+			trait = berserker
+		}
+		name = placeholdername_6
+		event_target:immortal_rival = {
+			death = { death_reason = death_duel killer = ROOT }
+		}
+		if = {
+			limit = {
+				can_be_maimed_trigger = yes
+			}
+				add_maimed_trait_effect = yes
+			custom_tooltip = { text = placeholdername_34 }	
+			break = yes
+		}
+		add_trait_wounded_effect = yes
+		custom_tooltip = { text = placeholdername_34 }
+	}
+}
+
+long_character_event = { # loss - death
+	id = RIP.30305
+	desc = RIP.30305.d
+	border = GFX_event_long_frame_war
+	picture = GFX_evt_melee
+
+	is_triggered_only = yes
+
+	option = {
+		name = RIP.30305.a
+		long_character_event = { id = RIP.30306 days = 0 }
+	}
+}
+
+long_character_event = { # loss - death2
+	id = RIP.30306
+	desc = RIP.30306.d
+	border = GFX_event_long_frame_war
+	picture = GFX_evt_beheading
+
+	is_triggered_only = yes
+
+	option = {
+		name = RIP.30306.a
+		death = { death_reason = death_duel killer = event_target:immortal_rival }
+		hidden_effect = {
+			event_target:immortal_rival = { 
+				leave_court_and_die_effect = yes
+			}
+		}
+	}
+}
+
+character_event = { # loss - mercy
+	id = RIP.30307
+	desc = RIP.30307.d
+	border = GFX_event_normal_frame_war
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = RIP.30307.a
+		
+	}
+}
+
+character_event = { # flag clear
+	id = RIP.30308
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	option = {
+		clr_character_flag = immortal_rival_highlander
+		clr_character_flag = immortal_rival_evildude
+		clr_character_flag = immortal_rival_goodguy
+		clr_character_flag = immortal_rival_shieldmaiden
+		clr_character_flag = immortal_rival_horse		
+	}
+}
+
+character_event = { # 
+	id = RIP.30309
+	desc = placeholdername_19 #RIP.30309.d
+	border = GFX_event_normal_frame_diplomacy
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = placeholdername_20# RIP.30309.a
+		event_target:immortal_rival = { 
+			add_friend = ROOT
+		}
+	}
+	option = {
+		name = placeholdername_21# RIP.30309.b
+		trigger = {
+			NOT = { trait = honest }
+		}
+		event_target:immortal_rival = {
+			death = { death_reason = death_murder_butchered killer = ROOT }
+		}
+	}
+}
+
+character_event = { # trick
+	id = RIP.30310
+	desc = placeholdername_11# RIP.30310.d
+	border = GFX_event_normal_frame_intrigue 
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = placeholdername_12 #RIP.30310.a
+		event_target:immortal_rival = {
+			death = { death_reason = death_execution_crushing killer = ROOT }
+		}
+	}
+	option = {
+		trigger = {
+			stewardship = 14
+		}
+		name = placeholdername_13 #RIP.30310.b	
+		tooltip_info = stewardship
+		capital_scope = {
+			add_province_modifier = {
+				name = trapped_immortal
+				duration = -1
+			}			
+		}
+	}
+}
+
+character_event = { # the power of money
+	id = RIP.30311
+	desc = placeholdername_14# RIP.30311.d
+	border = GFX_event_normal_frame_economy
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = placeholdername_15 #RIP.30311.a #prison
+		event_target:immortal_rival = {
+			imprison = ROOT
+		}
+	}
+	option = {
+		trigger = {
+			OR = {
+				trait = lunatic
+				trait = possessed  
+				trait = hunter
+			}
+		}
+		name = placeholdername_17 #RIP.30311.e #platypus 
+		tooltip_info = hunter
+		custom_tooltip = { text = immortal_hunter_tooltip }
+		event_target:immortal_rival = {
+			death = { death_reason = death_platypus killer = ROOT }
+		}
+	}
+	option = {
+		trigger = {
+			NOT = {
+				trait = kind
+			}
+		}
+		name = placeholdername_16 #RIP.30311.b	#burn
+		event_target:immortal_rival = {
+			death = { death_reason = death_execution_burning killer = ROOT }
+		}
+	}
+	option = {
+		trigger = {
+			stewardship = 14
+		}
+		name = placeholdername_13 #RIP.30310.c	#work
+		tooltip_info = stewardship
+		capital_scope = {
+			add_province_modifier = {
+				name = trapped_immortal
+				duration = -1
+			}			
+		}
+	}
+}
+
+character_event = { # debate
+	id = RIP.30312
+	desc = placeholdername_23 #RIP.30312.d
+	border = GFX_event_normal_frame_religion
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = placeholdername_24 #RIP.30312.a #new
+		character_event = { id = RIP.30313 days = 0 }
+	}
+	
+	option = {
+		name = placeholdername_25 #RIP.30312.b #refuse
+		character_event = { id = RIP.30313 days = 0 }
+	}
+}
+
+character_event = { # debate2
+	id = RIP.30313
+	desc = placeholdername_26 #RIP.30313.d
+	border = GFX_event_normal_frame_religion
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = placeholdername_27 #RIP.30313.a #argue on
+		character_event = { id = RIP.30314 days = 0 }
+	}
+	
+	option = {
+		name = placeholdername_27 #RIP.30313.b #kill
+		event_target:immortal_rival = {
+			death = { death_reason = death_accident killer = ROOT }
+		}
+	}
+}
+
+character_event = { # debate3
+	id = RIP.30314
+	desc = placeholdername_29 #RIP.30314.d
+	border = GFX_event_normal_frame_religion
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = placeholdername_30 #RIP.30314.a
+		event_target:immortal_rival = {
+			death = { death_reason = death_missing killer = ROOT }
+		}
+	}
+
+}
+
+character_event = { # immortal suspicions 
+	id = RIP.30315
+	desc = placeholdername_43 #RIP.30315.d
+	border = GFX_event_normal_frame_intrigue 
+	picture = GFX_evt_suspicious_noble
+	
+	immediate = {
+		most_popular_vassal = {
+			limit = {
+				ai = yes
+				immortal = no
+				NOT = { opinion = { who = ROOT value = 50 } }
+				intrigue = 12 
+			}
+			save_event_target_as = immortal_suspector
+		}
+	}
+
+	is_triggered_only = yes
+	
+	trigger = {
+		NOT = { has_character_flag = immortal_crisis }
+		immortal = yes
+		age = 70
+	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		modifier = {
+			factor = 2
+			age = 100
+		}
+		modifier = {
+			factor = 2
+			age = 150
+		}
+		
+		modifier = {
+			factor = 2
+			age = 200
+		}
+		
+		modifier = {
+			factor = 2
+			age = 200
+		}		
+
+	}
+
+	option = {
+		name = EVTOPTA_CM_6000 #Sweet text reuse
+		set_character_flag = immortal_crisis
+		event_target:immortal_suspector = {
+			opinion = { modifier = immortal_suspicions who = ROOT years = 100 } 
+		}
+	}
+	
+}
+
+character_event = { # clean up immortal crisis 
+	id = RIP.30316
+	hide_window = yes
+
+	is_triggered_only = yes
+	
+	trigger = {
+		immortal = yes
+		has_character_flag = immortal_crisis
+		NOR = {
+			any_vassal = {
+				has_opinion_modifier = { who = ROOT  modifier = immortal_hate }
+			}
+			any_vassal = {
+				has_opinion_modifier = { who = ROOT  modifier = immortal_suspicions }
+			}
+		}
+	}
+
+	option = {
+		name = RIP.30316.a
+		clr_character_flag = immortal_crisis
+		clr_character_flag = immortal_crisis_confirmed
+	}
+	
+}
+
+character_event = { # suspicions spread 
+	id = RIP.30317
+	hide_window = yes
+
+	is_triggered_only = yes
+	
+	immediate = {
+		random_vassal = {
+			limit = {
+				ai = yes
+				immortal = no
+				NOR = { 
+					opinion = { who = ROOT value = 50 }
+					has_opinion_modifier = { who = ROOT modifier = immortal_suspicions }
+				}
+			}
+			save_event_target_as = immortal_suspector
+		}
+	}
+	
+	trigger = {
+		NOT = { has_character_flag = immortal_crisis_confirmed}
+		any_vassal = {
+			ai = yes
+			immortal = no
+			NOR = { 
+				opinion = { who = ROOT value = 50 }
+				has_opinion_modifier = { who = ROOT modifier = immortal_suspicions }
+			}
+		}
+	}
+
+	option = {
+		name = RIP.30302.a
+		event_target:immortal_suspector = {
+			opinion = { modifier = immortal_suspicions who = ROOT years = 100 } 
+		}
+	}	
+}
+
+character_event = { # suspicions are confirmed
+	id = RIP.30318
+	desc = placeholdername_44 #RIP.30317.d
+	border = GFX_event_normal_frame_intrigue
+	picture = GFX_evt_suspicious_noble 
+
+	is_triggered_only = yes
+	
+	trigger = {
+		immortal = yes
+		age = 70
+		any_vassal = {
+			ai = yes
+			immortal = no
+			has_opinion_modifier = { who = ROOT modifier = immortal_suspicions }
+			intrigue = 16
+		}
+	}
+
+	option = {
+		name = RIP.30317.a
+		set_character_flag = immortal_crisis_confirmed
+		any_vassal = {
+			limit = {
+				has_opinion_modifier = { who = ROOT modifier = immortal_suspicions }
+			}
+			hidden_effect = { remove_opinion = { who = ROOT modifier = immortal_suspicions } }
+			opinion = { modifier = immortal_hate who = ROOT years = 100 } 
+		}
+		clr_character_flag = immortal_crisis
+		clr_character_flag = immortal_crisis_confirmed
+	}
+	
+}
+
+character_event = { # spare event
+	id = RIP.30400
+	desc = RIP.30302.d
+	border = GFX_event_normal_frame_war
+	picture = GFX_evt_suspicious_noble #TODO better pic
+
+	is_triggered_only = yes
+
+	option = {
+		name = RIP.30302.a
+		
+	}
+	
 }

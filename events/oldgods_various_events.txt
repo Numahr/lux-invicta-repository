@@ -26,6 +26,10 @@ character_event = {
 		is_alive = yes
 		NOT = { trait = berserker }
 		OR = {
+			NOT = { age = 50 }
+			immortal = yes
+		}
+		OR = {
 			trait = wroth
 			trait = aggressive_leader
 		}
@@ -819,6 +823,7 @@ character_event = {
 	
 	trigger = {
 		trait = berserker
+		immortal = no
 	}
 	
 	option = {
@@ -3367,7 +3372,13 @@ character_event = {
 		}
 		is_pregnant = yes
 		spouse = {
-			ai = no
+			OR = {
+				ai = no
+				has_game_rule = {
+					name = supernatural_events
+					value = unrestricted
+				}
+			}
 			any_courtier = { 
 				has_minor_title = title_volva 
 			}
@@ -4424,6 +4435,7 @@ character_event = {
 			trait = viking
 			trait = ravager
 			trait = seaking
+			trait = sea_queen
 		}
 		nm_trigger = yes
 	}
@@ -4459,6 +4471,7 @@ character_event = {
 		NOR = { 
 			trait = ravager
 			trait = seaking
+			trait = sea_queen
 		}
 		nm_trigger = yes
 		check_variable = { which = viking_raids value = 50 }
@@ -4490,8 +4503,9 @@ character_event = {
 	
 	trigger = {
 		trait = ravager
-		NOT = { 
+		NOR = { 
 			trait = seaking
+			trait = sea_queen
 		}
 		nm_trigger = yes
 		check_variable = { which = viking_raids value = 100 }
@@ -4500,7 +4514,14 @@ character_event = {
 	option = {
 		name = TOG.3322.a
 		remove_trait = ravager
-		add_trait = seaking
+		if = {
+			limit = {
+				is_female = no
+			}
+			add_trait = seaking
+			break = yes
+		}
+		add_trait = sea_queen
 	}
 }
 
@@ -4600,6 +4621,12 @@ character_event = {
 			80 = { }
 			10 = { impregnate = FROM }
 			10 = { add_lover = FROM }
+		}
+		hidden_tooltip = {
+			random = {
+				chance = 50
+				venereal_disease_effect = yes
+			}
 		}
 	}
 	option = {

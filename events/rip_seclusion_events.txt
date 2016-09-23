@@ -268,6 +268,13 @@ character_event = {
 			any_vassal = {
 				character_event = { id = RIP.12001 days = 7 random = 7 }
 			}
+			if = { #Notify employer that councillor is going into seclusion
+				limit = { 
+					is_councillor = yes 
+					liege = { ai = no }
+				}
+				liege = { letter_event = { id = RIP.12101 days = 1 } }
+			}
 		}
 	}
 }
@@ -366,7 +373,7 @@ character_event = {
 		}		
 		name = RIP.11551.c #gotta eat while you still can
 		change_variable = { which = remaining_food value = -2 }
-		#give everyone modifier with  health penalty?
+		#give everyone modifier with health penalty
 		add_character_modifier = {
 			name = greedy_food_shortage
 				duration = -1
@@ -649,7 +656,10 @@ character_event = {
 
 			modifier = {
 				factor = 0
-				NOT = { has_character_modifier = cannibal }
+				NOR = { 
+					has_character_modifier = cannibal 
+					trait = cannibal_trait
+				}
 			}
 			
 			modifier = {
@@ -671,14 +681,12 @@ character_event = {
 		change_variable = { which = remaining_food value = 1 }
 		if = {
 			limit = {
-				NOT = {
-					has_character_modifier = cannibal
+				NOR = { 
+					has_character_modifier = cannibal 
+					trait = cannibal_trait
 				}
 			}
-			add_character_modifier = {
-				name = cannibal
-				duration = -1
-			}
+			add_trait = cannibal_trait
 		}
 	}
 }
@@ -736,14 +744,12 @@ character_event = {
 		change_variable = { which = remaining_food value = 1 }
 		if = {
 			limit = {
-				NOT = {
+				NOR = {
 					has_character_modifier = cannibal
+					trait = cannibal_trait
 				}
 			}
-			add_character_modifier = {
-				name = cannibal
-				duration = -1
-			}
+			add_trait = cannibal_trait
 		}
 	}
 	option = {
@@ -752,6 +758,7 @@ character_event = {
 				trait = gluttonous 
 				trait = hedonist
 				has_character_modifier = cannibal
+				trait = cannibal_trait
 			}
 		}
 		name = RIP.11555.b
@@ -790,9 +797,18 @@ character_event = {
 	option = {
 		name = RIP.11556.a
 		set_character_flag = seclusion_starving
-		remove_character_modifier = tiny_food_shortage
-		remove_character_modifier = minor_food_shortage
-		remove_character_modifier = normal_food_shortage
+		if = {
+			limit = { has_character_modifier = tiny_food_shortage }
+			remove_character_modifier = tiny_food_shortage 
+		}
+		if = {
+			limit = { has_character_modifier = minor_food_shortage }
+			remove_character_modifier = minor_food_shortage 
+		}
+		if = {
+			limit = { has_character_modifier = normal_food_shortage }
+			remove_character_modifier = normal_food_shortage 
+		}
 		add_character_modifier = {
 			name = starving_food_shortage
 				duration = -1
@@ -834,11 +850,36 @@ character_event = {
 
 	option = {
 		name = OK
-		remove_character_modifier = tiny_food_shortage
-		remove_character_modifier = minor_food_shortage
-		remove_character_modifier = normal_food_shortage
-		remove_character_modifier = starving_food_shortage
-		remove_character_modifier = greedy_food_shortage
+		if = {
+			limit = {
+				has_character_modifier = tiny_food_shortage
+			}
+			remove_character_modifier = tiny_food_shortage
+		}
+		if = {
+			limit = {
+				has_character_modifier = minor_food_shortage
+			}
+			remove_character_modifier = minor_food_shortage
+		}
+		if = {
+			limit = {
+				has_character_modifier = normal_food_shortage
+			}
+			remove_character_modifier = normal_food_shortage
+		}
+		if = {
+			limit = {
+				has_character_modifier = starving_food_shortage
+			}
+			remove_character_modifier = starving_food_shortage
+		}
+		if = {
+			limit = {
+				has_character_modifier = greedy_food_shortage
+			}
+			remove_character_modifier = greedy_food_shortage
+		}
 		clr_character_flag = seclusion_food_shortage
 		clr_character_flag = seclusion_starving
 	}
@@ -982,7 +1023,11 @@ character_event = {
 		if = {
 			limit = {
 				event_target:sick_courtier = {
-					has_character_flag = got_bubonic_plague
+					OR = {
+						has_character_flag = got_bubonic_plague
+						has_character_flag = manifest_bubonic_plague
+						trait = has_bubonic_plague
+					}
 				}
 				ai = no
 			}
@@ -1565,6 +1610,8 @@ character_event = {
 				character_event = { id = RIP.11557 days = 40 random = 20} #clears starvation modifiers
 			}
 		}
+		if = { limit = { has_character_modifier = secluded_revelry } remove_character_modifier = secluded_revelry }
+		if = { limit = { has_character_modifier = savoring_the_end_days } remove_character_modifier = savoring_the_end_days }
 		add_character_modifier = {
 			name = recently_opened_gates
 			duration = 365
@@ -2702,7 +2749,7 @@ character_event = {
 	hide_from = no
 
 	trigger = {
-		has_character_flag = in_seclusion
+		has_character_modifier = in_seclusion
 	}
 
 	#Hear them out
@@ -2827,7 +2874,7 @@ character_event = {
 		
 		if = { 
 			limit = {
-				has_character_flag = in_seclusion
+				has_character_modifier = in_seclusion
 			}		
 			FROM = {
 				add_character_modifier = {
@@ -3078,7 +3125,7 @@ character_event = {
 			}
 		}
 		add_lover = event_target:captured_sneaker
-		hidden_tooltip = { clr_character_flag = did_not_trust_steward }
+		hidden_tooltip = { clr_character_flag = did_not_trust_steward clr_character_flag = seclusion_events_on }
 	}
 
 	#I don't think so, I'm sorry
@@ -3092,7 +3139,7 @@ character_event = {
 			}
 		}
 		add_friend = event_target:captured_sneaker
-		hidden_tooltip = { clr_character_flag = did_not_trust_steward }
+		hidden_tooltip = { clr_character_flag = did_not_trust_steward clr_character_flag = seclusion_events_on }
 	}
 
 	#Back off!
@@ -3106,7 +3153,7 @@ character_event = {
 				months = 36
 			}
 		}
-		hidden_tooltip = { clr_character_flag = did_not_trust_steward }
+		hidden_tooltip = { clr_character_flag = did_not_trust_steward clr_character_flag = seclusion_events_on }
 	}
 }
 
@@ -3152,7 +3199,7 @@ character_event = {
 				prisoner = yes
 			}
 		}
-		hidden_tooltip = { clr_character_flag = did_not_trust_steward }
+		hidden_tooltip = { clr_character_flag = did_not_trust_steward clr_character_flag = seclusion_events_on }
 	}
 }
 
@@ -3193,6 +3240,7 @@ character_event = {
 				}
 			}
 			clr_character_flag = did_not_trust_steward
+			clr_character_flag = seclusion_events_on
 		}
 
 		if = {
@@ -3212,6 +3260,7 @@ character_event = {
 		hidden_tooltip = {
 			add_maimed_trait_effect = yes
 			clr_character_flag = did_not_trust_steward
+			clr_character_flag = seclusion_events_on
 		}
 		trigger = {
 			event_target:captured_sneaker = {
@@ -3249,6 +3298,7 @@ character_event = {
 				death_reason = death_duel
 			}
 		}
+		clr_character_flag = seclusion_events_on
 	}
 }
 
@@ -3274,6 +3324,7 @@ character_event = {
 			prisoner = yes
 		}
 		hidden_tooltip = { add_maimed_trait_effect = yes }
+		clr_character_flag = seclusion_events_on
 	}
 }
 
@@ -3305,6 +3356,1784 @@ character_event = {
 				remove_character_modifier = in_seclusion
 				leave_court_effect = yes
 			}
+		}
+	}
+}
+### The Masque of the Red Death chain
+narrative_event = {
+	id = RIP.12070
+	title = RIP_12070_TITLE
+	picture = GFX_evt_bring_out_your_dead
+	border = GFX_event_narrative_frame_religion
+	
+	only_rulers = yes
+
+	immediate = { 
+		set_character_flag = seclusion_events_on
+	}
+
+	desc = { 
+		text = EVTDESC_RIP_12070_A # PIOUS - will prio over benevolent_trigger
+		trigger = {
+			is_pious_trigger = yes
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12070_B # BENEVOLENT - will prio over impious_trigger
+		trigger = {
+			is_benevolent_trigger = yes
+			is_pious_trigger = no
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12070_C # EVIL - will prio over impious
+		trigger = {	is_evil_trigger = yes }
+	}
+	desc = {
+		text = EVTDESC_RIP_12070_D # IMPIOUS - will be rare?
+		trigger = {
+			is_impious_trigger = yes
+			is_evil_trigger = no
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12070_E # Fallback (neutral)
+		trigger = {
+			is_pious_trigger = no
+			is_benevolent_trigger = no
+			is_impious_trigger = no
+			is_evil_trigger = no
+		}
+	}
+
+	immediate = {
+		random_courtier = {
+				limit = {
+					is_adult = yes
+					prisoner = no
+					is_incapable = no
+					has_vice_trigger = yes
+					has_character_modifier = in_seclusion
+				}
+				save_event_target_as = bored_courtier_target
+			}
+		random_courtier = {
+			limit = {
+				is_close_relative = yes
+				is_adult = yes
+				prisoner = no
+				is_incapable = no
+				is_pious_trigger = no
+				has_character_modifier = in_seclusion
+			}
+			save_event_target_as = bored_courtier_target
+		}
+		event_target:bored_courtier_target = {
+			add_character_modifier = {
+				name = bright_eyed
+				duration = -1
+			}
+		}
+		ROOT = {
+			save_event_target_as = secluded_party_host
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12070 # They're right, we should enjoy ourselves
+		custom_tooltip = { text = EVTOPTA_RIP_12070_TT }
+		set_character_flag = masque_of_red_death
+		scaled_wealth = -1
+	
+		if = {
+			limit = {
+				trait = lustful
+				NOT = { trait = greedy }
+			}
+			random = {
+				chance = 30
+				add_trait_greedy_effect = yes
+				remove_trait_charitable_effect = yes
+			}
+		}
+		if = {
+			limit = { NOT = { trait = lustful } }
+			random = {
+				chance = 30
+				add_trait_lustful_effect = yes
+				remove_trait_chaste_effect = yes
+			}
+		}
+		add_character_modifier = {
+			name = savoring_the_end_days
+			duration = -1
+		}
+		event_target:bored_courtier_target = {
+			opinion = {
+				modifier = opinion_took_my_advice
+				who = ROOT
+			}
+		}
+		hidden_tooltip = { character_event = { id = RIP.12071 days = 30 random = 10 } }
+	}
+	
+	option = { # don't go overboard with the arrangements
+		name = EVTOPTB_RIP_12070
+		custom_tooltip = { text = EVTOPTB_RIP_12070_TT }
+		set_character_flag = masque_of_red_death
+
+		add_character_modifier = {
+			name = savoring_the_end_days
+			duration = -1
+		}
+
+		event_target:bored_courtier_target = {
+			opinion = {
+				modifier = opinion_took_my_advice
+				who = ROOT
+			}
+		}
+		hidden_tooltip = { character_event = { id = RIP.12071 days = 30 random = 10 } }
+		trigger = {
+			NOT = {	trait = lunatic	}
+		}
+	}
+
+	option = { # lunatic option - yes
+		name = EVTOPTE_RIP_12070
+		custom_tooltip = { text = EVTOPTE_RIP_12070_TT }
+		set_character_flag = masque_of_red_death
+
+		add_character_modifier = {
+			name = savoring_the_end_days
+			duration = -1
+		}
+
+		event_target:bored_courtier_target = {
+			opinion = {
+				modifier = opinion_took_my_advice
+				who = ROOT
+			}
+		}
+		hidden_tooltip = { character_event = { id = RIP.12071 days = 30 random = 10 } }
+
+		trigger = {
+			trait = lunatic
+		}
+	}
+	
+	option = { # lunatic option - no
+		name = EVTOPTF_RIP_12070
+		custom_tooltip = { text = EVTOPTF_RIP_12070_TT }
+
+		trigger = {
+			trait = lunatic
+		}
+	}
+		
+	option = {
+		name = EVTOPTC_RIP_12070 # I refuse to have fun while other suffer
+		custom_tooltip = { text = EVTOPTC_RIP_12070_TT }
+		trigger = {
+			OR = {
+				is_benevolent_trigger = yes
+				is_pious_trigger = yes
+			}
+			NOT = {	trait = lunatic	}
+			NOT = {	trait = depressed }
+		}
+	}
+
+	# Opt out - I am boring
+	option = {
+		name = EVTOPTD_RIP_12070
+		custom_tooltip = { text = EVTOPTD_RIP_12070_TT }
+		trigger = {
+			OR = {
+				AND = {
+					is_benevolent_trigger = no
+					is_pious_trigger = no
+				}
+				trait = depressed
+			}
+			NOT = {	trait = lunatic	}
+		}
+	}
+}
+
+# This festive air makes me almost forget about the horror outside
+character_event = {
+	id = RIP.12071
+	picture = GFX_evt_castle_construction
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+		OR = {
+			event_target:bored_courtier_target = { is_alive = yes }
+			any_courtier = {
+				is_adult = yes
+				prisoner = no
+				is_incapable = no
+				has_vice_trigger = yes
+				has_character_modifier = in_seclusion
+			}
+			any_courtier = {
+				is_close_relative = yes
+				is_adult = yes
+				prisoner = no
+				is_incapable = no
+				is_pious_trigger = no
+				has_character_modifier = in_seclusion
+			}
+		}
+	}
+
+	desc = {
+		text = EVTDESC_RIP_12071_A # we've spruced up the castle
+		trigger = { NOT = { trait = lunatic } }	
+	}
+	desc = {
+		text = EVTDESC_RIP_12071_B # we've spruced up the castle - lunatic version
+		trigger = { trait = lunatic }
+	}
+
+	immediate = {
+		if = {
+			limit = { event_target:bored_courtier_target = { is_alive = no } } # fetch new event_target if old one is dead (preferably a relative)
+			random_courtier = {
+				limit = {
+					is_adult = yes
+					prisoner = no
+					is_incapable = no
+					has_vice_trigger = yes
+					has_character_modifier = in_seclusion
+				}
+				save_event_target_as = bored_courtier_target
+			}
+			random_courtier = {
+				limit = {
+					is_close_relative = yes
+					is_adult = yes
+					prisoner = no
+					is_incapable = no
+					is_pious_trigger = no
+					has_character_modifier = in_seclusion
+				}
+				save_event_target_as = bored_courtier_target
+			}
+			event_target:bored_courtier_target = {
+				add_character_modifier = {
+					name = bright_eyed
+					duration = -1
+				}
+			}
+		}
+	}
+	
+	is_triggered_only = yes
+
+	option = { # Can you do something about the lights?
+		name = EVTOPTA_RIP_12071
+		custom_tooltip = { text = EVTOPTA_RIP_12071_TT }
+
+		scaled_wealth = -1
+		hidden_tooltip = { character_event = { id = RIP.12072 days = 30 random = 15 } }
+
+		if = {
+			limit = { NOT = { trait = charitable } }
+			random = {
+				chance = 30
+				add_trait_charitable_effect = yes
+			}
+		}
+		if = { limit = { has_character_modifier = savoring_the_end_days }
+			remove_character_modifier = savoring_the_end_days
+		}
+		add_character_modifier = {
+			name = secluded_revelry
+			duration = -1
+		}
+		event_target:bored_courtier_target = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_budding_friendship
+			}
+		}
+		hidden_effect = {
+			opinion = {
+				who = event_target:bored_courtier_target
+				modifier = opinion_budding_friendship
+			}
+		}
+	}
+	
+	option = {
+		name = EVTOPTB_RIP_12071 # you've made life in seclusion bearable!
+		custom_tooltip = { text = EVTOPTB_RIP_12071_TT }
+
+		event_target:bored_courtier_target = {
+			opinion = {
+				who = ROOT
+				modifier = opinion_budding_friendship
+			}
+		}
+		hidden_effect = {
+			opinion = {
+				who = event_target:bored_courtier_target
+				modifier = opinion_budding_friendship
+			}
+		}
+
+		hidden_tooltip = { character_event = { id = RIP.12072 days = 30 random = 15 } }
+	}
+	
+	# Perhaps enough is enough - CHAIN END.
+	option = {
+		name = EVTOPTC_RIP_12071
+		custom_tooltip = { text = EVTOPTC_RIP_12071_TT }
+		clr_character_flag = masque_of_red_death
+	}
+}
+
+# Hidden event - strangers among us
+character_event = {
+	id = RIP.12072
+	picture = GFX_evt_castle_construction
+	desc = EVTDESC_RIP_12072
+	border = GFX_event_normal_frame_religion
+	
+	hide_window = yes
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+	
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12072 #
+		random_list = {
+			10 = {
+				create_character = {
+					female = no
+					age = 21
+					random_traits = no
+					attributes = {
+						intrigue = 15
+						martial = 10
+						diplomacy = 9
+					}
+					dynasty = none
+					trait = elusive_shadow
+					trait = arbitrary
+					trait = patient
+					religion = ROOT
+					culture = ROOT
+					race = ROOT
+					health = 7
+				}
+				new_character = {
+					will_not_marry_effect = yes
+					add_character_modifier = {
+						name = in_seclusion
+						duration = -1
+					}
+					add_character_modifier = {
+						name = attending_masquerade
+						duration = -1
+					}
+					set_character_flag = immune_bubonic_plague
+					save_event_target_as = partying_stranger
+				}
+			}
+			10 = {
+				create_character = {
+					female = yes
+					age = 21
+					random_traits = no
+					attributes = {
+						intrigue = 15
+						martial = 10
+						diplomacy = 9
+					}
+					dynasty = none
+					trait = elusive_shadow
+					trait = arbitrary
+					trait = patient
+					religion = ROOT
+					culture = ROOT
+					race = ROOT
+					health = 7
+				}
+				new_character = {
+					will_not_marry_effect = yes
+					add_character_modifier = {
+						name = in_seclusion
+						duration = -1
+					}
+					add_character_modifier = {
+						name = attending_masquerade
+						duration = -1
+					}
+					set_character_flag = immune_bubonic_plague
+					save_event_target_as = partying_stranger
+				}
+			}
+		}
+		event_target:secluded_party_host = { character_event = { id = RIP.12074 } }
+	}
+}
+
+# Our castle is magnificent and guests are happy - wait, who's that?
+character_event = {
+	id = RIP.12074
+	picture = GFX_evt_suspicious_noble
+	border = GFX_event_normal_frame_religion
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	hide_new = yes
+	hide_from = yes
+
+	desc = {
+		text = EVTDESC_RIP_12074_A
+		trigger = {
+			has_character_modifier = in_seclusion
+			NOT = { trait = lunatic }
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12074_B # if you left seclusion
+		picture = GFX_evt_prospering_province
+		trigger = {
+			NOT = { has_character_modifier = in_seclusion }
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12074_C # lunatic
+		trigger = {
+			has_character_modifier = in_seclusion
+			trait = lunatic
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12074 # who is that?
+		custom_tooltip = { text = EVTOPTA_RIP_12074_TT }
+		
+		event_target:partying_stranger = {
+			set_character_flag = marking_flag #to make char show up in option
+		}
+		
+		hidden_tooltip = { character_event = { id = RIP.12075 days = 15 } }
+
+		trigger = {
+			has_character_modifier = in_seclusion
+		}
+	}
+	
+	option = { # isn't there something off about them?
+		name = EVTOPTB_RIP_12074
+		custom_tooltip = { text = EVTOPTB_RIP_12074_TT }
+
+		event_target:partying_stranger = {
+			set_character_flag = marking_flag #to make char show up in option
+		}
+
+		if = {
+			limit = { NOT = { trait = cynical } }
+			random = {
+				chance = 50
+				add_trait_cynical_effect = yes
+				remove_trait_zealous_effect = yes
+			}
+		}
+
+		hidden_tooltip = { character_event = { id = RIP.12075 days = 15 } }
+
+		trigger = {
+			has_character_modifier = in_seclusion
+		}
+	}
+	
+	# It was fun while it lasted. But who's that? -  if you have left seclusion
+	option = {
+		name = EVTOPTC_RIP_12074
+		hidden_tooltip = { character_event = { id = RIP.12076 days = 15 } }
+
+		event_target:partying_stranger = {
+			set_character_flag = marking_flag #to make char show up in option
+		}
+		
+		trigger = {
+			NOT = { has_character_modifier = in_seclusion }
+		}
+	}
+}
+
+# You approach the stranger
+character_event = {
+	id = RIP.12075
+	picture = GFX_evt_suspicious_noble
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	desc = {
+		text = EVTDESC_RIP_12075_A # regular desc
+		trigger = { NOT = { trait = lunatic } }
+	}
+	desc = {
+		text = EVTDESC_RIP_12075_B # lunatic desc
+		trigger = { trait = lunatic }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12075 # be polite about it
+		custom_tooltip = { text = EVTOPTA_RIP_12075_TT }
+		event_target:partying_stranger = {
+			set_character_flag = optA
+			hidden_tooltip = { character_event = { id = RIP.12082 days = 10 random = 5 } }
+		}
+		trigger = { NOT = { trait = lunatic } }
+	}
+	
+	option = { # demand to know who they are
+		name = EVTOPTB_RIP_12075
+		custom_tooltip = { text = EVTOPTB_RIP_12075_TT }
+		event_target:partying_stranger = {
+			set_character_flag = optB
+			hidden_tooltip = { character_event = { id = RIP.12082  days = 10 random = 5 } }
+		}
+		trigger = { NOT = { trait = lunatic } }
+	}
+	
+	# special option - IMMORTAL - see through them!
+	option = {
+		name = EVTOPTC_RIP_12075
+		custom_tooltip = { text = EVTOPTC_RIP_12075_TT }
+		tooltip_info = immortal
+		event_target:partying_stranger = {
+			set_character_flag = optC
+			hidden_tooltip = { character_event = { id = RIP.12082 days = 10 random = 5 } }
+		}
+		trigger = {
+			trait = immortal
+		}
+	}
+	# special option - INTRIGUE - see through them!
+	option = {
+		name = EVTOPTD_RIP_12075
+		custom_tooltip = { text = EVTOPTD_RIP_12075_TT }
+		tooltip_info = intrigue
+		event_target:partying_stranger = {
+			set_character_flag = optC
+			hidden_tooltip = { character_event = { id = RIP.12082 days = 10 random = 5 } }
+		}
+		trigger = {
+			intrigue = 15
+			NOT = { trait = immortal }
+			NOT = { trait = lunatic }
+		}
+	}
+	# special option - LUNATIC
+	option = {
+		name = EVTOPTE_RIP_12075
+		custom_tooltip = { text = EVTOPTE_RIP_12075_TT }
+		event_target:partying_stranger = {
+			set_character_flag = optC
+			hidden_tooltip = { character_event = { id = RIP.12082 days = 10 random = 5 } }
+		}
+		set_character_flag = picked_lunatic_opt
+		trigger = {
+			trait = lunatic
+		}
+	}
+}
+
+# Ping event for setting the frame in the right corner
+character_event = {
+	id = RIP.12082
+	picture = GFX_evt_castle_construction
+	desc = EVTDESC_RIP_12082 #
+	border = GFX_event_normal_frame_religion
+
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12082 # 
+		if = {
+			limit = { has_character_flag = optA }
+			event_target:secluded_party_host = {
+				character_event = { id = RIP.12077 }
+			}
+		}
+		if = {
+			limit = { has_character_flag = optB }
+			event_target:secluded_party_host = {
+				character_event = { id = RIP.12078 }
+			}
+		}
+		if = {
+			limit = { has_character_flag = optC }
+			event_target:secluded_party_host = {
+				character_event = { id = RIP.12079 }
+			}
+		}
+		clr_character_flag = optA
+		clr_character_flag = optB
+		clr_character_flag = optC
+	}
+}
+
+# The stranger disappears
+character_event = {
+	id = RIP.12076
+	picture = GFX_evt_prospering_province
+	desc = EVTDESC_RIP_12076
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	hide_from = yes
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTA_RIP_12076 # just as well?
+		custom_tooltip = { text = EVTOPTA_RIP_12076_TT }
+
+		add_character_modifier = {
+			name = lucky_to_be_alive
+			duration = 365
+		}
+
+		trigger = {
+			has_character_modifier = in_seclusion
+		}
+	}
+}
+
+# You were polite about it
+character_event = {
+	id = RIP.12077
+	picture = GFX_evt_suspicious_noble
+	desc = EVTDESC_RIP_12077
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12077 # wth
+
+		random_list = {
+			10 = {
+				modifier = {
+					factor = 1.1
+					trait = quick
+				}
+				modifier = {
+					factor = 1.1
+					trait = genius
+				}
+				modifier = {
+					factor = 1.1
+					has_education_martial_trigger = yes
+				}
+				modifier = {
+					factor = 1.1
+					has_lifestyle_martial_trigger = yes
+				}
+
+				modifier = {
+				factor = 1.1
+				combat_rating = 1
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 1.1
+					martial = 11
+				}
+				modifier = {
+					factor = 1.1
+					martial = 12
+				}
+				modifier = {
+					factor = 1.1
+					martial = 14
+				}
+				modifier = {
+					factor = 1.1
+					martial = 16
+				}
+				modifier = {
+					factor = 1.1
+					martial = 18
+				}
+				modifier = {
+					factor = 1.1
+					martial = 20
+				}
+				set_character_flag = good_outcome_A
+				character_event = { id = RIP.12081 }
+				custom_tooltip = { text = RIP_12077_TT_good_outcome }
+			}
+			20 = {
+				modifier = {
+					factor = 1.5
+					trait = one_handed
+				}
+				modifier = {
+					factor = 1.5
+					has_mental_disorder_trigger = yes
+				}
+				modifier = {
+					factor = 2
+					trait = blinded
+				}
+				modifier = {
+					factor = 2
+					has_severe_disability_trigger = yes
+				}
+				set_character_flag = bad_outcome_A
+				character_event = { id = RIP.12080 }
+				custom_tooltip = { text = RIP_12077_TT_bad_outcome }
+			}
+		}
+	}
+}
+
+# You were demanding
+character_event = {
+	id = RIP.12078
+	picture = GFX_evt_shadowy_cabal
+	desc = EVTDESC_RIP_12078
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12078 # wth
+		random_list = {
+			10 = {
+				modifier = {
+					factor = 1.1
+					trait = quick
+				}
+				modifier = {
+					factor = 1.1
+					trait = genius
+				}
+				modifier = {
+					factor = 1.1
+					has_education_martial_trigger = yes
+				}
+				modifier = {
+					factor = 1.1
+					has_lifestyle_martial_trigger = yes
+				}
+
+				modifier = {
+					factor = 1.1
+				combat_rating = 1
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 1.1
+					martial = 11
+				}
+				modifier = {
+					factor = 1.1
+					martial = 12
+				}
+				modifier = {
+					factor = 1.1
+					martial = 14
+				}
+				modifier = {
+					factor = 1.1
+					martial = 16
+				}
+				modifier = {
+					factor = 1.1
+					martial = 18
+				}
+				modifier = {
+					factor = 1.1
+					martial = 20
+				}
+				custom_tooltip = { text = RIP_12077_TT_good_outcome }
+				set_character_flag = good_outcome_B
+				character_event = { id = RIP.12081 }
+			}
+			20 = {
+				modifier = {
+					factor = 1.5
+					trait = one_handed
+				}
+				modifier = {
+					factor = 1.5
+					has_mental_disorder_trigger = yes
+				}
+				modifier = {
+					factor = 2
+					trait = blinded
+				}
+				modifier = {
+					factor = 2
+					has_severe_disability_trigger = yes
+				}
+				custom_tooltip = { text = RIP_12077_TT_bad_outcome }
+				set_character_flag = bad_outcome_B
+				character_event = { id = RIP.12080 }
+			}
+		}
+	}
+}
+
+# Special skill/trait outcome
+character_event = {
+	id = RIP.12079
+	picture = GFX_evt_suspicious_noble
+	border = GFX_event_normal_frame_religion
+	
+	only_rulers = yes
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	desc = {
+		text = EVTDESC_RIP_12079_A
+		trigger = {
+			trait = immortal
+			NOT = { has_character_flag = picked_lunatic_opt }
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12079_B
+		trigger = {
+			intrigue = 15
+			NOT = { trait = immortal }
+			NOT = { has_character_flag = picked_lunatic_opt }
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12079_C
+		trigger = {
+			has_character_flag = picked_lunatic_opt
+		}
+	}
+
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12079 # That's not good
+		random_list = {
+			10 = {
+				modifier = {
+					factor = 1.1
+					trait = quick
+				}
+				modifier = {
+					factor = 1.1
+					trait = genius
+				}
+				modifier = {
+					factor = 1.1
+					has_education_martial_trigger = yes
+				}
+				modifier = {
+					factor = 1.1
+					has_lifestyle_martial_trigger = yes
+				}
+
+				modifier = {
+					factor = 1.1
+				combat_rating = 1
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 2
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 3
+				}
+				modifier = {
+					factor = 1.1
+					combat_rating = 4
+				}
+				modifier = {
+					factor = 1.1
+					martial = 11
+				}
+				modifier = {
+					factor = 1.1
+					martial = 12
+				}
+				modifier = {
+					factor = 1.1
+					martial = 14
+				}
+				modifier = {
+					factor = 1.1
+					martial = 16
+				}
+				modifier = {
+					factor = 1.1
+					martial = 18
+				}
+				modifier = {
+					factor = 1.1
+					martial = 20
+				}
+				custom_tooltip = { text = RIP_12077_TT_good_outcome }
+				set_character_flag = good_outcome_C
+				character_event = { id = RIP.12081 }
+			}
+			10 = {
+				modifier = {
+					factor = 1.5
+					trait = one_handed
+				}
+				modifier = {
+					factor = 1.5
+					has_mental_disorder_trigger = yes
+				}
+				modifier = {
+					factor = 2
+					trait = blinded
+				}
+				modifier = {
+					factor = 2
+					has_severe_disability_trigger = yes
+				}
+				custom_tooltip = { text = RIP_12077_TT_bad_outcome }
+				set_character_flag = bad_outcome_C
+				character_event = { id = RIP.12080 }
+			}
+		}
+		trigger = {
+			trait = immortal
+			NOT = { has_character_flag = picked_lunatic_opt }
+		}
+	}
+
+	option = {
+		name = EVTOPTB_RIP_12079 # That's not good
+		custom_tooltip = { text = EVTOPTB_RIP_12079_TT }
+		random_list = {
+			10 = {
+				modifier = {
+					factor = 1.1
+					trait = quick
+				}
+				modifier = {
+					factor = 1.1
+					trait = genius
+				}
+				modifier = {
+					factor = 1.1
+					has_lifestyle_intrigue_trigger = yes
+				}
+
+				modifier = {
+					factor = 1.1
+					has_education_intrigue_trigger = yes
+				}
+				
+				modifier = {
+					factor = 1.1
+					intrigue = 11
+				}
+				modifier = {
+					factor = 1.1
+					intrigue = 12
+				}
+				modifier = {
+					factor = 1.1
+					intrigue = 14
+				}
+				modifier = {
+					factor = 1.1
+					intrigue = 16
+				}
+				modifier = {
+					factor = 1.1
+					intrigue = 18
+				}
+				modifier = {
+					factor = 1.1
+					intrigue = 20
+				}
+				custom_tooltip = { text = RIP_12077_TT_good_outcome }
+				set_character_flag = good_outcome_D
+				character_event = { id = RIP.12081 }
+			}
+			20 = {
+				modifier = {
+					factor = 1.5
+					trait = slow
+				}
+				modifier = {
+					factor = 1.5
+					has_mental_disorder_trigger = yes
+				}
+				modifier = {
+					factor = 2
+					trait = blinded
+				}
+				modifier = {
+					factor = 2
+					has_severe_disability_trigger = yes
+				}
+				custom_tooltip = { text = RIP_12077_TT_bad_outcome }
+				set_character_flag = bad_outcome_D
+				character_event = { id = RIP.12080 }
+			}
+		}
+		trigger = {
+			intrigue = 15
+			NOT = { trait = immortal }
+			NOT = { has_character_flag = picked_lunatic_opt }
+		}
+	}
+
+	option = {
+		name = EVTOPTC_RIP_12079 # lunatic - not good
+		custom_tooltip = { text = EVTOPTC_RIP_12079_TT }
+		random_list = {
+			10 = {
+				modifier = {
+					factor = 1.1
+					has_pleasant_trait_trigger = yes
+				}
+				modifier = {
+					factor = 1.1
+					trait = genius
+				}
+				modifier = {
+					factor = 1.1
+					has_lifestyle_diplomacy_trigger = yes
+				}
+
+				modifier = {
+					factor = 1.1
+					has_education_diplomacy_trigger = yes
+				}
+				
+				modifier = {
+					factor = 1.1
+					diplomacy = 11
+				}
+				modifier = {
+					factor = 1.1
+					diplomacy = 12
+				}
+				modifier = {
+					factor = 1.1
+					diplomacy = 14
+				}
+				modifier = {
+					factor = 1.1
+					diplomacy = 16
+				}
+				modifier = {
+					factor = 1.1
+					diplomacy = 18
+				}
+				modifier = {
+					factor = 1.1
+					diplomacy = 20
+				}
+				custom_tooltip = { text = RIP_12077_TT_good_outcome }
+				set_character_flag = good_outcome_E
+				character_event = { id = RIP.12081 }
+			}
+			20 = {
+				modifier = {
+					factor = 1.5
+					trait = shy
+				}
+				modifier = {
+					factor = 1.5
+					trait = imbecile
+				}
+				modifier = {
+					factor = 1.5
+					trait = slow
+				}
+				modifier = {
+					factor = 1.5
+					trait = dull
+				}
+				modifier = {
+					factor = 2
+					has_severe_disability_trigger = yes
+				}
+				custom_tooltip = { text = RIP_12077_TT_bad_outcome }
+				set_character_flag = bad_outcome_E
+				character_event = { id = RIP.12080 }
+			}
+		}
+		trigger = {
+			has_character_flag = picked_lunatic_opt
+		}
+	}
+}
+
+# All goes to shit
+narrative_event = {
+	id = RIP.12080
+	title = RIP_12080_TITLE
+	picture = GFX_evt_plague_spreading
+	border = GFX_event_narrative_frame_religion
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	desc = {
+		text = EVTDESC_RIP_12080_A #
+		trigger = {
+			has_character_flag = bad_outcome_A
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12080_B # 
+		trigger = {
+			has_character_flag = bad_outcome_B
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12080_C # 
+		trigger = {
+			has_character_flag = bad_outcome_C
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12080_D # 
+		trigger = {
+			has_character_flag = bad_outcome_D
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12080_E # 
+		trigger = {
+			has_character_flag = bad_outcome_E
+		}
+	}
+
+	immediate = {
+		hidden_tooltip = {
+			random_list = { # this list selects whether you die or become injured
+				80 = { #You die 
+					set_character_flag = dies_at_the_ball_flag
+				}
+				20 = {	#You are injured
+					set_character_flag = injured_at_the_ball_flag
+				}
+			}
+			
+			random_list = { # this list selects how many dynasty members/children dies  (1/2/3)
+				10 = { # selects 1 dynasty members/children
+					random_courtier = {
+						limit = {	
+							ROOT = {
+								any_child = {
+									NOT = { character = PREVPREV }
+									NOT = { has_character_flag = dies_at_the_ball_flag }
+								}
+							}	
+							dynasty = ROOT
+							is_primary_heir = no
+							has_character_modifier = in_seclusion
+							NOT = { has_character_flag = dies_at_the_ball_flag }
+							at_location = ROOT
+						}
+						set_character_flag = dies_at_the_ball_flag
+					}
+				}
+				10 = { # selects 2 dynasty members/children
+					random_courtier = {
+						limit = {	
+							ROOT = {
+								any_child = {
+									NOT = { character = PREVPREV }
+									NOT = { has_character_flag = dies_at_the_ball_flag }
+								}
+							}	
+							dynasty = ROOT
+							is_primary_heir = no
+							has_character_modifier = in_seclusion
+							NOT = { has_character_flag = dies_at_the_ball_flag }
+							at_location = ROOT
+						}
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = {
+						limit = {	
+							ROOT = {
+								any_child = {
+									NOT = { character = PREVPREV }
+									NOT = { has_character_flag = dies_at_the_ball_flag }
+								}
+							}	
+							dynasty = ROOT
+							is_primary_heir = no
+							has_character_modifier = in_seclusion
+							NOT = { has_character_flag = dies_at_the_ball_flag }
+							at_location = ROOT
+						}
+						set_character_flag = dies_at_the_ball_flag
+					}
+				}
+				10 = { # selects 3 dynasty members/children
+					random_courtier = {
+						limit = {	
+							ROOT = {
+								any_child = {
+									NOT = { character = PREVPREV }
+									NOT = { has_character_flag = dies_at_the_ball_flag }
+								}
+							}	
+							dynasty = ROOT
+							is_primary_heir = no
+							has_character_modifier = in_seclusion
+							NOT = { has_character_flag = dies_at_the_ball_flag }
+							at_location = ROOT
+						}
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = {
+						limit = {	
+							ROOT = {
+								any_child = {
+									NOT = { character = PREVPREV }
+									NOT = { has_character_flag = dies_at_the_ball_flag }
+								}
+							}	
+							dynasty = ROOT
+							is_primary_heir = no
+							has_character_modifier = in_seclusion
+							NOT = { has_character_flag = dies_at_the_ball_flag }
+							at_location = ROOT
+						}
+						set_character_flag = dies_at_the_ball_flag
+					}					
+					random_courtier = {
+						limit = {	
+							ROOT = {
+								any_child = {
+									NOT = { character = PREVPREV }
+									NOT = { has_character_flag = dies_at_the_ball_flag }
+								}
+							}	
+							dynasty = ROOT
+							is_primary_heir = no
+							has_character_modifier = in_seclusion
+							NOT = { has_character_flag = dies_at_the_ball_flag }
+							at_location = ROOT
+						}
+						set_character_flag = dies_at_the_ball_flag
+					}
+				}
+			}
+			
+			random_list = { #this list selects how many random courtiers die (2/4/6)
+				10 = { # Two random dies
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+				}
+				10 = {	# four random dies
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+				}
+				10 = {	# six random dies
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+					random_courtier = { #selects random non-related courtier
+						limit = { NOT = { dynasty = ROOT } is_alive = yes NOT = { has_character_flag = dies_at_the_ball_flag } NOT = { has_character_flag = marking_flag } }
+						set_character_flag = dies_at_the_ball_flag
+					}
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12080 # NOOOO
+		custom_tooltip = { text = EVTOPTA_RIP_12080_TT }
+		
+		if = { #you die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		if = { #you become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+		
+		any_courtier = { # courtiers die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		clr_character_flag = bad_outcome_A
+		trigger = {
+			has_character_flag = bad_outcome_A
+		}
+	}
+	option = {
+		name = EVTOPTB_RIP_12080 # NOOOO
+		custom_tooltip = { text = EVTOPTB_RIP_12080_TT }
+		if = { #you die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		if = { #you become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+		
+		any_courtier = { # courtiers die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		
+		any_courtier = { # courtiers become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		clr_character_flag = bad_outcome_B
+		trigger = {
+			has_character_flag = bad_outcome_B
+		}
+	}
+	option = {
+		name = EVTOPTC_RIP_12080 # NOOOO
+		custom_tooltip = { text = EVTOPTC_RIP_12080_TT }
+
+		if = { #you die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		if = { #you become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+		
+		any_courtier = { # courtiers die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		
+		any_courtier = { # courtiers become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		clr_character_flag = bad_outcome_C
+		trigger = {
+			has_character_flag = bad_outcome_C
+		}
+	}
+	option = {
+		name = EVTOPTD_RIP_12080 # NOOOO
+		custom_tooltip = { text = EVTOPTD_RIP_12080_TT }
+		
+		if = { #you die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		if = { #you become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+		
+		any_courtier = { # courtiers die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		
+		any_courtier = { # courtiers become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		clr_character_flag = bad_outcome_D
+		trigger = {
+			has_character_flag = bad_outcome_D
+		}
+	}
+	option = { #lunatic 
+		name = EVTOPTE_RIP_12080 # NOOOO
+		custom_tooltip = { text = EVTOPTE_RIP_12080_TT }
+		
+		if = { #you die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		if = { #you become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+		
+		any_courtier = { # courtiers die
+			limit = { has_character_flag = dies_at_the_ball_flag }
+			death = { death_reason = death_murder_unknown killer = event_target:partying_stranger }
+		}
+		
+		any_courtier = { # courtiers become injured
+			limit = { has_character_flag = injured_at_the_ball_flag }
+			add_maimed_trait_effect = yes
+		}
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+		
+		clr_character_flag = bad_outcome_D
+		clr_character_flag = picked_lunatic_opt
+		trigger = {
+			has_character_flag = bad_outcome_E
+		}
+	}
+}
+
+# All is well?
+narrative_event = {
+	id = RIP.12081
+	title = RIP_12081_TITLE
+	picture = GFX_evt_danse_macabre
+	border = GFX_event_narrative_frame_religion
+	
+	trigger = {
+		has_character_flag = masque_of_red_death
+	}
+
+	desc = {
+		text = EVTDESC_RIP_12081_A
+		trigger = {
+			has_character_flag = good_outcome_A
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12081_B # 
+		picture = GFX_evt_prospering_province
+		trigger = {
+			has_character_flag = good_outcome_B
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12081_C
+		trigger = {
+			has_character_flag = good_outcome_C
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12081_D
+		trigger = {
+			has_character_flag = good_outcome_D
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12081_E
+		trigger = {
+			has_character_flag = good_outcome_E
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA_RIP_12081 # yay
+		custom_tooltip = { text = EVTOPTA_RIP_12081_TT }
+
+		add_character_modifier = {
+			name = lucky_to_be_alive
+			duration = 1825
+		}
+
+		hidden_effect = { if = { limit = { has_nickname = no } give_nickname = nick_the_survivor } }
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		clr_character_flag = good_outcome_A
+		clr_character_flag = good_outcome_B
+
+		trigger = {
+			OR = {
+				has_character_flag = good_outcome_A
+				has_character_flag = good_outcome_B
+			}
+		}
+	}
+	option = {
+		name = EVTOPTC_RIP_12081 # yay
+		custom_tooltip = { text = EVTOPTC_RIP_12081_TT }
+		
+		add_character_modifier = {
+			name = seizing_the_day
+			duration = 1825
+		}
+
+		hidden_effect = { if = { limit = { has_nickname = no } give_nickname = nick_the_survivor } }
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		hidden_effect = { give_nickname = nick_the_survivor }
+
+		clr_character_flag = good_outcome_C
+
+		trigger = {
+			has_character_flag = good_outcome_C
+		}
+	}
+	option = {
+		name = EVTOPTD_RIP_12081 # yay
+		custom_tooltip = { text = EVTOPTD_RIP_12081_TT }
+
+		add_character_modifier = {
+			name = lucky_to_be_alive
+			duration = 1825
+		}
+		
+		hidden_effect = { if = { limit = { has_nickname = no } give_nickname = nick_the_survivor } }
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		clr_character_flag = good_outcome_D
+
+		trigger = {
+			has_character_flag = good_outcome_D
+		}
+	}
+	option = {
+		name = EVTOPTE_RIP_12081 # yay
+		custom_tooltip = { text = EVTOPTE_RIP_12081_TT }
+
+		add_character_modifier = {
+			name = lucky_to_be_alive
+			duration = 1825
+		}
+
+		hidden_effect = { if = { limit = { has_nickname = no } give_nickname = nick_the_lucky } }
+
+		hidden_tooltip = { # Death leaves court and becomes random person
+			event_target:partying_stranger = { 
+				leave_court_effect = yes
+				remove_character_modifier = attending_masquerade
+				remove_character_modifier = in_seclusion
+				remove_character_modifier = will_not_marry
+				remove_trait = cannot_marry
+				clr_character_flag = marking_flag
+				clr_character_flag = immune_bubonic_plague
+			}
+		}
+
+		clr_character_flag = good_outcome_E
+		clr_character_flag = picked_lunatic_opt
+
+		trigger = {
+			has_character_flag = good_outcome_E
 		}
 	}
 }
@@ -3541,7 +5370,7 @@ character_event = {
 				narrative_event = { id = RIP.11550 }
 			}
 			# Tunnel steward
-			10 = {
+			20 = {
 				modifier = {
 					factor = 0
 					NAND = {
@@ -3560,6 +5389,51 @@ character_event = {
 					}
 				}
 				character_event = { id = RIP.12050 }
+			}
+			10 = {
+				modifier = {
+					factor = 0
+					OR = {
+						has_game_rule = {
+							name = supernatural_events
+							value = off
+						}
+						ai = yes
+						war = yes
+						NOT = {
+							any_realm_province = {
+								disease = bubonic_plague
+							}
+						}
+						has_character_flag = masque_of_red_death
+						has_character_flag = seclusion_events_on
+						has_character_modifier = lucky_to_be_alive
+						has_character_modifier = seizing_the_day
+						has_character_modifier = savoring_the_end_days
+						has_character_modifier = secluded_revelry
+						prisoner = yes
+						is_adult = no
+						NOT = { current_heir = { dynasty = ROOT } }
+						NOR = {
+							any_courtier = {
+								is_adult = yes
+								is_incapable = no
+								has_vice_trigger = yes
+								prisoner = no
+								has_character_modifier = in_seclusion
+							}
+							any_courtier = {
+								is_close_relative = yes
+								is_adult = yes
+								prisoner = no
+								is_incapable = no
+								is_pious_trigger = no
+								has_character_modifier = in_seclusion
+							}
+						}
+					}
+				}
+				narrative_event = { id = RIP.12070 }
 			}
 			40 = { }
 		}
@@ -3605,5 +5479,45 @@ character_event = {
 		clr_character_flag = do_not_disturb
 		remove_character_modifier = in_seclusion
 		set_character_flag = DEBUG_RIP.12098 #TODO
+	}
+}
+
+#Liege notification for councillors going into seclusion
+letter_event = {
+	id = RIP.12101
+
+	is_triggered_only = yes
+
+	desc = {
+		trigger = { NOT = { reverse_opinion = { who = FROM value = 0 } } }
+		text = EVTDESC_RIP_12099_A
+	}
+	desc = {
+		trigger = { reverse_opinion = { who = FROM value = 0 } }	
+		text = EVTDESC_RIP_12099_B
+	}
+
+	option = {
+		name = {
+			trigger = { has_unpleasant_personality_trigger = yes }
+			text = EVTOPTA_RIP_12099_A
+		}
+		name = {
+			trigger = { has_unpleasant_personality_trigger = no }
+			text = EVTOPTA_RIP_12099_B
+		}
+	}
+}
+
+character_event = {
+	id = RIP.12100
+	picture = GFX_evt_council
+	desc = EVTDESC_RIP_12100
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTA2482
 	}
 }

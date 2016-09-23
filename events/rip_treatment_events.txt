@@ -40,6 +40,10 @@ character_event = {
 		name = EVTOPTA_RIP_11000
 		trigger = { NOT = { has_character_flag = pending_infection } }
 		remove_trait = severely_injured
+		if = {
+			limit = { NOT = { trait = scarred } }
+			add_trait = scarred
+		}
 	}
 
 	option = {
@@ -47,6 +51,10 @@ character_event = {
 		trigger = { has_character_flag = pending_infection }
 		remove_trait = severely_injured
 		add_trait = infection
+		if = {
+			limit = { NOT = { trait = scarred } }
+			add_trait = scarred
+		}
 		hidden_tooltip = {
 			clr_character_flag = pending_infection
 			character_event = { id = RIP.11001 days = 365 random = 1095 }
@@ -1577,7 +1585,7 @@ character_event = {
 
 character_event = {
 	id = RIP.11035
-	picture = GFX_evt_recovery
+	picture = GFX_evt_court_physician
 	desc = EVTDESC_RIP_11035
 	border = GFX_event_normal_frame_religion
 
@@ -1601,9 +1609,30 @@ character_event = {
 			text = EVTOPTA_RIP_11035_TOOLTIP # Explain experimental treatment 
 		}
 		
+		trigger = {
+			is_adult = yes
+			OR = {
+				FROM = { learning = 18 }
+				FROM = { physician_good_trigger = yes }
+			}
+			NOR = { 
+				trait = craven 
+				trait = brave 
+			}
+		}
+
 		ai_chance = {
-			factor = 25
+			factor = 15
 			
+			modifier = {
+				factor = 0
+				health = 2.5
+			}
+			modifier = {
+				factor = 0
+				trait = food_poisoning
+				health = 1.5
+			}
 			modifier = {
 				factor = 10
 				is_unimportant_trigger = yes
@@ -1616,22 +1645,12 @@ character_event = {
 			}
 			
 			modifier = {
-				factor = 2
-				is_strong_trigger = yes
-			}
-			
-			modifier = {
-				factor = 2
+				factor = 1.5
 				trait = wroth
 			}
 			
 			modifier = {
-				factor = 2
-				trait = proud
-			}
-			
-			modifier = {
-				factor = 2
+				factor = 1.5
 				trait = arbitrary
 			}
 			
@@ -1656,18 +1675,6 @@ character_event = {
 			}
 		}
 		
-		trigger = {
-			is_adult = yes
-			OR = {
-				FROM = { learning = 18 }
-				FROM = { physician_good_trigger = yes }
-			}
-			NOR = { 
-				trait = craven 
-				trait = brave 
-			}
-		}
-
 		hidden_tooltip = {
 			random_list = {
 				#Good  experimental treatment
@@ -1872,6 +1879,11 @@ character_event = {
 
 	# experimental treatment when BRAVE
 	option = {
+		trigger = {
+			trait = brave
+			is_adult = yes
+		}
+		
 		name = EVTOPTF_RIP_11035
 		custom_tooltip = {
 			text = EVTOPTF_RIP_11035_TOOLTIP #explain experimental treatment when BRAVE
@@ -1879,7 +1891,7 @@ character_event = {
 		tooltip_info = brave
 		
 		ai_chance = {
-			factor = 75
+			factor = 50
 			
 			modifier = {
 				factor = 10
@@ -1893,18 +1905,17 @@ character_event = {
 			}
 			
 			modifier = {
-				factor = 2
-				is_strong_trigger = yes
+				factor = 0
+				health = 2.5
 			}
-			
 			modifier = {
-				factor = 2
+				factor = 0
+				trait = food_poisoning
+				health = 1.5
+			}
+			modifier = {
+				factor = 1.5
 				trait = wroth
-			}
-			
-			modifier = {
-				factor = 2
-				trait = proud
 			}
 			
 			modifier = {
@@ -1933,11 +1944,6 @@ character_event = {
 			}
 		}
 		
-		trigger = {
-			trait = brave
-			is_adult = yes
-		}
-
 		hidden_tooltip = {
 			random_list = {
 				#Good "normal" experimental treatment
@@ -3067,8 +3073,17 @@ character_event = {
 			if = { limit = { trait = has_tuberculosis } remove_trait = has_tuberculosis set_character_flag = immune_tuberculosis }
 			if = { limit = { trait = has_typhoid_fever } remove_trait = has_typhoid_fever set_character_flag = immune_typhoid_fever}
 			if = { limit = { trait = has_typhus } remove_trait = has_typhus set_character_flag = immune_typhus}
-			if = { limit = { trait = has_bubonic_plague ai = yes } remove_trait = has_bubonic_plague set_character_flag = immune_bubonic_plague}
-			if = { limit = { trait = has_bubonic_plague ai = no } remove_trait = has_bubonic_plague set_character_flag = immune_bubonic_plague set_character_flag = achievement_i_got_better}
+			if = {
+				limit = { trait = has_bubonic_plague }
+				remove_trait = has_bubonic_plague
+				set_character_flag = immune_bubonic_plague
+				if = {
+					limit = {
+						ai = no
+					}
+					set_character_flag = achievement_i_got_better
+				}
+			}
 			if = { limit = { trait = has_measles } remove_trait = has_measles set_character_flag = immune_measles}
 			if = { limit = { trait = has_small_pox } remove_trait = has_small_pox set_character_flag = immune_smallpox }
 			if = { limit = { trait = has_aztec_disease } remove_trait = has_aztec_disease set_character_flag = immune_aztec_disease }
@@ -3894,7 +3909,18 @@ character_event = {
 				if = { limit = { trait = has_tuberculosis } remove_trait = has_tuberculosis set_character_flag = immune_tuberculosis }
 				if = { limit = { trait = has_typhoid_fever } remove_trait = has_typhoid_fever set_character_flag = immune_typhoid_fever}
 				if = { limit = { trait = has_typhus } remove_trait = has_typhus set_character_flag = immune_typhus}
-				if = { limit = { trait = has_bubonic_plague } remove_trait = has_bubonic_plague set_character_flag = immune_bubonic_plague}
+				if = {
+					limit = { trait = has_bubonic_plague }
+					remove_trait = has_bubonic_plague
+					set_character_flag = immune_bubonic_plague
+					if = {
+						limit = {
+							ai = no
+						}
+						set_character_flag = achievement_i_got_better
+					}
+				}
+				if = { limit = { trait = has_bubonic_plague ai = no } remove_trait = has_bubonic_plague set_character_flag = immune_bubonic_plague }
 				if = { limit = { trait = has_measles } remove_trait = has_measles set_character_flag = immune_measles}
 				if = { limit = { trait = has_small_pox } remove_trait = has_small_pox set_character_flag = immune_smallpox }
 				if = { limit = { trait = has_aztec_disease } remove_trait = has_aztec_disease set_character_flag = immune_aztec_disease }
@@ -7484,6 +7510,16 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
+
+	trigger = { NOT = { has_character_modifier = relative_treatment_reaction_timer } }
+
+	immediate = { 
+		add_character_modifier = { 
+			modifier = relative_treatment_reaction_timer 
+			days = 30
+			hidden = yes 
+		}
+	}
 	
 	# throw them in prison
 	option = {
@@ -7583,6 +7619,16 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
+
+	trigger = { NOT = { has_character_modifier = relative_treatment_reaction_timer } }
+
+	immediate = { 
+		add_character_modifier = { 
+			modifier = relative_treatment_reaction_timer 
+			days = 30
+			hidden = yes 
+		}
+	}
 	
 	#Praise them to the court
 	option = {
@@ -7735,11 +7781,10 @@ character_event = {
 
 	option = {
 		name = EXCELLENT
-		tooltip = {
-			FROMFROMFROM = {
-				add_trait = physician
-			}
-		}
+		FROMFROMFROM = { 
+			save_event_target_as = physician_portrait
+			#add_trait = physician
+		}		
 	}
 }
 

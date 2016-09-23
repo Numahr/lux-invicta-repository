@@ -36,7 +36,7 @@ character_event = {
 			limit = { NOT = { has_character_modifier = known_murderer } }
 			add_character_modifier = {
 				name = known_murderer
-				duration = -1
+				duration = 50
 			}
 		}
 		
@@ -449,10 +449,21 @@ character_event = {
 					limit = { is_female = no }
 					
 					any_spouse = {
-						opinion = {
-							who = PREV
-							modifier = opinion_unfaithful_husband
-							months = 120
+						if = {
+							limit = { gender_equality_trigger = no }
+							reverse_opinion = {
+								who = PREV
+								modifier = opinion_unfaithful_husband
+								years = 10
+							}
+						}
+						if = {
+							limit = { gender_equality_trigger = yes }
+							reverse_opinion = {
+								who = PREV
+								modifier = opinion_unfaithful_husband_crime
+								years = 10
+							}
 						}
 						opinion = {
 							who = PREVPREV
@@ -3052,7 +3063,6 @@ diploresponse_event = {
 	is_triggered_only = yes
 	major = no
 	is_hostile = yes
-	sound = declare_war
 
 	trigger = {
 		ai = no
@@ -3083,7 +3093,6 @@ diploresponse_event = {
 	is_triggered_only = yes
 	major = no
 	is_hostile = yes
-	sound = declare_war
 
 	trigger = {
 		ai = no

@@ -34,11 +34,23 @@ character_event = {
 #		NOT = { culture = khitan }
 		OR = {
 			father = {
-				ai = no
+				OR = {
+					ai = no
+					has_game_rule = {
+						name = supernatural_events
+						value = unrestricted
+					}
+				}
 				NOT = { num_of_children = 2 }
 			}
 			mother = {
-				ai = no
+				OR = {
+					ai = no
+					has_game_rule = {
+						name = supernatural_events
+						value = unrestricted
+					}
+				}
 				NOT = { num_of_children = 2 }
 			}
 		}
@@ -72,10 +84,16 @@ narrative_event = {
 	is_triggered_only = yes
 	
 	only_playable = yes
-	ai = no
 	capable_only = yes	
 	
 	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
 		FROM = { is_alive = yes }
 		NOT = { trait = sickly }
 	}
@@ -122,7 +140,6 @@ narrative_event = {
 
 	is_triggered_only = yes
 	
-	ai = no
 	capable_only = yes
 	only_playable = yes
 	has_dlc = "Horse Lords"
@@ -130,6 +147,13 @@ narrative_event = {
 	culture_group = altaic
 	
 	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
 		NOR = {
 			num_of_children = 1
 #			culture = khitan
@@ -202,6 +226,10 @@ narrative_event = {
 		}
 		OR = {
 			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
 			father = { ai = no }
 			mother = { ai = no }
 		}
@@ -292,6 +320,10 @@ narrative_event = {
 		age = 13
 		OR = {
 			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
 			father = { ai = no }
 			mother = { ai = no }
 		}
@@ -556,13 +588,19 @@ narrative_event = {
 
 	is_triggered_only = yes
 
-	ai = no
 	capable_only = yes
 	prisoner = no
 	min_age = 18
 	has_character_flag = wolf_blood_first_generation
 	
 	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
 		in_command = no
 		NOR = {
 			has_character_flag = do_not_disturb
@@ -903,7 +941,6 @@ narrative_event = {
 
 	is_triggered_only = yes
 
-	ai = no
 	only_playable = yes
 	capable_only = yes
 	prisoner = no
@@ -911,6 +948,13 @@ narrative_event = {
 	has_dlc = "Horse Lords"
 	
 	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
 		NOT = {
 			has_game_rule = {
 				name = supernatural_events
@@ -972,13 +1016,19 @@ character_event = {
 
 	is_triggered_only = yes
 
-	ai = no
 	only_playable = yes
 	capable_only = yes
 	prisoner = no
 	min_age = 18
 	
 	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
 		trait = possessed
 		has_character_modifier = lycanthropy
 		NOT = { has_character_flag = do_not_disturb }
@@ -1285,6 +1335,7 @@ character_event = {
 		}
 		NOR = {
 			has_character_modifier = cannibal
+			trait = cannibal_trait
 			has_character_flag = wolf_resisted_cannibalism
 		}
 	}
@@ -1298,7 +1349,10 @@ character_event = {
 		}
 		modifier = {
 			factor = 4
-			has_character_modifier = cannibal
+			OR = {
+				has_character_modifier = cannibal
+				trait = cannibal_trait
+			}
 		}
 		modifier = {
 			factor = 1.5
@@ -1346,9 +1400,14 @@ character_event = {
 				killer = ROOT
 			}
 		}
-		add_character_modifier = {
-			name = cannibal
-			duration = -1
+		if = {
+			limit = {
+				NOR = {
+					trait = cannibal_trait
+					has_character_modifier = cannibal
+				}
+			}
+			add_trait = cannibal_trait
 		}
 	}
 	option = {

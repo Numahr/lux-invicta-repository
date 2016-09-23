@@ -141,6 +141,10 @@ character_event = {
 		}
 	}
 
+	immediate = {
+		remove_character_modifier = pet_best_friends
+	}
+
 	option = { # Garden funeral
 		name = EVTOPTA_77802
 		custom_tooltip = { text = EVTOPTA_77802_TOOLTIP }
@@ -582,35 +586,62 @@ character_event = {
 	picture = GFX_evt_courtiers_talking
 
 	desc = {
-		trigger = { has_dlc = "Reapers" }
+		trigger = { 
+			has_dlc = "Reapers" 
+			FROM = { has_character_modifier = pet_cat }
+		}
 		text = EVTDSC_7852
 		picture = GFX_evt_cat
 	}
 	desc = {
-		trigger = { NOT = { has_dlc = "Reapers" } }
+		trigger = { 
+			NOT = { has_dlc = "Reapers" }
+			FROM = { has_character_modifier = pet_cat }
+		}
 		text = EVTDSC_7852
 		picture = GFX_evt_courtiers_talking
+	}
+	desc = {
+		trigger = { 
+			FROM = { has_character_modifier = pet_hunting_dog }
+		}
+		text = EVTDSC_7852_dog
+		picture = GFX_evt_hunting_scene
 	}
 	
 
 	is_triggered_only = yes
 
 	option = {
-		name = EVTOPTA_77852
-		custom_tooltip = { text = EVTOPTA_77852_TOOLTIP }
+		name = {
+			trigger = { FROM = { has_character_modifier = pet_cat } }
+			text = EVTOPTA_77852
+		}
+		name = {
+			trigger = { FROM = { has_character_modifier = pet_hunting_dog } }
+			text = EVTOPTA_77852_dog
+		}
+		if = {
+			limit = { FROM = { has_character_modifier = pet_cat } }
+			custom_tooltip = { text = EVTOPTA_77852_TOOLTIP }
+		}
+		if = {
+			limit = { FROM = { has_character_modifier = pet_hunting_dog } }
+			custom_tooltip = { text = EVTOPTA_77852_TOOLTIP_dog }
+		}
 
 		if = {
-			limit = { is_friend = event_target:new_cat_owner }
+			limit = { is_friend = FROM }
 			reverse_opinion = {
-				who = event_target:new_cat_owner 
+				who = FROM
 				modifier = opinion_grateful
 				years = 10
 			}
 		}
 
 		if = {
-			limit = { NOT = { is_friend = event_target:new_cat_owner } }
-			add_friend = event_target:new_cat_owner
+			limit = { NOT = { is_friend = FROM } }
+			add_friend = FROM
 		}
 	}
 }
@@ -618,14 +649,23 @@ character_event = {
 #Bad new owner
 character_event = {
 	id = 77853
-	desc = EVTDSC_7853
 	border = GFX_event_normal_frame_intrigue
 	picture = GFX_evt_quarrel
+
+	desc = {
+		trigger = { FROM = { has_character_modifier = pet_cat } }
+		text = EVTDSC_7853
+	}
+	desc = {
+		trigger = { FROM = { has_character_modifier = pet_hunting_dog } }
+		text = EVTDSC_7853_dog
+	}
 
 	is_triggered_only = yes
 
 	immediate = {
-		event_target:new_cat_owner = { remove_character_modifier = pet_cat }
+		FROM = { remove_character_modifier = pet_cat }
+		FROM = { remove_character_modifier = pet_hunting_dog }
 	}
 
 	option = {
@@ -634,16 +674,16 @@ character_event = {
 
 		hidden_tooltip = {
 			if = {
-				limit = { is_friend = event_target:new_cat_owner }
-				remove_friend = event_target:new_cat_owner
+				limit = { is_friend = FROM }
+				remove_friend = FROM
 			}
 			if = {
-				limit = { is_lover = event_target:new_cat_owner }
-				remove_lover = event_target:new_cat_owner
+				limit = { is_lover = FROM }
+				remove_lover = FROM
 			}
 		}
 
-		add_rival = event_target:new_cat_owner
+		add_rival = FROM
 	}
 }
 
@@ -954,6 +994,196 @@ character_event = {
 		if = {
 			limit = { trait = depressed }
 			remove_trait = depressed
+		}
+	}
+}
+#Cat & dog
+character_event = {
+	id = 77861
+	desc = EVTDESC_77861
+	picture = GFX_evt_burning_house
+	
+	is_triggered_only = yes
+
+	hide_from = yes
+
+	ai = no
+	only_playable = yes
+	prisoner = no
+	only_capable = yes
+
+	trigger = {
+		has_character_modifier = pet_cat
+		has_character_modifier = pet_hunting_dog
+		NOT = { has_character_modifier = pet_best_friends }
+	}
+
+	immediate = {
+		random_friend = {
+			limit = {
+				age = 8
+				prisoner = no
+				ai = yes
+				is_inaccessible_trigger = no
+				NOR = { 
+					trait = incapable 
+			 		trait = cruel 
+			 		has_character_modifier = pet_cat
+			 		has_character_modifier = pet_hunting_dog
+			 	}
+			}
+			save_event_target_as = animal_caretaker
+		}
+		if = {
+			limit = { NOT = { event_target:animal_caretaker = { always = yes } } } 
+			random_courtier = {
+				limit = {
+					age = 8
+					prisoner = no
+					ai = yes
+					is_inaccessible_trigger = no
+					NOR = { 
+						trait = incapable 
+				 		trait = cruel 
+				 		has_character_modifier = pet_cat
+				 		has_character_modifier = pet_hunting_dog
+				 	}
+				}
+				save_event_target_as = animal_caretaker
+			}
+		}
+	}
+
+	#They will figure it out
+	option = {
+		name = EVTOPTA_77861
+		custom_tooltip = { text = EVTOPTA_77861_TOOLTIP }
+
+		hidden_tooltip = { character_event = { id = 77862 days = 30 random = 30 } }
+	}
+
+	#Get rid of dog
+	option = {
+		trigger = { event_target:animal_caretaker = { always = yes } }
+		name = EVTOPTB_77861
+
+		remove_character_modifier = pet_hunting_dog
+
+		event_target:animal_caretaker = {
+			add_character_modifier = {
+				name = pet_hunting_dog
+				duration = -1
+			}
+			hidden_tooltip = { 
+				character_event = { id = WoL.5290 days = 2555 random = 1000 } # Dog dies
+				character_event = { id = 77855 days = 100 } 
+			}
+		}
+	}
+
+	#Get rid of cat
+	option = {
+		trigger = { event_target:animal_caretaker = { always = yes } }
+		name = EVTOPTC_77861
+
+		remove_character_modifier = pet_cat
+
+		event_target:animal_caretaker = {
+			add_character_modifier = {
+				name = pet_cat
+				duration = -1
+			}
+			hidden_tooltip = { 
+				character_event = { id = 77802 days = 2555 random = 1000 }  # Cat dies
+				character_event = { id = 77855 days = 100 } 
+			}
+		}
+	}
+}
+
+#Outcome of dog & cat "figuring it out"
+character_event = {
+	id = 77862
+	picture = GFX_evt_cat
+
+	hide_from = yes
+
+	desc = {
+		trigger = { NOT = { has_character_modifier = pet_hunting_dog } }
+		text = EVTDESC_77862_A
+	}
+	desc = {
+		trigger = { NOT = { has_character_modifier = pet_cat } }
+		text = EVTDESC_77862_B
+	}
+	desc = {
+		trigger = { 
+			has_character_modifier = pet_hunting_dog 
+			has_character_modifier = pet_cat
+		} 
+		text = EVTDESC_77862_C
+	}
+	
+	is_triggered_only = yes
+
+	immediate = {
+		random_list = {
+			25 = { remove_character_modifier = pet_hunting_dog }
+			25 = { remove_character_modifier = pet_cat }
+			50 = {  }
+		}
+	}
+
+	option = {
+		trigger = { NOT = { has_character_modifier = pet_hunting_dog } }
+		name = EVTOPTA_77862
+		tooltip = { remove_character_modifier = pet_hunting_dog }
+
+		random = {
+			chance = 75
+			add_trait_depressed_effect = yes
+		}
+	}
+
+	option = {
+		trigger = { NOT = { has_character_modifier = pet_hunting_dog } }
+		name = EVTOPTB_77862
+		custom_tooltip = { text = EVTOPTB_77862_TOOLTIP }
+
+		remove_character_modifier = pet_cat
+		tooltip = { remove_character_modifier = pet_hunting_dog }
+	}
+
+	option = {
+		trigger = { NOT = { has_character_modifier = pet_cat } }
+		name = EVTOPTC_77862
+		tooltip = { remove_character_modifier = pet_cat }
+
+		random = {
+			chance = 75
+			add_trait_depressed_effect = yes
+		}
+	}
+
+	option = {
+		trigger = { NOT = { has_character_modifier = pet_cat } }
+		name = EVTOPTD_77862
+		custom_tooltip = { text = EVTOPTD_77862_TOOLTIP }
+
+		remove_character_modifier = pet_hunting_dog
+		tooltip = { remove_character_modifier = pet_cat }
+	}
+
+	option = {
+		trigger = { 
+			has_character_modifier = pet_hunting_dog 
+			has_character_modifier = pet_cat
+		} 
+		name = EVTOPTE_77862
+
+		add_character_modifier = {
+			name = pet_best_friends 
+			duration = -1
 		}
 	}
 }
