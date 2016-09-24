@@ -2493,22 +2493,22 @@ character_event = {
 
 	trigger = {
 		has_minor_deity_trigger = yes
-		NOR = { #Checks that the character isn't reforming
+		NOR = { #Checks that the character isn't converting within group
 			AND = {
-				religion = slavic_pagan_reformed
-				FROM = { religion = slavic_pagan }
+				religion_group = slavic_group
+				FROM = { religion_group = ROOT }
 			}
 			AND = {
-				religion = west_african_pagan_reformed
-				FROM = { religion = west_african_pagan }
+				religion_group = serer_group
+				FROM = { religion_group = ROOT }
 			}
 			AND = {
-				religion = finnish_pagan_reformed
-				FROM = { religion = finnish_pagan }
+				religion_group = finnish_group
+				FROM = { religion_group = ROOT }
 			}
 			AND = {
-				religion = baltic_pagan_reformed
-				FROM = { religion = baltic_pagan }
+				religion_group = baltic_group
+				FROM = { religion_group = ROOT }
 			}
 		}
 	}
@@ -4426,41 +4426,41 @@ character_event = {
 		name = EVTOPTA_TOG_7520
 
 		#Changes depopulation/prosperity
-		if = {
-			limit = {
-				has_dlc = "Reapers"
-				capital_scope = { NOT = { has_province_modifier = prosperity_modifier_3 } }
-			}
+		capital_scope = {
 			if = {
-				limit = { has_province_modifier = depopulated_1 }
+				limit = {
+					has_dlc = "Reapers"
+					NOT = { has_province_modifier = prosperity_modifier_3 }
+				}
+				if = {
+					limit = { has_province_modifier = depopulated_1 }
 
-				remove_province_modifier = depopulated_1
-				break = yes
-			}	
-			if = {
-				limit = { has_province_modifier = depopulated_2 }
+					remove_province_modifier = depopulated_1
+					break = yes
+				}	
+				if = {
+					limit = { has_province_modifier = depopulated_2 }
 
-				remove_province_modifier = depopulated_2
-				add_province_modifier = { name = depopulated_1 duration = -1 }
-				break = yes
-			}
-			if = {
-				limit = { has_province_modifier = depopulated_3 }
+					remove_province_modifier = depopulated_2
+					add_province_modifier = { name = depopulated_1 duration = -1 }
+					break = yes
+				}
+				if = {
+					limit = { has_province_modifier = depopulated_3 }
 
-				remove_province_modifier = depopulated_3
-				add_province_modifier = { name = depopulated_2 duration = -1 }
-				break = yes
-			}
-			capital_scope = { increase_prosperity_effect = yes }
-		}
-		if = {
-			limit = {
-				OR = {
-					NOT = { has_dlc = "Reapers" }
-					capital_scope = { has_province_modifier = prosperity_modifier_3 }
+					remove_province_modifier = depopulated_3
+					add_province_modifier = { name = depopulated_2 duration = -1 }
+					break = yes
 				}
 			}
-			capital_scope = {
+			increase_prosperity_effect = yes
+			if = {
+				limit = {
+					OR = {
+						NOT = { has_dlc = "Reapers" }
+						has_province_modifier = prosperity_modifier_3
+					}
+				}
 				add_province_modifier = { 
 					name = blessed_lands 
 					years = 10
@@ -4635,19 +4635,15 @@ character_event = {
 
 	desc = {
 		trigger = { 
-			OR = {
-				religion = west_african_pagan
-				religion = west_african_pagan_reformed
-			}
+			religion_group = serer_group
 		}
 		text = EVTDESC_TOG_7526
 		picture = GFX_evt_sun_temple
 	}
 	desc = {
 		trigger = { 
-			NOR = {
-				religion = west_african_pagan
-				religion = west_african_pagan_reformed
+			NOT = {
+				religion_group = serer_group
 			}
 		}
 		text = EVTDESC_TOG_7526
@@ -4779,9 +4775,8 @@ character_event = {
 	desc = {
 		trigger = { 
 			has_character_flag = monument_for_ancestors 
-			NOR = {
-				religion = west_african_pagan
-				religion = west_african_pagan_reformed
+			NOT = {
+				religion_group = serer_group
 			}
 		}
 		text = EVTDESC_TOG_7527_ANCESTORS
@@ -4789,10 +4784,7 @@ character_event = {
 	desc = {
 		trigger = { 
 			has_character_flag = monument_for_ancestors 
-			OR = {
-				religion = west_african_pagan
-				religion = west_african_pagan_reformed
-			}
+			religion_group = serer_group
 		}
 		text = EVTDESC_TOG_7527_ANCESTORS
 		picture = GFX_evt_sun_temple
