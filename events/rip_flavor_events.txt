@@ -2088,7 +2088,7 @@ character_event = {
 			}
 			modifier = {
 				factor = 1.5
-				character_disease_trigger = yes
+				has_disease_trigger = yes
 			}
 			modifier = { 
 				factor = 0
@@ -9304,7 +9304,7 @@ letter_event = {
 		prestige = 100
 		
 		FROMFROM = {
-			 letter_event = { id = RIP.30041 days = 3 }
+			letter_event = { id = RIP.30041 days = 3 }
 		}
 	}
 	
@@ -13519,6 +13519,9 @@ character_event = { # immortal suspicions
 
 	is_triggered_only = yes
 	
+	only_playable = yes
+	only_capable = yes
+	
 	trigger = {
 		NOT = { has_character_flag = immortal_crisis }
 		immortal = yes
@@ -13565,6 +13568,9 @@ character_event = { # clean up immortal crisis
 
 	is_triggered_only = yes
 	
+	only_playable = yes
+	only_capable = yes
+	
 	trigger = {
 		immortal = yes
 		has_character_flag = immortal_crisis
@@ -13592,6 +13598,9 @@ character_event = { # suspicions spread
 
 	is_triggered_only = yes
 	
+	only_playable = yes
+	only_capable = yes
+	
 	immediate = {
 		random_vassal = {
 			limit = {
@@ -13600,6 +13609,8 @@ character_event = { # suspicions spread
 				NOR = { 
 					opinion = { who = ROOT value = 50 }
 					has_opinion_modifier = { who = ROOT modifier = immortal_suspicions }
+					has_opinion_modifier = { who = ROOT modifier = immortal_loyalty }
+					has_opinion_modifier = { who = ROOT modifier = immortal_hate }
 				}
 			}
 			save_event_target_as = immortal_suspector
@@ -13607,23 +13618,35 @@ character_event = { # suspicions spread
 	}
 	
 	trigger = {
-		NOT = { has_character_flag = immortal_crisis_confirmed}
+		has_character_flag = immortal_crisis
+		NOT = { has_character_flag = immortal_crisis_confirmed }
 		any_vassal = {
 			ai = yes
 			immortal = no
 			NOR = { 
 				opinion = { who = ROOT value = 50 }
 				has_opinion_modifier = { who = ROOT modifier = immortal_suspicions }
+				has_opinion_modifier = { who = ROOT modifier = immortal_loyalty }
+				has_opinion_modifier = { who = ROOT modifier = immortal_hate }
 			}
 		}
 	}
 
 	option = {
 #		name = RIP.30302.a
-		event_target:immortal_suspector = {
-			opinion = { modifier = immortal_suspicions who = ROOT years = 100 } 
+		random_list = {
+			90 = {
+				event_target:immortal_suspector = {
+					opinion = { modifier = immortal_suspicions who = ROOT years = 100 } 
+				}
+			}
+			10 = {
+				event_target:immortal_suspector = {
+					opinion = { modifier = immortal_loyalty who = ROOT years = 100 } 
+				}
+			}
 		}
-	}	
+	}
 }
 
 character_event = { # suspicions are confirmed
@@ -13634,9 +13657,13 @@ character_event = { # suspicions are confirmed
 
 	is_triggered_only = yes
 	
+	only_playable = yes
+	only_capable = yes
+	
 	trigger = {
 		immortal = yes
 		age = 70
+		has_character_flag = immortal_crisis
 		any_vassal = {
 			ai = yes
 			immortal = no
@@ -13644,15 +13671,39 @@ character_event = { # suspicions are confirmed
 			intrigue = 16
 		}
 	}
+	
+	weight_multiplier = {
+		days = 1
+		
+		modifier = {
+			factor = 2
+			age = 100
+		}
+		modifier = {
+			factor = 2
+			age = 150
+		}
+		
+		modifier = {
+			factor = 2
+			age = 200
+		}
+		
+		modifier = {
+			factor = 2
+			age = 300
+		}		
+
+	}
 
 	option = {
-		name = RIP.30317.a
+		name = CURSES
 		set_character_flag = immortal_crisis_confirmed
 		any_vassal = {
 			limit = {
 				has_opinion_modifier = { who = ROOT modifier = immortal_suspicions }
 			}
-			hidden_tooltip = { remove_opinion = { who = ROOT modifier = immortal_suspicions } }
+			hidden_effect = { remove_opinion = { who = ROOT modifier = immortal_suspicions } }
 			opinion = { modifier = immortal_hate who = ROOT years = 100 } 
 		}
 		clr_character_flag = immortal_crisis
