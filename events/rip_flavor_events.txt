@@ -1762,6 +1762,13 @@ character_event = {
 		tooltip = { FROM = { change_learning = 1 } }
 	}
 
+	#Meh book outcome
+	option = {
+		trigger = { FROM = { has_character_flag = physician_meh_book } }
+
+		name = EVTOPTC_RIP_4032
+	}
+
 	#Bad outcome
 	option = {
 		trigger = { FROM = { has_character_flag = physician_bad_book } }
@@ -4007,7 +4014,7 @@ character_event = {
 										character = event_target:rip_friend_1 
 										is_rival = event_target:rip_friend_1 
 										is_friend = event_target:rip_friend_1  
-										is_lover = event_target:rip_friend_1  
+										is_lover = event_target:rip_friend_1
 									} 
 								} 
 							} 
@@ -12032,6 +12039,9 @@ narrative_event = {
 
 	is_triggered_only = yes
 	
+	only_playable = yes
+	only_capable = yes
+	
 	trigger = {
 		trait = immortal
 		NOT = { has_character_flag = immortal_rival_appeared }
@@ -13523,9 +13533,12 @@ character_event = { # immortal suspicions
 	only_capable = yes
 	
 	trigger = {
-		NOT = { has_character_flag = immortal_crisis }
 		immortal = yes
 		age = 70
+		NOR = { 
+			has_character_flag = immortal_crisis
+			has_character_flag = immortal_crisis_confirmed
+		}
 	}
 	
 	weight_multiplier = {
@@ -13573,7 +13586,10 @@ character_event = { # clean up immortal crisis
 	
 	trigger = {
 		immortal = yes
-		has_character_flag = immortal_crisis
+		OR = {
+			has_character_flag = immortal_crisis
+			has_character_flag = immortal_crisis_confirmed
+		}
 		NOR = {
 			any_vassal = {
 				has_opinion_modifier = { who = ROOT  modifier = immortal_hate }
@@ -13651,7 +13667,7 @@ character_event = { # suspicions spread
 
 character_event = { # suspicions are confirmed
 	id = RIP.30318
-	desc = placeholdername_44 #RIP.30317.d
+	desc = placeholdername_44 #RIP.30318.d
 	border = GFX_event_normal_frame_intrigue
 	picture = GFX_evt_suspicious_noble 
 
@@ -13707,7 +13723,6 @@ character_event = { # suspicions are confirmed
 			opinion = { modifier = immortal_hate who = ROOT years = 100 } 
 		}
 		clr_character_flag = immortal_crisis
-		clr_character_flag = immortal_crisis_confirmed
 	}
 	
 }
