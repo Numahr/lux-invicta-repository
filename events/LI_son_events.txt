@@ -23,6 +23,35 @@ character_event = {
 	
 	is_triggered_only = yes
 	
+	immediate = {
+		if = {
+			limit = {
+				any_vassal = {
+					primary_title = {
+						is_mercenary = yes
+					}
+				}
+			}
+			random_vassal = {
+				limit = {
+					primary_title = {
+						is_mercenary = yes
+					}
+				}
+				save_event_target_as = mercenary_captain
+			}
+			break = yes
+		}
+		random_independent_ruler = {
+			limit = {
+				primary_title = {
+					is_mercenary = yes
+				}
+			}
+			save_event_target_as = mercenary_captain
+		}
+	}
+	
 	option = { # On second thoughts no
 		name = EVTOPTAli_sonevents1
 		FROM = {
@@ -32,31 +61,10 @@ character_event = {
 	}
 	option = { # Yes!
 		name = EVTOPTB_TOG_3110
-		if = {
-			limit = { NOT = { any_vassal = { primary_title = { mercenary = yes } } } }
-			random_independent_ruler = {
-				limit = {
-					primary_title = {
-						mercenary = yes
-					}	
-				}
-				FROM = {
-					move_character = PREV
-				}
-			}
-		}
-		if = {
-			limit = { any_vassal = { primary_title = { mercenary = yes } } }
-			random_vassal = {
-				limit = {
-					primary_title = {
-						mercenary = yes
-					}	
-				}
-				FROM = {
-					set_character_flag = son_vassal_merc
-					move_character = PREV
-				}
+		event_target:mercenary_captain = {
+			FROM = {
+				set_character_flag = son_vassal_merc
+				move_character = PREV
 			}
 		}
 		hidden_tooltip = {
