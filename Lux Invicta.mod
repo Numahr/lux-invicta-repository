@@ -4,6 +4,9 @@ user_dir = "Lux Invicta"
 
 replace_path = common/buildings
 replace_path = common/trade_routes
+replace_path = common/societies
+replace_path = common/artifacts
+replace_path = common/artifact_spawns
 replace_path = "history"
 replace_path = "history/characters"
 replace_path = "history/diplomacy"
