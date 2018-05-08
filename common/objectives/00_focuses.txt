@@ -162,25 +162,16 @@ focus_seduction = {
 	
 	allow = {
 		is_adult = yes
-		NOR = {
-			trait = incapable
-			trait = celibate
-			trait = monk
-			trait = nun
-			trait = eunuch
-		}
-		OR = {
-			prisoner = no
-			is_female = yes
-		}
+		NOT = { trait = incapable }
+		NOT = { trait = celibate }
+		NOT = { is_ascetic_trigger = yes }
+		NOT = { trait = eunuch }
 		custom_tooltip = {
 			text = is_not_ascetic
 			hidden_tooltip = {
-				NOR = {
-					has_character_modifier = hindu_ascetic
-					has_character_modifier = buddhist_ascetic
-					has_character_modifier = jain_naked_ascetic
-				}
+				NOT = { has_character_modifier = hindu_ascetic }
+				NOT = { has_character_modifier = buddhist_ascetic }
+				NOT = { has_character_modifier = jain_naked_ascetic }
 			}
 		}
 	}
@@ -296,10 +287,6 @@ focus_seduction = {
 	
 	abort = {
 		OR = {
-			AND = {
-				prisoner = yes
-				is_female = no
-			}
 			trait = incapable
 			is_playable = no
 			trait = eunuch
@@ -347,13 +334,11 @@ focus_intrigue = {
 		}
 		modifier = {
 			factor = 0.25
-			NOT = {
-				OR = {
-					trait = amateurish_plotter
-					trait = flamboyant_schemer
-					trait = intricate_webweaver
-					trait = elusive_shadow
-				}
+			NOR = {
+				trait = amateurish_plotter
+				trait = flamboyant_schemer
+				trait = intricate_webweaver
+				trait = elusive_shadow
 			}
 		}
 		modifier = {
@@ -416,6 +401,7 @@ focus_intrigue = {
 	
 	# MODIFIERS
 	intrigue = 3
+	plot_power_modifier = 0.05
 }
 
 focus_hunting = {
@@ -933,6 +919,12 @@ focus_theology = {
 	# Focuses have no success conditions
 	success = {
 		always = no
+	}
+	creation_effect = {
+		if = {
+			limit = { has_quest = quest_monastic_order_theology_focus }
+			character_event = { id = MNM.4016 }
+		}
 	}
 	
 	abort = {

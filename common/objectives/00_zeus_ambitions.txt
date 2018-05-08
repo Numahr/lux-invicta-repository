@@ -17,7 +17,7 @@ obj_become_council_member = {
 	}
 
 	allow = {
-		liege = { independent = yes }
+		#liege = { independent = yes }
 		NOT = {
 			liege = { spouse = { character = ROOT } }
 		}
@@ -25,6 +25,7 @@ obj_become_council_member = {
 		prisoner = no
 		is_adult = yes
 		is_councillor = no
+		is_landed = yes
 		OR = {
 			can_hold_title = job_chancellor
 			can_hold_title = job_marshal
@@ -88,7 +89,7 @@ obj_become_council_member = {
 		}
 		modifier = { 
 			factor = 10
-			among_most_powerful_vassals = 5 #TODO replace this with more appropriate trigger
+			among_most_powerful_vassals = 5 
 		}
 		modifier = { 
 			factor = 5
@@ -100,17 +101,16 @@ obj_become_council_member = {
 	}
 	abort = {
 		OR = {
-			liege = { spouse = { character = ROOT } }
-			is_inaccessible_trigger = yes
 			independent = yes
 			trait = incapable
-			NOR = { 
+			NOR = {
 				can_hold_title = job_chancellor
 				can_hold_title = job_marshal
 				can_hold_title = job_treasurer
 				can_hold_title = job_spymaster
 				can_hold_title = job_spiritual
 			}
+			is_landed = no
 		}
 	}
 	abort_effect = {
@@ -119,7 +119,7 @@ obj_become_council_member = {
 		opinion = {
 			who = liege
 			modifier = opinion_ambition_fulfilled
-			months = 24
+			years = 5
 		}
 	}
 	
@@ -141,12 +141,12 @@ obj_land_for_son = {
 	}
 
 	allow = {
-		liege = { independent = yes }
+		#liege = { independent = yes }
 		has_dlc = "Zeus"
 		prisoner = no
 		is_adult = yes
-		NOR = {
-			trait = incapable
+		NOR = { 
+			trait = incapable 
 			has_character_flag = land_for_son_successful
 		}
 		any_child = {
@@ -157,7 +157,7 @@ obj_land_for_son = {
 			prisoner = no
 			NOR = {
 				trait = incapable
-				trait = monk
+				is_ascetic_trigger = yes
 				trait = eunuch
 			}
 			liege = {
@@ -388,7 +388,7 @@ obj_build_a_war_chest = {
 	effect = {
 		add_character_modifier = {
 			modifier = war_taxes
-			months = 36
+			months = 60
 		}
 		add_character_modifier = {
 		   modifier = war_chest_timer
@@ -429,27 +429,13 @@ obj_groom_an_heir = {
 					trait = eunuch
 					trait = celibate
 					trait = incapable
-					trait = monk
-					trait = nun
+					is_ascetic_trigger = yes
 				}
 				OR = {
-					AND = {
-						is_female = no
-						ROOT = {
-							NOR = {
-								has_law = enatic_cognatic_succession
-								has_law = enatic_succession
-							}
-						}
-					}
+					is_female = no
 					AND = {
 						is_female = yes
-						ROOT = {
-							NOR = {
-								has_law = cognatic_succession
-								has_law = agnatic_succession
-							}
-						}
+						ROOT = { has_law = true_cognatic_succession }
 					}
 				}
 			}
@@ -492,16 +478,8 @@ obj_groom_an_heir = {
 			government = nomadic_government
 		}
 		modifier = {
-			factor = 4
-			trait = genius
-		}
-		modifier = {
 			factor = 2
-			trait = quick
-		}
-		modifier = {
-			factor = 2
-			trait = shrewd
+			is_smart_trigger = yes
 		}
 		modifier = {
 			factor = 0.5
@@ -520,27 +498,13 @@ obj_groom_an_heir = {
 				trait = eunuch
 				trait = celibate
 				trait = incapable
-				trait = monk
-				trait = nun
+				is_ascetic_trigger = yes
 			}
 			OR = {
-				AND = {
-					is_female = no
-					ROOT = {
-						NOR = {
-							has_law = enatic_cognatic_succession
-							has_law = enatic_succession
-						}
-					}
-				}
+				is_female = no
 				AND = {
 					is_female = yes
-					ROOT = {
-						NOR = {
-							has_law = cognatic_succession
-							has_law = agnatic_succession
-						}
-					}
+					ROOT = { has_law = true_cognatic_succession }
 				}
 			}
 		}
@@ -551,10 +515,10 @@ obj_groom_an_heir = {
 	abort_effect = {
 	}
 	effect = {
-		custom_tooltip = {
-			text = opinion_boost_child
-			hidden_tooltip = {
-				any_child = {
+	custom_tooltip = {
+	text = opinion_boost_child
+		hidden_tooltip = {
+			any_child = {
 					limit = {
 						is_adult = yes 
 						NOR = {
@@ -562,27 +526,13 @@ obj_groom_an_heir = {
 							trait = eunuch
 							trait = celibate
 							trait = incapable
-							trait = monk
-							trait = nun
+							is_ascetic_trigger = yes
 						}
 						OR = {
-							AND = {
-								is_female = no
-								ROOT = {
-									NOR = {
-										has_law = enatic_cognatic_succession
-										has_law = enatic_succession
-									}
-								}
-							}
+							is_female = no
 							AND = {
 								is_female = yes
-								ROOT = {
-									NOR = {
-										has_law = cognatic_succession
-										has_law = agnatic_succession
-									}
-								}
+								ROOT = { has_law = true_cognatic_succession }
 							}
 						}
 					}
