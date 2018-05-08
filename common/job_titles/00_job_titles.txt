@@ -7,7 +7,9 @@
 #	viceroy: This is the Viceroy title for de jure Kingdoms
 #	allow: conditions for the character to hold the title
 #	gain_effect: fires when the title is granted
-#	lose_effect: fires when a title is lost if dismissal_trigger evaluates to false
+#	lose_effect: fires when a title is lost through most causes
+#	retire_effect: fires when a title is lost due to the character stepping down
+#	death_effect: fires when a title is lost due to the character dying
 #	The other fields are all character modifiers.
 
 job_chancellor = {
@@ -29,6 +31,19 @@ job_chancellor = {
 				AND = {
 					has_law = succession_voting_power_1
 					ROOT = { is_powerful_vassal = yes }
+				}
+			}
+			conditional_tooltip = {
+				trigger = {
+					has_character_flag = swapping_councillors
+				}
+				custom_tooltip = {
+					text = not_swapping_tt
+					hidden_tooltip = {
+						NOT = {
+							has_character_flag = swapping_councillors
+						}
+					}
 				}
 			}
 		}
@@ -57,8 +72,13 @@ job_chancellor = {
 		opinion = { who = FROM modifier = opinion_recently_fired }
 	}
 	retire_effect = {
+		if = {
+			limit = { has_character_flag = relic_hunter }
+			character_event = { id = MNM.9034 }
+		}
 	}
 	
+	action = action_statecraft
 	action = action_improve_relations
 	action = action_fabricate_claims
 	action = action_clan_sentiment # Replaces Fabricate Claims for Nomads
@@ -89,6 +109,19 @@ job_marshal = {
 					ROOT = { is_powerful_vassal = yes }
 				}
 			}
+			conditional_tooltip = {
+				trigger = {
+					has_character_flag = swapping_councillors
+				}
+				custom_tooltip = {
+					text = not_swapping_tt
+					hidden_tooltip = {
+						NOT = {
+							has_character_flag = swapping_councillors
+						}
+					}
+				}
+			}
 		}
 	}
 	gain_effect = {
@@ -115,14 +148,19 @@ job_marshal = {
 		opinion = { who = FROM modifier = opinion_recently_fired }
 	}
 	retire_effect = {
+		if = {
+			limit = { has_character_flag = relic_hunter }
+			character_event = { id = MNM.9034 }
+		}
 	}
 	
+	action = action_organize_army
 	action = action_assist_arrest
 	action = action_train_troops
 	action = action_train_troops_nomadic
 	action = action_advance_mil_tech
 	action = action_organize_raid # Replaces action_advance_mil_tech for Tribes
-
+	
 	lift_fow = yes
 }
 
@@ -147,6 +185,19 @@ job_treasurer = {
 					ROOT = { is_powerful_vassal = yes }
 				}
 			}
+			conditional_tooltip = {
+				trigger = {
+					has_character_flag = swapping_councillors
+				}
+				custom_tooltip = {
+					text = not_swapping_tt
+					hidden_tooltip = {
+						NOT = {
+							has_character_flag = swapping_councillors
+						}
+					}
+				}
+			}
 		}
 	}
 	gain_effect = {
@@ -173,15 +224,20 @@ job_treasurer = {
 		opinion = { who = FROM modifier = opinion_recently_fired }
 	}
 	retire_effect = {
+		if = {
+			limit = { has_character_flag = relic_hunter }
+			character_event = { id = MNM.9034 }
+		}
 	}
 	
+	action = action_administer_realm
 	action = action_squeeze_peasants
 	action = action_collect_tribute # Replaces action_squeeze_peasants for Nomads
 	action = action_settle_tribe # Replaces action_squeeze_peasants for Tribes
 	action = action_oversee_construction
 	action = action_advance_eco_tech
 	action = action_build_legend # Replaces action_advance_eco_tech for Tribes
-
+	
 	lift_fow = yes
 }
 
@@ -205,6 +261,19 @@ job_spymaster = {
 					ROOT = { is_powerful_vassal = yes }
 				}
 			}
+			conditional_tooltip = {
+				trigger = {
+					has_character_flag = swapping_councillors
+				}
+				custom_tooltip = {
+					text = not_swapping_tt
+					hidden_tooltip = {
+						NOT = {
+							has_character_flag = swapping_councillors
+						}
+					}
+				}
+			}
 		}
 	}
 	gain_effect = {
@@ -231,10 +300,17 @@ job_spymaster = {
 		opinion = { who = FROM modifier = opinion_recently_fired }
 	}
 	retire_effect = {
+		if = {
+			limit = { has_character_flag = relic_hunter }
+			character_event = { id = MNM.9034 }
+		}
 	}
 	
 	action = action_uncover_plots
+	action = action_uncover_plots_offmap	# Replaces action_uncover_plots if mystics is activated.
+	action = action_sabotage_province
 	action = action_organize_spies
+	action = action_organize_spies_mystics
 	action = action_study_technology
 
 	lift_neighbor_fow = yes
@@ -293,6 +369,8 @@ job_spiritual = {
 		}
 	}
 	
+	
+	action = action_hunt_heretics
 	action = action_inquisition
 	action = action_advance_cul_tech
 	action = action_improve_rel_relations
@@ -309,6 +387,5 @@ job_spiritual = {
 #	action = action_martial_training
 	action = action_build_zeal # Tribal replacement for 'action_advance_cul_tech'
 	
-
 	lift_fow = yes
 }

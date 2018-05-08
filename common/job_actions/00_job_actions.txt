@@ -6,9 +6,21 @@
 # Events that can trigger off this action. This info is only used by the GUI.
 # All modifiers (like 'local_build_time_modifier') are multiplied by the attribute
 
+# display_on_map = {
+#	tooltip = JOB_PROSELYTIZE_DIFFERENT_RELIGION  # Key of the loc to add to the tooltip
+#	trigger = {                                   # Trigger for when this should happen. Same scopes as the allow/potential for the job action itself
+#		NOT = { religion = FROM }
+#	}
+#	color = { 255 0 0 }                           # What color to use on the map
+# }
+
+
 # Chancellor
 action_improve_relations = {
 	attribute = diplomacy
+	
+	potential = {
+	}
 	
 	trigger = {
 		any_province_lord = {
@@ -22,6 +34,7 @@ action_improve_relations = {
 		}
 		is_within_diplo_range = FROM
 	}
+	
 	
 	events = { 910 911 }
 }
@@ -161,16 +174,35 @@ action_fabricate_claims = {
 action_sow_dissent = { #rework into Pacify Province job
 	attribute = diplomacy
 	
+	potential = {
+	}
+	
 	trigger = {
 		any_province_lord = {
-			character = FROM
+			NOT = { character = FROM }
+			NOT = { is_liege_or_above = FROM }
 		}
+		is_within_diplo_range = FROM
 	}
 	local_revolt_risk = -0.015
 	local_build_time_modifier = 0.005
 	local_tax_modifier = -0.005
 	
-	events = {  }
+	events = { 916 917 }
+}
+
+action_statecraft = {
+	attribute = diplomacy
+
+	potential = {
+		has_dlc = Mystics
+	}
+
+	liege_modifier = statecraft_liege_mod
+
+	offmap = yes
+	
+	events = { MNM.78000 MNM.78003 } 
 }
 
 # Steward
@@ -250,6 +282,9 @@ action_settle_tribe = {
 
 action_oversee_construction = {
 	attribute = stewardship
+	
+	potential = {
+	}
 
 	trigger = {
 		any_province_lord = {
@@ -303,9 +338,25 @@ action_build_legend = {
 	events = { 20208 }
 }
 
+action_administer_realm = {
+	attribute = stewardship
+
+	potential = {
+		has_dlc = Mystics
+	}
+
+	offmap = yes
+	
+	events = { MNM.70005 MNM.78007 }
+}
+
 # Spymaster
 action_uncover_plots = {
 	attribute = intrigue
+	
+	potential = {
+		NOT = { has_dlc = Mystics }
+	}
 	
 	trigger = {
 		any_province_lord = {
@@ -315,15 +366,31 @@ action_uncover_plots = {
 			}
 		}
 	}
-	
+
 	plot_discovery_chance = 0.01
 	
-	events = { 929 931 9000 9020}
+	events = { 929 931 9000 9020 }
 }
 
+action_uncover_plots_offmap = {
+	attribute = intrigue
+	
+	potential = {
+		has_dlc = Mystics
+	}
+	
+	offmap = yes
+
+	plot_discovery_chance = 0.01
+	
+	events = { MNM.70022 MNM.70024 MNM.70023 }
+}
 
 action_study_technology = { #rework into subterfguge
 	attribute = intrigue
+	
+	potential = {
+	}
 	
 	trigger = {
 		#has_higher_tech_than = FROM
@@ -340,6 +407,12 @@ action_study_technology = { #rework into subterfguge
 action_organize_spies = {
 	attribute = intrigue
 	
+	potential = {
+		NOT = {
+			has_dlc = "Mystics"
+		}
+	}
+	
 	trigger = {
 		any_province_lord = {
 			NOT = { character = FROM }
@@ -352,6 +425,46 @@ action_organize_spies = {
 	arrest_chance_modifier = 0.003
 	local_revolt_risk = -0.003
 	events = { 935 936 }
+}
+
+action_organize_spies_mystics = {
+	attribute = intrigue
+	
+	potential = {
+		has_dlc = "Mystics"
+	}
+	
+	trigger = {
+		any_province_lord = {
+			NOT = { character = FROM }
+		}
+		is_within_diplo_range = FROM
+	}
+	
+	plot_power_modifier = 0.005
+	
+	events = { 935 936 931 9000 9020 }
+}
+
+action_sabotage_province = {
+	attribute = intrigue
+
+	potential = {
+		has_dlc = Mystics
+	}
+
+	trigger = {
+		any_province_lord = {
+			NOT = {
+				tier = BARON
+			}
+			NOT = { character = FROM }
+		}
+		can_be_sabotaged_trigger = yes
+		is_within_diplo_range = FROM
+	}
+	
+	events = { MNM.70020 933 }
 }
 
 # Marshal
@@ -402,6 +515,7 @@ action_train_troops = {
 			is_nomadic = no
 		}
 	}
+
 	trigger = {
 		any_province_lord = {
 			character = FROM
@@ -437,6 +551,9 @@ action_train_troops_nomadic = {
 action_assist_arrest = {
 	attribute = martial
 	
+	potential = {
+	}
+	
 	trigger = {
 		any_province_lord = {
 			OR = {
@@ -454,9 +571,28 @@ action_assist_arrest = {
 	events = {  }
 }
 
+action_organize_army = {
+	attribute = martial
+
+	potential = {
+		has_dlc = Mystics
+	}
+
+	offmap = yes
+	
+	liege_modifier = organize_army_liege_mod
+	
+	attribute_cap = 25
+	
+	events = { MNM.70010 MNM.70012 MNM.70015 } 
+}
+
 # Lord Spiritual
 action_inquisition = {
 	attribute = learning
+	
+	potential = {
+	}
 	
 	trigger = {
 		FROM = {
@@ -501,8 +637,15 @@ action_inquisition = {
 				NOT = {
 					has_opinion_modifier = { who = FROM modifier = opinion_sent_preacher }
 				}
-				is_within_diplo_range = FROM
 			}
+		}
+		color = { 0 0 255 }
+	}
+	
+	display_on_map = {
+		tooltip = JOB_PROSELYTIZE_DIFFERENT_RELIGION
+		trigger = {
+			NOT = { religion = FROM }
 			any_province_lord = {
 				OR = {
 					character = FROM
@@ -510,8 +653,17 @@ action_inquisition = {
 				}
 			}
 		}
+		color = { 0 255 0 }
 	}
 	
+	display_on_map = {
+		tooltip = JOB_PROSELYTIZE_CONVERT_INDEPENDENT
+		trigger = {
+			proselytize_convert_independent_trigger = yes
+		}
+		color = { 255 35 35 }
+	}
+
 	events = { 900 901 902 903 }
 }
 
