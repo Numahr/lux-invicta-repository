@@ -81,8 +81,8 @@ targetted_decisions = {
 
 	legitimize_bastard = {
 		only_playable = yes
-		filter = dynasty
-		ai_target_filter = dynasty
+		filter = close_relatives
+		ai_target_filter = close_relatives
 	
 		from_potential = {
 			ai = no
@@ -115,11 +115,14 @@ targetted_decisions = {
 				imprison = no
 			}
 			
-			mother = {
-				opinion = {
-					who = FROM
-					modifier = legitimized_child
-					years = 10
+			if = {
+				limit = { FROM = { is_female = no } }
+				mother = {
+					opinion = {
+						who = FROM
+						modifier = legitimized_child
+						years = 10
+					}
 				}
 			}
 			FROM = {
@@ -133,7 +136,7 @@ targetted_decisions = {
 							}
 						}
 						opinion = {
-							who = FROM
+							who = ROOT_FROM
 							modifier = legitimized_bastard
 							years = 20
 						}
@@ -142,11 +145,11 @@ targetted_decisions = {
 				any_child = {
 					limit = {
 						NOT = { character = ROOT }
-						dynasty = FROM
+						dynasty = ROOT_FROM
 						NOT = { trait = bastard }
 					}
 					opinion = {
-						who = FROM
+						who = ROOT_FROM
 						modifier = legitimized_bastard
 						months = 12
 					}
@@ -167,6 +170,7 @@ targetted_decisions = {
 		only_playable = yes
 		filter = dynasty
 		ai_target_filter = dynasty
+		ai_check_interval = 3
 	
 		hide_in_decisions_list = yes # This decision is shown in the Religion View for each decadent character
 		
@@ -231,6 +235,7 @@ targetted_decisions = {
 		
 		filter = dynasty
 		ai_target_filter = dynasty
+		ai_check_interval = 3
 	
 		from_potential = {
 			is_ruler = yes
@@ -248,7 +253,7 @@ targetted_decisions = {
 		}
 		
 		potential = {
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 			is_ruler = no
 			liege = { character = FROM }
 			NOT = { is_plot_target_of = FROM }
@@ -272,36 +277,16 @@ targetted_decisions = {
 			OR = {
 				father = { ai = no }
 				mother = { ai = no }
+				is_female = no
 				is_primary_heir = yes
 				AND = {
 					is_female = yes
-					FROM = {
-						primary_title = {
-							OR = {
-								has_law = true_cognatic_succession
-								has_law = enatic_cognatic_succession
-								has_law = enatic_succession
-							}
-						}
-					}
-				}
-				AND = {
-					is_female = no
-					FROM = {
-						primary_title = {
-							OR = {
-								has_law = true_cognatic_succession
-								has_law = cognatic_succession
-								has_law = agnatic_succession
-							}
-						}
-					}
+					FROM = { has_law = true_cognatic_succession }
 				}
 			}
-			NOT = {
-				has_character_modifier = went_out_of_hiding_timer
-			}
-		}		
+			NOT = { has_character_modifier = went_out_of_hiding_timer }
+		}
+		
 		allow = {
 			in_command = no
 			prisoner = no
@@ -343,10 +328,8 @@ targetted_decisions = {
 					any_plotter = {
 						target = ROOT
 						limit = {
-							NOR = {
-								has_character_flag = murder_in_motion
-								character = FROM
-							}
+							NOT = { has_character_flag = murder_in_motion }
+							NOT = { character = FROM }
 							OR = {
 								has_plot = plot_kill_character
 								has_plot = plot_kill_spouse
@@ -367,7 +350,7 @@ targetted_decisions = {
 							}
 						}
 						character_event = { id = CM.6180 }
-						any_backed_character = {
+						any_backed_character = { 
 							character_event = { id = CM.6004 }
 						}
 					}
@@ -375,12 +358,10 @@ targetted_decisions = {
 				father = {
 					if = {
 						limit = {
-							NOR = {
-								character = FROM
-								plot_target_char = { character = ROOT }
-								any_backed_character = { plot_target_char = { character = ROOT } }
-								is_rival = ROOT
-							}
+							NOT = { character = FROM }
+							NOT = { plot_target_char = { character = ROOT } }
+							NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
+							NOT = { is_rival = ROOT }
 						}
 						character_event = { id = CM.6004 }
 					}
@@ -388,65 +369,53 @@ targetted_decisions = {
 				mother = {
 					if = {
 						limit = {
-							NOR = {
-								character = FROM
-								plot_target_char = { character = ROOT }
-								any_backed_character = { plot_target_char = { character = ROOT } }
-								is_rival = ROOT
-							}
+							NOT = { character = FROM }
+							NOT = { plot_target_char = { character = ROOT } }
+							NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
+							NOT = { is_rival = ROOT }
 						}
 						character_event = { id = CM.6004 }
 					}
 				}
 				any_spouse = {
 					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-						}
+						NOT = { plot_target_char = { character = ROOT } }
+						NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
+						NOT = { is_rival = ROOT }
 					}
 					character_event = { id = CM.6004 }
 				}
 				any_child = {
 					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-						}
+						NOT = { plot_target_char = { character = ROOT } }
+						NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
+						NOT = { is_rival = ROOT }
 					}
 					character_event = { id = CM.6004 }
 				}
 				any_lover = {
 					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-							spouse = { character = ROOT }
-						}
+						NOT = { plot_target_char = { character = ROOT } }
+						NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
+						NOT = { is_rival = ROOT }
+						NOT = { spouse = { character = ROOT } }
 					}
 					character_event = { id = CM.6004 }
 				}
 				any_sibling = {
 					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-							is_lover = ROOT
-						}
+						NOT = { plot_target_char = { character = ROOT } }
+						NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
+						NOT = { is_rival = ROOT }
+						NOT = { is_lover = ROOT }
 					}
 					character_event = { id = CM.6004 }
 				}
 				any_rival = {
 					limit = {
-						NOR = {
-							character = FROM
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-						}
+						NOT = { character = FROM }
+						NOT = { plot_target_char = { character = ROOT } }
+						NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
 					}
 					character_event = { id = CM.6004 }
 				}
@@ -459,7 +428,7 @@ targetted_decisions = {
 		ai_will_do = {
 			factor = 1
 			modifier = {
-				factor = 0.1
+				factor = 0.3
 			}
 			modifier = {
 				factor = 0.5
@@ -502,6 +471,7 @@ targetted_decisions = {
 		
 		filter = dynasty
 		ai_target_filter = dynasty
+		ai_check_interval = 3
 	
 		from_potential = {
 			is_ruler = yes
@@ -604,11 +574,11 @@ targetted_decisions = {
 		
 		filter = self
 		ai_target_filter = self
+		ai_check_interval = 3
 		
 		potential = {
-			is_ruler = yes
 			prisoner = no
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 			OR = {
 				ai = no
 				trait = amateurish_plotter
@@ -676,59 +646,16 @@ targetted_decisions = {
 							}
 						}
 						character_event = { id = CM.6180 }
-						any_backed_character = {
+						any_backed_character = { 
 							character_event = { id = CM.6000 }
 						}
 					}
 				}
 				any_spouse = {
 					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-						}
-					}
-					character_event = { id = CM.6000 }
-				}
-				any_child = {
-					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-						}
-					}
-					character_event = { id = CM.6000 }
-				}
-				any_lover = {
-					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-							spouse = { character = ROOT }
-						}
-					}
-					character_event = { id = CM.6000 }
-				}
-				any_sibling = {
-					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-							is_lover = ROOT
-						}
-					}
-					character_event = { id = CM.6000 }
-				}
-				any_rival = {
-					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-						}
+						NOT = { plot_target_char = { character = ROOT } }
+						NOT = { any_backed_character = { plot_target_char = { character = ROOT } } }
+						NOT = { is_rival = ROOT }
 					}
 					character_event = { id = CM.6000 }
 				}
@@ -751,7 +678,7 @@ targetted_decisions = {
 				}
 			}
 			modifier = {
-				factor = 0.1
+				factor = 0.3
 			}
 			modifier = {
 				factor = 0.1
@@ -782,6 +709,7 @@ targetted_decisions = {
 		
 		filter = self
 		ai_target_filter = self
+		ai_check_interval = 3
 		
 		potential = {
 			is_ruler = yes
@@ -795,11 +723,9 @@ targetted_decisions = {
 					NOT = {	trait = incapable }
 				}
 				regent = {
-					NOR = {
-						trait = deceitful
-						trait = ambitious
-						is_rival = ROOT
-					}
+					NOT = { trait = deceitful }
+					NOT = { trait = ambitious }
+					NOT = { is_rival = ROOT }
 				}
 			}
 		}
@@ -826,39 +752,6 @@ targetted_decisions = {
 					}
 				}
 				any_spouse = {
-					limit = {
-						ROOT = {
-							NOT = { is_plot_target_of = THIS }
-						}
-					}
-					character_event = { id = CM.6001 }
-				}
-				any_child = {
-					limit = {
-						ROOT = {
-							NOT = { is_plot_target_of = THIS }
-						}
-					}
-					character_event = { id = CM.6001 }
-				}
-				any_lover = {
-					limit = {
-						ROOT = {
-							NOT = { is_plot_target_of = THIS }
-						}
-						NOT = { spouse = { character = ROOT } }
-					}
-					character_event = { id = CM.6001 }
-				}
-				any_sibling = {
-					limit = {
-						ROOT = {
-							NOT = { is_plot_target_of = THIS }
-						}
-					}
-					character_event = { id = CM.6001 }
-				}
-				any_rival = {
 					limit = {
 						ROOT = {
 							NOT = { is_plot_target_of = THIS }
@@ -908,6 +801,7 @@ targetted_decisions = {
 		
 		filter = spouse
 		ai_target_filter = spouse
+		ai_check_interval = 3
 		
 		from_potential = {
 			is_ruler = yes
@@ -924,7 +818,7 @@ targetted_decisions = {
 		}
 		
 		potential = {
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 			is_ruler = no
 			is_married = FROM
 			liege = { character = FROM }
@@ -1004,52 +898,10 @@ targetted_decisions = {
 							}
 						}
 						character_event = { id = CM.6180 }
-						any_backed_character = {
+						any_backed_character = { 
 							character_event = { id = CM.6002 }
 						}
 					}
-				}
-				any_child = {
-					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-						}
-					}
-					character_event = { id = CM.6002 }
-				}
-				any_lover = {
-					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-							spouse = { character = ROOT }
-						}
-					}
-					character_event = { id = CM.6002 }
-				}
-				any_sibling = {
-					limit = {
-						NOR = {
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-							is_rival = ROOT
-							is_lover = ROOT
-						}
-					}
-					character_event = { id = CM.6002 }
-				}
-				any_rival = {
-					limit = {
-						NOR = {
-							spouse = { character = PREV }
-							plot_target_char = { character = ROOT }
-							any_backed_character = { plot_target_char = { character = ROOT } }
-						}
-					}
-					character_event = { id = CM.6002 }
 				}
 			}
 		}
@@ -1060,7 +912,7 @@ targetted_decisions = {
 			factor = 1 
 			
 			modifier = {
-				factor = 0.1
+				factor = 0.3
 			}
 			modifier = {
 				factor = 0.1
@@ -1129,6 +981,7 @@ targetted_decisions = {
 		
 		filter = spouse
 		ai_target_filter = spouse
+		ai_check_interval = 3
 		
 		from_potential = {
 			is_ruler = yes
@@ -1170,44 +1023,6 @@ targetted_decisions = {
 						character_event = { id = CM.6003 }
 					}
 				}
-				any_child = {
-					limit = {
-						ROOT = {
-							NOT = { is_plot_target_of = PREV }
-						}
-					}
-					character_event = { id = CM.6003 }
-				}
-				any_lover = {
-					limit = {
-						ROOT = {
-							NOT = { is_plot_target_of = PREV }
-						}
-						NOT = { spouse = { character = PREV } }
-					}
-					character_event = { id = CM.6003 }
-				}
-				any_sibling = {
-					limit = {
-						ROOT = {
-							NOT = { is_plot_target_of = PREV }
-						}
-					}
-					character_event = { id = CM.6003 }
-				}
-				any_rival = {
-					limit = {
-						NOR = {
-							spouse = {
-								character = PREV
-							}
-							ROOT = {
-								is_plot_target_of = PREV
-							}
-						}
-					}
-					character_event = { id = CM.6003 }
-				}
 			}
 		}
 		revoke_allowed = {
@@ -1238,4 +1053,5 @@ targetted_decisions = {
 			}			
 		}
 	}
+	
 }

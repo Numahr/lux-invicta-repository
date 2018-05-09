@@ -1,14 +1,17 @@
-decisions = {
+targetted_decisions = {
 	
 	convert_to_liege_religion = {
+		only_playable = yes
+		
+		filter = self
+		ai_target_filter = self
+		
 		potential = {
 			ai = no
 			is_playable = yes
 			liege = {
-				NOR = {
-					character = ROOT
-					religion = ROOT
-				}
+				NOT = { character = ROOT }
+				NOT = { religion = ROOT }
 				religion_group = ROOT
 			}
 			controls_religion = no
@@ -69,15 +72,122 @@ decisions = {
 		}
 	}
 	
-	convert_to_liege_culture = {
-		potential = {
+	convert_to_liege_religion_on_liege = {
+		only_playable = yes
+		
+		filter = liege
+		ai_target_filter = liege
+		
+		from_potential = {
 			ai = no
 			is_playable = yes
-			liege = {
-				NOR = {
-					character = ROOT
-					culture = ROOT
+			controls_religion = no
+		}
+		potential = {
+			NOT = { character = FROM }
+			NOT = { religion = FROM }
+			religion_group = FROM
+		}
+		
+		allow = {
+			FROM = { NOT = { trait = zealous } }
+		}
+		
+		effect = {
+			FROM = {
+				prestige = -500
+				piety = 250
+				if = {
+					limit = { higher_tier_than = BARON }
+					religion_authority = {
+						modifier = ruler_converted_from
+					}
 				}
+				religion = ROOT
+				if = {
+					limit = { higher_tier_than = BARON }
+					hidden_tooltip = {
+						religion_authority = {
+							modifier = ruler_converted_to
+						}
+					}
+				}
+				if = {
+					limit = { ROOT = { trait = shaivist_hindu } }
+					add_trait = shaivist_hindu
+				}
+				if = {
+					limit = { ROOT = { trait = vaishnavist_hindu } }
+					add_trait = vaishnavist_hindu
+				}
+				if = {
+					limit = { ROOT = { trait = shaktist_hindu } }
+					add_trait = shaktist_hindu
+				}
+				if = {
+					limit = { ROOT = { trait = smartist_hindu } }
+					add_trait = smartist_hindu
+				}
+				if = {
+					limit = { ROOT = { trait = digambara_jain } }
+					add_trait = digambara_jain
+				}
+				if = {
+					limit = { ROOT = { trait = svetambara_jain } }
+					add_trait = svetambara_jain
+				}
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+	convert_to_liege_culture_on_liege = {
+		only_playable = yes
+		
+		filter = liege
+		ai_target_filter = liege
+		
+		from_potential = {
+			is_playable = yes
+		}
+		
+		potential = {
+			NOT = { character = FROM }
+			NOT = { culture = FROM }
+		}
+		allow = {
+			FROM = { prestige = 200 }
+		}
+		effect = {
+			FROM = {
+				prestige = -200
+				culture = ROOT
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+	convert_to_liege_culture = {
+		only_playable = yes
+		
+		filter = self
+		ai_target_filter = self
+		
+		potential = {
+			is_playable = yes
+			liege = {
+				NOT = { character = ROOT }
+				NOT = { culture = ROOT }
 			}
 		}
 		allow = {
@@ -98,8 +208,12 @@ decisions = {
 	}
 	
 	convert_to_local_culture = {
+		only_playable = yes
+		
+		filter = self
+		ai_target_filter = self
+		
 		potential = {
-			ai = no
 			is_playable = yes
 			is_nomadic = no
 			capital_scope = {
@@ -113,6 +227,8 @@ decisions = {
 			}
 			holy_order = no
 			mercenary = no
+			has_dlc = "Rajas of India"
+			NOT = { government = chinese_imperial_government }
 		}
 		allow = {
 			prestige = 500
@@ -121,6 +237,15 @@ decisions = {
 			prestige = -500
 			capital_scope = {
 				reverse_culture = ROOT
+			}
+			hidden_tooltip = {
+				any_child = {
+					limit = {
+						is_ruler = no
+						liege = { character = ROOT }
+					}
+					culture = ROOT
+				}
 			}
 		}
 		revoke_allowed = {
@@ -156,10 +281,23 @@ decisions = {
 				factor = 0
 				culture = nahuatl
 			}
+			modifier = {
+				factor = 0
+				has_landed_title = e_china_west_governor
+			}
+			modifier = {
+				factor = 0
+				government = chinese_imperial_government
+			}
 		}
 	}
 	
 	convert_to_local_religion = {
+		only_playable = yes
+		
+		filter = self
+		ai_target_filter = self
+		
 		potential = {
 			ai = no
 			is_playable = yes
@@ -176,19 +314,29 @@ decisions = {
 			
 			# The Indian religions can convert to each other anyway
 			OR = {
-				NOT = { religion_group = indian_group }
+				NOT = { has_dharmic_religion_trigger = yes }
 				capital_scope = {
-					NOT = { religion_group = indian_group }
+					NOT = { has_dharmic_religion_trigger = yes }
 				}
 			}
 			
 			controls_religion = no
 			holy_order = no
+			
+			has_dlc = "Rajas of India"
+			
+			NOT = {
+				AND = {
+					has_dlc = "Charlemagne"
+					has_landed_title = e_byzantium  # May instead renounce iconoclasm
+					has_landed_title = c_byzantion
+					religion = iconoclast
+					capital_scope = { religion = orthodox }
+				}
+			}
 		}
 		allow = {
-			NOT = {
-				trait = zealous
-			}
+			NOT = { trait = zealous }
 			OR = {
 				AND = {
 					prestige = 500
@@ -225,6 +373,20 @@ decisions = {
 			religion_authority = {
 				modifier = ruler_converted_from
 			}
+			# template for all groups
+			# if = {
+				# limit = {
+					# religion_group = christian
+					# NOT = { trait = sympathy_christendom }
+					# capital_scope = {
+						# NOT = { religion_group = ROOT }
+					# }
+				# }
+				# random = {
+					# chance = 60
+					# add_trait = sympathy_christendom
+				# }
+			# }
 			if = {
 				limit = {
 					capital_scope = {
@@ -608,6 +770,11 @@ decisions = {
 	}
 	
 	convert_to_parent_religion = {
+		only_playable = yes
+		
+		filter = self
+		ai_target_filter = self
+		
 		potential = {
 			ai = no
 			is_playable = yes
@@ -810,7 +977,7 @@ decisions = {
 	# }
 }
 
-targetted_decisions = {	
+decisions = {	
 # commenting that Convert to Attacker's Religion decision out, for both thematic (I think it's one of the main means that causes a realm to convert right now) and technical (I can't get it to restrict to CB's correctly) reasons.
 # If in the future it manages to work as intended, it should probably be restricted to Proselyte religions as well	
 	convert_to_attacker_religion = {
