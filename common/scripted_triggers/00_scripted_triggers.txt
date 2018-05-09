@@ -1,25 +1,3 @@
-#	Example:
-# 
-#	example_trigger = {
-#		year = 1066
-#		num_of_spouses = 2
-#	}
-#
-#
-#	In a script file:
-#
-#	trigger = {
-#		example_trigger = yes
-#	}
-#
-# Naming convention:  xxxx_trigger
-#
-
-example_trigger = {
-	year = 1066
-	num_of_spouses = 2
-}
-
 ####TRAIT GROUP TRIGGERS####
 #If you make changes, update the "Trait group triggers CK2" spreadsheet
 
@@ -92,6 +70,8 @@ example_trigger = {
 #has_lifestyle_learning_trigger		Has a learning lifestyle trait.
 #child_personality_learning_trigger	Has a child trait with learning bonus.
 #is_learned_trigger					Has a scholarly trait, learning-oriented trait.
+
+#has_any_lifestyle_trait			Has any of the above lifestyle traits.
 
 #Religion
 #has_crusade_trait_trigger			Has a crusade type trait.
@@ -282,7 +262,6 @@ has_unattractive_trait_trigger = {
 		trait = arbitrary
 		trait = cruel
 		trait = stubborn
-		trait = eunuch
 		trait = blinded
 		trait = horse
 		trait = one_eyed
@@ -386,6 +365,7 @@ has_disease_trigger = {
 	}
 }
 
+
 has_symptom_trigger = {
 	OR = {
 		trait = infection
@@ -400,6 +380,25 @@ has_symptom_trigger = {
 		trait = diarrhea
 		trait = fever
 		trait = cough
+	}
+}
+
+has_minor_disease_trigger = {
+	OR = {
+		trait = malaise
+		trait = fatigue
+		trait = abdominal_pain
+		trait = headache
+		trait = rash
+		trait = cramps
+		trait = chest_pain
+		trait = vomiting
+		trait = diarrhea
+		trait = fever
+		trait = cough
+		trait = ill
+		trait = lovers_pox
+		trait = flu
 	}
 }
 
@@ -560,11 +559,14 @@ child_personality_diplomacy_trigger = {
 ##MARTIAL##
 
 has_education_martial_trigger = {
-	OR = {
-		trait = misguided_warrior
-		trait = tough_soldier
-		trait = skilled_tactician
-		trait = brilliant_strategist
+	custom_tooltip = {
+		text = has_martial_education_tt
+		OR = {
+			trait = misguided_warrior
+			trait = tough_soldier
+			trait = skilled_tactician
+			trait = brilliant_strategist
+		}
 	}
 }
 
@@ -680,7 +682,138 @@ is_learned_trigger = {
 }
 
 
+has_any_lifestyle_trait = {
+	OR = {
+		has_lifestyle_diplomacy_trigger = yes
+		has_lifestyle_martial_trigger = yes
+		has_lifestyle_stewardship_trigger = yes
+		has_lifestyle_intrigue_trigger = yes
+		has_lifestyle_learning_trigger = yes
+	}
+}
+
+
 ##RELIGION##
+
+has_crusade_trait_trigger = {
+	OR = {
+		AND = {
+			LI_norse_pagan_trigger = yes
+			trait = valhalla_bound
+		}
+		AND = {
+			religion_group = tengri_group
+			trait = tengri_warrior
+		}
+		AND = {
+			religion_group = baltic_group
+			trait = romuvas_own
+		}
+		AND = {
+			religion_group = finnish_group
+			trait = ukkos_shield
+		}
+		AND = {
+			religion = aztec
+			trait = eagle_warrior
+		}
+		AND = {
+			religion_group = slavic_group
+			trait = peruns_chosen
+		}
+		AND = {
+			religion_group = serer_group
+			trait = nyames_shield
+		}
+		AND = {
+			religion_group = sol_group
+			trait = sun_warrior
+		}
+		AND = {
+			religion_group = graecoroman_group
+			trait = hetairos
+		}
+		AND = {
+			religion_group = muslim
+			trait = mujahid
+		}
+		AND = {
+			religion_group = christian
+			trait = crusader
+		}
+		AND = {
+			religion_group = zoroastrian_group
+			trait = gondi_shahansha
+		}
+		AND = {
+			religion_group = jewish_group
+			trait = shaddai
+		}
+		AND = {
+			religion_group = mithra_group
+			trait = leo_mithras
+		}
+		AND = {
+			religion = cybele_reformed
+			trait = korybantes
+		}
+		AND = {
+			religion = ethiopian_war_reformed
+			trait = son_of_mahrem
+		}
+		AND = {
+			religion = almaqah
+			trait = mukarrib
+		}
+		AND = {
+			religion = zande_pagan_reformed
+			trait = azande
+		}
+		AND = {
+			religion = zulu_pagan_reformed
+			trait = induna
+		}
+		AND = {
+			religion = nyau
+			trait = nyau_akakairo
+		}
+		AND = {
+			religion = berber_pagan_reformed
+			trait = son_of_ifri
+		}
+		AND = {
+			OR = {
+				religion_group = bud_group
+				religion_group = chinese_group
+			}
+			trait = gongfu_warrior
+		}
+		AND = {
+			religion_group = zal_group
+			trait = dragon_knight
+		}
+		AND = {
+			religion = mani
+			trait = guardian_of_elect
+		}
+		AND = {
+			religion = mani_mithra
+			trait = seal_holder
+		}
+		AND = {
+			religion = ahriman_reformed
+			trait = warrior_of_light
+		}
+		AND = {
+			religion_group = egyptian_group
+			trait = medjay
+		}
+		AND = {
+			religion = murugan_reformed
+			trait = vel_wielder
+		}
+	}
+}
 
 has_secret_religion_trait_trigger = {
 	custom_tooltip = {
@@ -1525,126 +1658,6 @@ gender_equality_trigger = {
 	}
 }
 
-has_crusade_trait_trigger = {
-	OR = {
-		AND = {
-			LI_norse_pagan_trigger = yes
-			trait = valhalla_bound
-		}
-		AND = {
-			religion_group = tengri_group
-			trait = tengri_warrior
-		}
-		AND = {
-			religion_group = baltic_group
-			trait = romuvas_own
-		}
-		AND = {
-			religion_group = finnish_group
-			trait = ukkos_shield
-		}
-		AND = {
-			religion = aztec
-			trait = eagle_warrior
-		}
-		AND = {
-			religion_group = slavic_group
-			trait = peruns_chosen
-		}
-		AND = {
-			religion_group = serer_group
-			trait = nyames_shield
-		}
-		AND = {
-			religion_group = sol_group
-			trait = sun_warrior
-		}
-		AND = {
-			religion_group = graecoroman_group
-			trait = hetairos
-		}
-		AND = {
-			religion_group = muslim
-			trait = mujahid
-		}
-		AND = {
-			religion_group = christian
-			trait = crusader
-		}
-		AND = {
-			religion_group = zoroastrian_group
-			trait = gondi_shahansha
-		}
-		AND = {
-			religion_group = jewish_group
-			trait = shaddai
-		}
-		AND = {
-			religion_group = mithra_group
-			trait = leo_mithras
-		}
-		AND = {
-			religion = cybele_reformed
-			trait = korybantes
-		}
-		AND = {
-			religion = ethiopian_war_reformed
-			trait = son_of_mahrem
-		}
-		AND = {
-			religion = almaqah
-			trait = mukarrib
-		}
-		AND = {
-			religion = zande_pagan_reformed
-			trait = azande
-		}
-		AND = {
-			religion = zulu_pagan_reformed
-			trait = induna
-		}
-		AND = {
-			religion = nyau
-			trait = nyau_akakairo
-		}
-		AND = {
-			religion = berber_pagan_reformed
-			trait = son_of_ifri
-		}
-		AND = {
-			OR = {
-				religion_group = bud_group
-				religion_group = chinese_group
-			}
-			trait = gongfu_warrior
-		}
-		AND = {
-			religion_group = zal_group
-			trait = dragon_knight
-		}
-		AND = {
-			religion = mani
-			trait = guardian_of_elect
-		}
-		AND = {
-			religion = mani_mithra
-			trait = seal_holder
-		}
-		AND = {
-			religion = ahriman_reformed
-			trait = warrior_of_light
-		}
-		AND = {
-			religion_group = egyptian_group
-			trait = medjay
-		}
-		AND = {
-			religion = murugan_reformed
-			trait = vel_wielder
-		}
-	}
-}
-
 has_minor_deity_trigger = {
 	OR = {
 		has_character_modifier = follower_of_perun
@@ -1690,4 +1703,337 @@ has_prev_education_trigger = {
 			PREV = { has_education_learning_trigger = yes }
 		}
 	}
+}
+
+useless_character_trigger = {
+	OR = {
+		NOT = { health = 2.5 }
+		trait = lunatic
+		trait = maimed
+		trait = infirm
+		trait = incapable
+		trait = mangled
+		trait = severely_injured
+		trait = imbecile
+		trait = inbred
+	}
+}
+
+#True religion triggers
+# template
+# true_religion_catholic_trigger = {
+	# true_religion = catholic
+# }
+
+# true_religion_group_christian_trigger = {
+	# true_religion_group = christian
+# }
+
+relationship_with_root_trigger = {
+	OR = {
+		is_lover = ROOT
+		is_friend = ROOT
+		is_rival = ROOT
+	}
+}
+
+FROMs_religion_is_playable_trigger = {
+	NOR = {
+		AND = { #Means you're not allowed to play Muslims
+			FROM = { religion_group = muslim }
+			NOT = { has_dlc = "The Sword of Islam" }
+		}
+		AND = { #Means you're not allowed to play Jewish
+			FROM = { religion_group = jewish_group }
+			NOT = { has_dlc = "Sons of Abraham" }
+		}
+		AND = { #Means you're not allowed to play (most) Pagans
+			FROM = {
+				religion_group = pagan_group
+				NOT = { religion = bon }
+			}
+			NOT = { has_dlc = "The Old Gods" }
+		}
+		AND = { #Means you're not allowed to play the Bön religion (Pagan)
+			FROM = { 
+				religion = bon
+			}
+			NOR = {
+				has_dlc = "The Old Gods"
+				has_dlc = "Jade Dragon"
+			}
+		}
+		AND = { #Means you're not allowed to play the Eastern Religions
+			FROM = { religion_group = indian_group }
+			NOT = { 
+				FROM = { 
+					religion = taoist
+				} 
+			}
+			NOT = {	has_dlc = "Rajas of India" }
+		}
+		AND = { #Means you're not allowed to play the Zoroastrians
+			FROM = { religion_group = zoroastrian_group }
+			NOT = { has_dlc = "The Old Gods" }
+		}
+		AND = { #Means you're not allowed to play the Taoist religion 
+			FROM = { religion = taoist }
+			NOR = { 
+				has_dlc = "Jade Dragon"
+				has_dlc = "Rajas of India"
+			}
+		}
+	}
+}
+
+###Use the actual is_<family member>_of = scope triggers now
+family_of_root_trigger = { #use is_blood_relative_of_root_trigger for all relatives
+	OR = {
+		is_close_relative = ROOT #spouse, parents, children, siblings, grandparents, grandchildren
+		cousin_of_root_trigger = yes #cousins
+		sibling_child_of_root_trigger = yes #nephews, nieces
+		parent_sibling_of_root_trigger = yes #aunts, uncles
+		sibling_in_law_of_root_trigger = yes #brothers and sisters in law
+	}
+}
+
+cousin_of_root_trigger = {
+	is_cousin_of = ROOT
+}
+
+sibling_of_root_trigger = {
+	sibling = ROOT
+}
+
+sibling_child_of_root_trigger = {
+	is_nibling_of = ROOT
+}
+
+parent_sibling_of_root_trigger = {
+	is_aunt_uncle_of = ROOT
+}
+
+grandchild_of_root_trigger = {
+	is_grandchild_of = ROOT
+}
+
+sibling_in_law_of_root_trigger = {
+	OR = {
+		mother_even_if_dead = { any_child = { any_spouse = { character = ROOT } } }
+		father_even_if_dead = { any_child = { any_spouse = { character = ROOT } } }
+		any_spouse = { mother_even_if_dead = { any_child = { character = ROOT } } }
+		any_spouse = { father_even_if_dead = { any_child = { character = ROOT } } }
+	}
+}
+
+interesting_face_trigger = {
+	OR = {
+		trait = fair
+		trait = ugly
+		trait = scarred
+		is_ill = yes
+		trait = disfigured
+		trait = blinded
+		trait = one_eyed
+		trait = leper
+		trait = harelip
+		is_strong_trigger = yes
+		is_weak_trigger = yes
+		trait = lunatic
+		trait = possessed
+		trait = rabies
+		trait = horse
+	}
+}
+
+is_rich_holding = { #needs to be updated to fit Lux buildings
+	OR = {
+		calc_true_if = {
+			amount = 2
+			has_building = ca_keep_3
+			has_building = ca_keep_4
+			has_building = ca_keep_5
+			has_building = ca_keep_6
+			has_building = ca_town_3
+			has_building = ca_town_4
+			has_building = ca_town_5
+			has_building = ca_town_6
+			has_building = tp_monastery_3
+			has_building = tp_monastery_4
+			has_building = tp_monastery_5
+			has_building = tp_monastery_6
+			has_building = tp_town_3
+			has_building = tp_town_4
+			has_building = tp_town_5
+			has_building = tp_town_6
+		}
+		has_building = ct_marketplace_3
+		has_building = ct_marketplace_4
+		has_building = ct_marketplace_5
+		has_building = ct_marketplace_6
+
+	}
+}
+is_richer_holding = {
+	
+	OR = {
+		calc_true_if = {
+			amount = 2
+			has_building = ca_keep_5
+			has_building = ca_keep_6
+			has_building = ca_town_5
+			has_building = ca_town_6
+			has_building = tp_monastery_5
+			has_building = tp_monastery_6
+			has_building = tp_town_5
+			has_building = tp_town_6
+		}
+		has_building = ct_marketplace_5
+		has_building = ct_marketplace_6
+	}
+}
+
+has_society_currency_trivial_trigger = {
+	society_currency >= 15
+}
+
+has_society_currency_tiny_trigger = {
+	society_currency >= 50
+}
+
+has_society_currency_minor_trigger = {
+	society_currency >= 150
+}
+
+has_society_currency_medium_trigger = {
+	society_currency >= 300
+}
+
+has_society_currency_major_trigger = {
+	society_currency >= 500
+}
+
+is_ill_trigger = {
+	OR = {
+		has_disease_trigger = yes
+	}
+}
+
+has_negative_congenital_trigger = {
+	OR = {
+		trait = ugly
+		trait = clubfooted
+		trait = hunchback
+		trait = dwarf
+		trait = harelip
+		trait = stutter
+		trait = lisp
+		trait = slow
+		trait = inbred
+		trait = weak
+		trait = imbecile
+	}
+}
+
+is_christian_monastic_member_trigger = {
+	OR = {
+		society_member_of = monastic_order_orthodox
+		society_member_of = monastic_order_benedictine
+		society_member_of = monastic_order_dominican
+		society_member_of = monastic_order_nestorian
+		society_member_of = monastic_order_monophysite
+	}
+}
+
+is_dharmic_monastic_member_trigger = {
+	OR = {
+		society_member_of = monastic_order_hindu
+		society_member_of = monastic_order_buddhist
+		society_member_of = monastic_order_jain
+	}
+}
+
+is_monastic_member_trigger = {
+	OR = {
+		is_dharmic_monastic_member_trigger = yes
+		is_christian_monastic_member_trigger = yes
+	}
+}
+
+is_ascetic_trigger = {
+	custom_tooltip = {
+		text = is_ascetic_tooltip
+		OR = {
+			trait = monk
+			trait = nun
+			trait = muni
+			trait = aryika
+			trait = bhikkhu
+			trait = bhikkhuni
+			trait = sanyasi
+			trait = sanyasini
+		}
+	}
+}
+
+is_virgin_trigger = {
+	NOR = {
+		any_lover = { always = yes }
+		any_child_even_if_dead = { always = yes }
+		any_spouse_even_if_dead = { always = yes }
+		has_focus = focus_seduction
+		is_pregnant = yes
+		trait = pregnant
+		trait = lustful
+		trait = hedonist
+		trait = seducer
+		trait = seductress
+		trait = lovers_pox
+		trait = has_aztec_disease
+		trait = syphilitic
+	}
+	OR = {
+		NOT = { age = 25 }
+		trait = celibate
+		trait = chaste
+		trait = shy
+		is_ascetic_trigger = yes
+	}
+}
+
+print_scope_trigger = {
+	log = "------------------------------"
+	log = "- Printing the current scope -"
+	log = "- This: [This.GetName][This.GetBestName]"
+	log = "- Root: [Root.GetName][Root.GetBestName]"
+	log = "- Prev: [Prev.GetName][Prev.GetBestName]"
+	log = "- PrevPrev: [PrevPrev.GetName][PrevPrev.GetBestName]"
+	log = "- PrevPrevPrev: [PrevPrevPrev.GetName][PrevPrevPrev.GetBestName]"
+	log = "- PrevPrevPrevPrev: [PrevPrevPrevPrev.GetName][PrevPrevPrevPrev.GetBestName]"
+	log = "- From: [From.GetName][From.GetBestName]"
+	log = "- FromFrom: [FromFrom.GetName][FromFrom.GetBestName]"
+	log = "- FromFromFrom: [FromFromFrom.GetName][FromFromFrom.GetBestName]"
+	log = "- FromFromFromFrom: [FromFromFromFrom.GetName][FromFromFromFrom.GetBestName]"
+	log = "- Event_target:test_target1: [test_target1.GetName][test_target1.GetBestName]"
+	log = "- Event_target:test_target2: [test_target2.GetName][test_target2.GetBestName]"
+	log = "- Event_target:test_target3: [test_target3.GetName][test_target3.GetBestName]"
+	log = "------------------------------"
+}
+
+is_secret_religious_society_member_trigger = {
+	society_member_of = secret_religious_cult
+}
+
+# template
+# is_christian_secret_religious_society_member_trigger = {
+	# society_member_of = secret_religious_cult
+	# secret_religion_group = christian
+# }
+
+is_openly_of_prevs_secret_religion_trigger = {
+	religion = { target = PREV target_type = secret }
+}
+
+is_openly_of_roots_secret_religion_trigger = {
+	religion = { target = ROOT target_type = secret }
 }
