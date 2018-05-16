@@ -4067,9 +4067,444 @@ add_crusade_trait_effect = {
 }
 
 ###MONKS & MYSTICS###
+remove_assassins_debt_effect = {
+	if = {
+		limit = { has_character_modifier = assassins_debt }
+		remove_character_modifier = assassins_debt
+		hidden_tooltip = {
+			set_variable = { which = assassins_debt value = 0 } 
+		}
+		clr_character_flag = assassins_target_debt
+		clear_delayed_event = { id = MNM.6009 }
+	}
+}
 
 remove_secret_religion_trait_effect = {
 	clear_secret_religion = yes
+}
+
+pay_back_assassins_effect = {
+	if = {
+		limit = { is_variable_equal = { which = assassins_debt value = 50 } }
+		wealth = -50
+		hidden_tooltip = {
+			event_target:grand_master  = {
+				if = {
+					limit = {
+						ai = yes
+						primary_title = { title = d_hashshashin } 
+					}
+					wealth = 50
+				}
+			}
+		}
+	}
+	if = {
+		limit = { is_variable_equal = { which = assassins_debt value = 250 } }
+		wealth = -250	
+		hidden_tooltip = {
+			event_target:grand_master  = {
+				if = {
+					limit = {
+						ai = yes
+						primary_title = { title = d_hashshashin } 
+					}
+					wealth = 250
+				}
+			}
+		}
+	}
+	if = {
+		limit = { is_variable_equal = { which = assassins_debt value = 300 } }
+		wealth = -300
+		hidden_tooltip = {
+			event_target:grand_master  = {
+				if = {
+					limit = {
+						ai = yes
+						primary_title = { title = d_hashshashin } 
+					}
+					wealth = 300
+				}
+			}
+		}
+	}
+	if = {
+		limit = { is_variable_equal = { which = assassins_debt value = 500 } }
+		wealth = -500
+		hidden_tooltip = {
+			event_target:grand_master = {
+				if = {
+					limit = {
+						ai = yes
+						primary_title = { title = d_hashshashin } 
+					}
+					wealth = 500
+				}
+			}
+		}
+	}
+}
+
+major_soul_corruption_effect = {
+	custom_tooltip = { 
+		text = major_soul_corruption_effect_tooltip
+	}
+	hidden_effect = {
+		if = {
+			limit = {
+				NAND = {
+					trait = cruel
+					trait = arbitrary
+					trait = deceitful
+					trait = possessed
+				}
+			}
+			random_list = {
+				20 = {
+					modifier = {
+						factor = 0
+						OR = {
+							NOT = { trait = kind }
+							trait = cruel
+							has_character_flag = corruption_remove_kind 
+						}
+					}
+					set_character_flag = corruption_remove_kind
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				20 = {
+					modifier = {
+						factor = 0
+						OR = {
+							trait = kind
+							trait = cruel
+							has_character_flag = corruption_add_cruel 
+						}
+					}
+					set_character_flag = corruption_add_cruel
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				15 = {
+					modifier = {
+						factor = 0
+						OR = {
+							NOT = { trait = just }
+							trait = arbitrary
+							has_character_flag = corruption_remove_just
+						} 
+					}
+					set_character_flag = corruption_remove_just
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				15 = {
+					modifier = {
+						factor = 0
+						OR = {
+							trait = just
+							trait = arbitrary
+							has_character_flag = corruption_add_arbitrary
+						} 
+					}
+					set_character_flag = corruption_add_arbitrary
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				10 = {
+					modifier = {
+						factor = 0
+						OR = {
+							NOT = { trait = honest }
+							trait = deceitful
+							has_character_flag = corruption_remove_honest
+						} 
+					}
+					set_character_flag = corruption_remove_honest	
+					character_event = { id = MNM.7050 days = 3 random = 27 }		
+				}
+				10 = {
+					modifier = {
+						factor = 0
+						OR = {
+							trait = honest
+							trait = deceitful
+							has_character_flag = corruption_add_deceitful
+						} 
+					}
+					set_character_flag = corruption_add_deceitful
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				5 = { 
+					modifier = {
+						factor = 0
+						trait = possessed
+						has_character_flag = corruption_add_possessed
+					}
+					set_character_flag = corruption_add_possessed
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				50 = { }
+			}
+		}
+		random_list = { #Risk of getting weaker
+			10 = {
+				trigger = { NOT = { trait = stressed } }
+				character_event = { id = MNM.7051 days = 32 random = 5 }
+			}
+			5 = {
+				trigger = { NOT = { trait = lunatic } }
+				character_event = { id = MNM.7052 days = 32 random = 5 }
+			}
+			5 = {
+				trigger = { NOR = { trait = stutter } }
+				character_event = { id = MNM.7053 days = 32 random = 5 }
+			}
+			5 = {
+				trigger = { NOR = { trait = clubfooted } }
+				character_event = { id = MNM.7054 days = 32 random = 5} 
+			}
+			5 = {
+				trigger = { NOR = { trait = hunchback } }
+				character_event = { id = MNM.7055 days = 32 random = 5 }
+			}
+			5 = {
+				trigger = { NOR = { trait = ugly } }
+				character_event = { id = MNM.7056 days = 32 random = 5 }
+			}
+			5 = {
+				trigger = {
+					NOR = {
+			    		trait = feeble
+			    		trait = weak
+			    		trait = strong
+			    	}
+				}
+				character_event = { id = MNM.7059 days = 32 random = 5 }
+			}
+			20 = {
+				trigger = { 
+					NOR = { 
+						NOT = { health = 3 }
+						has_character_modifier = corrupting_magic_minor
+						has_character_modifier = corrupting_magic_major
+					}
+				}
+				character_event = { id = MNM.7057 days = 32 random = 5 }
+			}
+			220 = { # High visibility (ability abuse) increases the risk of getting weaker
+				modifier = {
+					factor = 0.9
+					check_variable = { which = visibility_value value = 10 }
+				}
+				modifier = {
+					factor = 0.9
+					check_variable = { which = visibility_value value = 15 }
+				}
+				modifier = {
+					factor = 0.9
+					check_variable = { which = visibility_value value = 20 }
+				}
+				modifier = {
+					factor = 0.9
+					check_variable = { which = visibility_value value = 25 }
+				}
+				modifier = {
+					factor = 0.9
+					check_variable = { which = visibility_value value = 30 }
+				}
+				modifier = {
+					factor = 0.9
+					check_variable = { which = visibility_value value = 35 }
+				}
+				modifier = {
+					factor = 0.9
+					check_variable = { which = visibility_value value = 40 }
+				}
+			}
+		}
+		random = {
+			chance = 2
+			set_character_flag = has_it_coming
+			character_event = { id = MNM.7854 days = 30 random = 50 } #Demon hunters come after you...
+		}
+	}
+}
+
+minor_soul_corruption_effect = {
+	custom_tooltip = { 
+		text = minor_soul_corruption_effect_tooltip
+	}
+	hidden_effect = {
+		if = {
+			limit = {
+				NAND = {
+					trait = cruel
+					trait = arbitrary
+					trait = deceitful
+					trait = possessed
+				}
+			}
+			random_list = {
+				10 = {
+					modifier = {
+						factor = 0
+						OR = {
+							NOT = { trait = kind }
+							trait = cruel
+							has_character_flag = corruption_remove_kind 
+						}
+					}
+					set_character_flag = corruption_remove_kind
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				5 = {
+					modifier = {
+						factor = 0
+						OR = {
+							trait = kind
+							trait = cruel
+							has_character_flag = corruption_add_cruel 
+						}
+					}
+					set_character_flag = corruption_add_cruel
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				10 = {
+					modifier = {
+						factor = 0
+						OR = {
+							NOT = { trait = just }
+							trait = arbitrary
+							has_character_flag = corruption_remove_just
+						}
+					}
+					set_character_flag = corruption_remove_just
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				5 = {
+					modifier = {
+						factor = 0
+						OR = {
+							trait = just
+							trait = arbitrary
+							has_character_flag = corruption_add_arbitrary
+						} 
+					}
+					set_character_flag = corruption_add_arbitrary
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				10 = {
+					modifier = {
+						factor = 0
+						OR = {
+							NOT = { trait = honest }
+							trait = deceitful
+							has_character_flag = corruption_remove_honest
+						} 
+					}
+					set_character_flag = corruption_remove_honest
+					character_event = { id = MNM.7050 days = 3 random = 27 }			
+				}
+				5 = {
+					modifier = {
+						factor = 0
+						OR = {
+							trait = honest
+							trait = deceitful
+							has_character_flag = corruption_add_deceitful
+						} 
+					}
+					set_character_flag = corruption_add_deceitful
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				5 = { 
+					modifier = {
+						factor = 0
+						trait = possessed
+						has_character_flag = corruption_add_possessed
+					}
+					set_character_flag = corruption_add_possessed
+					character_event = { id = MNM.7050 days = 3 random = 27 }
+				}
+				80 = { }
+			}
+			random_list = { #Risk of getting weaker
+				15 = {
+					trigger = { NOT = { trait = stressed } }
+					character_event = { id = MNM.7051 days = 32 random = 5 }
+				}
+				5 = {
+					trigger = { NOT = { trait = lunatic } }
+					character_event = { id = MNM.7052 days = 32 random = 5 }
+				}
+				5 = {
+					trigger = { NOR = { trait = stutter } }
+					character_event = { id = MNM.7053 days = 32 random = 5 }
+				}
+				5 = {
+					trigger = { NOR = { trait = clubfooted } }
+					character_event = { id = MNM.7054 days = 32 random = 5 }
+				}
+				5 = {
+					trigger = { NOR = { trait = hunchback } }
+					character_event = { id = MNM.7055 days = 32 random = 5 }
+				}
+				5 = {
+					trigger = { NOR = { trait = ugly } }
+					character_event = { id = MNM.7056 days = 32 random = 5 }
+				}
+				5 = {
+					trigger = {
+						NOR = {
+							trait = feeble
+							trait = weak
+							trait = strong
+						}
+					}
+					character_event = { id = MNM.7059 days = 32 random = 5 }
+				}
+				30 = {
+					trigger = { 
+						NOR = { 
+							NOT = { health = 3 }
+							has_character_modifier = corrupting_magic_minor
+							has_character_modifier = corrupting_magic_major
+						}
+					}
+					character_event = { id = MNM.7058 days = 32 random = 5 }
+				}
+				450 = {  # High visibility (ability abuse) increases the risk of getting weaker
+					modifier = {
+						factor = 0.9
+						check_variable = { which = visibility_value value = 10 }
+					}
+					modifier = {
+						factor = 0.9
+						check_variable = { which = visibility_value value = 15 }
+					}
+					modifier = {
+						factor = 0.9
+						check_variable = { which = visibility_value value = 20 }
+					}
+					modifier = {
+						factor = 0.9
+						check_variable = { which = visibility_value value = 25 }
+					}
+					modifier = {
+						factor = 0.9
+						check_variable = { which = visibility_value value = 30 }
+					}
+					modifier = {
+						factor = 0.9
+						check_variable = { which = visibility_value value = 35 }
+					}
+					modifier = {
+						factor = 0.9
+						check_variable = { which = visibility_value value = 40 }
+					}
+				}
+			}
+		}
+	}
 }
 
 add_society_currency_trivial_effect = {
@@ -4417,6 +4852,146 @@ remove_random_negative_congenital_effect = {
 			}
 			remove_trait = weak
 		}
+	}
+}
+
+join_from_devil_worshiper_society_effect = {
+	FROM = {
+		if = {
+			limit = {
+				society_member_of = the_satanists
+			}
+			ROOT = {
+				join_society = the_satanists
+			}
+		}
+		if = {
+			limit = {
+				society_member_of = the_cold_ones
+			}
+			ROOT = {
+				join_society = the_cold_ones
+			}
+		}
+		if = {
+			limit = {
+				society_member_of = the_plaguebringers
+			}
+			ROOT = {
+				join_society = the_plaguebringers
+			}
+		}
+		if = {
+			limit = {
+				society_member_of = the_cult_of_kali
+			}
+			ROOT = {
+				join_society = the_cult_of_kali
+			}
+		}
+		if = {
+			limit = {
+				society_member_of = the_trollcrafters
+			}
+			ROOT = {
+				join_society = the_trollcrafters
+			}
+		}
+	}
+}
+
+remove_demonic_blessing_effect = {
+	if = { limit = { has_character_modifier = blessing_of_azazel }
+		remove_character_modifier = blessing_of_azazel
+	}
+	if = { limit = { has_character_modifier = blessing_of_avnas }
+		remove_character_modifier = blessing_of_avnas
+	}
+	if = { limit = { has_character_modifier = blessing_of_belial }
+		remove_character_modifier = blessing_of_belial
+	}
+	if = { limit = { has_character_modifier = blessing_of_mammon }
+		remove_character_modifier = blessing_of_mammon
+	}
+	if = { limit = { has_character_modifier = blessing_of_vetis }
+		remove_character_modifier = blessing_of_vetis
+	}
+}
+
+add_prolong_life_effect = {
+	if = {
+		limit = {
+			NOR = {
+				has_character_modifier = stolen_life_minor
+				has_character_modifier = stolen_life_medium
+				has_character_modifier = stolen_life_major
+			}
+		}
+		random_list = {
+			10 = {
+				add_character_modifier = {
+					name = stolen_life_minor
+					days = 3650
+				}			
+			}
+			10 = {
+				add_character_modifier = {
+					name = stolen_life_medium
+					days = 3650
+				}
+			}
+			10 = {
+				add_character_modifier = {
+					name = stolen_life_major
+					days = 3650
+				}
+			}
+		}
+		break = yes
+	}
+	if = {
+		limit = {
+			OR = {
+				has_character_modifier = stolen_life_minor
+				has_character_modifier = stolen_life_medium
+			}
+		}
+		hidden_effect = {
+			remove_character_modifier = stolen_life_minor
+			remove_character_modifier = stolen_life_medium
+		}
+		add_character_modifier = {
+					name = stolen_life_major
+					days = 3650
+		}
+		break = yes
+	}
+	add_character_modifier = {
+		name = stolen_life_major
+		days = 3650
+	}
+}
+
+join_prev_devil_worshiper_society_effect = {
+	if = {
+		limit = { PREV = { society_member_of = the_satanists } }
+		join_society = the_satanists
+	}
+	if = {
+		limit = { PREV = { society_member_of = the_cold_ones } }
+		join_society = the_cold_ones
+	}
+	if = {
+		limit = { PREV = { society_member_of = the_plaguebringers } }
+		join_society = the_plaguebringers
+	}
+	if = {
+		limit = { PREV = { society_member_of = the_cult_of_kali } }
+		join_society = the_cult_of_kali
+	}
+	if = {
+		limit = { PREV = { society_member_of = the_trollcrafters } }
+		join_society = the_trollcrafters
 	}
 }
 
@@ -8593,24 +9168,24 @@ increase_visibility_minor_effect = {
 				}
 			}
 			set_character_flag = self_reveal
-			# if = {
-				# limit = {
-					# is_devil_worshiper_trigger = yes
-				# }
-				# add_character_modifier = {
-					# name = known_satanist
-					# duration = -1
-				# }
-			# }
-			# if = {
-				# limit = {
-					# is_devil_worshiper_trigger = no
-				# }
-				# add_character_modifier = {
-					# name = accused_apostate
-					# duration = -1
-				# }
-			# }
+			if = {
+				limit = {
+					is_devil_worshiper_trigger = yes
+				}
+				add_character_modifier = {
+					name = known_satanist
+					duration = -1
+				}
+			}
+			if = {
+				limit = {
+					is_devil_worshiper_trigger = no
+				}
+				add_character_modifier = {
+					name = accused_apostate
+					duration = -1
+				}
+			}
 			if = {
 				limit = {
 					controls_religion = no
@@ -9760,40 +10335,40 @@ clean_up_after_leaving_society_effect = {
 		#quest_the_assassins_convert_province
 		#quest_the_assassins_occupy_holding
 		#quest_the_assassins_protege
-		# clr_character_flag = ongoing_recruitment
-		# clr_character_flag = approves_of_shia
-		# clr_character_flag = disapproves_of_shia
-		# clr_character_flag = willing_to_join
-		# clr_character_flag = unwilling_to_join
-		# clr_character_flag = assassins_attempted_recruitment
-		# clr_character_flag = escape_successful
-		# clr_character_flag = escape_injured
-		# clr_character_flag = escape_death
-		# clr_character_flag = escape_bribe 
+		clr_character_flag = ongoing_recruitment
+		clr_character_flag = approves_of_shia
+		clr_character_flag = disapproves_of_shia
+		clr_character_flag = willing_to_join
+		clr_character_flag = unwilling_to_join
+		clr_character_flag = assassins_attempted_recruitment
+		clr_character_flag = escape_successful
+		clr_character_flag = escape_injured
+		clr_character_flag = escape_death
+		clr_character_flag = escape_bribe 
 		
 		#Powers, Missions and Interactions: Devil Worshipers
-		# clr_character_flag = attempted_corrupt_priest
-		# clr_character_flag = possessing_courtier
-		# clr_character_flag = desecration_in_progress
-		# clr_character_flag = desecration_violent
-		# clr_character_flag = desecration_at_home
-		# clr_character_flag = desecration_plotting
-		# clr_character_flag = approves_of_satanism
-		# clr_character_flag = disapproves_of_satanism
-		# clr_character_flag = has_ill_lover_loc
-		# clr_character_flag = has_ill_spouse_loc
-		# clr_character_flag = has_ill_child_loc
-		# clr_character_flag = has_money_troubles_loc
-		# clr_character_flag = has_some_illness_loc
-		# clr_character_flag = has_need_of_winning_battles_loc
-		# clr_character_flag = has_a_rival_loc
-		# clr_character_flag = is_weak_loc
-		# clr_character_flag = is_dumb_loc
-		# clr_character_flag = being_recruited_by_the_satanists
-		# clr_character_flag = being_recruited_by_the_trollcrafters
-		# clr_character_flag = being_recruited_by_the_cult_of_kali
-		# clr_character_flag = being_recruited_by_the_cold_ones
-		# clr_character_flag = being_recruited_by_the_plaguebringers
+		clr_character_flag = attempted_corrupt_priest
+		clr_character_flag = possessing_courtier
+		clr_character_flag = desecration_in_progress
+		clr_character_flag = desecration_violent
+		clr_character_flag = desecration_at_home
+		clr_character_flag = desecration_plotting
+		clr_character_flag = approves_of_satanism
+		clr_character_flag = disapproves_of_satanism
+		clr_character_flag = has_ill_lover_loc
+		clr_character_flag = has_ill_spouse_loc
+		clr_character_flag = has_ill_child_loc
+		clr_character_flag = has_money_troubles_loc
+		clr_character_flag = has_some_illness_loc
+		clr_character_flag = has_need_of_winning_battles_loc
+		clr_character_flag = has_a_rival_loc
+		clr_character_flag = is_weak_loc
+		clr_character_flag = is_dumb_loc
+		clr_character_flag = being_recruited_by_the_satanists
+		clr_character_flag = being_recruited_by_the_trollcrafters
+		clr_character_flag = being_recruited_by_the_cult_of_kali
+		clr_character_flag = being_recruited_by_the_cold_ones
+		clr_character_flag = being_recruited_by_the_plaguebringers
 
 		#Powers, Missions and Interactions: Secret Religious	
 		clr_character_flag = sr_too_honest
@@ -12285,4 +12860,58 @@ add_chinese_artifact_effect = { #Used in event JD.15016 (possible to use elsewhe
 			save_event_target_as = chinese_artifact
 		}
 	}
+}
+
+remove_opinions_with_prison_reason_effect = {
+	#Removes the specified opinion about "who" (PREV), from current scope
+	#NOTE: If you add a new opinion with "prison_reason" to the game, add it here, too!
+	remove_opinion = { modifier = opinion_dishonorable who = PREV }
+	remove_opinion = { modifier = opinion_traitor who = PREV }
+	remove_opinion = { modifier = opinion_rebel_traitor who = PREV }
+	remove_opinion = { modifier = opinion_regicide_traitor who = PREV }
+	remove_opinion = { modifier = attempted_murder_of_spouse who = PREV }
+	remove_opinion = { modifier = attempted_murder_of_child who = PREV }
+	remove_opinion = { modifier = attempted_murder_of_parent who = PREV }
+	remove_opinion = { modifier = attempted_murder_of_sibling who = PREV }
+	remove_opinion = { modifier = attempted_murder_of_vassal who = PREV }
+	remove_opinion = { modifier = attempted_murder_of_spouse_vassal who = PREV }
+	remove_opinion = { modifier = attempted_murder who = PREV }
+	remove_opinion = { modifier = opinion_spouse_slayer who = PREV }
+	remove_opinion = { modifier = opinion_murder_attempt who = PREV }
+	remove_opinion = { modifier = opinion_killed_close_kin who = PREV }
+	remove_opinion = { modifier = opinion_killed_father who = PREV }
+	remove_opinion = { modifier = opinion_hajj_attempt_murder who = PREV }
+	remove_opinion = { modifier = opinion_fatwa_target who = PREV }
+	remove_opinion = { modifier = opinion_refused_order who = PREV }
+	remove_opinion = { modifier = opinion_castrated_me who = PREV }
+	remove_opinion = { modifier = opinion_blinded_me who = PREV }
+	remove_opinion = { modifier = opinion_castrated_family who = PREV }
+	remove_opinion = { modifier = opinion_castrated_close_kin who = PREV }
+	remove_opinion = { modifier = opinion_blinded_family who = PREV }
+	remove_opinion = { modifier = opinion_blinded_close_kin who = PREV }
+	remove_opinion = { modifier = opinion_witch who = PREV }
+	remove_opinion = { modifier = opinion_takfir who = PREV }
+	remove_opinion = { modifier = opinion_attempted_abduction who = PREV }
+	remove_opinion = { modifier = opinion_unfaithful_wife who = PREV }
+	remove_opinion = { modifier = opinion_unfaithful_husband_crime who = PREV }
+	remove_opinion = { modifier = opinion_cuckolded who = PREV }
+	remove_opinion = { modifier = opinion_killed_lover who = PREV }
+	remove_opinion = { modifier = opinion_charge_heresiarch who = PREV }
+	remove_opinion = { modifier = opinion_charge_infidel who = PREV }
+	remove_opinion = { modifier = opinion_charge_deviant who = PREV }
+	remove_opinion = { modifier = opinion_charge_illegitimate who = PREV }
+	remove_opinion = { modifier = opinion_charge_cultist who = PREV }
+	remove_opinion = { modifier = opinion_charge_dw who = PREV }
+	remove_opinion = { modifier = opinion_charge_traitor who = PREV }
+	remove_opinion = { modifier = opinion_charge_slanderer who = PREV }
+	remove_opinion = { modifier = abuse_of_office who = PREV }
+	remove_opinion = { modifier = opinion_tortured_me who = PREV }
+	remove_opinion = { modifier = opinion_tortured_family who = PREV }
+	remove_opinion = { modifier = opinion_tortured_close_kin who = PREV }
+	remove_opinion = { modifier = opinion_mutilated_me who = PREV }
+	remove_opinion = { modifier = opinion_mutilated_family who = PREV }
+	remove_opinion = { modifier = opinion_mutilated_close_kin who = PREV }
+	remove_opinion = { modifier = opinion_thief who = PREV }
+	remove_opinion = { modifier = opinion_outlawed_society who = PREV }
+	remove_opinion = { modifier = opinion_accused_apostate who = PREV }
 }

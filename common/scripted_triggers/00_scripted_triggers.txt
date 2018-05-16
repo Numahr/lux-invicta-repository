@@ -1376,6 +1376,7 @@ is_inaccessible_trigger = {
 				has_character_modifier = in_seclusion
 				has_character_modifier = in_meditation
 				has_character_modifier = doing_penance
+				has_character_modifier = out_traveling
 			}
 		}
 	}
@@ -1395,7 +1396,7 @@ prefers_men_trigger = {
 }
 
 root_attraction_trigger = {
-	#Returns yes when root is attracted the scoped character, based on sex
+	#Returns yes when ROOT is attracted to the scoped character, based on sex
 	OR = {
 		AND = {
 			is_female = yes
@@ -1592,6 +1593,7 @@ death_execution_trigger = {
 		death_reason = death_execution_boar
 		death_reason = death_execution_eaten
 		death_reason = death_execution_aztec_sacrifice
+		death_reason = death_executed_by_chinese_emperor
 	}	
 }
 
@@ -1622,23 +1624,18 @@ death_suicide_trigger = {
 		death_reason = death_suicide_fall
 		death_reason = death_suicide_hanging
 		death_reason = death_suicide_poison
-		death_reason = death_suicide_possessed_fall
 	}
 }
 
 block_general_event_trigger = {
 	OR = {	
-		trait = incapable
 		is_adult = no
+		trait = incapable
 		prisoner = yes
 		is_inaccessible_trigger = yes
-		is_alive = no
-		hidden_trigger = {
-			NOT = { always = yes }
-		}
+		hidden_trigger = { is_alive = no }
 	}
 }
-
 
 gender_equality_trigger = {
 	OR = {
@@ -1657,6 +1654,7 @@ gender_equality_trigger = {
 		}
 	}
 }
+
 
 has_minor_deity_trigger = {
 	OR = {
@@ -1736,7 +1734,6 @@ relationship_with_root_trigger = {
 		is_rival = ROOT
 	}
 }
-
 FROMs_religion_is_playable_trigger = {
 	NOR = {
 		AND = { #Means you're not allowed to play Muslims
@@ -1826,6 +1823,65 @@ sibling_in_law_of_root_trigger = {
 	}
 }
 
+relative_in_law_of_root_trigger = {
+	OR = {
+		any_child = { any_spouse = { character = ROOT } }
+		#any_spouse = { mother_even_if_dead = { any_child = { any_spouse = { character = ROOT } } } }
+		#any_spouse = { father_even_if_dead = { any_child = { any_spouse = { character = ROOT } } } }
+	}
+}
+
+is_murder_quest_target_of_prev_trigger = {
+	PREVPREV = {
+		has_quest = quest_the_assassins_assassination
+		quest_target = { character = PREVPREV }
+	}
+}
+
+is_murder_quest_target_of_root_trigger = {
+	ROOT = {
+		has_quest = quest_the_assassins_assassination
+		quest_target = { character = PREVPREV }
+	}
+}
+
+assassins_appropriate_target_trigger = {
+	is_within_diplo_range = ROOT
+	is_adult = yes
+	is_quest_target = no
+
+	OR = {
+		is_ruler = no
+		AND = {
+			ROOT = {
+				society_rank = {
+					rank == 3
+					society = the_assassins
+				}
+			}
+			primary_title = { higher_real_tier_than = COUNT }
+		}
+		AND = {
+			ROOT = {
+				society_rank = {
+					rank == 2
+					society = the_assassins
+				}
+			}
+			primary_title = { lower_real_tier_than = EMPEROR }
+		}
+		AND = {
+			ROOT = {
+				society_rank = {
+					rank == 1
+					society = the_assassins
+				}
+			}
+			primary_title = { lower_real_tier_than = DUKE }
+		}
+	}
+}
+
 interesting_face_trigger = {
 	OR = {
 		trait = fair
@@ -1846,7 +1902,28 @@ interesting_face_trigger = {
 	}
 }
 
-is_rich_holding = { #needs to be updated to fit Lux buildings
+can_pay_assassins_debt = {
+	OR = {
+		AND = {
+			is_variable_equal = { which = assassins_debt value = 50 }
+			wealth = 50
+		}
+		AND = {
+			is_variable_equal = { which = assassins_debt value = 250 }
+			wealth = 250
+		}
+		AND = {
+			is_variable_equal = { which = assassins_debt value = 300 }
+			wealth = 300
+		}
+		AND = {
+			is_variable_equal = { which = assassins_debt value = 500 }
+			wealth = 500
+		}
+	}
+}
+
+is_rich_holding = {
 	OR = {
 		calc_true_if = {
 			amount = 2
@@ -1916,6 +1993,19 @@ has_society_currency_major_trigger = {
 is_ill_trigger = {
 	OR = {
 		has_disease_trigger = yes
+	}
+}
+
+is_devil_worshiper_trigger = {
+	custom_tooltip = {
+		text = IS_DEVIL_WORSHIPPER_TRIGGER
+		OR = {
+			society_member_of = the_satanists
+			society_member_of = the_cold_ones
+			society_member_of = the_plaguebringers
+			society_member_of = the_cult_of_kali
+			society_member_of = the_trollcrafters
+		}
 	}
 }
 
@@ -2177,6 +2267,96 @@ can_be_sabotaged_trigger = {
 		has_province_modifier = sabotaged_defences
 		has_province_modifier = sabotaged_unrest
 	}
+}
+
+has_assassins_prerequisites = {
+	age = 16
+	conditional_tooltip = { #recruitment decision
+		trigger = { FROM = { society_member_of = the_assassins } }
+		OR = {
+			FROM = { ai = no }
+			hidden_trigger = { ai = no }
+			religion_group = muslim
+		}
+	}
+	conditional_tooltip = { #showing interest via interface
+		trigger = { NOT = { FROM = { society_member_of = the_assassins } } }
+		OR = {
+			true_religion = shiite
+			religion_group = muslim
+			AND = {
+				ai = no
+				NOT = { trait = zealous }
+				any_playable_ruler = {
+					religion = shiite
+					NOT = {
+						distance_from_realm = { value = 300 who = ROOT }
+					}
+				}
+			}
+		}
+	}
+	OR = {
+		is_female = no
+		has_game_rule = {
+			name = gender
+			value = all
+		}
+	}
+}
+
+has_common_devilworship_prerequisites = {
+	age = 16
+	custom_tooltip = {
+		text = must_be_a_sinner_tooltip
+		hidden_tooltip = {
+			OR = {
+				has_impious_trait_trigger = yes
+				has_vice_trigger = yes
+				trait = drunkard
+				trait = possessed
+				trait = lunatic
+			}
+		}
+	}
+}
+
+has_satanists_prerequisites = {
+	has_common_devilworship_prerequisites = yes
+	OR = {
+		religion_group = christian
+		religion_group = muslim
+		religion_group = zoroastrian_group
+		religion_group = jewish_group
+		religion = zun_pagan
+		religion = zun_pagan_reformed
+	}
+}
+
+has_trollcrafters_prerequisites = {
+	has_common_devilworship_prerequisites = yes
+	religion_openly_norse_or_reformed_trigger = yes
+}
+
+has_cult_of_kali_prerequisites = {
+	has_common_devilworship_prerequisites = yes
+	OR = {
+		religion = hindu
+	}
+}
+
+has_cold_ones_prerequisites = {
+	has_common_devilworship_prerequisites = yes
+	OR = {
+		religion_openly_baltic_or_reformed_trigger = yes
+		religion_openly_slavic_or_reformed_trigger = yes
+		religion_openly_finnish_or_reformed_trigger = yes
+	}
+}
+
+has_plaguebringers_prerequisites = {
+	has_common_devilworship_prerequisites = yes
+	religion_openly_tengri_or_reformed_trigger = yes
 }
 
 same_society_rank_as_prev_trigger = {
@@ -3906,5 +4086,13 @@ the_hunt_for_an_artifact_has_made_enough_progress_trigger = {
 			event_target:relic_ruler = { check_variable = { which = relic_score value = 20 } } #40 } } old value
 			event_target:relic_ruler = { has_character_modifier = relic_rumor_major } 
 		}
+	}
+}
+
+is_inaccessible_or_incapable_trigger = {
+	OR = {  
+		is_inaccessible_trigger = yes
+		trait = incapable
+		prisoner = yes
 	}
 }
