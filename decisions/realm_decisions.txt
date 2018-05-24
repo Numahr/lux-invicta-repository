@@ -3,11 +3,9 @@ decisions = {
 	hold_a_epic_tournament  = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
-			NOT = {
-				trait = incapable
-			}
 			NOR = {
 				has_character_modifier = epic_tournament
 				has_character_flag = epic_tournament
@@ -34,8 +32,8 @@ decisions = {
 			independent = yes
 			NOT = { is_nomadic = yes }
 			OR = {
-				is_female = no
 				gender_equality_trigger = yes
+				NOT = { is_female = yes	}
 			}
 			OR = {
 				tier = king
@@ -49,7 +47,7 @@ decisions = {
 			war = no
 			prisoner = no
 			in_command = no
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 			age = 16
 			prestige = 500
 			wealth = 200
@@ -73,19 +71,6 @@ decisions = {
 			hidden_tooltip = {
 				clr_character_flag = tournament_has_ended
 			}
-			if = {
-				limit = {
-					has_dlc = "Reapers"
-				}
-				custom_tooltip = {
-					text = capital_prospers_custom_tooltip
-					hidden_tooltip = {
-						capital_scope = {
-							change_variable = { which = prosperity_value value = 8 }
-						}
-					}
-				}
-			}
 		}
 		ai_will_do = {
 			factor = 1
@@ -104,13 +89,15 @@ decisions = {
 	buy_indulgence_for_sins = {
 		only_playable = yes
 		potential = {
-			is_playable = yes
 			religion = catholic
 			age = 16
 			demesne_size = 1
 			NOT = { has_character_flag = ask_for_indulgence }
 		}
 		allow = {
+			prisoner = no
+			NOT = { trait = incapable }
+			NOT = { is_inaccessible_trigger = yes }
 			scaled_wealth = 1.0
 			wealth = 25
 			is_heretic = no
@@ -214,11 +201,7 @@ decisions = {
 			}
 			custom_tooltip = {
 				text = demand_liege_title_tooltip
-				hidden_tooltip = {
-					liege = {
-						letter_event = { id = 63041 days = 4 tooltip = "EVTTOOLTIP63041" } # "vassal_request_events.txt"
-					}
-				}
+				hidden_tooltip = { liege = { letter_event = { id = 63041 days = 4 } } } # "vassal_request_events.txt"
 			}
 		}
 		ai_will_do = {
@@ -272,8 +255,10 @@ decisions = {
 	hold_a_furusiyya  = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
+			independent = yes
 			NOR = {
 				has_character_flag = epic_tournament_furusiyya
 				has_character_modifier = epic_tournament_furusiyya
@@ -303,7 +288,7 @@ decisions = {
 			war = no
 			in_command = no
 			prisoner = no
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 			age = 16
 			prestige = 500
 			wealth = 200
@@ -325,19 +310,6 @@ decisions = {
 			prestige = 100
 			decadence = -5
 			character_event = { id = 88283 tooltip = "furusiyya_invite" }
-			if = {
-				limit = {
-					has_dlc = "Reapers"
-				}
-				custom_tooltip = {
-					text = capital_prospers_custom_tooltip
-					hidden_tooltip = {
-						capital_scope = {
-							change_variable = { which = prosperity_value value = 8 }
-						}
-					}
-				}
-			}
 		}
 		ai_will_do = {
 			factor = 1
@@ -356,6 +328,7 @@ decisions = {
 	restore_roman_empire = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
 			OR = {
@@ -465,7 +438,9 @@ decisions = {
 	claim_constantinople = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
+			is_nomadic = no
 			is_playable = yes
 			has_dlc = "Legacy of Rome"
 			has_landed_title = e_byzantium
@@ -496,6 +471,7 @@ decisions = {
 	make_rome_capital = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
 			ai = no
@@ -542,6 +518,7 @@ decisions = {
 	}
 	
 	petition_doge_for_tp = {
+		only_playable = yes
 		is_high_prio = yes
 		potential = {
 			is_playable = yes
@@ -590,6 +567,7 @@ decisions = {
 	}
 	
 	usurp_tp = {
+		only_playable = yes
 		is_high_prio = yes
 		potential = {
 			is_playable = yes
@@ -714,6 +692,7 @@ decisions = {
 	form_new_kingdom = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
 			tier = DUKE
@@ -850,6 +829,7 @@ decisions = {
 	form_new_empire = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
 			tier = KING
@@ -919,8 +899,8 @@ decisions = {
 								any_title_under = {
 									limit = {
 										tier = KING
-										empire = {
-											has_holder = no
+										NOT = {
+											empire = { has_holder = yes }
 										}
 									}
 									de_jure_liege = PREVPREV
@@ -930,8 +910,8 @@ decisions = {
 										tier = DUKE
 										location = {
 											kingdom = {
-												empire = {
-													has_holder = no
+												NOT = {
+													empire = { has_holder = yes }
 												}
 												
 												NOT = { de_jure_liege_or_above = PREVPREVPREVPREV }
@@ -981,10 +961,10 @@ decisions = {
 			is_adult = yes
 			prisoner = no
 			NOT = { trait = incapable }
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 			war = no
 			any_demesne_title = {
-				lower_tier_than = duke
+				NOT = { higher_tier_than = count }
 				is_occupied = no
 			}
 			wealth = 20
@@ -1003,19 +983,6 @@ decisions = {
 			set_character_flag = recent_minor_decision
 			set_character_flag = do_not_disturb
 			hidden_tooltip = { character_event = { id = HL.7000 } }
-			if = {
-				limit = {
-					has_dlc = "Reapers"
-				}
-				custom_tooltip = {
-					text = capital_prospers_custom_tooltip
-					hidden_tooltip = {
-						capital_scope = {
-							change_variable = { which = prosperity_value value = 8 }
-						}
-					}
-				}
-			}
 		}
 		revoke_allowed = {
 			always = no
@@ -1055,6 +1022,7 @@ decisions = {
 	convert_to_feudalism_indep  = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
 			is_tribal = yes
@@ -1193,6 +1161,7 @@ decisions = {
 	convert_to_feudalism_vassal = {
 		only_rulers = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_ruler = yes
 			is_tribal = yes
@@ -1224,13 +1193,29 @@ decisions = {
 					}
 				}
 			}
-			capital_holding = {
-				OR = {
-					AND = {
-						holding_type = tribal
-						has_building = tb_hillfort_4
+			OR = {
+				capital_holding = {
+					OR = {
+						AND = {
+							holding_type = tribal
+							has_building = tb_hillfort_4
+						}
+						holding_type = castle
 					}
-					holding_type = castle
+				}
+				AND = {
+					NOT = { tier = BARON }
+					capital_scope = {
+						any_province_holding = {
+							holding_type = castle
+							holder_scope = {
+								OR = {
+									character = ROOT
+									is_liege_or_above = ROOT
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -1273,10 +1258,57 @@ decisions = {
 			}
 			
 			hidden_tooltip = {
+				if = {
+					limit = {
+						capital_holding = {
+							holding_type = tribal
+							ROOT = { NOT = { tier = BARON } }
+						}
+						capital_scope = {
+							any_province_holding = {
+								holding_type = castle
+								holder_scope = {
+									OR = {
+										character = ROOT
+										is_liege_or_above = ROOT
+									}
+								}
+							}
+						}
+					}
+					
+					capital_scope = {
+						random_province_holding = {
+							limit = {
+								holding_type = castle
+								holder_scope = {
+									OR = {
+										character = ROOT
+										is_liege_or_above = ROOT
+									}
+								}
+							}
+							if = {
+								limit = {
+									NOT = { holder = ROOT }
+								}
+								usurp_title = ROOT
+							}
+							make_capital_holding = yes
+							ROOT = { set_character_flag = feudalize_handled_capital }
+						}
+					}
+				}
+				
 				any_demesne_title = {
 					limit = {
 						tier = baron
 						holding_type = tribal
+						location = {
+							capital_holding = {
+								NOT = { holding_type = castle }
+							}
+						}
 					}
 					convert_to = CASTLE
 					refill_holding_levy = yes
@@ -1371,6 +1403,7 @@ decisions = {
 	convert_to_republic_indep  = {
 		only_independent = yes
 		is_high_prio = yes
+		
 		potential = {
 			is_playable = yes
 			is_tribal = yes

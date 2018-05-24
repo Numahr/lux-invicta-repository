@@ -13,15 +13,16 @@ namespace = TOG
 # An ambitious landless claimant begins to plan an adventure for the title
 character_event = {
 	id = TOG.1200
+	
 	hide_window = yes # Only fires for unplayable landless characters
 	
 	min_age = 16
 	max_age = 50
 	capable_only = yes
 	prisoner = no
-	has_dlc = "The Old Gods"
 	
 	trigger = {
+		has_dlc = "The Old Gods"
 		
 		NOT = {
 			has_game_rule = {
@@ -29,7 +30,7 @@ character_event = {
 				value = none
 			}
 		}
-		
+
 		OR = {
 			has_game_rule = {
 				name = gender
@@ -58,12 +59,12 @@ character_event = {
 				}
 			}
 		}
+		
 		is_ruler = no
-		NOT = {
-			any_spouse = {
-				is_ruler = yes
-			}
-		}
+
+		NOT = { any_spouse = { is_ruler = yes } }
+		
+#		year = 867
 		
 		any_claim = {
 			has_holder = yes
@@ -93,27 +94,32 @@ character_event = {
 						}
 					}
 				}
+				ROOT = {
+					NOR = {
+						obedient = PREV
+						non_interference = PREV
+					}
+				}
 			}
 			OR = {
 				tier = KING
 				holder_scope = { tier = PREV }
 			}
 		}
-		diplomacy = 7
 		
-		health = 4
-		
-		NOR = { # Somewhat clunky way of checking that the character does not stand to inherit any titles
+		NOT = { # Somewhat clunky way of checking that the character does not stand to inherit any titles
 			any_heir_title = {
 				always = yes
 			}
-			any_spouse = {
-				is_ruler = yes
-			}
-			trait = content
-			trait = craven
-			has_character_modifier = planning_claimant_adventure
 		}
+		
+		diplomacy = 7
+		
+		health = 4
+		NOT = { trait = content }
+		NOT = { trait = craven }
+		
+		NOT = { has_character_modifier = planning_claimant_adventure }
 	}
 	
 	mean_time_to_happen = {
@@ -233,6 +239,7 @@ character_event = {
 					days = 730
 				}
 			}
+			
 			if = {
 				limit = {
 					holder_scope = {
@@ -246,7 +253,12 @@ character_event = {
 		end_inaccessibility_effect = yes #removes in hiding or in_seclusion
 		
 		set_character_flag = do_not_disturb
+		
 		character_event = { id = TOG.1215 days = 730 }
+	}
+	
+	option = {
+		name = OK
 	}
 }
 
@@ -274,6 +286,7 @@ character_event = {
 # An ambitious landless claimant starts an adventure for the title
 character_event = {
 	id = TOG.1202
+	
 	hide_window = yes # Only fires for unplayable landless characters
 	
 	is_triggered_only = yes
@@ -283,14 +296,17 @@ character_event = {
 	
 	trigger = {
 		is_ruler = no
-		NOT = {
-			any_spouse = {
-				is_ruler = yes
-			}
-		}
+		NOT = { any_spouse = { is_ruler = yes } }
+		
 		any_claim = {
 			has_holder = yes
 			holder_scope = {
+				NOT = {
+					defending_against_claimant = {
+						character = ROOT
+						title = PREV
+					}
+				}
 				independent = yes # Only do this vs independent rulers
 				NAND = {
 					government = nomadic_government
@@ -318,6 +334,12 @@ character_event = {
 						capital_holding = {
 							de_jure_liege_or_above = PREVPREV
 						}
+					}
+				}
+				ROOT = {
+					NOR = {
+						obedient = PREV
+						non_interference = PREV
 					}
 				}
 			}
@@ -354,6 +376,7 @@ character_event = {
 						tier = DUKE
 						landless = yes
 						temporary = yes
+						adventurer = yes
 						culture = ROOT
 						name = "CLAIMANT_ADVENTURE"
 						holder = ROOT
@@ -703,7 +726,7 @@ character_event = {
 #			log = "TOG.1202: [Root.GetBestName] starts claim adventure for [This.GetName]"
 			
 			holder_scope = {
-				reverse_war = {
+				reverse_unsafe_war = {
 					target = ROOT
 					casus_belli = claim
 					thirdparty_title = PREV
@@ -714,6 +737,10 @@ character_event = {
 				}
 			}
 		}
+	}
+	
+	option = {
+		name = OK
 	}
 }
 
@@ -770,9 +797,9 @@ character_event = {
 	max_age = 50
 	capable_only = yes
 	prisoner = no
-	has_dlc = "The Old Gods"
 	
 	trigger = {
+		has_dlc = "The Old Gods"
 		
 		NOT = {
 			has_game_rule = {
@@ -782,11 +809,8 @@ character_event = {
 		}
 		
 		is_ruler = no
-		NOT = {
-			any_spouse = {
-				is_ruler = yes
-			}
-		}
+		NOT = { any_spouse = { is_ruler = yes } }
+
 		OR = {
 			AND = {
 				is_female = no
@@ -815,6 +839,50 @@ character_event = {
 				name = gender
 				value = all
 			}
+		}
+		
+#		year = 867
+		
+		diplomacy = 7
+		martial = 9
+		health = 4
+		
+		NOT = { trait = content }
+		NOT = { trait = craven }
+		NOT = { # Somewhat clunky way of checking that the character does not stand to inherit any titles
+			any_heir_title = {
+				always = yes
+			}
+		}
+		
+		NOT = { # Handled by event TOG.1200
+			any_claim = {
+				has_holder = yes
+				holder_scope = {
+					independent = yes
+					OR = {
+						is_merchant_republic = no
+						NOT = {
+							capital_holding = {
+								de_jure_liege_or_above = PREVPREV
+							}
+						}
+					}
+				}
+				OR = {
+					tier = KING
+					holder_scope = { tier = PREV }
+				}
+				ROOT = {
+					NOR = {
+						obedient = PREV
+						non_interference = PREV
+					}
+				}
+			}
+		}
+		
+		OR = {
 			father_even_if_dead = {
 				OR = {
 					primary_title = { higher_tier_than = BARON }
@@ -839,45 +907,11 @@ character_event = {
 			}
 		}
 		
-		diplomacy = 7
-		martial = 9
-		health = 4
-		
-		is_dumb_trigger = no
-		NOR = {
-			trait = content
-			trait = craven
-			trait = patient
-			trait = temperate
-			trait = slothful
-			any_heir_title = {
-				always = yes
-			}
-			any_claim = {
-				has_holder = yes
-				holder_scope = {
-					independent = yes
-					OR = {
-						is_merchant_republic = no
-						NOT = {
-							capital_holding = {
-								de_jure_liege_or_above = PREVPREV
-							}
-						}
-					}
-				}
-				OR = {
-					tier = KING
-					holder_scope = { tier = PREV }
-				}
-			}
-			has_character_modifier = planning_duchy_adventure
-		}
-		
+		NOT = { has_character_modifier = planning_duchy_adventure }
 	}
 	
 	mean_time_to_happen = {
-		years = 200
+		years = 100
 		modifier = {
 			factor = 4
 			has_dlc = "Horse Lords"
@@ -897,23 +931,11 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.75
-			diplomacy = 15
-		}
-		modifier = {
-			factor = 0.5
-			diplomacy = 20
+			diplomacy = 12
 		}
 		modifier = {
 			factor = 0.75
-			martial = 15
-		}
-		modifier = {
-			factor = 0.5
-			martial = 20
-		}
-		modifier = {
-			factor = 0.65
-			is_heretic = yes
+			martial = 12
 		}
 		modifier = {
 			factor = 0.75
@@ -948,10 +970,6 @@ character_event = {
 			}
 		}
 		modifier = {
-			factor = 0.85
-			trait = bastard
-		}
-		modifier = {
 			factor = 50
 			has_game_rule = {
 				name = adventurers
@@ -963,10 +981,7 @@ character_event = {
 	immediate = {
 		random_independent_ruler = {
 			limit = {
-				OR = {
-					culture_group = ROOT
-					religion_group = ROOT
-				}
+				NOT = { culture = ROOT }
 				is_landed = yes
 				independent = yes
 				NOT = { is_vassal_or_below = ROOT }
@@ -1038,6 +1053,10 @@ character_event = {
 		set_character_flag = do_not_disturb
 		character_event = { id = TOG.1215 days = 730 }
 	}
+	
+	option = {
+		name = OK
+	}
 }
 
 character_event = {
@@ -1069,18 +1088,16 @@ character_event = {
 	hide_window = yes # Only fires for unplayable landless characters
 	
 	is_triggered_only = yes
+
 	prisoner = no
 	only_capable = yes
-	has_dlc = "The Old Gods"
 	
 	trigger = {
+		has_dlc = "The Old Gods"
 		
 		is_ruler = no
-		NOT = {
-			any_spouse = {
-				is_ruler = no
-			}
-		}
+		NOT = { any_spouse = { is_ruler = yes } }
+		
 		NOT = {
 			any_heir_title = {
 				always = yes
@@ -1088,12 +1105,10 @@ character_event = {
 		}
 		
 		any_independent_ruler = {
+			NOT = { culture = ROOT }
 			is_landed = yes
 			independent = yes
-			NOR = {
-				culture = ROOT
-				is_vassal_or_below = ROOT
-			}
+			NOT = { is_vassal_or_below = ROOT }
 			any_realm_province = {
 				OR = {
 					port = yes
@@ -1126,10 +1141,7 @@ character_event = {
 			capital_scope = {
 				random_independent_ruler = {
 					limit = {
-						OR = {
-							culture_group = ROOT
-							religion_group = ROOT
-						}
+						NOT = { culture = ROOT }
 						is_landed = yes
 						independent = yes
 						NOT = { is_vassal_or_below = ROOT }
@@ -1166,6 +1178,7 @@ character_event = {
 								tier = DUKE
 								landless = yes
 								temporary = yes
+								adventurer = yes
 								culture = ROOT
 								name = "CLAIMANT_ADVENTURE"
 								holder = ROOT
@@ -1248,6 +1261,10 @@ character_event = {
 				galleys = { 200 200 }
 			}
 		}
+	}
+	
+	option = {
+		name = OK
 	}
 }
 

@@ -1,14 +1,15 @@
 # Targetted decisions are possible vs _all_ other characters and shown are in the Diplomacy View, not the Intrigue View. The taker is in the FROM scope.
 #
-# filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/spouse/liege/rivals/all] ('self' MUST be set for decisions targetting only the taker, the other filter types can be set to lessen CPU load)
-# ai_target_filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/spouse/liege/rivals/all] (which characters for which the AI evaluates the decision.)
-#	court: all characters in the AI's host court, including prisoners, and characters currently away (wards, prisoners, etc)
-#	home_court: all characters in the AI's home court, including prisoners, and characters currently away (wards, prisoners, etc)
+# filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/spouse/liege/religious_head/rivals/society/all] ('self' MUST be set for decisions targetting only the taker, the other filter types can be set to lessen CPU load)
+# ai_target_filter = [self/court/home_court/vassals/sub_realm/realm/dynasty/spouse/liege/religious_head/rivals/society/all] (which characters for which the AI evaluates the decision.)
+#	court: all characters in the host court, including prisoners, and characters currently away (wards, prisoners, etc)
+#	home_court: all characters in the home court, including prisoners, and characters currently away (wards, prisoners, etc)
 #	vassals: direct vassal rulers of the AI's employer
 #	sub_realm: all characters below the AI's employer
 #	realm: all characters in the same top realm as the AI
-#	dynasty: all members of the same dynasty
+#	dynasty: all members of the same dynasty (but not yourself)
 #	rivals: your rivals plus any character you have an opinion modifier with 'crime = yes' set (the same set of characters the 'is_foe' trigger evaluates)
+# society: the other members of your society (but not yourself)
 #	all: all living characters (Avoid if possible. VERY CPU-HEAVY!)
 #	
 
@@ -24,10 +25,8 @@ targetted_decisions = {
 		}
 		potential = {
 			is_lover = FROM
-			NOR = {
-				any_spouse = { character = FROM }
-				any_consort = { character = FROM }
-			}
+			NOT = { any_spouse = { character = FROM } }
+			NOT = { any_consort = { character = FROM } }
 		}
 		allow = {
 			always = yes
@@ -47,11 +46,11 @@ targetted_decisions = {
 		only_playable = yes
 		
 		ai_target_filter = realm
+		ai_check_interval = 3
 	
 		from_potential = {
-			is_playable = yes
-			is_marriage_adult = yes
 			has_focus = focus_seduction
+			is_marriage_adult = yes
 			NOT = { trait = incapable }
 			prisoner = no
 			NOT = { has_any_opinion_modifier = opinion_seducing }
@@ -76,57 +75,46 @@ targetted_decisions = {
 						}
 					}
 					is_ill = no
-					NOR = {
-						trait = eunuch
-						trait = infirm
-						trait = inbred
-						trait = imbecile
-						trait = chaste
-						trait = shy
-					}
+					NOT = { trait = eunuch }
+					NOT = { trait = infirm }
+					NOT = { trait = inbred }
+					NOT = { trait = imbecile }
+					NOT = { trait = chaste }
+					NOT = { trait = shy }
 				}
 			}
 		}
 		
 		potential = {
 			is_marriage_adult = yes
+			NOT = { character = FROM }
+			NOT = { trait = incapable }
 			prisoner = no
-			NOR = {
-				character = FROM
-				trait = incapable
-				trait = eunuch
-				trait = nun
-				trait = monk
-				trait = celibate
-				is_lover = FROM
-				is_former_lover = FROM
+			NOT = { is_lover = FROM }
+			NOT = { is_former_lover = FROM }
 			
-				is_consort = FROM
-				any_spouse = { character = FROM }
-			}
+			NOT = { is_consort = FROM }
+			NOT = { any_spouse = { character = FROM } }
+			
 			OR = {
 				AND = {
-					NOR = {
-						is_child_of = FROM
-						mother_even_if_dead = { is_child_of = FROM }
-						father_even_if_dead = { is_child_of = FROM }
-					}
+					NOT = { is_child_of = FROM }
+					NOT = { mother_even_if_dead = { is_child_of = FROM } }
+					NOT = { father_even_if_dead = { is_child_of = FROM } }
 					FROM = {
-						NOR = {
-							is_child_of = ROOT
-							mother_even_if_dead = { is_child_of = ROOT }
-							father_even_if_dead = { is_child_of = ROOT }
-						}
+						NOT = { is_child_of = ROOT }
+						NOT = { mother_even_if_dead = { is_child_of = ROOT } }
+						NOT = { father_even_if_dead = { is_child_of = ROOT } }
 					}
 				}
 				close_relative_marriages_allowed_trigger = yes
 			}
 			
 			OR = {
-				NOR = {
-					FROM = { trait = homosexual }
-					trait = homosexual
-					same_sex = FROM
+				AND = {
+					FROM = { NOT = { trait = homosexual } }
+					NOT = { trait = homosexual }
+					NOT = { same_sex = FROM }
 				}
 				AND = {
 					FROM = { trait = homosexual }
@@ -140,9 +128,9 @@ targetted_decisions = {
 			NOR = {
 				has_opinion_modifier = { who = FROM modifier = opinion_seduced_refused }
 				has_character_modifier = dismissed_proposal
-				trait = celibate
-				FROM = { trait = celibate }
 			}
+			NOT = { trait = celibate }
+			NOT = { FROM = { trait = celibate } }
 			OR = {
 				religion_group = FROM
 				is_liege_or_above = FROM
@@ -181,11 +169,9 @@ targetted_decisions = {
 							religion_group = christian
 							OR = {
 								is_priest = yes
-								trait = monk
-								trait = nun
+								is_ascetic_trigger = yes
 								ROOT = { is_priest = yes }
-								ROOT = { trait = monk }
-								ROOT = { trait = nun }
+								ROOT = { is_ascetic_trigger = yes }
 							}
 						}
 						character_event = { id = WoL.103 days = 1 } # Warning - Priest scandal risk
@@ -215,7 +201,7 @@ targetted_decisions = {
 		ai_will_do = {
 			factor = 1 		# 1 = 100% chance every month (for each allowed target!)
 			modifier = {
-				factor = 0.05
+				factor = 0.15
 			}
 			modifier = {
 				factor = 0
@@ -248,16 +234,15 @@ targetted_decisions = {
 					num_of_children = 8
 				}
 			}
+			
 			modifier = {
 				factor = 0
 				num_of_lovers = 1
-				NOR = {
-					trait = lustful
-					trait = hedonist
-					trait = seducer
-					trait = seductress
-					has_focus = focus_seduction
-				}
+				NOT = { trait = lustful }
+				NOT = { trait = hedonist }
+				NOT = { trait = seducer }
+				NOT = { trait = seductress }
+				NOT = { has_focus = focus_seduction }
 			}
 			
 			modifier = {
@@ -277,6 +262,7 @@ targetted_decisions = {
 					}
 				}
 			}
+			
 			modifier = {
 				factor = 10
 				FROM = {
@@ -309,12 +295,10 @@ targetted_decisions = {
 				factor = 0.25
 				is_close_relative = FROM
 				FROM = {
-					NOR = {
-						trait = lustful
-						trait = arbitrary
-						trait = possessed
-						trait = lunatic
-					}
+					NOT = { trait = lustful }
+					NOT = { trait = arbitrary }
+					NOT = { trait = possessed }
+					NOT = { trait = lunatic }
 				}
 			}
 			
@@ -351,8 +335,10 @@ targetted_decisions = {
 			ai = no
 			is_marriage_adult = yes
 			has_focus = focus_seduction
-			has_character_flag = seduction_confirmed
-			has_any_opinion_modifier = opinion_seducing
+			OR = {
+				has_character_flag = seduction_confirmed
+				has_any_opinion_modifier = opinion_seducing
+			}
 		}
 		
 		effect = {
@@ -386,8 +372,10 @@ targetted_decisions = {
 			ai = no
 			is_marriage_adult = yes
 			has_focus = focus_seduction
-			has_character_flag = seduction_confirmed
-			has_any_opinion_modifier = opinion_seducing
+			OR = {
+				has_character_flag = seduction_confirmed
+				has_any_opinion_modifier = opinion_seducing
+			}
 		}
 		
 		potential = {
@@ -422,19 +410,15 @@ targetted_decisions = {
 		from_potential = {
 			is_playable = yes
 			has_focus = focus_intrigue
+			NOT = { trait = incapable }
 			prisoner = no
-			NOR = {
-				trait = incapable
-				has_any_opinion_modifier = opinion_spying_on
-				has_any_opinion_modifier = opinion_breaking_out
-			}
+			NOT = { has_any_opinion_modifier = opinion_spying_on }
+			NOT = { has_any_opinion_modifier = opinion_breaking_out }
 		}
 		potential = {
+			NOT = { trait = incapable }
 			same_realm = FROM
-			NOR = {
-				trait = incapable
-				character = FROM
-			}
+			NOT = { character = FROM }
 		}
 		allow = {
 			prisoner = no
@@ -476,7 +460,7 @@ targetted_decisions = {
 			}
 			modifier = {
 				factor = 0
-				NOR = {
+				NOR = { 
 					is_rival = FROM
 					is_married = FROM
 					AND = {
@@ -548,6 +532,7 @@ targetted_decisions = {
 		}
 	}
 	
+	
 	stop_spy_on_decision_target = {
 		ai_target_filter = realm
 	
@@ -586,17 +571,14 @@ targetted_decisions = {
 		only_playable = yes
 		is_high_prio = yes
 	
-		filter = sub_realm
 		ai_target_filter = dynasty
 		
 		from_potential = {
 			is_playable = yes
 			has_focus = focus_intrigue
-			NOR = {
-				trait = incapable
-				has_any_opinion_modifier = opinion_breaking_out
-				has_any_opinion_modifier = opinion_spying_on
-			}
+			NOT = { trait = incapable }
+			NOT = { has_any_opinion_modifier = opinion_breaking_out }
+			NOT = { has_any_opinion_modifier = opinion_spying_on }
 		}
 		
 		potential = {
@@ -633,10 +615,8 @@ targetted_decisions = {
 		}
 		
 		allow = {
-			NOR = {
-				trait = incapable
-				has_character_modifier = failed_escape
-			}
+			NOT = { trait = incapable }
+			NOT = { has_character_modifier = failed_escape }
 		}
 		
 		effect = {
@@ -650,12 +630,10 @@ targetted_decisions = {
 					if = {
 						limit = { ROOT = { prisoner = yes } }
 						character_event = { id = WoL.2200 days = 1 }
-						break = yes
 					}
 					if = {
 						limit = { ROOT = { prisoner = no } }
 						character_event = { id = WoL.2201 days = 1 }
-						break = yes
 					}
 					if = {
 						limit = {
@@ -702,35 +680,31 @@ targetted_decisions = {
 			is_adult = yes
 			has_focus = focus_carousing
 			prisoner = no
-			NOR = {
-				trait = incapable
-				had_character_flag = {
-					flag = inviting_guests_to_party_timer
-					days = 90
-				}
-			}
+			NOT = { trait = incapable }
+			NOT = { is_inaccessible_trigger = yes }
+			NOT = { had_character_flag = { flag = inviting_guests_to_party_timer days = 90 } }
+			NOT = { has_character_flag = party_host }
 		}
 		potential = {
 			is_adult = yes
 			prisoner = no
+			NOT = { is_inaccessible_trigger = yes }
+			NOT = { trait = incapable }
 			is_within_diplo_range = FROM
-			NOR = {
-				trait = incapable
-				has_character_flag = carousing_invite
-				character = FROM                          # Can't do this decision on yourself...
-			}
+			NOT = { has_character_flag = carousing_invite }
+			NOT = { character = FROM }                            # Can't do this decision on yourself...
 		}
 		allow = {
 			same_realm = FROM   # Can only invite characters in same realm!
-			NOR = {
-				has_character_modifier = organizing_party
-				has_character_modifier = party_carousing
+			NOT = { has_character_modifier = organizing_party }
+			NOT = { has_character_modifier = party_carousing }
+			war = no
+			NOT = {
 				reverse_has_opinion_modifier = {
 					modifier = opinion_declined_party
 					who = FROM
 				}
 			}
-			war = no
 			ROOT = {
 				custom_tooltip = {
 					text = tooltip_not_busy
@@ -738,6 +712,7 @@ targetted_decisions = {
 				}
 			}
 			FROM = {
+				
 				war = no
 				NOT = { has_character_modifier = party_timer }
 				OR = {
@@ -775,6 +750,9 @@ targetted_decisions = {
 			factor = 1
 
 			modifier = {
+				factor = 0.5 #Slow it down
+			}
+			modifier = {
 				factor = 0
 				FROM = { has_character_modifier = organizing_party } # AI will only invite one person
 			}
@@ -809,6 +787,7 @@ targetted_decisions = {
 
 			OR = {
 				ai = no
+				
 				is_female = no
 				trait = brave
 				is_nomadic = yes
@@ -820,10 +799,9 @@ targetted_decisions = {
 		potential = {
 			is_adult = yes
 			prisoner = no
-			NOT = {
-				character = FROM
-			}
+			NOT = { character = FROM }
 			is_inaccessible_trigger = no
+
 			OR = {
 				AND = {
 					OR = {
@@ -1037,7 +1015,7 @@ targetted_decisions = {
 								}
 								opinion = {
 									modifier = opinion_dishonorable_duel
-									who = FROM
+									who = PREV
 									months = 36
 								}
 							}

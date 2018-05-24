@@ -245,7 +245,7 @@ character_event = {
 	picture = GFX_evt_council
 	
 	is_triggered_only = yes
-	
+
 	option = {
 		name = EVTOPTA_38011
 		trigger = {
@@ -442,22 +442,11 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		NOR = {
-			wealth = -50
-			has_character_flag = stolen_church_properties
-			trait = zealous
-		}
+		NOT = { wealth = -50 }
+		NOT = { has_character_flag = stolen_church_properties }
+		NOT = { trait = zealous }
 		any_vassal = {
 			is_theocracy = yes
-		}
-	}
-	
-	immediate = {
-		random_vassal = {
-			limit = {
-				is_theocracy = yes
-			}
-			save_event_target_as = target_priest
 		}
 	}
 	
@@ -468,7 +457,8 @@ character_event = {
 	option = {
 		name = EVTOPTA38020 # There are fat bishop, seize them !
 		trigger = {
-			event_target:target_priest = {
+			any_vassal = {
+				is_theocracy = yes
 				any_demesne_title = {
 					tier = baron
 					num_of_buildings = 1
@@ -482,7 +472,15 @@ character_event = {
 				NOT = { trait = cynical }
 			}
 		}
-		event_target:target_priest = {
+		random_vassal = {
+			limit = {
+				is_theocracy = yes
+				any_demesne_title = {
+					tier = baron
+					num_of_buildings = 1
+				}
+			}
+			
 			character_event = { id = 38021 days = 1 tooltip = EVTTOOLTIP38021 }
 			imprison = yes
 		}
@@ -495,7 +493,10 @@ character_event = {
 		wealth = 100
 		random = {
 			chance = 25
-			event_target:target_priest = {
+			random_vassal = {
+				limit = {
+					is_theocracy = yes
+				}
 				character_event = { id = 38021 days = 1 tooltip = EVTTOOLTIP38021 }
 			}
 		}
@@ -589,6 +590,7 @@ character_event = {
 	picture = GFX_evt_bad_news
 	
 	is_triggered_only = yes
+	hide_from = yes
 	
 	option = {
 		name = EVTOPTA38022 
@@ -692,19 +694,22 @@ character_event = {
 	
 	trigger = {
 		independent = no
+		NOT = { has_character_flag = offered_to_buy_liege_titles }
 		liege = {
-			NOR = {
-				character = ROOT
-				wealth = -50
-			}
+			NOT = { character = ROOT }
+		}
+		liege = {
+			NOT = { wealth = -50 }
 			any_demesne_title = {
-				#has_de_jure_pretension = ROOT
-				#can_be_given_away = yes
+				has_de_jure_pretension = ROOT
+				can_be_given_away = yes
 				lower_tier_than = PREV
-				NAND = {
-					tier = count
-					location = {
-						is_capital = yes
+				NOT = {
+					AND = {
+						tier = count
+						location = {
+							is_capital = yes
+						}						
 					}
 				}
 			}
@@ -718,17 +723,20 @@ character_event = {
 				limit = {
 					has_de_jure_pretension = ROOT
 					can_be_given_away = yes
-					lower_tier_than = PREV
-					NAND = {
-						tier = count
-						location = {
-							is_capital = yes
+					lower_tier_than = ROOT
+					NOT = {
+						AND = {
+							tier = count
+							location = {
+								is_capital = yes
+							}
 						}
 					}
 				}
 				save_event_target_as = title_for_sale
 			}
 		}
+		set_character_flag = offered_to_buy_liege_titles
 	}
 	
 	mean_time_to_happen = {
@@ -768,7 +776,6 @@ character_event = {
 		}
 	}
 	
-	
 	option = {
 		trigger = {
 			has_dlc = "Zeus"
@@ -791,11 +798,12 @@ character_event = {
 			}
 		}
 	}
+	
 	option = {
 		name = EVTOPTA38060
 		ai_chance = { factor = 100 }
+		liege = { character_event = { id = 38061 days = 1 tooltip = EVTTOOLTIP38061 } }
 		liege = {
-			character_event = { id = 38061 days = 1 tooltip = EVTTOOLTIP38061 }
 			tooltip = {
 				event_target:title_for_sale = {
 					grant_title = ROOT

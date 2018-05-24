@@ -137,11 +137,13 @@ character_event = {
 		any_vassal = {
 			limit = {
 				ai = no
-				NOR = {
-					father = { character = ROOT }
-					mother = { character = ROOT }
-					is_primary_heir = ROOT # Any vassal except primary heir which is handled in chronicle owner transfer event CM.10001
+				NOT = {
+					OR = {
+						father = { character = ROOT }
+						mother = { character = ROOT }
+					}
 				}
+				NOT = { is_primary_heir = ROOT } # Any vassal except primary heir which is handled in chronicle owner transfer event CM.10001
 			}
 			chronicle = {
 				entry = CHRONICLE_DEATH_OF_LIEGE
@@ -187,11 +189,13 @@ character_event = {
 				religion_head = {
 					character = ROOT
 				}
-				NOR = {
-					is_primary_heir = ROOT # Not used for primary heir which is handled in chronicle owner transfer event CM.10001
-					father = { character = ROOT }
-					mother = { character = ROOT }
-					spouse = { character = ROOT }
+				NOT = { is_primary_heir = ROOT } # Not used for primary heir which is handled in chronicle owner transfer event CM.10001
+				NOT = {
+					OR = {
+						father = { character = ROOT }
+						mother = { character = ROOT }
+						spouse = { character = ROOT }
+					}
 				}
 			}
 			chronicle = {
@@ -385,7 +389,9 @@ character_event = {
 		}
 		any_player = {
 			limit = {
-				religion = new_character
+				new_character = {
+					religion = PREV
+				}
 			}
 			chronicle = {
 				entry = CHRONICLE_UNFRIENDLY_CRUSADE_STARTED
@@ -426,7 +432,9 @@ character_event = {
 				limit = {
 					OR = {
 						religion = FROM
-						religion = new_character
+						new_character = {
+							religion = PREV
+						}
 					}
 					NOT = { character = FROM }
 				}
@@ -457,7 +465,9 @@ character_event = {
 				limit = {
 					OR = {
 						religion = FROM
-						religion = new_character
+						new_character = {
+							religion = PREV
+						}
 					}
 				}
 				chronicle = {
@@ -484,7 +494,9 @@ character_event = {
 			limit = {
 				OR = {
 					religion = FROM
-					religion = new_character
+					new_character = {
+						religion = PREV
+					}
 				}
 			}
 			chronicle = {
@@ -507,10 +519,8 @@ character_event = {
 		any_player = {
 			limit = {
 				capital_scope = {
-					NOR = {
-						region = world_india
-						region = world_africa_east
-					}
+					NOT = { region = world_india }
+					NOT = { region = world_africa_east }
 				}
 			}
 			character_event = { id = CM.10019 }
@@ -671,10 +681,8 @@ character_event = {
 		if = {
 			limit = {
 				new_character = {
-					NOR = {
-						father_even_if_dead = { always = yes }
-						mother_even_if_dead = { always = yes }
-					}
+					NOT = { father_even_if_dead = { always = yes } }
+					NOT = { mother_even_if_dead = { always = yes } }
 				}
 			}
 			FROM = {
@@ -877,9 +885,7 @@ character_event = {
 				any_vassal = { ai = no }
 			}
 			any_vassal = {
-				limit = {
-					ai = no
-				}
+				limit = { ai = no }
 				chronicle = {
 					entry = CHRONICLE_LIEGE_CONVERTED_RELIGION
 					portrait = [Root.GetID]
@@ -1068,28 +1074,26 @@ character_event = {
 	ai = yes
 	
 	trigger = {
-		FROM = {
-			OR = {
-				title = b_roma
-				title = b_constantinople
-				title = b_bagdad
-#				title = b_indraprastha
-				title = b_jerusalem
-				title = b_mecca
-				title = b_alexandria
-				title = b_cordoba
-				AND = {
-					year = 900
-					title = b_venezia
-				}
-				AND = {
-					year = 1164
-					title = b_koln
-				}
-				AND = {
-					year = 1200
-					title = b_paris
-				}
+		OR = {
+			FROM = { title = b_roma }
+			FROM = { title = b_constantinople }
+			FROM = { title = b_bagdad }
+#			FROM = { title = b_indraprastha }
+			FROM = { title = b_jerusalem }
+			FROM = { title = b_mecca }
+			FROM = { title = b_alexandria }
+			FROM = { title = b_cordoba }
+			AND = {
+				year = 900
+				FROM = { title = b_venezia }
+			}
+			AND = {
+				year = 1164
+				FROM = { title = b_koln }
+			}
+			AND = {
+				year = 1200
+				FROM = { title = b_paris }
 			}
 		}
 	}
@@ -1123,28 +1127,26 @@ character_event = {
 	ai = yes
 	
 	trigger = {
-		FROM = {
-			OR = {
-				title = b_roma
-				title = b_constantinople
-				title = b_bagdad
-#				title = b_indraprastha
-				title = b_jerusalem
-				title = b_mecca
-				title = b_alexandria
-				title = b_cordoba
-				AND = {
-					year = 900
-					title = b_venezia
-				}
-				AND = {
-					year = 1164
-					title = b_koln
-				}
-				AND = {
-					year = 1200
-					title = b_paris
-				}
+		OR = {
+			FROM = { title = b_roma }
+			FROM = { title = b_constantinople }
+			FROM = { title = b_bagdad }
+#			FROM = { title = b_indraprastha }
+			FROM = { title = b_jerusalem }
+			FROM = { title = b_mecca }
+			FROM = { title = b_alexandria }
+			FROM = { title = b_cordoba }
+			AND = {
+				year = 900
+				FROM = { title = b_venezia }
+			}
+			AND = {
+				year = 1164
+				FROM = { title = b_koln }
+			}
+			AND = {
+				year = 1200
+				FROM = { title = b_paris }
 			}
 		}
 	}
@@ -1272,8 +1274,8 @@ character_event = {
 	trigger = {
 		OR = {
 			ai = no
-			FROM = {
-				ai = no
+			FROM = { 
+				ai = no 
 			}
 		}
 	}

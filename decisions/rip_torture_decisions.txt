@@ -19,33 +19,34 @@ targetted_decisions = {
 		}
 
 		allow = {
+			NOT = { diplomatic_immunity = yes }
 			prisoner = yes
 		}
 
 		effect = {
 			hidden_tooltip = {
-				FROM = {
-					if = {
-						limit = {
+				if = {
+					limit = {
+						FROM = { 
 							has_nickname = no
 							is_adult = yes
 							NOT = { trait = incapable }
 						}
-						random_list = {
-							5 = {
-								give_nickname = nick_the_cruel
-							}
-							5 = {
-								give_nickname = nick_the_evil
-							}
-							5 = {
-								give_nickname = nick_the_tormentor
-							}
-							5 = {
-								give_nickname = nick_the_depraved
-							}
-							100 = {}
+					}
+					random_list = {
+						5 = {
+							FROM = { give_nickname = nick_the_cruel }
 						}
+						5 = {
+							FROM = { give_nickname = nick_the_evil }
+						}
+						5 = {
+							FROM = { give_nickname = nick_the_tormentor }
+						}
+						5 = {
+							FROM = { give_nickname = nick_the_depraved }
+						}
+						100 = {}
 					}
 				}
 			}
@@ -150,10 +151,8 @@ targetted_decisions = {
 							if = {
 								limit = {
 									FROM = {
-										NOR = {
-											dynasty = ROOT
-											sibling = ROOT
-										}
+										NOT = { dynasty = ROOT }
+										NOT = { sibling = ROOT }
 									}
 								}
 								any_sibling = {
@@ -204,9 +203,12 @@ targetted_decisions = {
 			}
 			
 			FROM = {
+				show_scope_change = no
+				remove_opinions_with_prison_reason_effect = yes
 				save_event_target_as = remove_prison_reason_effect_accuser
 				ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
-				hidden_tooltip = { remove_prison_reason_effect = yes }
+				#hidden_tooltip = { remove_prison_reason_effect = yes } #NOTE: OUTDATED. Now uses the "remove_opinions_with_prison_reason_effect" instead.
+
 				if = {
 					limit = {
 						NOR = {
@@ -262,7 +264,7 @@ targetted_decisions = {
 				OR = {
 					reverse_opinion = { who = FROM value = 40 }
 					FROM = { NOT = { piety = 100 } }
-					FROM = { liege = { dynasty = ROOT } }
+					FROM = { LIEGE = { dynasty = ROOT } }
 				}
 			}
 			modifier = {
@@ -321,17 +323,19 @@ targetted_decisions = {
 			is_adult = yes
 			prisoner = no
 			NOT = { trait = incapable }
-			OR = {
-				trait = cruel
-				trait = impaler
-				trait = wroth
-				trait = arbitrary
-				AND = {
-					trait = envious
-					trait = ugly
+			AND = {
+				OR = {
+					trait = cruel
+					trait = impaler
+					trait = wroth
+					trait = arbitrary
+					AND = {
+						trait = envious
+						trait = ugly
+					}
 				}
+				NOT = { trait = kind }
 			}
-			NOT = { trait = kind }
 		}
 
 		potential = {
@@ -339,55 +343,58 @@ targetted_decisions = {
 			prisoner = yes
 			age = 13
 
-			NAND = {
-				trait = one_legged
-				trait = one_handed
-				trait = disfigured
-				OR = {
-					trait = one_eyed
-					trait = blinded
-				}
-				OR = {
-					is_female = yes
-					trait = eunuch
+			NOT = {
+				AND = {
+					trait = one_legged
+					trait = one_handed
+					trait = disfigured
+					OR = {
+						trait = one_eyed
+						trait = blinded
+					}
+					OR = {
+						is_female = yes
+						trait = eunuch
+					}
 				}
 			}
 		}
 
 		allow = {
+			NOT = { diplomatic_immunity = yes }
 			prisoner = yes
 		}
 
 		effect = {
 			hidden_tooltip = {
-				FROM = {
-					if = {
-						limit = {
+				if = {
+					limit = {
+						FROM = { 
 							has_nickname = no
 							is_adult = yes
 							NOT = { trait = incapable }
 						}
-						random_list = {
-							5 = {
-								give_nickname = nick_the_evil
-							}
-							5 = {
-								give_nickname = nick_the_tormentor
-							}
-							5 = {
-								give_nickname = nick_the_butcher
-							}
-							5 = {
-								give_nickname = nick_the_mutilator
-							}
-							5 = {
-								give_nickname = nick_the_monster
-							}
-							5 = {
-								give_nickname = nick_son_of_evilgod
-							}
-							100 = {}
+					}
+					random_list = {
+						5 = {
+							FROM = { give_nickname = nick_the_evil }
 						}
+						5 = {
+							FROM = { give_nickname = nick_the_tormentor }
+						}
+						5 = {
+							FROM = { give_nickname = nick_the_butcher }
+						}
+						5 = {
+							FROM = { give_nickname = nick_the_mutilator }
+						}
+						5 = {
+							FROM = { give_nickname = nick_the_monster }
+						}
+						5 = {
+							FROM = { give_nickname = nick_son_of_evilgod }
+						}
+						100 = {}
 					}
 				}
 			}
@@ -470,6 +477,7 @@ targetted_decisions = {
 			}
 			
 			FROM = {
+				show_scope_change = no
 				piety = -50
 				if = {
 					limit = { NOT = { trait = cruel } }
@@ -511,10 +519,8 @@ targetted_decisions = {
 				if = {
 					limit = {
 						FROM = {
-							NOR = {
-								dynasty = ROOT
-								sibling = ROOT
-							}
+							NOT = { dynasty = ROOT }
+							NOT = { sibling = ROOT }
 						}
 					}
 					any_sibling = {
@@ -533,7 +539,9 @@ targetted_decisions = {
 				
 				FROM = { save_event_target_as = remove_prison_reason_effect_accuser }
 				ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
-				hidden_tooltip = { remove_prison_reason_effect = yes }
+				#hidden_tooltip = { remove_prison_reason_effect = yes } #NOTE: OUTDATED. Now uses the "remove_opinions_with_prison_reason_effect" instead.
+				FROM = { remove_opinions_with_prison_reason_effect = yes }
+
 			}
 		}
 		revoke_allowed = {
@@ -548,7 +556,7 @@ targetted_decisions = {
 				OR = {
 					reverse_opinion = { who = FROM value = 40 }
 					FROM = { NOT = { piety = 100 } }
-					FROM = { liege = { dynasty = ROOT } }
+					FROM = { LIEGE = { dynasty = ROOT } }
 				}
 			}
 			modifier = {
@@ -592,6 +600,7 @@ targetted_decisions = {
 		}
 
 		allow = {
+			NOT = { diplomatic_immunity = yes }
 			prisoner = yes
 		}
 
@@ -641,7 +650,8 @@ targetted_decisions = {
 
 			FROM = { save_event_target_as = remove_prison_reason_effect_accuser }
 			ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
-			hidden_tooltip = { remove_prison_reason_effect = yes }
+			#hidden_tooltip = { remove_prison_reason_effect = yes }
+			hidden_effect = { FROM = { remove_opinions_with_prison_reason_effect = yes } }
 		}
 		revoke_allowed = {
 			always = no
@@ -691,6 +701,7 @@ targetted_decisions = {
 			age = 13
 		}
 		allow = {
+			NOT = { diplomatic_immunity = yes }
 			prisoner = yes
 		}
 		effect = {
@@ -852,10 +863,8 @@ targetted_decisions = {
 				if = {
 					limit = {
 						FROM = {
-							NOR = {
-								dynasty = ROOT
-								sibling = ROOT
-							}
+							NOT = { dynasty = ROOT }
+							NOT = { sibling = ROOT }
 						}
 					}
 					any_sibling = {
@@ -874,7 +883,8 @@ targetted_decisions = {
 			}
 			FROM = { save_event_target_as = remove_prison_reason_effect_accuser }
 			ROOT = { save_event_target_as = remove_prison_reason_effect_accused }
-			hidden_tooltip = { remove_prison_reason_effect = yes }
+			#hidden_tooltip = { remove_prison_reason_effect = yes }
+			hidden_effect = { FROM = { remove_opinions_with_prison_reason_effect = yes } }
 		}
 		revoke_allowed = {
 			always = no
@@ -923,10 +933,14 @@ targetted_decisions = {
 			OR = {
 				has_character_modifier = cannibal
 				trait = cannibal_trait
+				graphical_culture = beargfx
+				culture = bear
 			}
 			OR = {
 				trait = possessed
 				trait = lunatic
+				graphical_culture = beargfx
+				culture = bear
 			}
 		}
 
@@ -934,6 +948,10 @@ targetted_decisions = {
 			host = { character = FROM }
 			prisoner = yes
 			age = 12
+		}
+		
+		allow = {
+			NOT = { diplomatic_immunity = yes }
 		}
 		
 		ai_will_do = {
@@ -944,6 +962,7 @@ targetted_decisions = {
 			hidden_tooltip = {
 				any_dynasty_member = {
 					limit = {
+						is_offmap_ruler = no
 						is_close_relative = ROOT
 						NOT = { character = FROM }
 					}
@@ -971,6 +990,8 @@ targetted_decisions = {
 							modifier = {
 								factor = 0
 								OR = {
+									immortal = yes
+									has_character_flag = demon_child
 									ROOT = {
 										immortal = yes
 									}
@@ -982,17 +1003,52 @@ targetted_decisions = {
 									}
 								}
 							}
-							if = {
-								limit = {
-									NOR = {
-										num_of_symptoms = 1
-										is_ill = yes
-										has_character_flag = developing_illness
+							random_list = {
+								50 = { # Food Poisoning
+									if = {
+										limit = {
+											NOR = {
+												num_of_symptoms = 1
+												is_ill = yes
+												has_character_flag = developing_illness
+												has_character_flag = disease_not_serious
+											}
+										}
+										set_character_flag = got_food_poisoning
+										set_character_flag = developing_illness
+										character_event = { id = RIP.5023 days = 5 }
 									}
 								}
-								set_character_flag = got_food_poisoning
-								set_character_flag = developing_illness
-								character_event = { id = RIP.5023 days = 5 }
+								25 = { # Diarrhea - Not Serious
+									if = {
+										limit = {
+											NOR = {
+												num_of_symptoms = 1
+												is_ill = yes
+												has_character_flag = developing_illness
+												has_character_flag = disease_not_serious
+											}
+										}
+										set_character_flag = disease_not_serious
+										character_event = { id = RIP.5002 days = 5 }
+										character_event = { id = RIP.11004 days = 10 random = 50 }
+									}
+								}
+								25 = { # Vomiting - Not Serious
+									if = {
+										limit = {
+											NOR = {
+												num_of_symptoms = 1
+												is_ill = yes
+												has_character_flag = developing_illness
+												has_character_flag = disease_not_serious
+											}
+										}
+										set_character_flag = disease_not_serious
+										character_event = { id = RIP.5003 days = 5 }
+										character_event = { id = RIP.11005 days = 10 random = 50 }
+									}
+								}
 							}
 						}
 						10 = { # Gain power!
@@ -1011,7 +1067,7 @@ targetted_decisions = {
 									}	
 									NOT = { religion_group = ROOT }
 								}
-									set_character_flag = pope_eater	
+								set_character_flag = pope_eater	
 							}
 							if = {
 								limit = {
@@ -1093,6 +1149,7 @@ targetted_decisions = {
 				death_reason = death_execution_eaten
 				killer = FROM
 			}
+			save_event_target_as = kinslayer_target
 			FROM = {
 				if = {
 					limit = {
@@ -1109,6 +1166,9 @@ targetted_decisions = {
 						duration = -1
 					}
 				}
+				add_kinslayer_trait_effect = yes
+			}
+			hidden_tooltip = {
 				if = {
 					limit = {
 						dynasty = ROOT
