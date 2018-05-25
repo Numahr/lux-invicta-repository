@@ -1459,16 +1459,21 @@ character_event = {
 	trigger = {
 		num_of_dynasty_members = 3 # Does not trigger for tiny dynasties
 		uses_decadence = yes
+		holy_order = no
+		is_offmap_ruler = no
+		lower_tier_than = KING
 		NOR = {
+			has_character_flag = invasion_china_claimant
 			trait = decadent
 			trait = zealous
 			trait = mujahid
-			has_character_modifier = decadent_timer
+			trait = adventurer
+			has_character_flag = straightened_up
 		}
-		lower_tier_than = KING
 		biggest_realm_size_relative = {
 			NOT = { character = PREV }
 			realm_size = 5
+			same_realm = ROOT
 		}
 	}
 	
@@ -1488,16 +1493,20 @@ character_event = {
 			trait = amateurish_plotter
 		}
 		modifier = {
-			factor = 0.25
+			factor = 0.1
 			trait = hedonist
+		}
+		modifier = {
+			factor = 0.25
+			trait = gluttonous
+		}
+		modifier = {
+			factor = 0.25
+			trait = drunkard
 		}
 		modifier = {
 			factor = 0.5
 			trait = homosexual
-		}
-		modifier = {
-			factor = 0.5
-			trait = gluttonous
 		}
 		modifier = {
 			factor = 0.5
@@ -1508,12 +1517,28 @@ character_event = {
 			trait = bad_priest_muslim
 		}
 		modifier = {
+			factor = 0.5
+			trait = lunatic
+		}
+		modifier = {
 			factor = 0.75
 			trait = cynical
 		}
 		modifier = {
 			factor = 0.75
 			trait = lustful
+		}
+		modifier = {
+			factor = 0.75
+			trait = greedy
+		}
+		modifier = {
+			factor = 0.75
+			trait = wroth
+		}
+		modifier = {
+			factor = 0.75
+			trait = cruel
 		}
 		modifier = {
 			factor = 0.75
@@ -1564,39 +1589,68 @@ character_event = {
 			trait = mastermind_theologian
 		}
 		modifier = {
-			factor = 2.5
-			tier = BARON
-		}
-		modifier = {
 			factor = 10.0
-			tier = COUNT
+			OR = {
+				tier = COUNT
+				tier = BARON
+			}
 		}
 		modifier = {
 			factor = 20.0
 			tier = DUKE
 		}
 		modifier = {
-			factor = 0.5
-			highest_ranked_relative = {
-				tier = KING
+			factor = 0.75
+			biggest_realm_size_relative = {
+				realm_size = 100
 			}
 		}
 		modifier = {
-			factor = 0.5
-			highest_ranked_relative = {
-				tier = EMPEROR
-			}
-		}
-		modifier = {
-			factor = 0.5
+			factor = 0.75
 			biggest_realm_size_relative = {
 				realm_size = 150
 			}
 		}
 		modifier = {
-			factor = 0.5
+			factor = 0.75
+			biggest_realm_size_relative = {
+				realm_size = 200
+			}
+		}
+		modifier = {
+			factor = 0.75
 			biggest_realm_size_relative = {
 				realm_size = 250
+			}
+		}
+		modifier = {
+			factor = 0.75
+			biggest_realm_size_relative = {
+				realm_size = 300
+			}
+		}
+		modifier = {
+			factor = 0.75
+			biggest_realm_size_relative = {
+				realm_size = 350
+			}
+		}
+		modifier = {
+			factor = 0.75
+			biggest_realm_size_relative = {
+				realm_size = 400
+			}
+		}
+		modifier = {
+			factor = 0.75
+			biggest_realm_size_relative = {
+				realm_size = 450
+			}
+		}
+		modifier = {
+			factor = 0.75
+			biggest_realm_size_relative = {
+				realm_size = 500
 			}
 		}
 	}
@@ -1608,6 +1662,7 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					ai = no
 				}
 				character_event = {
@@ -1735,11 +1790,7 @@ character_event = {
 				tooltip = EVTTOOLTIP91352
 			}
 		}
-		add_character_modifier = {
-			modifier = decadent_timer
-			years = 5
-			hidden = yes
-		}
+		set_character_flag = straightened_up
 		remove_trait = decadent
 		clr_character_flag = negotiated_to_drop_decadence
 	}
@@ -1767,11 +1818,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = FROM
-					}
+					NOT = { trait = decadent }
+					NOT = { character = FROM }
 				}
 				
 				character_event = {
@@ -1899,11 +1949,7 @@ character_event = {
 				tooltip = EVTTOOLTIP91352
 			}
 		}
-		add_character_modifier = {
-			modifier = decadent_timer
-			years = 5
-			hidden = yes
-		}
+		set_character_flag = straightened_up
 		remove_trait = decadent
 		clr_character_flag = negotiated_to_drop_decadence
 	}
@@ -1984,11 +2030,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = FROM
-					}
+					NOT = { trait = decadent }
+					NOT = { character = FROM }
 				}
 				
 				character_event = {
@@ -2078,11 +2123,7 @@ character_event = {
 				}
 			}
 		}
-		add_character_modifier = {
-			modifier = decadent_timer
-			years = 5
-			hidden = yes
-		}
+		set_character_flag = straightened_up
 		remove_trait = decadent
 		clr_character_flag = negotiated_to_drop_decadence
 		piety = 100
@@ -2153,9 +2194,11 @@ character_event = {
 	option = {
 		name = EVTOPTD91360 # Go on Hajj
 		trigger = {
-			NOR = {
-				trait = hajjaj
-				trait = on_hajj
+			NOT = {
+				OR = {
+					trait = hajjaj
+					trait = on_hajj
+				}
 			}
 		}
 		
@@ -2163,12 +2206,8 @@ character_event = {
 			factor = 5
 		}
 		
-		add_character_modifier = {
-			modifier = decadent_timer
-			years = 5
-			hidden = yes
-		}
-
+		set_character_flag = straightened_up
+		
 		remove_trait = decadent
 		clr_character_flag = negotiated_to_drop_decadence
 		piety = 50
@@ -2197,13 +2236,9 @@ character_event = {
 		
 		ai_chance = {
 			factor = 5
-		}
+		}	
+		set_character_flag = straightened_up
 		
-		add_character_modifier = {
-			modifier = decadent_timer
-			years = 5
-			hidden = yes
-		}
 		remove_trait = decadent
 		clr_character_flag = negotiated_to_drop_decadence
 		
@@ -2364,12 +2399,8 @@ character_event = {
 				days = 3
 				tooltip = EVTTOOLTIP91352
 			}
-		}
-		add_character_modifier = {
-			modifier = decadent_timer
-			years = 5
-			hidden = yes
-		}
+		}	
+		set_character_flag = straightened_up
 		remove_trait = decadent
 		clr_character_flag = negotiated_to_drop_decadence
 	}
@@ -2476,11 +2507,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = FROM
-					}
+					NOT = { trait = decadent }
+					NOT = { character = FROM }
 				}
 				
 				character_event = {
@@ -2607,6 +2637,7 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
 					NOT = { trait = decadent }
 					NOT = { character = ROOT }
@@ -2634,11 +2665,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = ROOT
-					}
+					NOT = { trait = decadent }
+					NOT = { character = ROOT }
 				}
 				
 				character_event = {
@@ -2669,11 +2699,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = ROOT
-					}
+					NOT = { trait = decadent }
+					NOT = { character = ROOT }
 				}
 				
 				character_event = {
@@ -2698,11 +2727,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = ROOT
-					}
+					NOT = { trait = decadent }
+					NOT = { character = ROOT }
 				}
 				
 				character_event = {
@@ -2789,11 +2817,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = ROOT
-					}
+					NOT = { trait = decadent }
+					NOT = { character = ROOT }
 				}
 				
 				character_event = {
@@ -2823,11 +2850,10 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
-					NOR = {
-						trait = decadent
-						character = ROOT
-					}
+					NOT = { trait = decadent }
+					NOT = { character = ROOT }
 				}
 				
 				character_event = {
@@ -2854,7 +2880,7 @@ character_event = {
 		}
 		reverse_opinion = {
 			modifier = opinion_takfir
-			who = FROMFROM
+			who = FROMFROM 
 			months = 240
 		}
 		reverse_opinion = {
@@ -2866,6 +2892,7 @@ character_event = {
 		hidden_tooltip = {
 			any_dynasty_member = {
 				limit = {
+					is_offmap_ruler = no
 					is_playable = yes
 					NOT = { trait = decadent }
 					NOT = { character = ROOT }

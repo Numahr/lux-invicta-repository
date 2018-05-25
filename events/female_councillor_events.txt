@@ -33,12 +33,10 @@ character_event = {
 				modifier = {
 					factor = 5
 					has_dlc = "Conclave"
-					primary_title = {
-						NOR = {
-							has_law = status_of_women_2
-							has_law = status_of_women_3
-							has_law = status_of_women_4
-						}
+					NOR = {
+						has_law = status_of_women_2
+						has_law = status_of_women_3
+						has_law = status_of_women_4
 					}
 				}
 				modifier = {
@@ -88,7 +86,7 @@ character_event = {
 					remove_trait = mystic
 
 					if = {
-						limit = { religion_group = indian_group }
+						limit = { has_dharmic_religion_trigger = yes }
 						remove_trait = brahmin
 						remove_trait = vaishya
 						add_trait = kshatriya
@@ -124,11 +122,9 @@ character_event = {
 				modifier = {
 					factor = 5
 					has_dlc = "Conclave"
-					primary_title = {
-						NOR = {
-							has_law = status_of_women_3
-							has_law = status_of_women_4
-						}
+					NOR = {
+						has_law = status_of_women_3
+						has_law = status_of_women_4
 					}
 				}
 
@@ -181,7 +177,7 @@ character_event = {
 					remove_trait = mystic
 
 					if = {
-						limit = { religion_group = indian_group }
+						limit = { has_dharmic_religion_trigger = yes }
 						remove_trait = brahmin
 						remove_trait = vaishya
 						add_trait = kshatriya
@@ -218,12 +214,10 @@ character_event = {
 				modifier = {
 					factor = 5
 					has_dlc = "Conclave"
-					primary_title = {
-						NOR = {
-							has_law = status_of_women_2
-							has_law = status_of_women_3
-							has_law = status_of_women_4
-						}
+					NOR = {
+						has_law = status_of_women_2
+						has_law = status_of_women_3
+						has_law = status_of_women_4
 					}
 				}
 				modifier = {
@@ -272,7 +266,7 @@ character_event = {
 					remove_trait = mystic
 
 					if = {
-						limit = { religion_group = indian_group }
+						limit = { has_dharmic_religion_trigger = yes }
 						remove_trait = brahmin
 						remove_trait = kshatriya
 						add_trait = vaishya
@@ -304,13 +298,11 @@ character_event = {
 				modifier = {
 					factor = 5
 					has_dlc = "Conclave"
-					primary_title = {
-						NOR = {
-							has_law = status_of_women_1
-							has_law = status_of_women_2
-							has_law = status_of_women_3
-							has_law = status_of_women_4
-						}
+					NOR = {
+						has_law = status_of_women_1
+						has_law = status_of_women_2
+						has_law = status_of_women_3
+						has_law = status_of_women_4
 					}
 				}
 				modifier = {
@@ -360,7 +352,7 @@ character_event = {
 					remove_trait = mystic
 
 					if = {
-						limit = { religion_group = indian_group }
+						limit = { has_dharmic_religion_trigger = yes }
 						remove_trait = brahmin
 						remove_trait = kshatriya
 						add_trait = vaishya
@@ -405,27 +397,19 @@ character_event = {
 	immediate = {
 
 		remove_trait = content
-		
+
 		trigger_switch = {
 			on_trigger = has_character_flag
-			female_councillor_chancellor = {
-				FROM = { character_event = { id = 77779 } }
-				clr_character_flag = female_councillor_chancellor
-			}
-			female_councillor_marshal = {
-				FROM = { character_event = { id = 77780 } }
-				clr_character_flag = female_councillor_marshal
-			}
-			female_councillor_treasurer = {
-				FROM = { character_event = { id = 77781 } }
-				clr_character_flag = female_councillor_treasurer
-			}
-			female_councillor_spymaster = {
-				FROM = { character_event = { id = 77782 } }
-				clr_character_flag = female_councillor_spymaster
-			}
+			female_councillor_chancellor = { FROM = { character_event = { id = 77779 } } }
+			female_councillor_marshal = { FROM = { character_event = { id = 77780 } } }
+			female_councillor_treasurer = { FROM = { character_event = { id = 77781 } } }
+			female_councillor_spymaster = { FROM = { character_event = { id = 77782 } } }
 		}
 
+		clr_character_flag = female_councillor_chancellor
+		clr_character_flag = female_councillor_marshal
+		clr_character_flag = female_councillor_treasurer
+		clr_character_flag = female_councillor_spymaster
 	}
 }
 
@@ -463,7 +447,9 @@ character_event = {
 			}
 		}
 
-		FROM = { give_job_title = job_chancellor }
+		FROM = { 
+			give_job_title = job_chancellor 
+		}
 		
 		if = {
 			limit = {
@@ -491,37 +477,25 @@ character_event = {
 		#Gets her married
 		hidden_tooltip = {
 			if = {
-				limit = {
-					any_courtier = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
-				}
+				limit = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } }
 				random_courtier = {
-					limit = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
+					limit = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes }
 					add_spouse_matrilineal = FROM
 				}
 				break = yes
 			}
 
-			create_random_diplomat = { 
-				random_traits = yes
-				dynasty = random
-				female = no
-				age = 37
+			if = {
+				limit = { NOT = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } } }
+
+				create_random_diplomat = { 
+					random_traits = yes
+					dynasty = NONE
+					female = no
+					age = 37
+				}
+				new_character = { add_spouse_matrilineal = FROM }
 			}
-			new_character = { add_spouse_matrilineal = FROM }
 		}
 	}
 
@@ -529,7 +503,6 @@ character_event = {
 		name = EVTOPTB_77779
 		hidden_tooltip = {
 			FROM = {
-				leave_court_effect = yes
 				death = { death_reason = death_missing }
 			}
 		}
@@ -572,7 +545,9 @@ character_event = {
 			}
 		}
 
-		FROM = { give_job_title = job_marshal }
+		FROM = { 
+			give_job_title = job_marshal 
+		}
 		
 		if = {
 			limit = {
@@ -604,44 +579,31 @@ character_event = {
 		#Gets her married
 		hidden_tooltip = {
 			if = {
-				limit = {
-					any_courtier = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
-				}
+				limit = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } }
 				random_courtier = {
-					limit = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
+					limit = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes }
 					add_spouse_matrilineal = FROM
 				}
 				break = yes
 			}
 
-			create_random_soldier = { 
-				random_traits = yes
-				dynasty = random
-				female = no
-				age = 37
-			}
-			new_character = { add_spouse_matrilineal = FROM }
+			if = {
+				limit = { NOT = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } } }
+
+				create_random_soldier = { 
+					random_traits = yes
+					dynasty = NONE
+					female = no
+					age = 37
+				}
+				new_character = { add_spouse_matrilineal = FROM }
+			}	
 		}
 	}
 	option = {
 		name = EVTOPTB_77780
 		hidden_tooltip = {
 			FROM = {
-				leave_court_effect = yes
 				death = { death_reason = death_missing }
 			}
 		}
@@ -694,7 +656,9 @@ character_event = {
 			}
 		}
 
-		FROM = { give_job_title = job_treasurer }
+		FROM = { 
+			give_job_title = job_treasurer 
+		}
 		
 		if = {
 			limit = {
@@ -722,44 +686,31 @@ character_event = {
 		#Gets her married
 		hidden_tooltip = {
 			if = {
-				limit = {
-					any_courtier = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
-				}
+				limit = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } }
 				random_courtier = {
-					limit = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
+					limit = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes }
 					add_spouse_matrilineal = FROM
 				}
 				break = yes
 			}
 
-			create_random_steward = { 
-				random_traits = yes
-				dynasty = random
-				female = no
-				age = 42
-			}
-			new_character = { add_spouse_matrilineal = FROM }
+			if = {
+				limit = { NOT = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } } }
+
+				create_random_steward = { 
+					random_traits = yes
+					dynasty = NONE
+					female = no
+					age = 42
+				}
+				new_character = { add_spouse_matrilineal = FROM }
+			}	
 		}
 	}
 	option = {
 		name = EVTOPTB_77781
 		hidden_tooltip = {
 			FROM = {
-				leave_court_effect = yes
 				death = { death_reason = death_missing }
 			}
 		}
@@ -812,7 +763,9 @@ character_event = {
 			}
 		}
 
-		FROM = { give_job_title = job_spymaster }
+		FROM = { 
+			give_job_title = job_spymaster 
+		}
 
 		reverse_opinion = { modifier = opinion_given_council_position_1 who = FROM years = 5 }
 		
@@ -826,44 +779,31 @@ character_event = {
 		#Gets her married
 		hidden_tooltip = {
 			if = {
-				limit = {
-					any_courtier = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
-				}
+				limit = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } }
 				random_courtier = {
-					limit = {
-						NOT = { character = ROOT }
-						is_adult = yes
-						is_married = no
-						is_female = no
-						prisoner = no
-						is_unimportant_trigger = yes
-					}
+					limit = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes }
 					add_spouse_matrilineal = FROM
 				}
 				break = yes
 			}
 
-			create_random_intriguer = { 
-				random_traits = yes
-				dynasty = random
-				female = no
-				age = 29
-			}
-			new_character = { add_spouse_matrilineal = FROM }
+			if = {
+				limit = { NOT = { any_courtier = { NOT = { character = ROOT } is_adult = yes is_married = no is_female = no prisoner = no is_unimportant_trigger = yes } } }
+
+				create_random_intriguer = { 
+					random_traits = yes
+					dynasty = NONE
+					female = no
+					age = 29
+				}
+				new_character = { add_spouse_matrilineal = FROM }
+			}	
 		}
 	}
 	option = {
 		name = EVTOPTB_77782
 		hidden_tooltip = {
 			FROM = {
-				leave_court_effect = yes
 				death = { death_reason = death_missing }
 			}
 		}
@@ -889,13 +829,10 @@ character_event = {
 
 	trigger = {
 		NOR = { 
-			primary_title = {
-				OR = {
-					has_law = status_of_women_3
-					has_law = status_of_women_4
-				}
-			}
-			feminist_religions_trigger = yes
+			primary_title = { has_law = status_of_women_3 }
+			primary_title = { has_law = status_of_women_4 }
+			religion = cathar
+			religion = messalian
 			has_game_rule = {
 				name = gender
 				value = all
@@ -933,12 +870,12 @@ character_event = {
 				is_close_relative = ROOT
 				is_female = yes
 				is_adult = yes
+				NOT = { trait = content }
 				liege = { character = ROOT }
+				NOT = { character = ROOT }
 				ai = yes
 
 				NOR = {
-					character = ROOT
-					trait = content
 					has_job_title = job_chancellor
 					has_job_title = job_marshal
 					has_job_title = job_treasurer
@@ -967,17 +904,11 @@ character_event = {
 					AND = {
 						intrigue = 15
 						NOR = {
-							ROOT = {
-								primary_title = {
-									OR = {
-										has_law = status_of_women_2
-										has_law = status_of_women_1
-									}
-								}
-							}
+							ROOT = { primary_title = { has_law = status_of_women_2 } }
+							ROOT = { primary_title = { has_law = status_of_women_1 } }
 							AND = {
-								ROOT = { feminist_religions_trigger = yes }
-								feminist_religions_trigger = yes
+								ROOT = { religion_group = pagan_group }
+								religion_group = pagan_group
 							}
 							any_spouse = { character = ROOT }
 							any_child = { character = ROOT }
@@ -1036,17 +967,11 @@ character_event = {
 					factor = 0
 					OR = {
 						NOT = { intrigue = 15 }
-						FROM = {
-							primary_title = {
-								OR = {
-									has_law = status_of_women_2
-									has_law = status_of_women_1
-								}
-							} 
-						}
+						FROM = { primary_title = { has_law = status_of_women_2 } } 
+						FROM = { primary_title = { has_law = status_of_women_1 } } 
 						AND = {
-							FROM = { feminist_religions_trigger = yes }
-							feminist_religions_trigger = yes
+							FROM = { religion_group = pagan_group }
+							religion_group = pagan_group
 						}
 					}
 				}
@@ -1072,7 +997,7 @@ character_event = {
 			factor = 25
 			
 			modifier = {
-				factor = 2
+				factor = 0.75
 				trait = cynical
 			}
 			modifier = {
@@ -1144,7 +1069,7 @@ character_event = {
 			factor = 25
 			
 			modifier = {
-				factor = 2
+				factor = 0.75
 				trait = cynical
 			}
 			modifier = {
@@ -1223,7 +1148,7 @@ character_event = {
 			factor = 25
 			
 			modifier = {
-				factor = 2
+				factor = 0.75
 				trait = cynical
 			}
 			modifier = {
@@ -1296,7 +1221,7 @@ character_event = {
 			factor = 25
 			
 			modifier = {
-				factor = 2
+				factor = 0.75
 				trait = cynical
 			}
 			modifier = {
@@ -1359,7 +1284,8 @@ character_event = {
 		NOR = { 
 			primary_title = { has_law = status_of_women_3 }
 			primary_title = { has_law = status_of_women_4 }
-			feminist_religions_trigger = yes
+			religion = cathar
+			religion = messalian
 			has_game_rule = {
 				name = gender
 				value = all

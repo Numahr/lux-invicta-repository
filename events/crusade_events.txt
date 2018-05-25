@@ -16,8 +16,10 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	#war = yes
 	
 	trigger = {
+		religion_group = christian
 		NOT = { trait = crusader }
 		in_command = yes
 		OR = {
@@ -70,12 +72,14 @@ character_event = {
 	picture = "GFX_evt_moors"
 	border = GFX_event_normal_frame_war
 	
-	only_men = yes
+	#only_men = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	#war = yes
 	
 	trigger = {
+		religion_group = muslim
 		NOT = { trait = mujahid }
 		in_command = yes
 		OR = {
@@ -131,6 +135,7 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
+	#war = yes
 	
 	trigger = {
 		NOT = { trait = valhalla_bound }
@@ -227,7 +232,7 @@ character_event = {
 	picture = "GFX_evt_siege"
 	border = GFX_event_normal_frame_war
 
-	only_men = yes
+	#only_men = yes
 	min_age = 16
 	capable_only = yes
 	prisoner = no
@@ -246,6 +251,7 @@ character_event = {
 				}
 			}
 		}
+
 		crusade_target = {
 			is_located_in = ROOT
 		}
@@ -362,13 +368,14 @@ character_event = {
 	
 	hide_from = yes
 	
+	min_age = 16
+	capable_only = yes
+	prisoner = no
 	is_triggered_only = yes
 	
 	trigger = {
-		NOR = {
-			trait = zealous
-			trait = cynical
-		}
+		NOT = { trait = zealous }
+		NOT = { trait = cynical }
 		
 		has_called_crusade = yes
 		OR = {
@@ -401,13 +408,14 @@ character_event = {
 	picture = "GFX_evt_pale_rider"
 	border = GFX_event_normal_frame_war
 
+	min_age = 16
+	capable_only = yes
+	prisoner = no
 	is_triggered_only = yes
 	
 	trigger = {
-		NOR = {
-			trait = cynical
-			trait = zealous
-		}
+		NOT = { trait = cynical }
+		NOT = { trait = zealous }
 		
 		has_called_crusade = yes
 		OR = {
@@ -444,6 +452,7 @@ character_event = {
 	
 	trigger = {
 		FROM = { is_capital = yes }
+#		religion = catholic
 		
 		has_called_crusade = yes
 		OR = {
@@ -590,6 +599,13 @@ character_event = {
 	option = {
 		name = "EVTOPTA8340"
 		prestige = 100
+		if = {
+			limit = { has_dlc = Mystics }
+			add_artifact = spear_of_destiny
+			new_artifact = {
+                set_creation_date = 1.1.1
+            }
+		}
 	}
 }
 
@@ -681,6 +697,7 @@ character_event = {
 	
 	trigger = {
 		FROM = { is_capital = yes }
+#		religion = catholic
 		OR = {
 			any_war = {
 				using_cb = crusade
@@ -823,8 +840,8 @@ character_event = {
 			rightful_religious_head_scope = {
 				character = ROOT
 			}
-			NOR = {
-				excommunicated_for = ROOT
+			NOT = { excommunicated_for = ROOT }
+			NOT = {
 				reverse_has_opinion_modifier = {
 					who = ROOT
 					modifier = opinion_not_participating_in_crusade_emperor
@@ -842,7 +859,6 @@ character_event = {
 					modifier = opinion_not_participating_in_crusade_count
 				}
 			}
-			mercenary = no
 			NOT = {
 				any_realm_province = {
 					any_neighbor_province = {
@@ -851,6 +867,7 @@ character_event = {
 					}
 				}
 			}
+			NOT = { mercenary = yes }
 		}
 	}
 	
@@ -881,8 +898,8 @@ character_event = {
 				rightful_religious_head_scope = {
 					character = ROOT
 				}
-				NOR = {
-					excommunicated_for = ROOT
+				NOT = { excommunicated_for = ROOT }
+				NOT = {
 					reverse_has_opinion_modifier = {
 						who = ROOT
 						modifier = opinion_not_participating_in_crusade_emperor
@@ -900,7 +917,6 @@ character_event = {
 						modifier = opinion_not_participating_in_crusade_count
 					}
 				}
-				mercenary = no
 				NOT = {
 					any_realm_province = {
 						any_neighbor_province = {
@@ -909,6 +925,7 @@ character_event = {
 						}
 					}
 				}
+				NOT = { mercenary = yes }
 			}
 			letter_event = { id = 8405 days = 1 }
 		}		
@@ -1031,9 +1048,6 @@ character_event = {
 						using_cb = crusade
 					}
 				}
-				NOT = {
-					excommunicated_for = ROOT
-				}
 				crusade_target = {
 					holder_scope = {
 						NOT = { reverse_has_truce = PREVPREV }
@@ -1042,6 +1056,7 @@ character_event = {
 				rightful_religious_head_scope = {
 					character = ROOT
 				}
+				NOT = { excommunicated_for = ROOT }
 			}
 			clr_character_flag = reminded_about_crusade
 			letter_event = { id = 8415 days = 1 }
@@ -1131,27 +1146,11 @@ character_event = {
 			independent = yes
 			religion = catholic
 			prisoner = no
-			NOR = {
-				primary_title = { tier = COUNT } # Exclude small rulers
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_not_participating_in_crusade_bishop
-				}
-			}
+			NOT = { primary_title = { tier = COUNT } } # Exclude small rulers
 			NOT = {
 				any_war = {
 					using_cb = crusade
-					any_attacker = {
-						character = PREVPREV
-					}
-				}
-			}
-			NOT = {
-				any_realm_province = {
-					any_neighbor_province = {
-						has_owner = yes
-						NOT = { religion_group = christian } 
-					}
+					any_attacker = { character = PREVPREV }
 				}
 			}
 			crusade_target = {
@@ -1165,6 +1164,20 @@ character_event = {
 						character = PREVPREV
 					}
 					NOT = { excommunicated_for = PREV }
+				}
+			}
+			NOT = {
+				reverse_has_opinion_modifier = {
+					who = ROOT
+					modifier = opinion_not_participating_in_crusade_bishop
+				}
+			}
+			NOT = {
+				any_realm_province = {
+					any_neighbor_province = {
+						has_owner = yes
+						NOT = { religion_group = christian } 
+					}
 				}
 			}
 		}
@@ -1350,27 +1363,11 @@ character_event = {
 			independent = yes
 			religion = catholic
 			prisoner = no
-			NOR = {
-				primary_title = { tier = COUNT } # Exclude small rulers
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_not_participating_in_crusade_vassal
-				}
-			}
+			NOT = { primary_title = { tier = COUNT } } # Exclude small rulers
 			NOT = {
 				any_war = {
 					using_cb = crusade
-					any_attacker = {
-						character = PREVPREV
-					}
-				}
-			}
-			NOT = {
-				any_realm_province = {
-					any_neighbor_province = {
-						has_owner = yes
-						NOT = { religion_group = christian } 
-					}
+					any_attacker = { character = PREVPREV }
 				}
 			}
 			crusade_target = {
@@ -1384,6 +1381,20 @@ character_event = {
 						character = PREVPREV
 					}
 					NOT = { excommunicated_for = PREV }
+				}
+			}
+			NOT = {
+				reverse_has_opinion_modifier = {
+					who = ROOT
+					modifier = opinion_not_participating_in_crusade_vassal
+				}
+			}
+			NOT = {
+				any_realm_province = {
+					any_neighbor_province = {
+						has_owner = yes
+						NOT = { religion_group = christian } 
+					}
 				}
 			}
 		}
@@ -1576,9 +1587,7 @@ character_event = {
 				NOT = {
 					any_war = {
 						using_cb = crusade
-						any_attacker = {
-							character = PREVPREV
-						}
+						any_attacker = { character = PREVPREV }
 					}
 				}
 				crusade_target = {
@@ -1606,9 +1615,7 @@ character_event = {
 					NOT = {
 						any_war = {
 							using_cb = crusade
-							any_attacker = {
-								character = PREVPREV
-							}
+							any_attacker = { character = PREVPREV }
 						}
 					}
 					crusade_target = {
@@ -1645,9 +1652,6 @@ character_event = {
 				NOT = {
 					any_war = {
 						using_cb = crusade
-						any_attacker = {
-							character = PREVPREV
-						}
 					}
 				}
 				crusade_target = {
@@ -1681,19 +1685,15 @@ character_event = {
 					NOT = {
 						any_war = {
 							using_cb = crusade
-							any_attacker = {
-								character = PREVPREV
-							}
 						}
 					}
-					NOR = {
-						crusade_target = {
-							holder_scope = {
-								reverse_has_truce = PREVPREV
-							}
+					crusade_target = {
+						holder_scope = {
+							NOT = { reverse_has_truce = PREVPREV }
 						}
-						has_character_flag = offered_revoked_excommunication
 					}
+					excommunicated_for = ROOT
+					NOT = { has_character_flag = offered_revoked_excommunication }
 					NOT = {
 						any_realm_province = {
 							any_neighbor_province = {
@@ -1702,7 +1702,6 @@ character_event = {
 							}
 						}
 					}
-					excommunicated_for = ROOT
 				}
 				set_character_flag = offered_revoked_excommunication
 				letter_event = { id = 8465 days = 1 }
@@ -1846,3 +1845,5 @@ letter_event = {
 		clr_character_flag = offered_revoked_excommunication
 	}
 }
+
+

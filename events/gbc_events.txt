@@ -14,12 +14,13 @@ namespace = GBC
 #selecting target relative
 letter_event = {
 	id = GBC.1
+	desc = EVTDESC_GBC_1
 	
 	min_age = 16
 	has_global_flag = black_death_happened
-	has_dlc = "Game Book"
 
 	trigger = {
+		has_dlc = "Game Book"
 		NOT = { has_character_flag = gbc_mourning }
 		OR = {
 			any_friend = {
@@ -28,6 +29,7 @@ letter_event = {
 				trait = has_bubonic_plague
 			}			
 	    	any_dynasty_member = {
+	    		is_offmap_ruler = no
 				is_adult = yes
 				ai = yes
 				trait = has_bubonic_plague
@@ -51,31 +53,43 @@ letter_event = {
 				limit = {
 					is_adult = yes
 					ai = yes
-					trait = has_bubonic_plague
+					trait = has_bubonic_plague        
 				}
-				save_event_target_as = GBC_dead_one
+				save_event_target_as = GBC_dead_one               
 			}
-			break = yes
 		}
-		random_dynasty_member = {
+		if = {
 			limit = {
-				is_adult = yes
-				ai = yes
-				trait = has_bubonic_plague
+				NOT = {
+					any_friend = {
+						is_adult = yes
+						ai = yes
+						trait = has_bubonic_plague
+					}
+				}
 			}
-			save_event_target_as = GBC_dead_one
+			random_dynasty_member = {
+				limit = {
+					is_offmap_ruler = no
+					is_adult = yes
+					ai = yes
+					trait = has_bubonic_plague        
+				}
+				save_event_target_as = GBC_dead_one               
+			}
 		}
 	}
 
 	#Kill plagued char
 	option = {
+	name = EVTOPTA_GBC_3
 
 		event_target:GBC_dead_one = {
 			add_trait = falconer
 			death = { death_reason = death_trait }
 		}
 		set_character_flag = gbc_mourning
-		narrative_event = { id = GBC.2 days = 10 }
+		character_event = { id = GBC.2 days = 10 }
 	}
 }
 
@@ -162,12 +176,15 @@ character_event = {
 #Selecting new friend - hidden event
 character_event = {
 	id = GBC.4
+	picture = GFX_evt_comet
 
 	is_triggered_only = yes
 	hide_window = yes
+	hide_from = yes
 
 	trigger = {
 		any_dynasty_member = {
+			is_offmap_ruler = no
 			is_adult = yes
 			ai = yes
 			NOT = { trait = incapable }
@@ -177,6 +194,7 @@ character_event = {
 	immediate = {
 		random_dynasty_member = {
 			limit = {
+				is_offmap_ruler = no
 				is_adult = yes
 				ai = yes
 				NOT = { trait = incapable }
@@ -203,10 +221,13 @@ character_event = {
 
 	is_triggered_only = yes
 	hide_window = yes
+	hide_from = yes
 
 	option = {
-		FROM = {
-			character_event = { id = GBC.5 }
+		hidden_tooltip = {
+			FROM = {
+				character_event = { id = GBC.5 }
+			}
 		}
 	}
 }
@@ -316,6 +337,8 @@ character_event = {
 #Selecting advisor
 character_event = {
 	id = GBC.7
+	picture = GFX_evt_council
+	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
 	hide_window = yes
@@ -325,40 +348,7 @@ character_event = {
 			if = {
 				limit = {
 					any_courtier = {
-						OR = {
-							has_job_title = job_chancellor
-							has_job_title = job_marshal
-							has_job_title = job_treasurer
-							has_job_title = job_spymaster
-							has_job_title = job_spiritual
-						}
-						opinion = {
-							who = ROOT
-							value = 25
-						}
-					}
-				}
-				random_courtier = {
-					limit = {
-						OR = {
-							has_job_title = job_chancellor
-							has_job_title = job_marshal
-							has_job_title = job_treasurer
-							has_job_title = job_spymaster
-							has_job_title = job_spiritual
-						}
-						opinion = {
-							who = ROOT
-							value = 25
-						}						
-					}
-					save_event_target_as = GBC_nice_councillor
-				}
-			}
-			if = {
-				limit = {
-					NOT = {
-						any_courtier = {
+						AND = {
 							OR = {
 								has_job_title = job_chancellor
 								has_job_title = job_marshal
@@ -369,6 +359,45 @@ character_event = {
 							opinion = {
 								who = ROOT
 								value = 25
+							}						
+						}
+					}
+				}
+				random_courtier = {
+					limit = {
+						AND = {
+							OR = {
+								has_job_title = job_chancellor
+								has_job_title = job_marshal
+								has_job_title = job_treasurer
+								has_job_title = job_spymaster
+								has_job_title = job_spiritual
+							}
+							opinion = {
+								who = ROOT
+								value = 25
+							}
+						}						
+					}
+					save_event_target_as = GBC_nice_councillor
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_courtier = {
+							AND = {
+								OR = {
+									has_job_title = job_chancellor
+									has_job_title = job_marshal
+									has_job_title = job_treasurer
+									has_job_title = job_spymaster
+									has_job_title = job_spiritual
+								}
+								opinion = {
+									who = ROOT
+									value = 25
+								}						
 							}
 						}
 					}
@@ -411,7 +440,9 @@ character_event = {
 		}
 	}
 	option = {
-		event_target:GBC_nice_councillor = { character_event = { id = GBC.71 } }
+		hidden_tooltip = {
+			event_target:GBC_nice_councillor = { character_event = { id = GBC.71 } }
+		}
 	}
 }
 
@@ -503,7 +534,7 @@ character_event = {
 
 		if = {
 			limit = { 
-				NOR = {
+				NOT = {
 					trait = patient
 					trait = wroth
 				}
@@ -526,7 +557,7 @@ character_event = {
 
 		if = {
 			limit = {
-				NOR = {
+				NOT = {
 					trait = patient
 					trait = wroth
 				}
@@ -650,6 +681,7 @@ character_event = {
 
 	is_triggered_only = yes
 	hide_window = yes
+	hide_from = yes
 
 	option = {
 		hidden_tooltip = {
@@ -707,7 +739,7 @@ character_event = {
 		text = EVTDESC_GBC_17_B
 		picture = GFX_evt_hunt
 		trigger = { 
-			NOR = { 
+			NOT = { 
 				has_dlc = "Reapers"
 				has_character_flag = GBC_knows_friend_is_ill
 			}
@@ -751,7 +783,6 @@ character_event = {
 	}
 	
 	option = {
-
 		if = {
 			limit = { has_dlc = "Reapers" }
 			
@@ -853,9 +884,9 @@ narrative_event = {
 #Sending it to the one who got married
 character_event = {
 	id = GBC.199
-	has_dlc = "Game Book"
 
 	trigger = {
+		has_dlc = "Game Book"
 		FROM = {
 			block_general_event_trigger = no
 			
@@ -1036,7 +1067,7 @@ character_event = {
 
 		spouse = { save_event_target_as = gbc_rival }
 
-		FROM = { narrative_event = { id = GBC.102 } } 
+		FROM = { character_event = { id = GBC.102 } } 
 	}
 }
 
@@ -1870,11 +1901,13 @@ character_event = {
 					modifier = adulteress
 					years = 10
 				}
-				break = yes
 			}
-			add_character_modifier = {
-				modifier = adulterer
-				years = 10
+			if = { 
+				limit = { is_female = no }
+				add_character_modifier = {
+					modifier = adulterer
+					years = 10
+				}
 			}
 		}
 	}
@@ -1924,6 +1957,7 @@ character_event = {
 letter_event = {
 	id = GBC.128
 	border = GFX_event_letter_frame_intrigue
+	picture = GFX_evt_whispers
 	desc = EVTDSC_GBC_128
 
 	is_triggered_only = yes
@@ -2272,7 +2306,7 @@ character_event = {
 			limit = { NOT = { has_character_modifier = known_murderer } }
 			add_character_modifier = {
 				name = known_murderer
-				duration = 50
+				years = 50
 			}
 		}
 

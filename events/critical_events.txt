@@ -25,7 +25,7 @@ character_event = {
 			num_traits = 4
 		}
 		trait = indulgent_wastrel
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 		immortal = no
 	}
 	
@@ -63,7 +63,12 @@ character_event = {
 				add_trait = greedy
 			}
 			25 = {
-				add_trait = incapable
+				if = {
+					limit = {
+						immortal = no
+					}
+					add_trait = incapable
+				}
 			}
 		}
 	}
@@ -149,34 +154,32 @@ character_event = {
 		}
 		if = {
 			limit = {
-				NOT = {
-					has_dlc = "Reapers"
-				}
-			}
-			if = {
-				limit = {
-					NOT = {
-						trait = maimed
+				OR = {
+					AND = {
+						NOT = { has_dlc = "Reapers" }
+						NOT = { trait = maimed }
 					}
-				}
-				add_trait = maimed
-				hidden_tooltip = {
-					character_event = {
-						id = 38284 #Notify maimed
+					AND = {
+						has_dlc = "Reapers"
+						NOT = { trait = one_eyed }
 					}
 				}
 			}
-			break = yes
-		}
-		if = {
-			limit = {
-				NOT = {
-					trait = one_eyed
+			random = {
+				chance = 25
+				if = {
+					limit = {
+						NOT = { has_dlc = "Reapers" }
+					}
+					add_trait = maimed
 				}
-			}
-			add_trait = one_eyed
-			hidden_tooltip = {
-				character_event = { id = RIP.11501 } #Notify one-eyed
+				if = {
+					limit = {
+						has_dlc = "Reapers"
+					}
+					add_trait = one_eyed
+					character_event = { id = RIP.11501 } #Notify one-eyed
+				}
 			}
 		}
 	}
