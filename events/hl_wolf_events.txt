@@ -21,16 +21,16 @@ character_event = {
 	hide_window = yes
 	
 	is_triggered_only = yes
-	has_dlc = "Horse Lords"
-	culture_group = altaic
 	
 	trigger = {
+		has_dlc = "Horse Lords"
 		NOT = {
 			has_game_rule = {
 				name = supernatural_events
 				value = off
 			}
 		}
+		culture_group = altaic
 #		NOT = { culture = khitan }
 		OR = {
 			father = {
@@ -83,7 +83,6 @@ narrative_event = {
 
 	is_triggered_only = yes
 	
-	only_playable = yes
 	capable_only = yes	
 	
 	trigger = {
@@ -142,11 +141,9 @@ narrative_event = {
 	
 	capable_only = yes
 	only_playable = yes
-	has_dlc = "Horse Lords"
-	min_age = 16
-	culture_group = altaic
 	
 	trigger = {
+		has_dlc = "Horse Lords"
 		OR = {
 			ai = no
 			has_game_rule = {
@@ -154,10 +151,12 @@ narrative_event = {
 				value = unrestricted
 			}
 		}
-		NOR = {
-			num_of_children = 1
-#			culture = khitan
-			religion = jain
+		is_adult = yes
+		NOT = { num_of_children = 1 }
+		culture_group = altaic
+#		NOT = { culture = khitan }
+		NOT = { religion = jain }
+		NOT = {
 			any_close_relative = {
 				OR = {
 					has_character_modifier = wolf_child
@@ -207,31 +206,32 @@ narrative_event = {
 	is_triggered_only = yes
 	
 	capable_only = yes	
-	has_dlc = "Horse Lords"
-	min_age = 5
-	max_age = 10
-	culture_group = altaic
 	
 	trigger = {
+		has_dlc = "Horse Lords"
 		culture_group = altaic
-		NOR = {
-#			culture = khitan
-			any_sibling = { is_older_than = ROOT }
+#		NOT = { culture = khitan }
+		age = 5
+		NOT = { age = 10 }
+		NOT = {	any_sibling = { is_older_than = ROOT } }
+		OR = {
+			OR = {
+				ai = no
+				has_game_rule = {
+					name = supernatural_events
+					value = unrestricted
+				}
+			}
+			father = { ai = no }
+			mother = { ai = no }
+		}
+		NOT = {
 			any_close_relative = {
 				OR = {
 					has_character_modifier = wolf_child
 					has_character_modifier = wolf_blood
 				}
 			}
-		}
-		OR = {
-			ai = no
-			has_game_rule = {
-				name = supernatural_events
-				value = unrestricted
-			}
-			father = { ai = no }
-			mother = { ai = no }
 		}
 	}
 	
@@ -314,15 +314,17 @@ narrative_event = {
 	is_triggered_only = yes
 	
 	has_character_flag = wolf_blood_first_generation
-	capable_only = yes
+	capable_only = yes	
 	
 	trigger = {
 		age = 13
 		OR = {
-			ai = no
-			has_game_rule = {
-				name = supernatural_events
-				value = unrestricted
+			OR = {
+				ai = no
+				has_game_rule = {
+					name = supernatural_events
+					value = unrestricted
+				}
 			}
 			father = { ai = no }
 			mother = { ai = no }
@@ -602,10 +604,8 @@ narrative_event = {
 			}
 		}
 		in_command = no
-		NOR = {
-			has_character_flag = do_not_disturb
-			has_character_flag = call_of_the_wolves
-		}
+		NOT = { has_character_flag = do_not_disturb }
+		NOT = { has_character_flag = call_of_the_wolves }
 	}
 	
 	immediate = {
@@ -703,10 +703,13 @@ narrative_event = {
 				trait = stressed
 			}
 			add_trait = depressed
-			remove_trait = stressed
-			break = yes
 		}
-		add_trait = stressed
+		if = {
+			limit = {
+				NOT = { trait = stressed }
+			}
+			add_trait = stressed
+		}
 	}
 }
 	
@@ -941,13 +944,12 @@ narrative_event = {
 
 	is_triggered_only = yes
 
-	only_playable = yes
 	capable_only = yes
 	prisoner = no
 	min_age = 18
-	has_dlc = "Horse Lords"
 	
 	trigger = {
+		has_dlc = "Horse Lords"
 		OR = {
 			ai = no
 			has_game_rule = {
@@ -962,10 +964,8 @@ narrative_event = {
 			}
 		}
 		trait = possessed
-		NOR = {
-			has_character_modifier = lycanthropy
-			has_character_flag = do_not_disturb
-		}
+		NOT = { has_character_modifier = lycanthropy }
+		NOT = { has_character_flag = do_not_disturb }
 	}
 	
 	weight_multiplier = {
@@ -1016,7 +1016,6 @@ character_event = {
 
 	is_triggered_only = yes
 
-	only_playable = yes
 	capable_only = yes
 	prisoner = no
 	min_age = 18
@@ -1333,11 +1332,9 @@ character_event = {
 			trait = impaler
 			trait = lunatic
 		}
-		NOR = {
-			has_character_modifier = cannibal
-			trait = cannibal_trait
-			has_character_flag = wolf_resisted_cannibalism
-		}
+		NOT = { has_character_modifier = cannibal }
+		NOT = { trait = cannibal_trait }
+		NOT = { has_character_flag = wolf_resisted_cannibalism }
 	}
 	
 	weight_multiplier = {
@@ -1390,10 +1387,8 @@ character_event = {
 			limit = {
 				ai = yes
 				at_location = ROOT
-				NOR = {
-					father = { character= ROOT }
-					mother = { character= ROOT }
-				}
+				NOT = { father = { character= ROOT } }
+				NOT = { mother = { character= ROOT } }
 			}
 			death = {
 				death_reason = death_murder_unknown
@@ -1441,11 +1436,9 @@ character_event = {
 
 	trigger = {
 		has_character_modifier = wolf_blood
-		NOR = {
-			trait = possessed
-			trait = lunatic
-			has_character_flag = wolf_howled_at_moon
-		}
+		NOT = { trait = possessed }
+		NOT = { trait = lunatic }
+		NOT = { has_character_flag = wolf_howled_at_moon }
 	}
 	
 	option = {
@@ -1471,11 +1464,9 @@ character_event = {
 
 	trigger = {
 		has_character_modifier = wolf_blood
-		NOR = {
-			trait = patient
-			religion = jain
-			has_character_flag = wolf_hunting_instinct_at_court
-		}
+		NOT = { trait = patient }
+		NOT = { religion = jain }
+		NOT = { has_character_flag = wolf_hunting_instinct_at_court }
 	}
 	
 	immediate = {
@@ -1864,10 +1855,10 @@ character_event = {
 	is_triggered_only = yes
 	
 	capable_only = yes
-	has_character_flag = wolf_blood_inherited
 
 	trigger = {
 		has_character_modifier = wolf_blood
+		has_character_flag = wolf_blood_inherited
 		NOT = { trait = wroth }
 	}
 	
@@ -1906,10 +1897,10 @@ character_event = {
 	is_triggered_only = yes
 
 	capable_only = yes
-	has_character_flag = wolf_blood_inherited
 
 	trigger = {
 		has_character_modifier = wolf_blood
+		has_character_flag = wolf_blood_inherited
 		NOT = { trait = ugly }
 	}
 	
@@ -1939,10 +1930,10 @@ character_event = {
 	is_triggered_only = yes
 
 	capable_only = yes
-	has_character_flag = wolf_blood_inherited
 
 	trigger = {
 		has_character_modifier = wolf_blood
+		has_character_flag = wolf_blood_inherited
 		NOT = { has_character_flag = wolf_animal_mind_learning }
 		OR = {
 			trait = martial_cleric
@@ -2009,10 +2000,10 @@ narrative_event = {
 	is_triggered_only = yes
 
 	capable_only = yes
-	has_character_flag = wolf_blood_inherited
 
 	trigger = {
 		has_character_modifier = wolf_blood
+		has_character_flag = wolf_blood_inherited
 		NOT = { has_character_flag = wolf_howled_at_moon }
 	}
 
@@ -2050,9 +2041,9 @@ character_event = {
 	hide_window = yes
 	
 	is_triggered_only = yes
-	has_dlc = "Horse Lords"
 	
 	trigger = {
+		has_dlc = "Horse Lords"
 		OR = {
 			father_even_if_dead = {
 				has_character_modifier = wolf_blood
@@ -2092,28 +2083,12 @@ character_event = {
 				modifier = {
 					factor = 2
 					OR = {
-						father_even_if_dead = {
-							OR = {
-								ai = no
-								father_even_if_dead = {
-									ai = no
-								}
-								mother_even_if_dead = {
-									ai = no
-								}
-							}
-						}
-						mother_even_if_dead = {
-							OR = {
-								ai = no
-								father_even_if_dead = {
-									ai = no
-								}
-								mother_even_if_dead = {
-									ai = no
-								}
-							}
-						}
+						father_even_if_dead = { ai = no }
+						mother_even_if_dead = { ai = no }
+						father_even_if_dead = { father_even_if_dead = { ai = no } }
+						father_even_if_dead = { mother_even_if_dead = { ai = no } }
+						mother_even_if_dead = { father_even_if_dead = { ai = no } }
+						mother_even_if_dead = { mother_even_if_dead = { ai = no } }
 					}
 				}
 				modifier = {
@@ -2131,18 +2106,10 @@ character_event = {
 				modifier = {
 					factor = 1.5
 					OR = {
-						father_even_if_dead = {
-							OR = {
-								father_even_if_dead = { has_character_flag = wolf_blood_first_generation }
-								mother_even_if_dead = { has_character_flag = wolf_blood_first_generation }
-							}
-						}
-						mother_even_if_dead = {
-							OR = {
-								father_even_if_dead = { has_character_flag = wolf_blood_first_generation }
-								mother_even_if_dead = { has_character_flag = wolf_blood_first_generation }
-							}
-						}
+						father_even_if_dead = { father_even_if_dead = { has_character_flag = wolf_blood_first_generation } }
+						father_even_if_dead = { mother_even_if_dead = { has_character_flag = wolf_blood_first_generation } }
+						mother_even_if_dead = { father_even_if_dead = { has_character_flag = wolf_blood_first_generation } }
+						mother_even_if_dead = { mother_even_if_dead = { has_character_flag = wolf_blood_first_generation } }
 					}
 				}
 				add_character_modifier = {
@@ -2213,3 +2180,19 @@ narrative_event = {
 		}
 	}
 }
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+

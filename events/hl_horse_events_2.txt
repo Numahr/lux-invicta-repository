@@ -61,17 +61,24 @@ character_event = {
 	is_triggered_only = yes
 	
 	only_playable = yes
-	only_capable = yes
 	
 	trigger = {
 		has_character_modifier = nomad_warhorse
-		is_inaccessible_trigger = no
-		any_courtier_or_vassal = {
-			is_adult = yes
-			prisoner = no
-			NOT = { trait = incapable }
-			ai = yes
-
+		NOT = { trait = incapable }
+		NOT = { is_inaccessible_trigger = yes }
+		OR = {
+		    any_vassal = {
+			    is_adult = yes
+			    prisoner = no
+			    NOT = { trait = incapable }
+		    	ai = yes
+		    }
+		    any_courtier = {
+			    is_adult = yes
+			    prisoner = no
+			    NOT = { trait = incapable }
+			    ai = yes
+		    }
 		}
 	}
 	
@@ -80,14 +87,32 @@ character_event = {
 	}
 	
 	immediate = {
-		random_courtier_or_vassal = {
+		if = {
+			limit = {
+				any_vassal = {
+					is_adult = yes
+				    prisoner = no
+				    NOT = { trait = incapable }
+			    	ai = yes
+				}
+			}
+			random_vassal = {
+				limit = {
+					is_adult = yes
+				    prisoner = no
+				    NOT = { trait = incapable }
+			    	ai = yes
+				}
+				character_event = { id = HL.6511 }
+				break = yes
+			}
+		}
+		random_courtier = {
 			limit = {
 				is_adult = yes
-				prisoner = no
-				NOT = { 
-					trait = incapable
-				}
-				ai = yes
+			    prisoner = no
+			    NOT = { trait = incapable }
+			    ai = yes
 			}
 			character_event = { id = HL.6511 }
 		}
@@ -159,17 +184,14 @@ character_event = {
 	picture = GFX_evt_market_altaic
 	border = GFX_event_normal_frame_diplomacy
 	
-	only_capable = yes
-	
 	is_triggered_only = yes
 	
 	trigger = {
 		prestige = 1500
 		has_character_modifier = nomad_warhorse
-		is_inaccessible_trigger = no
-		NOT = {
-			has_character_flag = nomad_painter
-		}
+		NOT = { trait = incapable }
+		NOT = { is_inaccessible_trigger = yes }
+		NOT = { has_character_flag = nomad_painter }
 	}
 	
 	weight_multiplier = {

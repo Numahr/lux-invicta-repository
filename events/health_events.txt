@@ -22,9 +22,13 @@ character_event = {
 	lacks_dlc = "Reapers"
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			trait = syphilitic
+		}
+		NOT = {
 			trait = celibate
+		}
+		NOT = {
 			trait = infirm
 		}
 		OR = {
@@ -120,10 +124,10 @@ character_event = {
 	only_capable = yes
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			trait = leper
-			health = 5
 		}
+		NOT = { health = 5 }
 	}
 	
 	mean_time_to_happen = {
@@ -167,36 +171,51 @@ character_event = {
 	option = {
 		name = EVTOPTA6010
 		add_trait = leper
-		if = {
-			limit = {
-				has_dlc = "Reapers"
+			if = {
+				limit = {
+					has_dlc = "Reapers"
+					is_playable = no
+				}
+				set_character_flag = new_leper_character
+				host = {
+					random_courtier_or_vassal = {
+						limit = {
+							liege = { character = PREVPREV }
+							has_minor_title = title_court_physician
+						}
+						character_event = { id = RIP.11031 days = 1 }
+					}
+				}
+				character_event = { id = RIP.11063 days = 20 }
 			}
-			set_character_flag = new_leper_character
-			host = {
+			if = {
+				limit = {
+					has_dlc = "Reapers"
+					is_playable = yes
+				}
+				set_character_flag = new_leper_character
 				random_courtier_or_vassal = {
 					limit = {
-						liege = { character = PREVPREV }
 						has_minor_title = title_court_physician
 					}
 					character_event = { id = RIP.11031 days = 1 }
 				}
+				character_event = { id = RIP.11063 days = 20 }
 			}
-			character_event = { id = RIP.11063 days = 20 }
-		}
 			
-		hidden_tooltip = {
-			random_list ={
-				100 = {
-					character_event = { id = RIP.5041 days = 365 random = 50 }
-				}
-				75 = {
-					character_event = { id = RIP.5041 days = 1500 random = 300 }
-				}
-				30 = {
-					character_event = { id = RIP.5041 days = 3000 random = 600 }
+			hidden_tooltip = {
+				random_list ={
+					100 = {
+						character_event = { id = RIP.5041 days = 365 random = 50 }
+					}
+					75 = {
+						character_event = { id = RIP.5041 days = 1500 random = 300 }
+					}
+					30 = {
+						character_event = { id = RIP.5041 days = 3000 random = 600 }
+					}
 				}
 			}
-		}
 	}
 }
 
@@ -239,15 +258,14 @@ character_event = {
 	id = 6020
 	picture = GFX_evt_lunatic
 	border = GFX_event_normal_frame_religion
+	
 	desc = {
 		text = EVTDESC6020
 		trigger = {
 			is_ill = no
-			NOR = {
-				trait = paranoid
-				trait = zealous
-				trait = incapable
-			}
+			NOT = { trait = paranoid }
+			NOT = { trait = zealous }
+			NOT = { trait = incapable }
 			prisoner = no
 		}
 	}
@@ -287,14 +305,14 @@ character_event = {
 	min_age = 10
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			trait = lunatic
-			AND = {
-				# Senile/comatose due to old age do not gain lunatic, immortals get a pass though
-				age = 65
-				immortal = no
-				trait = incapable
-			}
+		}
+		OR = {
+			#Senile/comatose due to old age do not gain lunatic, immortals get a pass though
+			NOT = { age = 65 }
+			immortal = yes
+			NOT = { trait = incapable }
 		}
 	}
 	
@@ -346,8 +364,10 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.1
-			trait = incapable
-			immortal = yes # Incapable immortals more likely to wake up nuts
+			AND = {
+				trait = incapable
+				immortal = yes # Incapable immortals more likely to wake up nuts
+			}
 		}
 		modifier = {
 			factor = 0.25
@@ -388,11 +408,9 @@ character_event = {
 			text = EVTOPTA6020
 			trigger = {
 				is_ill = no
-				NOR = {
-					trait = paranoid
-					trait = zealous
-					trait = incapable
-				}
+				NOT = { trait = paranoid }
+				NOT = { trait = zealous }
+				NOT = { trait = incapable }
 				prisoner = no
 			}
 		}
@@ -459,9 +477,11 @@ character_event = {
 	trigger = {
 		health = 4
 		trait = lunatic
-		NOR = {
-			trait = syphilitic
-			trait = has_aztec_disease
+		NOT = {
+			OR = {
+				trait = syphilitic
+				trait = has_aztec_disease
+			}
 		}
 	}
 	
@@ -498,9 +518,7 @@ character_event = {
 	only_capable = yes
 	
 	trigger = {
-		NOT = {
-			trait = possessed
-		}
+		NOT = { trait = possessed }
 	}
 	
 	mean_time_to_happen = {
@@ -527,14 +545,13 @@ character_event = {
 	}
 	
 	option = {
-		name = {
-			text = EVTOPTA6030
-			trigger = { NOT = { religion_group = muslim } }
-		}
-		name = {
-			text = EVTOPTA6030_MUS
-			trigger = { religion_group = muslim }
-		}
+		name = EVTOPTA6030
+		trigger = { NOT = { religion_group = muslim } }
+		add_trait = possessed
+	}
+	option = {
+		name = EVTOPTA6030_MUS
+		trigger = { religion_group = muslim }
 		add_trait = possessed
 	}
 }
@@ -556,10 +573,8 @@ character_event = {
 	desc = {
 		text = EVTDESC6031_ALL
 		trigger = {
-			NOR = {
-				religion_group = muslim
-				religion_group = christian
-			}
+			NOT = { religion_group = muslim }
+			NOT = { religion_group = christian }
 		}
 	}
 	
@@ -594,15 +609,16 @@ character_event = {
 		clr_character_flag = demon_child_fake
 		clr_character_flag = child_exorcism
 	}
+	
 	option = {
-		name = {
-			text = EVTOPTA6031
-			trigger = { religion_group = christian }
-		}
-		name = {
-			text = EVTOPTA6031_ALL
-			trigger = { NOT = { religion_group = christian } }
-		}
+		name = EVTOPTA6031
+		trigger = { religion_group = christian }
+		remove_trait = possessed
+	}
+	
+	option = {
+		name = EVTOPTA6031_ALL
+		trigger = { NOT = { religion_group = christian } }
 		remove_trait = possessed
 	}
 }
@@ -623,10 +639,8 @@ character_event = {
 			is_councillor = yes
 			has_minor_title = title_regent
 		}
-		NOR = {
-			trait = stressed
-			trait = infirm
-		}
+		NOT = { trait = stressed }
+		NOT = { trait = infirm }
 	}
 	
 	mean_time_to_happen = {
@@ -636,6 +650,7 @@ character_event = {
 			factor = 0.75
 			trait = diligent
 		}
+		
 		modifier = {
 			factor = 0.8
 			in_command = yes
@@ -712,11 +727,9 @@ character_event = {
 	only_capable = yes
 	
 	trigger = {
-		NOR = {
-			trait = depressed
-			trait = zealous
-			trait = content
-		}
+		NOT = { trait = depressed }
+		NOT = { trait = zealous }
+		NOT = { trait = content }
 	}
 	
 	mean_time_to_happen = {
@@ -903,6 +916,18 @@ character_event = {
 			base_health = 6
 		}
 		modifier = {
+			factor = 1.5
+			is_strong_trigger = yes
+		}
+		modifier = {
+			factor = 2.0
+			base_health = 7
+		}
+		modifier = {
+			factor = 2.0
+			base_health = 8
+		}
+		modifier = {
 			factor = 0.5
 			has_game_rule = {
 				name = non_epidemic_diseases
@@ -922,18 +947,6 @@ character_event = {
 				name = non_epidemic_diseases
 				value = rare
 			}
-		}
-		modifier = {
-			factor = 1.5
-			is_strong_trigger = yes
-		}
-		modifier = {
-			factor = 2.0
-			base_health = 7
-		}
-		modifier = {
-			factor = 2.0
-			base_health = 8
 		}
 	}
 
@@ -1298,11 +1311,15 @@ character_event = {
 			add_trait = ill
 			blessing_removes_disease_effect = yes
 			deaths_gift_removes_disease_effect = yes
-			break = yes
 		}
-		add_trait = infection
-		hidden_tooltip = {
-			character_event = { id = RIP.11001 days = 365 random = 1095 }
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
+			add_trait = infection
+			hidden_tooltip = {
+				character_event = { id = RIP.11001 days = 365 random = 1095 }
+			}
 		}
 	}
 }
@@ -1742,7 +1759,7 @@ character_event = {
 	trigger = {
 		trait = has_measles
 	}
-	
+	 
 	mean_time_to_happen = {
 		months = 5
 		
@@ -1896,6 +1913,7 @@ character_event = {
 	religion_group = christian
 	
 	trigger = {
+		is_devil_worshiper_trigger = no
 		NOT = {
 			has_game_rule = {
 				name = supernatural_events
@@ -1903,11 +1921,9 @@ character_event = {
 			}
 		}
 		trait = possessed
-		NOR = {
-			has_character_modifier = voice_of_jesus
-			has_character_modifier = voice_of_satan
-			has_character_modifier = holy_comet
-		}
+		NOT = { has_character_modifier = voice_of_jesus }
+		NOT = { has_character_modifier = voice_of_satan }
+		NOT = { has_character_modifier = holy_comet }
 	}
 	
 	mean_time_to_happen = {
@@ -2084,7 +2100,7 @@ character_event = {
 character_event = {
 	id = 6204
 	desc = EVTDESC6204
-	picture = GFX_evt_brothel_scene
+	picture = GFX_evt_brothel
 	border = GFX_event_normal_frame_religion
 	
 	only_playable = yes
@@ -2188,9 +2204,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
-		NOR = {	
-			trait = gluttonous
-			trait = temperate
+		NOT = {
+			OR = {
+				trait = gluttonous
+				trait = temperate
+			}
 		}
 	}
 
@@ -2249,9 +2267,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
-		NOR = {	
-			trait = greedy
-			trait = charitable
+		NOT = {
+			OR = {
+				trait = greedy
+				trait = charitable
+			}
 		}
 	}
 
@@ -2309,9 +2329,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
-		NOR = {	
-			trait = slothful
-			trait = diligent
+		NOT = {
+			OR = {
+				trait = slothful
+				trait = diligent
+			}
 		}
 	}
 
@@ -2369,9 +2391,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
-		NOR = {	
-			trait = envious
-			trait = kind
+		NOT = {
+			OR = {
+				trait = envious
+				trait = kind
+			}
 		}
 	}
 
@@ -2430,9 +2454,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
-		NOR = {
-			trait = wroth
-			trait = patient
+		NOT = {
+			OR = {
+				trait = wroth
+				trait = patient
+			}
 		}
 	}
 
@@ -2491,9 +2517,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_jesus
-		NOR = {
-			trait = proud
-			trait = humble
+		NOT = {
+			OR = {
+				trait = proud
+				trait = humble
+			}
 		}
 	}
 
@@ -2551,9 +2579,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = holy_comet
-		NOR = {
-			has_character_modifier = military_jesus
-			has_character_modifier = speaking_in_tounges
+		NOT = {
+			OR = {
+				has_character_modifier = military_jesus
+				has_character_modifier = speaking_in_tounges
+			}
 		}
 	}
 	
@@ -2614,9 +2644,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = holy_comet
-		NOR = {
-			has_character_modifier = military_jesus
-			has_character_modifier = speaking_in_tounges
+		NOT = {
+			OR = {
+				has_character_modifier = military_jesus
+				has_character_modifier = speaking_in_tounges
+			}
 		}
 	}
 	
@@ -2676,15 +2708,18 @@ character_event = {
 	
 	trigger = {
 		trait = possessed
-		NOR = {
-			has_character_modifier = voice_of_jesus
-			has_character_modifier = voice_of_satan
-			has_character_modifier = holy_comet
-		}
+		NOT = { has_character_modifier = voice_of_jesus }
+		NOT = { has_character_modifier = voice_of_satan }
+		NOT = { has_character_modifier = holy_comet }
 	}
 	
 	mean_time_to_happen = {
 		months = 1200
+
+		modifier = {
+			factor = 0.3
+			is_devil_worshiper_trigger = yes
+		}
 
 		modifier = {
 			factor = 0.5
@@ -2894,9 +2929,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_satan
-		NOR = {
-			trait = chaste
-			trait = lustful
+		NOT = {
+			OR = {
+				trait = chaste
+				trait = lustful
+			}
 		}
 	}
 	
@@ -2955,9 +2992,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_satan
-		NOR = {
-			trait = patient
-			trait = wroth
+		NOT = {
+			OR = {
+				trait = patient
+				trait = wroth
+			}
 		}
 	}
 	
@@ -3016,9 +3055,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_satan
-		NOR = {
-			trait = humble
-			trait = proud
+		NOT = {
+			OR = {
+				trait = humble
+				trait = proud
+			}
 		}
 	}
 	
@@ -3077,9 +3118,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_satan
-		NOR = {
-			trait = temperate
-			trait = gluttonous
+		NOT = {
+			OR = {
+				trait = temperate
+				trait = gluttonous
+			}
 		}
 	}
 	
@@ -3138,9 +3181,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_satan
-		NOR = {
-			trait = charitable
-			trait = greedy
+		NOT = {
+			OR = {
+				trait = charitable
+				trait = greedy
+			}
 		}
 	}
 	
@@ -3199,9 +3244,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_satan
-		NOR = {
-			trait = kind
-			trait = envious
+		NOT = {
+			OR = {
+				trait = kind
+				trait = envious
+			}
 		}
 	}
 	
@@ -3260,9 +3307,11 @@ character_event = {
 	trigger = {
 		trait = possessed
 		has_character_modifier = voice_of_satan
-		NOR = {
-			trait = diligent
-			trait = slothful
+		NOT = {
+			OR = {
+				trait = diligent
+				trait = slothful
+			}
 		}
 	}
 	
@@ -3412,7 +3461,7 @@ narrative_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = EVTOPTA6305
+		name = EVTOPTA6305 
 		custom_tooltip = {
 			text = ALL_VASSALS_INSANE_LAW
 			hidden_tooltip = {
@@ -3426,6 +3475,7 @@ narrative_event = {
 		}
 	}
 }
+
 
 # Pants Law (Liege)
 narrative_event = {
@@ -3935,10 +3985,8 @@ character_event = {
 		}		
 		if = {
 			limit = {
-				NOR = {
-					lifestyle_traits = 1
-					has_dlc = "Way of Life"
-				}
+				NOT = { lifestyle_traits = 1 }
+				NOT = { has_dlc = "Way of Life" }
 			}
 			add_trait = scholar
 		}
@@ -3959,7 +4007,7 @@ character_event = {
 		text = EVTDESC_WOL_40_NC
 		trigger = {
 			is_female = yes
-			has_dlc = "Sons of Abraham"
+			has_DLC = "Sons of Abraham"
 		}
 		picture = GFX_evt_bad_news_female
 	}
@@ -3967,12 +4015,12 @@ character_event = {
 		text = EVTDESC_WOL_40_NC
 		trigger = {
 			is_female = no
-			has_dlc = "Sons of Abraham"
+			has_DLC = "Sons of Abraham"
 		}
 		picture = GFX_evt_bad_news
 	}
 	desc = {
-		trigger = { NOT = { has_dlc = "Sons of Abraham" } }
+		trigger = { NOT = { has_DLC = "Sons of Abraham" } }
 		text = EVTDESC_WOL_40_NC
 		picture = GFX_evt_recovery
 	}
@@ -3989,5 +4037,223 @@ character_event = {
 	option = {
 		name = CURSES
 		add_trait = lovers_pox
+	}
+}
+
+
+
+### Mittens the Spymaster ###
+
+# Start
+character_event = {
+	id = 6360
+	picture = GFX_evt_cat
+	border = GFX_event_normal_frame_diplomacy
+
+	desc = {
+		trigger = { has_dlc = Reapers }
+		picture = GFX_evt_cat
+		text = EVTDESC6360
+	}
+	desc = {
+		trigger = { NOT = { has_dlc = Reapers } }
+		picture = GFX_evt_council
+		text = EVTDESC6360
+	}
+	
+	min_age = 16
+	prisoner = no
+	only_capable = yes
+	only_playable = yes
+	
+	is_triggered_only = yes
+	
+	trigger = {
+		OR = {
+			ai = no
+			has_game_rule = {
+				name = supernatural_events
+				value = unrestricted
+			}
+		}
+		NOR = {
+			has_game_rule = {
+				name = supernatural_events
+				value = off
+			}
+			has_character_flag = cat_spymaster_flag
+		}
+		trait = lunatic
+		any_courtier = {
+			has_job_title = job_spymaster
+			ai = yes
+		}
+		has_character_modifier = pet_cat
+	}
+
+	weight_multiplier = {
+		days = 1
+	}
+	
+	immediate = {
+		set_character_flag = cat_spymaster_flag
+		random_courtier = {
+			limit = {
+				has_job_title = job_spymaster
+				ai = yes
+			}
+			save_event_target_as = show
+		}
+	}
+	
+	option = {
+		name = EVTOPTA6360
+		custom_tooltip = { text = cat_start }
+		hidden_tooltip = {
+			character_event = { 
+				id = 6361
+				#days = 30
+			}
+		}
+	}
+	option = {
+		name = EVTOPTB6360
+		job_spymaster = {
+			opinion = {
+				modifier = opinion_no_cat
+				who = ROOT
+				years = 100
+			}
+		}
+	}
+}
+
+# Sleepless Mittens
+character_event = {
+	id = 6361
+	desc = EVTDESC6361
+	picture = GFX_evt_kitten_shadow
+	border = GFX_event_normal_frame_intrigue
+	
+	is_triggered_only = yes
+	hide_from = yes
+
+	trigger = { has_character_modifier = pet_cat }
+	
+	option = {
+		name = EVTOPTA6361
+		custom_tooltip = { text = cat_corridor }
+		hidden_tooltip = {
+			character_event = { 
+				id = 6362
+				#days = 3
+			}
+		}
+	}
+	option = {
+		name = EVTOPTB6361
+		custom_tooltip = { text = cat_kitchen }
+	}
+}
+
+# Mittens the Spymaster
+character_event = {
+	id = 6362
+	desc = EVTDESC6362
+	picture = GFX_evt_kitten_shadow
+	border = GFX_event_normal_frame_intrigue
+	
+	is_triggered_only = yes
+
+	trigger = { has_character_modifier = pet_cat }
+	
+	option = {
+		name = EVTOPTA6362
+		tooltip_info = lunatic
+		job_spymaster = {
+			death = {
+				death_reason = death_murder_unknown
+			}
+		}
+		
+		create_character = {
+			name = "Mittens"
+			age = 16
+			religion = ROOT
+			culture = cat
+			race = cat
+			dynasty = NONE
+			trait = cat
+			trait = imbecile
+			trait = deceitful
+			trait = fair
+			trait = wroth
+			trait = proud
+		}
+		new_character = {
+			give_job_title = job_spymaster
+			opinion = {
+				modifier = opinion_my_servant
+				who = ROOT
+				years = 100
+			}
+			reverse_opinion = {
+				modifier = opinion_my_kitten
+				who = ROOT
+				years = 100
+			}
+			character_event = { 
+				id = 6364
+			}
+		}
+		hidden_tooltip = {
+			remove_character_modifier = pet_cat
+			
+		}
+	}
+}
+
+#Mittens ping
+character_event = {
+    id = 6364
+    hide_window = yes
+    is_triggered_only = yes
+    immediate = { 
+    	FROM = {
+    		any_courtier = {
+				limit = {
+					OR = {
+						has_job_title = job_chancellor
+						has_job_title = job_marshal
+						has_job_title = job_treasurer
+						has_job_title = job_spiritual
+					}
+				}
+				character_event = { 
+					id = 6363
+				}
+			}
+    	}
+    }
+}
+
+# End
+character_event = {
+	id = 6363
+	desc = EVTDESC6363
+	picture = GFX_evt_kitten_shadow
+	border = GFX_event_normal_frame_intrigue
+	
+	is_triggered_only = yes
+
+	hide_new = yes
+	
+	option = {
+		name = EVTOPTA6363
+		opinion = {
+			modifier = opinion_cat_spymaster
+			who = FROMFROM
+			years = 100
+		}
 	}
 }

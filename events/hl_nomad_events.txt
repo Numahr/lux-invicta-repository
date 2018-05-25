@@ -100,15 +100,14 @@ character_event = { # Pillaging Repeating Event
 					}
 					location = {
 						province_event = { id = HL.4810 days = 1 }
-						province_event = { id = HL.4814 days = 4 random = 8 }
+						save_event_target_as = target_location
+						ROOT = { character_event = { id = HL.4814 days = 2 random = 2 } }
 					}
 					destroy_settlement = THIS	
 				}
-				
 			}
 		}
 	}
-
 }
 
 province_event = { # Clear the 'Rampaging Nomads'-Modifier when province is empty, also prosperity mods
@@ -289,43 +288,64 @@ character_event = { # Nomads may pillage holdings on siege
 
 }
 
-province_event = { # Notification event that a holding is destroyed
+character_event = { # Notification event that a holding is destroyed
 	id = HL.4814
-	desc = EVTDESC_HL_4814
+	
+	desc = {
+		text = EVTDESC_HL_4814
+		trigger = {
+			owner = {
+				is_nomadic = yes
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_HL_4814_NON_NOMAD
+		trigger = {
+			owner = {
+				is_nomadic = no
+			}
+		}
+	}
+	
 	picture = GFX_evt_mongols_pillage_oldgods
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		OR = {
-			NOT = {
-				has_province_flag = destroyed_by_nomads
+		event_target:target_location = {
+			OR = {
+				NOT = {
+					has_province_flag = destroyed_by_nomads
+				}
+				had_province_flag = { flag = destroyed_by_nomads days = 365 }
 			}
-			had_province_flag = { flag = destroyed_by_nomads days = 365 }
 		}
 	}
 	
 	immediate = {
-		set_province_flag = destroyed_by_nomads
+		event_target:target_location = {
+			set_province_flag = destroyed_by_nomads
+		}
 	}
 	
 	option = {
 		name = EVTOPTA_HL_4814
 		trigger = {
-			owner = {
-				OR = {
-					trait = gardener
-					trait = diligent
-				}
+			OR = {
+				trait = gardener
+				trait = diligent
 			}
-			NOT = {
-				any_province_holding = {
-					OR = {
-						holding_type = city
-						holding_type = temple
-						holding_type = castle
-						holding_type = tribal
+			event_target:target_location = {
+				NOT = {
+					any_province_holding = {
+						OR = {
+							holding_type = city
+							holding_type = temple
+							holding_type = castle
+							holding_type = tribal
+						}
 					}
 				}
 			}
@@ -333,7 +353,8 @@ province_event = { # Notification event that a holding is destroyed
 		ai_chance = {
 			factor = 95
 		}
-		owner = {
+		if = {
+			limit = { is_nomadic = yes }
 			capital_holding = {
 				add_holding_modifier = {
 					name = nomad_population_boom
@@ -347,19 +368,19 @@ province_event = { # Notification event that a holding is destroyed
 	option = {
 		name = EVTOPTB_HL_4814
 		trigger = {
-			owner = {
-				OR = {
-					trait = impaler
-					trait = cruel
-				}
+			OR = {
+				trait = impaler
+				trait = cruel
 			}
-			NOT = {
-				any_province_holding = {
-					OR = {
-						holding_type = city
-						holding_type = temple
-						holding_type = castle
-						holding_type = tribal
+			event_target:target_location = {
+				NOT = {
+					any_province_holding = {
+						OR = {
+							holding_type = city
+							holding_type = temple
+							holding_type = castle
+							holding_type = tribal
+						}
 					}
 				}
 			}
@@ -367,28 +388,30 @@ province_event = { # Notification event that a holding is destroyed
 		ai_chance = {
 			factor = 95
 		}
-		add_province_modifier = {
-			name = throne_of_skulls
-			years = 10
+		event_target:target_location = {
+			add_province_modifier = {
+				name = throne_of_skulls
+				years = 10
+			}
 		}
 	}
 	
 	option = {
 		name = EVTOPTC_HL_4814
 		trigger = {
-			owner = {
-				OR = {
-					trait = zealous
-					trait = possessed
-				}
+			OR = {
+				trait = zealous
+				trait = possessed
 			}
-			NOT = {
-				any_province_holding = {
-					OR = {
-						holding_type = city
-						holding_type = temple
-						holding_type = castle
-						holding_type = tribal
+			event_target:target_location = {
+				NOT = {
+					any_province_holding = {
+						OR = {
+							holding_type = city
+							holding_type = temple
+							holding_type = castle
+							holding_type = tribal
+						}
 					}
 				}
 			}
@@ -396,9 +419,11 @@ province_event = { # Notification event that a holding is destroyed
 		ai_chance = {
 			factor = 95
 		}
-		add_province_modifier = {
-			name = nomadic_rites
-			years = 10
+		event_target:target_location = {
+			add_province_modifier = {
+				name = nomadic_rites
+				years = 10
+			}
 		}
 	}
 	
@@ -409,7 +434,6 @@ province_event = { # Notification event that a holding is destroyed
 		}
 		owner = { prestige = 5 }
 	}
-
 }
 
 ######################################
@@ -594,7 +618,7 @@ character_event = {
 				}
 				create_random_soldier = {
 					random_traits = yes
-					dynasty = random
+					dynasty = NONE
 					religion = PREV
 					culture = PREV
 					female = yes
@@ -637,16 +661,16 @@ character_event = {
 					set_father = event_target:new_nomad
 					set_mother = event_target:new_nomad_wife
 				}
-			}
-			event_target:new_nomad = {
-				population = 1000
-				manpower = 250
-				spawn_unit = {
-					province = PREV
-					troops = {
-						horse_archers = { 225 225 }
-						light_cavalry = { 450 450 }
-						knights = { 75 75 }
+				event_target:new_nomad = {
+					population = 1000
+					manpower = 250
+					spawn_unit = {
+						province = PREV
+						troops = {
+							horse_archers = { 225 225 }
+							light_cavalry = { 450 450 }
+							knights = { 75 75 }
+						}
 					}
 				}
 			}
@@ -688,16 +712,16 @@ character_event = {
 				remove_province_modifier = nomad_agitation
 				county = {
 					grant_title = { target = event_target:new_nomad type = revolt }
-				}
-				event_target:new_nomad = {
-					population = 375
-					manpower = 100
-					spawn_unit = {
-						province = PREV
-						troops = {
-							horse_archers = { 75 75 }
-							light_cavalry = { 150 150 }
-							knights = { 25 25 }
+					event_target:new_nomad = {
+						population = 375
+						manpower = 100
+						spawn_unit = {
+							province = PREV
+							troops = {
+								horse_archers = { 75 75 }
+								light_cavalry = { 150 150 }
+								knights = { 25 25 }
+							}
 						}
 					}
 				}
@@ -750,6 +774,7 @@ character_event = {
 						AND = {
 							is_ruler = yes
 							is_landed = no	
+							NOT = { is_offmap_governor = yes } #offmap governors do not become nomads
 						}
 						has_character_modifier = raiding_adventurer_nomad_timer
 					}
@@ -792,6 +817,7 @@ character_event = {
 						AND = {
 							is_ruler = yes
 							is_landed = no	
+							NOT = { is_offmap_governor = yes } #offmap governors do not become tribal
 						}
 						has_character_modifier = raiding_adventurer_tribal_timer
 					}

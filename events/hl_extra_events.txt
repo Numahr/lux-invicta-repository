@@ -17,15 +17,18 @@ character_event = {
 	hide_window = yes
 
 	is_triggered_only = yes
-	has_dlc = "Horse Lords"
+	
+	only_playable = yes
 	
 	trigger = {
-		government = nomadic_government
+		has_dlc = "Horse Lords"
+		death_in_china_trigger = no
+		death_no_trace_trigger = no
 		OR = {
 			religion = tengri_pagan
 			religion = tengri_pagan_reformed
 			religion_group = zoroastrian_group
-			religion_group = indian_group
+			has_dharmic_religion_trigger = yes
 		}
 	}
 
@@ -83,7 +86,6 @@ character_event = {
 					set_character_flag = sky_burial_brother
 				}
 			}
-			
 		}
 		current_heir = {
 			set_character_flag = sky_burial
@@ -140,12 +142,10 @@ character_event = {
 	}
 	desc = { # Any other predecessor
 		trigger = {
-			NOR = {
-				has_character_flag = sky_burial_father
-				has_character_flag = sky_burial_brother
-				has_character_flag = sky_burial_mother
-				has_character_flag = sky_burial_sister
-			}
+			NOT = { has_character_flag = sky_burial_father }
+			NOT = { has_character_flag = sky_burial_brother }
+			NOT = { has_character_flag = sky_burial_mother }
+			NOT = { has_character_flag = sky_burial_sister }
 		}
 		text = EVTDESC_HL_8005_other
 	}
@@ -233,7 +233,7 @@ character_event = {
 			limit = {
 				trait = patient
 			}
-			prestige = 20
+			prestige = 30
 		}
 		hidden_tooltip = {
 			character_event = { id = HL.8010 days = 5 }
@@ -557,10 +557,8 @@ character_event = {
 		trigger = {
 			is_weak_trigger = no
 			is_ill = no
-			NOT = {
-				trait = wounded
-			}
-			is_maimed_trigger = no
+			NOT = { trait = wounded }
+			NOT = { is_maimed_trigger = yes }
 		}
 		prestige = -100
 		piety = 100
@@ -627,7 +625,6 @@ character_event = {
 	picture = GFX_evt_steppe_mercenaries
 	border = GFX_event_normal_frame_war
 	
-	
 	min_age =  16
 	only_men = yes
 	capable_only = yes
@@ -639,22 +636,22 @@ character_event = {
 
 	trigger = {
 		government = nomadic_government
-		NOR = {
-			has_character_modifier = manly_skill_wrestling
-			has_character_modifier = denied_wrestling
-		}
+		NOT = { has_character_modifier = manly_skill_wrestling }
+		NOT = { has_character_modifier = denied_wrestling }
 		any_realm_character = {
 			is_female = no
 			is_adult = yes
 			ai = yes
 			prisoner = no
 			martial = 10
-			NOR = {
-				character = ROOT 
-				trait = incapable
-				trait = infirm
-				health_traits = 1
-				trait = craven
+			NOT = {
+				OR = {
+					character = ROOT 
+					trait = incapable
+					trait = infirm
+					health_traits = 1
+					trait = craven
+				}
 			}
 		}
 		any_demesne_title = {
@@ -744,12 +741,14 @@ character_event = {
 				ai = yes
 				prisoner = no
 				martial = 10
-				NOR = {
-					character = ROOT 
-					trait = incapable
-					trait = infirm
-					health_traits = 1
-					trait = craven
+				NOT = {
+					OR = {
+						character = ROOT 
+						trait = incapable
+						trait = infirm
+						health_traits = 1
+						trait = craven
+					}
 				}
 			}
 			save_event_target_as = wrestling_opponent
@@ -891,21 +890,21 @@ character_event = {
 						is_strong_trigger = yes
 					}
 					AND = {
-						FROM = {
-							is_strong_trigger = no
-							is_weak_trigger = no
-						}
-						is_strong_trigger = no
-						is_weak_trigger = no
+						FROM = { is_strong_trigger = no }
+						FROM = { is_weak_trigger = no }
+						NOT = { is_strong_trigger = yes }
+						NOT = { is_weak_trigger = yes }
 					}
 				}
 			}
-			FROM = {
-				random_list = {
-					70 = {
+			random_list = {
+				70 = {
+					FROM = {
 						long_character_event = { id = HL.9003 } 
 					}
-					30 = {
+				}
+				30 = {
+					FROM = {
 						long_character_event = { id = HL.9004 } 
 					}
 				}
@@ -917,12 +916,14 @@ character_event = {
 				FROM = { is_weak_trigger = yes }
 				is_weak_trigger = yes
 			}
-			FROM = {
-				random_list = {
-					50 = {
+			random_list = {
+				50 = {
+					FROM = {
 						long_character_event = { id = HL.9003 } 
 					}
-					50 = {
+				}
+				50 = {
+					FROM = {
 						long_character_event = { id = HL.9004 } 
 					}
 				}
@@ -1021,10 +1022,8 @@ long_character_event = {
 		
 		trigger = {
 			trait = gregarious
-			NOR = {
-				trait = kind
-				is_friend = FROM
-			}
+			NOT = { trait = kind }
+			NOT = { is_friend = FROM }
 		}
 		
 		prestige = 25
@@ -1041,14 +1040,10 @@ long_character_event = {
 		
 		trigger = {
 			trait = homosexual
-			FROM = {
-				trait = homosexual
-				NOT = { is_close_relative = ROOT }
-			}
-			NOR = {
-				is_lover = FROM
-				is_former_lover = FROM
-			}
+			FROM = { trait = homosexual }
+			FROM = { NOT = { is_close_relative = ROOT } }
+			NOT = { is_lover = FROM }
+			NOT = { is_former_lover = FROM }
 		}
 		
 		prestige = 50
@@ -1102,9 +1097,9 @@ long_character_event = {
 			FROM = { NOT = { health_traits = 1 } }
 		}
 		
+		FROM = { prestige = 75 }
 		prestige = -75
-		FROM = {
-			prestige = 75
+		FROM = { 
 			random_list = {
 					90 = {
 						add_trait = wounded
@@ -1135,14 +1130,10 @@ long_character_event = {
 		
 		trigger = {
 			trait = homosexual
-			FROM = {
-				trait = homosexual
-				NOT = { is_close_relative = ROOT }
-			}
-			NOR = {
-				is_lover = FROM
-				is_former_lover = FROM
-			}
+			FROM = { trait = homosexual }
+			FROM = { NOT = { is_close_relative = ROOT } }
+			NOT = { is_lover = FROM }
+			NOT = { is_former_lover = FROM }
 		}
 		
 		FROM = { prestige = 50 }
