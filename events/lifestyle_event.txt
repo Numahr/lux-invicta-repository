@@ -22,10 +22,12 @@ character_event = {
 	lacks_dlc = "Way of Life"
 	
 	trigger = {
+		NOT = { trait = blinded }
 		in_command = no
-		NOR = {
-			trait = blinded
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_flag = LE_ST
 		}
 	}
@@ -127,14 +129,6 @@ character_event = {
 			name = illumination
 			duration = -1
 		}
-	}
-
-	option = {
-		name = "EVTOPTC5000"
-		trigger = {
-			ai = no
-		}
-		clr_character_flag = LE_ST
 	}
 }
 
@@ -243,10 +237,16 @@ character_event = {
 	
 	trigger = {
 		in_command = no
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_flag = LE_ST
+		}
+		NOT = {
 			has_character_modifier = the_impaler
+		}
+		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -321,14 +321,6 @@ character_event = {
 		}
 		set_character_flag = stake_pole
 	}
-
-	option = {
-		name = "EVTOPTC5000"
-		trigger = {
-			ai = no
-		}
-		clr_character_flag = LE_ST
-	}
 }
 
 #Stake/Pole
@@ -344,11 +336,17 @@ character_event = {
 	lacks_dlc = "Way of Life"
 	
 	trigger = {
-		has_character_flag = stake_pole
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_flag = red_rose
+		}
+		has_character_flag = stake_pole
+		NOT = {
 			has_character_modifier = the_impaler
+		}
+		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -421,13 +419,16 @@ character_event = {
 				days = 30
 				tooltip = "EVTTOOLTIP5023"
 			}
-			break = yes
 		}
-		#muslim
-		character_event = { 
-			id = 5026
-			days = 30
-			tooltip = "EVTTOOLTIP5023" #Muslim Impaler
+		if = {
+			limit = {
+				religion_group = muslim
+			}
+			character_event = { 
+				id = 5026
+				days = 30
+				tooltip = "EVTTOOLTIP5023" #Muslim Impaler
+			}
 		}
 	}
 }
@@ -445,11 +446,17 @@ character_event = {
 	lacks_dlc = "Way of Life"
 
 	trigger = {
-		has_character_flag = red_rose
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_flag = stake_pole
+		}
+		has_character_flag = red_rose
+		NOT = {
 			has_character_modifier = the_impaler
+		}
+		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -562,10 +569,14 @@ character_event = {
 	lacks_dlc = "Way of Life"
 
 	trigger = {
-		has_character_flag = vlad_impaler
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		has_character_flag = vlad_impaler
+		NOT = {
 			has_character_modifier = the_impaler
+		}
+		NOT = {
 			has_character_modifier = the_gardener
 		}
 	}
@@ -607,10 +618,14 @@ character_event = {
 	lacks_dlc = "Way of Life"
 	
 	trigger = {
-		has_character_flag = rose_gardener
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		has_character_flag = rose_gardener
+		NOT = {
 			has_character_modifier = the_gardener
+		}
+		NOT = {
 			has_character_modifier = the_impaler
 		}
 	}
@@ -683,40 +698,58 @@ character_event = {
 	trigger = {
 		in_command = no
 		has_lover = no
-		NOR = {
+		NOT = {
 			trait = homosexual
-			lifestyle_traits = 1
-			religion_group = muslim
-			has_character_flag = LE_ST
 		}
-		is_inaccessible_trigger = no
+		NOT = {
+			lifestyle_traits = 1
+		}
+		NOT = {
+			religion_group = muslim
+		}
 		any_courtier = {
 			has_lover = no
 			is_married = no
 			age = 25
-			is_female = yes
-			NOR = {
+			NOT = {
 				age = 35
+			}
+			is_female = yes
+			NOT = {
 				trait = celibate
+			}
+			NOT = {
 				trait = homosexual
+			}
+			NOT = {
 				opinion = { who = ROOT value = 20 }
 			}
 			reverse_opinion = { who = ROOT value = 20 }
 		}
+		NOT = {
+			has_character_flag = LE_ST
+		}
+		NOT = { is_inaccessible_trigger = yes }
 	}
 	
 	immediate = {
 		set_character_flag = LE_ST
 		random_courtier = {
 			limit = {
+				age = 25
+				NOT = {
+					age = 35
+				}
+				is_female = yes
 				is_married = no
 				has_lover = no
-				age = 25
-				is_female = yes
-				NOR = {
-					age = 35
+				NOT = {
 					trait = celibate
+				}
+				NOT = {
 					trait = homosexual
+				}
+				NOT = {
 					opinion = { who = ROOT value = 20 }
 				}
 				reverse_opinion = { who = ROOT value = 20 }
@@ -834,14 +867,6 @@ character_event = {
 			}
 		}			
 	}
-
-	option = {
-		name = "EVTOPTC5000"
-		trigger = {
-			ai = no
-		}
-		clr_character_flag = LE_ST
-	}
 }
 
 #Ignored
@@ -855,7 +880,11 @@ character_event = {
 	option = {
 		name = "EVTOPTA5031" #Forget it
 		prestige = -15
-		event_target:target_courtier = {
+		random_courtier = {
+			limit = {
+				has_character_flag = ignore_courtship
+			}
+			clr_character_flag = ignore_courtship
 			opinion = {
 				modifier = opinion_disgusted
 				who = ROOT
@@ -867,7 +896,10 @@ character_event = {
 	option = {
 		name = "EVTOPTB5031" #Try something else
 		set_character_flag = never_giveup
-		event_target:target_courtier = {
+		random_courtier = {
+			limit = {
+				has_character_flag = ignore_courtship
+			}
 			opinion = {
 				modifier = opinion_disgusted
 				who = ROOT
@@ -891,7 +923,10 @@ character_event = {
 			name = "aspiring_poet"
 			duration = -1
 		}
-		event_target:target_courtier = {
+		random_courtier = {
+			limit = {
+				has_character_flag = encourage_courtship
+			}
 			opinion = {
 				modifier = opinion_approves
 				who = ROOT
@@ -915,7 +950,10 @@ character_event = {
 			name = "aspiring_duelist"
 			duration = -1
 		}
-		event_target:target_courtier = {
+		random_courtier = {
+			limit = {
+				has_character_flag = encourage_courtship
+			}
 			opinion = {
 				modifier = opinion_approves
 				who = ROOT
@@ -1065,16 +1103,6 @@ character_event = {
 			clr_character_flag = encourage_courtship
 			clr_character_flag = ignore_courtship
 			add_lover = ROOT
-			add_character_modifier = {
-				name = "new_love"
-				duration = 90
-				hidden = yes
-			}
-		}
-		add_character_modifier = {
-			name = "new_love"
-			duration = 90
-			hidden = yes
 		}
 	}
 	
@@ -1092,16 +1120,6 @@ character_event = {
 			clr_character_flag = encourage_courtship
 			clr_character_flag = ignore_courtship
 			add_lover = ROOT
-			add_character_modifier = {
-				name = "new_love"
-				duration = 90
-				hidden = yes
-			}
-		}
-		add_character_modifier = {
-			name = "new_love"
-			duration = 90
-			hidden = yes
 		}
 	}
 }
@@ -1128,16 +1146,6 @@ character_event = {
 			clr_character_flag = encourage_courtship
 			clr_character_flag = ignore_courtship
 			add_lover = ROOT
-			add_character_modifier = {
-				name = "new_love"
-				duration = 90
-				hidden = yes
-			}
-		}
-		add_character_modifier = {
-			name = "new_love"
-			duration = 90
-			hidden = yes
 		}
 	}
 	
@@ -1154,16 +1162,6 @@ character_event = {
 			clr_character_flag = encourage_courtship
 			clr_character_flag = ignore_courtship
 			add_lover = ROOT
-			add_character_modifier = {
-				name = "new_love"
-				duration = 90
-				hidden = yes
-			}
-		}
-		add_character_modifier = {
-			name = "new_love"
-			duration = 90
-			hidden = yes
 		}
 	}
 }
@@ -1184,12 +1182,14 @@ character_event = {
 	
 	trigger = {
 		in_command = no
-		NOR = {
-			religion = jain
+		NOT = { religion = jain }
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_flag = LE_ST
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 	}
 	
 	immediate = {
@@ -1276,14 +1276,6 @@ character_event = {
 			}
 		}			
 	}
-
-	option = {
-		name = "EVTOPTC5000"
-		trigger = {
-			ai = no
-		}
-		clr_character_flag = LE_ST
-	}
 }
 
 #Hunting - no fun
@@ -1319,12 +1311,14 @@ character_event = {
 			}
 		}
 	}
+
 	desc = {
-		text = EVTDESC5047
+		text = "EVTDESC5047"
 		trigger = {
 			religion_group = muslim
 		}
 	}
+		
 	picture = "GFX_evt_hunt"
 	
 	is_triggered_only = yes	
@@ -1508,14 +1502,16 @@ character_event = {
 	prisoner = no
 
 	trigger = {
+		NOT = { religion = jain }
 		in_command = no
+		NOT = {
+			has_character_flag = LE_ST
+		}
+		NOT = { is_inaccessible_trigger = yes }
 		NOR = {
 			trait = falconer
 			trait = poet
-			religion = jain
-			has_character_flag = LE_ST
 		}
-		is_inaccessible_trigger = no
 	}
 	
 	immediate = {
@@ -1524,19 +1520,7 @@ character_event = {
 
 	mean_time_to_happen = {
 		months = 260
-		
-		modifier = {
-			factor = 0.75
-			martial = 8
-		}		
-		modifier = {
-			factor = 0.5
-			has_nickname = nick_the_fowler
-		}
-		modifier = {
-			factor = 0.25
-			has_nickname = nick_the_hunter
-		}
+			
 		modifier = {
 			factor = 4.0
 			trait = slothful
@@ -1621,7 +1605,33 @@ character_event = {
 		name = "EVTOPTB5051" #Try something else
 		add_character_modifier = {
 			name = aspiring_falconer
-			duration = 90
+			duration = 120
+		}
+		hidden_tooltip = {
+			random_list = {
+				60 = {
+					modifier = {
+						factor = 1.8
+						trait = diligent
+					}
+					modifier = {
+						factor = 1.6
+						trait = patient
+					}
+					modifier = {
+						factor = 1.4
+						trait = gregarious
+					}
+					
+					character_event = { id = 5056 days = 60 random = 60 }
+				}
+				40 = {
+					modifier = {
+						factor = 1.5
+						trait = slothful
+					}
+				}
+			}
 		}
 	}
 }
@@ -1636,6 +1646,10 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA5052"
+		if = {
+			limit = { has_character_modifier = uninspired }
+			remove_character_modifier = uninspired
+		}
 		add_character_modifier = {
 			name = aspiring_poet
 			duration = -1
@@ -1663,7 +1677,33 @@ character_event = {
 		name = "EVTOPTB5053" #Try something else
 		add_character_modifier = {
 			name = aspiring_poet
-			duration = 90
+			duration = 120
+		}
+		hidden_tooltip = {
+			random_list = {
+				60 = {
+					modifier = {
+						factor = 1.8
+						trait = diligent
+					}
+					modifier = {
+						factor = 1.6
+						trait = patient
+					}
+					modifier = {
+						factor = 1.4
+						trait = erudite
+					}
+					
+					character_event = { id = 5055 days = 60 random = 60 }
+				}
+				40 = {
+					modifier = {
+						factor = 1.5
+						trait = slothful
+					}
+				}
+			}
 		}
 	}
 }
@@ -1707,7 +1747,6 @@ character_event = {
 		name = "EVTOPTA5055"
 		add_trait = poet
 		clr_character_flag = LE_ST
-
 	}
 	
 	option = {
@@ -1751,8 +1790,8 @@ character_event = {
 ########################################################################################
 character_event = {
 	id = 5060
-	desc = "EVTDESC5060"
-	picture = "GFX_evt_brothel"
+	desc = EVTDESC5060
+	picture = GFX_evt_brothel
 	
 	min_age = 25
 	capable_only = yes
@@ -1840,13 +1879,6 @@ character_event = {
 			duration = -1
 		}
 	}
-	option = {
-		name = "EVTOPTC5000"
-		trigger = {
-			ai = no
-		}
-		clr_character_flag = LE_ST
-	}
 }
 
 #On the road towards Hedonism
@@ -1931,18 +1963,14 @@ character_event = {
 	lacks_dlc = "Way of Life"
 	
 	trigger = {
-		NOR = {
-			lifestyle_traits = 1
-		}
 		has_character_modifier = one_celibate
 		OR = {
 			trait = sensual
 			trait = chaste
 			trait = lustful
-			trait = zealous
-#			trait = phlegmblood
-#			trait = phlegmbbile
-#			trait = bbileybile
+		}
+		NOT = {
+			lifestyle_traits = 1
 		}
 	}
 
@@ -1964,10 +1992,6 @@ character_event = {
 		modifier = {
 			factor = 0.5
 			trait = mastermind_theologian	
-		}
-		modifier = {
-			factor = 0.5
-			trait = chaste	
 		}
 #		modifier = {
 #			factor = 0.6
@@ -2103,10 +2127,6 @@ character_event = {
 			trait = chaste
 		}
 		modifier = {
-			factor = 0.5
-			trait = spiritual	
-		}
-		modifier = {
 			factor = 5
 			has_ambition = obj_buddhist_abstain_sexual_excess
 		}
@@ -2157,13 +2177,6 @@ character_event = {
 			}
 			remove_trait = lustful
 		}
-		
-		if = {
-			limit = {
-				trait = sensual
-			}
-			remove_trait = sensual
-		}
 	}
 	option = {
 		name = "EVTOPTB5065"
@@ -2195,12 +2208,6 @@ character_event = {
 			}
 			remove_trait = chaste
 		}
-		if = {
-			limit = {
-				trait = spiritual
-			}
-			remove_trait = spiritual
-		}
 	}
 	option = {
 		name = "EVTOPTB5066"
@@ -2222,11 +2229,13 @@ character_event = {
 	lacks_dlc = "Way of Life"
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_flag = LE_ST
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 	}
 
 	immediate = {
@@ -2256,10 +2265,6 @@ character_event = {
 			factor = 0.25
 			trait = gregarious	
 		}
-		modifier = {
-			factor = 0.7
-			has_ambition = obj_find_hobby
-		}
 	}
 	
 	option = {
@@ -2275,13 +2280,6 @@ character_event = {
 			name = muslim_poet
 			duration = -1
 		}
-	}
-	option = {
-		name = "EVTOPTC5000"
-		trigger = {
-			ai = no
-		}
-		clr_character_flag = LE_ST
 	}
 }
 
@@ -2299,8 +2297,10 @@ character_event = {
 	lacks_dlc = "Way of Life"
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_modifier = muslim_poet
 		}
 		OR = {
@@ -2403,8 +2403,10 @@ character_event = {
 	lacks_dlc = "Way of Life"
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			lifestyle_traits = 1
+		}
+		NOT = {
 			has_character_modifier = muslim_hedonist
 		}
 		OR = {
@@ -2557,15 +2559,29 @@ character_event = {
 	
 	trigger = {
 		in_command = no
-		is_dumb_trigger = no
-		NOR = {
+		NOT = {
 			has_character_modifier = aspiring_faqih
+		}
+		NOT = {
 			has_character_flag = LE_ST
+		}
+		NOT = {
 			has_character_flag = aspiring_faqih_flag
+		}
+		NOT = {
 			trait = scholar
+		}
+		NOT = {
 			trait = hafiz
+		}
+		NOT = {
 			trait = inbred
+		}
+		is_dumb_trigger = no
+		NOT = {
 			trait = infirm
+		}
+		NOT = {
 			trait = faqih
 		}
 	}
@@ -2686,13 +2702,6 @@ character_event = {
 			}
 			prestige = -10
 		}
-	}
-	option = {
-		name = "EVTOPTC5000"
-		trigger = {
-			ai = no
-		}
-		clr_character_flag = LE_ST
 	}
 }
 

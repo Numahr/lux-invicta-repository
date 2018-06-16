@@ -25,13 +25,13 @@ character_event = {
 	trigger = {
 		is_pregnant = no
 		spouse = {
+			NOT = { trait = incapable }
 			is_pregnant = no
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOR = {
-				trait = incapable
+			NOT = {
 				opinion = { who = ROOT value = -20 }
 			}
 		}
@@ -178,13 +178,15 @@ character_event = {
 			}
 		}
 		spouse = {
+			NOT = { trait = incapable }
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOR = {
-				trait = incapable
+			NOT = {
 				num_of_children = 1
+			}
+			NOT = {
 				opinion = { who = ROOT value = -50 }
 			}
 		}
@@ -286,14 +288,17 @@ character_event = {
 		trait = ambitious
 		trait = envious
 		spouse = {
+			NOT = { trait = incapable }
 			is_female = no
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			higher_tier_than = duke
 			NOT = {
-				trait = incapable
+				tier = king
+			}
+			NOT = {
+				tier = emperor
 			}
 			any_child = { 
 				is_primary_heir = yes
@@ -651,15 +656,9 @@ character_event = {
 	picture = "GFX_evt_emissary"
 	
 	is_triggered_only = yes
-	
+
 	immediate = {
 		random_courtier = {
-			limit = {
-				NOT = {
-					trait = incapable
-				}
-				at_location = ROOT
-			}
 			save_event_target_as = target_courtier
 		}
 	}
@@ -866,6 +865,9 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	is_triggered_only = yes
+	only_rulers = yes
+	only_men = yes
+	is_married = yes
 	
 	trigger = {
 		any_child = {
@@ -886,15 +888,14 @@ character_event = {
 			trait = wroth
 		}
 		spouse = {
+			NOT = { trait = incapable }
+			is_landed = no
 			prisoner = no
 			is_alive = yes
 			OR = {
 				trait = diligent
 				trait = deceitful
 				trait = ambitious
-			}
-			NOT = {
-				trait = incapable
 			}
 		}
 	}
@@ -972,8 +973,7 @@ character_event = {
 	is_married = yes
 	
 	is_triggered_only = yes
-	
-	
+		
 	trigger = {
 		spouse = { 
 			NOT = { trait = incapable }
@@ -1088,14 +1088,12 @@ character_event = {
 			}
 		}
 		spouse = {
+			NOT = { trait = incapable }
 			trait = homosexual
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOT = {
-				trait = incapable
-			}
 		}
 	}
 	
@@ -1256,7 +1254,7 @@ character_event = {
 	}
 }
 
-#Spouse chastises spouse about rumors
+#Spouse chastisies spouse about rumors
 character_event = {
 	id = 30029
 	desc = "EVTDESC30029"
@@ -1321,7 +1319,7 @@ character_event = {
 	}
 	
 	immediate = {
-		set_character_flag = prisoner_spouse
+		set_character_flag = prisoner_spouse #see if we can remove this
 		save_event_target_as = prisoner_spouse
 		random_spouse = {
 			limit = {
@@ -1629,27 +1627,21 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOR = {
-			demesne_size = 1
-			trait = humble
-			trait = kind
-		}
+		NOT = { demesne_size = 1 }
+		NOT = { trait = humble }
+		NOT = { trait = kind }
 		spouse = {
+			NOT = { trait = incapable }
 			prisoner = no
 			is_alive = yes
 			higher_tier_than = BARON
 			is_councillor = no
 			is_abroad = no
 			at_location = ROOT
-			NOT = {
-				trait = incapable
-			}
 			any_courtier = {
 				is_councillor = yes
-				NOR = {
-					character = ROOT
-					opinion = { who = ROOT  value = 30 }
-				}
+				NOT = { character = ROOT }
+				NOT = { opinion = { who = ROOT  value = 30 } }
 				OR = {
 					trait = envious
 					trait = wroth 
@@ -1679,15 +1671,14 @@ character_event = {
 			trait = cruel
 		}
 	}
+
 	immediate = {
 		spouse = {
 			random_courtier = {
 				limit = {
 					is_councillor = yes
-					NOR = {
-						character = ROOT
-						opinion = { who = ROOT  value = 30 }
-					}
+					NOT = { character = ROOT }
+					NOT = { opinion = { who = ROOT  value = 30 } }
 					OR = {
 						trait = envious
 						trait = wroth 
@@ -1701,7 +1692,6 @@ character_event = {
 			}
 		}
 	}
-	
 	
 	option = {
 		name = "EVTOPTA30040"
@@ -1753,6 +1743,7 @@ character_event = {
 	desc = "EVTDESC30041"
 	picture = "GFX_evt_quarrel"
 	border = GFX_event_normal_frame_intrigue
+
 	is_triggered_only = yes
 	
 	option = {
@@ -1855,6 +1846,7 @@ character_event = {
 			prisoner = no
 			is_alive = yes
 			any_courtier = {
+				is_female = no
 				is_councillor = yes
 				OR = {
 					trait = gregarious
@@ -1869,12 +1861,14 @@ character_event = {
 			trait = envious
 			trait = arbitrary
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 	}
+
 	immediate = {
 		spouse = {
 			random_courtier = {
 				limit = {
+					is_female = no
 					is_councillor = yes
 					OR = {
 						trait = gregarious
@@ -1922,7 +1916,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTB30045"
-		event_target:chosen_courtier = {
+		event_target:chosen_courtier = { 
 			opinion = {
 				modifier = opinion_disappointed
 				who = ROOT
@@ -1947,7 +1941,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30046"
-		event_target:chosen_courtier = {
+		event_target:chosen_courtier = { 
 			death = {
 				death_reason = death_murder_unknown_drowning
 				killer = ROOT
@@ -2058,12 +2052,12 @@ character_event = {
 	
 	trigger = {
 		spouse = {
+			NOT = { trait = incapable }
 			is_alive = yes
 			is_abroad = no
 			prisoner = no
 			at_location = ROOT
-			NOR = {
-				trait = incapable
+			NOT = {
 				opinion = { who = ROOT value = 50 }
 			}
 		}
@@ -2119,16 +2113,6 @@ character_event = {
 		treasury = -15
 		spouse = {
 			add_lover = ROOT
-			add_character_modifier = {
-				name = new_love
-				duration = 90
-				hidden = yes
-			}
-		}
-		add_character_modifier = {
-			name = new_love
-			duration = 90
-			hidden = yes
 		}
 	}
 	option = {
@@ -2161,13 +2145,13 @@ character_event = {
 	trigger = {
 		in_command = no
 		spouse = {
+			NOT = { trait = incapable }
 			is_female = yes
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOR = {
-				trait = incapable
+			NOT = {
 				opinion = { who = ROOT value = 50 }
 			}
 		}
@@ -2222,16 +2206,6 @@ character_event = {
 		}
 		spouse = {
 			add_lover = ROOT
-			add_character_modifier = {
-				name = new_love
-				duration = 90
-				hidden = yes
-			}
-		}
-		add_character_modifier = {
-			name = new_love
-			duration = 90
-			hidden = yes
 		}
 	}
 	option = {
@@ -2262,15 +2236,17 @@ character_event = {
 	trigger = {
 		NOT = { religion = jain }
 		spouse = {
+			NOT = { trait = incapable }
 			NOT = { religion = jain }
 			is_female = yes
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOR = {
-				trait = incapable
+			NOT = {
 				opinion = { who = ROOT value = 50 }
+			}
+			NOT = {
 				trait = craven
 			}
 		}
@@ -2355,15 +2331,15 @@ character_event = {
 			}
 		}
 		spouse = {
+			NOT = { trait = incapable }
+			NOT = { has_job_title = job_chancellor }
 			diplomacy = 10
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
 			is_dumb_trigger = no
-			NOR = {
-				has_job_title = job_chancellor
-				trait = incapable
+			NOT = {	
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2384,7 +2360,10 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30055"
-		capital_scope = {
+		random_demesne_province = {
+			limit = {
+				is_capital = yes
+			}
 			add_province_modifier = {
 				name = diplomacy_advice
 				duration = 1825
@@ -2445,15 +2424,15 @@ character_event = {
 			}
 		}
 		spouse = {
+			NOT = { trait = incapable }
+			NOT = { has_job_title = job_marshal }
 			martial = 10
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
 			is_dumb_trigger = no
-			NOR = {
-				has_job_title = job_marshal
-				trait = incapable
+			NOT = {	
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2538,15 +2517,15 @@ character_event = {
 			}
 		}
 		spouse = {
+			NOT = { trait = incapable }
+			NOT = { has_job_title = job_treasurer }
 			stewardship = 10
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
 			is_dumb_trigger = no
-			NOR = {
-				trait = incapable
-				has_job_title = job_treasurer
+			NOT = {	
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2567,7 +2546,10 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30057"
-		capital_scope = {
+		random_demesne_province = {
+			limit = {
+				is_capital = yes
+			}
 			add_province_modifier = {
 				name = stewardship_advice
 				duration = 1825
@@ -2619,20 +2601,22 @@ character_event = {
 		job_spymaster = {
 			always = yes
 		}
-		NOR = {
+		NOT = {
 			intrigue = 8
+		}
+		NOT = {
 			has_character_modifier = intrigue_advice
 		}
 		spouse = {
+			NOT = { trait = incapable }
+			NOT = { has_job_title = job_spymaster }
 			intrigue = 10
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
 			is_dumb_trigger = no
-			NOR = {
-				has_job_title = job_spymaster
-				trait = incapable
+			NOT = {	
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2712,21 +2696,25 @@ character_event = {
 		job_spiritual = {
 			always = yes
 		}
-		NOR = {
+		NOT = {
 			learning = 8
+		}
+		NOT = {
 			has_character_modifier = learning_advice
+		}
+		NOT = {
 			religion_group = muslim
 		}
 		spouse = {
+			NOT = { trait = incapable }
+			NOT = { has_job_title = job_spiritual }
 			learning = 10
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
 			is_dumb_trigger = no
-			NOR = {
-				has_job_title = job_spiritual
-				trait = incapable
+			NOT = {	
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}
@@ -2810,21 +2798,13 @@ character_event = {
 			age = 16
 			is_female = no
 			prisoner = no
-			NOR = {
-				job_chancellor = {
-					OR = {
-						character = ROOT
-						attribute_diff = {
-							attribute = diplomacy
-							character = PREV
-							value = 0
-						}
-					}
-				}
-				trait = incapable
-				liege = {
+			NOT = { trait = incapable }
+			liege = {
+				NOT = {
 					character = PREV
 				}
+			}
+			NOT = {
 				spouse = {
 					character = ROOT
 				}
@@ -2836,52 +2816,17 @@ character_event = {
 			trait = charitable
 		}
 		spouse = {
+			NOT = { trait = incapable }
 			is_ruler = yes
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOT = {
-				trait = incapable
-			}
 		}
 		job_chancellor = {
 			NOT = {
 				character = ROOT
 			}
-		}
-	}
-	
-	immediate = {
-		random_courtier = {
-			limit = {
-				OR = {
-					any_lover = { character = ROOT }
-					reverse_opinion = { who = ROOT value = 40 }
-				}
-				is_councillor = no
-				diplomacy = 10
-				age = 16
-				is_female = no
-				prisoner = no
-				NOR = {
-					job_chancellor = {
-						attribute_diff = {
-							attribute = diplomacy
-							character = PREV
-							value = 0
-						}
-					}
-					trait = incapable
-					liege = {
-						character = PREV
-					}
-					spouse = {
-						character = ROOT
-					}
-				}
-			}
-			save_event_target_as = target_courtier
 		}
 	}
 	
@@ -2904,6 +2849,31 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30060"
+		random_courtier = {
+			limit = {
+				OR = {
+					any_lover = { character = ROOT }
+					reverse_opinion = { who = ROOT value = 40 }
+				}
+				is_councillor = no
+				diplomacy = 10
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				liege = {
+					NOT = {
+						character = PREV
+					}
+				}
+				NOT = {
+					spouse = {
+						character = ROOT
+					}
+				}
+			}
+			save_event_target_as = new_chancellor
+		}
 		spouse = {
 			character_event = {
 				id = 30061
@@ -2930,7 +2900,7 @@ character_event = {
 				years = 5
 			}
 		}
-		event_target:target_courtier = {
+		event_target:new_chancellor = {
 			give_job_title = job_chancellor
 		}
 		FROM = {
@@ -2978,9 +2948,9 @@ character_event = {
 	option = {
 		name = "EVTOPTB30062"
 		trigger = {
-			has_character_flag = husband_declined_chancellor
+			has_character_flag = husband_denied_chancellor
 		}
-		clr_character_flag = husband_declined_chancellor
+		clr_character_flag = husband_denied_chancellor
 		FROM = {
 			reverse_opinion = {
 				modifier = opinion_denied_advice
@@ -3020,35 +2990,25 @@ character_event = {
 			age = 16
 			is_female = no
 			prisoner = no
-			NOR = {
-				job_marshal = {
-					OR = {
-						character = ROOT
-						attribute_diff = {
-							attribute = martial
-							character = PREV
-							value = 0
-						}
-					}
-				}
-				trait = incapable
-				liege = {
+			NOT = { trait = incapable }
+			liege = {
+				NOT = {
 					character = PREV
 				}
+			}
+			NOT = {
 				spouse = {
 					character = ROOT
 				}
 			}
 		}
 		spouse = {
+			NOT = { trait = incapable }
 			is_ruler = yes
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOT = {
-				trait = incapable
-			}
 		}
 		OR = {
 			trait = ambitious
@@ -3057,39 +3017,6 @@ character_event = {
 		}
 		job_marshal = {
 			NOT = {	character = ROOT }
-		}
-	}
-
-	immediate = {
-		random_courtier = {
-			limit = {
-				OR = {
-					any_lover = { character = ROOT }
-					reverse_opinion = { who = ROOT value = 40 }
-				}
-				is_councillor = no
-				martial = 10
-				age = 16
-				is_female = no
-				prisoner = no
-				NOR = {
-					job_marshal = {
-						attribute_diff = {
-							attribute = martial
-							character = PREV
-							value = 0
-						}
-					}
-					trait = incapable
-					liege = {
-						character = PREV
-					}
-					spouse = {
-						character = ROOT
-					}
-				}
-			}
-			save_event_target_as = target_courtier
 		}
 	}
 	
@@ -3112,6 +3039,31 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30063"
+		random_courtier = {
+			limit = {
+				OR = {
+				any_lover = { character = ROOT }
+					reverse_opinion = { who = ROOT value = 40 }
+				}
+				is_councillor = no
+				martial = 10
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				liege = {
+					NOT = {
+						character = PREV
+					}
+				}
+				NOT = {
+					spouse = {
+						character = ROOT
+					}
+				}
+			}
+			save_event_target_as = new_marshal
+		}
 		spouse = {
 			character_event = {
 				id = 30064
@@ -3138,7 +3090,7 @@ character_event = {
 				years = 5
 			}
 		}
-		event_target:target_courtier = {
+		event_target:new_marshal = {
 			give_job_title = job_marshal
 		}
 		FROM = {
@@ -3186,7 +3138,7 @@ character_event = {
 	option = {
 		name = "EVTOPTB30065"
 		trigger = {
-			has_character_flag = husband_declined_marshal
+			has_character_flag = husband_denied_marshal
 		}
 		FROM = {
 			reverse_opinion = {
@@ -3195,7 +3147,7 @@ character_event = {
 				years = 5
 			}
 		}
-		clr_character_flag = husband_declined_marshal			
+		clr_character_flag = husband_denied_marshal			
 	}
 }
 
@@ -3228,21 +3180,13 @@ character_event = {
 			age = 16
 			is_female = no
 			prisoner = no
-			NOR = {
-				job_treasurer = {
-					OR = {
-						character = ROOT
-						attribute_diff = {
-							attribute = stewardship
-							character = PREV
-							value = 0
-						}
-					}
-				}
-				trait = incapable
-				liege = {
+			NOT = { trait = incapable }
+			liege = {
+				NOT = {
 					character = PREV
 				}
+			}
+			NOT = {
 				spouse = {
 					character = ROOT
 				}
@@ -3254,52 +3198,17 @@ character_event = {
 			trait = charitable
 		}
 		spouse = {
+			NOT = { trait = incapable }
 			is_ruler = yes
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOT = {
-				trait = incapable
-			}
 		}
 		job_treasurer = {
 			NOT = {
 				character = ROOT
 			}
-		}
-	}
-	
-	immediate = {
-		random_courtier = {
-			limit = {
-				OR = {
-					any_lover = { character = ROOT }
-					reverse_opinion = { who = ROOT value = 40 }
-				}
-				is_councillor = no
-				stewardship = 10
-				age = 16
-				is_female = no
-				prisoner = no
-				NOR = {
-					job_treasurer = {
-						attribute_diff = {
-							attribute = stewardship
-							character = PREV
-							value = 0
-						}
-					}
-					trait = incapable
-					liege = {
-						character = PREV
-					}
-					spouse = {
-						character = ROOT
-					}
-				}
-			}
-			save_event_target_as = target_courtier
 		}
 	}
 	
@@ -3322,6 +3231,31 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30066"
+		random_courtier = {
+			limit = {
+				OR = {
+					any_lover = { character = ROOT }
+					reverse_opinion = { who = ROOT value = 40 }
+				}
+				is_councillor = no
+				stewardship = 10
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				liege = {
+					NOT = {
+						character = PREV
+					}
+				}
+				NOT = {
+					spouse = {
+						character = ROOT
+					}
+				}
+			}
+			save_event_target_as = new_steward
+		}
 		spouse = {
 			character_event = {
 				id = 30067
@@ -3348,7 +3282,7 @@ character_event = {
 				years = 5
 			}
 		}
-		event_target:target_courtier = {
+		event_target:new_steward = {
 			give_job_title = job_treasurer
 		}
 		FROM = {
@@ -3436,21 +3370,13 @@ character_event = {
 			age = 16
 			is_female = no
 			prisoner = no
-			NOR = {
-				job_spymaster = {
-					OR = {
-						character = ROOT
-						attribute_diff = {
-							attribute = intrigue
-							character = PREV
-							value = 0
-						}
-					}
-				}
-				trait = incapable
-				liege = {
+			NOT = { trait = incapable }
+			liege = {
+				NOT = {
 					character = PREV
 				}
+			}
+			NOT = {
 				spouse = {
 					character = ROOT
 				}
@@ -3462,52 +3388,17 @@ character_event = {
 			trait = charitable
 		}
 		spouse = {
+			NOT = { trait = incapable }
 			is_ruler = yes
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			NOT = {
-				trait = incapable
-			}
 		}
 		job_spymaster = {
 			NOT = {
 				character = ROOT
 			}
-		}
-	}
-	
-	immediate = {
-		random_courtier = {
-			limit = {
-				OR = {
-					any_lover = { character = ROOT }
-					reverse_opinion = { who = ROOT value = 40 }
-				}
-				is_councillor = no
-				intrigue = 10
-				age = 16
-				is_female = no
-				prisoner = no
-				NOR = {
-					job_spymaster = {
-						attribute_diff = {
-							attribute = intrigue
-							character = PREV
-							value = 0
-						}
-					}
-					trait = incapable
-					liege = {
-						character = PREV
-					}
-					spouse = {
-						character = ROOT
-					}
-				}
-			}
-			save_event_target_as = target_courtier
 		}
 	}
 	
@@ -3530,6 +3421,31 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30069"
+		random_courtier = {
+			limit = {
+				OR = {
+					any_lover = { character = ROOT }
+					reverse_opinion = { who = ROOT value = 40 }
+				}
+				is_councillor = no
+				intrigue = 10
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				liege = {
+					NOT = {
+						character = PREV
+					}
+				}
+				NOT = {
+					spouse = {
+						character = ROOT
+					}
+				}
+			}
+			save_event_target_as = new_spymaster
+		}
 		spouse = {
 			character_event = {
 				id = 30070
@@ -3556,7 +3472,7 @@ character_event = {
 				years = 5
 			}
 		}
-		event_target:target_courtier = {
+		event_target:new_spymaster = {
 			give_job_title = job_spymaster
 		}
 		FROM = {
@@ -3604,7 +3520,7 @@ character_event = {
 	option = {
 		name = "EVTOPTB30071"
 		trigger = {
-			has_character_flag = husband_declined_spymaster
+			has_character_flag = husband_denied_spymaster
 		}
 		FROM = {
 			reverse_opinion = {
@@ -3613,7 +3529,7 @@ character_event = {
 				years = 5
 			}
 		}
-		clr_character_flag = husband_declined_spymaster			
+		clr_character_flag = husband_denied_spymaster			
 	}
 }
 
@@ -3632,46 +3548,36 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOR = {
+		NOT = {
 			demesne_size = 1
+		}
+		NOT = {
 			religion_group = muslim
 		}
 		spouse = {
-			NOR = {
+			NOT = {
 				religion_group = muslim
-				trait = incapable
 			}
-			is_ruler = yes
-			prisoner = no
-			is_alive = yes
-			is_abroad = no
-			at_location = ROOT
 		}
 		independent = no
 		any_courtier = {
 			OR = {
 				any_lover = { character = ROOT }
 				reverse_opinion = { who = ROOT value = 40 }
-			}
+			}			
 			is_councillor = no
+			can_be_spiritual_trigger = yes
+			learning = 10
 			age = 16
 			is_female = no
 			prisoner = no
-			NOR = {
-				job_spiritual = {
-					OR = {
-						character = ROOT
-						attribute_diff = {
-							attribute = learning
-							character = PREV
-							value = 0
-						}
-					}
-				}
-				trait = incapable
-				liege = {
+			NOT = { trait = incapable }
+			liege = {
+				NOT = {
 					character = PREV
 				}
+			}
+			NOT = {
 				spouse = {
 					character = ROOT
 				}
@@ -3682,43 +3588,18 @@ character_event = {
 			trait = diligent
 			trait = charitable
 		}
+		spouse = {
+			NOT = { trait = incapable }
+			is_ruler = yes
+			prisoner = no
+			is_alive = yes
+			is_abroad = no
+			at_location = ROOT
+		}
 		job_spiritual = {
 			NOT = {
 				character = ROOT
 			}
-		}
-	}
-	
-	immediate = {
-		random_courtier = {
-			limit = {
-				OR = {
-					any_lover = { character = ROOT }
-					reverse_opinion = { who = ROOT value = 40 }
-				}
-				is_councillor = no
-				learning = 10
-				age = 16
-				is_female = no
-				prisoner = no
-				NOR = {
-					job_spiritual = {
-						attribute_diff = {
-							attribute = learning
-							character = PREV
-							value = 0
-						}
-					}
-					trait = incapable
-					liege = {
-						character = PREV
-					}
-					spouse = {
-						character = ROOT
-					}
-				}
-			}
-			save_event_target_as = target_courtier
 		}
 	}
 	
@@ -3741,6 +3622,32 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30072"
+		random_courtier = {
+			limit = {
+				OR = {
+				any_lover = { character = ROOT }
+					reverse_opinion = { who = ROOT value = 40 }
+				}
+				can_be_spiritual_trigger = yes
+				is_councillor = no
+				learning = 10
+				age = 16
+				is_female = no
+				prisoner = no
+				NOT = { trait = incapable }
+				liege = {
+					NOT = {
+						character = PREV
+					}
+				}
+				NOT = {
+					spouse = {
+						character = ROOT
+					}
+				}
+			}
+			save_event_target_as = new_lord_spiritual
+		}
 		spouse = {
 			character_event = {
 				id = 30073
@@ -3767,7 +3674,7 @@ character_event = {
 				years = 5
 			}
 		}
-		event_target:target_courtier = {
+		event_target:new_lord_spiritual = {
 			give_job_title = job_spiritual
 		}
 		FROM = {
@@ -3815,7 +3722,7 @@ character_event = {
 	option = {
 		name = "EVTOPTB30074"
 		trigger = {
-			has_character_flag = husband_declined_lord_spiritual
+			has_character_flag = husband_denied_lord_spiritual
 		}
 		FROM = {
 			reverse_opinion = {
@@ -3824,7 +3731,7 @@ character_event = {
 				years = 5
 			}
 		}
-		clr_character_flag = husband_declined_lord_spiritual
+		clr_character_flag = husband_denied_lord_spiritual
 	}
 }
 
@@ -3839,20 +3746,18 @@ character_event = {
 	only_women = yes
 	capable_only = yes
 	prisoner = no
+	is_married = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
-		is_married = yes
 		is_ruler = no
 		spouse = {
+			NOT = { trait = incapable }
 			is_alive = yes
 			age = 40
 			prisoner = no
-			NOR = {
-				fertility = 0.5
-				trait = incapable
-			}
+			NOT = { fertility = 0.5 }
 		}
 		is_pregnant = no
 		fertility = 0.6
@@ -3860,45 +3765,22 @@ character_event = {
 			num_of_children = 1
 		}
 		any_courtier = {
+			is_close_relative = no
 			is_female = no
-			OR = {
-				any_lover = { character = ROOT }
-				reverse_opinion = { who = ROOT value = 40 }
-			}
+			age = 20
 			NOR = {
 				age = 65
 				trait = chaste
 				trait = celibate
 				trait = homosexual
 				trait = eunuch
-				trait = monk
+				is_ascetic_trigger = yes
 				family = ROOT
-				trait = incapable
 			}
-		}
-	}
-	
-	immediate = {
-		random_courtier = {
-			limit = {
-				is_female = no
-				OR = {
-					any_lover = { character = ROOT }
-					reverse_opinion = { who = ROOT value = 40 }
-				}
-				age = 20
-				NOR = {
-					age = 65
-					trait = chaste
-					trait = celibate
-					trait = homosexual
-					trait = eunuch
-					trait = monk
-					family = ROOT
-					trait = incapable
-				}
+			OR = {
+				any_lover = { character = ROOT }
+				reverse_opinion = { who = ROOT value = 40 }
 			}
-			save_event_target_as = target_courtier
 		}
 	}
 	
@@ -3926,8 +3808,27 @@ character_event = {
 	option = {
 		name = "EVTOPTA30075"
 		ai_chance = { factor = 80 }
-		event_target:target_courtier = {
+		random_courtier = {
+			limit = {
+				is_close_relative = no
+				is_female = no
+				age = 20
+				NOR = {
+					age = 65
+					trait = chaste
+					trait = celibate
+					trait = homosexual
+					trait = eunuch
+					is_ascetic_trigger = yes
+					family = ROOT
+				}
+				OR = {
+					any_lover = { character = ROOT }
+					reverse_opinion = { who = ROOT value = 40 }
+				}
+			}
 			impregnate_cuckoo = ROOT
+			save_event_target_as = sire_bastard
 		}
 		hidden_tooltip = {
 			character_event = {
@@ -4102,7 +4003,7 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30080" #Imprison courtier
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			imprison = yes
 		}
 	}
@@ -4113,9 +4014,9 @@ character_event = {
 			piety = -20
 			custom_tooltip = { text = jain_ahimsa_tooltip }
 		}
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_hanging
 				killer = ROOT
 			}
 		}
@@ -4123,25 +4024,27 @@ character_event = {
 	option = {
 		name = "EVTOPTC30080" #Banish
 		ai_chance = { factor = 1000 }
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			banish = yes
 		}
 	}
 	
 	option = {
 		name = "EVTOPTD30080" #Does nothing
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			opinion = {
 				modifier = opinion_relieved
 				who = ROOT
 				years = 5
 			}
 		}
-		FROMFROM = {
-			opinion = {
-				modifier = opinion_grateful
-				who = ROOT
-				years = 5
+		FROM = {
+			FROM = {
+				opinion = {
+					modifier = opinion_grateful
+					who = ROOT
+					years = 5
+				}
 			}
 		}
 	}
@@ -4157,11 +4060,13 @@ character_event = {
 	
 	option = {
 		name = "EVTOPTA30081" #Imprison
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			imprison = yes
 		}
-		FROMFROM = {
-			imprison = yes
+		FROM = {
+			FROM = {
+				imprison = yes
+			}
 		}
 	}
 	option = {
@@ -4171,32 +4076,36 @@ character_event = {
 			piety = -20
 			custom_tooltip = { text = jain_ahimsa_tooltip }
 		}
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			death = {
-				death_reason = death_execution
+				death_reason = death_execution_hanging
 				killer = ROOT
 			}
 		}
-		FROMFROM = {
-			death = {
-				death_reason = death_execution
-				killer = ROOT
+		FROM = {
+			FROM = {
+				death = {
+					death_reason = death_execution_hanging
+					killer = ROOT
+				}
 			}
 		}
 	}
 	option = {
 		name = "EVTOPTC30081" #Banish
 		ai_chance = { factor = 1000 }
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			banish = yes
 		}
-		FROMFROM = {
-			banish = yes
+		FROM = {
+			FROM = {
+				banish = yes
+			}
 		}
 	}
 	option = {
 		name = "EVTOPTD30081" #Does nothing
-		event_target:target_courtier = {
+		event_target:sire_bastard = {
 			opinion = {
 				modifier = opinion_relieved
 				who = ROOT
@@ -4215,6 +4124,8 @@ character_event = {
 	id = 30085
 	desc = "EVTDESC30085"
 	picture = GFX_evt_quarrel
+
+	hide_from = yes
 	
 	min_age = 40
 	only_men = yes
@@ -4227,20 +4138,30 @@ character_event = {
 	trigger = {
 		in_command = no
 		spouse = {
+			NOT = { trait = incapable }
 			prisoner = no
 			is_alive = yes
 			is_abroad = no
 			at_location = ROOT
-			is_smart_trigger = no
-			NOR = {
+			NOT = {
 				age = 30
-				trait = incapable
 			}
-			is_inaccessible_trigger = no
+			is_smart_trigger = no
+			NOT = { 
+				is_inaccessible_trigger = yes
+			}
+		}
+		NOT = {
+			has_character_modifier = for_the_sake_of_love
+		}
+		NOT = {
+			has_character_flag = best_friends_forever
+		}
+		spouse = {
 			any_courtier = {
 				age = 16
-				ai = yes
 				is_councillor = no
+				ai = yes
 				spouse = {
 					prisoner = no
 					is_alive = yes
@@ -4250,22 +4171,6 @@ character_event = {
 				}
 			}
 		}
-		NOR = {
-			has_character_modifier = for_the_sake_of_love
-			has_character_flag = best_friends_forever
-		}
-	}
-	
-	immediate = {
-		random_courtier = {
-			limit = {
-				age = 16
-				ai = yes
-				family = no
-				is_councillor = no
-			}
-			save_event_target_as = target_courtier
-		}
 	}
 	
 	weight_multiplier = {
@@ -4273,11 +4178,11 @@ character_event = {
 		
 		modifier = {
 			factor = 1.5
-			spouse = {
+			spouse = { 
 				OR = {
 					trait = slow
 					trait = dull
-				}
+				} 
 			}
 		}
 		modifier = {
@@ -4286,6 +4191,26 @@ character_event = {
 		}
 	}
 
+	immediate = {
+		spouse = {
+			random_courtier = {
+				limit = {
+					age = 16
+					is_councillor = no
+					ai = yes
+					spouse = {
+						prisoner = no
+						is_alive = yes
+						NOT = {
+							character = PREVPREV
+						}
+					}
+				}
+				save_event_target_as = target_courtier
+			}
+		}
+	}
+	
 	option = {
 		name = "EVTOPTA30085" #Fine, I'll humor you
 		add_character_modifier = {
@@ -4342,7 +4267,7 @@ character_event = {
 	}
 }
 
-#Courtier
+#Courtier - New Friend
 character_event = {
 	id = 30087
 	hide_window = yes
@@ -4369,7 +4294,7 @@ character_event = {
 	option = {
 		name = "EVTOPTA30088"
 		trigger = {
-			NOR = {
+			NOT = {
 				has_character_flag = failed_lake
 				has_character_flag = perfect_lake
 			}
@@ -4382,7 +4307,7 @@ character_event = {
 	option = {
 		name = "EVTOPTB30088"
 		trigger = {
-			NOR = {
+			NOT = {
 				has_character_flag = failed_picnic
 				has_character_flag = perfect_picnic
 			}
@@ -4395,8 +4320,8 @@ character_event = {
 	option = {
 		name = "EVTOPTC30088"
 		trigger = {
-			NOR = {
-				religion = jain
+			NOT = { religion = jain }
+			NOT = {
 				has_character_flag = failed_hunt
 				has_character_flag = perfect_hunt
 			}
@@ -4409,7 +4334,7 @@ character_event = {
 	option = {
 		name = "EVTOPTD30088"
 		trigger = {
-			NOR = {
+			NOT = {
 				has_character_flag = failed_dinner
 				has_character_flag = perfect_dinner
 			}
@@ -4854,18 +4779,13 @@ character_event = {
 	
 	trigger = {
 		fertility = 0.65
-		NOR = {
-			trait = celibate
-			trait = nun
-			has_character_modifier = spouse_active_timer
-		}
+		NOT = { is_ascetic_trigger = yes }
+		NOT = { trait = celibate }
 		spouse = {
-			NOR = {
-				trait = celibate
-				trait = incapable
-				trait = eunuch
-				trait = monk
-			}
+			NOT = { trait = incapable }
+			NOT = { trait = celibate }
+			NOT = { is_ascetic_trigger = yes }
+			NOT = { trait = eunuch }
 			age = 40
 			war = no
 			in_command = no
@@ -4873,6 +4793,9 @@ character_event = {
 			at_location = ROOT
 			prisoner = no
 			is_alive = yes
+		}
+		NOT = {
+			has_character_modifier = spouse_active_timer
 		}
 	}
 	
@@ -4960,23 +4883,29 @@ character_event = {
 		name = EVTOPTA30101
 		trigger = {
 			has_character_flag = wild_ride
+			NOT = {
+				age = 55
+			}
 		}
 		clr_character_flag = wild_ride
 		prestige = 20
 		if = {
+			limit = { NOT = { trait = lustful } }
+			random = {
+				chance = 40
+				
+				add_trait = lustful
+				hidden_tooltip = {
+					character_event = {
+						id = 38272 #Notify Lustful
+					}
+				}
+			}
+		}
+		if = {
 			limit = { immortal = no }
 			random = {
 				chance = 10
-				modifier = {
-					factor = 2.0
-					age = 55
-				}
-				modifier = {
-					factor = 2.0
-					NOT = {
-						health = 5
-					}
-				}
 				
 				death = {
 					death_reason = death_accident
@@ -4987,66 +4916,36 @@ character_event = {
 						tooltip = "EVTTOOLTIP30103"
 					}
 				}
+				break = yes
 			}
-			break = yes
-		}
-		random = {
-			chance = 40
-			
-			add_trait = lustful
 		}
 	}
-#	option = {
-#		name = "EVTOPTB30101"
-#		trigger = {
-#			has_character_flag = wild_ride
-#			age = 55
-#			NOT = {
-#				health = 5
-#			}
-#		}
-#		clr_character_flag = wild_ride
-#		prestige = 20
-#		random = {
-#			chance = 30
-#			
-#			death = {
-#				death_reason = death_accident
-#			}
-#			spouse = {
-#				character_event = {
-#					id = 30103
-#					tooltip = "EVTTOOLTIP30103"
-#				}
-#			}
-#		}
-#		random = {
-#			chance = 40
-#			
-#			add_trait = lustful
-#		}
-#	}
 	option = {
-		name = "EVTOPTC30101"
+		name = "EVTOPTB30101"
 		trigger = {
-			has_character_flag = boss_in_bedchamber
+			has_character_flag = wild_ride
+			age = 55
 		}
-		clr_character_flag = boss_in_bedchamber
+		clr_character_flag = wild_ride
 		prestige = 20
+		if = {
+			limit = { NOT = { trait = lustful } }
+			random = {
+				chance = 40
+				
+				add_trait = lustful
+				hidden_tooltip = {
+					character_event = {
+						id = 38272 #Notify Lustful
+					}
+				}
+			}
+		}
 		if = {
 			limit = { immortal = no }
 			random = {
-				chance = 10
-				modifier = {
-					factor = 2.0
-					age = 55
-				}
-				modifier = {
-					factor = 2.0
-					NOT = {
-						health = 5
-					}
-				}
+				chance = 30
+				
 				death = {
 					death_reason = death_accident
 				}
@@ -5056,45 +4955,90 @@ character_event = {
 						tooltip = "EVTTOOLTIP30103"
 					}
 				}
+				break = yes
 			}
-			break = yes
-		}
-		random = {
-			chance = 40
-			
-			add_trait = lustful
 		}
 	}
-#	option = {
-#		name = "EVTOPTD30101"
-#		trigger = {
-#			has_character_flag = boss_in_bedchamber
-#			age = 55
-#			NOT = {
-#				health = 5
-#			}
-#		}
-#		clr_character_flag = boss_in_bedchamber
-#		prestige = 20
-#		random = {
-#			chance = 10
-#			
-#			death = {
-#				death_reason = death_accident
-#			}
-#			spouse = {
-#				character_event = {
-#					id = 30103
-#					tooltip = "EVTTOOLTIP30103"
-#				}
-#			}
-#		}
-#		random = {
-#			chance = 40
-#			
-#			add_trait = lustful
-#		}
-#	}
+	option = {
+		name = "EVTOPTC30101"
+		trigger = {
+			has_character_flag = boss_in_bedchamber
+			NOT = {
+				age = 55
+			}
+		}
+		clr_character_flag = boss_in_bedchamber
+		prestige = 20
+		if = {
+			limit = { NOT = { trait = lustful } }
+			random = {
+				chance = 40
+				
+				add_trait = lustful
+				hidden_tooltip = {
+					character_event = {
+						id = 38272 #Notify Lustful
+					}
+				}
+			}
+		}
+		if = {
+			limit = { immortal = no }
+			random = {
+				chance = 10
+				
+				death = {
+					death_reason = death_accident
+				}
+				spouse = {
+					character_event = {
+						id = 30103
+						tooltip = "EVTTOOLTIP30103"
+					}
+				}
+				break = yes
+			}
+		}
+	}
+	option = {
+		name = "EVTOPTD30101"
+		trigger = {
+			has_character_flag = boss_in_bedchamber
+			age = 55
+		}
+		clr_character_flag = boss_in_bedchamber
+		prestige = 20
+		if = {
+			limit = { NOT = { trait = lustful } }
+			random = {
+				chance = 40
+				
+				add_trait = lustful
+				hidden_tooltip = {
+					character_event = {
+						id = 38272 #Notify Lustful
+					}
+				}
+			}
+		}
+		if = {
+			limit = { immortal = no }
+			random = {
+				chance = 10
+				
+				death = {
+					death_reason = death_accident
+				}
+				spouse = {
+					character_event = {
+						id = 30103
+						tooltip = "EVTTOOLTIP30103"
+					}
+				}
+				break = yes
+			}
+		}
+	}
 }
 
 #Active ***live: Gentle and Sweet Love
@@ -5109,119 +5053,142 @@ character_event = {
 		name = "EVTOPTA30102"
 		trigger = {
 			has_character_flag = gentle_loving
+			NOT = {
+				age = 55
+			}
 		}
 		clr_character_flag = gentle_loving
 		random = {
 			chance = 60
-			modifier = {
-				factor = 0.67
-				age = 55
-			}
 			
 			add_trait = lustful
-		}
-		random = {
-			chance = 10
-			modifier = {
-				factor = 2.0
-				age = 55
-			}
-			
-			death = {
-				death_reason = death_accident
-			}
-			spouse = {
+			hidden_tooltip = {
 				character_event = {
-					id = 30104
-					tooltip = "EVTTOOLTIP30104"
+					id = 38272 #Notify Lustful
+				}
+			}
+		}
+		if = {
+			limit = { immortal = no }
+			random = {
+				chance = 10
+				
+				death = {
+					death_reason = death_accident
+				}
+				spouse = {
+					character_event = {
+						id = 30104
+						tooltip = "EVTTOOLTIP30104"
+					}
 				}
 			}
 		}
 	}
-#	option = {
-#		name = "EVTOPTB30102"
-#		trigger = {
-#			has_character_flag = gentle_loving
-#			age = 55
-#		}
-#		clr_character_flag = gentle_loving
-#		random = {
-#			chance = 40
-#			
-#			add_trait = lustful
-#		}
-#		random = {
-#			chance = 20
-#			
-#			death = {
-#				death_reason = death_accident
-#			}
-#			spouse = {
-#				character_event = {
-#					id = 30104
-#					tooltip = "EVTTOOLTIP30104"
-#				}
-#			}
-#		}
-#	}
+	option = {
+		name = "EVTOPTB30102"
+		trigger = {
+			has_character_flag = gentle_loving
+			age = 55
+		}
+		clr_character_flag = gentle_loving
+		random = {
+			chance = 40
+			
+			add_trait = lustful
+			hidden_tooltip = {
+				character_event = {
+					id = 38272 #Notify Lustful
+				}
+			}
+		}
+		if = {
+			limit = { immortal = no }
+			random = {
+				chance = 20
+				
+				death = {
+					death_reason = death_accident
+				}
+				spouse = {
+					character_event = {
+						id = 30104
+						tooltip = "EVTTOOLTIP30104"
+					}
+				}
+			}
+		}
+	}
 	option = {
 		name = "EVTOPTC30102"
 		trigger = {
 			has_character_flag = sweet_love
+			NOT = {
+				age = 60
+			}
 		}
 		clr_character_flag = sweet_love
 		random = {
 			chance = 30
-			modifier = {
-				factor = 0.67
-				age = 60
-			}
-			add_trait = lustful
-		}
-		random = {
-			chance = 20
-			modifier = {
-				factor = 2.0
-				age = 60
-			}
 			
-			spouse = {
+			add_trait = lustful
+			hidden_tooltip = {
 				character_event = {
-					id = 30104
-					tooltip = "EVTTOOLTIP30104"
+					id = 38272 #Notify Lustful
 				}
 			}
-			death = {
-				death_reason = death_accident
+		}
+		if = {
+			limit = { immortal = no }
+			random = {
+				chance = 20
+				
+				spouse = {
+					character_event = {
+						id = 30104
+						tooltip = "EVTTOOLTIP30104"
+					}
+				}
+				death = {
+					death_reason = death_accident
+				}
 			}
 		}
 	}
-#	option = {
-#		name = "EVTOPTD30102"
-#		trigger = {
-#			has_character_flag = sweet_love
-#			age = 60
-#		}
-#		clr_character_flag = sweet_love
-#		random = {
-#			chance = 20
-#			
-#			add_trait = lustful
-#		}
-#		random = {
-#			chance = 40
-#			
-#			spouse = {
-#				character_event = {
-#					id = 30104
-#					tooltip = "EVTTOOLTIP30104"
-#				}
-#			}
-#			death = {
-#				death_reason = death_accident
-#			}
-#		}
-#	}
+	option = {
+		name = "EVTOPTD30102"
+		trigger = {
+			has_character_flag = sweet_love
+			age = 60
+		}
+		clr_character_flag = sweet_love
+		random = {
+			chance = 20
+			
+			add_trait = lustful
+			hidden_tooltip = {
+				character_event = {
+					id = 38272 #Notify Lustful
+				}
+			}
+		}
+		if = {
+			limit = { immortal = no }
+			random = {
+				chance = 40
+				
+				spouse = {
+					character_event = {
+						id = 30104
+						tooltip = "EVTTOOLTIP30104"
+					}
+				}
+				death = {
+					death_reason = death_accident
+				}
+			}
+		}
+	}
 }
 
 #Active ***life: Killed Spouse by loving him too fiercely
@@ -5283,22 +5250,23 @@ character_event = {
 		has_lover = no
 		fertility = 0.3
 		spouse = {
+			NOT = { trait = incapable }
 			war = no
 			in_command = no
 			is_abroad = no
 			at_location = ROOT
 			prisoner = no
 			is_alive = yes
-			NOR = {
+			NOT = {
 				num_of_children = 1
+			}
+			NOT = {
 				fertility = 0.5
-				trait = incapable
 			}
 		}
 		is_pregnant = no
-		NOR = {
+		NOT = {
 			num_of_children = 1
-			has_character_modifier = suitable_father_timer
 		}
 		any_courtier = {
 			reverse_opinion = { who = ROOT value = 40 }
@@ -5306,15 +5274,18 @@ character_event = {
 			fertility = 0.5
 			has_lover = no
 			age = 20
-			NOR = {
+			NOR = { 
 				age = 35
+				trait = eunuch
+				is_ascetic_trigger = yes
 				trait = chaste
 				trait = celibate
-				trait = eunuch
-				trait = monk
 				family = ROOT
 			}
 			is_close_relative = no
+		}
+		NOT = {
+			has_character_modifier = suitable_father_timer
 		}
 	}
 	
@@ -5356,10 +5327,10 @@ character_event = {
 				fertility = 0.5
 				has_lover = no
 				age = 20
-				NOR = {
+				NOR = { 
 					age = 35
 					trait = eunuch
-					trait = monk
+					is_ascetic_trigger = yes
 					trait = chaste
 					trait = celibate
 					family = ROOT
@@ -5367,20 +5338,10 @@ character_event = {
 				is_close_relative = no
 			}
 			add_lover = ROOT
-			add_character_modifier = {
-				name = new_love
-				duration = 90
-				hidden = yes
-			}
 			random = {
 				chance = 15
 				impregnate_cuckoo = ROOT
 			}
-		}
-		add_character_modifier = {
-			name = new_love
-			duration = 90
-			hidden = yes
 		}
 	}
 	option = {
@@ -5405,8 +5366,10 @@ character_event = {
 	
 	trigger = {
 		is_councillor = no
-		NOR = {
+		NOT = {
 			learning = 8
+		}
+		NOT = {
 			has_character_modifier = learning_advice
 		}
 		spouse = {
@@ -5416,7 +5379,7 @@ character_event = {
 			is_abroad = no
 			at_location = ROOT
 			is_dumb_trigger = no
-			NOT = {
+			NOT = {	
 				has_opinion_modifier = { who = ROOT modifier = opinion_denied_advice }
 			}
 		}

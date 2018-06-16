@@ -22,12 +22,7 @@ narrative_event = {
 	war = no
 	
 	trigger = {
-		NOR = {
-			has_global_flag = robin_hood_existed
-			has_character_flag = killed_robin_hood
-			has_character_flag = robin_marion_married
-			has_character_flag = robin_hood
-		}
+		NOT = { has_global_flag = robin_hood_existed }
 		in_command = no
 		is_ill = no
 		OR = {
@@ -37,13 +32,22 @@ narrative_event = {
 			religion_group = slavic_group
 			religion_group = baltic_group
 		}
+		NOT = {
+			has_character_flag = killed_robin_hood
+		}
+		NOT = {
+			has_character_flag = robin_marion_married
+		}
+		NOT = {
+			has_character_flag = robin_hood
+		}
 		any_demesne_province = {
 			OR = {
 				has_province_modifier = highway_robber_band
 				revolt_risk = 0.05
 			}
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 	}
 	
 	mean_time_to_happen = {
@@ -249,7 +253,7 @@ narrative_event = {
 			}
 			random = {
 				chance = 25
-				
+
 				add_trait = diligent
 				hidden_tooltip = {
 					character_event = {
@@ -262,14 +266,14 @@ narrative_event = {
 		}
 		if = {
 			limit = {
-				NOR = {
+				NOT = {
 					trait = ambitious
 					has_character_flag = got_trait
 				}
 			}
 			random = {
 				chance = 25
-				
+
 				add_trait = ambitious
 				hidden_tooltip = {
 					character_event = {
@@ -447,8 +451,10 @@ narrative_event = {
 		prestige = 10
 		any_courtier = {
 			limit = {
-				NOR = {
+				NOT = {
 					trait = charitable
+				}
+				NOT = {
 					trait = kind
 				}
 			}
@@ -502,7 +508,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			save_event_target_as = robin_hood
+			save_event_target_as = marion_robin
 		}
 		create_character = {
 			name = Marion
@@ -522,7 +528,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			save_event_target_as = maid_marion
+			save_event_target_as = robin_marion
 		}
 		narrative_event = {
 			id = 10042
@@ -1211,7 +1217,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			save_event_target_as = robin_hood
+			save_event_target_as = marion_robin
 		}
 		create_character = {
 			name = Marion
@@ -1231,7 +1237,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			save_event_target_as = maid_marion
+			save_event_target_as = robin_marion
 		}
 		narrative_event = {
 			id = 10042
@@ -1338,7 +1344,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			save_event_target_as = robin_hood
+			save_event_target_as = marion_robin
 		}
 		create_character = {
 			name = Marion
@@ -1358,7 +1364,7 @@ narrative_event = {
 			}
 		}
 		new_character = {
-			save_event_target_as = maid_marion
+			save_event_target_as = robin_marion
 		}
 		narrative_event = {
 			id = 10042
@@ -1381,11 +1387,10 @@ narrative_event = {
 	option = {
 		name =  "EVTOPTA10042"
 		set_character_flag = robin_marion_married
-		event_target:robin_hood = {
-			add_spouse = event_target:maid_marion
-			hidden_tooltip = {
-				add_lover = event_target:maid_marion
-			}
+
+		event_target:marion_robin = {
+			add_spouse = event_target:robin_marion
+			hidden_tooltip = { add_lover = event_target:robin_marion }
 		}
 	}
 }
@@ -1408,12 +1413,21 @@ narrative_event = {
 	
 	trigger = {
 		in_command = no
+
 		primary_title = { temporary = no }
-		is_inaccessible_trigger = no
-		NOR = {
+
+		NOT = { is_inaccessible_trigger = yes }
+
+		NOT = {
 			has_character_modifier = flaming_gap
+		}
+		NOT = {
 			has_character_modifier = gates_hell
+		}
+		NOT = {
 			has_character_modifier = wailing_gap
+		}
+		NOR = {
 			has_character_modifier = exorcism_gateshell
 			has_character_modifier = cattle_gateshell
 			has_character_modifier = sacrifice_gateshell
@@ -1881,6 +1895,7 @@ narrative_event = {
 	
 	option = {
 		name = "EVTOPTA10107"
+		
 		event_target:human_sacrifice = {
 			death = {
 				death_reason = death_murder_fall

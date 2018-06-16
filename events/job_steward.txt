@@ -37,6 +37,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_squeeze_peasants
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			county = {
 				is_occupied = no
@@ -93,15 +96,16 @@ character_event = {
 }
 
 # 20200: The liege is informed
-letter_event = {
+character_event = {
 	id = 20200
-	desc = "EVTDESC20200"
-	border = GFX_event_letter_frame_economy
+	desc = EVTDESC20200
+	picture = GFX_evt_carriage
+	border = GFX_event_normal_frame_economy
 	
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA20200"
+		name = EVTOPTA20200
 		scaled_wealth = 0.5
 	}
 }
@@ -113,7 +117,6 @@ character_event = {
 	title = "EVTNAME921"
 	desc = "EVTDESC921"
 	picture = GFX_evt_peasants
-	border = GFX_event_normal_frame_economy
 
 	min_age = 16
 	capable_only = yes
@@ -121,6 +124,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_squeeze_peasants
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			owner = {
 				job_treasurer = {
@@ -191,9 +197,7 @@ character_event = {
 			NOT = { stewardship = 5 }
 		}
 		random_list = {
-			25 = {
-				character_event = { id = 20210 tooltip = "EVTTOOLTIP20210" }
-			}
+			25 = { character_event = { id = 20210 tooltip = "EVTTOOLTIP20210" } }
 			50 = {
 				character_event = { id = 20211 tooltip = "EVTTOOLTIP20211" }
 				hidden_tooltip = {
@@ -219,7 +223,8 @@ character_event = {
 		}
 		random_list = {
 			35 = { character_event = { id = 20210 tooltip = "EVTTOOLTIP20210" } }
-			50 = { character_event = { id = 20211 tooltip = "EVTTOOLTIP20211" }
+			50 = {
+				character_event = { id = 20211 tooltip = "EVTTOOLTIP20211" }
 				hidden_tooltip = {
 					liege = { letter_event = { id = 20212 } }
 				}
@@ -283,36 +288,41 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA20211"
+		name = EVTOPTA20211
 		add_trait = wounded
 		custom_tooltip = { text = EVTTOOLTIP20212 }
 	}
 }
 
 # 20212: Inform the Liege about wounding
-letter_event = {
+character_event = {
 	id = 20212
-	desc = "EVTDESC20212"
+	desc = EVTDESC20212
+	picture = GFX_evt_carriage
 	
 	is_triggered_only = yes
 	
+	notification = yes
+	
 	option = {
-		name = "EVTOPTA20212"
-		prestige = -10
+		name = EVTOPTA20212
+#		prestige = -10
 	}
 }
 
 # 20213: Inform the Liege about death
 character_event = {
 	id = 20213
-	desc = "EVTDESC20213"
+	desc = EVTDESC20213
 	picture = GFX_evt_death
 	
 	is_triggered_only = yes
 	
+	notification = yes
+	
 	option = {
-		name = "EVTOPTA20213"
-		prestige = -15
+		name = EVTOPTA20213
+#		prestige = -15
 	}
 }
 
@@ -328,6 +338,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_squeeze_peasants
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			owner = {
 				job_treasurer = {
@@ -446,6 +459,7 @@ character_event = {
 letter_event = {
 	id = 20216
 	desc = "EVTDESC20216"
+	border = GFX_event_letter_frame_economy
 	
 	is_triggered_only = yes
 	
@@ -461,10 +475,8 @@ letter_event = {
 				# Province barons
 				any_province_lord = {
 					limit = {
-						NOR = {
-							character = ROOT
-							character = FROM
-						}
+						NOT = { character = ROOT }
+						NOT = { character = FROM }
 					}
 					opinion = {
 						who = ROOT
@@ -497,6 +509,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_oversee_construction
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		NOT = { has_character_modifier = master_builder }
 		location = {
 			owner = {
@@ -607,6 +622,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_oversee_construction
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			any_province_lord = {
 				independent = no
@@ -684,19 +702,27 @@ character_event = {
 	option = {
 		name = "EVTOPTA20240"
 		ai_chance = { factor = 100 }
-		FROM = {
-			liege = {
-				job_spymaster = {
-					hidden_tooltip = {
-						if = {
-							limit = {
+		hidden_tooltip = {
+			if = {
+				limit = {
+					FROM = {
+						liege = {
+							job_spymaster = {
 								intrigue = 12
 							}
+						}
+					}
+				}
+				FROM = {
+					liege = {
+						job_spymaster = {
 							character_event = { id = 20243 days = 14 }
 						}
 					}
 				}
 			}
+		}
+		FROM = {
 			character_event = { id = 20241 days = 4 tooltip = "EVTTOOLTIP20241"	}
 		}
 	}
@@ -767,11 +793,13 @@ letter_event = {
 	option = {
 		name = "EVTOPTA20244"
 		ai_chance = { factor = 100 }
-		FROMFROM = {
-			reverse_opinion = {
-				modifier = opinion_dishonorable
-				who = ROOT
-				years = 2
+		FROM = {
+			FROM = {
+				reverse_opinion = {
+					modifier = opinion_dishonorable
+					who = ROOT
+					years = 2
+				}
 			}
 		}
 	}
@@ -780,7 +808,6 @@ letter_event = {
 		ai_chance = { factor = 0 }
 	}
 }
-
 
 ##############################
 # STEWARD
@@ -801,6 +828,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_settle_tribe
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			county = {
 				is_occupied = no
@@ -930,6 +960,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_settle_tribe
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			owner = {
 				job_treasurer = {
@@ -1040,6 +1073,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_build_legend
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		liege = {
 			is_adult = yes
 			prisoner = no
@@ -1137,6 +1173,7 @@ character_event = {
 					province = PREV
 					home = PREV
 					owner = THIS
+					#leader = none
 					match_character = THIS
 					match_mult = 0.075
 					match_min = 100
@@ -1150,6 +1187,7 @@ character_event = {
 					province = PREV
 					home = PREV
 					owner = THIS
+					#leader = none
 					match_character = THIS
 					match_mult = 0.075
 					match_min = 100
@@ -1163,6 +1201,7 @@ character_event = {
 					province = PREV
 					home = PREV
 					owner = THIS
+					#leader = none
 					match_character = THIS
 					match_mult = 0.075
 					match_min = 100
@@ -1212,6 +1251,7 @@ character_event = {
 		disband_event_forces = tribal_build_legend
 	}
 }
+
 ##############################
 # STEWARD
 # JOB: action_collect_tribute
@@ -1231,6 +1271,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_collect_tribute
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		liege = {
 			ROOT = {
 				location = {
@@ -1238,10 +1281,8 @@ character_event = {
 						is_occupied = no
 					}
 					any_province_lord = {
-						NOR = {
-							character = ROOT
-							character = PREVPREVPREV
-						}
+						NOT = { character = ROOT }
+						NOT = { character = PREVPREVPREV }
 						OR = {
 							vassal_of = PREVPREVPREV
 							pays_tribute_to = PREVPREVPREV

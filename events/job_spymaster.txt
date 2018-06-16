@@ -36,12 +36,13 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_uncover_plots
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			any_province_character = {
-				NOR = {
-					is_liege_of = ROOT
-					character = ROOT
-				}
+				NOT = { is_liege_of = ROOT }
+				NOT = { character = ROOT }
 				OR = {
 					has_plot = plot_gain_title
 					has_plot = plot_kill_character
@@ -202,10 +203,8 @@ character_event = {
 			location = {
 				random_province_character = {
 					limit = {
-						NOR = {
-							is_liege_of = ROOT
-							character = ROOT
-						}
+						NOT = { is_liege_of = ROOT }
+						NOT = { character = ROOT }
 						OR = {
 							has_plot = plot_gain_title
 							has_plot = plot_gain_vassal_title
@@ -315,13 +314,6 @@ character_event = {
 		hidden_tooltip = {
 			liege = { letter_event = { id = 20292 } }
 		}
-
-#		if = {
-#			limit = {
-#				has_ambition = obj_uncover_plot
-#			}
-#			add_trait = counterspy
-#		}
 	}
 }
 
@@ -344,6 +336,16 @@ letter_event = {
 					}
 				}
 			}
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+	
+	option = {
+		name = "EVTOPTB20292"
+		ai_chance = {
+			factor = 0
 		}
 	}
 }
@@ -382,13 +384,17 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		has_job_action = action_uncover_plots
+		OR = {
+			has_job_action = action_uncover_plots
+			has_job_action = action_organize_spies_mystics
+		}
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			any_province_lord = {
-				NOR = {
-					is_liege_of = ROOT
-					character = ROOT
-				}
+				NOT = { is_liege_of = ROOT }
+				NOT = { character = ROOT }
 				OR = {
 					has_plot = plot_gain_title
 					has_plot = plot_kill_character
@@ -396,12 +402,6 @@ character_event = {
 					has_plot = plot_weaken_fellow_vassal
 					has_plot = plot_gain_liege_title
 					has_plot = plot_gain_fellow_vassal_title
-#					has_plot = plot_seduce_liege
-#					has_plot = plot_fabricate_evidence_betrayal
-#					has_plot = plot_fabricate_evidence_betrayal_same_realm
-#					has_plot = plot_fabricate_evidence_treason
-#					has_plot = plot_fabricate_evidence_treason_vassal
-#					has_plot = plot_kidnapping
 				}
 			}
 		}
@@ -663,19 +663,23 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		has_job_action = action_uncover_plots
+		OR = {
+			has_job_action = action_uncover_plots
+			has_job_action = action_organize_spies_mystics
+		}
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			OR = {
 				owner = {
 					same_liege = ROOT
 					independent = no
-					NOR = {
-						is_liege_of = ROOT
-						character = ROOT
-						trait = incapable
-						has_opinion_modifier = { who = liege modifier = opinion_coerced_into_leaving_faction }
-						has_character_flag = faction_member
-					}
+					NOT = { is_liege_of = ROOT }
+					NOT = { character = ROOT }
+					NOT = { trait = incapable }
+					NOT = { has_opinion_modifier = { who = liege modifier = opinion_coerced_into_leaving_faction } }
+					NOT = { has_character_flag = faction_member }
 					age = 16
 					prisoner = no
 					primary_title = { higher_tier_than = BARON }
@@ -683,19 +687,15 @@ character_event = {
 				owner = {
 					liege = { same_liege = ROOT }
 					independent = no
-					NOR = {
-						is_liege_of = ROOT
-						character = ROOT
-					}
+					NOT = { is_liege_of = ROOT }
+					NOT = { character = ROOT }
 					liege = {
 						independent = no
-						NOR = {
-							is_liege_of = ROOT
-							character = ROOT
-							trait = incapable
-							has_opinion_modifier = { who = liege modifier = opinion_coerced_into_leaving_faction }
-							has_character_flag = faction_member
-						}
+						NOT = { is_liege_of = ROOT }
+						NOT = { character = ROOT }
+						NOT = { trait = incapable }
+						NOT = { has_opinion_modifier = { who = liege modifier = opinion_coerced_into_leaving_faction } }
+						NOT = { has_character_flag = faction_member }
 						age = 16
 						prisoner = no
 						primary_title = { higher_tier_than = BARON }
@@ -808,25 +808,26 @@ character_event = {
 	}
 	
 	immediate = {
-		location = {
-			owner = {
-				if = {
-					limit = {
+		IF = {
+			limit = {
+				location = {
+					owner = {
 						same_liege = ROOT
 					}
-					set_character_flag = faction_member
-					save_event_target_as = faction_member
-					break = yes
 				}
-				liege = {
-					if = {
-						limit = {
-							same_liege = ROOT
-						}
-						set_character_flag = faction_member
-						save_event_target_as = faction_member
+			}
+			location = { owner = { set_character_flag = faction_member } }
+		}
+		IF = {
+			limit = {
+				location = {
+					owner = {
+						liege = { same_liege = ROOT }
 					}
 				}
+			}
+			location = { 
+				owner = { liege = { set_character_flag = faction_member } }
 			}
 		}
 	}
@@ -848,7 +849,8 @@ letter_event = {
 	option = { # Blackmail
 		name = "EVTOPTA9001"
 		trigger = {
-			event_target:faction_member = {
+			any_vassal = {
+				has_character_flag = faction_member
 				OR = {
 					trait = homosexual
 					trait = impaler
@@ -856,21 +858,22 @@ letter_event = {
 					trait = drunkard
 					trait = hedonist
 					trait = syphilitic
-					trait = kinslayer
 				}
 			}
 		}
 		ai_chance = {
 			factor = 10000
 		}
-		event_target:faction_member = {
+		random_vassal = {
+			limit = { has_character_flag = faction_member }
 			letter_event = { id = 9002 tooltip = EVTTOOLTIP9002 }
 		}	
 	}
 	option = { # Legalism
 		name = "EVTOPTB9001"
 		trigger = {
-			event_target:faction_member = {
+			any_vassal = {
+				has_character_flag = faction_member
 				OR = {
 					trait = just
 					trait = honest
@@ -883,14 +886,16 @@ letter_event = {
 		ai_chance = {
 			factor = 10000
 		}
-		event_target:faction_member = {
+		random_vassal = {
+			limit = { has_character_flag = faction_member }
 			letter_event = { id = 9005 tooltip = EVTTOOLTIP9005 }
 		}	
 	}
 	option = { # Threaten
 		name = "EVTOPTC9001"
 		trigger = {
-			event_target:faction_member = {
+			any_vassal = {
+				has_character_flag = faction_member
 				OR = {
 					trait = craven
 					trait = paranoid
@@ -903,50 +908,55 @@ letter_event = {
 		ai_chance = {
 			factor = 10000
 		}
-		event_target:faction_member = {
+		random_vassal = {
+			limit = { has_character_flag = faction_member }
 			letter_event = { id = 9008 tooltip = EVTTOOLTIP9008 }
 		}	
 	}
 	option = { # Ask Nicely
 		name = "EVTOPTD9001"
 		trigger = {
-			event_target:faction_member = {
-				NOR = {
-					trait = craven
-					trait = paranoid
-					trait = cynical
-					trait = humble
-					trait = slothful
-					trait = just
-					trait = honest
-					trait = trusting
-					trait = content
-					trait = kind
-					trait = homosexual
-					trait = impaler
-					trait = lustful
-					trait = drunkard
-					trait = hedonist
-					trait = syphilitic
-					trait = kinslayer
+			any_vassal = {
+				has_character_flag = faction_member
+				NOT = {
+					OR = {
+						trait = craven
+						trait = paranoid
+						trait = cynical
+						trait = humble
+						trait = slothful
+						trait = just
+						trait = honest
+						trait = trusting
+						trait = content
+						trait = kind
+						trait = homosexual
+						trait = impaler
+						trait = lustful
+						trait = drunkard
+						trait = hedonist
+						trait = syphilitic
+					}
 				}
 			}
 		}
 		ai_chance = {
 			factor = 100
 		}
-		event_target:faction_member = {
+		random_vassal = {
+			limit = { has_character_flag = faction_member }
 			letter_event = { id = 9003 tooltip = EVTTOOLTIP9023 }
 		}	
 	}
 	option = { # Do Nothing
 		name = "EVTOPTE9001"
-		event_target:faction_member = {
-			clr_character_flag = faction_member
-		}
 		ai_chance = {
 			factor = 1
 		}
+		random_vassal = {
+			limit = { has_character_flag = faction_member }
+			clr_character_flag = faction_member
+		}	
 	}
 }
 
@@ -1062,26 +1072,6 @@ letter_event = {
 		name = "EVTOPTF9002"
 		tooltip_info = syphilitic
 		trigger = { trait = syphilitic }
-		FROM = {
-			opinion = {
-				modifier = opinion_pleased
-				who = ROOT
-				years = 2
-			}
-		}
-		custom_tooltip = {
-			text = EVTTOOLTIP9004
-			hidden_tooltip = {
-				FROM = {
-					letter_event = { id = 9004 days = 7 }
-				}
-			}
-		}
-	}
-	option = { # Agree (Kinslayer)
-		name = "EVTOPTI9002"
-		tooltip_info = kinslayer
-		trigger = { trait = kinslayer }
 		FROM = {
 			opinion = {
 				modifier = opinion_pleased
@@ -1463,7 +1453,13 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		has_job_action = action_uncover_plots
+		OR = {
+			has_job_action = action_uncover_plots
+			has_job_action = action_organize_spies_mystics
+		}
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		liege = { in_faction = yes }
 		location = {
 			owner = {
@@ -1474,17 +1470,15 @@ character_event = {
 				}
 				ai = yes
 				independent = no
-				NOR = {
-					is_liege_of = ROOT
-					character = ROOT
-					trait = incapable
-					has_character_flag = faction_recruit
-					ROOT = {
-						liege = {
-							reverse_has_opinion_modifier = { who = PREVPREV modifier = opinion_coerced_into_joining_faction }
-						}
+				NOT = { is_liege_of = ROOT }
+				NOT = { character = ROOT }
+				NOT = { trait = incapable }
+				ROOT = {
+					liege = {
+						NOT = { reverse_has_opinion_modifier = { who = PREVPREV modifier = opinion_coerced_into_joining_faction } }
 					}
 				}
+				NOT = { has_character_flag = faction_recruit }
 				in_faction = no
 				age = 16
 				prisoner = no
@@ -1595,12 +1589,7 @@ character_event = {
 	}
 	
 	immediate = {
-		location = {
-			owner = {
-				set_character_flag = faction_recruit
-				save_event_target_as = faction_recruit
-			}
-		}
+		location = { owner = { set_character_flag = faction_recruit } }
 	}
 	
 	option = {
@@ -1621,7 +1610,8 @@ letter_event = {
 		name = EVTOPTA9021
 		trigger = {
 			liege = {
-				event_target:faction_recruit = {
+				any_vassal = {
+					has_character_flag = faction_recruit
 					OR = {
 						trait = homosexual
 						trait = impaler
@@ -1629,13 +1619,13 @@ letter_event = {
 						trait = drunkard
 						trait = hedonist
 						trait = syphilitic
-						trait = kinslayer
 					}
 				}
 			}
 		}
 		liege = {
-			event_target:faction_recruit = {
+			any_vassal = {
+				limit = { has_character_flag = faction_recruit }
 				letter_event = { id = 9022 tooltip = EVTTOOLTIP9022 }
 			}
 		}
@@ -1644,7 +1634,8 @@ letter_event = {
 		name = "EVTOPTC9021"
 		trigger = {
 			liege = {
-				event_target:faction_recruit = {
+				any_vassal = {
+					has_character_flag = faction_recruit
 					OR = {
 						trait = craven
 						trait = paranoid
@@ -1656,7 +1647,8 @@ letter_event = {
 			}
 		}
 		liege = {
-			event_target:faction_recruit = {
+			any_vassal = {
+				limit = { has_character_flag = faction_recruit }
 				letter_event = { id = 9028 tooltip = EVTTOOLTIP9028 }
 			}
 		}
@@ -1665,7 +1657,8 @@ letter_event = {
 		name = "EVTOPTD9001"
 		trigger = {
 			liege = {
-				event_target:faction_recruit = {
+				any_vassal = {
+					has_character_flag = faction_recruit
 					NOT = {
 						OR = {
 							trait = craven
@@ -1685,7 +1678,8 @@ letter_event = {
 			}
 		}
 		liege = {
-			event_target:faction_recruit = {
+			any_vassal = {
+				limit = { has_character_flag = faction_recruit }
 				letter_event = { id = 9023 tooltip = EVTTOOLTIP9023 }
 			}
 		}
@@ -1693,7 +1687,8 @@ letter_event = {
 	option = { # Do Nothing
 		name = "EVTOPTD9021"
 		liege = {
-			event_target:faction_recruit = {
+			any_vassal = {
+				limit = { has_character_flag = faction_recruit }
 				clr_character_flag = faction_recruit
 			}
 		}
@@ -1819,27 +1814,7 @@ letter_event = {
 				years = 2
 			}
 		}
-		custom_tooltip = {
-			text = EVTTOOLTIP9004
-			hidden_tooltip = {
-				FROM = {
-					letter_event = { id = 9024 days = 7 }
-				}
-			}
-		}
-	}
-	option = { # Agree (Kinslayer)
-		name = "EVTOPTI9002"
-		tooltip_info = kinslayer
-		trigger = { trait = kinslayer }
-		FROM = {
-			opinion = {
-				modifier = opinion_pleased
-				who = ROOT
-				years = 2
-			}
-		}
-		custom_tooltip = {
+		custom_tooltip = { 
 			text = EVTTOOLTIP9004
 			hidden_tooltip = {
 				FROM = {
@@ -2083,6 +2058,9 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_study_technology
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = { has_higher_tech_than = ROOT }
 	}
 	
@@ -2270,14 +2248,21 @@ character_event = {
 	prisoner = no
 	
 	trigger = {
-		has_job_action = action_study_technology
-		location = { has_higher_tech_than = ROOT }
+		OR = {
+			has_job_action = action_study_technology
+			has_job_action = action_sabotage_province
+		}
+		OR = {
+			location = { has_higher_tech_than = ROOT }
+			has_job_action = action_sabotage_province
+		}
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			any_province_lord = {
-				NOR = {
-					is_liege_of = ROOT
-					character = ROOT
-				}
+				NOT = { is_liege_of = ROOT }
+				NOT = { character = ROOT }
 				OR = {
 					intrigue = 10
 					job_spymaster = {
@@ -2394,10 +2379,8 @@ character_event = {
 		location = {
 			random_province_lord = {
 				limit = {
-					NOR = {
-						is_liege_of = ROOT
-						character = ROOT
-					}
+					NOT = { is_liege_of = ROOT }
+					NOT = { character = ROOT }
 					job_spymaster = {
 						intrigue = 10
 					}
@@ -2507,30 +2490,21 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_organize_spies
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			any_province_lord = {
-				NOR = {
-					is_liege_of = ROOT
-					character = ROOT
-				}
+				NOT = { is_liege_of = ROOT }
+				NOT = { character = ROOT }
 				ROOT = {
 					liege = {
 						NOT = { opinion = { who = PREVPREV value = 0 } }
 					}
 				}
+				trait = homosexual
+				is_female = no
 				num_of_vassals = 1
-				OR = {
-					AND = {
-						trait = homosexual
-						is_female = no
-					}
-					trait = impaler
-					trait = lustful
-					trait = drunkard
-					trait = hedonist
-					trait = syphilitic
-					trait = kinslayer
-				}
 			}
 		}
 	}
@@ -2675,24 +2649,15 @@ character_event = {
 			location = {
 				random_province_lord = {
 					limit = {
-						NOR = {
-							is_liege_of = ROOT
-							character = ROOT
-						}
+						NOT = { is_liege_of = ROOT }
+						NOT = { character = ROOT }
 						ROOT = {
 							liege = {
 								NOT = { opinion = { who = PREVPREV value = 0 } }
 							}
 						}
-						OR = {
-							trait = homosexual
-							trait = impaler
-							trait = lustful
-							trait = drunkard
-							trait = hedonist
-							trait = syphilitic
-							trait = kinslayer
-						}
+						trait = homosexual
+						is_female = no
 						num_of_vassals = 1
 					}
 					save_event_target_as = vicious_rumor_target
@@ -3024,8 +2989,10 @@ character_event = {
 		name = "EVTOPTA20358"
 		prestige = -15
 		hidden_tooltip = {
-			FROMFROM = {
-				clr_character_flag = vicious_rumor
+			FROM = {
+				FROM = {
+					clr_character_flag = vicious_rumor
+				}
 			}
 		}
 	}
@@ -3062,9 +3029,11 @@ letter_event = {
 		name = "EXCELLENT"
 		wealth = 100
 		hidden_tooltip = {
-			FROMFROM = {
-				clr_character_flag = vicious_rumor
-				clr_character_flag = vicious_rumor_blackmail
+			FROM = {
+				FROM = {
+					clr_character_flag = vicious_rumor
+					clr_character_flag = vicious_rumor_blackmail
+				}
 			}
 		}
 	}
@@ -3102,8 +3071,10 @@ letter_event = {
 	option = {
 		name = "EVTOPTA20362"
 		hidden_tooltip = {
-			FROMFROM = {
-				character_event = { id = 20363 days = 1 }
+			FROM = {
+				FROM = {
+					character_event = { id = 20363 days = 1 }
+				}
 			}
 		}
 	}
@@ -3124,77 +3095,15 @@ character_event = {
 		hidden_tooltip = {
 			any_vassal = {
 				limit = {
-					NOT = {
-						opinion = { who = ROOT value = 0 }
-					}
-					OR = {
-						AND = {
-							trait = homosexual
-							ROOT = { trait = homosexual }
-						}
-						AND = {
-							trait = impaler
-							ROOT = { trait = impaler }
-						}
-						AND = {
-							trait = lustful
-							ROOT = { trait = lustful }
-						}
-						AND = {
-							trait = drunkard
-							ROOT = { trait = drunkard }
-						}
-						AND = {
-							trait = hedonist
-							ROOT = { trait = hedonist }
-						}
-						AND = {
-							trait = syphilitic
-							ROOT = { trait = syphilitic }
-						}
-						AND = {
-							trait = kinslayer
-							ROOT = { trait = kinslayer }
-						}
-					}
+					NOT = { opinion = { who = ROOT value = 0 } }
+					NOT = { trait = homosexual }
 				}
 				set_character_flag = opinion_liege_homosexual
 			}
 			any_courtier = {
 				limit = {
-					NOT = {
-						opinion = { who = ROOT value = 0 }
-					}
-					OR = {
-						AND = {
-							trait = homosexual
-							ROOT = { trait = homosexual }
-						}
-						AND = {
-							trait = impaler
-							ROOT = { trait = impaler }
-						}
-						AND = {
-							trait = lustful
-							ROOT = { trait = lustful }
-						}
-						AND = {
-							trait = drunkard
-							ROOT = { trait = drunkard }
-						}
-						AND = {
-							trait = hedonist
-							ROOT = { trait = hedonist }
-						}
-						AND = {
-							trait = syphilitic
-							ROOT = { trait = syphilitic }
-						}
-						AND = {
-							trait = kinslayer
-							ROOT = { trait = kinslayer }
-						}
-					}
+					NOT = { opinion = { who = ROOT value = 0 } }
+					NOT = { trait = homosexual }
 				}
 				set_character_flag = opinion_liege_homosexual
 			}		
@@ -3242,12 +3151,13 @@ character_event = {
 	
 	trigger = {
 		has_job_action = action_organize_spies
+		NOT = { has_character_modifier = in_seclusion }
+		NOT = { has_character_modifier = bedridden_illness }
+		NOT = { trait = incapable }
 		location = {
 			any_province_lord = {
-				NOR = {
-					is_liege_of = ROOT
-					character = ROOT
-				}
+				NOT = { is_liege_of = ROOT }
+				NOT = { character = ROOT }
 				ROOT = {
 					liege = {
 						NOT = { opinion = { who = PREVPREV value = 0 } }
@@ -3398,10 +3308,8 @@ character_event = {
 			location = {
 				random_province_lord = {
 					limit = {
-						NOR = {
-							is_liege_of = ROOT
-							character = ROOT
-						}
+						NOT = { is_liege_of = ROOT }
+						NOT = { character = ROOT }
 						ROOT = {
 							liege = {
 								NOT = { opinion = { who = PREVPREV value = 0 } }
@@ -3409,7 +3317,6 @@ character_event = {
 							}
 						}
 					}
-					save_event_target_as = corrupt_noble
 					set_character_flag = corrupt_nobel
 				}
 			}
@@ -3458,9 +3365,21 @@ character_event = {
 	option = {
 		name = "EVTOPTA20371"
 		hidden_tooltip = {
-			event_target:corrupt_noble = {
-				set_character_flag = corrupt_nobel_accused
-				character_event = { id = 20373 days = 1 }
+			location = {
+				random_province_lord = {
+					limit = {
+						NOT = { is_liege_of = ROOT }
+						NOT = { character = ROOT }
+						ROOT = {
+							liege = {
+								NOT = { opinion = { who = PREVPREV value = 0 } }
+								same_realm = PREVPREV
+							}
+						}
+					}
+					set_character_flag = corrupt_nobel_accused
+					character_event = { id = 20373 days = 1 }
+				}
 			}
 		}
 	}
@@ -3478,8 +3397,20 @@ character_event = {
 	option = {
 		name = "EVTOPTA20372"
 		hidden_tooltip = {
-			event_target:corrupt_noble = {
-				clr_character_flag = corrupt_nobel
+			location = {
+				random_province_lord = {
+					limit = {
+						NOT = { is_liege_of = ROOT }
+						NOT = { character = ROOT }
+						ROOT = {
+							liege = {
+								NOT = { opinion = { who = PREVPREV value = 0 } }
+								same_realm = PREVPREV
+							}
+						}
+					}
+					clr_character_flag = corrupt_nobel
+				}
 			}
 		}
 	}
@@ -3605,8 +3536,10 @@ letter_event = {
 	option = {
 		name = "EVTOPTA20377"
 		hidden_tooltip = {
-			FROMFROM = {
-				character_event = { id = 20363 days = 1 }
+			FROM = {
+				FROM = {
+					character_event = { id = 20363 days = 1 }
+				}
 			}
 		}
 	}
@@ -3627,8 +3560,10 @@ character_event = {
 		name = "EVTOPTA20378"
 		prestige = -15
 		hidden_tooltip = {
-			FROMFROM = {
-				clr_character_flag = corrupt_nobel
+			FROM = {
+				FROM = {
+					clr_character_flag = corrupt_nobel
+				}
 			}
 		}
 	}
