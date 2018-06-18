@@ -69,13 +69,13 @@ character_event = {
 	border = GFX_event_normal_frame_war
 
 	only_rulers = yes
-	min_age = 16
-	capable_only = yes
 	
 	is_triggered_only = yes
 	
 	trigger = {
 		nm_trigger = yes
+		age = 16
+		NOT = { trait = incapable }
 
 		any_courtier_or_vassal = {
 			trait = shieldmaiden
@@ -88,7 +88,6 @@ character_event = {
 	immediate = {
 		random_courtier_or_vassal = {
 			limit = {
-				liege = { character = ROOT }
 				trait = shieldmaiden
 				NOT = { trait = incapable }
 				prisoner = no
@@ -179,7 +178,7 @@ character_event = {
 		text = EVTDESC_79003_G
 		trigger = {
 			FROM = {
-				NOR = {
+				NOT = {
 					trait = maimed
 					trait = one_eyed
 					trait = one_legged
@@ -370,7 +369,6 @@ character_event = {
 		custom_tooltip = { text = EVTOPTA_79005_TOOLTIP }
 		
 		add_cat_effect = yes
-		hidden_tooltip = { character_event = { id = 77802 days = 3000 random = 2000 } } # Cat dies
 
 		tooltip = { add_friend = FROM }
 
@@ -421,13 +419,11 @@ character_event = {
 			}
 					
 			add_cat_effect = yes
+
 			opinion = {
 				who = ROOT
 				modifier = opinion_gave_me_pet
 			}
-
-			hidden_tooltip = { character_event = { id = 77802 days = 3000 random = 2000 } } # Cat dies
-			#Send notification event along the lines of "I got a cat today!"
 
 		}
 		hidden_tooltip = {
@@ -501,7 +497,7 @@ character_event = {
 
 		if = {
 			limit = { has_character_flag = I_got_cat }
-			add_cat_effect = yes
+			add_cat_effect = yes		
 		}
 
 		add_friend = FROM
@@ -979,13 +975,17 @@ character_event = {
 		trigger = {
 			OR = {
 				trait = deceitful
-				NOR = { 
-					opinion = {
-						who = event_target:my_liege
-						value = 25
+				AND = {
+					NOT = { 
+						opinion = {
+							who = event_target:my_liege
+							value = 25
+						}
 					}
-					trait = kind 
-					trait = honest
+					NOT = {
+						trait = kind 
+						trait = honest
+					}
 				}
 			}
 		}
@@ -1352,7 +1352,7 @@ character_event = {
 				factor = 100
 				NOT = {
 					opinion = {
-						who = event_target:my_liege
+						who = liege
 						value = 0
 					}
 				}
