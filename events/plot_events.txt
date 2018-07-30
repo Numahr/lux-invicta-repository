@@ -42,9 +42,6 @@ character_event = {
 			has_plot = plot_weaken_fellow_vassal
 			has_plot = plot_gain_liege_title
 			has_plot = plot_gain_fellow_vassal_title
-#			has_plot = plot_seduce_liege
-#			has_plot = plot_seduce_for_men
-#			has_plot = plot_kidnapping
 		}
 		is_plot_active = no
 		num_of_plot_backers = 1
@@ -129,6 +126,7 @@ character_event = {
 letter_event = {
 	id = 7255
 	desc = "EVTDESC7255"
+	picture = GFX_evt_whispers
 	
 	hide_from = yes
 	
@@ -228,13 +226,6 @@ letter_event = {
 
 	option = {
 		name = "EVTOPTA7270"
-
-		if = {
-			limit = {
-				has_focus = focus_intrigue
-			}
-			add_trait = counterspy
-		}
 	}
 }
 
@@ -262,9 +253,6 @@ character_event = {
 				has_plot = plot_weaken_fellow_vassal
 				has_plot = plot_gain_liege_title
 				has_plot = plot_gain_fellow_vassal_title
-#				has_plot = plot_seduce_liege
-#				has_plot = plot_seduce_for_men
-#				has_plot = plot_kidnapping
 			}
 			is_plot_active = no
 			OR = {
@@ -325,9 +313,6 @@ character_event = {
 					has_plot = plot_weaken_fellow_vassal
 					has_plot = plot_gain_liege_title
 					has_plot = plot_gain_fellow_vassal_title
-#					has_plot = plot_seduce_liege
-#					has_plot = plot_seduce_for_men
-#					has_plot = plot_kidnapping
 				}
 				NOT = { has_character_flag = event7040 }
 				NOT = {
@@ -345,13 +330,6 @@ character_event = {
 			hidden_tooltip = {
 				character_event = { id = 7045 days = 1 }
 			}
-		}
-		if = {
-			limit = {
-				has_focus = focus_intrigue
-			}
-			
-			add_trait = counterspy
 		}
 	}
 }
@@ -491,13 +469,6 @@ character_event = {
 			hidden_tooltip = {
 				character_event = { id = 7046 days = 1 }
 			}
-		}
-		if = {
-			limit = {
-				has_focus = focus_intrigue
-			}
-			
-			add_trait = counterspy
 		}
 	}
 }
@@ -1664,9 +1635,8 @@ letter_event = {
 			any_vassal = {
 				limit = {
 					ai = no
-					NOT = {
-						in_faction = faction_lower_crown_authority
-					}
+					NOT = { in_faction = faction_lower_crown_authority
+ }
 				}
 				character_event = { id = 8094 }
 			}
@@ -1766,7 +1736,6 @@ letter_event = {
 				factor = 1.25
 				trait = ambitious
 			}
-			
 			modifier = {
 				factor = 0.75
 				FROM = {
@@ -2737,7 +2706,9 @@ letter_event = {
 			}
 		}
 		FROM = {
+			show_scope_change = no
 			any_faction_backer = {
+			show_scope_change = no
 				faction = faction_independence
 				set_defacto_liege = THIS
 			}
@@ -2745,6 +2716,7 @@ letter_event = {
 		}
 		
 		FROM = {
+			show_scope_change = no
 			opinion = {
 				modifier = opinion_granted_independence
 				who = ROOT
@@ -3240,7 +3212,11 @@ letter_event = {
 								}
 							}
 						}
-						ROOT = { supported_claimant = { abdicate = yes } }
+						ROOT = { 
+							supported_claimant = {
+								abdicate = { move = no }
+							}
+						}
 					}
 				
 					usurp_title_plus_barony_if_unlanded_and_vassals_no_adj = { target = PREVPREV type = faction_demand }
@@ -3423,7 +3399,9 @@ letter_event = {
 # Inform other vassals - Seniority
 character_event = {
 	id = 8076
-	desc = "EVTDESC8076"
+	desc = EVTDESC8076
+	
+	notification = yes
 	
 	picture = GFX_evt_council
 	border = GFX_event_normal_frame_intrigue
@@ -3465,7 +3443,9 @@ letter_event = {
 # Inform other vassals - Primogeniture
 character_event = {
 	id = 8081
-	desc = "EVTDESC8081"
+	desc = EVTDESC8081
+	
+	notification = yes
 	
 	picture = GFX_evt_council
 	border = GFX_event_normal_frame_intrigue
@@ -3507,7 +3487,9 @@ letter_event = {
 # Inform other vassals - feudal elective
 character_event = {
 	id = 8086
-	desc = "EVTDESC8086"
+	desc = EVTDESC8086
+	
+	notification = yes
 	
 	picture = GFX_evt_council
 	border = GFX_event_normal_frame_intrigue
@@ -3549,7 +3531,9 @@ letter_event = {
 # Inform other vassals - Gavelkind
 character_event = {
 	id = 8091
-	desc = "EVTDESC8091"
+	desc = EVTDESC8091
+	
+	notification = yes
 	
 	picture = GFX_evt_council
 	border = GFX_event_normal_frame_intrigue
@@ -3616,7 +3600,9 @@ letter_event = {
 # Inform other vassals - Crown Authority
 character_event = {
 	id = 8094
-	desc = "EVTDESC8094"
+	desc = EVTDESC8094
+	
+	notification = yes
 	
 	picture = GFX_evt_council
 	border = GFX_event_normal_frame_intrigue
@@ -4149,6 +4135,7 @@ character_event = {
 			has_plot = plot_kill_spouse
 		}
 		plot_target_char = {
+			NOT = { is_murder_quest_target_of_root_trigger = yes }
 			age = 16
 			prisoner = no
 			at_location = ROOT # The Plot Head needs to be at the target's location to get a chance
@@ -4161,7 +4148,10 @@ character_event = {
 				trait = drunkard
 			}
 		}
-		NOT = { has_character_flag = murder_in_motion }
+		OR = {
+			NOT = { has_character_flag = murder_in_motion }
+			had_character_flag = { flag = murder_in_motion days = 100 }
+		}
 		plot_power_contribution = 
 		{
 			plotter = ROOT
@@ -4384,12 +4374,16 @@ character_event = {
 			}
 			plot_power = 0.5
 			plot_target_char = {
+				NOT = { is_murder_quest_target_of_root_trigger = yes }
 				age = 16
 				prisoner = no
 				NOT = { trait = incapable }
 				NOT = { is_inaccessible_trigger = yes }
 			}
-			NOT = { has_character_flag = murder_in_motion }
+			OR = {
+				NOT = { has_character_flag = murder_in_motion }
+				had_character_flag = { flag = murder_in_motion days = 100 }
+			}
 			ROOT = {
 				plot_power_contribution = 
 				{
@@ -4589,12 +4583,16 @@ character_event = {
 				}
 				plot_power = 0.5
 				plot_target_char = {
+					NOT = { is_murder_quest_target_of_root_trigger = yes }
 					age = 16
 					prisoner = no
 					NOT = { trait = incapable }
 					NOT = { is_inaccessible_trigger = yes }
 				}
-				NOT = { has_character_flag = murder_in_motion }
+				OR = {
+					NOT = { has_character_flag = murder_in_motion }
+					had_character_flag = { flag = murder_in_motion days = 100 }
+				}
 				ROOT = {
 					plot_power_contribution = 
 					{
@@ -5005,6 +5003,12 @@ character_event = {
 	
 	is_triggered_only = yes
 	
+	trigger = {
+		plot_target_char = {
+			is_alive = yes
+		}
+	}
+	
 	immediate = {
 		plot_target_char = { save_event_target_as = plot_target }
 	}
@@ -5177,6 +5181,7 @@ character_event = {
 			has_plot = plot_kill_spouse
 		}
 		plot_target_char = {
+			NOT = { is_murder_quest_target_of_root_trigger = yes }
 			age = 5
 			NOT = { age = 16 }
 			prisoner = no
@@ -5184,7 +5189,10 @@ character_event = {
 			NOT = { is_inaccessible_trigger = yes }
 			at_location = ROOT # The Plot Head needs to be at the target's location to get a chance
 		}
-		NOT = { has_character_flag = murder_in_motion }
+		OR = {
+			NOT = { has_character_flag = murder_in_motion }
+			had_character_flag = { flag = murder_in_motion days = 100 }
+		}
 		plot_power_contribution = 
 		{
 			plotter = ROOT
@@ -5407,13 +5415,17 @@ character_event = {
 			}
 			plot_power = 0.5
 			plot_target_char = {
+				NOT = { is_murder_quest_target_of_root_trigger = yes }
 				age = 5
 				NOT = { age = 16 }
 				prisoner = no
 				NOT = { trait = incapable }
 				NOT = { is_inaccessible_trigger = yes }
 			}
-			NOT = { has_character_flag = murder_in_motion }
+			OR = {
+				NOT = { has_character_flag = murder_in_motion }
+				had_character_flag = { flag = murder_in_motion days = 100 }
+			}
 			ROOT = {
 				plot_power_contribution = 
 				{
@@ -5613,13 +5625,17 @@ character_event = {
 				}
 				plot_power = 0.5
 				plot_target_char = {
+					NOT = { is_murder_quest_target_of_root_trigger = yes }
 					age = 5
 					NOT = { age = 16 }
 					prisoner = no
 					NOT = { trait = incapable }
 					NOT = { is_inaccessible_trigger = yes }
 				}
-				NOT = { has_character_flag = murder_in_motion }
+				OR = {
+					NOT = { has_character_flag = murder_in_motion }
+					had_character_flag = { flag = murder_in_motion days = 100 }
+				}
 				ROOT = {
 					plot_power_contribution = 
 					{
@@ -6039,6 +6055,12 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
+	
+	trigger = {
+		plot_target_char = {
+			is_alive = yes
+		}
+	}
 	
 	immediate = {
 		plot_target_char = { save_event_target_as = plot_target }
@@ -6707,6 +6729,7 @@ character_event = {
 			has_plot = plot_kill_spouse
 		}
 		plot_target_char = {
+			NOT = { is_murder_quest_target_of_root_trigger = yes }
 			age = 16
 			is_ruler = yes
 			at_location = ROOT # The Plot Head needs to be at the target's location to get a chance
@@ -6714,7 +6737,10 @@ character_event = {
 			NOT = { is_inaccessible_trigger = yes }
 			prisoner = no
 		}
-		NOT = { has_character_flag = murder_in_motion }
+		OR = {
+			NOT = { has_character_flag = murder_in_motion }
+			had_character_flag = { flag = murder_in_motion days = 100 }
+		}
 		plot_power_contribution = 
 		{
 			plotter = ROOT
@@ -6937,13 +6963,17 @@ character_event = {
 			}
 			plot_power = 0.5
 			plot_target_char = {
+				NOT = { is_murder_quest_target_of_root_trigger = yes }
 				age = 16
 				is_ruler = yes
 				NOT = { trait = incapable }
 				NOT = { is_inaccessible_trigger = yes }
 				prisoner = no
 			}
-			NOT = { has_character_flag = murder_in_motion }
+			OR = {
+				NOT = { has_character_flag = murder_in_motion }
+				had_character_flag = { flag = murder_in_motion days = 100 }
+			}
 			ROOT = {
 				plot_power_contribution = 
 				{
@@ -7143,13 +7173,17 @@ character_event = {
 				}
 				plot_power = 0.5
 				plot_target_char = {
+					NOT = { is_murder_quest_target_of_root_trigger = yes }
 					age = 16
 					is_ruler = yes
 					NOT = { trait = incapable }
 					NOT = { is_inaccessible_trigger = yes }
 					prisoner = no
 				}
-				NOT = { has_character_flag = murder_in_motion }
+				OR = {
+					NOT = { has_character_flag = murder_in_motion }
+					had_character_flag = { flag = murder_in_motion days = 100 }
+				}
 				ROOT = {
 					plot_power_contribution = 
 					{
@@ -7559,6 +7593,12 @@ character_event = {
 	
 	is_triggered_only = yes
 	
+	trigger = {
+		plot_target_char = {
+			is_alive = yes
+		}
+	}
+	
 	immediate = {
 		plot_target_char = { save_event_target_as = plot_target }
 	}
@@ -7729,13 +7769,17 @@ character_event = {
 			has_plot = plot_kill_spouse
 		}
 		plot_target_char = {
+			NOT = { is_murder_quest_target_of_root_trigger = yes }
 			age = 16
 			at_location = ROOT # The Plot Head needs to be at the target's location to get a chance
 			NOT = { trait = incapable }
 			NOT = { is_inaccessible_trigger = yes }
 			prisoner = no
 		}
-		NOT = { has_character_flag = murder_in_motion }
+		OR = {
+			NOT = { has_character_flag = murder_in_motion }
+			had_character_flag = { flag = murder_in_motion days = 100 }
+		}
 		plot_power_contribution = 
 		{
 			plotter = ROOT
@@ -7958,12 +8002,16 @@ character_event = {
 			}
 			plot_power = 0.5
 			plot_target_char = {
+				NOT = { is_murder_quest_target_of_root_trigger = yes }
 				age = 16
 				prisoner = no
 				NOT = { trait = incapable }
 				NOT = { is_inaccessible_trigger = yes }
 			}
-			NOT = { has_character_flag = murder_in_motion }
+			OR = {
+				NOT = { has_character_flag = murder_in_motion }
+				had_character_flag = { flag = murder_in_motion days = 100 }
+			}
 			ROOT = {
 				plot_power_contribution = 
 				{
@@ -8163,12 +8211,16 @@ character_event = {
 				}
 				plot_power = 0.5
 				plot_target_char = {
+					NOT = { is_murder_quest_target_of_root_trigger = yes }
 					age = 16
 					prisoner = no
 					NOT = { trait = incapable }
 					NOT = { is_inaccessible_trigger = yes }
 				}
-				NOT = { has_character_flag = murder_in_motion }
+				OR = {
+					NOT = { has_character_flag = murder_in_motion }
+					had_character_flag = { flag = murder_in_motion days = 100 }
+				}
 				ROOT = {
 					plot_power_contribution = 
 					{
@@ -8576,6 +8628,12 @@ character_event = {
 	border = GFX_event_normal_frame_intrigue
 	
 	is_triggered_only = yes
+	
+	trigger = {
+		plot_target_char = {
+			is_alive = yes
+		}
+	}
 	
 	immediate = {
 		plot_target_char = { save_event_target_as = plot_target }
