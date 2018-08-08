@@ -1,7 +1,4 @@
-
 namespace = RIP
-
-#TODO, add RIP.10000, RIP.10005 to on action infected province
 
 # The Black Death has been discovered
 province_event = {
@@ -50,13 +47,8 @@ narrative_event = {
 			}
 			if = {
 				limit = { 
-					NOR = {
-						distance = {
-							value = 1000
-							where = FROM
-						}
-						is_vassal_or_below = ROOT
-					}
+					NOT = { distance = { value = 1000 where = FROM } } 
+					NOT = { is_vassal_or_below = ROOT }
 				}
 				narrative_event = { id = RIP.10003 days = 3 random = 3 }
 			}
@@ -93,8 +85,12 @@ narrative_event = {
 				modifier = {
 					factor = 0
 					OR = {
-						trait = erudite
-						is_smart_trigger = yes
+						OR = {
+							trait = erudite
+							trait = shrewd
+							trait = genius
+							trait = quick
+						}
 						AND = {
 							NOT = { religion_group = FROM }
 							OR = {
@@ -102,9 +98,11 @@ narrative_event = {
 								trait = cruel
 							}
 						}
-						trait = kind 
-						trait = charitable 
-						AND = {
+						OR = {
+							trait = kind 
+							trait = charitable 
+						}
+						NAND = {
 							OR = { 
 								trait = strong 
 								trait = robust 
@@ -136,12 +134,12 @@ narrative_event = {
 				modifier = {
 					factor = 0
 					NAND = {
-						OR = {
-							trait = zealous
-							trait = cruel
+							NOT = { religion_group = FROM }
+							OR = {
+								trait = zealous
+								trait = cruel
+							}
 						}
-						NOT = { religion_group = FROM }
-					}
 				}
 			}
 			10 = {
@@ -159,7 +157,8 @@ narrative_event = {
 				modifier = {
 					factor = 0
 					NOR = { 
-						is_strong_trigger = yes 
+						trait = strong 
+						trait = robust 
 						trait = brave 
 					}
 					NOR = {
@@ -301,12 +300,12 @@ narrative_event = {
 				modifier = {
 					factor = 0
 					NAND = {
-						NOT = { religion_group = FROM }
-						OR = {
-							trait = zealous
-							trait = cruel
+							NOT = { religion_group = FROM }
+							OR = {
+								trait = zealous
+								trait = cruel
+							}
 						}
-					}
 				}
 			}
 			10 = {
@@ -411,10 +410,29 @@ narrative_event = {
 
 	immediate = {
 		set_character_flag = black_death_close
+
+		if = {
+			limit = { has_power_omen_modifier_trigger = yes }
+			set_character_flag = negative_event_flag
+		}
 	}
 	
 	option = {
 		name = EVTOPTA_RIP_10001
+		trigger = {
+			has_power_omen_modifier_trigger = no
+		}
+	}
+
+	option = { # Monks & Mystics - Hermetics Scrying reaction
+		name = EVTOPTA_SSI_006
+
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+		tooltip_info = yes
+		trigger = {
+			has_power_omen_modifier_trigger = yes
+		}
 	}
 }
 
@@ -502,7 +520,7 @@ narrative_event = {
 							trait = kind 
 							trait = charitable 
 						}
-						NAND = {
+						AND = {
 							OR = { 
 								trait = strong 
 								trait = robust 
@@ -575,15 +593,33 @@ narrative_event = {
 				}
 			}
 		}
+		if = {
+			limit = {
+				NOR = {
+					has_character_flag = option_a
+					has_character_flag = option_b
+					has_character_flag = option_c
+					has_character_flag = option_d
+					has_character_flag = option_e
+					has_character_flag = option_f
+				}
+			}
+			set_character_flag = option_a
+		}
 		chronicle = {
 			entry = CHRONICLE_BORDERING_PLAGUE
 			picture = GFX_evt_plague_spreading
+		}
+		if = {
+			limit = { has_power_omen_modifier_trigger = yes }
+			set_character_flag = negative_event_flag
 		}
 	}
 	
 	option = {
 		trigger = {
 			has_character_flag = option_a
+			has_power_omen_modifier_trigger = no
 		}
 		name = EVTOPTA_RIP_10006
 	}
@@ -591,6 +627,7 @@ narrative_event = {
 	option = {
 		trigger = {
 			has_character_flag = option_b
+			has_power_omen_modifier_trigger = no
 		}
 		name = EVTOPTB_RIP_10006
 		clr_character_flag = option_b
@@ -599,6 +636,7 @@ narrative_event = {
 	option = {
 		trigger = {
 			has_character_flag = option_c
+			has_power_omen_modifier_trigger = no
 		}
 		name = EVTOPTC_RIP_10006
 		clr_character_flag = option_c
@@ -607,6 +645,7 @@ narrative_event = {
 	option = {
 		trigger = {
 			has_character_flag = option_d
+			has_power_omen_modifier_trigger = no
 		}
 		name = EVTOPTD_RIP_10006
 		clr_character_flag = option_d
@@ -615,6 +654,7 @@ narrative_event = {
 	option = {
 		trigger = {
 			has_character_flag = option_e
+			has_power_omen_modifier_trigger = no
 		}
 		name = EVTOPTE_RIP_10006
 		clr_character_flag = option_e
@@ -623,10 +663,85 @@ narrative_event = {
 	option = {
 		trigger = {
 			has_character_flag = option_f
+			has_power_omen_modifier_trigger = no
 		}
 		name = EVTOPTF_RIP_10006
 		clr_character_flag = option_f
 	}
+
+	### Hermetics: Scrying Omen result options below... ###
+	option = {
+		trigger = {
+			has_character_flag = option_a
+			has_power_omen_modifier_trigger = yes
+		}
+		name = EVTOPTA_RIP_10006
+
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+		tooltip_info = yes
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = option_b
+			has_power_omen_modifier_trigger = yes
+		}
+		name = EVTOPTB_RIP_10006
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+		tooltip_info = yes
+		clr_character_flag = option_b
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = option_c
+			has_power_omen_modifier_trigger = yes
+		}
+		name = EVTOPTC_RIP_10006
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+		tooltip_info = yes
+		clr_character_flag = option_c
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = option_d
+			has_power_omen_modifier_trigger = yes
+		}
+		name = EVTOPTD_RIP_10006
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+		tooltip_info = yes
+		clr_character_flag = option_d
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = option_e
+			has_power_omen_modifier_trigger = yes
+		}
+		name = EVTOPTE_RIP_10006
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+		tooltip_info = yes
+		clr_character_flag = option_e
+	}
+
+	option = {
+		trigger = {
+			has_character_flag = option_f
+			has_power_omen_modifier_trigger = yes
+		}
+		name = EVTOPTF_RIP_10006
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+		tooltip_info = yes
+		clr_character_flag = option_f
+	}
+	
 }
 
 #See if any world_region has been severely damaged by the plague

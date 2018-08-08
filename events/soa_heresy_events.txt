@@ -20,9 +20,9 @@ province_event = {
 	desc = EVTDESC39000
 	picture = GFX_evt_heretic
 	border = GFX_event_normal_frame_religion
-	has_dlc = "Sons of Abraham"
 	
 	trigger = {
+		has_dlc = "Sons of Abraham"
 		
 		is_heretic = no
 		
@@ -60,6 +60,14 @@ province_event = {
 		modifier = {
 			factor = 2.0
 			religion_authority = 0.9
+		}
+		modifier = {
+			factor = 3.0
+			OR = {
+				province_id = 275 # Rome
+				province_id = 517 # Thrace
+				province_id = 719 # Mecca
+			}
 		}
 		modifier = {
 			factor = 0.5
@@ -318,11 +326,18 @@ province_event = {
 		trigger = { owner = { is_parent_religion = ROOT } }
 		
 		owner = { piety = -10 }
+		
+		ai_chance = {
+        	factor = 95
+        }
 	}
 	
 	option = {
 		name = EVTOPTB39000 # The owner is of the same heresy
 		trigger = { owner = { religion = ROOT } }
+		ai_chance = {
+        	factor = 95
+        }
 	}
 	
 	option = {
@@ -333,6 +348,53 @@ province_event = {
 				NOT = { is_parent_religion = ROOT }
 			}
 		}
+		ai_chance = {
+        	factor = 95
+        }
+	}
+	
+	option = {
+		name = EVTOPTD_SOA_4000 #  The owner is of the parent religion and interested in the heresy
+		trigger = {
+			owner = {
+				owner = { is_parent_religion = ROOT }
+			}
+		}
+		
+		owner = {
+			piety = -250
+			set_secret_religion = { target_type = public target = ROOT }
+			any_spouse = {
+				limit = {
+					ai = yes
+					has_secret_religion = no
+				}
+				set_secret_religion = { target_type = public target = ROOT }
+			}
+			any_child = {
+				limit = {
+					ai = yes
+					has_secret_religion = no
+				}
+				set_secret_religion = { target_type = public target = ROOT }
+			}
+		}
+		
+		ai_chance = {
+        	factor = 5
+        	modifier = {
+        		factor = 0
+				owner = {
+					trait = zealous 
+				}
+        	}
+        	modifier = {
+        		factor = 2
+				owner = {
+					trait = cynical 
+				}
+        	}
+        }
 	}
 }
 
@@ -354,23 +416,22 @@ character_event = {
 	max_age = 50
 	capable_only = yes
 	prisoner = no
-	has_dlc = "Sons of Abraham"
+	
+	is_triggered_only = yes
 	
 	trigger = {
+		has_dlc = "Sons of Abraham"
 		
 		NOT = {
 			trait = zealous
 		}
 	
 		is_heretic = no # Heretics, already people of strong conviction, never change religion spontaneously
-		
-		OR = {
-			is_ruler = no
-			is_theocracy = no
-		}
+
+		is_theocracy = no	
 		
 		can_change_religion = yes
-		
+
 		NOT = { religion_authority = 0.9 }
 		
 		
@@ -390,10 +451,16 @@ character_event = {
 		}
 	}
 	
-	mean_time_to_happen = {
-		months = 360
+	immediate = {
+		location = {
+			save_event_target_as = location_religion
+		}
+	}
+	
+	weight_multiplier = {
+		days = 1		
 		modifier = {
-			factor = 0.25
+			factor = 1.75
 			trait = cynical
 			independent = no
 			location = {
@@ -405,39 +472,39 @@ character_event = {
 			}
 		}
 		modifier = {
-			factor = 1.5
+			factor = 0.75
 			religion_authority = 0.6
 		}
 		modifier = {
-			factor = 1.5
+			factor = 0.75
 			religion_authority = 0.7
 		}
 		modifier = {
-			factor = 1.5
+			factor = 0.75
 			religion_authority = 0.8
 		}
 		modifier = {
-			factor = 2.0
+			factor = 0.5
 			religion_authority = 0.9
 		}
 		modifier = {
-			factor = 4.0
+			factor = 0.25
 			NOT = { is_heresy_of = ROOT }
 		}
 		modifier = {
-			factor = 0.5
+			factor = 1.5
 			NOT = { religion_authority = 0.2 }
 		}
 		modifier = {
-			factor = 0.75
+			factor = 1.75
 			NOT = { religion_authority = 0.3 }
 		}
 		modifier = {
-			factor = 0.75
+			factor = 1.75
 			NOT = { religion_authority = 0.4 }
 		}
 		modifier = {
-			factor = 0.75
+			factor = 1.75
 			NOT = { religion_authority = 0.5 }
 		}
 	}
@@ -460,9 +527,7 @@ character_event = {
 			}
 		}
 		
-		location = {
-			reverse_religion = ROOT
-		}
+		religion = event_target:location_religion
 		hidden_tooltip = {
 			if = {
 				limit = { religion_group = indian_group }
@@ -578,6 +643,7 @@ letter_event = {
 		}
 
 		
+		
 		FROM = {
 			letter_event = { id = SoA.4023 tooltip = EVTTOOLTIP_SOA_4023 }
 		}
@@ -591,7 +657,7 @@ letter_event = {
 		FROM = {
 			letter_event = { id = SoA.4024 tooltip = EVTTOOLTIP_SOA_4024 }
 		}
-	}
+	}	
 }
 
 # SoA.4023 - Liege notified, conversion accepted
@@ -631,9 +697,25 @@ letter_event = {
 	option = { # Accept
 		name = ACCEPT
 		ai_chance = {
-			factor = 100
+			factor = 80
 		}
 		
+		religion = FROM
+		
+		FROM = {
+			letter_event = { id = SoA.4026 tooltip = EVTTOOLTIP_SOA_4023 }
+		}
+	}	
+	option = { # Accept, but keep old religion secretly
+		name = ACCEPT_SECRETLY_WORSHIP_OLD_RELIGION
+		ai_chance = {
+			modifier = {
+				factor = 2.0
+				trait = zealous
+			}
+			factor = 20
+		}
+		add_secret_religion_trait_trigger_is_religion_or_old_religion_flag_clear_flag_after_effect_is_run_this_name_is_a_tribute_to_m_effect = yes
 		religion = FROM
 		
 		FROM = {
@@ -679,7 +761,6 @@ character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
-	has_dlc = "Sons of Abraham"
 	
 	trigger = {
 		is_ruler = no
@@ -706,6 +787,8 @@ character_event = {
 			mercenary = no
 			holy_order = no
 		}
+		
+		has_dlc = "Sons of Abraham"
 	}
 	
 	mean_time_to_happen = {
@@ -1002,9 +1085,10 @@ letter_event = {
 province_event = {
 	id = SoA.4100
 	hide_window = yes
-	has_dlc = "Sons of Abraham"
 	
 	trigger = {
+		has_dlc = "Sons of Abraham"
+		
 		is_heretic = yes
 		
 		owner = {
@@ -1019,10 +1103,8 @@ province_event = {
 			wealth = 100
 		}
 		
-		NOR = {
-			has_province_modifier = theological_dialogue
-			has_province_modifier = active_inquisition
-		}
+		NOT = { has_province_modifier = theological_dialogue }
+		NOT = { has_province_modifier = active_inquisition }
 	}
 	
 	mean_time_to_happen = {
@@ -1291,9 +1373,9 @@ province_event = {
 	hide_window = yes
 	
 	is_triggered_only = yes
-	has_dlc = "Sons of Abraham"
 	
 	trigger = {
+		has_dlc = "Sons of Abraham"
 		has_province_modifier = promised_to_clear_out_heresy
 		owner = {
 			top_liege = {

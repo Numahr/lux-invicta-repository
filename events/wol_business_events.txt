@@ -247,7 +247,7 @@ character_event = {
 	id = WoL.10105
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_10105
-	picture = GFX_evt_priest
+	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_economy
 	
 	option = {
@@ -331,7 +331,7 @@ character_event = {
 	id = WoL.10106
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_10106
-	picture = GFX_evt_priest
+	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_economy
 	
 	option = {
@@ -903,17 +903,10 @@ character_event = {
 		name = {
 			text = EVTOPTD_WOL_10118
 			trigger = {
-				FROM = {
-					NOT = {
+				NOT = {
+					FROM = {
 						religion_group = ROOT
 					}
-				}
-			}
-		}
-		trigger = {
-			NOT = {
-				FROM = {
-					religion = ROOT
 				}
 			}
 		}
@@ -1301,6 +1294,7 @@ character_event = {
 		transfer_scaled_wealth = {
 			to = event_target:steward
 			value = 0.5
+			max = 200
 		}
 		event_target:steward = {
 			hidden_tooltip = {
@@ -1456,6 +1450,8 @@ province_event = {
 	desc = EVTDESC_WOL_10130
 	picture = GFX_evt_merchant_caravan
 	border = GFX_event_normal_frame_economy
+
+	hide_from = yes
 	
 	trigger = {
 		has_province_modifier = trade_route
@@ -1509,6 +1505,8 @@ province_event = {
 	desc = EVTDESC_WOL_10131
 	picture = GFX_evt_busy_trading_dock_republic
 	border = GFX_event_normal_frame_economy
+
+	hide_from = yes
 	
 	trigger = {
 		has_province_modifier = trade_route
@@ -1610,7 +1608,7 @@ character_event = {
 		capital_scope = {
 			create_character = {
 				random_traits = no
-				dynasty = culture
+				dynasty = NONE
 				religion = ROOT
 				culture = PREV
 				age = 28
@@ -1644,11 +1642,13 @@ character_event = {
 		trigger = {
 			trait = greedy
 		}
+		hidden_tooltip = {} #for new random seed. Do not remove!
+
 		scaled_wealth = -0.08
 		capital_scope = {
 			create_character = {
 				random_traits = no
-				dynasty = culture
+				dynasty = NONE
 				religion = PREV
 				culture = PREV
 				age = 17
@@ -1686,88 +1686,111 @@ character_event = {
 	picture = GFX_evt_scandal
 	border = GFX_event_normal_frame_economy
 	hide_from = yes
+
+	immediate = {
+		random_vassal = {
+			limit = {
+				NOT = { has_character_flag = selected }
+				NOT = { trait = incapable }
+				prisoner = no
+				is_adult = yes
+				is_republic = yes
+			}
+			set_character_flag = selected
+			save_event_target_as = selected_1	
+		}
+		random_vassal = {
+			limit = {
+				NOT = { has_character_flag = selected }
+				NOT = { trait = incapable }
+				prisoner = no
+				is_adult = yes
+				is_republic = yes
+			}
+			set_character_flag = selected
+			save_event_target_as = selected_2
+		}
+		random_vassal = {
+			limit = {
+				NOT = { has_character_flag = selected }
+				NOT = { trait = incapable }
+				prisoner = no
+				is_adult = yes
+				is_republic = yes
+			}
+			set_character_flag = selected	
+			save_event_target_as = selected_3		
+		}
+		random_vassal = {
+			limit = {
+				NOT = { has_character_flag = selected }
+				NOT = { trait = incapable }
+				prisoner = no
+				is_adult = yes
+				is_republic = yes
+			}
+			set_character_flag = selected
+			save_event_target_as = selected_4	
+		}
+	}
 	
 	option = {
 		name = EVTOPTA_WOL_10202
-		random_vassal = {
+		if = {
 			limit = {
-				NOT = {
-					OR = {
-						has_character_flag = selected 
-						trait = incapable
-					}
-				}
-				prisoner = no
-				is_adult = yes
-				is_republic = yes
+				event_target:selected_1 = { always = yes } 
 			}
-			set_character_flag = selected			
-			opinion = {
-				modifier = opinion_impressed
-				years = 2
-				who = ROOT
+			event_target:selected_1 = {
+				show_scope_change = no
+				opinion = {
+					modifier = opinion_impressed
+					years = 2
+					who = ROOT
+				}
+				clr_character_flag = selected
 			}
 		}
-		random_vassal = {
+		if = {
 			limit = {
-				NOT = {
-					OR = {
-						has_character_flag = selected 
-						trait = incapable
-					}
-				}
-				prisoner = no
-				is_adult = yes
-				is_republic = yes
+				event_target:selected_2 = { always = yes } 
 			}
-			set_character_flag = selected			
-			opinion = {
-				modifier = opinion_impressed
-				years = 2
-				who = ROOT
+			event_target:selected_2 = {
+				show_scope_change = no
+				opinion = {
+					modifier = opinion_impressed
+					years = 2
+					who = ROOT
+				}
+				clr_character_flag = selected
 			}
 		}
-		random_vassal = {
+		if = {
 			limit = {
-				NOT = {
-					OR = {
-						has_character_flag = selected 
-						trait = incapable
-					}
-				}
-				prisoner = no
-				is_adult = yes
-				is_republic = yes
+				event_target:selected_3 = { always = yes } 
 			}
-			set_character_flag = selected			
-			opinion = {
-				modifier = opinion_impressed
-				years = 2
-				who = ROOT
+			event_target:selected_3 = {
+				show_scope_change = no
+				opinion = {
+					modifier = opinion_impressed
+					years = 2
+					who = ROOT
+				}
+				clr_character_flag = selected
 			}
 		}
-		random_vassal = {
+		if = {
 			limit = {
-				NOT = {
-					OR = {
-						has_character_flag = selected 
-						trait = incapable
-					}
+				event_target:selected_4 = { always = yes } 
+			}
+			event_target:selected_4 = {
+				show_scope_change = no
+				opinion = {
+					modifier = opinion_impressed
+					years = 2
+					who = ROOT
 				}
-				prisoner = no
-				is_adult = yes
-				is_republic = yes
+				clr_character_flag = selected
 			}
-			set_character_flag = selected			
-			opinion = {
-				modifier = opinion_impressed
-				years = 2
-				who = ROOT
-			}
-		}
-		any_vassal = {
-			limit = { has_character_flag = selected }
-			clr_character_flag = selected
 		}
 		hidden_tooltip = {
 			event_target:stonemason = {
@@ -1955,6 +1978,7 @@ province_event = {
 	border = GFX_event_normal_frame_economy
 	
 	option = {
+		name = EVTOPTA_WOL_10207
 		remove_province_modifier = stone_quarry
 	}
 }
@@ -2221,7 +2245,7 @@ long_character_event = {
 		remove_character_modifier = trader
 		add_character_modifier = {
 			name = great_tower
-			duration = 3650
+			duration = -1
 		}
 		hidden_tooltip = {
 			random = {
@@ -2607,10 +2631,14 @@ long_character_event = {
 	desc = {
 		text = EVTDESCA_WOL_10221
 		trigger = {
-			NOR = {
+			NOT = {
 				has_character_flag = tower_blamed_mason
-				has_character_flag = tower_street_mason
-				event_target:stonemason = { has_character_flag = is_street_mason }
+			}
+			NOT = {
+				OR = {
+					has_character_flag = tower_street_mason
+					event_target:stonemason = { has_character_flag = is_street_mason }
+				}
 			}
 		}
 	}
@@ -2630,9 +2658,11 @@ long_character_event = {
 		text = EVTDESCC_WOL_10221
 		trigger = {
 			has_character_flag = tower_blamed_mason
-			NOR = {
-				has_character_flag = tower_street_mason
-				event_target:stonemason = { has_character_flag = is_street_mason }
+			NOT ={
+				OR = {
+					has_character_flag = tower_street_mason
+					event_target:stonemason = { has_character_flag = is_street_mason }
+				}
 			}
 		}
 	}
@@ -2677,9 +2707,6 @@ long_character_event = {
 			add_province_modifier = {
 				name = leaning_tower
 				duration = -1
-			}
-			owner = {
-				prestige = -50
 			}
 		}
 		scaled_wealth = 0.5
@@ -2859,9 +2886,7 @@ long_character_event = {
 							tier = COUNT
 							location = {
 								any_province_holding = {
-									NOT = {
-										holding_type = nomad
-									}
+									NOT = { holding_type = nomad }
 								}
 							}
 						}
@@ -3402,6 +3427,15 @@ character_event = {
 					}
 					factor = 0
 				}
+				modifier = {
+					has_character_modifier = sell_land_cd
+					factor = 0
+				}
+				add_character_modifier = {
+					name = sell_land_cd
+					hidden = yes
+					years = 5
+				}
 				capital_scope = {
 					random_province_holding = {
 						limit = {
@@ -3683,7 +3717,7 @@ character_event = {
 	id = WoL.10421
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_10421
-	picture = GFX_evt_priest
+	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_economy
 	
 	option = {
@@ -3788,7 +3822,7 @@ character_event = {
 	id = WoL.10441
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_10441
-	picture = GFX_evt_priest
+	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_economy
 	
 	option = {
@@ -3822,7 +3856,7 @@ character_event = {
 	id = WoL.10442
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_10442
-	picture = GFX_evt_priest
+	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_economy
 	
 	option = {

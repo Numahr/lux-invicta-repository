@@ -370,10 +370,13 @@ character_event = {
 	
 	is_triggered_only = yes
 	
+	immediate = {
+		set_character_flag = party_host
+	}
+	
 	option = {
 		name = EVTOPTA_WoL_4030
 		remove_character_modifier = organizing_party
-		set_character_flag = party_host
 		add_character_modifier = {
 			name = party_carousing
 			days = 40
@@ -511,11 +514,9 @@ character_event = {
 								OR = {
 									AND = {
 										is_opposite_sex = ROOT
-										NOR = {
-											trait = homosexual
-											ROOT = {
-												trait = homosexual
-											}
+										NOT = { trait = homosexual }
+										ROOT = {
+											NOT = { trait = homosexual }
 										}
 									}
 									AND = {
@@ -566,20 +567,22 @@ character_event = {
 				}
 				modifier = {
 					factor = 0
-					NOR = {
-						trait = wroth
-						trait = lunatic
-						trait = paranoid
-						top_liege = {
-							any_realm_character = {
-								has_opinion_modifier = {
-									modifier = opinion_carousing
-									who = ROOT
-								}
-								OR = {
-									trait = wroth
-									trait = lunatic
-									trait = paranoid
+					NOT = {
+						OR = {
+							trait = wroth
+							trait = lunatic
+							trait = paranoid
+							top_liege = {
+								any_realm_character = {
+									has_opinion_modifier = {
+										modifier = opinion_carousing
+										who = ROOT
+									}
+									OR = {
+										trait = wroth
+										trait = lunatic
+										trait = paranoid
+									}
 								}
 							}
 						}
@@ -771,6 +774,15 @@ character_event = {
 					death_reason = death_murder_unknown_butchered
 					killer = ROOT
 				}
+				hidden_tooltip = {
+					if = {
+						limit = {
+							religion = bon
+							ROOT = { ai = no }
+						}
+						ROOT = { set_character_flag = achievement_bon_appetit }
+					}
+				}
 			}
 		}
 	}
@@ -795,6 +807,15 @@ character_event = {
 			death = {
 				death_reason = death_murder_unknown_butchered
 				killer = ROOT
+			}
+			hidden_tooltip = {
+				if = {
+					limit = {
+						religion = bon
+						ROOT = { ai = no }
+					}
+					ROOT = { set_character_flag = achievement_bon_appetit }
+				}
 			}
 		}
 	}
@@ -1572,10 +1593,10 @@ character_event = {
 						who = ROOT
 					}
 				}
+
 				if = {
-					limit = {
-						NOT = { trait = drunkard }
-					}
+					limit = { NOT = { trait = drunkard } }
+
 					opinion = {
 						modifier = despise_drunkard
 						who = ROOT
@@ -1583,10 +1604,10 @@ character_event = {
 					}
 					hidden_tooltip = { character_event = { id = WoL.4152 } }
 				}
+
 				if = {
-					limit = {
-						trait = drunkard
-					}
+					limit = { trait = drunkard }
+
 					opinion = {
 						modifier = opinion_gained_respect
 						who = ROOT
@@ -1879,6 +1900,21 @@ character_event = {
 		clr_character_flag = do_not_disturb
 		clr_character_flag = party_host
 		clr_character_flag = party_guest
+		trigger_switch = {
+			on_trigger = ai
+			no = {
+				add_character_modifier = {
+					name = party_timer
+					duration = 200
+				}
+			}
+			yes = {
+				add_character_modifier = {
+					name = party_timer
+					duration = 350
+				}
+			}
+		}
 	}
 	
 	option = {
@@ -1927,10 +1963,6 @@ character_event = {
 				remove_trait = depressed
 			}
 		}
-		add_character_modifier = {
-			name = party_timer
-			duration = 200
-		}
 	}
 	option = {
 		name = EVTOPTB_WoL_4800 # Party and carousing is all I wanna do...
@@ -1964,10 +1996,6 @@ character_event = {
 				remove_trait = depressed
 			}
 		}
-		add_character_modifier = {
-			name = party_timer
-			duration = 200
-		}
 	}
 	option = {
 		name = EVTOPTC_WoL_4800 # Great way to meet new people...
@@ -1995,17 +2023,12 @@ character_event = {
 				remove_trait = depressed
 			}
 		}
-		add_character_modifier = {
-			name = party_timer
-			duration = 200
-		}
 	}
 	option = {
 		name = EVTOPTD_WoL_4800 # Gamer Lifestyle...
 		trigger = {
 			has_character_flag = played_games_today
 			has_character_modifier = apprentice_boardgamer
-			NOT = { trait = gamer }
 			NOT = { lifestyle_traits = 1 }
 		}
 		clr_character_flag = played_games_today
@@ -2025,10 +2048,6 @@ character_event = {
 				chance = 30
 				remove_trait = depressed
 			}
-		}
-		add_character_modifier = {
-			name = party_timer
-			duration = 200
 		}
 	}
 }

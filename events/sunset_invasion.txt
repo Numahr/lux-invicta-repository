@@ -10,18 +10,22 @@
 namespace = SSI
 
 # First Contact - Beads and Feathers
+# (There is another version of this event: SoA.3081 - triggered by a Demon Child.)
 province_event = {
 	id = SSI.1
-	desc = EVTDESC_SSI_001
-	
-	picture = GFX_evt_aztec_explorers
-	border = GFX_event_normal_frame_war
+	hide_window = yes
 
 	has_dlc = "Sunset Invasion"
 	
 	trigger = {
 		OR = {
-			year = 1250
+			AND = {
+				has_game_rule = {
+					name = aztec_invasion
+					value = historical
+				}
+				year = 1250
+			}
 			AND = {
 				has_game_rule = {
 					name = aztec_invasion
@@ -45,6 +49,7 @@ province_event = {
 				name = aztec_invasion
 				value = off
 			}
+			has_global_flag = demon_child_to_aztecs
 		}
 		OR = {
 			province_id = 1 # Vestisland
@@ -61,9 +66,42 @@ province_event = {
 	}
 	
 	immediate = {
+		if = { 
+			limit = {  
+				OR = {
+					has_game_rule = {
+						name = aztec_invasion
+						value = random
+					}
+					has_game_rule = {
+						name = aztec_invasion
+						value = delayed_random
+					}
+				}
+				NOT = { year = 1300 } #Will never fire otherwise.
+			}
+			random = { 
+				chance = 40
+					modifier = {
+						factor = 0.75
+						total_years_played = 100
+					}
+					modifier = {
+						factor = 0.5
+						total_years_played = 150
+					}
+					modifier = {
+						factor = 0.25
+						total_years_played = 200
+					}
+				break = yes #Chance of misfire to prevent the randomized invasions from firing immediately after 50 years of game.
+			}
+		}
+		log = "AZTEC INVASION IMMEDIATE 5532432005"
 		set_global_flag = aztec_explorers
 		set_province_flag = aztec_explorers
 		activate_title = { title = e_mexikha status = yes }
+		owner = { character_event = { id = SSI.74 } }
 		
 		k_papal_state = {
 			holder_scope = {
@@ -127,7 +165,21 @@ province_event = {
 narrative_event = {
 	id = SSI.2
 	title = EVTNAME_SSI_002
-	desc = EVTDESC_SSI_002
+	
+	desc = {
+		text = EVTDESC_SSI_002
+		trigger = {
+			NOT = { has_global_flag = demon_child_to_aztecs }
+		}
+	}
+	
+	desc = {
+		text = EVTDESC_SSI_002_DEMON
+		trigger = {
+			has_global_flag = demon_child_to_aztecs
+		}
+	}
+	
 	major = yes
 	
 	picture = GFX_evt_aztec_explorers
@@ -148,7 +200,23 @@ narrative_event = {
 	}
 	
 	option = {
-		name = EVTOPTA_SSI_002
+		name = {
+			text = EVTOPTA_SSI_002
+			trigger = {
+				OR = {
+					NOT = { has_global_flag = demon_child_to_aztecs }
+					NOT = { society_member_of = the_satanists }
+				}
+			}
+		}
+		
+		name = {
+			text = EVTOPTA_SSI_002_SATANIC
+			trigger = {
+				has_global_flag = demon_child_to_aztecs
+				society_member_of = the_satanists
+			}
+		}
 	}
 }
 
@@ -162,7 +230,14 @@ province_event = {
 	
 	trigger = {
 		OR = {
-			year = 1250
+			has_global_flag = demon_child_to_aztecs
+			AND = {
+				has_game_rule = {
+					name = aztec_invasion
+					value = historical
+				}
+				year = 1250
+			}
 			AND = {
 				has_game_rule = {
 					name = aztec_invasion
@@ -949,10 +1024,40 @@ narrative_event = {
 			female = yes
 			age = 16
 		}
+
+		if = {
+			limit = {
+				OR = {
+					has_power_omen_modifier_trigger = yes
+					has_battle_omen_modifier_trigger = yes
+				}
+			}
+			set_character_flag = negative_event_flag # For the scrying outcome calculation...
+		}
 	}
 	
 	option = {
 		name = EVTOPTA_SSI_004
+
+		trigger = {
+			has_power_omen_modifier_trigger = no
+			has_battle_omen_modifier_trigger = no
+		}
+	}
+
+	option = { # Monks & Mystics - Hermetics Scrying reaction
+		name = EVTOPTA_SSI_004
+
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+
+		tooltip_info = yes
+		trigger = {
+			OR = {
+				has_power_omen_modifier_trigger = yes
+				has_battle_omen_modifier_trigger = yes
+			}
+		}
 	}
 }
 
@@ -968,7 +1073,13 @@ province_event = {
 	
 	trigger = {
 		OR = {
-			year = 1250
+			AND = {
+				has_game_rule = {
+					name = aztec_invasion
+					value = historical
+				}
+				year = 1250
+			}
 			AND = {
 				has_game_rule = {
 					name = aztec_invasion
@@ -1603,10 +1714,39 @@ narrative_event = {
 				}
 			}
 		}
+		if = {
+			limit = {
+				OR = {
+					has_power_omen_modifier_trigger = yes
+					has_battle_omen_modifier_trigger = yes
+				}
+			}
+			set_character_flag = negative_event_flag # For the scrying outcome calculation...
+		}
 	}
 	
 	option = {
 		name = EVTOPTA_SSI_006
+
+		trigger = {
+			has_power_omen_modifier_trigger = no
+			has_battle_omen_modifier_trigger = no
+		}
+	}
+
+	option = { # Monks & Mystics - Hermetics Scrying reaction
+		name = EVTOPTA_SSI_006
+
+		calculate_scrying_outcome_effect = yes
+		remove_scrying_omen_modifiers_effect = yes
+
+		tooltip_info = yes
+		trigger = {
+			OR = {
+				has_power_omen_modifier_trigger = yes
+				has_battle_omen_modifier_trigger = yes
+			}
+		}
 	}
 }
 
@@ -1631,6 +1771,10 @@ character_event = {
 	immediate = {
 		disband_event_forces = aztec_invasion_fleet
 		set_global_flag = aztec_invasion_fleet_disbanded
+	}
+	
+	option = {
+		name = OK
 	}
 }
 
@@ -2279,7 +2423,10 @@ character_event = {
 			}
 		}
 		new_character = {
-			religion = aztec
+			OR = {
+				religion = aztec
+				religion = aztec_reformed
+			}
 		}
 	}
 	
@@ -2293,8 +2440,9 @@ character_event = {
 					ai = no
 					ROOT = {
 						controls_religion = yes
-						NOT = {
+						NOR = {
 							religion = aztec
+							religion = aztec_reformed
 						}
 					}
 				}
@@ -2302,6 +2450,10 @@ character_event = {
 			}
 		}
 		death = { death_reason = death_sacrificed }
+	}
+	
+	option = {
+		name = OK
 	}
 }
 
@@ -2330,6 +2482,7 @@ narrative_event = {
 	border = GFX_event_narrative_frame_war
 	
 	major = yes
+	
 	only_playable = yes
 	has_global_flag = aztec_arrival
 	
@@ -2428,3 +2581,19 @@ character_event = {
 	}
 }
 
+# Notification event at beginning of invasion.
+character_event = {
+	id = SSI.74
+	desc = EVTDESC_SSI_001
+	
+	picture = GFX_evt_aztec_explorers
+	border = GFX_event_normal_frame_war
+
+	has_dlc = "Sunset Invasion"
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_SSI_001
+	}
+}

@@ -23,6 +23,7 @@ character_event = {
 			name = patron_shiva
 			duration = -1
 		}
+		clr_character_flag = selecting_patron_deity
 		if = {
 			limit = { ai = no }
 			chronicle = {
@@ -37,6 +38,7 @@ character_event = {
 			name = patron_vishnu
 			duration = -1
 		}
+		clr_character_flag = selecting_patron_deity
 		if = {
 			limit = { ai = no }
 			chronicle = {
@@ -51,6 +53,7 @@ character_event = {
 			name = patron_brahma
 			duration = -1
 		}
+		clr_character_flag = selecting_patron_deity
 		if = {
 			limit = { ai = no }
 			chronicle = {
@@ -80,6 +83,7 @@ character_event = {
 			name = patron_kali
 			duration = -1
 		}
+		clr_character_flag = selecting_patron_deity
 		if = {
 			limit = { ai = no }
 			chronicle = {
@@ -94,6 +98,7 @@ character_event = {
 			name = patron_ganesha
 			duration = -1
 		}
+		clr_character_flag = selecting_patron_deity
 		if = {
 			limit = { ai = no }
 			chronicle = {
@@ -108,6 +113,7 @@ character_event = {
 			name = patron_ganga
 			duration = -1
 		}
+		clr_character_flag = selecting_patron_deity
 		if = {
 			limit = { ai = no }
 			chronicle = {
@@ -1040,11 +1046,11 @@ character_event = {
 	
 	ai = no
 	min_age = 14
-	has_dlc = "Rajas of India"
 	
 	trigger = {
 		is_reincarnated = yes
 		trait = reincarnation
+		has_dlc = "Rajas of India"
 		reincarnation_scope = {
 			OR = {
 				death_murder_trigger = yes
@@ -1094,11 +1100,11 @@ character_event = {
 	
 	ai = no
 	min_age = 14
-	has_dlc = "Rajas of India"
 	
 	trigger = {
 		is_reincarnated = yes
 		trait = reincarnation
+		has_dlc = "Rajas of India"
 		reincarnation_scope = {
 			spouse_even_if_dead = {
 				always = yes
@@ -1125,11 +1131,11 @@ character_event = {
 	
 	ai = no
 	min_age = 14
-	has_dlc = "Rajas of India"
 	
 	trigger = {
 		is_reincarnated = yes
 		trait = reincarnation
+		has_dlc = "Rajas of India"
 		reincarnation_scope = {
 			num_of_children = 1
 			any_child = {
@@ -1170,9 +1176,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		OR = {
 			religion_group = bud_group
 			religion = indoh_bud
@@ -1218,13 +1224,12 @@ character_event = {
 	desc = EVTDESC_RoI_204
 	picture = GFX_evt_bishop_hindu
 	border = GFX_event_normal_frame_religion
-	
-	religion = hindu
 
 	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTA_RoI_204
+		religion = hindu
 		add_trait = shaivist_hindu
 		set_character_flag = india_converted
 		add_character_modifier = {
@@ -1255,9 +1260,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		OR = {
 			religion = hindu
 			religion = jain
@@ -1337,9 +1342,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		OR = {
 			religion = hindu
 			religion_group = bud_group
@@ -1419,9 +1424,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		NOT = {	primary_title = { tier = COUNT } }
 		NOT = { has_global_flag = cursed_diamond }
 		capital_scope = {
@@ -1438,10 +1443,17 @@ character_event = {
 		name = EVTOPTA_RoI_215
 		wealth = -30
 		prestige = 30
+		add_artifact = cursed_diamond_crown
+		set_character_flag = cursed_diamond_crown
 		hidden_tooltip = { character_event = { id = RoI.216 days = 60 } }  # Make a grand crown
 	}
 	option = {
 		name = EVTOPTB_RoI_215
+		add_artifact = cursed_diamond
+		new_artifact = {
+			set_creation_date = 1.1.1
+		}
+		set_character_flag = cursed_diamond
 		hidden_tooltip = { character_event = { id = RoI.221 days = 60 } } # Put it in the treasury
 	}
 	option = {
@@ -1452,6 +1464,10 @@ character_event = {
 		}
 		spouse = {
 			add_lover = ROOT
+			add_artifact = cursed_diamond
+			new_artifact = {
+				set_creation_date = 1.1.1
+			}
 			set_character_flag = spouse_diamond
 			hidden_tooltip = { character_event = { id = RoI.225 days = 60 } } # Give it to your spouse
 		}
@@ -1481,6 +1497,12 @@ character_event = {
 					random_courtier = {
 						limit = {
 							ai = yes
+							is_adult = yes
+							prisoner = no
+							NOT = {
+								trait = incapable
+							}
+							is_inaccessible_trigger = no
 							NOT = { father = { character = ROOT } }
 							NOT = { mother = { character = ROOT } }
 							NOT = { spouse = { character = ROOT } }
@@ -1697,6 +1719,21 @@ character_event = {
 	picture = GFX_evt_emissary
 
 	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				has_artifact = cursed_diamond
+			}
+			unsafe_destroy_artifact = cursed_diamond
+		}
+		if = {
+			limit = {
+				has_artifact = cursed_diamond_crown
+			}
+			unsafe_destroy_artifact = cursed_diamond_crown
+		}
+	}
 	
 	option = {
 		name = EVTOPTA_RoI_223
@@ -1795,12 +1832,10 @@ character_event = {
 			prestige = 30
 		}
 		hidden_tooltip = {
-			spouse = {
-				random_list = {
-					10 = { character_event = { id = RoI.227 days = 60 } }
-					10 = { character_event = { id = RoI.229 days = 60 } }
-					10 = { character_event = { id = RoI.231 days = 60 } }
-				}
+			random_list = {
+				10 = { spouse = { character_event = { id = RoI.227 days = 60 } } }
+				10 = { spouse = { character_event = { id = RoI.229 days = 60 } } }
+				10 = { spouse = { character_event = { id = RoI.231 days = 60 } } }
 			}
 		}
 	}
@@ -1831,6 +1866,12 @@ character_event = {
 	picture = GFX_evt_market
 
 	is_triggered_only = yes
+
+	immediate = {
+		spouse = {
+			unsafe_destroy_artifact = cursed_diamond
+		}
+	}
 	
 	option = {
 		name = EVTOPTA_RoI_228
@@ -1905,6 +1946,18 @@ character_event = {
 	picture = GFX_evt_throne_room
 
 	is_triggered_only = yes
+
+	immediate = {
+		random_artifact = {
+			limit = {
+				artifact_type = cursed_diamond
+			}
+			transfer_artifact = {
+				from = spouse
+				to = ROOT
+			}
+		}
+	}
 	
 	option = {
 		name = EVTOPTA_RoI_232
@@ -1940,20 +1993,62 @@ character_event = {
 			NOT = { has_character_flag = loves_diamond }
 		}
 		wealth = 100
-		hidden_tooltip = { character_event = { id = RoI.241 days = 30 } }
+		hidden_effect = { 
+			character_event = { id = RoI.241 days = 30 } 
+		}
+		if = {
+			limit = {
+				has_artifact = cursed_diamond
+			}
+			unsafe_destroy_artifact = cursed_diamond
+			set_character_flag = sold_cursed_diamond
+		}
+		if = {
+			limit = {
+				has_artifact = cursed_diamond_crown
+			}
+			unsafe_destroy_artifact = cursed_diamond_crown
+			set_character_flag = sold_cursed_diamond_crown
+		}
 	}
 	option = {
 		name = EVTOPTB_RoI_240
-		hidden_tooltip = { character_event = { id = RoI.243 days = 30 } }
+		hidden_effect = { 
+			character_event = { id = RoI.243 days = 30 } 
+		}
+		if = {
+			limit = {
+				has_artifact = cursed_diamond
+			}
+			unsafe_destroy_artifact = cursed_diamond
+		}
+		if = {
+			limit = {
+				has_artifact = cursed_diamond_crown
+			}
+			unsafe_destroy_artifact = cursed_diamond_crown
+		}
 	}
 	option = {
 		name = EVTOPTC_RoI_240
-		hidden_tooltip = { character_event = { id = RoI.245 days = 30 } }
+		hidden_effect = { character_event = { id = RoI.245 days = 30 } }
 	}
 	option = {
 		name = EVTOPTD_RoI_240
 		trigger = {
 			has_character_flag = loves_diamond
+		}
+		if = {
+			limit = { 
+				has_artifact = cursed_diamond
+			}
+			unsafe_destroy_artifact = cursed_diamond
+		}
+		if = {
+			limit = { 
+				has_artifact = cursed_diamond_crown
+			}
+			unsafe_destroy_artifact = cursed_diamond_crown
 		}
 		death = {
 			death_reason = death_suicide
@@ -1992,6 +2087,24 @@ character_event = {
 			name = the_diamond_thief
 			duration = 1800
 		}
+		if = {
+			limit = {
+				OR = {
+					has_character_flag = cursed_diamond_crown
+					has_character_flag = sold_cursed_diamond_crown
+				}
+			}
+			add_artifact = cursed_diamond_crown
+			clr_character_flag = sold_cursed_diamond_crown
+		}
+		if = {
+			limit = {
+				has_character_flag = cursed_diamond
+				has_character_flag = sold_cursed_diamond
+			}
+			add_artifact = cursed_diamond
+			clr_character_flag = sold_cursed_diamond
+		}
 		hidden_tooltip = { character_event = { id = RoI.245 days = 60 } }
 	}
 }
@@ -2023,40 +2136,36 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_RoI_244
+		
 		if = {
-			limit = {
-				is_ill = yes
-			}
+			limit = { is_ill = yes }
+			
 			random = {
 				chance = 30
 				if = {
-					limit = {
-						NOT = {
-							has_dlc = "Reapers"
-						}
-					}
+					limit = { NOT = { has_dlc = "Reapers" } }
 					add_trait = pneumonic
-					break = yes
 				}
-				add_trait = infection
-				hidden_tooltip = {
-					character_event = { id = RIP.11001 days = 365 random = 1095 }
+				if = {
+					limit = { has_dlc = "Reapers" }
+					add_trait = infection
+					hidden_tooltip = { character_event = { id = RIP.11001 days = 365 random = 1095 } }
 				}		
 			}
-			break = yes
 		}
-		random = {
-			chance = 30
-			if = {
-				limit = {
-					NOT = {
-						has_dlc = "Reapers"
-					}
+
+		if = {
+			limit = { is_ill = no }
+
+			random = {
+				chance = 30
+				if = { limit = { NOT = { has_dlc = "Reapers" } }
+					add_trait = ill
 				}
-				add_trait = ill
-				break = yes
+				if = { limit = { has_dlc = "Reapers" }
+					add_symptom_effect = yes
+				}	
 			}
-			add_symptom_effect = yes
 		}
 	}
 }
@@ -2069,6 +2178,23 @@ character_event = {
 
 	is_triggered_only = yes
 	
+	immediate = {
+		if = {
+			limit = {
+				has_artifact = cursed_diamond
+			}
+			unsafe_destroy_artifact = cursed_diamond
+		}
+		if = {
+			limit = {
+				has_artifact = cursed_diamond_crown
+			}
+			unsafe_destroy_artifact = cursed_diamond_crown
+		}
+		clr_character_flag = cursed_diamond
+		clr_character_flag = cursed_diamond_crown
+	}
+
 	option = {
 		name = EVTOPTA_RoI_245
 		trigger = {
@@ -2076,12 +2202,25 @@ character_event = {
 				NOT = { has_character_flag = spouse_diamond }
 				ai = yes
 				at_location = ROOT
+				is_adult = yes
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+				is_inaccessible_trigger = no
 			}
 		}
 		random_spouse = {
 			limit = {
+				NOT = { has_character_flag = spouse_diamond }
 				ai = yes
 				at_location = ROOT
+				is_adult = yes
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+				is_inaccessible_trigger = no
 			}
 			hidden_tooltip = { character_event = { id = RoI.246 } }
 		}
@@ -2092,12 +2231,24 @@ character_event = {
 			any_sibling = {
 				ai = yes
 				at_location = ROOT
+				is_adult = yes
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+				is_inaccessible_trigger = no
 			}
 		}
 		random_sibling = {
 			limit = {
 				ai = yes
 				at_location = ROOT
+				is_adult = yes
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+				is_inaccessible_trigger = no
 			}
 			hidden_tooltip = { character_event = { id = RoI.246 } }
 		}
@@ -2109,6 +2260,12 @@ character_event = {
 				ai = yes
 				is_councillor = yes
 				at_location = ROOT
+				is_adult = yes
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+				is_inaccessible_trigger = no
 			}
 		}
 		random_courtier = {
@@ -2116,6 +2273,12 @@ character_event = {
 				ai = yes
 				is_councillor = yes
 				at_location = ROOT
+				is_adult = yes
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+				is_inaccessible_trigger = no
 			}
 			hidden_tooltip = { character_event = { id = RoI.246 } }
 		}
@@ -2128,12 +2291,24 @@ character_event = {
 					ai = yes
 					is_councillor = yes
 					at_location = ROOT
+					is_adult = yes
+					prisoner = no
+					NOT = {
+						trait = incapable
+					}
+					is_inaccessible_trigger = no
 				}
 			}
 			NOT = {
 				any_sibling = {
 					ai = yes
 					at_location = ROOT
+					is_adult = yes
+					prisoner = no
+					NOT = {
+						trait = incapable
+					}
+					is_inaccessible_trigger = no
 				}
 			}
 			NOT = {
@@ -2141,6 +2316,12 @@ character_event = {
 					NOT = { has_character_flag = spouse_diamond }
 					ai = yes
 					at_location = ROOT
+					is_adult = yes
+					prisoner = no
+					NOT = {
+						trait = incapable
+					}
+					is_inaccessible_trigger = no
 				}
 			}
 		}
@@ -2148,6 +2329,12 @@ character_event = {
 			limit = {
 				ai = yes
 				at_location = ROOT
+				is_adult = yes
+				prisoner = no
+				NOT = {
+					trait = incapable
+				}
+				is_inaccessible_trigger = no
 			}
 			hidden_tooltip = { character_event = { id = RoI.246 } }
 		}
@@ -2196,6 +2383,52 @@ character_event = {
 	}
 }
 
+# On Death - clearing the treasury
+character_event = {
+	id = RoI.248
+
+	hide_window = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_artifact = cursed_diamond_crown
+		has_artifact = cursed_diamond
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				has_artifact = cursed_diamond
+			}
+			unsafe_destroy_artifact = cursed_diamond
+		}
+		if = {
+			limit = {
+				has_artifact = cursed_diamond_crown
+			}
+			unsafe_destroy_artifact = cursed_diamond_crown
+		}
+		save_event_target_as = cursed_diamond_parent
+		current_heir = {
+			character_event = { id = RoI.249 days = 7 }
+		}
+	}
+}
+
+# Heir finds out famous diamond has disappeared
+character_event = {
+	id = RoI.249
+	desc = EVTDESC_RoI.249
+	picture = GFX_evt_bad_news
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_RoI.249
+	}
+}
+
 ###########################################
 # Thugs                                   #
 ###########################################
@@ -2210,14 +2443,14 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		NOT = { has_global_flag = thugs_global }
 		capital_scope = {
 			region = world_india
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 	}
 
 	immediate = {
@@ -2570,9 +2803,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		capital_scope = {
 			region = world_india
 		}
@@ -2610,9 +2843,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		NOT = { has_character_flag = crazed_elephant }
 		capital_scope = {
 			OR = {
@@ -3449,13 +3682,11 @@ character_event = {
 	
 	ai = no
 	min_age = 16
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		in_command = no
-		capital_scope = {
-			region = world_india
-		}
+		capital_scope = { region = world_india }
 		NOT = { is_inaccessible_trigger = yes }
 	}
 	
@@ -3466,7 +3697,7 @@ character_event = {
 	option = {
 		name = EVTOPTB_RoI_193
 		trigger = {
-			NOR = {
+			NOT = {
 				trait = zealous
 				religion_group = indian_group
 			}
@@ -3603,10 +3834,10 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	min_age = 16
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
+		is_adult = yes
 		NOT = { has_global_flag = marco_polo_persia }
 		year = 1200
 		capital_scope = {
@@ -3701,9 +3932,7 @@ character_event = {
 	option = {
 		name = EVTOPTA_RoI_504
 		trigger = {
-			NOT = {
-				has_character_flag = helped_marco_polo_lots
-			}
+			NOT = { has_character_flag = helped_marco_polo_lots }
 		}
 		scaled_wealth = 0.1
 		prestige = 20
@@ -3786,9 +4015,9 @@ character_event = {
 	is_triggered_only = yes
 	
 	ai = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		capital_scope = {
 			region = world_india
 		}
@@ -3805,7 +4034,7 @@ character_event = {
 	option = {
 		name = EVTOPTB_RoI_180
 		trigger = {
-			NOR = {
+			NOT = {
 				trait = paranoid
 				trait = wroth
 			}
@@ -3848,9 +4077,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		NOT = { has_global_flag = indus_uboat }
 		in_command = no
 		capital_scope = {
@@ -3908,9 +4137,9 @@ character_event = {
 	only_capable = yes
 	prisoner = no
 	min_age = 16
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		trait = sympathy_indian
 		any_realm_character = {
 			religion_group = indian_group
@@ -3942,9 +4171,9 @@ character_event = {
 	prisoner = no
 	only_capable = yes
 	min_age = 16
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		prestige = 100
 		in_command = no
 		capital_scope = {
@@ -4040,9 +4269,9 @@ character_event = {
 	only_capable = yes
 	prisoner = no
 	religion = hindu
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		in_command = no
 		NOT = { has_character_flag = do_not_disturb }
 		NOT = { is_inaccessible_trigger = yes }
@@ -4100,9 +4329,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		in_command = no
 		OR = {
 			religion = hindu
@@ -4208,9 +4437,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		in_command = no
 		OR = {
 			religion_group = bud_group
@@ -4256,9 +4485,9 @@ character_event = {
 	ai = no
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Rajas of India"
 	
 	trigger = {
+		has_dlc = "Rajas of India"
 		in_command = no
 		NOT = { religion_group = indian_group }
 		any_demesne_province  = {

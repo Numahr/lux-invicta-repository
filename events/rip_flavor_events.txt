@@ -29,11 +29,11 @@ character_event = {
 	capable_only = yes
 	only_playable = yes
 	prisoner = no
-	has_dlc = "Reapers"
 	
 	is_triggered_only = yes
 	
 	trigger = {
+		has_dlc = "Reapers"
 		NOR = { 
 			has_character_flag = stress_relief
 			is_tribal = yes
@@ -197,11 +197,11 @@ character_event = {
 	capable_only = yes
 	only_playable = yes
 	prisoner = no
-	has_dlc = "Reapers"
 	
 	is_triggered_only = yes
 	
 	trigger = {
+		has_dlc = "Reapers"
 		trait = blinded
 		NOR = {
 			has_character_modifier = guide_dog
@@ -395,8 +395,7 @@ character_event = {
 		}
 		NOR = { 
 			has_character_flag = fertility_treatment
-			trait = monk
-			trait = nun
+			is_ascetic_trigger = yes
 			trait = celibate
 			trait = eunuch
 			num_of_children = 1
@@ -507,8 +506,7 @@ character_event = {
 				modifier = {
 					factor = 0
 					OR = {
-						trait = monk
-						trait = nun
+						is_ascetic_trigger = yes
 						trait = celibate
 						trait = eunuch
 						trait = chaste
@@ -525,18 +523,20 @@ character_event = {
 				}
 				modifier = {
 					factor = 5
-					OR = { 
-						trait = deceitful
-						trait = lustful
-						trait = hedonist
-						trait = seducer
-					}
-					event_target:spouse_target = {
+					AND = {
 						OR = { 
 							trait = deceitful
 							trait = lustful
 							trait = hedonist
-							trait = seductress
+							trait = seducer
+						}
+						event_target:spouse_target = {
+							OR = { 
+								trait = deceitful
+								trait = lustful
+								trait = hedonist
+								trait = seductress
+							}
 						}
 					}
 				}
@@ -739,6 +739,10 @@ character_event = {
 	is_triggered_only = yes
 	hide_new = yes
 	
+	trigger = {
+
+	}
+	
 	immediate = {
 		random_realm_character = {
 			limit = {
@@ -860,7 +864,7 @@ character_event = {
 		if = {
 			limit = {
 				NOT = { trait = homosexual }
-			}
+			}  
 			add_trait = homosexual
 		}
 		fertility = 0.25
@@ -1735,7 +1739,7 @@ character_event = {
 		text = EVTDESC_RIP_4032_BAD
 		picture = GFX_evt_experiments_failed
 	}
-	
+
 	trigger = {
 		FROM = {
 			is_alive = yes
@@ -1750,7 +1754,7 @@ character_event = {
 			}
 		}
 	}
-
+	
 	is_triggered_only = yes
 
 	#Good book outcome 
@@ -2534,11 +2538,11 @@ character_event = {
 	capable_only = yes
 	only_playable = yes
 	prisoner = no
-	has_dlc = "Reapers"
 	
 	is_triggered_only = yes
 	
 	trigger = {
+		has_dlc = "Reapers"
 		higher_tier_than = BARON
 		OR = {
 			is_tribal = yes
@@ -2825,20 +2829,27 @@ character_event = {
 		religion = event_target:missionary_physician_target
 		prestige = -500
 		piety = 250
-		any_courtier = {
-			limit = { 
-				is_close_relative = ROOT
-				NOT = { trait = zealous }
+		hidden_tooltip = {
+			any_courtier = {
+				limit = { 
+					is_close_relative = ROOT
+					NOT = { trait = zealous }
+					NOT = { has_character_flag = ai_flag_refuse_conversion }
+					NOT = { trait = stubborn }
+				}
+				religion = event_target:missionary_physician_target
 			}
-			religion = event_target:missionary_physician_target
-		}
-		any_spouse = {
-			limit = { 
-				is_consort = no
-				NOT = { trait = zealous }
+			any_spouse = {
+				limit = { 
+					is_consort = no
+					NOT = { trait = zealous }
+					NOT = { has_character_flag = ai_flag_refuse_conversion }
+					NOT = { trait = stubborn }
+				}
+				religion = event_target:missionary_physician_target
 			}
-			religion = event_target:missionary_physician_target
 		}
+		custom_tooltip = { text = EVTOPTB_RIP_4101_TT }
 	}
 	
 	option = {
@@ -2964,7 +2975,7 @@ character_event = {
 		job_treasurer = {
 			save_event_target_as = councillor_target
 		}
-		any_demesne_province = {
+		random_demesne_province = {
 			limit = {
 				NOT = {
 					has_province_modifier = new_roads
@@ -3117,7 +3128,7 @@ character_event = {
 		job_spiritual = {
 			save_event_target_as = councillor_target
 		}
-		any_demesne_province = {
+		random_demesne_province = {
 			limit = {
 				NOT = {
 					has_province_modifier = new_shrines
@@ -3270,7 +3281,7 @@ character_event = {
 		job_marshal = {
 			save_event_target_as = councillor_target
 		}
-		any_demesne_province = {
+		random_demesne_province = {
 			limit = {
 				NOT = {
 					has_province_modifier = peasants_protected
@@ -3423,7 +3434,7 @@ character_event = {
 		job_spymaster = {
 			save_event_target_as = councillor_target
 		}
-		any_demesne_province = {
+		random_demesne_province = {
 			limit = {
 				NOT = {
 					has_province_modifier = messenger_stations
@@ -3576,7 +3587,7 @@ character_event = {
 		job_chancellor = {
 			save_event_target_as = councillor_target
 		}
-		any_demesne_province = {
+		random_demesne_province = {
 			limit = {
 				NOT = {
 					has_province_modifier = harvest_festivals
@@ -3713,7 +3724,7 @@ character_event = {
 	}
 	
 	immediate = {
-		any_demesne_province = {
+		random_demesne_province = {
 			limit = {
 				NOT = {
 					has_province_modifier = inspired_peasantry
@@ -3791,12 +3802,11 @@ character_event = { # Execution nicknames
 	id = RIP.4400
 	hide_window = yes
 	is_triggered_only = yes
-
-	has_dlc = "Reapers"
 	
 	trigger = {
 		death_execution_trigger = yes
 		killer = { always = yes }
+		has_dlc = "Reapers"
 	}
 	
 	immediate = {
@@ -3912,7 +3922,7 @@ character_event = { # Execution nicknames
 							NOR = {
 								NOT = { piety = -50 }
 								trait = possessed
-								trait = kinslayer
+								is_any_kinslayer_trigger = yes
 							}
 						}
 					}
@@ -3957,11 +3967,14 @@ character_event = {
 
 	trigger = {
 		OR = {
-			num_of_lovers = 1
-			num_of_friends = 1
-			num_of_rivals = 1
+			any_lover = { is_alive = yes }
+			any_friend = { is_alive = yes }
+			any_rival = { is_alive = yes }
 		}
-
+		NOR = {
+			death_no_trace_trigger = yes
+			death_in_china_trigger = yes
+		}
 	}
 
 	option = {
@@ -4425,8 +4438,7 @@ character_event = {
 		name = EVTOPTD_RIP_29005
 		custom_tooltip = { text = EVTOPTD_RIP_29005_TOOLTIP }
 		trigger = { 
-			num_of_friends = 1 
-			any_friend = { is_alive = yes }
+			any_friend = { is_alive = yes } 
 		}
 		any_friend = { remove_friend = ROOT } 
 
@@ -4599,30 +4611,30 @@ character_event = {
 		}
 
 		hidden_tooltip = {
-		random_list = {
-			#Fail
-			40 = { 
-				modifier = {
-					factor = 0
-					OR = {
-						NOT = { event_target:rip_widow = { always = yes } }
-						NOT = { event_target:rip_child = { always = yes } }
-						event_target:rip_widow = { character = ROOT }
-						event_target:rip_child = { character = ROOT }
+			random_list = {
+				#Fail
+				40 = {
+					modifier = {
+						factor = 0
+						OR = {
+							NOT = { event_target:rip_widow = { always = yes } }
+							NOT = { event_target:rip_child = { always = yes } }
+							event_target:rip_widow = { character = ROOT }
+							event_target:rip_child = { character = ROOT }
+						}
+					}
+
+					if = {
+						limit = { event_target:rip_widow = { NOT = { character = ROOT } } }
+						event_target:rip_widow = { character_event = { id = RIP.29011 days = 7 } }
+						break = yes
+					}
+					if = {
+					limit = { event_target:rip_child = { NOT = { character = ROOT } } }
+					event_target:rip_child = { character_event = { id = RIP.29011 days = 7 } }
 					}
 				}
-
-				if = { 
-					limit = { event_target:rip_widow = { NOT = { character = ROOT } } }
-					event_target:rip_widow = { character_event = { id = RIP.29011 days = 7 } }
-					break = yes
-				}
-				if = { 
-				limit = { event_target:rip_child = { NOT = { character = ROOT } } }
-				event_target:rip_child = { character_event = { id = RIP.29011 days = 7 } }
-				}
-			}
-			#Success			
+				#Success
 				60 = {
 					modifier = {
 						factor = 1.2
@@ -4655,7 +4667,7 @@ character_event = {
 
 	#Enemy of my enemy
 	option = {
-		trigger = { event_target:rip_enemy_2 = { always = yes } }
+		trigger = { event_target:rip_enemy_2 = { is_alive = yes } }
 		name = EVTOPTB_RIP_29010
 		custom_tooltip = { text = EVTOPTB_RIP_29010_TOOLTIP }
 
@@ -4666,7 +4678,7 @@ character_event = {
 
 	#Get a new enemy
 	option = {
-		trigger = { event_target:rip_new_enemy = { always = yes } }
+		trigger = { event_target:rip_new_enemy = { is_alive = yes } }
 		name = EVTOPTC_RIP_29010
 		custom_tooltip = { text = EVTOPTC_RIP_29010_TOOLTIP }
 
@@ -4679,7 +4691,7 @@ character_event = {
 	option = {
 		trigger = {
 			OR = {
-				num_of_rivals = 1
+				any_rival = { is_alive = yes }
 				trait = cruel
 				trait = envious
 				NOT = { trait = kind }
@@ -4898,32 +4910,13 @@ character_event = {
 
 	option = {
 		name = EVTOPTA_RIP_29013
+		custom_tooltip = { text = EVTOPTA_RIP_29013_TT }
 
-		if = {
-			limit = {
-				NOR = {
-					has_character_modifier = skull_trophy
-					has_character_modifier = skull_trophies
-				}
+		hidden_effect = {
+			add_artifact = rival_skull
+			new_artifact = {
+				set_original_owner = event_target:rip_dead
 			}
-			add_character_modifier = {
-				name = skull_trophy
-				duration = -1
-			}
-		}
-
-		if = { 
-			limit = {
-				OR = {
-					has_character_modifier = skull_trophy
-					has_character_modifier = skull_trophies
-				}
-			}
-			add_character_modifier = {
-				name = skull_trophies
-				duration = -1
-			}
-			hidden_tooltip = { remove_character_modifier = skull_trophy }
 		}
 
 		hidden_tooltip = {
@@ -4938,6 +4931,7 @@ character_event = {
 	id = RIP.29014
 	border = GFX_event_normal_frame_intrigue
 	desc = EVTDSC_RIP_29014
+	portrait = event_target:rip_dead
 	picture = GFX_evt_bloody_tools
 
 	is_triggered_only = yes
@@ -5213,17 +5207,6 @@ character_event = {
 	option = {
 		name = EVTOPTB_RIP_29020
 		custom_tooltip = { text = EVTOPTB_RIP_29020_TOOLTIP }
-		ai_chance = {
-			factor = 3
-			modifier = {
-				factor = 2
-				OR = {
-					trait = shy
-					trait = cruel
-					trait = arbitrary
-				}
-			}
-		}	
 
 		if = {
 			limit = { NOR = { trait = shy trait = gregarious } }
@@ -5241,6 +5224,17 @@ character_event = {
 				hidden_tooltip = { character_event = { id = 38297 } } #Notify remove gregarious
 			}
 		}
+		ai_chance = {
+			factor = 3
+			modifier = {
+				factor = 2
+				OR = {
+					trait = shy
+					trait = cruel
+					trait = arbitrary
+				}
+			}
+		}	
 	}
 }
 
@@ -5391,8 +5385,7 @@ character_event = {
 				OR = {
 					trait = shy
 					trait = chaste
-					trait = nun
-					trait = monk
+					is_ascetic_trigger = yes
 					is_married = yes
 				}
 			}
@@ -5467,7 +5460,7 @@ character_event = {
 				modifier = {
 					factor = 0
 					OR = {
-						num_of_lovers = 1
+						any_lover = { is_alive = yes }
 						has_character_modifier = golden_mask
 					}
 				}
@@ -6330,9 +6323,9 @@ character_event = {
 			10 = { 
 				modifier = {
 					factor = 0
-					OR = {
+					OR = {	
 						has_character_modifier = martially_ambidextrous
-						has_character_modifier = iron_hand
+						has_artifact = prosthetic_hand_metal
 						trait = blinded
 					}
 				}
@@ -6343,8 +6336,8 @@ character_event = {
 				modifier = {
 					factor = 0
 					OR = {	
-						has_character_modifier = iron_hand
-						has_character_modifier = golden_hand
+						has_artifact = prosthetic_hand_gold
+						has_artifact = prosthetic_hand_metal
 					}
 				}
 				character_event = { id = RIP.29305 }
@@ -6542,10 +6535,7 @@ character_event = {
 
 		scaled_wealth = { value = -0.75 min = -100 }
 
-		add_character_modifier = {
-			name = golden_hand 
-			duration = -1
-		}
+		add_artifact = prosthetic_hand_gold
 	}
 
 	#Iron hand
@@ -6555,10 +6545,7 @@ character_event = {
 
 		scaled_wealth = { value = -0.50 min = -50 }
 
-		add_character_modifier = {
-			name = iron_hand 
-			duration = -1
-		}
+		add_artifact = prosthetic_hand_metal
 
 		hidden_tooltip = {
 			random = {
@@ -6626,7 +6613,7 @@ character_event = {
 				modifier = {
 					factor = 0
 					OR = {	
-						has_character_modifier = prosthetic_leg
+						has_artifact = prosthetic_leg
 						has_character_modifier = peg_leg
 					}
 				}
@@ -6795,10 +6782,7 @@ character_event = {
 
 		scaled_wealth = { value = -0.35 min = -35 }
 
-		add_character_modifier = {
-			name = prosthetic_leg 
-			duration = -1
-		}
+		add_artifact = prosthetic_leg_artifact 
 	}
 
 	#Peg leg
@@ -7295,8 +7279,8 @@ character_event = {
 		}
 		if = {
 			limit = { has_character_flag = make_friend }
-			add_lover = FROM
-			clr_character_flag = make_lover
+			add_friend = FROM
+			clr_character_flag = make_friend
 		}
 		
 		reverse_opinion = {
@@ -7474,7 +7458,9 @@ character_event = {
 	picture = GFX_evt_birth 
 
 	trigger = {
-		FROM = { is_child_of = ROOT } 
+		FROM = { is_child_of = ROOT }
+		NOT = { has_character_modifier = good_relationship_omen }
+		NOT = { has_character_modifier = bad_relationship_omen }
 	}
 
 	immediate = {
@@ -7768,6 +7754,10 @@ character_event = {
 			}
 		}
 	}
+	
+	option = {
+	
+	}
 }
 
 character_event = {
@@ -7803,7 +7793,7 @@ character_event = {
 		character_event = {
 			days = 20
 			id = RIP.29802
-			tooltip = EVTOPTA_RIP_29801_TOOLTIP
+			TOOLTIP = EVTOPTA_RIP_29801_TOOLTIP
 		}
 	}
 
@@ -8144,7 +8134,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30003 days = 3 }
+			character_event = { id = RIP.30003 days = 3 }
 		}
 	}
 	option = {
@@ -8165,7 +8155,7 @@ letter_event = {
 			FROMFROM = { NOT = { owes_favor_to = ROOT } }
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30007 days = 3 }
+			character_event = { id = RIP.30007 days = 3 }
 		}
 	}
 	
@@ -8209,7 +8199,7 @@ letter_event = {
 		}
 		
 		FROMFROM = {
-			letter_event = { id = RIP.30001 days = 3 }
+			character_event = { id = RIP.30001 days = 3 }
 		}
 	}
 	
@@ -8268,7 +8258,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30006 days = 3 }
+			character_event = { id = RIP.30006 days = 3 }
 		}
 	}
 	
@@ -8327,7 +8317,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30006 days = 3 }
+			character_event = { id = RIP.30006 days = 3 }
 		}
 	}
 	
@@ -8345,7 +8335,7 @@ letter_event = {
 		name = EXCELLENT
 		
 		event_target:target_defender = {
-			letter_event = { id = RIP.30002 }
+			character_event = { id = RIP.30002 }
 		}
 		
 		opinion = {
@@ -8358,6 +8348,7 @@ letter_event = {
 			any_war = {
 				limit = {
 					defender = { character = event_target:target_defender }
+					attacker = { character = FROM }
 				}
 				end_war = whitepeace
 			}
@@ -8405,7 +8396,7 @@ letter_event = {
 		}
 		
 		event_target:target_defender = {
-			letter_event = { id = RIP.30002 }
+			character_event = { id = RIP.30002 }
 		}
 		
 		tooltip = {
@@ -8417,10 +8408,11 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30004 }
+			character_event = { id = RIP.30004 }
 			any_war = {
 				limit = {
 					defender = { character = event_target:target_defender }
+					attacker = { character = FROM }
 				}
 				end_war = whitepeace
 			}
@@ -8436,7 +8428,7 @@ letter_event = {
 			factor = 1
 		}
 		FROM = {
-			letter_event = { id = RIP.30005 }
+			character_event = { id = RIP.30005 }
 		}
 	}
 }
@@ -8532,7 +8524,7 @@ letter_event = {
 		}
 		
 		event_target:target_defender = {
-			letter_event = { id = RIP.30002 }
+			character_event = { id = RIP.30002 }
 		}
 		
 		reverse_add_favor = FROM
@@ -8544,10 +8536,11 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30008 }
+			character_event = { id = RIP.30008 }
 			any_war = {
 				limit = {
 					defender = { character = event_target:target_defender }
+					attacker = { character = FROM }
 				}
 				end_war = whitepeace
 			}
@@ -8564,7 +8557,7 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30009 }
+			character_event = { id = RIP.30009 }
 		}
 	}
 }
@@ -8617,6 +8610,7 @@ letter_event = {
 		any_war = {
 			limit = {
 				defender = { character = event_target:target_defender }
+				attacker = { character = ROOT }
 			}
 			end_war = whitepeace
 		}
@@ -8636,7 +8630,7 @@ letter_event = {
 		}
 		
 		FROMFROM = {
-			letter_event = { id = RIP.30011 }
+			character_event = { id = RIP.30011 }
 		}
 	}
 }
@@ -8653,7 +8647,7 @@ letter_event = {
 		name = EXCELLENT
 		
 		event_target:target_defender = {
-			letter_event = { id = RIP.30002 }
+			character_event = { id = RIP.30002 }
 		}
 		
 		opinion = {
@@ -8697,7 +8691,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30023 days = 3 }
+			character_event = { id = RIP.30023 days = 3 }
 		}
 	}
 	option = {
@@ -8718,7 +8712,7 @@ letter_event = {
 			FROMFROM = { NOT = { owes_favor_to = ROOT } }
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30027 days = 3 }
+			character_event = { id = RIP.30027 days = 3 }
 		}
 	}
 	
@@ -8764,7 +8758,7 @@ letter_event = {
 		prestige = 100
 		
 		FROMFROM = {
-			letter_event = { id = RIP.30021 days = 3 }
+			character_event = { id = RIP.30021 days = 3 }
 		}
 	}
 	
@@ -8823,7 +8817,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30026 days = 3 }
+			character_event = { id = RIP.30026 days = 3 }
 		}
 	}
 	
@@ -8882,7 +8876,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30026 days = 3 }
+			character_event = { id = RIP.30026 days = 3 }
 		}
 	}
 }
@@ -8899,7 +8893,7 @@ letter_event = {
 		name = EXCELLENT
 		
 		event_target:target_attacker = {
-			letter_event = { id = RIP.30022 }
+			character_event = { id = RIP.30022 }
 		}
 		
 		opinion = {
@@ -8912,6 +8906,7 @@ letter_event = {
 			any_war = {
 				limit = {
 					attacker = { character = event_target:target_attacker }
+					defender = { character = FROM }
 				}
 				end_war = success
 			}
@@ -8957,7 +8952,7 @@ letter_event = {
 		}
 		
 		event_target:target_attacker = {
-			letter_event = { id = RIP.30022 }
+			character_event = { id = RIP.30022 }
 		}
 		
 		tooltip = {
@@ -8969,10 +8964,11 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30024 }
+			character_event = { id = RIP.30024 }
 			any_war = {
 				limit = {
 					attacker = { character = event_target:target_attacker }
+					defender = { character = FROM }
 				}
 				end_war = success
 			}
@@ -8985,7 +8981,7 @@ letter_event = {
 			factor = 1
 		}
 		FROM = {
-			letter_event = { id = RIP.30025 }
+			character_event = { id = RIP.30025 }
 		}
 	}
 }
@@ -9082,7 +9078,7 @@ letter_event = {
 		}
 		
 		event_target:target_attacker = {
-			letter_event = { id = RIP.30022 }
+			character_event = { id = RIP.30022 }
 		}
 		
 		reverse_add_favor = FROM
@@ -9094,10 +9090,11 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30028 }
+			character_event = { id = RIP.30028 }
 			any_war = {
 				limit = {
 					attacker = { character = event_target:target_attacker }
+					defender = { character = FROM }
 				}
 				end_war = success
 			}
@@ -9111,7 +9108,7 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30029 }
+			character_event = { id = RIP.30029 }
 		}
 	}
 }
@@ -9165,6 +9162,7 @@ letter_event = {
 		any_war = {
 			limit = {
 				attacker = { character = event_target:target_attacker }
+				defender = { character = FROM }
 			}
 			end_war = success
 		}
@@ -9180,7 +9178,7 @@ letter_event = {
 		}
 		
 		FROMFROM = {
-			letter_event = { id = RIP.30031 }
+			character_event = { id = RIP.30031 }
 		}
 	}
 }
@@ -9197,7 +9195,7 @@ letter_event = {
 		name = EXCELLENT
 		
 		event_target:target_attacker = {
-			letter_event = { id = RIP.30022 }
+			character_event = { id = RIP.30022 }
 		}
 		
 		opinion = {
@@ -9244,7 +9242,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30043 days = 3 }
+			character_event = { id = RIP.30043 days = 3 }
 		}
 	}
 	option = {
@@ -9265,7 +9263,7 @@ letter_event = {
 			FROMFROM = { NOT = { owes_favor_to = ROOT } }
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30047 days = 3 }
+			character_event = { id = RIP.30047 days = 3 }
 		}
 	}
 	
@@ -9311,7 +9309,7 @@ letter_event = {
 		prestige = 100
 		
 		FROMFROM = {
-			letter_event = { id = RIP.30041 days = 3 }
+			character_event = { id = RIP.30041 days = 3 }
 		}
 	}
 	
@@ -9371,7 +9369,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30046 days = 3 }
+			character_event = { id = RIP.30046 days = 3 }
 		}
 	}
 	
@@ -9430,7 +9428,7 @@ letter_event = {
 			}
 		}
 		FROMFROM = {
-			letter_event = { id = RIP.30046 days = 3 }
+			character_event = { id = RIP.30046 days = 3 }
 		}
 	}
 }
@@ -9488,7 +9486,7 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30044 }
+			character_event = { id = RIP.30044 }
 			primary_title = {
 				add_law_w_cooldown = succ_gavelkind
 			}
@@ -9502,7 +9500,7 @@ letter_event = {
 			factor = 1
 		}
 		FROM = {
-			letter_event = { id = RIP.30045 }
+			character_event = { id = RIP.30045 }
 		}
 	}
 }
@@ -9607,7 +9605,7 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30048 }
+			character_event = { id = RIP.30048 }
 			primary_title = {
 				add_law_w_cooldown = succ_gavelkind
 			}
@@ -9622,7 +9620,7 @@ letter_event = {
 		}
 		
 		FROM = {
-			letter_event = { id = RIP.30049 }
+			character_event = { id = RIP.30049 }
 		}
 	}
 }
@@ -9690,7 +9688,7 @@ letter_event = {
 		}
 		
 		FROMFROM = {
-			letter_event = { id = RIP.30051 }
+			character_event = { id = RIP.30051 }
 		}
 	}
 }
@@ -10487,6 +10485,15 @@ character_event = {
 				factor = 2
 				trait = brave
 			}
+			modifier = {
+				factor = 4
+				trait = ambitious
+				FROM = {
+					current_heir = {
+						character = ROOT
+					}
+				}
+			}
 		}
 	}
 
@@ -10585,15 +10592,9 @@ character_event = {
 	only_capable = yes
 	war = no
 	has_dlc = "Reapers"
+	ai = no
 
 	trigger = {
-		OR = {
-			ai = no
-			has_game_rule = {
-				name = supernatural_events
-				value = unrestricted
-			}
-		}
 		NOT = {
 			has_game_rule = {
 				name = supernatural_events
@@ -10990,7 +10991,7 @@ narrative_event = {
 				}
 				same_sex = FROM
 			}
-			FROM = { add_trait = homosexual }
+			FROM = { add_trait = homosexual } #To "enable" seduction
 		}
 	}
 
@@ -11913,21 +11914,6 @@ character_event = {
 	}
 }
 
-#Todo - test event
-#character_event = {
-#	id = RIP.30234
-#	picture = GFX_evt_court_physician
-#	border = GFX_event_normal_frame_intrigue
-#
-#	desc = chess_score_number
-#
-#	is_triggered_only = yes
-#
-#	option = {
-#		name = OK
-#	}
-#}
-
 ### Immortal rival events
 narrative_event = {
 	id = RIP.30300
@@ -12269,7 +12255,7 @@ character_event = {
 			save_event_target_as = immortal_rival
 		}
 		character_event = { id = RIP.30308 days = 1 } #clears flags in one spot, hidden event
-		hidden_tooltip = {
+		hidden_effect = {
 			if = {
 				limit = {
 					has_character_flag = immortal_rival_horse 
@@ -12300,7 +12286,12 @@ character_event = {
 						any_courtier = {
 							ai = yes
 							is_alive = yes
-							culture = horse							
+							culture = horse
+							NOT = {
+								event_target:immortal_rival = {
+									character = THIS 
+								}
+							}
 						}
 					}
 					random_courtier = {
@@ -12308,6 +12299,11 @@ character_event = {
 								ai = yes
 								is_alive = yes
 								culture = horse
+								NOT = {
+									event_target:immortal_rival = {
+										character = THIS 
+									}
+								}
 							}
 						save_event_target_as = immortal_horse_victim
 						death = { death_reason = death_execution_horses killer = event_target:immortal_rival }	
@@ -13306,7 +13302,7 @@ long_character_event = { # loss - death2
 	option = {
 		name = RIP.30306.a
 		death = { death_reason = death_duel killer = event_target:immortal_rival }
-		hidden_tooltip = {
+		hidden_effect = {
 			event_target:immortal_rival = { 
 				leave_court_and_die_effect = yes
 			}
@@ -13314,19 +13310,19 @@ long_character_event = { # loss - death2
 	}
 }
 
-character_event = { # loss - mercy
-	id = RIP.30307
-	desc = RIP.30307.d
-	border = GFX_event_normal_frame_war
-	picture = GFX_evt_suspicious_noble #TODO better pic
-
-	is_triggered_only = yes
-
-	option = {
-		name = RIP.30307.a
-		
-	}
-}
+#character_event = { # loss - mercy
+#	id = RIP.30307
+#	desc = RIP.30307.d
+#	border = GFX_event_normal_frame_war
+#	picture = GFX_evt_suspicious_noble
+#
+#	is_triggered_only = yes
+#
+#	option = {
+#		name = RIP.30307.a
+#		
+#	}
+#}
 
 character_event = { # flag clear
 	id = RIP.30308
@@ -13343,11 +13339,11 @@ character_event = { # flag clear
 	}
 }
 
-character_event = { # 
+character_event = {
 	id = RIP.30309
 	desc = placeholdername_19 #RIP.30309.d
 	border = GFX_event_normal_frame_diplomacy
-	picture = GFX_evt_suspicious_noble #TODO better pic
+	picture = GFX_evt_suspicious_noble
 
 	is_triggered_only = yes
 
@@ -13372,7 +13368,7 @@ character_event = { # trick
 	id = RIP.30310
 	desc = placeholdername_11# RIP.30310.d
 	border = GFX_event_normal_frame_intrigue 
-	picture = GFX_evt_suspicious_noble #TODO better pic
+	picture = GFX_evt_suspicious_noble
 
 	is_triggered_only = yes
 
@@ -13401,7 +13397,7 @@ character_event = { # the power of money
 	id = RIP.30311
 	desc = placeholdername_14# RIP.30311.d
 	border = GFX_event_normal_frame_economy
-	picture = GFX_evt_suspicious_noble #TODO better pic
+	picture = GFX_evt_suspicious_noble
 
 	is_triggered_only = yes
 
@@ -13443,6 +13439,9 @@ character_event = { # the power of money
 		}
 		name = placeholdername_13 #RIP.30310.c	#work
 		tooltip_info = stewardship
+		event_target:immortal_rival = {
+			death = { death_reason = death_missing killer = ROOT }
+		}
 		capital_scope = {
 			add_province_modifier = {
 				name = trapped_immortal
@@ -13456,7 +13455,7 @@ character_event = { # debate
 	id = RIP.30312
 	desc = placeholdername_23 #RIP.30312.d
 	border = GFX_event_normal_frame_religion
-	picture = GFX_evt_suspicious_noble #TODO better pic
+	picture = GFX_evt_suspicious_noble
 
 	is_triggered_only = yes
 
@@ -13475,7 +13474,7 @@ character_event = { # debate2
 	id = RIP.30313
 	desc = placeholdername_26 #RIP.30313.d
 	border = GFX_event_normal_frame_religion
-	picture = GFX_evt_suspicious_noble #TODO better pic
+	picture = GFX_evt_suspicious_noble
 
 	is_triggered_only = yes
 
@@ -13485,7 +13484,7 @@ character_event = { # debate2
 	}
 	
 	option = {
-		name = placeholdername_27 #RIP.30313.b #kill
+		name = placeholdername_28 #RIP.30313.b #kill
 		event_target:immortal_rival = {
 			death = { death_reason = death_accident killer = ROOT }
 		}
@@ -13496,7 +13495,7 @@ character_event = { # debate3
 	id = RIP.30314
 	desc = placeholdername_29 #RIP.30314.d
 	border = GFX_event_normal_frame_religion
-	picture = GFX_evt_suspicious_noble #TODO better pic
+	picture = GFX_evt_suspicious_noble
 
 	is_triggered_only = yes
 
@@ -13601,7 +13600,6 @@ character_event = { # clean up immortal crisis
 	}
 
 	option = {
-#		name = RIP.30316.a
 		clr_character_flag = immortal_crisis
 		clr_character_flag = immortal_crisis_confirmed
 	}
@@ -13649,7 +13647,7 @@ character_event = { # suspicions spread
 	}
 
 	option = {
-#		name = RIP.30302.a
+		name = RIP.30302.a	
 		random_list = {
 			90 = {
 				event_target:immortal_suspector = {
@@ -13731,7 +13729,7 @@ character_event = { # spare event
 	id = RIP.30400
 	desc = RIP.30302.d
 	border = GFX_event_normal_frame_war
-	picture = GFX_evt_suspicious_noble #TODO better pic
+	picture = GFX_evt_suspicious_noble
 
 	is_triggered_only = yes
 

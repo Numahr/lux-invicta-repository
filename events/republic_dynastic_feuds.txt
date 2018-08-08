@@ -19,9 +19,9 @@ character_event = {
 	is_patrician = yes
 	capable_only = yes
 	prisoner = no
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		liege = { is_merchant_republic = yes }
 		in_command = no
 		OR = {
@@ -35,7 +35,7 @@ character_event = {
 				NOT = { reverse_opinion = { who = ROOT value = 0 } }
 				NOT = { has_dynasty_flag = the_victims }
 				NOT = { has_character_flag = the_grand_ball }
-				is_inaccessible_trigger = no
+				NOT = { is_inaccessible_trigger = yes }
 			}
 			liege = {
 				any_vassal = {
@@ -48,7 +48,7 @@ character_event = {
 					NOT = { trait = incapable }
 					NOT = { has_dynasty_flag = the_victims }
 					NOT = { has_character_flag = the_grand_ball }
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 				}
 			}
 		}
@@ -64,12 +64,12 @@ character_event = {
 			limit = {
 				liege = { 
 					ai = no
-					NOR = {
+					NOT = {
 						reverse_opinion = { who = ROOT value = 0 }
 						has_dynasty_flag = the_victims
 						any_vassal = { ai = no }
 					}
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 				}
 			}
 			liege = { 
@@ -98,7 +98,7 @@ character_event = {
 						prisoner = no
 						NOT = { reverse_opinion = { who = ROOT value = 0 } }
 						NOT = { has_dynasty_flag = the_victims }
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 					narrative_event = { id = REP.101 }
 					set_character_flag = the_grand_ball
@@ -162,9 +162,9 @@ character_event = {
 	ai = yes
 	is_patrician = yes
 	has_character_flag = shamed_player_at_ball
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		liege = { is_merchant_republic = yes }
 		OR = {
 			liege = { 
@@ -173,7 +173,7 @@ character_event = {
 				is_patrician = yes
 				in_command = no
 				prisoner = no
-				NOR = { 
+				NOT = { 
 					trait = incapable
 					trait = infirm
 				}
@@ -185,7 +185,7 @@ character_event = {
 					is_patrician = yes
 					in_command = no
 					prisoner = no
-					NOR = { 
+					NOT = { 
 						trait = incapable
 						trait = infirm
 					}
@@ -287,9 +287,9 @@ character_event = {
 	
 	ai = yes
 	is_patrician = yes
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		has_dynasty_flag = the_feuders
 		liege = { is_merchant_republic = yes }
 		OR = {
@@ -424,9 +424,9 @@ character_event = {
 	
 	ai = yes
 	is_patrician = yes
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		has_dynasty_flag = the_feuders
 		liege = { is_merchant_republic = yes }
 		OR = {
@@ -441,11 +441,11 @@ character_event = {
 				job_spymaster = {
 					NOT = { character = ROOT }
 				}
-				NOR = { 
+				NOT = { 
 					trait = incapable
 					trait = infirm
 				}
-				is_inaccessible_trigger = no
+				NOT = { is_inaccessible_trigger = yes }
 			}
 			liege = {
 				any_vassal = {
@@ -456,11 +456,11 @@ character_event = {
 					age = 16
 					in_command = no
 					prisoner = no
-					NOR = { 
+					NOT = { 
 						trait = incapable
 						trait = infirm
 					}
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 				}
 			}
 		}
@@ -477,7 +477,7 @@ character_event = {
 					ai = no
 					has_dynasty_flag = the_victims
 					NOT = { has_dynasty_flag = flagship_feud }
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 				}
 			}
 			liege = { 
@@ -492,7 +492,7 @@ character_event = {
 						ai = no
 						has_dynasty_flag = the_victims
 						NOT = { has_dynasty_flag = flagship_feud }
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 				}
 			}
@@ -502,7 +502,7 @@ character_event = {
 						is_patrician = yes
 						ai = no
 						has_dynasty_flag = the_victims
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 					narrative_event = { id = REP.151 }
 				}
@@ -529,7 +529,24 @@ narrative_event = {
 		hidden_tooltip = {
 			random_list = {
 				70 = {
-					narrative_event = { id = REP.153 days = 46 }
+					if = {
+						limit = {
+							liege = { has_landed_title = k_venice }
+							liege = { religion = catholic }
+							religion = catholic
+						}
+						narrative_event = { id = REP.152 days = 46 }
+					}
+					if = {
+						limit = {
+							OR = {
+								liege = { NOT = { has_landed_title = k_venice }}
+								liege = { NOT = { religion = catholic }}
+								NOT = { religion = catholic }
+							}
+						}
+						narrative_event = { id = REP.153 days = 46 }
+					}
 				}
 				30 = {
 					narrative_event = { id = REP.155 days = 46 }
@@ -548,30 +565,30 @@ narrative_event = {
 }
 
 # Marriage of the Sea (Venice Only)
-#narrative_event = {
-#	id = REP.152
-#	title = EVTNAME_REP_152
-#	desc = EVTDESC_REP_152
-#	picture = GFX_evt_merchant_ship_at_sea_republic
-#	
-#	hide_from = yes
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = EVTOPTA_REP_152
-#		prestige = 50
-#		FROMFROM = { prestige = -100 }
-#		religion_head = {
-#			opinion = {
-#				modifier = opinion_furious
-#				who = FROMFROM
-#				years = 5
-#			}
-#		}
-#		set_dynasty_flag = feud_phase_two
-#	}
-#}
+narrative_event = {
+	id = REP.152
+	title = EVTNAME_REP_152
+	desc = EVTDESC_REP_152
+	picture = GFX_evt_merchant_ship_at_sea_republic
+	
+	hide_from = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTA_REP_152
+		prestige = 50
+		FROMFROM = { prestige = -100 }
+		religion_head = {
+			opinion = {
+				modifier = opinion_furious
+				who = FROMFROM
+				years = 5
+			}
+		}
+		set_dynasty_flag = feud_phase_two
+	}
+}
 
 # The Ship is Launched
 narrative_event = {
@@ -655,16 +672,16 @@ character_event = {
 			prisoner = no
 			in_command = no
 			NOT = { trait = incapable }
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 		}
-		NOR = { 
+		NOT = { 
 			age = 30 
 			trait = homosexual
 			trait = infirm
 			trait = incapable
 			trait = eunuch
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 		father = {
 			OR = {
 				liege = { 
@@ -678,19 +695,19 @@ character_event = {
 					NOT = { 
 						trait = incapable
 					}
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 					any_child = {
 						is_female = yes
 						is_married = no
 						age = 15
 						NOT = { age = 30 }
 						prisoner = no
-						NOR = { 
+						NOT = { 
 							trait = incapable
 							trait = infirm
 							trait = homosexual
 						}
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 				}
 				liege = {
@@ -703,19 +720,19 @@ character_event = {
 						prisoner = no
 						in_command = no
 						NOT = { trait = incapable }
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 						any_child = {
 							is_female = yes
 							is_married = no
 							age = 15
 							NOT = { age = 30 }
 							prisoner = no
-							NOR = { 
+							NOT = { 
 								trait = incapable
 								trait = infirm
 								trait = homosexual
 							}
-							is_inaccessible_trigger = no
+							NOT = { is_inaccessible_trigger = yes }
 						}
 					}
 				}
@@ -731,7 +748,7 @@ character_event = {
 						ai = no
 						has_dynasty_flag = the_victims
 						has_dynasty_flag = feud_phase_two
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 				}
 				liege = { 
@@ -746,7 +763,7 @@ character_event = {
 							ai = no
 							has_dynasty_flag = the_victims
 							has_dynasty_flag = feud_phase_two
-							is_inaccessible_trigger = no
+							NOT = { is_inaccessible_trigger = yes }
 						}
 					}
 				}
@@ -760,7 +777,7 @@ character_event = {
 							prisoner = no
 							in_command = no
 							NOT = { trait = incapable }
-							is_inaccessible_trigger = no
+							NOT = { is_inaccessible_trigger = yes }
 						}
 						narrative_event = { id = REP.161 }
 					}
@@ -806,7 +823,7 @@ narrative_event = {
 				age = 15
 				NOT = { age = 30 }
 				prisoner = no
-				NOR = { 
+				NOT = { 
 					trait = incapable
 					trait = infirm
 					trait = homosexual
@@ -835,7 +852,7 @@ narrative_event = {
 				age = 15
 				NOT = { age = 30 }
 				prisoner = no
-				NOR = { 
+				NOT = { 
 					trait = incapable
 					trait = infirm
 					trait = homosexual
@@ -869,14 +886,14 @@ character_event = {
 			prisoner = no
 			in_command = no
 			NOT = { trait = incapable }
-			is_inaccessible_trigger = no
+			NOT = { is_inaccessible_trigger = yes }
 		}
-		NOR = { 
+		NOT = { 
 			age = 30 
 			trait = homosexual
 			trait = incapable
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 		father = {
 			OR = {
 				liege = { 
@@ -887,18 +904,18 @@ character_event = {
 					prisoner = no
 					in_command = no
 					NOT = { trait = incapable }
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 					any_child = {
 						age = 15
 						is_female = no
-						NOR = { 
+						NOT = { 
 							age = 30 
 							trait = homosexual
 							trait = infirm
 							trait = incapable
 							trait = eunuch
 						}
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 						prisoner = no
 						is_married = no
 						in_command = no
@@ -914,18 +931,18 @@ character_event = {
 						prisoner = no
 						in_command = no
 						NOT = { trait = incapable }
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 						any_child = {
 							age = 15
 							is_female = no
-							NOR = { 
+							NOT = { 
 								age = 30 
 								trait = homosexual
 								trait = infirm
 								trait = incapable
 								trait = eunuch
 							}
-							is_inaccessible_trigger = no
+							NOT = { is_inaccessible_trigger = yes }
 							prisoner = no
 							is_married = no
 							in_command = no
@@ -1010,7 +1027,7 @@ narrative_event = {
 			limit = {
 				age = 15
 				is_female = no
-				NOR = { 
+				NOT = { 
 					age = 30 
 					trait = homosexual
 					trait = infirm
@@ -1041,7 +1058,7 @@ narrative_event = {
 			limit = {
 				age = 15
 				is_female = no
-				NOR = { 
+				NOT = { 
 					age = 30 
 					trait = homosexual
 					trait = infirm
@@ -1187,9 +1204,9 @@ character_event = {
 	hide_window = yes
 	
 	is_patrician = yes
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		has_dynasty_flag = feud_peace_2
 		OR = {
 			AND = {
@@ -1285,9 +1302,9 @@ character_event = {
 	is_patrician = yes
 	capable_only = yes
 	prisoner = no
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		has_dynasty_flag = the_feuders
 		liege = { is_merchant_republic = yes }
 		wealth = 200
@@ -1307,13 +1324,13 @@ character_event = {
 					NOT = { age = 35 }
 					in_command = no
 					prisoner = no
-					NOR = { 
+					NOT = { 
 						trait = incapable 
 						trait = infirm
 						trait = blinded
 						trait = craven
 					}
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 				}
 			}
 			liege = {
@@ -1329,13 +1346,13 @@ character_event = {
 						NOT = { age = 35 }
 						in_command = no
 						prisoner = no
-						NOR = { 
+						NOT = { 
 							trait = incapable 
 							trait = infirm
 							trait = blinded
 							trait = craven
 						}
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 				}
 			}
@@ -1363,12 +1380,12 @@ character_event = {
 						NOT = { age = 35 }
 						in_command = no
 						prisoner = no
-						NOR = { 
+						NOT = { 
 							trait = incapable 
 							trait = infirm
 							trait = blinded
 						}
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 					character_event = { id = REP.181 }
 				}
@@ -1399,12 +1416,12 @@ character_event = {
 							NOT = { age = 35 }
 							in_command = no
 							prisoner = no
-							NOR = { 
+							NOT = { 
 								trait = incapable 
 								trait = infirm
 								trait = blinded
 							}
-							is_inaccessible_trigger = no
+							NOT = { is_inaccessible_trigger = yes }
 						}
 						character_event = { id = REP.181 }
 					}
@@ -1572,15 +1589,15 @@ character_event = {
 	is_patrician = yes
 	capable_only = yes
 	prisoner = no
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		in_command = no
-		NOR = {
+		NOT = {
 			trait = infirm
 			trait = blinded
 		}
-		is_inaccessible_trigger = no
+		NOT = { is_inaccessible_trigger = yes }
 		has_dynasty_flag = the_feuders
 		liege = { is_merchant_republic = yes }
 		OR = {
@@ -1590,12 +1607,12 @@ character_event = {
 				in_command = no
 				prisoner = no
 				is_patrician = yes
-				NOR = { 
+				NOT = { 
 					trait = incapable 
 					trait = infirm
 					trait = blinded
 				}
-				is_inaccessible_trigger = no
+				NOT = { is_inaccessible_trigger = yes }
 				has_dynasty_flag = the_victims
 				has_dynasty_flag = feud_phase_two
 				NOT = { has_dynasty_flag = pirate_feud }
@@ -1607,12 +1624,12 @@ character_event = {
 					age = 16
 					in_command = no
 					prisoner = no
-					NOR = { 
+					NOT = { 
 						trait = incapable 
 						trait = infirm
 						trait = blinded
 					}
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 					has_dynasty_flag = the_victims
 					has_dynasty_flag = feud_phase_two
 					NOT = { has_dynasty_flag = pirate_feud }
@@ -1633,7 +1650,7 @@ character_event = {
 					has_dynasty_flag = the_victims
 					has_dynasty_flag = feud_phase_two
 					NOT = { has_dynasty_flag = pirate_feud }
-					is_inaccessible_trigger = no
+					NOT = { is_inaccessible_trigger = yes }
 				}
 			}
 			liege = { 
@@ -1649,7 +1666,7 @@ character_event = {
 						has_dynasty_flag = the_victims
 						has_dynasty_flag = feud_phase_two
 						NOT = { has_dynasty_flag = pirate_feud }
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 				}
 			}
@@ -1661,7 +1678,7 @@ character_event = {
 						has_dynasty_flag = the_victims
 						has_dynasty_flag = feud_phase_two
 						NOT = { has_dynasty_flag = pirate_feud }
-						is_inaccessible_trigger = no
+						NOT = { is_inaccessible_trigger = yes }
 					}
 					narrative_event = { id = REP.191 }
 				}
@@ -1804,9 +1821,9 @@ character_event = {
 	is_patrician = yes
 	prisoner = no
 	capable_only = yes
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		has_dynasty_flag = the_feuders
 		is_merchant_republic = yes
 		any_vassal = {
@@ -1863,9 +1880,9 @@ character_event = {
 	
 	ai = yes
 	is_patrician = yes
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		has_dynasty_flag = the_feuders
 		liege = { is_merchant_republic = yes }
 		liege = { 
@@ -1919,9 +1936,9 @@ character_event = {
 	
 	ai = yes
 	is_patrician = yes
-	has_dlc = "The Republic"
 	
 	trigger = {
+		has_dlc = "The Republic"
 		has_dynasty_flag = the_feuders
 		liege = { is_merchant_republic = yes }
 		OR = {

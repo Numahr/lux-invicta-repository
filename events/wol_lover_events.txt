@@ -44,36 +44,19 @@ character_event = {
 		
 		any_spouse = {
 			prisoner = no
-			is_inaccessible_trigger = no
-			NOR = {
-				trait = infirm
-				trait = incapable
-				trait = on_pilgrimage
-				trait = traveling
-				has_character_modifier = wol_court_tomcat
-				has_character_modifier = wol_court_vixen
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_cuckolded
-				}
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_cuckolded_private
-				}
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = slut_seductress
-				}
-			}
+			NOT = { trait = infirm }
+			NOT = { is_inaccessible_trigger = yes }
+			NOT = { trait = incapable }
+			NOT = { trait = on_pilgrimage }
 			any_lover = {
+				NOT = { character = ROOT }
+				NOT = { has_character_modifier = wol_court_tomcat }
+				NOT = { has_character_modifier = wol_court_vixen }
 				prisoner = no
-				NOR = {
-					character = ROOT
-					is_consort = PREV
-					has_character_modifier = wol_court_tomcat
-					has_character_modifier = wol_court_vixen
-				}
+				NOT = { is_consort = PREV }
 			}
+			NOT = { has_character_modifier = wol_court_tomcat }
+			NOT = { has_character_modifier = wol_court_vixen }
 		}
 	}
 	
@@ -162,13 +145,11 @@ character_event = {
 					}
 				}
 				any_lover = {
+					NOT = { character = ROOT }
+					NOT = { has_character_modifier = wol_court_tomcat }
+					NOT = { has_character_modifier = wol_court_vixen }
 					prisoner = no
-					NOR = {
-						character = ROOT
-						is_consort = PREV
-						has_character_modifier = wol_court_tomcat
-						has_character_modifier = wol_court_vixen
-					}
+					NOT = { is_consort = PREV }
 				}
 			}
 			character_event = { id = WoL.1001 }
@@ -186,13 +167,9 @@ character_event = {
 	immediate = {
 		random_lover = {
 			limit = {
-				prisoner = no
-				NOR = {
-					character = FROM
-					is_consort = ROOT
-					has_character_modifier = wol_court_tomcat
-					has_character_modifier = wol_court_vixen
-				}
+				NOT = { character = FROM }
+				NOT = { has_character_modifier = wol_court_tomcat }
+				NOT = { has_character_modifier = wol_court_vixen }
 			}
 			character_event = { id = WoL.1002 }
 		}
@@ -1200,7 +1177,8 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	option = { # Success!
+	option = {
+		name = OK # Success!
 		trigger = {
 			is_lover = FROMFROM
 		}
@@ -1287,7 +1265,8 @@ character_event = {
 		FROM = { character_event = { id = WoL.1028 } }
 	}
 	
-	option = { # Failure
+	option = {
+		name = OK # Failure
 		ai_chance = {
 			factor = 100
 			modifier = {
@@ -2138,12 +2117,16 @@ character_event = {
 					has_dlc = "Reapers"
 				}
 			}
-			add_trait = ill
-			break = yes
+		add_trait = ill
 		}
+		if = {
+			limit = {
+				has_dlc = "Reapers"
+			}
 		set_character_flag = disease_not_serious
 		add_trait = vomiting
 		character_event = { id = RIP.11005 days = 10 random = 30 }
+		}
 	}
 }
 
@@ -2625,7 +2608,8 @@ character_event = {
 	hide_window = yes
 	is_triggered_only = yes
 	
-	option = { # Accuser wins.
+	option = {
+		name = OK # Accuser wins.
 		ai_chance = {
 			factor = 100
 			modifier = {
@@ -2655,7 +2639,8 @@ character_event = {
 		character_event = { id = WoL.1036 } # Notify
 	}
 	
-	option = { # Defender wins
+	option = {
+		name = OK # Defender wins
 		ai_chance = {
 			factor = 100
 			modifier = {
@@ -3890,26 +3875,17 @@ character_event = {
 	min_age = 16
 	prisoner = no
 	capable_only = yes
-	has_dlc = "Way of Life"
 	
 	trigger = {
-		is_consort = no
-		is_inaccessible_trigger = no
+		has_dlc = "Way of Life"
 		any_lover = {
-			is_inaccessible_trigger = no
 			is_married = yes
 			has_polygamy = no
 			in_command = no
 			has_regent = no
 			is_ill = no
 			prisoner = no
-			NOR = {
-				trait = incapable
-				reverse_has_opinion_modifier = {
-					who = ROOT
-					modifier = opinion_seduced_yearning
-				}
-			}
+			NOT = { trait = incapable }
 			spouse = {
 				prisoner = no
 				NOR = {
@@ -3925,6 +3901,12 @@ character_event = {
 			reverse_opinion = {
 				who = ROOT
 				value = 25
+			}
+			NOT = {
+				reverse_has_opinion_modifier = {
+					who = ROOT
+					modifier = opinion_seduced_yearning
+				}
 			}
 		}
 		is_ill = no
@@ -3963,7 +3945,6 @@ character_event = {
 	immediate = {
 		random_lover = {
 			limit = {
-				is_inaccessible_trigger = no
 				is_married = yes
 				has_polygamy = no
 				in_command = no
@@ -4090,22 +4071,25 @@ character_event = {
 				limit = {
 					fertility = 0.33
 					FROM = { fertility = 0.33 }
-					is_opposite_sex = FROM
 					OR = {
 						AND = {
 							is_female = yes
 							NOT = { age = 45 }
 							is_pregnant = no
+							FROM = { is_female = no }
 						}
-						FROM = {
-							is_female = yes
-							NOT = { age = 45 }
-							is_pregnant = no
+						AND = {
+							is_female = no
+							FROM = {
+								is_female = yes
+								NOT = { age = 45 }
+								is_pregnant = no
+							}
 						}
 					}
 				}
 				random = {
-					chance = 50
+					chance = 25
 					if = {
 						limit = {
 							FROM = {
@@ -4188,22 +4172,25 @@ character_event = {
 				limit = {
 					fertility = 0.33
 					FROM = { fertility = 0.33 }
-					is_opposite_sex = FROM
 					OR = {
 						AND = {
 							is_female = yes
 							NOT = { age = 45 }
 							is_pregnant = no
+							FROM = { is_female = no }
 						}
-						FROM = {
-							is_female = yes
-							NOT = { age = 45 }
-							is_pregnant = no
+						AND = {
+							is_female = no
+							FROM = {
+								is_female = yes
+								NOT = { age = 45 }
+								is_pregnant = no
+							}
 						}
 					}
 				}
 				random = {
-					chance = 50
+					chance = 25
 					if = {
 						limit = {
 							FROM = {

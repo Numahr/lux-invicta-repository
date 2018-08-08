@@ -24,17 +24,17 @@ character_event = {
 	
 	is_triggered_only = yes
 	
-	has_dlc = "Way of Life"
+	trigger = {
+		has_dlc = "Way of Life"
+	}
 	
 	immediate = {
 		
 		# Chance of trait adjustments
 		if = {
 			limit = {
-				NOR = {
-					trait = proud
-					trait = humble
-				}
+				NOT = { trait = proud }
+				NOT = { trait = humble }
 				random = 85 # 15% chance
 			}
 			add_trait = proud
@@ -217,10 +217,8 @@ character_event = {
 	is_triggered_only = yes
 	
 	trigger = {
-		NOR = {
-			lifestyle_traits = 1
-			has_character_flag = wol_no_to_diplomacy_trait
-		}
+		NOT = { lifestyle_traits = 1 }
+		NOT = { has_character_flag = wol_no_to_diplomacy_trait }
 	}
 	
 	option = {
@@ -1056,6 +1054,7 @@ character_event = {
 		save_event_target_as = target_initiator
 		random_dynasty_member = {
 			limit = {
+				is_offmap_ruler = no
 				is_adult = yes
 				is_alive = yes
 				NOR = {
@@ -1069,9 +1068,9 @@ character_event = {
 					AND = {				
 						is_female = no
 						ROOT = {
-							NOR = {
-								has_law = enatic_succession
-								has_law = enatic_cognatic_succession
+							OR = {
+								has_law = agnatic_succession
+								has_law = cognatic_succession
 							}
 						}
 					}
@@ -1103,6 +1102,7 @@ character_event = {
 	immediate = {
 		random_dynasty_member = {
 			limit = {
+				is_offmap_ruler = no
 				is_adult = yes
 				is_alive = yes
 				NOR = {
@@ -1118,9 +1118,9 @@ character_event = {
 					AND = {				
 						is_female = no
 						ROOT = {
-							NOR = {
-								has_law = enatic_succession
-								has_law = enatic_cognatic_succession
+							OR = {
+								has_law = agnatic_succession
+								has_law = cognatic_succession
 							}
 						}
 					}
@@ -1473,9 +1473,9 @@ character_event = {
 					AND = {
 						is_female = no
 						ROOT = {
-							NOR = {
-								has_law = enatic_succession
-								has_law = enatic_cognatic_succession
+							OR = {
+								has_law = agnatic_succession
+								has_law = cognatic_succession
 							}
 						}
 					}
@@ -1502,27 +1502,19 @@ character_event = {
 						is_adult = no
 						is_alive = yes
 						age = 5
-						NOR = {
-							trait = incapable
-							trait = inbred
-							trait = imbecile
-							character = PREVPREV
-							is_friend = PREVPREV
-							personal_opinion = {
-								who = PREVPREV
-								value = 50
-							}
-						}
+						NOT = { trait = incapable }
+						NOT = { trait = inbred }
+						NOT = { trait = imbecile }
 						prisoner = no
-
+						NOT = { character = PREVPREV }
 						host = { character = ROOT }
 						OR = {
 							AND = {				
 								is_female = no
 								ROOT = {
-									NOR = {
-										has_law = enatic_succession
-										has_law = enatic_cognatic_succession
+									OR = {
+										has_law = agnatic_succession
+										has_law = cognatic_succession
 									}
 								}
 							}
@@ -1537,6 +1529,13 @@ character_event = {
 							}
 							ROOT = { has_law = true_cognatic_succession }
 							is_primary_heir = ROOT
+						}
+						NOT = { is_friend = PREVPREV }
+						NOT = {
+							personal_opinion = {
+								who = PREVPREV
+								value = 50
+							}
 						}
 					}
 					ROOT = { set_character_flag = found_first }
