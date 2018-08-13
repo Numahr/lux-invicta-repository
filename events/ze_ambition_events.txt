@@ -17,9 +17,9 @@ character_event = {
 	desc = EVTDESC_ZE_6001
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 
 	trigger = { 
+		has_dlc = "Zeus"
 		prisoner = no
 		is_adult = yes
 		NOR = { 
@@ -29,7 +29,7 @@ character_event = {
 	}
 
 	immediate = {
-		FROM = { save_event_target_as = aspiring_councillor }
+		FROMFROM = { save_event_target_as = aspiring_councillor }
 		ROOT = { save_event_target_as = target_liege }
 	}
 	
@@ -40,19 +40,21 @@ character_event = {
 			modifier = {
 				factor = 3
 				OR = {
-					opinion = { who = FROM value = 75 }
-					is_friend = FROM
+					opinion = { who = FROMFROM value = 75 }
+					is_friend = FROMFROM
 				}
 			}
 			modifier = {
 				factor = 0
-				is_rival = FROM
+				is_rival = FROMFROM
 			}
 		}
-		FROM = {
-			hidden_tooltip = { 
+		hidden_tooltip = {
+			FROMFROM = { 
 				set_character_flag = council_membership_requested
 			}
+		}
+		FROMFROM = { 
 			character_event = { id = ZE.6004 days = 1 tooltip = EVTTOOLTIPZE_6004 } 
 		}
 	}
@@ -64,20 +66,20 @@ character_event = {
 			modifier = {
 				factor = 0
 				OR = {
-					opinion = { who = FROM value = 75 }
-					is_friend = FROM
+					opinion = { who = FROMFROM value = 75 }
+					is_friend = FROMFROM
 				}
 			}
 			modifier = {
 				factor = 3
-				is_rival = FROM
+				is_rival = FROMFROM
 			}
 			modifier = {
 				factor = 0
 				diplomacy = 15
 			}
 		}
-		FROM = { 
+		FROMFROM = { 
 			set_character_flag = council_membership_denied
 			opinion = {
 				modifier = opinion_very_disappointed
@@ -98,16 +100,16 @@ character_event = {
 			modifier = {
 				factor = 0
 				OR = {
-					opinion = { who = FROM value = 75 }
-					is_friend = FROM
+					opinion = { who = FROMFROM value = 75 }
+					is_friend = FROMFROM
 				}
 			}
 			modifier = {
 				factor = 3
-				is_rival = FROM
+				is_rival = FROMFROM
 			}
 		}
-		FROM = { 
+		FROMFROM = { 
 			set_character_flag = council_membership_denied
 			opinion = {
 				modifier = opinion_flattered
@@ -128,19 +130,18 @@ character_event = {
 	desc = EVTDESC_ZE_6002
 
 	is_triggered_only = yes
-	only_capable = yes
-	has_dlc = "Conclave"
 
 	trigger = { 
+		has_dlc = "Zeus"
 		has_ambition = obj_become_council_member
 		has_character_flag = council_membership_requested
-		NOT = { 
-			has_character_flag = council_membership_denied
-
-		}
+		NOT = { has_character_flag = council_membership_denied }
 		prisoner = no
 		is_adult = yes
-		is_inaccessible_trigger = no
+		NOR = { 
+			trait = incapable
+			is_inaccessible_trigger = yes
+		}
 	}
 
 	immediate = {
@@ -274,9 +275,9 @@ character_event = {
 	}
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 
 	trigger = { 
+		has_dlc = "Zeus"
 		prisoner = no
 		is_adult = yes
 		NOR = { 
@@ -520,9 +521,9 @@ character_event = {
 	desc = EVTDESC_ZE_6004
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 
 	trigger = { 
+		has_dlc = "Zeus"
 		prisoner = no
 		is_adult = yes
 		NOR = { 
@@ -547,9 +548,9 @@ character_event = {
 	desc = EVTDESC_ZE_6005
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 
 	trigger = { 
+		has_dlc = "Zeus"
 		prisoner = no
 		is_adult = yes
 		NOR = { 
@@ -571,9 +572,9 @@ character_event = {
 	desc = EVTDESC_ZE_6006
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 
 	trigger = { 
+		has_dlc = "Zeus"
 		prisoner = no
 		is_adult = yes
 		NOR = { 
@@ -595,9 +596,9 @@ character_event = {
 	desc = EVTDESC_ZE_6007
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 
 	trigger = { 
+		has_dlc = "Zeus"
 		prisoner = no
 		is_adult = yes
 		NOR = { 
@@ -632,23 +633,29 @@ character_event = {
 	immediate = {
 		father = {
 			if = { 
-				limit = { has_ambition = obj_land_for_son } 
+				limit = { 
+					has_ambition = obj_land_for_son 
+					ROOT = { is_landed = yes } #Might be making him a landless mercenary.
+				} 
 				set_character_flag = land_for_son_successful
 				opinion = {
 					modifier = opinion_ambition_fulfilled
 					who = FROMFROM
-					months = 24
+					years = 5
 				}
 			}
 		}
 		mother = { 
 			if = { 
-				limit = { has_ambition = obj_land_for_son } 
+				limit = { 
+					has_ambition = obj_land_for_son 
+					ROOT = { is_landed = yes } #Might be making him a landless mercenary.
+				} 
 				set_character_flag = land_for_son_successful
 				opinion = {
 					modifier = opinion_ambition_fulfilled
 					who = FROMFROM
-					months = 24
+					years = 5
 				}
 			}
 		}
@@ -677,7 +684,7 @@ character_event = {
 			} 
 			save_event_target_as = requested_province 
 		}
-		FROM = {
+		FROMFROM = {
 			random_child = {
 				limit = {
 					is_female = no
@@ -687,11 +694,10 @@ character_event = {
 					prisoner = no
 					NOR = { 
 						trait = incapable
-						trait = monk
-						trait = eunuch
+						is_ascetic_trigger = yes
 					}
 					liege = {
-						character = ROOT_FROM
+						character = PREVPREV
 					}
 				}
 				save_event_target_as = chosen_son
@@ -708,7 +714,7 @@ character_event = {
 		event_target:chosen_son = {
 			grant_title = event_target:requested_province
 		}
-		FROM = {
+		FROMFROM = {
 			character_event = { id = ZE.6013 }
 		}
 	}
@@ -718,7 +724,7 @@ character_event = {
 		ai_chance = {
 			factor = 80
 		}
-		FROM = {
+		FROMFROM = {
 			character_event = { id = ZE.6014 }
 		}
 	}
@@ -726,7 +732,7 @@ character_event = {
 	option = {
 		trigger = {
 			NOT = {
-				FROM = {
+				FROMFROM = {
 					owes_favor_to = ROOT
 				}
 			}
@@ -738,9 +744,9 @@ character_event = {
 		event_target:chosen_son = {
 			grant_title = event_target:requested_province
 		}
-		add_favor = FROM
+		add_favor = FROMFROM
 		hidden_tooltip = {
-			FROM = {
+			FROMFROM = {
 				character_event = { id = ZE.6015 }
 			}
 		}
@@ -844,6 +850,9 @@ character_event = {
 	is_triggered_only = yes
 
 	immediate = { #first, we set a char modifier and check what job the councillor has now
+		
+		set_character_flag = swapping_councillors
+		
 		add_character_modifier = {
 			name = councillors_changed_jobs
 			duration = 365
@@ -1407,7 +1416,7 @@ character_event = {
 					limit = {
 						has_character_flag = is_chancellor
 					}
-					remove_title = job_marshal
+					remove_title = job_chancellor
 					clr_character_flag = is_chancellor
 				}
 				if = {
@@ -1665,6 +1674,7 @@ character_event = {
 			}
 		}
 		hidden_tooltip = {
+			set_character_flag = dont_clear_flag
 			character_event = { id = ZE.6022 }
 		}
 	}
@@ -1690,6 +1700,14 @@ character_event = {
 		clr_character_flag = option_6_emperor
 		remove_character_modifier = councillors_changed_jobs
 	}
+	
+	after = {
+		if = {
+			limit = { NOT = { has_character_flag = dont_clear_flag } }
+			clr_character_flag = swapping_councillors
+		}
+		clr_character_flag = dont_clear_flag
+	}
 }
 
 character_event = {
@@ -1699,6 +1717,10 @@ character_event = {
 	desc = EVTDESC_ZE_6021
 	
 	is_triggered_only = yes
+	
+	immediate = {
+		set_character_flag = swapping_councillors
+	}
 
 	option = { #is spymaster a possible swap
 		name = EVTOPTD_ZE_6021
@@ -2075,6 +2097,7 @@ character_event = {
 			}
 		}
 		hidden_tooltip = {
+			set_character_flag = dont_clear_flag
 			character_event = { id = ZE.6021 }
 		}
 	}
@@ -2098,5 +2121,13 @@ character_event = {
 		clr_character_flag = option_6_displayed
 		clr_character_flag = option_6_king
 		clr_character_flag = option_6_emperor
+	}
+	
+	after = {
+		if = {
+			limit = { NOT = { has_character_flag = dont_clear_flag } }
+			clr_character_flag = swapping_councillors
+		}
+		clr_character_flag = dont_clear_flag
 	}
 }

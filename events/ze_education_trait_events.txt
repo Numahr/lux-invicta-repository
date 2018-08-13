@@ -45,10 +45,10 @@ character_event = {
 		}
 	}
 	
-	has_dlc = "Conclave"
 	is_triggered_only = yes
 	
 	trigger = {
+		has_dlc = "Zeus"
 		has_focus = focus_ed_diplomacy
 	}
 	
@@ -79,13 +79,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 1.5
-					OR = {
-						has_character_flag = was_willful
-						trait = willful
-					}
-					OR = {
-						has_character_flag = was_fussy
-						trait = fussy
+					AND = {
+						OR = {
+							has_character_flag = was_willful
+							trait = willful
+						}
+						OR = {
+							has_character_flag = was_fussy
+							trait = fussy
+						}
 					}
 				}
 				modifier = {
@@ -104,13 +106,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_affectionate
-						trait = affectionate
-					}
-					OR = {
-						has_character_flag = was_curious
-						trait = curious
+					AND = {
+						OR = {
+							has_character_flag = was_affectionate
+							trait = affectionate
+						}
+						OR = {
+							has_character_flag = was_curious
+							trait = curious
+						}
 					}
 				}
 				modifier = {
@@ -167,13 +171,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.5
-					OR = {
-						has_character_flag = was_willful
-						trait = willful
-					}
-					OR = {
-						has_character_flag = was_fussy
-						trait = fussy
+					AND = {
+						OR = {
+							has_character_flag = was_willful
+							trait = willful
+						}
+						OR = {
+							has_character_flag = was_fussy
+							trait = fussy
+						}
 					}
 				}
 				modifier = {
@@ -192,13 +198,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_affectionate
-						trait = affectionate
-					}
-					OR = {
-						has_character_flag = was_curious
-						trait = curious
+					AND = {
+						OR = {
+							has_character_flag = was_affectionate
+							trait = affectionate
+						}
+						OR = {
+							has_character_flag = was_curious
+							trait = curious
+						}
 					}
 				}
 				modifier = {
@@ -244,13 +252,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_willful
-						trait = willful
-					}
-					OR = {
-						has_character_flag = was_fussy
-						trait = fussy
+					AND = {
+						OR = {
+							has_character_flag = was_willful
+							trait = willful
+						}
+						OR = {
+							has_character_flag = was_fussy
+							trait = fussy
+						}
 					}
 				}
 				modifier = {
@@ -269,13 +279,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_affectionate
-						trait = affectionate
-					}
-					OR = {
-						has_character_flag = was_curious
-						trait = curious
+					AND = {
+						OR = {
+							has_character_flag = was_affectionate
+							trait = affectionate
+						}
+						OR = {
+							has_character_flag = was_curious
+							trait = curious
+						}
 					}
 				}
 				modifier = {
@@ -317,8 +329,6 @@ character_event = {
 		}
 		add_trait = naive_appeaser
 		clr_character_flag = education_outcome_level_1
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14110 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTB_ZE_14100
@@ -327,8 +337,6 @@ character_event = {
 		}
 		add_trait = underhanded_rogue
 		clr_character_flag = education_outcome_level_2
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14110 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTC_ZE_14100
@@ -337,8 +345,6 @@ character_event = {
 		}
 		add_trait = charismatic_negotiator
 		clr_character_flag = education_outcome_level_3
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14110 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTD_ZE_14100
@@ -347,8 +353,44 @@ character_event = {
 		}
 		add_trait = grey_eminence
 		clr_character_flag = education_outcome_level_4
+	}
+	
+	after = {
 		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14110 } } } # Notify educator
+		hidden_tooltip = { 
+			# Notify educator
+			event_target:education_outcome_educator = { character_event = { id = ZE.14110 } } 
+			if = {
+				limit = { # Notify mother if primary heir
+					mother = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					} 
+				}
+				mother = {
+					character_event = { id = ZE.14110 }
+				}
+			}
+			if = {
+				limit = { # Notify father if primary heir
+					father = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				father = {
+					character_event = { id = ZE.14110 }
+				}
+			}
+		}
 	}
 }
 
@@ -452,9 +494,9 @@ character_event = {
 	}
 	
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		has_focus = focus_ed_martial
 	}
 	
@@ -485,13 +527,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 1.5
-					OR = {
-						has_character_flag = was_timid
-						trait = timid
-					}
-					OR = {
-						has_character_flag = was_idolizer
-						trait = idolizer
+					AND = {
+						OR = {
+							has_character_flag = was_timid
+							trait = timid
+						}
+						OR = {
+							has_character_flag = was_idolizer
+							trait = idolizer
+						}
 					}
 				}
 				modifier = {
@@ -510,13 +554,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_rowdy
-						trait = rowdy
-					}
-					OR = {
-						has_character_flag = was_willful
-						trait = willful
+					AND = {
+						OR = {
+							has_character_flag = was_rowdy
+							trait = rowdy
+						}
+						OR = {
+							has_character_flag = was_willful
+							trait = willful
+						}
 					}
 				}
 				modifier = {
@@ -573,13 +619,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.5
-					OR = {
-						has_character_flag = was_timid
-						trait = timid
-					}
-					OR = {
-						has_character_flag = was_idolizer
-						trait = idolizer
+					AND = {
+						OR = {
+							has_character_flag = was_timid
+							trait = timid
+						}
+						OR = {
+							has_character_flag = was_idolizer
+							trait = idolizer
+						}
 					}
 				}
 				modifier = {
@@ -598,13 +646,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_rowdy
-						trait = rowdy
-					}
-					OR = {
-						has_character_flag = was_willful
-						trait = willful
+					AND = {
+						OR = {
+							has_character_flag = was_rowdy
+							trait = rowdy
+						}
+						OR = {
+							has_character_flag = was_willful
+							trait = willful
+						}
 					}
 				}
 				modifier = {
@@ -650,13 +700,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_timid
-						trait = timid
-					}
-					OR = {
-						has_character_flag = was_idolizer
-						trait = idolizer
+					AND = {
+						OR = {
+							has_character_flag = was_timid
+							trait = timid
+						}
+						OR = {
+							has_character_flag = was_idolizer
+							trait = idolizer
+						}
 					}
 				}
 				modifier = {
@@ -675,13 +727,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_rowdy
-						trait = rowdy
-					}
-					OR = {
-						has_character_flag = was_willful
-						trait = willful
+					AND = {
+						OR = {
+							has_character_flag = was_rowdy
+							trait = rowdy
+						}
+						OR = {
+							has_character_flag = was_willful
+							trait = willful
+						}
 					}
 				}
 				modifier = {
@@ -723,8 +777,6 @@ character_event = {
 		}
 		add_trait = misguided_warrior
 		clr_character_flag = education_outcome_level_1
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14210 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTB_ZE_14200
@@ -733,8 +785,6 @@ character_event = {
 		}
 		add_trait = tough_soldier
 		clr_character_flag = education_outcome_level_2
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14210 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTC_ZE_14200
@@ -743,8 +793,6 @@ character_event = {
 		}
 		add_trait = skilled_tactician
 		clr_character_flag = education_outcome_level_3
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14210 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTD_ZE_14200
@@ -765,11 +813,87 @@ character_event = {
 				10 = { add_trait = flanker }
 				10 = { add_trait = aggressive_leader }
 				10 = { add_trait = siege_leader }
+				30 = {
+					trigger = {
+						OR = {
+							culture = han
+							has_character_flag = taught_chinese_strategy
+							has_character_flag = originated_from_chinese_court
+						}
+					}
+					add_trait = master_of_flame
+				}
+				30 = {
+					trigger = {
+						OR = {
+							culture = han
+							has_character_flag = taught_chinese_strategy
+							has_character_flag = originated_from_chinese_court
+						}
+					}
+					add_trait = logistics_expert
+				}
+				30 = {
+					trigger = {
+						OR = {
+							culture = han
+							has_character_flag = taught_chinese_strategy
+							has_character_flag = originated_from_chinese_court
+						}
+					}
+					add_trait = levy_coordinator
+				}
+				30 = {
+					trigger = {
+						OR = {
+							culture = han
+							has_character_flag = taught_chinese_strategy
+							has_character_flag = originated_from_chinese_court
+						}
+					}
+					add_trait = sapper
+				}
 			}
 		}
 		clr_character_flag = education_outcome_level_4
+	}
+	
+	after = {
 		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14210 } } } # Notify educator
+		hidden_tooltip = { 
+			# Notify educator
+			event_target:education_outcome_educator = { character_event = { id = ZE.14210 } } 
+			if = {
+				limit = { # Notify mother if primary heir
+					mother = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				mother = {
+					character_event = { id = ZE.14210 }
+				}
+			}
+			if = {
+				limit = { # Notify father if primary heir
+					father = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				father = {
+					character_event = { id = ZE.14210 }
+				}
+			}
+		}
 	}
 }
 
@@ -873,9 +997,9 @@ character_event = {
 	}
 	
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		has_focus = focus_ed_stewardship
 	}
 	
@@ -906,13 +1030,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 1.5
-					OR = {
-						has_character_flag = was_indolent
-						trait = indolent
-					}
-					OR = {
-						has_character_flag = was_haughty
-						trait = haughty
+					AND = {
+						OR = {
+							has_character_flag = was_indolent
+							trait = indolent
+						}
+						OR = {
+							has_character_flag = was_haughty
+							trait = haughty
+						}
 					}
 				}
 				modifier = {
@@ -931,13 +1057,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_brooding
-						trait = brooding
-					}
-					OR = {
-						has_character_flag = was_conscientious
-						trait = conscientious
+					AND = {
+						OR = {
+							has_character_flag = was_brooding
+							trait = brooding
+						}
+						OR = {
+							has_character_flag = was_conscientious
+							trait = conscientious
+						}
 					}
 				}
 				modifier = {
@@ -994,13 +1122,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.5
-					OR = {
-						has_character_flag = was_indolent
-						trait = indolent
-					}
-					OR = {
-						has_character_flag = was_haughty
-						trait = haughty
+					AND = {
+						OR = {
+							has_character_flag = was_indolent
+							trait = indolent
+						}
+						OR = {
+							has_character_flag = was_haughty
+							trait = haughty
+						}
 					}
 				}
 				modifier = {
@@ -1019,13 +1149,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_brooding
-						trait = brooding
-					}
-					OR = {
-						has_character_flag = was_conscientious
-						trait = conscientious
+					AND = {
+						OR = {
+							has_character_flag = was_brooding
+							trait = brooding
+						}
+						OR = {
+							has_character_flag = was_conscientious
+							trait = conscientious
+						}
 					}
 				}
 				modifier = {
@@ -1071,13 +1203,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_indolent
-						trait = indolent
-					}
-					OR = {
-						has_character_flag = was_haughty
-						trait = haughty
+					AND = {
+						OR = {
+							has_character_flag = was_indolent
+							trait = indolent
+						}
+						OR = {
+							has_character_flag = was_haughty
+							trait = haughty
+						}
 					}
 				}
 				modifier = {
@@ -1096,13 +1230,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_brooding
-						trait = brooding
-					}
-					OR = {
-						has_character_flag = was_conscientious
-						trait = conscientious
+					AND = {
+						OR = {
+							has_character_flag = was_brooding
+							trait = brooding
+						}
+						OR = {
+							has_character_flag = was_conscientious
+							trait = conscientious
+						}
 					}
 				}
 				modifier = {
@@ -1144,8 +1280,6 @@ character_event = {
 		}
 		add_trait = indulgent_wastrel
 		clr_character_flag = education_outcome_level_1
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14310 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTB_ZE_14300
@@ -1154,8 +1288,6 @@ character_event = {
 		}
 		add_trait = thrifty_clerk
 		clr_character_flag = education_outcome_level_2
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14310 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTC_ZE_14300
@@ -1164,8 +1296,6 @@ character_event = {
 		}
 		add_trait = fortune_builder
 		clr_character_flag = education_outcome_level_3
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14310 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTD_ZE_14300
@@ -1174,8 +1304,44 @@ character_event = {
 		}
 		add_trait = midas_touched
 		clr_character_flag = education_outcome_level_4
+	}
+	
+	after = {
 		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14310 } } } # Notify educator
+		hidden_tooltip = { 
+			# Notify educator
+			event_target:education_outcome_educator = { character_event = { id = ZE.14310 } } 
+			if = {
+				limit = { # Notify mother if primary heir
+					mother = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				mother = {
+					character_event = { id = ZE.14310 }
+				}
+			}
+			if = {
+				limit = { # Notify father if primary heir
+					father = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				father = {
+					character_event = { id = ZE.14310 }
+				}
+			}
+		}
 	}
 }
 
@@ -1277,9 +1443,9 @@ character_event = {
 	}
 	
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		has_focus = focus_ed_intrigue
 	}
 	
@@ -1310,13 +1476,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 1.5
-					OR = {
-						has_character_flag = was_rowdy
-						trait = rowdy
-					}
-					OR = {
-						has_character_flag = was_affectionate
-						trait = affectionate
+					AND = {
+						OR = {
+							has_character_flag = was_rowdy
+							trait = rowdy
+						}
+						OR = {
+							has_character_flag = was_affectionate
+							trait = affectionate
+						}
 					}
 				}
 				modifier = {
@@ -1335,13 +1503,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_playful
-						trait = playful
-					}
-					OR = {
-						has_character_flag = was_fussy
-						trait = fussy
+					AND = {
+						OR = {
+							has_character_flag = was_playful
+							trait = playful
+						}
+						OR = {
+							has_character_flag = was_fussy
+							trait = fussy
+						}
 					}
 				}
 				modifier = {
@@ -1398,13 +1568,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.5
-					OR = {
-						has_character_flag = was_rowdy
-						trait = rowdy
-					}
-					OR = {
-						has_character_flag = was_affectionate
-						trait = affectionate
+					AND = {
+						OR = {
+							has_character_flag = was_rowdy
+							trait = rowdy
+						}
+						OR = {
+							has_character_flag = was_affectionate
+							trait = affectionate
+						}
 					}
 				}
 				modifier = {
@@ -1423,13 +1595,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_playful
-						trait = playful
-					}
-					OR = {
-						has_character_flag = was_fussy
-						trait = fussy
+					AND = {
+						OR = {
+							has_character_flag = was_playful
+							trait = playful
+						}
+						OR = {
+							has_character_flag = was_fussy
+							trait = fussy
+						}
 					}
 				}
 				modifier = {
@@ -1475,13 +1649,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_rowdy
-						trait = rowdy
-					}
-					OR = {
-						has_character_flag = was_affectionate
-						trait = affectionate
+					AND = {
+						OR = {
+							has_character_flag = was_rowdy
+							trait = rowdy
+						}
+						OR = {
+							has_character_flag = was_affectionate
+							trait = affectionate
+						}
 					}
 				}
 				modifier = {
@@ -1500,13 +1676,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_playful
-						trait = playful
-					}
-					OR = {
-						has_character_flag = was_fussy
-						trait = fussy
+					AND = {
+						OR = {
+							has_character_flag = was_playful
+							trait = playful
+						}
+						OR = {
+							has_character_flag = was_fussy
+							trait = fussy
+						}
 					}
 				}
 				modifier = {
@@ -1548,8 +1726,6 @@ character_event = {
 		}
 		add_trait = amateurish_plotter
 		clr_character_flag = education_outcome_level_1
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14410 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTB_ZE_14400
@@ -1558,8 +1734,6 @@ character_event = {
 		}
 		add_trait = flamboyant_schemer
 		clr_character_flag = education_outcome_level_2
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14410 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTC_ZE_14400
@@ -1568,8 +1742,6 @@ character_event = {
 		}
 		add_trait = intricate_webweaver
 		clr_character_flag = education_outcome_level_3
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14410 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTD_ZE_14400
@@ -1578,8 +1750,44 @@ character_event = {
 		}
 		add_trait = elusive_shadow
 		clr_character_flag = education_outcome_level_4
+	}
+	
+	after = {
 		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14410 } } } # Notify educator
+		hidden_tooltip = { 
+			# Notify educator
+			event_target:education_outcome_educator = { character_event = { id = ZE.14410 } } 
+			if = {
+				limit = { # Notify mother if primary heir
+					mother = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				mother = {
+					character_event = { id = ZE.14410 }
+				}
+			}
+			if = {
+				limit = { # Notify father if primary heir
+					father = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					} 
+				}
+				father = {
+					character_event = { id = ZE.14410 }
+				}
+			}
+		}
 	}
 }
 
@@ -1681,9 +1889,9 @@ character_event = {
 	}
 	
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		has_focus = focus_ed_learning
 	}
 	
@@ -1714,13 +1922,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 1.5
-					OR = {
-						has_character_flag = was_brooding
-						trait = brooding
-					}
-					OR = {
-						has_character_flag = was_playful
-						trait = playful
+					AND = {
+						OR = {
+							has_character_flag = was_brooding
+							trait = brooding
+						}
+						OR = {
+							has_character_flag = was_playful
+							trait = playful
+						}
 					}
 				}
 				modifier = {
@@ -1739,13 +1949,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_idolizer
-						trait = idolizer
-					}
-					OR = {
-						has_character_flag = was_timid
-						trait = timid
+					AND = {
+						OR = {
+							has_character_flag = was_idolizer
+							trait = idolizer
+						}
+						OR = {
+							has_character_flag = was_timid
+							trait = timid
+						}
 					}
 				}
 				modifier = {
@@ -1802,13 +2014,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.5
-					OR = {
-						has_character_flag = was_brooding
-						trait = brooding
-					}
-					OR = {
-						has_character_flag = was_playful
-						trait = playful
+					AND = {
+						OR = {
+							has_character_flag = was_brooding
+							trait = brooding
+						}
+						OR = {
+							has_character_flag = was_playful
+							trait = playful
+						}
 					}
 				}
 				modifier = {
@@ -1827,13 +2041,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_idolizer
-						trait = idolizer
-					}
-					OR = {
-						has_character_flag = was_timid
-						trait = timid
+					AND = {
+						OR = {
+							has_character_flag = was_idolizer
+							trait = idolizer
+						}
+						OR = {
+							has_character_flag = was_timid
+							trait = timid
+						}
 					}
 				}
 				modifier = {
@@ -1879,13 +2095,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 0.2
-					OR = {
-						has_character_flag = was_brooding
-						trait = brooding
-					}
-					OR = {
-						has_character_flag = was_playful
-						trait = playful
+					AND = {
+						OR = {
+							has_character_flag = was_brooding
+							trait = brooding
+						}
+						OR = {
+							has_character_flag = was_playful
+							trait = playful
+						}
 					}
 				}
 				modifier = {
@@ -1904,13 +2122,15 @@ character_event = {
 				}
 				modifier = {
 					factor = 2
-					OR = {
-						has_character_flag = was_idolizer
-						trait = idolizer
-					}
-					OR = {
-						has_character_flag = was_timid
-						trait = timid
+					AND = {
+						OR = {
+							has_character_flag = was_idolizer
+							trait = idolizer
+						}
+						OR = {
+							has_character_flag = was_timid
+							trait = timid
+						}
 					}
 				}
 				modifier = {
@@ -1952,8 +2172,6 @@ character_event = {
 		}
 		add_trait = detached_priest
 		clr_character_flag = education_outcome_level_1
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14510 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTB_ZE_14500
@@ -1962,8 +2180,6 @@ character_event = {
 		}
 		add_trait = martial_cleric
 		clr_character_flag = education_outcome_level_2
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14510 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTC_ZE_14500
@@ -1972,8 +2188,6 @@ character_event = {
 		}
 		add_trait = scholarly_theologian
 		clr_character_flag = education_outcome_level_3
-		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14510 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTD_ZE_14500
@@ -1982,8 +2196,44 @@ character_event = {
 		}
 		add_trait = mastermind_theologian
 		clr_character_flag = education_outcome_level_4
+	}
+	
+	after = {
 		clr_character_flag = is_being_graded
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14510 } } } # Notify educator
+		hidden_tooltip = { 
+			# Notify educator
+			event_target:education_outcome_educator = { character_event = { id = ZE.14510 } } 
+			if = {
+				limit = { # Notify mother if primary heir
+					mother = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				mother = {
+					character_event = { id = ZE.14510 }
+				}
+			}
+			if = {
+				limit = { # Notify father if primary heir
+					father = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				father = {
+					character_event = { id = ZE.14510 }
+				}
+			}
+		}
 	}
 }
 
@@ -2090,9 +2340,9 @@ character_event = {
 			has_character_flag = education_learning
 		}
 	}
-	has_dlc = "Conclave"
 	
 	trigger = { # Make sure we have no education focus and no education outcome already set
+		has_dlc = "Zeus"
 		NOR = {
 			has_character_flag = is_being_graded
 			has_focus = focus_ed_diplomacy
@@ -2164,7 +2414,6 @@ character_event = {
 		}
 		add_trait = naive_appeaser
 		clr_character_flag = education_diplomacy
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14710 } } } # Notify educator
 	}
 
 	option = {
@@ -2174,7 +2423,6 @@ character_event = {
 		}
 		add_trait = misguided_warrior
 		clr_character_flag = education_martial
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14710 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTA_ZE_14700
@@ -2183,7 +2431,6 @@ character_event = {
 		}
 		add_trait = indulgent_wastrel
 		clr_character_flag = education_stewardship
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14710 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTA_ZE_14700
@@ -2192,7 +2439,6 @@ character_event = {
 		}
 		add_trait = amateurish_plotter
 		clr_character_flag = education_intrigue
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14710 } } } # Notify educator
 	}
 	option = {
 		name = EVTOPTA_ZE_14700
@@ -2201,7 +2447,43 @@ character_event = {
 		}
 		add_trait = detached_priest
 		clr_character_flag = education_learning
-		hidden_tooltip = { event_target:education_outcome_educator = { character_event = { id = ZE.14710 } } } # Notify educator
+	}
+
+	after = {
+		hidden_tooltip = { 
+			# Notify educator
+			event_target:education_outcome_educator = { character_event = { id = ZE.14710 } } 
+			if = {
+				limit = { # Notify mother if primary heir
+					mother = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					}
+				}
+				mother = {
+					character_event = { id = ZE.14710 }
+				}
+			}
+			if = {
+				limit = { # Notify father if primary heir
+					father = {
+						event_target:education_outcome_educator = {
+							NOT = { character = PREV }
+						}
+						ROOT = {
+							is_primary_heir = PREV
+						}
+					} 
+				}
+				father = {
+					character_event = { id = ZE.14710 }
+				}
+			}
+		}
 	}
 }
 

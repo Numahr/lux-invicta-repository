@@ -16,10 +16,10 @@ character_event = {
 
 	is_triggered_only = yes
 	only_playable = yes
-	has_dlc = "Conclave"
-	has_dlc = "Sons of Abraham"
 
 	trigger = { 
+		has_dlc = "Sons of Abraham"
+		has_dlc = "Zeus"
 		job_treasurer = {
 			trait = proud
 			NOR = { 
@@ -86,13 +86,26 @@ character_event = {
 		}
 	
 		name = EVTOPTA_ZE_3001
-		event_target:target_treasurer = {
-			if = { limit = { has_job_title = job_treasurer} remove_title = job_treasurer }
+
+		if = {
+			limit = {
+				NOT = { trait = just }
+				NOT = { trait = arbitrary }
+			}
+			add_trait = just
+		}
+		if = {
+			limit = { trait = arbitrary }
+			remove_trait = arbitrary
 		}
 		opinion = {
 			modifier = opinion_very_disappointed
-			who = ROOT
+			who = event_target:target_treasurer
 			years = 5
+		}
+		event_target:target_treasurer = {
+			show_scope_change = no
+			if = { limit = { has_job_title = job_treasurer} remove_title = job_treasurer }
 		}
 	}
 
@@ -107,6 +120,7 @@ character_event = {
 		if = { limit = { NOT = { trait = cruel } } add_trait = cruel }
 		#steward
 		event_target:target_treasurer = {
+			show_scope_change = no
 			add_rival = ROOT
 			if = { limit = { has_job_title = job_treasurer} remove_title = job_treasurer }
 			if = { limit = { is_maimed_trigger = yes } death = { death_reason = death_execution killer = ROOT } break = yes }
@@ -118,16 +132,15 @@ character_event = {
 	#Do nothing
 	option = {
 		name = EVTOPTC_ZE_3001
+		if = { limit = { trait = wroth } remove_trait = wroth }
+		if = { limit = { NOT = { trait = patient }} add_trait = patient }
 		event_target:target_treasurer = {
+			show_scope_change = no
 			opinion = {
 				modifier = opinion_grateful
 				who = ROOT
 				years = 5
 			}
-		}
-		ROOT = {
-			if = { limit = { trait = wroth } remove_trait = wroth }
-			if = { limit = { NOT = { trait = patient }} add_trait = patient }
 		}
 	}
 }
@@ -141,9 +154,9 @@ character_event = {
 
 	is_triggered_only = yes
 	only_playable = yes
-	has_dlc = "Conclave"
 
 	trigger = {
+		has_dlc = "Zeus"
 		ROOT = {
 			is_adult = yes
 			NOR = { 
@@ -190,16 +203,21 @@ character_event = {
 	only_playable = yes
 
 	trigger = {
-		any_demesne_title = {
+		any_demesne_title = { 
 			tier = COUNT
 			can_be_given_away = yes
+			NOT = {
+				location = {
+					is_capital = yes
+				}
+			}
 			num_of_settlements = 1
 		}
 	}
 
 	immediate = { 
 		random_demesne_title = {
-			limit = {
+			limit = { 
 				tier = COUNT
 				can_be_given_away = yes
 				NOT = {
@@ -209,7 +227,7 @@ character_event = {
 				}
 				num_of_settlements = 1
 			}
-			save_event_target_as = requested_province
+			save_event_target_as = requested_province 
 		}
 	}
 
@@ -256,9 +274,9 @@ character_event = {
 
 	is_triggered_only = yes
 	only_playable = yes
-	has_dlc = "Conclave"
 
 	trigger = {
+		has_dlc = "Zeus"
 		scaled_wealth = 2
 		is_adult = yes
 		NOR = { 
@@ -512,9 +530,9 @@ character_event = {
 
 	is_triggered_only = yes
 	only_playable = yes
-	has_dlc = "Conclave"
 
 	trigger = {
+		has_dlc = "Zeus"
 		job_treasurer = { 
 			NOR = { trait = incapable is_inaccessible_trigger = yes }
 			prisoner = no
@@ -667,14 +685,45 @@ character_event = {
 			NOT = { has_character_flag = ZE.3011_failed_flag }
 		}
 		name = EVTOPTA_ZE_3014
-		if = { limit = { trait = detached_priest } remove_trait = detached_priest add_trait = thrifty_clerk break = yes}
-		if = { limit = { trait = misguided_warrior } remove_trait = misguided_warrior add_trait = thrifty_clerk break = yes}
-		if = { limit = { trait = indulgent_wastrel } remove_trait = indulgent_wastrel add_trait = thrifty_clerk break = yes}
-		if = { limit = { trait = naive_appeaser } remove_trait = naive_appeaser add_trait = thrifty_clerk break = yes}
-		if = { limit = { trait = amateurish_plotter } remove_trait = amateurish_plotter add_trait = thrifty_clerk break = yes}
-		if = { limit = { trait = arbitrary } remove_trait = arbitrary}
-		if = { limit = { NOT = { trait = just } } add_trait = just change_stewardship = 1 break = yes}
-		change_stewardship = 3
+		if = {
+			limit = { has_bottom_tier_education_trait_trigger = yes }
+			trigger_switch = {
+				on_trigger = trait
+				detached_priest = {
+					remove_trait = detached_priest
+					add_trait = thrifty_clerk
+				}
+				misguided_warrior = {
+					remove_trait = misguided_warrior
+					add_trait = thrifty_clerk
+				}
+				indulgent_wastrel = {
+					remove_trait = indulgent_wastrel
+					add_trait = thrifty_clerk
+				}
+				naive_appeaser = {
+					remove_trait = naive_appeaser
+					add_trait = thrifty_clerk
+				}
+				amateurish_plotter = {
+					remove_trait = amateurish_plotter
+					add_trait = thrifty_clerk
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = { trait = arbitrary }
+				remove_trait = arbitrary
+			}
+			if = {
+				limit = { NOT = { trait = just } }
+				add_trait = just
+				change_stewardship = 1
+				break = yes
+			}
+			change_stewardship = 3
+		}
 	}
 
 	#wasnt for me

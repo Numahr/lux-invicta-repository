@@ -28,9 +28,9 @@ character_event = {
 	prisoner = no
 	
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		is_voter = yes
 		NOT = { is_inaccessible_trigger = yes }
 		liege = {
@@ -198,7 +198,7 @@ long_character_event = {
 	min_age = 16
 	capable_only = yes
 	prisoner = no
-	has_dlc = "Conclave"
+	has_dlc = "Zeus"
 	war = no
 	
 	is_triggered_only = yes
@@ -511,9 +511,9 @@ character_event = {
 	hide_window = yes
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		mercenary = yes
 		primary_title = {
 			has_title_flag = ze_dyn_merc
@@ -602,13 +602,13 @@ letter_event = {
 	option = { # Accept the invitation
 		name = EVTOPTA_ZE_23154
 		FROM = {
-			letter_event = { id = ZE.23155 days = 5 }
+			character_event = { id = ZE.23155 days = 5 }
 		}
 	}
 	option = { # Decline the invitation
 		name = EVTOPTB_ZE_23154
 		FROM = {
-			letter_event = { id = ZE.23156 days = 5 }
+			character_event = { id = ZE.23156 days = 5 }
 		}
 	}
 }
@@ -712,7 +712,7 @@ character_event = {
 	prisoner = no
 	ai = no
 	war = no
-	has_dlc = "Conclave"
+	has_dlc = "Zeus"
 	
 	only_playable = yes
 
@@ -764,9 +764,9 @@ character_event = {
 	only_playable = yes
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		
 		is_voter = yes
 		NOR = { 
@@ -914,9 +914,9 @@ character_event = {
 	only_playable = yes
 
 	is_triggered_only = yes
-	has_dlc = "Conclave"
 	
 	trigger = {
+		has_dlc = "Zeus"
 		is_voter = yes
 		NOR = { 
 			piety = 200
@@ -1078,11 +1078,10 @@ character_event = {
 	option = {
 		name = EVTOPTA_ZE_22510
 		
+		piety = 100
+		
 		tooltip = {
-			FROM = {
-				piety = 100
-				add_favor = ROOT 
-			}
+			add_favor = FROM
 		}	
 	}
 }
@@ -1119,7 +1118,7 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	war = no
-	has_dlc = "Conclave"
+	has_dlc = "Zeus"
 	
 	only_playable = yes
 
@@ -1664,7 +1663,7 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	war = no
-	has_dlc = "Conclave"
+	has_dlc = "Zeus"
 	
 	only_playable = yes
 
@@ -1691,8 +1690,7 @@ character_event = {
 				is_inaccessible_trigger = yes
 				trait = eunuch
 				trait = celibate
-				trait = monk
-				trait = nun
+				is_ascetic_trigger = yes
 				owes_favor_to = ROOT
 				trait = incapable
 				any_heir_title = {
@@ -1707,7 +1705,8 @@ character_event = {
 					is_female = yes
 					ROOT = {
 						OR = {
-							feminist_religions_trigger = yes
+							religion = cathar
+							religion = messalian
 							primary_title = { has_law = status_of_women_4 }
 							has_game_rule = {
 								name = gender
@@ -1730,8 +1729,7 @@ character_event = {
 					is_inaccessible_trigger = yes
 					trait = eunuch
 					trait = celibate
-					trait = monk
-					trait = nun
+					is_ascetic_trigger = yes
 					owes_favor_to = ROOT
 					trait = incapable
 					any_heir_title = {
@@ -1833,6 +1831,33 @@ character_event = {
 				months = 1200
 			}
 			reverse_add_favor = ROOT
+			hidden_tooltip = {
+				if = {
+                    limit = {
+                        religion_group = muslim
+                    }
+                    set_government_type = muslim_government
+                }
+                else = {
+                    if = {
+                        limit = {
+                            oriental_monarchy_government_trigger = yes
+                        }
+                        set_government_type = oriental_monarchy_government
+                    }
+                    else = {
+                        if = {
+                            limit = {
+                                classical_government = yes
+                            }
+                            set_government_type = oriental_monarchy_government
+                        }
+                        else = {
+                            set_government_type = feudal_government
+                        }
+                    }
+                }
+			}
 			grant_title = event_target:target_friend_land
 		}
 		custom_tooltip = {
@@ -1849,7 +1874,7 @@ character_event = {
 				}
 			}
 		}
-		if = {
+		If = {
 			limit = {
 				NOT = {
 					trait = charitable
@@ -1880,7 +1905,7 @@ character_event = {
 	capable_only = yes
 	prisoner = no
 	war = no
-	has_dlc = "Conclave"
+	has_dlc = "Zeus"
 	
 	only_playable = yes
 
@@ -1889,12 +1914,12 @@ character_event = {
 	trigger = {
 		martial = 12
 		independent = no
-		is_inaccessible_trigger = no
 		NOR = {
+			is_inaccessible_trigger = yes
 			trait = slothful
 			trait = shy
 			liege = { is_rival = ROOT }
-			holds_favor_on = liege
+			holds_favor_on = LIEGE
 		}
 		OR = { 
 			trait = light_foot_leader
@@ -1921,10 +1946,10 @@ character_event = {
 		
 		liege = {
 			prisoner = no
-			NOT = {
+			NOR = {
 				trait = incapable
+				is_inaccessible_trigger = yes
 			}
-			is_inaccessible_trigger = no
 			any_realm_character = {
 				count = 3
 				can_have_more_leadership_traits = yes
@@ -1932,167 +1957,27 @@ character_event = {
 				same_liege = ROOT
 				has_minor_title = title_commander
 				ai = yes
-				OR = {
-					AND = {
-						NOT = {
-							trait = light_foot_leader
-						}
-						ROOT = {
-							trait = light_foot_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = heavy_infantry_leader
-						}
-						ROOT = {
-							trait = heavy_infantry_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = cavalry_leader
-						}
-						ROOT = {
-							trait = cavalry_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = inspiring_leader
-						}
-						ROOT = {
-							trait = inspiring_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = trickster
-						}
-						ROOT = {
-							trait = trickster
-						}
-					}
-					AND = {
-						NOT = {
-							trait = organizer
-						}
-						ROOT = {
-							trait = organizer
-						}
-					}
-					AND = {
-						NOT = {
-							trait = defensive_leader
-						}
-						ROOT = {
-							trait = defensive_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = experimenter
-						}
-						ROOT = {
-							trait = experimenter
-						}
-					}
-					AND = {
-						NOT = {
-							trait = flanker
-						}
-						ROOT = {
-							trait = flanker
-						}
-					}
-					AND = {
-						NOT = {
-							trait = aggressive_leader
-						}
-						ROOT = {
-							trait = aggressive_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = siege_leader
-						}
-						ROOT = {
-							trait = siege_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = flat_terrain_leader
-						}
-						ROOT = {
-							trait = flat_terrain_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = rough_terrain_leader
-						}
-						ROOT = {
-							trait = rough_terrain_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = mountain_terrain_leader
-						}
-						ROOT = {
-							trait = mountain_terrain_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = desert_terrain_leader
-						}
-						ROOT = {
-							trait = desert_terrain_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = unyielding_leader
-						}
-						ROOT = {
-							trait = unyielding_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = narrow_flank_leader
-						}
-						ROOT = {
-							trait = narrow_flank_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = war_elephant_leader
-						}
-						ROOT = {
-							trait = war_elephant_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = jungle_terrain_leader
-						}
-						ROOT = {
-							trait = jungle_terrain_leader
-						}
-					}
-					AND = {
-						NOT = {
-							trait = winter_soldier
-						}
-						ROOT = {
-							trait = winter_soldier
-						}
-					}
+				NOR = {
+					trait = light_foot_leader
+					trait = heavy_infantry_leader 
+					trait = cavalry_leader
+					trait = inspiring_leader
+					trait = trickster
+					trait = organizer
+					trait = defensive_leader
+					trait = experimenter
+					trait = flanker
+					trait = aggressive_leader
+					trait = siege_leader
+					trait = flat_terrain_leader
+					trait = rough_terrain_leader
+					trait = mountain_terrain_leader
+					trait = desert_terrain_leader
+					trait = unyielding_leader
+					trait = narrow_flank_leader
+					trait = war_elephant_leader
+					trait = jungle_terrain_leader
+					trait = winter_soldier
 				}
 			}
 		}
@@ -2110,167 +1995,29 @@ character_event = {
 					has_minor_title = title_commander
 					ai = yes
 					can_have_more_leadership_traits = yes
-					OR = {
-						AND = {
-							NOT = {
-								trait = light_foot_leader
-							}
-							ROOT = {
-								trait = light_foot_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = heavy_infantry_leader
-							}
-							ROOT = {
-								trait = heavy_infantry_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = cavalry_leader
-							}
-							ROOT = {
-								trait = cavalry_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = inspiring_leader
-							}
-							ROOT = {
-								trait = inspiring_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = trickster
-							}
-							ROOT = {
-								trait = trickster
-							}
-						}
-						AND = {
-							NOT = {
-								trait = organizer
-							}
-							ROOT = {
-								trait = organizer
-							}
-						}
-						AND = {
-							NOT = {
-								trait = defensive_leader
-							}
-							ROOT = {
-								trait = defensive_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = experimenter
-							}
-							ROOT = {
-								trait = experimenter
-							}
-						}
-						AND = {
-							NOT = {
-								trait = flanker
-							}
-							ROOT = {
-								trait = flanker
-							}
-						}
-						AND = {
-							NOT = {
-								trait = aggressive_leader
-							}
-							ROOT = {
-								trait = aggressive_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = siege_leader
-							}
-							ROOT = {
-								trait = siege_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = flat_terrain_leader
-							}
-							ROOT = {
-								trait = flat_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = rough_terrain_leader
-							}
-							ROOT = {
-								trait = rough_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = mountain_terrain_leader
-							}
-							ROOT = {
-								trait = mountain_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = desert_terrain_leader
-							}
-							ROOT = {
-								trait = desert_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = unyielding_leader
-							}
-							ROOT = {
-								trait = unyielding_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = narrow_flank_leader
-							}
-							ROOT = {
-								trait = narrow_flank_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = war_elephant_leader
-							}
-							ROOT = {
-								trait = war_elephant_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = jungle_terrain_leader
-							}
-							ROOT = {
-								trait = jungle_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = winter_soldier
-							}
-							ROOT = {
-								trait = winter_soldier
-							}
-						}
+					NOR = {
+						character = event_target:commander_two
+						character = event_target:commander_three
+						trait = light_foot_leader
+						trait = heavy_infantry_leader 
+						trait = cavalry_leader
+						trait = inspiring_leader
+						trait = trickster
+						trait = organizer
+						trait = defensive_leader
+						trait = experimenter
+						trait = flanker
+						trait = aggressive_leader
+						trait = siege_leader
+						trait = flat_terrain_leader
+						trait = rough_terrain_leader
+						trait = mountain_terrain_leader
+						trait = desert_terrain_leader
+						trait = unyielding_leader
+						trait = narrow_flank_leader
+						trait = war_elephant_leader
+						trait = jungle_terrain_leader
+						trait = winter_soldier
 					}
 				}
 				save_event_target_as = commander_one
@@ -2282,170 +2029,29 @@ character_event = {
 					has_minor_title = title_commander
 					ai = yes
 					can_have_more_leadership_traits = yes
-					NOT = {
+					NOR = {
 						character = event_target:commander_one
-					}
-					OR = {
-						AND = {
-							NOT = {
-								trait = light_foot_leader
-							}
-							ROOT = {
-								trait = light_foot_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = heavy_infantry_leader
-							}
-							ROOT = {
-								trait = heavy_infantry_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = cavalry_leader
-							}
-							ROOT = {
-								trait = cavalry_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = inspiring_leader
-							}
-							ROOT = {
-								trait = inspiring_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = trickster
-							}
-							ROOT = {
-								trait = trickster
-							}
-						}
-						AND = {
-							NOT = {
-								trait = organizer
-							}
-							ROOT = {
-								trait = organizer
-							}
-						}
-						AND = {
-							NOT = {
-								trait = defensive_leader
-							}
-							ROOT = {
-								trait = defensive_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = experimenter
-							}
-							ROOT = {
-								trait = experimenter
-							}
-						}
-						AND = {
-							NOT = {
-								trait = flanker
-							}
-							ROOT = {
-								trait = flanker
-							}
-						}
-						AND = {
-							NOT = {
-								trait = aggressive_leader
-							}
-							ROOT = {
-								trait = aggressive_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = siege_leader
-							}
-							ROOT = {
-								trait = siege_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = flat_terrain_leader
-							}
-							ROOT = {
-								trait = flat_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = rough_terrain_leader
-							}
-							ROOT = {
-								trait = rough_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = mountain_terrain_leader
-							}
-							ROOT = {
-								trait = mountain_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = desert_terrain_leader
-							}
-							ROOT = {
-								trait = desert_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = unyielding_leader
-							}
-							ROOT = {
-								trait = unyielding_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = narrow_flank_leader
-							}
-							ROOT = {
-								trait = narrow_flank_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = war_elephant_leader
-							}
-							ROOT = {
-								trait = war_elephant_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = jungle_terrain_leader
-							}
-							ROOT = {
-								trait = jungle_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = winter_soldier
-							}
-							ROOT = {
-								trait = winter_soldier
-							}
-						}
+						character = event_target:commander_three
+						trait = light_foot_leader
+						trait = heavy_infantry_leader 
+						trait = cavalry_leader
+						trait = inspiring_leader
+						trait = trickster
+						trait = organizer
+						trait = defensive_leader
+						trait = experimenter
+						trait = flanker
+						trait = aggressive_leader
+						trait = siege_leader
+						trait = flat_terrain_leader
+						trait = rough_terrain_leader
+						trait = mountain_terrain_leader
+						trait = desert_terrain_leader
+						trait = unyielding_leader
+						trait = narrow_flank_leader
+						trait = war_elephant_leader
+						trait = jungle_terrain_leader
+						trait = winter_soldier
 					}
 				}
 				save_event_target_as = commander_two
@@ -2460,168 +2066,26 @@ character_event = {
 					NOR = {
 						character = event_target:commander_two
 						character = event_target:commander_one
-					}
-					OR = {
-						AND = {
-							NOT = {
-								trait = light_foot_leader
-							}
-							ROOT = {
-								trait = light_foot_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = heavy_infantry_leader
-							}
-							ROOT = {
-								trait = heavy_infantry_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = cavalry_leader
-							}
-							ROOT = {
-								trait = cavalry_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = inspiring_leader
-							}
-							ROOT = {
-								trait = inspiring_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = trickster
-							}
-							ROOT = {
-								trait = trickster
-							}
-						}
-						AND = {
-							NOT = {
-								trait = organizer
-							}
-							ROOT = {
-								trait = organizer
-							}
-						}
-						AND = {
-							NOT = {
-								trait = defensive_leader
-							}
-							ROOT = {
-								trait = defensive_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = experimenter
-							}
-							ROOT = {
-								trait = experimenter
-							}
-						}
-						AND = {
-							NOT = {
-								trait = flanker
-							}
-							ROOT = {
-								trait = flanker
-							}
-						}
-						AND = {
-							NOT = {
-								trait = aggressive_leader
-							}
-							ROOT = {
-								trait = aggressive_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = siege_leader
-							}
-							ROOT = {
-								trait = siege_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = flat_terrain_leader
-							}
-							ROOT = {
-								trait = flat_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = rough_terrain_leader
-							}
-							ROOT = {
-								trait = rough_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = mountain_terrain_leader
-							}
-							ROOT = {
-								trait = mountain_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = desert_terrain_leader
-							}
-							ROOT = {
-								trait = desert_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = unyielding_leader
-							}
-							ROOT = {
-								trait = unyielding_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = narrow_flank_leader
-							}
-							ROOT = {
-								trait = narrow_flank_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = war_elephant_leader
-							}
-							ROOT = {
-								trait = war_elephant_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = jungle_terrain_leader
-							}
-							ROOT = {
-								trait = jungle_terrain_leader
-							}
-						}
-						AND = {
-							NOT = {
-								trait = winter_soldier
-							}
-							ROOT = {
-								trait = winter_soldier
-							}
-						}
+						trait = light_foot_leader
+						trait = heavy_infantry_leader 
+						trait = cavalry_leader
+						trait = inspiring_leader
+						trait = trickster
+						trait = organizer
+						trait = defensive_leader
+						trait = experimenter
+						trait = flanker
+						trait = aggressive_leader
+						trait = siege_leader
+						trait = flat_terrain_leader
+						trait = rough_terrain_leader
+						trait = mountain_terrain_leader
+						trait = desert_terrain_leader
+						trait = unyielding_leader
+						trait = narrow_flank_leader
+						trait = war_elephant_leader
+						trait = jungle_terrain_leader
+						trait = winter_soldier
 					}
 				}
 				save_event_target_as = commander_three
@@ -2695,1151 +2159,345 @@ letter_event = {
 			}
 		}
 		
-		random_list = {
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = siege_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = { 
-						trait = siege_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = siege_leader 
+		if = {
+			limit = {
+				FROM = {
+					trait = siege_leader  
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = flat_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = flat_terrain_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = flat_terrain_leader  
-				}
+			event_target:commander_one = { 
+				add_trait = siege_leader 
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = rough_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = rough_terrain_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = rough_terrain_leader  
-				}
+			event_target:commander_two = { 
+				add_trait = siege_leader 
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = mountain_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = mountain_terrain_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = mountain_terrain_leader  
-				}
+			event_target:commander_three = { 
+				add_trait = siege_leader 
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = desert_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = desert_terrain_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = desert_terrain_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = jungle_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = jungle_terrain_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = jungle_terrain_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = winter_soldier
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = winter_soldier
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = winter_soldier  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = organizer
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = organizer
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = organizer 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = light_foot_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = light_foot_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = light_foot_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = heavy_infantry_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = heavy_infantry_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = heavy_infantry_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = cavalry_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = cavalry_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = cavalry_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = inspiring_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = inspiring_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = inspiring_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = defensive_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = defensive_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = defensive_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = experimenter
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = experimenter
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = experimenter 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = flanker
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = flanker
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = flanker 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = aggressive_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = aggressive_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = aggressive_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = unyielding_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = unyielding_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = unyielding_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = narrow_flank_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = narrow_flank_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = narrow_flank_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = trickster
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = trickster
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = trickster 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = war_elephant_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_one = {
-						trait = war_elephant_leader
-					}
-				}
-				event_target:commander_one = { 
-					add_trait = war_elephant_leader  
-				}
-			}
+			break = yes
 		}
-		random_list = {
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = siege_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = siege_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = siege_leader 
+		if = {
+			limit = {
+				FROM = {
+					trait = flat_terrain_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = flat_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = flat_terrain_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = flat_terrain_leader  
-				}
+			event_target:commander_one = { 
+				add_trait = flat_terrain_leader  
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = rough_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = rough_terrain_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = rough_terrain_leader  
-				}
+			event_target:commander_two = { 
+				add_trait = flat_terrain_leader  
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = mountain_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = mountain_terrain_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = mountain_terrain_leader  
-				}
+			event_target:commander_three = { 
+				add_trait = flat_terrain_leader  
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = desert_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = desert_terrain_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = desert_terrain_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = jungle_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = jungle_terrain_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = jungle_terrain_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = winter_soldier
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = winter_soldier
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = winter_soldier  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = organizer
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = organizer
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = organizer 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = light_foot_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = light_foot_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = light_foot_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = heavy_infantry_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = heavy_infantry_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = heavy_infantry_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = cavalry_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = cavalry_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = cavalry_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = inspiring_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = inspiring_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = inspiring_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = defensive_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = defensive_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = defensive_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = experimenter
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = experimenter
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = experimenter 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = flanker
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = flanker
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = flanker 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = aggressive_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = aggressive_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = aggressive_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = unyielding_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = unyielding_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = unyielding_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = narrow_flank_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = narrow_flank_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = narrow_flank_leader  
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = trickster
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = trickster
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = trickster 
-				}
-			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = war_elephant_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_two = {
-						trait = war_elephant_leader
-					}
-				}
-				event_target:commander_two = { 
-					add_trait = war_elephant_leader  
-				}
-			}
+			break = yes
 		}
-		random_list = {
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = siege_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = siege_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = siege_leader 
+		if = {
+			limit = {
+				FROM = {
+					trait = rough_terrain_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = flat_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = flat_terrain_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = flat_terrain_leader  
+			event_target:commander_one = { 
+				add_trait = rough_terrain_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = rough_terrain_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = rough_terrain_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = mountain_terrain_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = rough_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = rough_terrain_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = rough_terrain_leader  
+			event_target:commander_one = { 
+				add_trait = mountain_terrain_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = mountain_terrain_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = mountain_terrain_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = desert_terrain_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = mountain_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = mountain_terrain_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = mountain_terrain_leader  
+			event_target:commander_one = { 
+				add_trait = desert_terrain_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = desert_terrain_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = desert_terrain_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = jungle_terrain_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = desert_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = desert_terrain_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = desert_terrain_leader  
+			event_target:commander_one = { 
+				add_trait = jungle_terrain_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = jungle_terrain_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = jungle_terrain_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = winter_soldier   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = jungle_terrain_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = jungle_terrain_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = jungle_terrain_leader  
+			event_target:commander_one = { 
+				add_trait = winter_soldier  
+			}
+			event_target:commander_two = { 
+				add_trait = winter_soldier  
+			}
+			event_target:commander_three = { 
+				add_trait = winter_soldier  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = organizer  
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = winter_soldier
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = winter_soldier
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = winter_soldier  
+			event_target:commander_one = { 
+				add_trait = organizer 
+			}
+			event_target:commander_two = { 
+				add_trait = organizer 
+			}
+			event_target:commander_three = { 
+				add_trait = organizer 
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = light_foot_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = organizer
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = organizer
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = organizer 
+			event_target:commander_one = { 
+				add_trait = light_foot_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = light_foot_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = light_foot_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = heavy_infantry_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = light_foot_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = light_foot_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = light_foot_leader  
+			event_target:commander_one = { 
+				add_trait = heavy_infantry_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = heavy_infantry_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = heavy_infantry_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = cavalry_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = heavy_infantry_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = heavy_infantry_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = heavy_infantry_leader  
+			event_target:commander_one = { 
+				add_trait = cavalry_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = cavalry_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = cavalry_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = inspiring_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = cavalry_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = cavalry_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = cavalry_leader  
+			event_target:commander_one = { 
+				add_trait = inspiring_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = inspiring_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = inspiring_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = defensive_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = inspiring_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = inspiring_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = inspiring_leader  
+			event_target:commander_one = { 
+				add_trait = defensive_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = defensive_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = defensive_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = experimenter  
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = defensive_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = defensive_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = defensive_leader  
+			event_target:commander_one = { 
+				add_trait = experimenter 
+			}
+			event_target:commander_two = { 
+				add_trait = experimenter 
+			}
+			event_target:commander_three = { 
+				add_trait = experimenter 
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = flanker  
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = experimenter
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = experimenter
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = experimenter 
+			event_target:commander_one = { 
+				add_trait = flanker 
+			}
+			event_target:commander_two = { 
+				add_trait = flanker 
+			}
+			event_target:commander_three = { 
+				add_trait = flanker 
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = aggressive_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = flanker
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = flanker
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = flanker 
+			event_target:commander_one = { 
+				add_trait = aggressive_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = aggressive_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = aggressive_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = unyielding_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = aggressive_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = aggressive_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = aggressive_leader  
+			event_target:commander_one = { 
+				add_trait = unyielding_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = unyielding_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = unyielding_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = narrow_flank_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = unyielding_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = unyielding_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = unyielding_leader  
+			event_target:commander_one = { 
+				add_trait = narrow_flank_leader  
+			}
+			event_target:commander_two = { 
+				add_trait = narrow_flank_leader  
+			}
+			event_target:commander_three = { 
+				add_trait = narrow_flank_leader  
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = trickster  
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = narrow_flank_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = narrow_flank_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = narrow_flank_leader  
+			event_target:commander_one = { 
+				add_trait = trickster 
+			}
+			event_target:commander_two = { 
+				add_trait = trickster 
+			}
+			event_target:commander_three = { 
+				add_trait = trickster 
+			}
+			break = yes
+		}
+		if = {
+			limit = {
+				FROM = {
+					trait = war_elephant_leader   
 				}
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = trickster
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = trickster
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = trickster 
-				}
+			event_target:commander_one = { 
+				add_trait = war_elephant_leader  
 			}
-			10 = {
-				modifier = {
-					factor = 0
-					FROM = {
-						NOT = {
-							trait = war_elephant_leader
-						}
-					}
-				}
-				modifier = {
-					factor = 0
-					event_target:commander_three = {
-						trait = war_elephant_leader
-					}
-				}
-				event_target:commander_three = { 
-					add_trait = war_elephant_leader  
-				}
+			event_target:commander_two = { 
+				add_trait = war_elephant_leader  
 			}
+			event_target:commander_three = { 
+				add_trait = war_elephant_leader  
+			}
+			break = yes
 		}
 	}
 	

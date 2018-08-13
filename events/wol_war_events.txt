@@ -674,6 +674,7 @@ long_character_event = {
 		custom_tooltip = {
 			text = EVTTOOLTIPWOL11006
 			hidden_tooltip = {
+				generate_tooltip = no
 				any_realm_character = {
 					opinion = {
 						modifier = opinion_ruthless
@@ -705,13 +706,8 @@ long_character_event = {
 		}
 		if = {
 			limit = { event_target:challenger = { character = ROOT } }
-			if = {
-				limit = {
-					event_target:opponent = { dynasty = ROOT }
-					NOT = { trait = kinslayer }
-				}
-				add_trait = kinslayer
-			}
+			event_target:opponent = { save_event_target_as = kinslayer_target }
+			add_kinslayer_trait_effect = yes
 			tooltip = {
 				event_target:opponent = {
 					death = {
@@ -732,13 +728,8 @@ long_character_event = {
 		}
 		if = {
 			limit = { NOT = { event_target:challenger = { character = ROOT } } }
-			if = {
-				limit = {
-					event_target:challenger = { dynasty = ROOT }
-					NOT = { trait = kinslayer }
-				}
-				add_trait = kinslayer
-			}
+			event_target:challenger = { save_event_target_as = kinslayer_target }
+			add_kinslayer_trait_effect = yes
 			tooltip = {
 				event_target:challenger = {
 					death = {
@@ -799,8 +790,8 @@ long_character_event = {
 			}
 			maim_hand_effect = yes
 			if = {
-				limit = { NOT = { is_rival = ROOT } }
-				add_rival = ROOT
+				limit = { NOT = { is_rival = FROM } }
+				add_rival = FROM
 			}
 		}
 		if = {
@@ -845,17 +836,8 @@ long_character_event = {
 		hidden_tooltip = {
 			FROM = { clr_character_flag = duel_maim }
 		}
-		FROM = {
-			if = {
-				limit = {
-					dynasty = ROOT
-					NOT = { trait = kinslayer }
-				}
-				tooltip = {
-					add_trait = kinslayer
-				}
-			}
-		}
+		save_event_target_as = kinslayer_target
+		tooltip = { FROM = { add_kinslayer_trait_effect = yes } }
 		if = {
 			limit = { multiplayer = no }
 			death = {
@@ -892,13 +874,8 @@ long_character_event = {
 			limit = { multiplayer = yes }
 			if = {
 				limit = { event_target:challenger = { character = ROOT } }
-				if = {
-					limit = {
-						event_target:opponent = { dynasty = ROOT }
-						NOT = { trait = kinslayer }
-					}
-					add_trait = kinslayer
-				}
+				event_target:opponent = { save_event_target_as = kinslayer_target }
+				add_kinslayer_trait_effect = yes
 				death = {
 					death_reason = death_duel
 					killer = event_target:opponent
@@ -906,13 +883,8 @@ long_character_event = {
 			}
 			if = {
 				limit = { NOT = { event_target:challenger = { character = ROOT } } }
-				if = {
-					limit = {
-						event_target:challenger = { dynasty = ROOT }
-						NOT = { trait = kinslayer }
-					}
-					add_trait = kinslayer
-				}
+				event_target:challenger = { save_event_target_as = kinslayer_target }
+				add_kinslayer_trait_effect = yes
 				death = {
 					death_reason = death_duel
 					killer = event_target:challenger
@@ -925,19 +897,10 @@ long_character_event = {
 		name = EVTOPTA_CM_6303
 		if = {
 			limit = { event_target:challenger = { character = ROOT } }
-			if = {
-				limit = {
-					event_target:opponent = { dynasty = ROOT }
-				}
-				if = {
-					limit = { NOT = { trait = kinslayer } }
-					add_trait = kinslayer
-				}
-				if = {
-					limit = { event_target:opponent = { NOT = { trait = kinslayer } } }
-					tooltip = { event_target:opponent = { add_trait = kinslayer } }
-				}
-			}
+			event_target:opponent = { save_event_target_as = kinslayer_target }
+			add_kinslayer_trait_effect = yes
+			save_event_target_as = kinslayer_target
+			event_target:opponent = { add_kinslayer_trait_effect = yes }
 			if = {
 				limit = { multiplayer = no }
 				death = {
@@ -956,19 +919,10 @@ long_character_event = {
 		}
 		if = {
 			limit = { NOT = { event_target:challenger = { character = ROOT } } }
-			if = {
-				limit = {
-					event_target:challenger = { dynasty = ROOT }
-				}
-				if = {
-					limit = { NOT = { trait = kinslayer } }
-					add_trait = kinslayer
-				}
-				if = {
-					limit = { event_target:challenger = { NOT = { trait = kinslayer } } }
-					tooltip = { event_target:challenger = { add_trait = kinslayer } }
-				}
-			}
+			event_target:challenger = { save_event_target_as = kinslayer_target }
+			add_kinslayer_trait_effect = yes
+			save_event_target_as = kinslayer_target
+			event_target:challenger = { add_kinslayer_trait_effect = yes }
 			if = {
 				limit = { multiplayer = no }
 				death = {
@@ -1029,13 +983,8 @@ long_character_event = {
 			}
 			give_nickname = nick_the_beheader
 		}
-		if = {
-			limit = {
-				event_target:opponent = { dynasty = ROOT }
-				NOT = { trait = kinslayer }
-			}
-			add_trait = kinslayer
-		}
+		event_target:opponent = { save_event_target_as = kinslayer_target }
+		add_kinslayer_trait_effect = yes
 		tooltip = {
 			event_target:opponent = {
 				death = {
@@ -1076,13 +1025,8 @@ long_character_event = {
 			}
 			give_nickname = nick_the_beheader
 		}
-		if = {
-			limit = {
-				event_target:challenger = { dynasty = ROOT }
-				NOT = { trait = kinslayer }
-			}
-			add_trait = kinslayer
-		}
+		event_target:challenger = { save_event_target_as = kinslayer_target }
+		add_kinslayer_trait_effect = yes
 		tooltip = {
 			event_target:challenger = {
 				death = {
@@ -1222,6 +1166,7 @@ character_event = {
 			has_character_flag = do_not_disturb
 		}
 		in_command = no
+		prisoner = no
 	}
 	
 	mean_time_to_happen = {
@@ -1339,20 +1284,32 @@ character_event = {
 	desc = EVTDESC_WOL_11102
 	picture = GFX_evt_emissary
 	border = GFX_event_normal_frame_war
+
+	trigger = {
+		prisoner = no
+	}
 	
-	option = {
-		name = EVTOPTA_WOL_11102
+	immediate = {
 		random_courtier = {
 			limit = {
-				NOR = {
-					character = ROOT 
-					trait = incapable
-					trait = infirm
+				NOT = {
+					OR = {
+						character = ROOT 
+						trait = incapable
+						trait = infirm
+					}
 				}
 				ai = yes
 				is_adult = yes
 				trait = slothful
 			}
+			save_event_target_as = slothful_courtier
+		}
+	}
+	
+	option = {
+		name = EVTOPTA_WOL_11102
+		event_target:slothful_courtier = {
 			random_list = {
 				50 = {
 					remove_trait = slothful
@@ -3353,9 +3310,13 @@ character_event = {
 				NOT = { trait = patient }
 			}
 			add_trait = wroth
-			break = yes
 		}
-		remove_trait = patient
+		if = {
+			limit = {
+				trait = patient
+			}
+			remove_trait = patient
+		}
 	}
 }
 
@@ -3374,9 +3335,13 @@ character_event = {
 				NOT = { trait = craven }
 			}
 			add_trait = brave
-			break = yes
 		}
-		remove_trait = craven
+		if = {
+			limit = {
+				trait = craven
+			}
+			remove_trait = craven
+		}
 	}
 }
 
