@@ -1,5 +1,7 @@
 # Artifacts are a scope in and of themselves now.
 
+stacking = no							# can only have a single copy of this artifact in one's posession. Defaults to "yes"
+
 # effects
 add_artifact = golden_platypus	# must be scoped to a character
 								# a copy of the named artifact is created and added to the scoped character
@@ -33,7 +35,11 @@ destroy_artifact = golden_platypus	# if an artifact name is given, the scope sho
 									# if they own more than one, only the first one will be destroyed
 									# WILL FAIL and add an error message if called on an indestructible artifact
 
+set_description = SET_DESC_EFFECT   # Changes the description of the scoped to artifact to the given string/loc key. All custom loc is resolved when set, so the description will not change once set. Can be reset by setting it to the blank string ""
 
+set_picture = GFX_WHATEVER			# Changes the picture of the scoped to artifact to the given GFX
+
+copy_artifact_history = some_scope 	# Replaces the scoped artifact's history with that of the target artifact
 
 # Triggers
 num_of_artifacts = 3 					# scope must be a character, returns true if scoped character has at least 3 (in this example) artifacts
@@ -66,12 +72,31 @@ original_owner / original_artifact_owner = {	# takes an artifact as a scope, ret
 	}
 }
 
+previous_owner = { # Takes an artifact as a scope, returns the previous owner of the artifact
+}
+
+any/random_artifact_owner = {  Takes an artifact as a scope, returns everyone who has owned the artifact, including the current owner. Random version picks one of them at random
+}
+
 is_indestructible = yes					# scope is artifact, returns true if the scoped artifact is indestructible, false otherwise
 artifact_type = golden_platypus			# takes an artifact as a scope, returns true if the artifact is of the given type, false otherwise
 is_artifact_same_type_as = ROOT 		# takes an artifact as a scope, and an artifact as a target, and returns true if they're the same type, false otherwise
 artifact_type_owned_by = ROOT	 		# takes an artifact as a scope, and a character as a target, and returns true if the target character already owns an artifact of the same type
-stacking = no							# can only have a single copy of this artifact in one's posession. Defaults to "yes"
+artifact_can_be_gifted_to = ROOT		# checks if the artifact currently scoped to can be gifted to the target character
+is_artifact_equipped = yes				# checks if the artifact currently scoped to is equipped
+artifact_age > 10						# checks if the artifact is the given age in years. Note that if the artifact has no known creation date, it will always return false
+has_known_creation_date = yes			# checks if the artifact has a known creation date
+history = no							# artifact history will not be kept for this artifact
 
-#events
+### events
 on_artifact_inheritance					# on action event is sent whenever a character receives an artifact (one event for each artifact)
 										# Scopes: ROOT is the character, FROM is the artifact, FROMFROM is the old holder
+
+### available loc commands
+You can now use "extended" (bracket-based) localization in Artifact scopes:
+	- [GetName] will display the name
+	- [Owner] will rescope to the current owner of the artifact
+	- [OriginalOwner] will rescope to the original owner of the artifact
+
+### decisions
+destroy_artifact						# takes the current owner of the artifact as ROOT, and the ARTIFACT in FROM, destroys the artifact unless it's indestructible
