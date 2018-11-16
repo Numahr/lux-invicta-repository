@@ -28,41 +28,45 @@ glory_hound_pattern_for = {
 			custom_tooltip = {
 				text = pattern_glory_hound_land_grab_custom_tooltip
 				hidden_tooltip = {
-					NOR = {
-						FROM = { # Attacker
-							relative_power_including_allies_attacker = {
-								who = ROOT_FROMFROM # Defender
-								power = 3
+					AND = {
+						NOT = {
+							FROM = { # Attacker
+								relative_power_including_allies_attacker = {
+									who = ROOT_FROMFROM # Defender
+									power = 3
+								}
 							}
 						}
-						AND = {
-							stored_token_trigger = other_claim
-							NOT = {
-								FROMFROMFROM = { # Gainer
-									OR = {
-										is_landed = yes
-										dynasty = ROOT_FROM # Attacker
-									}
-									is_liege_or_above = ROOT_FROM
-									ROOT_FROM = { # Attacker
-										primary_title = {
-											higher_tier_than = ROOT_FROMFROMFROMFROM # Thirdparty_title
+						NOR = {
+							AND = {
+								stored_token_trigger = other_claim
+								NOT = {
+									FROMFROMFROM = { # Gainer
+										OR = {
+											is_landed = yes
+											dynasty = ROOT_FROM # Attacker
+										}
+										is_liege_or_above = ROOT_FROM
+										ROOT_FROM = { # Attacker
+											primary_title = {
+												higher_tier_than = ROOT_FROMFROMFROMFROM # Thirdparty_title
+											}
 										}
 									}
 								}
 							}
+							stored_token_trigger = claim_on_liege
+							stored_token_trigger = other_claim_on_liege
+							stored_token_trigger = crusade
+							stored_token_trigger = excommunicated_ruler
+							stored_token_trigger = bid_for_independence
+							stored_token_trigger = depose_liege
+							stored_token_trigger = overthrow_ruler
+							stored_token_trigger = overthrow_ruler_no_calls
+							stored_token_trigger = embargo_cb
+							stored_token_trigger = depose_antipope
+							stored_token_trigger = cb_install_antiking
 						}
-						stored_token_trigger = claim_on_liege
-						stored_token_trigger = other_claim_on_liege
-						stored_token_trigger = crusade
-						stored_token_trigger = excommunicated_ruler
-						stored_token_trigger = bid_for_independence
-						stored_token_trigger = depose_liege
-						stored_token_trigger = overthrow_ruler
-						stored_token_trigger = overthrow_ruler_no_calls
-						stored_token_trigger = embargo_cb
-						stored_token_trigger = depose_antipope
-						stored_token_trigger = cb_install_antiking
 					}	
 				}
 			}
@@ -85,6 +89,9 @@ glory_hound_pattern_for = {
 	war_voting_power_1 = { always = yes }
 	succession_voting_power_0 = { always = no }
 	succession_voting_power_1 = { always = yes }
+	vassal_wars_law_0 = { always = yes }
+	vassal_wars_law_1 = { always = no }
+	vassal_wars_law_2 = { always = no }
 	
 	centralization_0 = {
 		always = yes
@@ -387,22 +394,23 @@ glory_hound_pattern_for = {
 	}
 	
 	status_of_women_0 = { 
-		is_female = no
+		is_female = yes
+		NOT = { has_law = status_of_women_1 }
 	}
 	status_of_women_1 = { 
-		is_female = no
-		has_law = status_of_women_2
+		is_female = yes
+		NOT = { has_law = status_of_women_2 }
 	}
 	status_of_women_2 = { 
-		is_female = no
-		has_law = status_of_women_3
+		is_female = yes
+		NOT = { has_law = status_of_women_3 }
 	}
 	status_of_women_3 = { 
-		is_female = no
-		has_law = status_of_women_4
+		is_female = yes
+		NOT = { has_law = status_of_women_4 }
 	}
 	status_of_women_4 = { 
-		always = no
+		is_female = yes
 	}
 	slavery_0 = { always = no }
 	slavery_2 = { always = yes }
@@ -417,11 +425,13 @@ glory_hound_pattern_against = {
 		custom_tooltip = {
 			text = pattern_glory_hound_opponent_too_weak_custom_tooltip
 			hidden_tooltip = {
-				NOT = { # Attacking a weak enemy
-					FROMFROM = { # Defender
-						relative_power_including_allies_defender = {
-							who = ROOT_FROM # Attacker
-							power = 0.3
+				OR = {
+					NOT = { # Attacking a weak enemy
+						FROMFROM = { # Defender
+							relative_power_including_allies_defender = {
+								who = ROOT_FROM # Attacker
+								power = 0.3
+							}
 						}
 					}
 				}	
@@ -445,6 +455,9 @@ glory_hound_pattern_against = {
 	war_voting_power_1 = { always = no }
 	succession_voting_power_0 = { always = yes }
 	succession_voting_power_1 = { always = no }
+	vassal_wars_law_0 = { always = no }
+	vassal_wars_law_1 = { always = yes }
+	vassal_wars_law_2 = { always = yes }
 	
 	centralization_0 = { always = no }
 	centralization_1 = { always = no }
