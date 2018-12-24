@@ -9,8 +9,14 @@ succession_laws = {
 		vassal_opinion = 5
 	
 		potential = {
+			NAND = { 
+				has_law = succ_byzantine_elective 
+				OR = { 
+					title = e_byzantium
+					title = e_roman_empire
+				}
+			}
 			holder_scope = {
-				mercenary = no
 				OR = {
 					independent = yes
 					NOT = {
@@ -35,7 +41,6 @@ succession_laws = {
 						}
 					}
 				}
-				in_revolt = no
 			}
 			OR = {
 				is_landless_type_title = no
@@ -48,19 +53,55 @@ succession_laws = {
 				holder_scope = { is_tribal = yes }
 			}
 			is_primary_type_title = no
+			NOT = { holder_scope = { government = confucian_bureaucracy } }
 		}
 		allow = {
 			holder_scope = {
+				show_scope_change = no
 				primary_title = {
 					NOR = {
 						has_law = centralization_0
 						has_law = clanic_centralization_0
 					}
 				}
+				in_revolt = no
+				conditional_tooltip = {
+					trigger = {
+						has_law = succ_hre_elective
+						has_dlc = "Conclave"
+					}
+					has_law = law_voting_power_0
+				}
+				conditional_tooltip = {
+					trigger = {
+						has_law = succ_hre_elective
+						NOT = { has_dlc = "Conclave" }
+					}
+					has_law = crown_authority_4
+				}
+				conditional_tooltip = {
+					trigger = {
+						has_law = succ_hre_elective
+					}
+					has_law = centralization_4
+				}
 			}
-			NAND = { 
-				has_law = succession_voting_power_1
-				has_law = succ_feudal_elective
+			conditional_tooltip = {
+				trigger = {
+					has_dlc = "Conclave"
+				}
+				custom_tooltip = {
+					text = forced_elective_tt
+					hidden_tooltip = {
+						NAND = { 
+							has_law = succession_voting_power_1
+							OR = { 
+								has_law = succ_feudal_elective
+								has_law = succ_hre_elective
+							}
+						}
+					}
+				}
 			}
 		}
 		effect = {
@@ -76,8 +117,14 @@ succession_laws = {
 		dynasty_opinion = 5
 	
 		potential = {
+			NAND = { 
+				has_law = succ_byzantine_elective 
+				OR = { 
+					title = e_byzantium
+					title = e_roman_empire
+				}
+			}
 			holder_scope = {
-				mercenary = no
 				is_nomadic = no
 				OR = {
 					independent = yes
@@ -102,7 +149,6 @@ succession_laws = {
 						}
 					}
 				}
-				in_revolt = no
 			}
 			OR = {
 				is_landless_type_title = no
@@ -115,13 +161,160 @@ succession_laws = {
 				holder_scope = { is_tribal = yes }
 			}
 			is_primary_type_title = no
-			NAND = { 
-				has_law = succession_voting_power_1
-				has_law = succ_feudal_elective
+			NOT = { holder_scope = { government = confucian_bureaucracy } }
+			NOT = { holder_scope = { government = chinese_imperial_government } }
+		}
+		allow = {
+			conditional_tooltip = {
+				trigger = {
+					has_dlc = "Conclave"
+				}
+				custom_tooltip = {
+					text = forced_elective_tt
+					hidden_tooltip = {
+						NAND = { 
+							has_law = succession_voting_power_1
+							OR = { 
+								has_law = succ_feudal_elective
+								has_law = succ_hre_elective
+							}
+						}
+					}
+				}
+			}
+			holder_scope = {
+				show_scope_change = no
+				in_revolt = no
+				conditional_tooltip = {
+					trigger = {
+						has_law = succ_hre_elective
+						has_dlc = "Conclave"
+					}
+					has_law = law_voting_power_0
+				}
+				conditional_tooltip = {
+					trigger = {
+						has_law = succ_hre_elective
+						NOT = { has_dlc = "Conclave" }
+					}
+					has_law = crown_authority_4
+				}
+				conditional_tooltip = {
+					trigger = {
+						has_law = succ_hre_elective
+					}
+					has_law = centralization_4
+				}
 			}
 		}
 		effect = {
-			succession = elective_gavelkind
+			succession = {
+				base_type = elective_gavelkind
+				voting_rules = elective_gavelkind
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+	}
+	
+	succ_eldership = {
+		dynasty_opinion = 5
+	
+		potential = {
+			NAND = { 
+				has_law = succ_byzantine_elective 
+				OR = { 
+					title = e_byzantium
+					title = e_roman_empire
+				}
+			}
+			holder_scope = {
+				OR = {
+					has_religion_feature = religion_beatification
+					has_religion_feature = religion_feature_baltic
+					has_religion_feature = religion_feature_west_african
+				}
+			}
+			holder_scope = {
+				has_dlc = "Holy Fury"
+				is_nomadic = no
+				OR = {
+					independent = yes
+					NOT = {
+						any_liege = {
+							holy_order = yes
+						}
+					}
+				}
+				NOR = { 
+					religion_group = muslim 
+					has_religion_feature = religion_matriarchal
+					has_religion_feature = religion_patriarchal
+				}
+				is_merchant_republic = no
+				is_patrician = no
+				OR = {
+					independent = yes
+					NOT = {
+						any_demesne_title = {
+							is_vice_royalty = yes
+						}
+					}
+				}
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+				temporary = yes
+			}
+			
+			rebel = no
+			
+			OR = {
+				holder_scope = { is_feudal = yes }
+				holder_scope = { is_tribal = yes }
+			}
+			is_primary_type_title = no
+			NOT = { holder_scope = { government = confucian_bureaucracy } }
+			NOT = { holder_scope = { government = chinese_imperial_government } }
+		}
+		allow = {
+			conditional_tooltip = {
+				trigger = {
+					has_dlc = "Holy Fury"
+				}
+				holder_scope = {
+					OR = {
+						has_religion_feature = religion_beatification
+						has_religion_feature = religion_feature_baltic
+						has_religion_feature = religion_feature_west_african
+					}
+				}
+				custom_tooltip = {
+					text = forced_elective_tt
+					hidden_tooltip = {
+						NAND = { 
+							has_law = succession_voting_power_1
+							OR = { 
+								has_law = succ_feudal_elective
+								has_law = succ_hre_elective
+							}
+						}
+					}
+				}
+			}
+			holder_scope = {
+				show_scope_change = no
+				in_revolt = no
+			}
+		}
+		effect = {
+			succession = {
+				base_type = tanistry
+				voting_rules = eldership_rules
+			}
+			elective_voting_rules = eldership_rules
 		}
 		revoke_allowed = {
 			always = no
@@ -135,6 +328,13 @@ succession_laws = {
 		dynasty_opinion = 5
 	
 		potential = {
+			NAND = { 
+				has_law = succ_byzantine_elective 
+				OR = { 
+					title = e_byzantium
+					title = e_roman_empire
+				}
+			}
 			holder_scope = {
 				OR = {
 					independent = yes
@@ -151,12 +351,16 @@ succession_laws = {
 					}
 				}
 				
-				NOR = {
-					religion_group = muslim
-					primary_title = {
-						has_law = people_control_0
-					}
-				}
+                OR = {
+                    NOR = {
+						religion_group = muslim
+						religion_group = indian_group 
+						primary_title = {
+							has_law = people_control_0
+						}
+			}
+                    is_patrician = yes
+                }
 				OR = {
 					is_republic = no
 					is_patrician = yes
@@ -196,9 +400,16 @@ succession_laws = {
 					}
 				}
 			}
+			
+			NOT = { holder_scope = { government = confucian_bureaucracy } }
 		}
 		
 		allow = {
+			conditional_tooltip = {
+				trigger = {
+					NOT = { has_dlc = "Conclave" }
+					NOT = { has_law = succ_hre_elective }
+				}
 			OR = {
 				holder_scope = {
 					OR = {
@@ -486,6 +697,167 @@ succession_laws = {
 		}
 		effect = {
 			succession = feudal_elective
+		}
+		revoke_allowed = {
+			always = no
+		}			
+	}
+	
+	succ_hre_elective = {
+		oldest_child_opinion = -15
+		child_opinion = -5
+		dynasty_opinion = -5
+		vassal_opinion = 15
+		vassal_limit = 20
+		potential = {
+			NAND = { 
+				has_law = succ_byzantine_elective 
+				OR = { 
+					title = e_byzantium
+					title = e_roman_empire
+				}
+			}
+			OR = {
+				title = e_hre #Title-bound.
+				ROOT = {
+					has_title_flag = alternate_hre
+				}
+			}
+			holder_scope = {
+				OR = {
+					independent = yes
+					NOT = {
+						any_liege = {
+							holy_order = yes
+						}
+					}
+				}
+				OR = {
+					NOR = { 
+						religion_group = muslim
+						religion_group = indian_group
+					}
+					has_law = succession_voting_power_1
+					has_law = succ_feudal_elective # Keep it even if you revoke Full Council Authority
+					has_law = succ_hre_elective
+					ROOT = {
+						has_title_flag = alternate_hre
+					}
+				}
+				is_merchant_republic = no
+				is_patrician = no
+				
+				OR = {
+					has_law = succession_voting_power_1
+					has_law = succ_feudal_elective # Keep it even if you revoke Full Council Authority
+					has_law = succ_hre_elective
+					ROOT = {
+						has_title_flag = alternate_hre
+					}
+				}
+				OR = {
+					independent = yes
+					NOT = {
+						any_demesne_title = {
+							is_vice_royalty = yes
+						}
+					}
+				}
+			}
+			OR = {
+				is_landless_type_title = no
+				is_tribal_type_title = yes
+				temporary = yes
+			}
+			is_primary_type_title = no
+			NOT = { tier = baron }
+			holder_scope = {
+				OR = {
+					is_feudal = yes
+					has_law = succession_voting_power_1
+					has_law = succ_feudal_elective # Keep it even if you revoke Full Council Authority
+					has_law = succ_hre_elective
+					ROOT = {
+						has_title_flag = alternate_hre
+					}
+				}
+			}
+			NOT = { holder_scope = { government = confucian_bureaucracy } }
+			NOT = { holder_scope = { government = chinese_imperial_government } }
+		}
+		allow = {
+			custom_tooltip = {
+				text = not_forced_tt
+				hidden_tooltip = {
+					holder_scope = { NOT = { has_character_flag = liege_forced_succ_law } }
+				}
+			}
+		}
+		effect = {
+			succession = {
+				base_type = feudal_elective
+				voting_rules = hre_feudal_elective
+			}
+		}
+		revoke_allowed = {
+			always = no
+		}			
+	}
+	
+	succ_byzantine_elective = {
+		oldest_child_opinion = -5
+		child_opinion = -5
+		dynasty_opinion = -5
+		feudal_opinion = -5
+		potential = {
+			holder_scope = {
+				OR = {
+					has_landed_title = e_byzantium
+					has_landed_title = e_roman_empire
+				}
+				NOT = { religion_group = muslim }
+				is_nomadic = no
+				is_merchant_republic = no
+				is_patrician = no
+			#	OR = {
+			#		culture_group = byzantine
+			#		culture = roman
+			#		religion = orthodox
+			#		religion = hellenic_pagan
+			#		religion = hellenic_pagan_reformed
+			#	}
+			#	OR = {
+			#		independent = yes
+			#		NOT = {
+			#			any_demesne_title = {
+			#				is_vice_royalty = yes
+			#			}
+			#		}
+			#	}
+			}
+			#OR = {
+			#	is_landless_type_title = no
+			#	is_tribal_type_title = yes
+			#	temporary = yes
+			#}
+			#is_primary_type_title = no
+			NOT = { holder_scope = { government = confucian_bureaucracy } }
+			NOT = { holder_scope = { government = chinese_imperial_government } }
+
+		}
+		allow = {
+			custom_tooltip = {
+				text = not_forced_tt
+				hidden_tooltip = {
+					holder_scope = { NOT = { has_character_flag = liege_forced_succ_law } }
+				}
+			}
+		}
+		effect = {
+			succession = {
+				base_type = feudal_elective
+				voting_rules = byzantine_elective
+			}
 		}
 		revoke_allowed = {
 			always = no
@@ -950,6 +1322,24 @@ succession_laws = {
 		}
 		effect = {
 			succession = nomad_succession
+		}
+		revoke_allowed = {
+			always = no
+		}			
+	}
+	
+	succ_offmap_succession = {
+		potential = {
+			holder_scope = {
+				top_liege = { is_offmap_governor = yes }
+				government = confucian_bureaucracy # To use this with future offmap powers, use an OR clause here with the new government types
+			}
+		}
+		effect = {
+			succession = offmap_succession
+			# This succession type generates a character of China's culture and religion
+			# They have decent (4-10) stats, and good (7-11) stewardship, and will always have a Stewardship education
+			# The offmap power defined in the top liege's government is used to determine the culture and religion. Will not function if this isn't defined
 		}
 		revoke_allowed = {
 			always = no

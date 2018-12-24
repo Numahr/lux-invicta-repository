@@ -93,75 +93,12 @@ action_fabricate_claims = {
 	}
 	
 	trigger = {
-		# Can't fab claims on merchant republic capital counties ...
-		NAND = {
-			owner = { is_merchant_republic = yes }
-			is_capital = yes
-		}
+		any_province_lord = {
+			NOT = { character = FROM }
+			FROM = {
+				job_chancellor = {
+					NOT = { character = PREVPREV } # Can't be sent to improve relations with himself...
 
-		# If AI, must be independent or vassal king to fab claims outside top realm...
-		OR = { 
-			FROM = { ai = no }
-			FROM = { independent = yes }
-			FROM = { tier = king }
-			owner = { same_realm = FROM }
-		}
-
-		owner = {
-			NOR = {
-				character = FROM # Can't fab claims on self-owned counties
-				FROM = {
-					job_chancellor = {
-						character = PREVPREV # Can't fab claims on chancellor-owned counties
-					}
-				}
-			}
-		}
-
-		OR = {
-			county = {
-				NOT = { claimed_by = FROM }
-				holder_scope = {
-					NOR = {
-						character = FROM
-						is_vassal_or_below = FROM # Can't fab claim on any_liege's counties
-					}
-				}
-			}
-			AND = {
-				FROM = { ai = no }
-				duchy = {
-					NOT = { claimed_by = FROM }
-					holder_scope = {
-						NOR = {
-							character = FROM
-							is_vassal_or_below = FROM # Can't fab claim on any_liege's duchies
-						}
-					}
-				}
-			}
-		}
-
-		# Must be in same top realm OR neighboring it OR neighboring it via a single adjacent sea zone
-		OR = {
-			owner = { same_realm = FROM }
-			any_neighbor_province = {
-				owner = {
-					OR = {
-						character = FROM
-						is_liege_or_above = FROM
-					}
-				}
-			}
-			any_neighbor_province = {
-				is_land = no
-				any_neighbor_province = {
-					owner = {
-						OR = {
-							character = FROM
-							is_liege_or_above = FROM
-						}
-					}
 				}
 			}
 		}
@@ -313,7 +250,7 @@ action_advance_eco_tech = {
 		technology_can_spread = yes
 	}
 	
-	tech_growth_modifier_economy = 0.1
+	tech_growth_modifier_economy = 0.05
 	
 	events = { 320500 320502 }  #### from CK2+ (by Ash)
 }
@@ -484,7 +421,7 @@ action_advance_mil_tech = {
 		technology_can_spread = yes
 	}
 	
-	tech_growth_modifier_military = 0.1
+	tech_growth_modifier_military = 0.05
 	
 	events = { 938 939 }
 }
@@ -563,7 +500,7 @@ action_assist_arrest = {
 		}
 	}
 	
-	arrest_chance_modifier = 0.005
+	arrest_chance_modifier = 0.01
 	local_revolt_risk = -0.01
 	local_tax_modifier = -0.005
 	levy_size = -0.005
