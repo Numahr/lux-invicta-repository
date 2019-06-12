@@ -65,26 +65,26 @@ succession_laws = {
 					}
 				}
 				in_revolt = no
-				conditional_tooltip = {
-					trigger = {
-						has_law = succ_hre_elective
-						has_dlc = "Conclave"
-					}
-					has_law = law_voting_power_0
+			}
+			conditional_tooltip = {
+				trigger = {
+					has_law = succ_hre_elective
+					has_dlc = "Conclave"
 				}
-				conditional_tooltip = {
-					trigger = {
-						has_law = succ_hre_elective
-						NOT = { has_dlc = "Conclave" }
-					}
-					has_law = crown_authority_4
+				has_law = law_voting_power_0
+			}
+			conditional_tooltip = {
+				trigger = {
+					has_law = succ_hre_elective
+					NOT = { has_dlc = "Conclave" }
 				}
-				conditional_tooltip = {
-					trigger = {
-						has_law = succ_hre_elective
-					}
-					has_law = centralization_4
+				has_law = crown_authority_4
+			}
+			conditional_tooltip = {
+				trigger = {
+					has_law = succ_hre_elective
 				}
+				has_law = centralization_4
 			}
 			conditional_tooltip = {
 				trigger = {
@@ -185,26 +185,26 @@ succession_laws = {
 			holder_scope = {
 				show_scope_change = no
 				in_revolt = no
-				conditional_tooltip = {
-					trigger = {
-						has_law = succ_hre_elective
-						has_dlc = "Conclave"
-					}
-					has_law = law_voting_power_0
+			}
+			conditional_tooltip = {
+				trigger = {
+					has_law = succ_hre_elective
+					has_dlc = "Conclave"
 				}
-				conditional_tooltip = {
-					trigger = {
-						has_law = succ_hre_elective
-						NOT = { has_dlc = "Conclave" }
-					}
-					has_law = crown_authority_4
+				has_law = law_voting_power_0
+			}
+			conditional_tooltip = {
+				trigger = {
+					has_law = succ_hre_elective
+					NOT = { has_dlc = "Conclave" }
 				}
-				conditional_tooltip = {
-					trigger = {
-						has_law = succ_hre_elective
-					}
-					has_law = centralization_4
+				has_law = crown_authority_4
+			}
+			conditional_tooltip = {
+				trigger = {
+					has_law = succ_hre_elective
 				}
+				has_law = centralization_4
 			}
 		}
 		effect = {
@@ -422,6 +422,7 @@ succession_laws = {
 					has_crown_law_title = no
 				}
 				holder_scope = {
+					show_scope_change = no
 					is_patrician = yes 
 					OR = {
 						is_merchant_republic = no
@@ -540,6 +541,7 @@ succession_laws = {
 		allow = {
 			OR = {
 				holder_scope = {
+					show_scope_change = no
 					any_demesne_title = {
 						is_vice_royalty = yes
 					}
@@ -551,6 +553,7 @@ succession_laws = {
 								NOT = { has_dlc = "Zeus" }
 							}
 							holder_scope = {
+								show_scope_change = no
 								custom_tooltip = {
 									text = is_a_reformed_rel
 									hidden_tooltip = {
@@ -565,6 +568,7 @@ succession_laws = {
 							}
 							holder_scope = {
 								primary_title = {
+									show_scope_change = no
 									OR = {
 										has_law = ze_administration_laws_1
 										has_law = ze_administration_laws_2
@@ -697,7 +701,10 @@ succession_laws = {
 			}
 		}
 		effect = {
-			succession = feudal_elective
+			succession = {
+				base_type = feudal_elective
+				voting_rules = feudal_elective
+			}
 		}
 		revoke_allowed = {
 			always = no
@@ -955,7 +962,10 @@ succession_laws = {
 			}
 		}
 		effect = {
-			succession = tanistry
+			succession = {
+				base_type = tanistry
+				voting_rules = tanistry
+			}
 		}
 		revoke_allowed = {
 			always = no
@@ -1017,6 +1027,7 @@ succession_laws = {
 						NOT = { has_dlc = "Zeus" }
 					}
 					holder_scope = {
+						show_scope_change = no
 						custom_tooltip = {
 							text = is_a_reformed_rel
 							hidden_tooltip = {
@@ -1031,6 +1042,7 @@ succession_laws = {
 					}
 					holder_scope = {
 						primary_title = {
+							show_scope_change = no
 							OR = {
 								has_law = ze_administration_laws_1
 								has_law = ze_administration_laws_2
@@ -1082,6 +1094,8 @@ succession_laws = {
 					religion_group = zoroastrian_group
 					has_law = people_control_0
 				}
+				is_republic = no
+				is_merchant_republic = no
 				is_nomadic = no
 			}
 
@@ -1109,8 +1123,6 @@ succession_laws = {
 					}
 					is_primary_type_title = no
 				}
-				is_republic = no
-				is_merchant_republic = no
 			}
 		}
 		allow = {
@@ -1225,11 +1237,9 @@ succession_laws = {
 			}
 			OR = {
 				is_landless_type_title = yes
-				holder_scope = {
-					OR = {
-						is_theocracy = no
-						NOT = { religion = catholic }
-					}
+				holder_scope = { is_theocracy = no }
+				holder_scope = { 
+					NOT = { religion = catholic }
 				}
 			}
 			holder_scope = { 
@@ -1417,7 +1427,7 @@ gender_laws = {
 		}			
 		default = yes
 		default_selection = {
-			factor = 1
+			factor = 10
 		}
 	}
 	agnatic_succession = {
@@ -1466,9 +1476,18 @@ gender_laws = {
 		}			
 		default = yes
 		default_selection = {
-			factor = 0
+			factor = 1
+			
+			modifier = {
+				factor = 0
+				has_game_rule = {
+					name = gender
+					value = all
+				}
+			}
 		}
 	}
+	
 	true_cognatic_succession = {
 		male_dynasty_opinion = -5
 		
@@ -1536,7 +1555,10 @@ gender_laws = {
 		}
 		revoke_allowed = {
 			always = no
-		}			
+		}	
+		default_selection = {
+			factor = 1
+		}
 	}
 	
 	enatic_succession = {
@@ -1603,7 +1625,11 @@ gender_laws = {
 		}
 		revoke_allowed = {
 			always = no
-		}			
+		}
+		default_selection = {
+			factor = 1
+			
+		}
 	}
 	
 	enatic_cognatic_succession = {
@@ -1661,7 +1687,10 @@ gender_laws = {
 		}
 		revoke_allowed = {
 			always = no
-		}			
-	}
-	
+		}	
+		default_selection = {
+			factor = 1
+			
+		}		
+	}	
 }
