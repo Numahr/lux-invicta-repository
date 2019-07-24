@@ -386,6 +386,17 @@ plot_gain_vassal_title = {
 					}
 				}
 			}
+			# Belongs to Tyrannical Bloodline
+			custom_tooltip = {
+				text = TT_PLOT_GAIN_VASSAL_TITLE_TYRANNICAL_BLOODLINE
+				hidden_tooltip = {
+					FROM = {
+						any_owned_bloodline = {
+							has_bloodline_flag = bloodline_revocation_plot 
+						}
+					}
+				}
+			}
 		}
 		holder_scope = {
 			custom_tooltip = { # liege_before_war lacks localisation, among other things
@@ -589,6 +600,12 @@ plot_gain_vassal_title = {
 							num_of_count_titles = 2
 						}
 					}
+					# Bloodline
+					FROM = {
+						any_owned_bloodline = {
+							has_bloodline_flag = bloodline_revocation_plot 
+						}
+					}
 				}
 			}
 			FROM = {
@@ -737,6 +754,7 @@ plot_kill_character = {
 		NOT = { has_blood_oath_with = FROM }
 		assassination_interaction_trigger = yes
 	}
+	
 	target_potential = {
 		NOT = { any_spouse = { character = FROM } } # This case is covered by another plot
 	}
@@ -750,6 +768,7 @@ plot_kill_character = {
 		}
 		NOT = { any_spouse = { character = FROM } } # This case is covered by another plot
 		NOT = { has_blood_oath_with = FROM }
+		
 		is_within_diplo_range = FROM
 		
 		# Don't kill my lovers, or their children
@@ -892,6 +911,9 @@ plot_kill_character = {
 					OR = {
 						trait = lunatic
 						trait = possessed
+						any_owned_bloodline = {
+							has_bloodline_flag = bloodline_murderous 
+						}
 					}
 				}
 				
@@ -899,6 +921,7 @@ plot_kill_character = {
 				any_rival = {
 					character = ROOT
 				}
+				
 				ROOT = { is_murder_quest_target_of_prev_trigger = yes }
 			}
 		}
@@ -910,9 +933,10 @@ plot_kill_character = {
 			NOT = { is_child_of = FROM } # Not my own children
 		}
 	}
+	
 	chance = {
 		factor = 2
-		
+
 		modifier = {
 			factor = 50
 			FROM = { has_quest = quest_the_assassins_assassination }
@@ -1052,6 +1076,12 @@ plot_kill_character = {
 				top_liege = { character = father }
 			}
 		}
+		modifier = {
+			factor = 2.0
+			any_owned_bloodline = { #Backstabbing family.
+				has_bloodline_flag = bloodline_murderous 
+			}
+		}
 	}
 	
 	success = {
@@ -1129,7 +1159,6 @@ plot_kill_spouse = {
 	
 	# Target character scope
 	allow = {
-		
 		NOT = { is_lover = FROM }
 		
 		OR = {
@@ -1446,11 +1475,9 @@ plot_weaken_fellow_vassal = {
 				}
 			}
 			OR = {
-		  
 				FROM = { trait = envious }
 				FROM = { trait = deceitful }
 				FROM = { trait = ambitious }
-	 
 			}
 		}
 		modifier = {
