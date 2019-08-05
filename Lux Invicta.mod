@@ -1,4 +1,4 @@
-name = "Lux Invicta v0.6K10" 
+name = "Lux Invicta v0.6K16" 
 path = "mod/Lux Invicta"
 user_dir = "Lux Invicta"
 
