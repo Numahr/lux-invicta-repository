@@ -24,11 +24,15 @@ character_event = {
 	immediate = {
 		if = {
 			limit = {
-				NAND = {
-					has_character_modifier = declined_prestige_duel_timer
-					is_female = no
-					event_target:challenger = { is_female = yes }
-					top_liege = { is_nomadic = no }
+				OR = {
+					NOT = { has_character_modifier = declined_prestige_duel_timer }
+					NOT = { 
+						AND = {
+							is_female = no
+							event_target:challenger = { is_female = yes }
+							top_liege = { is_nomadic = no }
+						}
+					}
 				}
 			}
 			add_character_modifier = {
@@ -58,7 +62,7 @@ character_event = {
 		}
 	}
 	
-	option = {
+	option = { #Challenge accepted
 		name = EVTOPTA_WOL_11000
 		ai_chance = {
 			factor = 20
@@ -81,7 +85,7 @@ character_event = {
 			}
 			modifier = {
 				is_female = no
-				FROM = { is_female = yes }
+				FROMFROM = { is_female = yes }
 				top_liege = {
 					is_nomadic = no
 				}
@@ -95,19 +99,19 @@ character_event = {
 				remove_trait = craven
 			}
 		}
+		pacifists_lose_piety_effect = yes
 		if = {
-			limit = { religion = jain }
-			piety = -20
-			custom_tooltip = { text = jain_ahimsa_tooltip }
+			limit = { 
+				FROMFROM = { 
+					has_opinion_modifier = { who = ROOT modifier = grievously_offended }
+				}
+			}
+			FROMFROM = {
+				remove_opinion = { who = ROOT modifier = grievously_offended }
+			}
 		}
 		save_event_target_as = opponent
 		FROMFROM = {
-			if = {
-				limit = { 
-					has_opinion_modifier = { who = ROOT modifier = grievously_offended }
-				}
-				remove_opinion = { who = ROOT modifier = grievously_offended }
-			}
 			save_event_target_as = challenger
 			hidden_tooltip = {
 				character_event = { id = WoL.11001 days = 3 }
@@ -115,7 +119,7 @@ character_event = {
 		}
 		clr_character_flag = punish_declining
 	}
-	option = {
+	option = { #No, that sounds dangerous
 		name = EVTOPTB_WOL_11000
 		ai_chance = {
 			factor = 1
@@ -156,7 +160,7 @@ character_event = {
 		hidden_tooltip = {
 			remove_character_modifier = recent_duel_timer
 		}
-		FROMFROM = {
+		FROMFROM = { #attacker
 			hidden_tooltip = {
 				remove_character_modifier = recent_duel_timer
 				opinion = {
@@ -267,7 +271,8 @@ character_event = {
 }
 
 
-# Duel (hidden)
+### NO LONGER IN USE (hence why numbers are off) ###
+# Duel (hidden) 
 character_event = {
 	id = WoL.11005
 	is_triggered_only = yes
@@ -485,7 +490,6 @@ character_event = {
 }
 
 # Winner event
-# Audax Validator "." Ignore_NEXT
 long_character_event = {
 	id = WoL.11006
 	is_triggered_only = yes
@@ -519,8 +523,8 @@ long_character_event = {
 	desc = {
 		text = EVTDESCD_WOL_11006 # Winning over challenger
 		trigger = {
-			NOR = {
-				event_target:challenger = { character = ROOT }
+			NOT = { event_target:challenger = { character = ROOT } }
+			NOT = {
 				has_character_flag = duel_maim
 			}
 		}
@@ -600,7 +604,7 @@ long_character_event = {
 		if = {
 			limit = { event_target:challenger = { character = ROOT } }
 			if = {
-				limit = { event_target:opponent = { is_maimed_trigger = no } }
+				limit = { event_target:opponent = { NOT = { is_maimed_trigger = yes } } }
 				tooltip = {
 					event_target:opponent = {
 						add_trait = wounded
@@ -620,7 +624,7 @@ long_character_event = {
 		if = {
 			limit = { NOT = { event_target:challenger = { character = ROOT } } }
 			if = {
-				limit = { event_target:challenger = { is_maimed_trigger = no } }
+				limit = { event_target:challenger = { NOT = { is_maimed_trigger = yes } } }
 				tooltip = {
 					event_target:challenger = {
 						add_trait = wounded
@@ -693,6 +697,7 @@ long_character_event = {
 					has_nickname = no
 				}
 				give_nickname = nick_the_ruthless
+				add_blood_splatter_effect = yes
 			}
 		}
 		if = {
@@ -753,7 +758,6 @@ long_character_event = {
 }
 
 # Loser event
-# Audax Validator "." Ignore_NEXT
 long_character_event = {
 	id = WoL.11007
 	is_triggered_only = yes
@@ -812,7 +816,6 @@ long_character_event = {
 }
 
 # Loser event executed
-# Audax Validator "." Ignore_NEXT
 long_character_event = {
 	id = WoL.11008
 	is_triggered_only = yes
@@ -849,7 +852,6 @@ long_character_event = {
 }
 
 # Double death (challenger)
-# Audax Validator "." Ignore_NEXT
 long_character_event = {
 	id = WoL.11009
 	is_triggered_only = yes
@@ -943,7 +945,6 @@ long_character_event = {
 }
 
 # Winner decap
-# Audax Validator "." Ignore_NEXT
 long_character_event = {
 	id = WoL.11011
 	is_triggered_only = yes
@@ -982,6 +983,7 @@ long_character_event = {
 				has_nickname = no
 			}
 			give_nickname = nick_the_beheader
+			add_blood_splatter_effect = yes
 		}
 		event_target:opponent = { save_event_target_as = kinslayer_target }
 		add_kinslayer_trait_effect = yes
@@ -1049,7 +1051,6 @@ long_character_event = {
 }
 
 # Loser decap
-# Audax Validator "." Ignore_NEXT
 long_character_event = {
 	id = WoL.11012
 	is_triggered_only = yes
@@ -1161,10 +1162,8 @@ character_event = {
 	
 	trigger = {
 		has_focus = focus_war
-		NOR = {
-			trait = infirm
-			has_character_flag = do_not_disturb
-		}
+		NOT = { trait = infirm }
+		NOT = { has_character_flag = do_not_disturb }
 		in_command = no
 		prisoner = no
 	}
@@ -1183,16 +1182,12 @@ character_event = {
 				character_event = { id = WoL.11101 } # running
 			}
 			30 = {
-				modifier = {
-					OR = {
+				trigger = {
+					NOT = { trait = slothful }
+					any_courtier = {
 						trait = slothful
-						NOT = {
-							any_courtier = {
-								trait = slothful
-							}
-						}
+						prisoner = no
 					}
-					factor = 0
 				}
 				character_event = { id = WoL.11102 } # slothful court
 			}
@@ -1214,8 +1209,8 @@ character_event = {
 			}
 			30 = {
 				modifier = {
-					NOR = {
-						any_friend = {
+				NOT = {
+					any_friend = {
 							has_character_flag = sparring_partner
 						}
 						has_character_flag = sparring_partner
@@ -1229,7 +1224,7 @@ character_event = {
 			}
 			30 = {
 				modifier = {
-					NOR = {
+					NOT = {
 						any_friend = {
 							has_character_flag = sparring_partner
 						}
@@ -1302,6 +1297,7 @@ character_event = {
 				ai = yes
 				is_adult = yes
 				trait = slothful
+				prisoner = no
 			}
 			save_event_target_as = slothful_courtier
 		}
@@ -1347,7 +1343,20 @@ character_event = {
 	id = WoL.11103
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_11103
-	picture = GFX_evt_son_asking_father
+	picture = { 
+		trigger = { 
+			has_religion_feature = religion_matriarchal
+		} 
+		picture = GFX_evt_daughter_asking_mother
+	}
+	picture = { 
+		trigger = { 
+			NOT = { 
+				has_religion_feature = religion_matriarchal
+			} 
+		} 
+		picture = GFX_evt_son_asking_father
+	}
 	border = GFX_event_normal_frame_war
 	
 	option = {
@@ -1395,7 +1404,20 @@ character_event = {
 	id = WoL.11104
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_11104
-	picture = GFX_evt_son_asking_father
+	picture = { 
+		trigger = { 
+			has_religion_feature = religion_matriarchal
+		} 
+		picture = GFX_evt_daughter_asking_mother
+	}
+	picture = { 
+		trigger = { 
+			NOT = { 
+				has_religion_feature = religion_matriarchal
+			} 
+		} 
+		picture = GFX_evt_son_asking_father
+	}
 	border = GFX_event_normal_frame_war
 	
 	immediate = {
@@ -1419,6 +1441,7 @@ character_event = {
 	option = {
 		name = EVTOPTA_WOL_11104
 		event_target:portrait_target = {
+			show_scope_change = no
 			mangle_effect = yes
 		}
 		hidden_tooltip = {
@@ -1449,11 +1472,13 @@ character_event = {
 						is_adult = yes
 						is_female = no
 						prisoner = no
-						NOR = {
-							is_rival = ROOT
-							trait = incapable
-							trait = infirm
-							character = ROOT
+						NOT = {
+							OR = {
+								is_rival = ROOT
+								trait = incapable
+								trait = infirm
+								character = ROOT
+							}
 						}
 					}
 					character_event = { id = WoL.11108 }
@@ -1468,7 +1493,20 @@ character_event = {
 	id = WoL.11107
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_11107
-	picture = GFX_evt_son_asking_father
+	picture = { 
+		trigger = { 
+			has_religion_feature = religion_matriarchal
+		} 
+		picture = GFX_evt_daughter_asking_mother
+	}
+	picture = { 
+		trigger = { 
+			NOT = { 
+				has_religion_feature = religion_matriarchal
+			} 
+		} 
+		picture = GFX_evt_son_asking_father
+	}
 	border = GFX_event_normal_frame_war
 	
 	option = {
@@ -1498,7 +1536,20 @@ character_event = {
 	id = WoL.11109
 	is_triggered_only = yes
 	desc = EVTDESC_WOL_11109
-	picture = GFX_evt_son_asking_father
+	picture = { 
+		trigger = { 
+			has_religion_feature = religion_matriarchal
+		} 
+		picture = GFX_evt_daughter_asking_mother
+	}
+	picture = { 
+		trigger = { 
+			NOT = { 
+				has_religion_feature = religion_matriarchal
+			} 
+		} 
+		picture = GFX_evt_son_asking_father
+	}
 	border = GFX_event_normal_frame_war
 	
 	option = {
@@ -1526,12 +1577,14 @@ character_event = {
 				ai = yes
 				is_female = no
 				is_adult = yes
-				NOR = {
-					is_rival = ROOT
-					is_friend = ROOT
-					age = 50
-					trait = incapable
-					trait = infirm
+				NOT = {
+					OR = {
+						is_rival = ROOT
+						is_friend = ROOT
+						age = 50
+						trait = incapable
+						trait = infirm
+					}
 				}
 			}
 			hidden_tooltip = {
@@ -1539,6 +1592,7 @@ character_event = {
 				set_character_flag = sparring_partner
 			}
 			ROOT = {
+				show_scope_change = no
 				add_friend = PREV
 			}
 		}
@@ -1591,7 +1645,7 @@ character_event = {
 		name = EVTOPTA_WOL_11112
 		trigger = { has_character_flag = sparring_injured }
 		if = {
-			limit = { is_maimed_trigger = no }
+			limit = { NOT = { is_maimed_trigger = yes } }
 			add_trait = wounded
 		}
 		clr_character_flag = sparring_injured
@@ -1603,7 +1657,7 @@ character_event = {
 		random_friend = {
 			limit = { has_character_flag = sparring_partner }
 			if = {
-				limit = { is_maimed_trigger = no }
+				limit = { NOT = { is_maimed_trigger = yes } }
 				add_trait = wounded
 			}
 		}
@@ -1784,9 +1838,9 @@ character_event = {
 	immediate = {
 		if = {
 			limit = {
-				NAND = {
-					event_target:attacker = { always = yes }
-					event_target:defender = { always = yes }
+				OR = {
+					NOT = { event_target:attacker = { always = yes } }
+					NOT = { event_target:defender = { always = yes } }
 				}
 			}
 			character_event = { id = WoL.11117 days = 3 }
@@ -3067,10 +3121,8 @@ character_event = {
 		}
 		if = {
 			limit = {
-				NOR = {
-					has_character_modifier = adept_of_strategy
-					has_character_modifier = student_of_strategy
-				}
+				NOT = { has_character_modifier = adept_of_strategy }
+				NOT = { has_character_modifier = student_of_strategy }
 			}
 			add_character_modifier = { modifier = student_of_strategy duration = -1 }
 		}
@@ -3083,8 +3135,8 @@ character_event = {
 	option = {
 		name = EVTOPTB_WOL_11140
 		trigger = {
+			NOT = { trait = wroth }
 			NOR = {
-				trait = wroth
 				has_character_flag = wargame_win1
 				has_character_flag = wargame_win2
 				has_character_flag = wargame_win3
@@ -3212,9 +3264,11 @@ character_event = {
 character_event = {
 	id = WoL.11201
 	is_triggered_only = yes
-	desc = EVTDESC_WOL_11201 ### Add more culture specific weapon descriptions
+	desc = EVTDESC_WOL_11201
 	picture = GFX_evt_melee
 	border = GFX_event_normal_frame_war
+
+	hide_from = yes
 	
 	trigger = {
 		NOT = {
@@ -3260,6 +3314,8 @@ character_event = {
 	desc = EVTDESC_WOL_11202
 	picture = GFX_evt_melee
 	border = GFX_event_normal_frame_war
+
+	hide_from = yes
 	
 	trigger = {
 		has_character_modifier = wol_great_warrior
@@ -3288,6 +3344,8 @@ character_event = {
 	desc = EVTDESC_WOL_11203
 	picture = GFX_evt_melee
 	border = GFX_event_normal_frame_war
+
+	hide_from = yes
 	
 	option = {
 		name = EVTOPTA_WOL_11203
@@ -3302,6 +3360,8 @@ character_event = {
 	desc = EVTDESC_WOL_11204
 	picture = GFX_evt_melee
 	border = GFX_event_normal_frame_war
+
+	hide_from = yes
 	
 	option = {
 		name = EVTOPTA_WOL_11204
@@ -3327,6 +3387,8 @@ character_event = {
 	desc = EVTDESC_WOL_11205
 	picture = GFX_evt_melee
 	border = GFX_event_normal_frame_war
+
+	hide_from = yes
 	
 	option = {
 		name = EVTOPTA_WOL_11205
@@ -3351,6 +3413,9 @@ character_event = {
 	is_triggered_only = yes
 	picture = GFX_evt_melee
 	border = GFX_event_normal_frame_war
+
+	hide_from = yes
+
 	desc = {
 		text = EVTDESCA_WOL_11206
 		trigger = {
@@ -4004,6 +4069,8 @@ character_event = {
 		}
 		trigger = {
 			trait = zealous
+		}
+		trigger = {
 			NOT = { trait = holy_warrior }
 		}
 		add_trait = holy_warrior
