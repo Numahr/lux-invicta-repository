@@ -1,0 +1,1190 @@
+########################################################
+#
+# Event Chains for VIET Events Reborn
+# Fired from on_actions ten year pulse
+# VIETmisc.9010-9999 reserved
+# (VIETmisc.9000-9009 reserved for Cretan events)
+#
+# List of event chains:
+# Traveler Recounts Chinese Adventures 9010-9014
+# Dream of Oblivion 9015-9029
+# Love Lost 9030-9035
+# Dream of the Final Journey 9035-9044
+# 
+########################################################
+
+namespace = VIETmisc
+
+################################################################################
+# 
+# TRAVELER RECOUNTS CHINESE ADVENTURES
+# 
+# Character meets a merchant who tells about someone interesting they met in China.
+# Four options are possible: Courtesan, Poet, Soldier, and Official. 
+# Will only fire once per character's lifetime
+# 
+################################################################################
+
+# Meet a traveling merchant at a banquet
+character_event = {
+	id = VIETmisc.9010
+	desc = VIETmisc.9010.desc
+	picture = GFX_evt_feast
+	
+	is_triggered_only = yes
+	
+	min_age = 16
+	only_rulers = yes
+	capable_only = yes
+	prisoner = no
+	ai = no
+	war = no
+	
+	trigger = {
+		in_command = no
+		NOT = { has_character_flag =  VIET_chinese_traveler_tells_stories }
+		capital_scope = {
+			OR = {
+				region = custom_eastern_edge_of_map
+				region = world_himalayas
+				region = world_steppe
+				region = world_india
+				region = world_persia
+				region = world_middle_east
+				region = world_asia_minor				
+			}				
+		}
+		NOT = { has_alternate_start_parameter = { key = religion_names value = random } }
+		NOT = { has_alternate_start_parameter = { key = culture_names value = random } }
+	}
+	
+	weight_multiplier = {
+		days = 1
+		modifier = {
+			factor = 1.2
+			trait = gregarious
+		}
+		modifier = {
+			factor = 0.8
+			trait = shy
+		}
+		modifier = {
+			factor = 1.2
+			trait = humble
+		}
+		modifier = {
+			factor = 0.8
+			trait = proud
+		}
+		modifier = {
+			factor = 1.2
+			trait = patient
+		}
+		modifier = {
+			factor = 0.8
+			trait = wroth
+		}
+		modifier = {
+			factor = 1.2
+			trait = trusting
+		}
+		modifier = {
+			factor = 0.8
+			trait = paranoid
+		}
+	}
+	
+	immediate = {
+		set_character_flag = VIET_chinese_traveler_tells_stories
+	}
+	
+	option = { #the courtesan
+		name = VIETmisc.9010.a
+		add_character_modifier = {
+			name = VIET_chinese_rumors
+			duration = 960
+		}
+		narrative_event = { id = VIETmisc.9011 tooltip = VIETmisc.9011.tooltip }
+	}	
+	option = { #the poet
+		name = VIETmisc.9010.b
+		add_character_modifier = {
+			name = VIET_chinese_rumors
+			duration = 960
+		}
+		narrative_event = { id = VIETmisc.9012 tooltip = VIETmisc.9012.tooltip }
+	}	
+	option = { #the soldier
+		name = VIETmisc.9010.c
+		add_character_modifier = {
+			name = VIET_chinese_rumors
+			duration = 960
+		}
+		narrative_event = { id = VIETmisc.9013 tooltip = VIETmisc.9013.tooltip }
+	}	
+	option = { #the official
+		name = VIETmisc.9010.d
+		add_character_modifier = {
+			name = VIET_chinese_rumors
+			duration = 960
+		}
+		narrative_event = { id = VIETmisc.9014 tooltip = VIETmisc.9014.tooltip }
+	}
+}
+
+# The Courtesan's story
+narrative_event = {
+	id = VIETmisc.9011
+	title = VIETmisc.9011.title
+	desc = VIETmisc.9011.desc
+	picture = GFX_evt_chinese_princess
+	
+	is_triggered_only = yes
+	
+	option = { # strong female characters
+		name = VIETmisc.9011.a
+		add_character_modifier = {
+			name = VIET_girl_power
+			duration = 365
+		}
+	}	
+	option = { # beautiful!
+		name = VIETmisc.9011.b
+		add_character_modifier = {
+			name = VIET_admiring_beauty
+			duration = 365
+		}
+	}	
+	option = { # bad wimmin
+		name = VIETmisc.9011.c
+		add_character_modifier = {
+			name = VIET_sexist_against_women
+			duration = 365
+		}
+	}
+}
+
+# The Poet's story
+narrative_event = {
+	id = VIETmisc.9012
+	title = VIETmisc.9012.title
+	desc = VIETmisc.9012.desc
+	picture = GFX_evt_artemis_moon
+	
+	is_triggered_only = yes
+	
+	option = { # yay poetry
+		name = VIETmisc.9012.a
+		add_character_modifier = {
+			name = VIET_poetry_contemplation
+			duration = 365
+		}
+	}	
+	option = { # boo poetry
+		name = VIETmisc.9012.b
+		add_character_modifier = {
+			name = VIET_dislikes_hipsters
+			duration = 365
+		}
+	}
+}
+
+# The Soldiers's story
+narrative_event = {
+	id = VIETmisc.9013
+	title = VIETmisc.9013.title
+	desc = VIETmisc.9013.desc
+	picture = GFX_evt_scandal_chinese_group
+	
+	is_triggered_only = yes
+	
+	option = { # sad story
+		name = VIETmisc.9013.a
+		add_character_modifier = {
+			name = VIET_sobering_lesson
+			duration = 365
+		}
+	}
+}
+
+# The Official's story
+narrative_event = {
+	id = VIETmisc.9014
+	title = VIETmisc.9014.title
+	desc = VIETmisc.9014.desc
+	picture = GFX_evt_throne_room_chinese_group
+	
+	is_triggered_only = yes
+	
+	option = { # tragedy
+		name = VIETmisc.9014.a
+		add_character_modifier = {
+			name = VIET_sobering_lesson
+			duration = 365
+		}
+	}	
+	option = { # erotica plox
+		name = VIETmisc.9014.b
+		add_character_modifier = {
+			name = lustful_ruler
+			duration = 365
+		}
+	}
+}
+
+
+
+############################################################################################################
+# 
+# DREAM OF OBLIVION
+# Basically the plot of Oblivion's tutorial.
+# Character has a dream that is suspiciously similar to Elder Scroll Oblivion's storyline.
+# 
+############################################################################################################
+
+# Dreaming
+character_event = {
+	id = VIETmisc.9015
+	title = VIETmisc.9015.title
+	desc = VIETmisc.9015.desc
+	picture = GFX_evt_prison_cell
+	
+	is_triggered_only = yes
+	
+	min_age = 16
+	only_rulers = yes
+	capable_only = yes
+	prisoner = no
+	ai = no
+	war = no
+	
+	trigger = {
+		in_command = no
+		NOT = { has_global_flag =  VIET_Oblivion_dream }
+		learning = 6
+		NOT = {
+			has_game_rule = {
+				name = VIET_events_rules
+				value = serious
+			}		
+		}
+	}
+	
+	weight_multiplier = {
+		days = 1
+		modifier = {
+			factor = 1.2
+			trait = kind
+		}
+		modifier = {
+			factor = 0.8
+			trait = cruel
+		}
+		modifier = {
+			factor = 1.2
+			has_virtue_trigger = yes
+		}
+		modifier = {
+			factor = 0.8
+			has_evil_trait_trigger = yes
+		}
+		modifier = {
+			factor = 1.2
+			trait = patient
+		}
+		modifier = {
+			factor = 0.8
+			trait = wroth
+		}
+		modifier = {
+			factor = 1.2
+			trait = just
+		}
+		modifier = {
+			factor = 0.8
+			trait = arbitrary
+		}
+	}
+	
+	immediate = {
+		set_character_flag = VIET_played_oblivion
+		set_global_flag = VIET_Oblivion_dream
+	}
+	
+	option = { #okay
+		name = VIETmisc.9015.a
+		narrative_event = { id = VIETmisc.9016 tooltip = VIETmisc.9016.tooltip days = 3 random = 2 }
+	}
+}
+
+# Guards enter the cell
+narrative_event = {
+	id = VIETmisc.9016
+	title = VIETmisc.9016.title
+	desc = VIETmisc.9016.desc
+	picture = GFX_evt_group_hf
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9016.a
+		narrative_event = { id = VIETmisc.9017 tooltip = VIETmisc.9017.tooltip days = 3 random = 2 }
+	}
+}
+
+# "You are the one from my dreams"
+narrative_event = {
+	id = VIETmisc.9017
+	title = VIETmisc.9017.title
+	desc = VIETmisc.9017.desc
+	picture = GFX_evt_prison_cell
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9017.a
+		narrative_event = { id = VIETmisc.9018 tooltip = VIETmisc.9018.tooltip days = 3 random = 2 }
+	}
+}
+
+# Follow the Emperor
+narrative_event = {
+	id = VIETmisc.9018
+	title = VIETmisc.9018.title
+	desc = VIETmisc.9018.desc
+	picture = GFX_evt_prison_cell
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9018.a
+		narrative_event = { id = VIETmisc.9019 tooltip = VIETmisc.9019.tooltip days = 3 random = 2 }
+	}
+}
+
+# Relationship with the gods?
+narrative_event = {
+	id = VIETmisc.9019
+	title = VIETmisc.9019.title
+	desc = VIETmisc.9019.desc
+	picture = GFX_evt_dark_tunnel
+	
+	is_triggered_only = yes
+	
+	option = { # Guides and Protects Us
+		name = VIETmisc.9019.a
+		random = {
+			add_trait = zealous
+			chance = 20
+		}
+		narrative_event = { id = VIETmisc.9020 tooltip = VIETmisc.9020.tooltip days = 3 random = 2 }
+	}	
+	option = { # Not on Good Terms
+		name = VIETmisc.9019.b
+		random = {
+			add_trait = cynical
+			chance = 20
+		}
+		narrative_event = { id = VIETmisc.9020 tooltip = VIETmisc.9020.tooltip days = 3 random = 2 }
+	}	
+	option = { # Don't Think About It
+		name = VIETmisc.9019.c
+		random = {
+			add_trait = content
+			chance = 20
+		}
+		narrative_event = { id = VIETmisc.9020 tooltip = VIETmisc.9020.tooltip days = 3 random = 2 }
+	}
+}
+
+# Stars
+narrative_event = {
+	id = VIETmisc.9020
+	title = VIETmisc.9020.title
+	desc = VIETmisc.9020.desc
+	picture = GFX_evt_comet
+	
+	is_triggered_only = yes
+	
+	option = { # okay
+		name = VIETmisc.9020.a
+		narrative_event = { id = VIETmisc.9021 tooltip = VIETmisc.9021.tooltip days = 3 random = 2 }
+	}
+}
+
+# Fate, Doom, and all that
+narrative_event = {
+	id = VIETmisc.9021
+	title = VIETmisc.9021.title
+	desc = VIETmisc.9021.desc
+	picture = GFX_evt_dark_tunnel
+	
+	is_triggered_only = yes
+	
+	option = { # okay
+		name = VIETmisc.9021.a
+		narrative_event = { id = VIETmisc.9022 tooltip = VIETmisc.9022.tooltip days = 3 random = 2 }
+	}
+}
+
+# Patrick Stewart's Shakespeare Quote
+narrative_event = {
+	id = VIETmisc.9022
+	title = VIETmisc.9022.title
+	desc = VIETmisc.9022.desc
+	picture = GFX_evt_dueling_knights_hf
+	
+	is_triggered_only = yes
+	
+	option = { # okay
+		name = VIETmisc.9022.a
+		narrative_event = { id = VIETmisc.9023 tooltip = VIETmisc.9023.tooltip days = 3 random = 2 }
+	}
+}
+
+# Farewell to the Emperor
+narrative_event = {
+	id = VIETmisc.9023
+	title = VIETmisc.9023.title
+	desc = VIETmisc.9023.desc
+	picture = GFX_evt_nightmare
+	
+	is_triggered_only = yes
+	
+	option = { # With all my heart
+		name = VIETmisc.9023.a
+		piety = 5
+		narrative_event = { id = VIETmisc.9024 tooltip = VIETmisc.9024.tooltip.a days = 3 random = 2 }
+	}	
+	option = { # Won't forget
+		name = VIETmisc.9023.b
+		random_list = {
+			50 = { piety = 5 }
+			50 = { prestige = 5 }
+		}
+		narrative_event = { id = VIETmisc.9024 tooltip = VIETmisc.9024.tooltip.b days = 3 random = 2 }
+	}
+	option = { # Take it from here
+		name = VIETmisc.9023.c
+		prestige = 5
+		narrative_event = { id = VIETmisc.9024 tooltip = VIETmisc.9024.tooltip.c days = 3 random = 2 }
+	}
+}
+
+# Boink
+narrative_event = {
+	id = VIETmisc.9024
+	title = VIETmisc.9024.title
+	desc = VIETmisc.9024.desc
+	picture = GFX_evt_cornered_duel_hf
+	
+	is_triggered_only = yes
+	
+	option = { # Nooo!!!
+		name = VIETmisc.9024.a
+		narrative_event = { id = VIETmisc.9025 tooltip = VIETmisc.9025.tooltip days = 3 random = 2 }
+	}	
+}
+
+# Hope
+narrative_event = {
+	id = VIETmisc.9025
+	title = VIETmisc.9025.title
+	desc = VIETmisc.9025.desc
+	picture = GFX_evt_nightmare
+	
+	is_triggered_only = yes
+	
+	option = { # Okay
+		name = VIETmisc.9025.a
+		narrative_event = { id = VIETmisc.9026 tooltip = VIETmisc.9026.tooltip days = 3 random = 2 }
+	}	
+}
+
+# It's Time to Find Jauffre
+narrative_event = {
+	id = VIETmisc.9026
+	title = VIETmisc.9026.title
+	desc = VIETmisc.9026.desc
+	picture = GFX_evt_dark_tunnel
+	
+	is_triggered_only = yes
+	
+	option = { # Okay
+		name = VIETmisc.9026.a
+		narrative_event = { id = VIETmisc.9027 tooltip = VIETmisc.9027.tooltip days = 3 random = 2 }
+	}	
+}
+
+
+# Emerge from the Sewers and see Vilverin
+narrative_event = {
+	id = VIETmisc.9027
+	title = VIETmisc.9027.title
+	desc = VIETmisc.9027.desc
+	picture = GFX_evt_oblivion_exiting_dungeon_view
+	
+	is_triggered_only = yes
+	
+	option = { # Okay
+		name = VIETmisc.9027.a
+		custom_tooltip = {
+			text = VIETmisc.9028.tooltip
+		}
+		hidden_tooltip = {
+			random_list = {
+				75 = { narrative_event = { id = VIETmisc.9028 days = 3 random = 2 } }
+				25 = { narrative_event = { id = VIETmisc.9029 days = 3 random = 2 } }
+			}
+		}
+	}	
+}
+
+
+# Brief Summary of Oblivion's Plot
+narrative_event = {
+	id = VIETmisc.9028
+	title = VIETmisc.9028.title
+	desc = VIETmisc.9028.desc
+	picture = GFX_evt_oblivion_pastoral_dream
+	
+	is_triggered_only = yes
+	
+	option = { # Okay
+		name = VIETmisc.9028.a
+		piety = 25
+		prestige = 25
+		add_character_modifier = {
+			name = VIET_Oblivion_dream_complete
+			duration = -1 #1825
+		}
+		add_artifact = VIET_oblivion_dream_book
+	}	
+}
+
+
+# Brief Summary of Oblivion's Plot... if you didn't bother with the main quest
+# Credits to this_anon from this reddit thread, the text was mostly their idea, with some minor tweaks and changes on my part:
+# https://www.reddit.com/r/CrusaderKings/comments/dhi7v2/cant_wait_for_the_elder_scrolls_vi_wallachia/f3p3t9t/
+narrative_event = {
+	id = VIETmisc.9029
+	title = VIETmisc.9029.title
+	desc = VIETmisc.9029.desc
+	picture = GFX_evt_oblivion_pastoral_dream
+	
+	is_triggered_only = yes
+	
+	option = { # Okay
+		name = VIETmisc.9029.a
+		piety = 25
+		prestige = 25
+		add_character_modifier = {
+			name = VIET_Oblivion_dream_complete
+			duration = -1 #1825
+		}
+		add_artifact = VIET_oblivion_dream_book_alt
+		random_list = {
+			60 = { }
+			20 = { add_trait = cynical }
+			20 = { add_trait = depressed }
+		}
+	}		
+	option = { # Okay
+		name = VIETmisc.9029.b
+		piety = 25
+		prestige = 25
+		add_character_modifier = {
+			name = VIET_Oblivion_dream_complete
+			duration = -1 #1825
+		}
+		add_artifact = VIET_oblivion_dream_book_alt
+		random_list = {
+			60 = { }
+			20 = { add_trait = diligent }
+			20 = { add_trait = stressed }
+		}		
+	}		
+	option = { # Okay
+		name = VIETmisc.9029.c
+		piety = 25
+		prestige = 25
+		add_character_modifier = {
+			name = VIET_Oblivion_dream_complete
+			duration = -1 #1825
+		}
+		add_artifact = VIET_oblivion_dream_book_alt
+	}	
+}
+
+
+######################################################################################
+# 
+# LOST LOVE
+# A beloved old servant who is dying mistakes the character for their lost love,
+# thus allowing them the blessing of the last thing they see before passing on
+# is the smiling visage of someone who meant so much to them for all these years.
+# 
+######################################################################################
+
+
+# Lost Love - a beloved servant falls ill and is dying
+# NOTE: Servant is always the opposite gender of the character
+character_event = {
+	id = VIETmisc.9030
+	#title = VIETmisc.9030.title
+	desc = VIETmisc.9030.desc
+	picture = GFX_evt_castle_construction
+	
+	is_triggered_only = yes
+	
+	min_age = 16
+	max_age = 60 # Narrative is less fitting if character is too old
+	only_rulers = yes
+	capable_only = yes
+	prisoner = no
+	ai = no
+	war = no
+	
+	trigger = {
+		in_command = no
+		NOT = { has_global_flag =  VIET_lost_love_event_chain }
+		#NOT = { trait = cruel }
+	}
+	
+	weight_multiplier = {
+		days = 1
+		modifier = {
+			factor = 1.2
+			trait = kind
+		}
+		modifier = {
+			factor = 0.8
+			trait = envious
+		}
+		modifier = {
+			factor = 1.2
+			has_virtue_trigger = yes
+		}
+		modifier = {
+			factor = 0.8
+			has_evil_trait_trigger = yes
+		}
+		modifier = {
+			factor = 1.2
+			trait = humble
+		}
+		modifier = {
+			factor = 0.8
+			trait = patient
+		}
+		modifier = {
+			factor = 1.2
+			trait = gregarious
+		}
+		modifier = {
+			factor = 0.8
+			trait = shy
+		}
+		modifier = {
+			factor = 1.2
+			has_attractive_trait_trigger = yes
+		}
+		modifier = {
+			factor = 0.8
+			has_unattractive_trait_trigger = yes
+		}
+	}
+	
+	immediate = {
+		set_global_flag = VIET_lost_love_event_chain
+	}
+	
+	option = { #okay
+		name = VIETmisc.9030.a
+		narrative_event = { id = VIETmisc.9031 tooltip = VIETmisc.9031.tooltip }
+	}
+}
+
+
+# The servant awakes
+narrative_event = {
+	id = VIETmisc.9031
+	title = VIETmisc.9031.title
+	desc = VIETmisc.9031.desc
+	picture = GFX_evt_recovery
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9031.a
+		narrative_event = { id = VIETmisc.9032 tooltip = VIETmisc.9032.tooltip }
+	}
+}
+
+
+# The servant mistakes the character for their long-lost love
+narrative_event = {
+	id = VIETmisc.9032
+	title = VIETmisc.9032.title
+	desc = VIETmisc.9032.desc
+	picture = GFX_evt_lovers
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9032.a
+		narrative_event = { id = VIETmisc.9033 tooltip = VIETmisc.9033.tooltip days = 3 random = 3 }
+	}
+}
+
+
+# After the funeral, character meets with servant's sister, for answers
+narrative_event = {
+	id = VIETmisc.9033
+	title = VIETmisc.9033.title
+	desc = VIETmisc.9033.desc
+	picture = GFX_evt_death
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9033.a
+		narrative_event = { id = VIETmisc.9034 tooltip = VIETmisc.9034.tooltip }
+	}
+}
+
+
+# The sister tells how coincidentally, the character shares the same name as the servant's long-lost love
+narrative_event = {
+	id = VIETmisc.9034
+	title = VIETmisc.9034.title
+	desc = VIETmisc.9034.desc
+	picture = GFX_evt_lovers
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9034.a
+		narrative_event = { id = VIETmisc.9035 tooltip = VIETmisc.9035.tooltip }
+	}
+}
+
+
+# The sister thanks the character
+narrative_event = {
+	id = VIETmisc.9035
+	title = VIETmisc.9035.title
+	desc = VIETmisc.9035.desc
+	picture = GFX_evt_hyouka
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9035.a
+		if = {
+			limit = {
+				NOT = { trait = kind }
+			}
+			add_trait = kind
+		}
+		piety = 10
+		add_character_modifier = {
+			name = VIET_servants_death_love_lesson
+			duration = -1
+		}
+	}
+}
+
+
+############################################################################################################
+# 
+# DREAM OF THE FINAL JOURNEY
+# Character dreams of deceased grandparent, who gently guides them to prepare for their own death.
+# Will only happen to older characters to prevent healthy young characters from dying "for no reason."
+# In real life, studies have shown that it is very common for people to experience "end of life dreams."
+# These visions, which are not the same as hallucinations, often feature deceased relatives or friends.
+# The majority of these dreams tend to be comforting, peaceful, and help the person who's dying prepare.
+# The event chain I wrote here is loosely inspired by some of the anecdotes discussed in these studies.
+# If you're reading this, I highly recommend you search up "End of Life dreams." They can be rather profound.
+# 
+############################################################################################################
+
+
+
+# Dream of the Final Journey - beloved grandparent returns to guide character into the afterlife
+character_event = {
+	id = VIETmisc.9036
+	#title = VIETmisc.9036.title
+	desc = VIETmisc.9036.desc
+	picture = GFX_evt_apollo_sun
+	
+	is_triggered_only = yes
+	
+	min_age = 50 # Narrative is less fitting if character is older
+	only_rulers = yes
+	capable_only = yes
+	prisoner = no
+	ai = no
+	war = no
+	
+	trigger = {
+		in_command = no
+		NOT = { has_global_flag =  VIET_final_journey_dream_completed }
+		NOT = { has_character_flag =  VIET_final_journey_dream_chosen }
+		# While this ideally should happen to anyone, in order to ensure the full storyline plays out, it's best to do it with someone healthy
+		has_disease_trigger = no
+		has_symptom_trigger = no
+		has_minor_disease_trigger = no
+		health = 5
+		# Grandparents are probably dead by now, but just to be safe
+		OR = {
+			father_even_if_dead = {
+				father_even_if_dead = {
+					is_alive = no
+					OR = {
+						is_benevolent_trigger = yes
+						has_pleasant_trait_trigger = yes
+					}
+					NOT = { trait = wroth }
+					NOT = { trait = envious }				
+				}
+			}
+			father_even_if_dead = {
+				mother_even_if_dead = {
+					is_alive = no
+					OR = {
+						is_benevolent_trigger = yes
+						has_pleasant_trait_trigger = yes
+					}
+					NOT = { trait = wroth }
+					NOT = { trait = envious }				
+				}
+			}
+			mother_even_if_dead = {
+				mother_even_if_dead = {
+					is_alive = no
+					OR = {
+						is_benevolent_trigger = yes
+						has_pleasant_trait_trigger = yes
+					}
+					NOT = { trait = wroth }
+					NOT = { trait = envious }				
+				}
+			}
+			mother_even_if_dead = {
+				father_even_if_dead = {
+					is_alive = no
+					OR = {
+						is_benevolent_trigger = yes
+						has_pleasant_trait_trigger = yes
+					}
+					NOT = { trait = wroth }
+					NOT = { trait = envious }				
+				}
+			}
+		}
+		#any_dynasty_member_even_if_dead = {
+		#	is_grandparent_of = ROOT
+		#	is_alive = no
+		#	OR = {
+		#		is_benevolent_trigger = yes
+		#		has_pleasant_trait_trigger = yes
+		#	}
+		#	NOT = { trait = wroth }
+		#	NOT = { trait = envious }
+		#}
+	}
+	
+	weight_multiplier = {
+		days = 1		
+		modifier = {
+			factor = 2
+			age = 70
+		}		
+		modifier = {
+			factor = 1.5
+			age = 60
+		}
+		modifier = {
+			factor = 0.5
+			NOT = { age = 55 }
+		}
+		modifier = {
+			factor = 1.2
+			trait = kind
+		}
+		modifier = {
+			factor = 0.8
+			trait = envious
+		}
+		modifier = {
+			factor = 1.2
+			has_virtue_trigger = yes
+		}
+		modifier = {
+			factor = 0.8
+			has_evil_trait_trigger = yes
+		}
+		modifier = {
+			factor = 1.2
+			trait = humble
+		}
+		modifier = {
+			factor = 0.8
+			trait = patient
+		}
+		modifier = {
+			factor = 1.2
+			trait = trusting
+		}
+		modifier = {
+			factor = 0.8
+			trait = paranoid
+		}
+	}
+	
+	immediate = {
+		set_character_flag = VIET_final_last_journey_chosen
+		random_list = {
+			25 = {
+				trigger = {
+					father_even_if_dead = {
+						father_even_if_dead = {
+							is_alive = no
+							OR = {
+								is_benevolent_trigger = yes
+								has_pleasant_trait_trigger = yes
+							}
+							NOT = { trait = wroth }
+							NOT = { trait = envious }							
+						}
+					}
+				}
+				father_even_if_dead = {
+					father_even_if_dead = {
+						save_event_target_as = target_VIET_grandparent_dream
+					}
+				}
+			}
+			25 = {
+				trigger = {
+					father_even_if_dead = {
+						mother_even_if_dead = {
+							is_alive = no
+							OR = {
+								is_benevolent_trigger = yes
+								has_pleasant_trait_trigger = yes
+							}
+							NOT = { trait = wroth }
+							NOT = { trait = envious }							
+						}
+					}
+				}
+				father_even_if_dead = {
+					mother_even_if_dead = {
+						save_event_target_as = target_VIET_grandparent_dream
+					}
+				}
+			}
+			25 = {
+				trigger = {
+					mother_even_if_dead = {
+						father_even_if_dead = {
+							is_alive = no
+							OR = {
+								is_benevolent_trigger = yes
+								has_pleasant_trait_trigger = yes
+							}
+							NOT = { trait = wroth }
+							NOT = { trait = envious }							
+						}
+					}
+				}
+				mother_even_if_dead = {
+					father_even_if_dead = {
+						save_event_target_as = target_VIET_grandparent_dream
+					}
+				}
+			}
+			25 = {
+				trigger = {
+					mother_even_if_dead = {
+						mother_even_if_dead = {
+							is_alive = no
+							OR = {
+								is_benevolent_trigger = yes
+								has_pleasant_trait_trigger = yes
+							}
+							NOT = { trait = wroth }
+							NOT = { trait = envious }							
+						}
+					}
+				}
+				mother_even_if_dead = {
+					mother_even_if_dead = {
+						save_event_target_as = target_VIET_grandparent_dream
+					}
+				}
+			}
+		}
+		#random_dynasty_member_even_if_dead = {
+		#	limit = {
+		#		is_grandparent_of = ROOT
+		#		is_alive = no
+		#		OR = {
+		#			is_benevolent_trigger = yes
+		#			has_pleasant_trait_trigger = yes
+		#		}
+		#		NOT = { trait = wroth }
+		#		NOT = { trait = envious }
+		#	}
+		#	save_event_target_as = target_VIET_grandparent_dream
+		#}
+	}
+	
+	option = { #okay
+		name = VIETmisc.9036.a
+		#hidden_tooltip = {
+		#	event_target:target_VIET_grandparent_dream = {
+		#		piety = 5
+		#	}		
+		#}
+		narrative_event = { id = VIETmisc.9037 tooltip = VIETmisc.9037.tooltip }
+	}
+}
+
+# Reunion - character sees grandparent in dream
+narrative_event = {
+	id = VIETmisc.9037
+	title = VIETmisc.9037.title
+	desc = VIETmisc.9037.desc
+	picture = GFX_evt_oblivion_pastoral_dream
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9037.a
+		narrative_event = { id = VIETmisc.9038 tooltip = VIETmisc.9038.tooltip }
+	}
+}
+
+# Grandparent tells character to prepare for a journey
+narrative_event = {
+	id = VIETmisc.9038
+	title = VIETmisc.9038.title
+	desc = VIETmisc.9038.desc
+	picture = GFX_evt_family
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9038.a
+		character_event = { id = VIETmisc.9039 tooltip = VIETmisc.9039.tooltip }
+	}
+}
+
+# Character wakes up, feeling comforted
+character_event = {
+	id = VIETmisc.9039
+	#title = VIETmisc.9039.title
+	desc = VIETmisc.9039.desc
+	picture = GFX_evt_modern_slice_of_life
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9039.a
+		hidden_tooltip = { long_character_event = { id = VIETmisc.9040 days = 30 random = 60 } }
+	}
+}
+
+# Character keeps seeing grandparent in real life
+long_character_event = {
+	id = VIETmisc.9040
+	#title = VIETmisc.9040.title
+	desc = VIETmisc.9040.desc
+	picture = GFX_evt_garden
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9040.a
+		hidden_tooltip = { narrative_event = { id = VIETmisc.9041 days = 30 random = 60 } }
+	}
+}
+
+# Grandparent returns once more in a second dream for another gentle reminder
+narrative_event = {
+	id = VIETmisc.9041
+	title = VIETmisc.9041.title
+	desc = VIETmisc.9041.desc
+	picture = GFX_evt_oblivion_pastoral_dream
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9041.a
+		character_event = { id = VIETmisc.9042 tooltip = VIETmisc.9042.tooltip }
+	}
+}
+
+# Character wakes up and starts to show signs of impending death but is at ease and peace
+character_event = {
+	id = VIETmisc.9042
+	#title = VIETmisc.9042.title
+	desc = VIETmisc.9042.desc
+	picture = GFX_evt_modern_slice_of_life
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9042.a
+		narrative_event = { id = VIETmisc.9043 tooltip = VIETmisc.9043.tooltip days = 10 random = 20 }
+	}
+}
+
+# Character prepares for death
+narrative_event = {
+	id = VIETmisc.9043
+	title = VIETmisc.9043.title
+	desc = VIETmisc.9043.desc
+	picture = GFX_evt_hyouka
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9043.a
+		narrative_event = { id = VIETmisc.9044 tooltip = VIETmisc.9044.tooltip }
+	}
+}
+
+# The character begins their journey with their grandparent
+narrative_event = {
+	id = VIETmisc.9044
+	title = VIETmisc.9044.title
+	desc = VIETmisc.9044.desc
+	picture = GFX_evt_holy_light_basic
+	
+	is_triggered_only = yes
+	
+	option = { #okay
+		name = VIETmisc.9044.a
+		piety = 100
+		hidden_tooltip = {
+			any_dynasty_member = {
+				limit = {
+					is_close_relative = ROOT
+				}
+				#piety = 25
+				add_character_modifier = {
+					name = VIET_final_journey_dream_relative
+					duration = 1460
+				}
+			}		
+		}
+		death = {
+			death_reason = death_natural
+		}
+		set_global_flag =  VIET_final_journey_dream_completed
+	}
+}
