@@ -49,6 +49,17 @@ character_event = {
 			has_character_modifier = relic_rumor_medium
 			has_character_modifier = relic_rumor_minor
 		}
+		NOT = {
+			has_alternate_start_parameter = { key = religion_names value = random }
+		}
+	}
+	
+	weight_multiplier = {
+		days = 1
+		modifier = {
+		factor = 2.0
+		has_ambition = obj_create_treasury
+		}
 	}
 
 	immediate = {
@@ -626,7 +637,7 @@ character_event = {
 							modifier = { factor = 1.4 martial = 15 }	
 							modifier = { factor = 1.4 martial = 18 }	
 							modifier = { factor = 1.4 trait = brave }
-							modifier = { factor = 1.4 combat_rating = 2 }
+							modifier = { factor = 1.4 combat_rating = 20 }
 							event_target:relic_ruler = { 
 								change_variable = { which = relic_score value = 1 } 
 								if = {
@@ -7767,14 +7778,26 @@ character_event = {
         		random_list = { #Stewardship
         			15 = { change_stewardship = 1 }
         			25 = { change_stewardship = 3 }
-        			20 = { change_stewardship = 5 }
-        			10 = { change_stewardship = 7 }
+        			20 = {
+        				artisan_craftsmen_bloodline_increase_score = yes
+        				change_stewardship = 5
+        			}
+        			10 = {
+        				artisan_craftsmen_bloodline_increase_score = yes
+        				change_stewardship = 7
+        			}
         		}
         		random_list = { #Personality
         			1 = { add_trait = greedy }
         			1 = { add_trait = envious }
-        			1 = { add_trait = charitable }
-        			1 = { add_trait = diligent }
+        			1 = {
+        				artisan_craftsmen_bloodline_increase_score = yes
+        				add_trait = charitable
+        			}
+        			1 = {
+        				artisan_craftsmen_bloodline_increase_score = yes
+        				add_trait = diligent
+        			}
         			1 = { add_trait = deceitful }
         		}
         		random = {
@@ -7783,6 +7806,7 @@ character_event = {
         				factor = 2
         				trait = indulgent_wastrel
         			}
+        			artisan_craftsmen_bloodline_increase_score = yes
         			upgrade_education_effect = yes
         		}
 			}
@@ -7887,6 +7911,13 @@ character_event = {
         			modifier = { factor = 0.2 FROM = { trait = content } }
         			modifier = { factor = 1.5 FROM = { trait = ambitious } }
         			modifier = { factor = 1.3 FROM = { trait = deceitful } }
+        			trigger = {
+        				NOT = {
+	        				any_owned_bloodline = {
+								has_bloodline_flag = bloodline_artisan_craftsmen
+							}
+        				}
+        			}
         			set_character_flag = goldsmith_steal
 				}
 	    	}
@@ -7980,6 +8011,13 @@ character_event = {
         			modifier = { factor = 0.2 FROM = { trait = content } }
         			modifier = { factor = 1.5 FROM = { trait = ambitious } }
         			modifier = { factor = 1.3 FROM = { trait = deceitful } }
+        			trigger = {
+        				NOT = {
+	        				any_owned_bloodline = {
+								has_bloodline_flag = bloodline_artisan_craftsmen
+							}
+        				}
+        			}
         			set_character_flag = goldsmith_steal
 				}
 			}
@@ -8068,6 +8106,13 @@ character_event = {
         			modifier = { factor = 0.2 FROM = { trait = content } }
         			modifier = { factor = 1.5 FROM = { trait = ambitious } }
         			modifier = { factor = 1.3 FROM = { trait = deceitful } }
+        			trigger = {
+        				NOT = {
+	        				any_owned_bloodline = {
+								has_bloodline_flag = bloodline_artisan_craftsmen
+							}
+        				}
+        			}
         			set_character_flag = goldsmith_steal
 				}
 			}
@@ -8158,59 +8203,14 @@ character_event = {
 
     option = { 
         name = EVTOPTA_MNM_9105
-
-        if = {
-        	limit = { 
-        		OR = {
-        			religion_group = christian 
-        			religion_group = jewish_group
-				}
-        	}
-        	add_artifact = crown_of_majesty_2
-        	add_artifact = emerald_scepter_2
-        	add_artifact = sword_of_heroes_2
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = muslim 
-        			religion_group = serer_group
-        		}
-        	}
-        	add_artifact = dagger_of_glory_2
-        	add_artifact = ruby_bracelets_2
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = indian_group
-					religion_group = bud_group
-        		}
-        	}
-        	add_artifact = dagger_of_glory_2
-        	add_artifact = celestial_necklace_2
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = zoroastrian_group
-					religion_group = indohelen_group
-				}
-			}
-        	add_artifact = circlet_of_the_heavens_2
-        	add_artifact = staff_of_majesty_2
-        }
-        else_if = {
-        	limit = {
-        		religion_group = norsegerman_group
-        	}
-        	add_artifact = crown_of_crows_2
-        	add_artifact = sword_of_heroes_2
-        }
-        else = {
-        	add_artifact = heros_crown_2
-        	add_artifact = axe_of_the_ancestors_2
-        }
+        if = { 
+        	limit = { have_duplicate_goldsmith_artifacts_flag_amazing_trigger = no } # If player doesn't already have all items in the given set, then give items
+	        give_goldsmith_artifacts_flag_amazing_effect = yes
+	    }
+	    else = {
+	    	scaled_wealth = { value = 3.5 min = 230 max = 2000 } # Get some money back if duplicate
+	    	custom_tooltip = { text = EVTTT_MNM_9105_NO_DUPLICATES }
+	    }
 
         hidden_effect = { 
         	event_target:smith = { character_event = { id = MNM.9110 days = 5 } } 
@@ -8249,59 +8249,14 @@ character_event = {
 
     option = { 
         name = EVTOPTA_MNM_9105
-
-        if = {
-        	limit = { 
-        		OR = {
-        			religion_group = christian 
-        			religion_group = jewish_group
-				}
-        	}
-        	add_artifact = crown_of_majesty
-        	add_artifact = emerald_scepter
-        	add_artifact = sword_of_heroes
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = muslim 
-        			religion_group = serer_group
-        		}
-        	}
-        	add_artifact = dagger_of_glory
-        	add_artifact = ruby_bracelets
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = indian_group
-					religion_group = bud_group
-        		}
-        	}
-        	add_artifact = dagger_of_glory
-        	add_artifact = celestial_necklace
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = zoroastrian_group
-					religion_group = indohelen_group
-				}
-			}
-        	add_artifact = circlet_of_the_heavens
-        	add_artifact = staff_of_majesty
-        }
-        else_if = {
-        	limit = {
-        		religion_group = norsegerman_group
-        	}
-        	add_artifact = crown_of_crows
-        	add_artifact = sword_of_heroes
-        }
-        else = {
-        	add_artifact = heros_crown
-        	add_artifact = axe_of_the_ancestors
-        }
+        if = { 
+        	limit = { have_duplicate_goldsmith_artifacts_flag_expensive_trigger = no } # If player doesn't already have all items in the given set, then give items
+	        give_goldsmith_artifacts_flag_expensive_effect = yes
+	    }
+	    else = {
+	    	scaled_wealth = { value = 3.5 min = 230 max = 2000 } # Get some money back if duplicate
+	    	custom_tooltip = { text = EVTTT_MNM_9105_NO_DUPLICATES }
+	    }
 
         hidden_effect = { 
         	event_target:smith = { character_event = { id = MNM.9110 days = 5 } } 
@@ -8341,59 +8296,16 @@ character_event = {
     option = {
         name = EVTOPTA_MNM_9106
 
-        if = {
-        	limit = { 
-        		OR = {
-        			religion_group = christian 
-        			religion_group = jewish_group
-				}
-        	}
-        	add_artifact = crown_of_pearls
-        	add_artifact = ruby_scepter
-        	add_artifact = golden_sword
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = muslim 
-        			religion_group = serer_group
-        		}
-        	}
-        	add_artifact = bejeweled_dagger
-        	add_artifact = golden_bracelets
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = indian_group
-					religion_group = bud_group
-        		}
-        	}
-        	add_artifact = bejeweled_dagger
-        	add_artifact = necklace_of_radiance
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = zoroastrian_group
-					religion_group = indohelen_group
-				}
-			}
-        	add_artifact = circlet_of_the_heavens
-        	add_artifact = golden_staff
-        }
-        else_if = {
-        	limit = { 
-        		religion_group = norsegerman_group
-        	}
-        	add_artifact = crown_of_the_sea
-        	add_artifact = golden_sword
-        }
-        else = {
-        	add_artifact = amber_crown
-        	add_artifact = obsidian_axe
-        }
-
+        if = { 
+        	limit = { have_duplicate_goldsmith_artifacts_flag_good_trigger = no } 
+        	# If player doesn't already have all items in the given set, then give items
+	        give_goldsmith_artifacts_flag_good_effect = yes
+	    }
+	    else = {
+	    	scaled_wealth = { value = 1.8 min = 100 max = 500 } # Get some money back if duplicate
+	    	custom_tooltip = { text = EVTTT_MNM_9105_NO_DUPLICATES }
+	    }
+        
         hidden_effect = { 
         	event_target:smith = { character_event = { id = MNM.9110 days = 5 } } 
         	clr_character_flag = expensive_jewels
@@ -8440,59 +8352,16 @@ character_event = {
     option = {
         name = EVTOPTA_MNM_9107
 
-        if = {
-        	limit = {
-        		OR = {
-        			religion_group = christian 
-        			religion_group = jewish_group
-				}
-        	}
-        	add_artifact = the_lily_crown
-        	add_artifact = noble_scepter
-        	add_artifact = engraved_sword
-        }
-        else_if = {
-        	limit = {
-        		OR = {
-        			religion_group = muslim 
-        			religion_group = serer_group
-        		}
-        	}
-        	add_artifact = engraved_dagger
-        	add_artifact = silver_bracelets
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = indian_group
-        			religion_group = bud_group
-        		}
-        	}
-        	add_artifact = engraved_dagger
-        	add_artifact = collar_of_pearls
-        }
-        else_if = {
-        	limit = { 
-        		OR = {
-        			religion_group = zoroastrian_group
-					religion_group = indohelen_group
-				}
-			}
-        	add_artifact = circlet_of_twilight
-        	add_artifact = silver_staff
-        }
-        else_if = {
-        	limit = {
-        		religion_group = norsegerman_group
-        	}
-        	add_artifact = iron_crown
-        	add_artifact = engraved_sword
-        }
-        else = {
-        	add_artifact = engraved_crown
-        	add_artifact = ceremonial_axe
-        }
-
+        if = { 
+        	limit = { have_duplicate_goldsmith_artifacts_flag_okay_trigger = no } 
+        	# If player doesn't already have all items in the given set, then give items
+	        give_goldsmith_artifacts_flag_okay_effect = yes
+	    }
+	    else = {
+	    	scaled_wealth = { value = 0.8 min = 40 max = 100 } # Get some money back if duplicate
+	    	custom_tooltip = { text = EVTTT_MNM_9105_NO_DUPLICATES }
+	    }
+        
         hidden_effect = { 
         	event_target:smith = { character_event = { id = MNM.9110 days = 5 } } 
         	clr_character_flag = expensive_jewels
@@ -8711,12 +8580,28 @@ character_event = {
 ###WEAPON EVENTS###
 character_event = {
     id = MNM.9115
-    desc = EVTDESC_MNM_9115
     picture = GFX_evt_weaponsmith
     border = GFX_event_normal_frame_economy
-
     hide_from = yes
     is_triggered_only = yes
+	
+	
+	desc = {
+		text = EVTDESC_MNM_9115
+		trigger = {
+			any_courtier_or_vassal = {
+				has_job_title = job_marshal
+			}
+		}
+	}
+	desc = {
+		text = EVTDESC_MNM_9115_b
+		trigger = {
+			NOT = { any_courtier_or_vassal = {
+				has_job_title = job_marshal 
+			} }
+		}
+	}
     
     trigger = {
     	OR = {
@@ -8787,14 +8672,26 @@ character_event = {
         		random_list = { #Stewardship
         			15 = { change_stewardship = 1 }
         			25 = { change_stewardship = 3 }
-        			20 = { change_stewardship = 5 }
-        			10 = { change_stewardship = 7 }
+        			20 = {
+        				change_stewardship = 5
+        				artisan_craftsmen_bloodline_increase_score = yes
+        			}
+        			10 = {
+        				change_stewardship = 7
+        				artisan_craftsmen_bloodline_increase_score = yes
+        			}
         		}
         		random_list = { #Personality
         			1 = { add_trait = greedy }
         			1 = { add_trait = envious }
-        			1 = { add_trait = charitable }
-        			1 = { add_trait = diligent }
+        			1 = {
+        				add_trait = charitable
+        				artisan_craftsmen_bloodline_increase_score = yes
+        			}
+        			1 = {
+        				add_trait = diligent
+        				artisan_craftsmen_bloodline_increase_score = yes
+        			}
         			1 = { add_trait = deceitful }
         		}
         		random = {
@@ -8803,6 +8700,7 @@ character_event = {
         				factor = 2
         				trait = indulgent_wastrel
         			}
+        			artisan_craftsmen_bloodline_increase_score = yes
         			upgrade_education_effect = yes
         		}
 			}
@@ -8820,6 +8718,15 @@ character_event = {
     			save_event_target_as = neighbor_province
     		}
     	}
+    	#If the player has an armory
+    	random_realm_wonder_upgrade = {
+			limit = {
+				has_wonder_upgrade = upgrade_armory
+				is_active = yes
+			}
+			save_event_target_as = the_armory
+			wonder = { save_event_target_as = the_wonder }
+		}
     }
 
     #Yes, invite them!
@@ -8839,20 +8746,182 @@ character_event = {
         		character_event = { id = MNM.9116 days = 7 } 
         	}
         }
+		trigger = {
+			any_courtier_or_vassal = {
+				has_job_title = job_marshal
+			}
+		}
     }
+	
+	option = {
+		name = EVTOPTA_MNM_9115_b
+		 custom_tooltip = { text = EVTOPTA_MNM_9115_TT }
+		  hidden_effect = {
+        	save_event_target_as = smith_employer
+        	event_target:smith = { 
+        		character_event = { id = MNM.9116 days = 7 } 
+        	}
+        }
+		trigger = {
+			NOT = { 
+				any_courtier_or_vassal = {
+					has_job_title = job_marshal 
+				} 
+			}
+		}
+	}
 
     #Don't invite them
     option = {
         name = EVTOPTB_MNM_9115
+        trigger = {
+        	NOT = { event_target:the_armory = { always = yes } }
+        }
         custom_tooltip = { text = EVTOPTB_MNM_9115_TT }
         hidden_effect = {
         	event_target:smith = { 
         		leave_court_and_die_effect = yes
         	}
         }
-        clr_character_flag = weaponsmith
+		
+		if = {
+			limit = {
+				has_character_flag = weaponsmith
+				NOR = {
+					has_artifact = terrible_sword
+					has_character_flag = got_terrible_sword
+				}
+			}
+			character_event = { id = MNM.9999 days = 7 }
+			set_character_flag = got_terrible_sword
+		}
+		else_if = {
+			limit = {
+				has_character_flag = armorsmith
+				NOR = {
+					has_artifact = terrible_armor
+					has_character_flag = got_terrible_armor
+				}
+			}
+			character_event = { id = MNM.9999 days = 7 }
+			set_character_flag = got_terrible_armor
+		}
+
+		clr_character_flag = weaponsmith
         clr_character_flag = armorsmith
+
+		ai_chance = {
+            factor = 0
+        }
     }
+
+    #I can do it in my armory, after all!
+    option = {
+        name = EVTOPTC_MNM_9115
+        trigger = {
+        	event_target:the_armory = { always = yes }
+        }
+        tooltip_info_custom = EVTOPTC_MNM_9115_TT
+        custom_tooltip = { text = EVTOPTB_MNM_9115_TT }
+        hidden_effect = {
+        	event_target:smith = { 
+        		leave_court_and_die_effect = yes
+        	}
+
+        	#Create the Armory Master Weaponsmith
+        	random_list = {
+				15 = { #Woman
+					modifier = { factor = 2 primary_title = { has_law = status_of_women_2 } }
+					modifier = { factor = 2 primary_title = { has_law = status_of_women_3 } }
+					modifier = { factor = 2 primary_title = { has_law = status_of_women_4 } }
+					modifier = { factor = 6 has_game_rule = { name = gender value = all } } 
+					create_random_steward  = {
+	        			age = 45
+		        		random_traits = yes
+		        		female = yes
+		        		dynasty = none
+		        		attributes = {
+		        			stewardship = 3
+		        		}
+		        	}
+		        	new_character = { 
+		        		save_event_target_as = smith
+		        		set_character_flag = ai_flag_refuse_concubinage
+		        	}
+				} 
+				85 = { #Man
+		        	create_random_steward  = {
+		        		age = 45
+		        		random_traits = yes
+		        		female = no
+		        		dynasty = none
+		        		attributes = {
+		        			stewardship = 3
+		        		}
+					}
+		        	new_character = {
+		        		save_event_target_as = smith
+					}
+				}
+			}
+			event_target:smith = {
+				health = 3
+				set_character_flag = ai_flag_refuse_marriage
+				set_character_flag = cannot_marry
+               	set_character_flag = no_court_invites
+				will_not_marry_effect = yes
+
+        		ROOT = {
+        			trigger_switch = {
+	        			on_trigger = has_character_flag 
+	        			weaponsmith = { PREV = { give_nickname = nick_the_weaponsmith } }
+	        			armorsmith = { PREV = { give_nickname = nick_the_armorsmith } }
+	        		}
+        		}
+        	}
+        }
+
+        character_event = { id = LT.20201 days = 7 }
+		
+		ai_chance = {
+            factor = 100
+        }
+    }
+}
+
+character_event = { #Your own smiths have a go
+    id = MNM.9999
+	desc = {
+		trigger = { has_character_flag = got_terrible_sword }
+		text = MNM_9999_DESC
+	}
+	desc = {
+		trigger = { has_character_flag = got_terrible_armor }
+		text = MNM_9999_DESC_armor
+	}
+    picture = GFX_evt_weaponsmith
+    border = GFX_event_normal_frame_economy
+    hide_from = yes
+	hide_new = yes
+    is_triggered_only = yes
+	
+	trigger = {
+		OR = {
+    		has_dlc = "Mystics"
+    		has_dlc = "Jade Dragon"
+    	}
+	}
+	
+	immediate = {}
+	
+	option = {
+		name = EVTOPTA_MNM_9999
+		trigger_switch = { 
+			on_trigger = has_character_flag
+			got_terrible_sword = { add_artifact = terrible_sword }
+			got_terrible_armor = { add_artifact = terrible_armor }
+		}
+	}
 }
 
 #Ping event for weaponsmith
@@ -8889,7 +8958,10 @@ character_event = {
 
     #Sword
     option = { 
-        trigger = { NOR = { religion_group = muslim has_dharmic_religion_trigger = yes } has_character_flag = weaponsmith }
+        trigger = { 
+        	NOR = { religion_group = muslim has_dharmic_religion_trigger = yes } has_character_flag = weaponsmith 
+        	have_all_weaponsmith_swords_all_flags_trigger = no
+        }
         name = EVTOPTA_MNM_9118
         custom_tooltip = { text = EVTOPTA_MNM_9118_TT }
         hidden_tooltip = { FROM = { set_character_flag = weapon_sword } }
@@ -8898,7 +8970,10 @@ character_event = {
 
     #Scimitar
     option = {
-        trigger = { OR = { religion_group = muslim has_dharmic_religion_trigger = yes } has_character_flag = weaponsmith }
+        trigger = { 
+        	OR = { religion_group = muslim has_dharmic_religion_trigger = yes } has_character_flag = weaponsmith 
+        	have_all_weaponsmith_scimitar_all_flags_trigger = no
+    	}
         name = EVTOPTB_MNM_9118
         custom_tooltip = { text = EVTOPTB_MNM_9118_TT }
         hidden_tooltip = { FROM = { set_character_flag = weapon_scimitar } }
@@ -8907,7 +8982,10 @@ character_event = {
     
     #Lance
     option = {
-    	trigger = { has_character_flag = weaponsmith }
+    	trigger = { 
+    		has_character_flag = weaponsmith 
+    		have_all_weaponsmith_lance_all_flags_trigger = no
+    	}
         name = EVTOPTC_MNM_9118
         custom_tooltip = { text = EVTOPTC_MNM_9118_TT }
         hidden_tooltip = { FROM = { set_character_flag = weapon_lance } }
@@ -8919,7 +8997,10 @@ character_event = {
     
     #Axe
     option = {
-    	trigger = { has_character_flag = weaponsmith }
+    	trigger = { 
+    		has_character_flag = weaponsmith 
+    		have_all_weaponsmith_axe_all_flags_trigger = no
+    	}
         name = EVTOPTD_MNM_9118
         custom_tooltip = { text = EVTOPTD_MNM_9118_TT }
         hidden_tooltip = { FROM = { set_character_flag = weapon_axe } }
@@ -8931,7 +9012,11 @@ character_event = {
 
     #Mace
     option = {
-        trigger = { is_nomadic = no has_character_flag = weaponsmith }
+        trigger = { 
+        	is_nomadic = no 
+        	has_character_flag = weaponsmith 
+        	have_all_weaponsmith_mace_all_flags_trigger = no
+        }
         name = EVTOPTE_MNM_9118
         custom_tooltip = { text = EVTOPTE_MNM_9118_TT }
         hidden_tooltip = { FROM = { set_character_flag = weapon_mace } }
@@ -8944,7 +9029,11 @@ character_event = {
 
     #Bow
     option = {
-        trigger = { is_nomadic = yes has_character_flag = weaponsmith }
+        trigger = { 
+        	is_nomadic = yes 
+        	has_character_flag = weaponsmith
+        	have_all_weaponsmith_bow_all_flags_trigger = no 
+        }
         name = EVTOPTF_MNM_9118
         custom_tooltip = { text = EVTOPTF_MNM_9118_TT }
         hidden_tooltip = { FROM = { set_character_flag = weapon_bow } }
@@ -9055,6 +9144,7 @@ character_event = {
         			modifier = { factor = 1.3 FROM = { trait = diligent } }
         			modifier = { factor = 1.3 FROM = { trait = patient } }
         			modifier = { factor = 1.3 FROM = { is_smart_trigger = yes } }
+        			modifier = { factor = 1.5 event_target:the_armory = { always = yes } }
         			set_character_flag = smith_success
 				}
 				45 = { #Fail
@@ -9066,6 +9156,13 @@ character_event = {
         			modifier = { factor = 0.2 FROM = { trait = content } }
         			modifier = { factor = 1.5 FROM = { trait = ambitious } }
         			modifier = { factor = 1.3 FROM = { trait = deceitful } }
+        			trigger = {
+        				NOT = {
+	        				any_owned_bloodline = {
+								has_bloodline_flag = bloodline_artisan_craftsmen
+							}
+        				}
+        			}
         			set_character_flag = smith_steal
 				}
 			}
