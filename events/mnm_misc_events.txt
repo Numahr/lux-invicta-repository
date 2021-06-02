@@ -504,7 +504,7 @@ letter_event = {
 	}
 	desc = {
 		trigger = { 
-			society_member_of = secret_religious_cult 
+			society_member_of = secret_religious_cult
 			FROM = { ROOT = { is_openly_of_prevs_secret_religion_trigger = yes } }
 		}
 		text = EVTDESC_MNM_10023_SR_A
@@ -521,10 +521,37 @@ letter_event = {
 		text = EVTDESC_MNM_10023_HERMETICS
 	}
 	
+	desc = { #Generic fallback
+		trigger = {
+			NOR = {
+				is_monastic_member_trigger = yes
+				society_member_of = secret_religious_cult
+			}
+		}
+		text = EVTDESC_MNM_10023_fallback
+	}
+
 	is_triggered_only = yes
 	
 	option = {
-		name = EVTOPTA_MNM_10023
+		name = {
+			text = EVTOPTA_MNM_10023
+			trigger = {
+				OR = {
+					is_monastic_member_trigger = yes
+					society_member_of = secret_religious_cult
+				}
+			}
+		}
+		name = {
+			text = EVTOPTA_MNM_10023_less_hostile
+			trigger = {
+				NOR = {
+					is_monastic_member_trigger = yes
+					society_member_of = secret_religious_cult
+				}
+			}
+		}
 		leave_society = yes
 	}
 }
@@ -570,7 +597,7 @@ character_event = {
 				}
 			}
 		}
-		any_courtier = {
+		if = {
 			limit = {
 				ai = yes
 				prisoner = no
@@ -582,7 +609,23 @@ character_event = {
 			}
 			character_event = { id = MNM.10031 }
 		}
-		if = {
+		any_courtier = {
+			limit = {
+				ai = yes
+				prisoner = no
+				NOT = { trait = incapable }
+				is_in_society = yes
+				society_rank < 3
+				society_can_rank_up = yes
+			}
+			random_list = {
+				75 = {}
+				25 = {
+					society_rank_up = 1					
+				}
+			}
+		}
+		any_courtier = {
 			limit = {
 				ai = yes
 				prisoner = no
@@ -632,6 +675,14 @@ character_event = {
 								is_priest = yes
 							}
 						}
+						modifier = {
+							factor = 2
+							monastic_order_benedictine = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_benedictine = { num_of_society_members < 10 }
+						}
 						join_society = monastic_order_benedictine
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -673,6 +724,14 @@ character_event = {
 								learning = 16
 								is_priest = yes
 							}
+						}
+						modifier = {
+							factor = 2
+							monastic_order_dominican = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_dominican = { num_of_society_members < 10 }
 						}
 						join_society = monastic_order_dominican
 						random_list = { # Artificially increase society influence for balance purposes
@@ -719,6 +778,14 @@ character_event = {
 								is_priest = yes
 							}
 						}
+						modifier = {
+							factor = 2
+							monastic_order_orthodox = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_orthodox = { num_of_society_members < 10 }
+						}
 						join_society = monastic_order_orthodox
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -760,6 +827,14 @@ character_event = {
 								learning = 16
 								is_priest = yes
 							}
+						}
+						modifier = {
+							factor = 2
+							monastic_order_nestorian = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_nestorian = { num_of_society_members < 10 }
 						}
 						join_society = monastic_order_nestorian
 						random_list = { # Artificially increase society influence for balance purposes
@@ -803,6 +878,14 @@ character_event = {
 								is_priest = yes
 							}
 						}
+						modifier = {
+							factor = 2
+							monastic_order_monophysite = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_monophysite = { num_of_society_members < 10 }
+						}
 						join_society = monastic_order_monophysite
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -842,6 +925,14 @@ character_event = {
 								learning = 16
 								is_priest = yes
 							}
+						}
+						modifier = {
+							factor = 2
+							monastic_order_hindu = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_hindu = { num_of_society_members < 10 }
 						}
 						join_society = monastic_order_hindu
 						random_list = { # Artificially increase society influence for balance purposes
@@ -923,6 +1014,14 @@ character_event = {
 								is_priest = yes
 							}
 						}
+						modifier = {
+							factor = 2
+							monastic_order_jain = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_jain = { num_of_society_members < 10 }
+						}
 						join_society = monastic_order_jain
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -964,6 +1063,14 @@ character_event = {
 								learning = 16
 								is_priest = yes
 							}
+						}
+						modifier = {
+							factor = 2
+							monastic_order_adoptionist = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_adoptionist = { num_of_society_members < 10 }
 						}
 						join_society = monastic_order_adoptionist
 						random_list = { # Artificially increase society influence for balance purposes
@@ -1007,6 +1114,14 @@ character_event = {
 								is_priest = yes
 							}
 						}
+						modifier = {
+							factor = 2
+							monastic_order_apollinarist = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_apollinarist = { num_of_society_members < 10 }
+						}
 						join_society = monastic_order_apollinarist
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -1048,6 +1163,14 @@ character_event = {
 								learning = 16
 								is_priest = yes
 							}
+						}
+						modifier = {
+							factor = 2
+							monastic_order_iconoclast = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_iconoclast = { num_of_society_members < 10 }
 						}
 						join_society = monastic_order_iconoclast
 						random_list = { # Artificially increase society influence for balance purposes
@@ -1091,6 +1214,14 @@ character_event = {
 								is_priest = yes
 							}
 						}
+						modifier = {
+							factor = 2
+							monastic_order_melkite = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_melkite = { num_of_society_members < 10 }
+						}
 						join_society = monastic_order_melkite
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -1132,6 +1263,14 @@ character_event = {
 								learning = 16
 								is_priest = yes
 							}
+						}
+						modifier = {
+							factor = 2
+							monastic_order_monothelite = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_monothelite = { num_of_society_members < 10 }
 						}
 						join_society = monastic_order_monothelite
 						random_list = { # Artificially increase society influence for balance purposes
@@ -1175,6 +1314,14 @@ character_event = {
 								is_priest = yes
 							}
 						}
+						modifier = {
+							factor = 2
+							monastic_order_montanist = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_montanist = { num_of_society_members < 10 }
+						}
 						join_society = monastic_order_montanist
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -1216,6 +1363,14 @@ character_event = {
 								learning = 16
 								is_priest = yes
 							}
+						}
+						modifier = {
+							factor = 2
+							monastic_order_pelagian = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							monastic_order_pelagian = { num_of_society_members < 10 }
 						}
 						join_society = monastic_order_pelagian
 						random_list = { # Artificially increase society influence for balance purposes
@@ -1378,6 +1533,14 @@ character_event = {
 								trait = lunatic
 							}
 						}
+						modifier = {
+							factor = 2
+							the_satanists = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							the_satanists = { num_of_society_members < 10 }
+						}
 						join_society = the_satanists
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -1416,6 +1579,14 @@ character_event = {
 								trait = possessed
 								trait = lunatic
 							}
+						}
+						modifier = {
+							factor = 2
+							the_trollcrafters = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							the_trollcrafters = { num_of_society_members < 10 }
 						}
 						join_society = the_trollcrafters
 						random_list = { # Artificially increase society influence for balance purposes
@@ -1456,6 +1627,14 @@ character_event = {
 								trait = lunatic
 							}
 						}
+						modifier = {
+							factor = 2
+							the_cult_of_kali = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							the_cult_of_kali = { num_of_society_members < 10 }
+						}
 						join_society = the_cult_of_kali
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -1495,6 +1674,14 @@ character_event = {
 								trait = lunatic
 							}
 						}
+						modifier = {
+							factor = 2
+							the_cold_ones = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							the_cold_ones = { num_of_society_members < 10 }
+						}
 						join_society = the_cold_ones
 						random_list = { # Artificially increase society influence for balance purposes
 							75 = {
@@ -1533,6 +1720,14 @@ character_event = {
 								trait = possessed
 								trait = lunatic
 							}
+						}
+						modifier = {
+							factor = 2
+							the_plaguebringers = { num_of_society_members < 15 }
+						}
+						modifier = {
+							factor = 2
+							the_plaguebringers = { num_of_society_members < 10 }
 						}
 						join_society = the_plaguebringers
 						random_list = { # Artificially increase society influence for balance purposes
