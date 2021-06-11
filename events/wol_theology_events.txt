@@ -29,10 +29,8 @@ character_event = {
 		is_priest = no
 		holy_order = no
 		has_focus = focus_theology
-		is_inaccessible_trigger = no
-		NOT = {
-			has_character_flag = studied_religious_myths
-		}
+		NOT = { is_inaccessible_trigger = yes }
+		NOT = { has_character_flag = studied_religious_myths }
 	}
 
 	desc = {
@@ -277,10 +275,6 @@ character_event = {
 
 	trigger = {
 		has_focus = focus_theology
-		any_realm_title = {
-			is_holy_site = ROOT
-			holder_scope = { ai = yes }
-		}
 		in_command = no
 		NOR = {
 			religion_group = christian
@@ -290,6 +284,10 @@ character_event = {
 			is_inaccessible_trigger = yes
 			has_character_flag = do_not_disturb
 			has_character_flag = wol_theology_visited_holy_site
+		}
+		any_realm_title = {
+			is_holy_site = ROOT
+			holder_scope = { ai = yes }
 		}
 	}
 	
@@ -587,6 +585,7 @@ character_event = {
 			}
 		}
 		FROM = {
+			show_scope_change = no
 			trigger_switch = {
 				on_trigger = religion_group
 				christian 			= { ROOT = { add_trait = sympathy_christendom } }
@@ -616,7 +615,7 @@ character_event = {
 				mani_group			= { ROOT = { add_trait = sympathy_manichaeans } }
 				mithra_group		= { ROOT = { add_trait = sympathy_mithraics } }
 				neoplato_group		= { ROOT = { add_trait = sympathy_platonics } }
-				palmyranpagan_group	= { ROOT = { add_trait = sympathy_plamyrans } }
+				palmyranpagan_group	= { ROOT = { add_trait = sympathy_palmyrans } }
 				serer_group			= { ROOT = { add_trait = sympathy_sererics } }
 				slavic_group		= { ROOT = { add_trait = sympathy_slavics } }
 				sol_group			= { ROOT = { add_trait = sympathy_sol } }
@@ -634,10 +633,11 @@ character_event = {
 		piety = 50
 	}
 }
-	
+
 # Question own faith
 character_event = {
 	id = WoL.7050
+	
 	picture = GFX_evt_religious_exultation
 	border = GFX_event_normal_frame_religion
 	
@@ -653,6 +653,10 @@ character_event = {
 			OR = {
 				LI_pagan_trigger = no
 				is_reformed_religion = yes
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
 			}
 		}
 	}
@@ -662,6 +666,12 @@ character_event = {
 		trigger = {
 			LI_pagan_trigger = yes
 			is_reformed_religion = no
+			NOT = {
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+			}
 		}
 	}
 
@@ -955,7 +965,7 @@ character_event = {
 			NOR = {
 				religion_group = pagan_group
 				religion_group = muslim
-				religion_group = indian_group
+				has_dharmic_religion_trigger = yes
 			}
 		}
 	}
@@ -969,7 +979,7 @@ character_event = {
 	}
 	desc = {
 		text = EVTDESC_WoL_7080_INDIAN
-		trigger = { religion_group = indian_group }
+		trigger = { has_dharmic_religion_trigger = yes }
 	}
 
 	trigger = {
@@ -1085,7 +1095,7 @@ character_event = {
 		trigger = {
 			NOR = {
 				trait = lunatic
-				religion_group = indian_group
+				has_dharmic_religion_trigger = yes
 			}
 			LI_pagan_trigger = no
 		}
@@ -1105,7 +1115,7 @@ character_event = {
 			NOT = {
 				trait = lunatic
 			}
-			religion_group = indian_group
+			has_dharmic_religion_trigger = yes
 		}
 	}
 	desc = {
@@ -1342,7 +1352,7 @@ character_event = {
 			trait = chaste
 			NOR = {
 				religion_group = christian
-				religion_group = indian_group
+				has_dharmic_religion_trigger = yes
 			}
 		}
 		ai_chance = {

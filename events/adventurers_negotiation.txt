@@ -51,24 +51,13 @@ character_event = {
 				NOT = {
 					has_province_modifier = nomad_agitation
 				}
-    			OR = {
-    				AND = {
-    					event_target:raiding_adventurer = { is_seafarer = yes }
-    					port = yes
-    				}
-    				event_target:raiding_adventurer = { is_seafarer = no }
-    				AND = {
-						holder_scope = {
-							top_liege = {
-								NOT = { any_demesne_province = { port = yes } }
-							}
-						}
-						NOT = {
-							port = yes
-						}
-					}
-    			}
     		}
+			preferred_limit = {
+				event_target:raiding_adventurer = {
+					is_seafarer = yes
+				}
+				port = yes
+			}
 
     		set_variable = { which = price value = 100 }
 
@@ -113,7 +102,7 @@ character_event = {
 
    		#If they can't afford your province, pick a vassal province (also a big chance to happen even if they can afford it)
     	random_list = {
-    		80 = { 
+    		80 = {
     			random_vassal = {
 	    			limit = {
 	    				any_demesne_province = {
@@ -122,41 +111,40 @@ character_event = {
 							NOT = {
 								has_province_modifier = nomad_agitation
 							}
-							OR = {
-			    				AND = {
-			    					event_target:raiding_adventurer = { is_seafarer = yes }
-			    					port = yes
-			    				}
-			    				event_target:raiding_adventurer = { is_seafarer = no }
-			    				NOT = { any_demesne_province = { port = yes } }
-			    			}
 	    				}
 	    			}
+					preferred_limit = {
+						event_target:raiding_adventurer = {
+								is_seafarer = yes
+						}
+						any_demesne_province = {
+							is_capital = no 
+			    			num_of_settlements = 1
+							NOT = {
+								has_province_modifier = nomad_agitation
+							}
+							port = yes
+						}
+					}
 	    			random_demesne_province = {
-	    				limit = { 
+	    				limit = {
 			    			is_capital = no 
 			    			num_of_settlements = 1
 							NOT = {
 								has_province_modifier = nomad_agitation
 							}
-							OR = {
-			    				AND = {
-			    					event_target:raiding_adventurer = { is_seafarer = yes }
-			    					port = yes
-			    				}
-			    				event_target:raiding_adventurer = { is_seafarer = no }
-								AND = {
-									holder_scope = {
-										top_liege = {
-											NOT = { any_demesne_province = { port = yes } }
-										}
-									}
-									NOT = {
-										port = yes
-									}
-								}
-			    			}
 			    		}
+						preferred_limit = {
+							event_target:raiding_adventurer = {
+								is_seafarer = yes
+							}
+							is_capital = no 
+			    			num_of_settlements = 1
+							NOT = {
+								has_province_modifier = nomad_agitation
+							}
+							port = yes
+						}
 
 			    		set_variable = { which = price value = 100 }
 
@@ -189,10 +177,9 @@ character_event = {
 	    		}
     		}
     		20 = {
-    			modifier = {
-    				NOT = { event_target:selling_province = { always = yes } }
-    				factor = 0
-    			}
+    			trigger = {
+					event_target:selling_province = { always = yes }
+				}
     			#Empty, your demesne province is kept as selling_province
     		}
     	}
@@ -217,26 +204,56 @@ character_event = {
 	    			can_marry = yes
 	    			NOT = { is_primary_heir = ROOT }
 	    			is_ruler = no
-	    			NOR = {
-	    				is_dumb_trigger = yes
-	    				character_disease_trigger = yes
-	    				has_disability_trigger = yes
-	    				has_mental_disorder_trigger = yes
-	    				trait = homosexual
-	    				trait = celibate
-	    				trait = ugly
-	    			}
+                    character_disease_trigger = no
+                    has_disability_trigger = no
 	    			OR = {
-	    				is_smart_trigger = yes
-	    				has_attractive_trait_trigger = yes
-	    				has_pleasant_personality_trigger = yes
-	    				stewardship = 13
-	    				martial = 13
-	    				diplomacy = 13
-	    				intrigue = 13
-	    				learning = 15
+                        stewardship = 5
+                        martial = 5
+                        diplomacy = 5
+                        intrigue = 5
+                        learning = 5
 	    			}
 	    		}
+                preferred_limit = {
+                    NOR = {
+                        is_dumb_trigger = yes
+                        has_mental_disorder_trigger = yes
+                        trait = homosexual
+                        trait = celibate
+                        has_ugly_trait_trigger = yes
+                    }
+                    OR = {
+                        is_smart_trigger = yes
+                        has_attractive_trait_trigger = yes
+                        has_pleasant_personality_trigger = yes
+                        stewardship = 13
+                        martial = 13
+                        diplomacy = 13
+                        intrigue = 13
+                        learning = 15
+                    }
+                }
+                preferred_limit = {
+                    NOR = {
+                        is_dumb_trigger = yes
+                        has_mental_disorder_trigger = yes
+                        trait = homosexual
+                        trait = celibate
+                        has_ugly_trait_trigger = yes
+                    }
+                }
+                preferred_limit = {
+                    NOR = {
+                        is_dumb_trigger = yes
+                        has_mental_disorder_trigger = yes
+                        has_ugly_trait_trigger = yes
+                    }
+                }
+                preferred_limit = {
+                    NOT = {
+                        has_ugly_trait_trigger = yes
+                    }
+                }
 	    		save_event_target_as = marriage_child
 	    	}
     	}
@@ -652,38 +669,22 @@ letter_event = {
 		
 		#Government switch
 		if = {
-            limit = {
-                event_target:raiding_adventurer = { is_nomadic = yes }
-                is_nomadic = no
-            }
-            event_target:raiding_adventurer = {
-                if = {
-                    limit = {
-                        religion_group = muslim
-                    }
-                    set_government_type = muslim_government
-                }
-                else = {
-                    if = {
-                        limit = {
-                            oriental_monarchy_government_trigger = yes
-                        }
-                        set_government_type = oriental_monarchy_government
-                    }
-                    else = {
-                        if = {
-                            limit = {
-                                classical_government = yes
-                            }
-                            set_government_type = oriental_monarchy_government
-                        }
-                        else = {
-                            set_government_type = feudal_government
-                        }
-                    }
-                }
-            }
-        }
+			limit = {
+				event_target:raiding_adventurer = { is_nomadic = yes }
+				is_nomadic = no
+			}
+			event_target:raiding_adventurer = {
+				if = {
+					limit = {
+						religion_group = muslim
+					}
+					set_government_type = muslim_government
+				}
+				else = {
+					set_government_type = feudal_government
+				}
+			}
+		}
 
         #Grants province and sets liege 
         event_target:selling_province = {
