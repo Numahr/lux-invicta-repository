@@ -108,11 +108,11 @@ character_event = {
 			is_ill = yes
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = pneumonic
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = syphilitic
 		}
 		modifier = {
@@ -483,9 +483,6 @@ character_event = {
 		days = 1
 		
 		modifier = {
-		factor = 1.25
-		}
-		modifier = {
 			factor = 0.5
 			immortal = yes
 		}
@@ -578,11 +575,11 @@ character_event = {
 			is_ill = yes
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = pneumonic
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = syphilitic
 		}
 		modifier = {
@@ -900,28 +897,6 @@ character_event = {
 		is_alive = yes
 	}
 	
-	immediate = {
-		if = {
-			limit = {
-				has_dlc = "Reapers"
-			}
-			random_list = {
-				60 = {
-					modifier = {
-						factor = 0
-						trait = disfigured						
-					}
-					set_character_flag = wounded_disfigured
-				}
-				40 = {
-					set_character_flag = wounded_incapable
-				}
-			}
-		}
-	}
-	
-	
-	
 	weight_multiplier = {
 		days = 1
 		
@@ -1013,11 +988,11 @@ character_event = {
 			is_ill = yes
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = pneumonic
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = syphilitic
 		}
 		modifier = {
@@ -1029,12 +1004,12 @@ character_event = {
 			trait = wounded
 		}
 		modifier = {
-			factor = 1.25
-			is_maimed_trigger = yes
-		}
-		modifier = {
 			factor = 2.0
 			trait = infirm
+		}
+		modifier = {
+			factor = 3.0
+			trait = incapable
 		}
 		modifier = {
 			factor = 1.1
@@ -1450,11 +1425,11 @@ character_event = {
 			is_ill = yes
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = pneumonic
 		}
 		modifier = {
-			factor = 1.25
+			factor = 1.15
 			trait = syphilitic
 		}
 		modifier = {
@@ -1474,11 +1449,7 @@ character_event = {
 			trait = infirm
 		}
 		modifier = {
-			factor = 5.0
-			trait = incapable
-		}
-		modifier = {
-			factor = 1.25
+			factor = 1.1
 			trait = drunkard
 		}
 		modifier = {
@@ -1754,15 +1725,12 @@ character_event = {
 					has_dlc = "Reapers"
 				}
 			}
-			random_list = {
-				50 = { add_trait = incapable }
-				25 = { add_trait = blinded }
-				25 = { add_trait = deaf }
-			}
+			add_trait = incapable
 			break = yes
-		}	
+		}
 		if = {
 			limit = {
+				has_dlc = "Reapers"
 				has_character_flag = wounded_disfigured
 			}
 			add_trait = disfigured 
@@ -2260,6 +2228,8 @@ character_event = {
 	border = GFX_event_normal_frame_war
 	
 	is_triggered_only = yes
+	
+	notification = yes
 
 	trigger = {
 		is_alive = yes
@@ -2269,14 +2239,7 @@ character_event = {
 	weight_multiplier = {
 		days = 1
 		modifier = {
-			factor = 0.33
-		}
-		modifier = {
-			factor = 5
-			is_feudal = yes
-		}	
-		modifier = {
-			factor = 2.5
+			factor = 1.5
 			trait = brave
 		}
 		modifier = {
@@ -2699,10 +2662,13 @@ character_event = {
 			factor = 3
 			}			
 	}
+	
+	immediate = {
+		change_martial = 1
+	}
 
 	option = {
 		name = EXCELLENT
-		change_martial = 1
 	}
 }
 
@@ -2721,11 +2687,6 @@ character_event = {
 		OR = {
 			trait = brilliant_strategist
 			trait = skilled_tactician
-		}
-		capital_scope = {
-			NOT = {
-				has_province_modifier = war_knowledge
-			}
 		}
 	}
 	
@@ -2771,15 +2732,7 @@ character_event = {
 			factor = 0.2
 		}
 		modifier = {
-			is_strong_trigger = yes
-			factor = 2
-		}
-		modifier = {
-			is_weak_trigger = yes
-			factor = 0.5
-		}	
-		modifier = {
-			factor = 0.75
+			factor = 0.8
 			trait = stressed
 		}
 		modifier = {
@@ -3571,7 +3524,7 @@ character_event = {
 	option = {
 		name = EXCELLENT
 		add_trait = brave
-
+		add_blood_splatter_effect = yes
 		random = {
 			chance = 50
 			#Promote battle trait
@@ -3632,7 +3585,6 @@ character_event = {
 			trait = brave
 			trait = craven
 			trait = berserker
-			personality_traits = 5
 		}
 	}
 	
@@ -3836,6 +3788,7 @@ character_event = {
 	option = {
 		name = CURSES
 		add_trait = wroth
+		add_blood_splatter_effect = yes
 	}
 }
 
@@ -4247,13 +4200,16 @@ character_event = {
 			add_trait = poor_warrior
 		}
 	}
+
+	option = {
+		name = OK
+	}
 }
 
 
 #On-action battle_won: Soldier Distinguishes himself.
 character_event = {
 	id = 261
-	desc = EVTDESC261
 	picture = GFX_evt_battle
 	border = GFX_event_normal_frame_war
 	
@@ -4282,11 +4238,37 @@ character_event = {
 			}
 		}
 		new_character = {
+			add_blood_splatter_effect = yes
 			remove_trait = craven
 			save_event_target_as = soldier_target
 		}
 	}
+
+	desc = {
+		trigger = {
+			NOR = {
+				has_character_modifier = good_battle_omen
+				has_character_modifier = bad_battle_omen
+			}
+		}
+		text = EVTDESC261
+	}
 	
+	desc = {
+		trigger = {
+			has_dlc = "Mystics"
+			has_character_modifier = good_battle_omen
+		}
+		text = EVTDESC261_good_battle_omen
+	}
+	desc = {
+		trigger = {
+			has_dlc = "Mystics"
+			has_character_modifier = bad_battle_omen
+		}
+		text = EVTDESC261_bad_battle_omen
+	}
+
 	weight_multiplier = {
 		days = 1
 		modifier = {
@@ -4308,6 +4290,14 @@ character_event = {
 		modifier = {
 			factor = 0.2
 			trait = arbitrary
+		}
+		modifier = {
+			factor = 2
+			has_character_modifier = good_battle_omen
+		}
+		modifier = {
+			factor = 0.9
+			has_character_modifier = bad_battle_omen
 		}
 		modifier = {
 			factor = 2.5
@@ -4416,7 +4406,39 @@ character_event = {
 		name = EXCELLENT
 		event_target:soldier_target = {
 			prestige = 50
-		}	
+		}
+		trigger = {
+			NOR = {
+				has_character_modifier = good_battle_omen
+				has_character_modifier = bad_battle_omen
+			}
+		}
+	}
+	option = {
+		name = 261_OPTA
+
+		event_target:soldier_target = {
+			prestige = 50
+		}
+		upgrade_seer_modifier_effect = yes
+		trigger = {
+			has_dlc = "Mystics"
+			has_character_modifier = good_battle_omen
+		}
+	}
+	option = {
+		name = 261_OPTB
+		event_target:soldier_target = {
+			prestige = 50
+		}
+		downgrade_seer_modifier_effect = yes
+		trigger = {
+			has_dlc = "Mystics"
+			has_character_modifier = bad_battle_omen
+		}
+	}
+	after = {
+		remove_scrying_omen_modifiers_effect = yes
 	}
 }
 
@@ -4514,6 +4536,7 @@ character_event = {
 #On-action battle_lost: Imprisoned by the enemy
 character_event = {
 	id = 250
+	title = captured_in_battle
 	desc = EVTDESC250
 	picture = GFX_evt_into_the_dungeon
 	border = GFX_event_normal_frame_war
@@ -4530,6 +4553,35 @@ character_event = {
 	
 	weight_multiplier = {
 		days = 1
+		bad_soldier_outcome_score = yes
+		title_tier_reduction_score = yes
+		modifier = {
+			FROM = { trait = norse_leader }
+			factor = 1.5
+		}
+		
+		modifier = {
+			factor = 2 # if the enemy leader has a particular bloodline
+			FROM = {
+				any_owned_bloodline = {
+					has_bloodline_flag = bloodline_fearsome
+				}
+			}
+		}
+		modifier = {
+			factor = 3 # if the enemy leader was a warrior lodge member
+			FROM = {
+				is_member_of_any_warrior_lodge_trigger = yes
+				society_rank > 1 #Must be rank 2 or higher
+			}
+		}
+
+		modifier = {
+			factor = 0.5 # has a wonder upgrade that allows you to run away easier
+			any_realm_wonder = {
+				has_wonder_upgrade = upgrade_hidden_passageways
+			}
+		}
 
 		modifier = {
 			factor = 1.25
@@ -4668,18 +4720,6 @@ character_event = {
 			factor = 1.1
 			trait = has_aztec_disease
 		}
-		#modifier = {
-		#	factor = 0.5
-		#	tier = duke
-		#}
-		#modifier = {
-		#	factor = 0.25
-		#	tier = king
-		#}
-		#modifier = {
-		#	factor = 0.125
-		#	tier = emperor
-		#}
 		#LIBERT3 v11 LI additional modifiers (mostly using incorporated FF/VIET traits and some vanilla traits)
 		modifier = {
 			factor = 0.5
@@ -4922,17 +4962,19 @@ character_event = {
 	}
 	
 	immediate = {
-		imprison = FROM
+		save_event_target_as = captured_commander
+		location = { save_event_target_as = battlefield_location }
+		FROM = { save_event_target_as = enemy_liege }
+		#You are captured...
+		imprison = event_target:enemy_liege #ROOT is imprisoned *by* enemy_liege.
 	}
 
 	option = {
 		name = CURSES
-		imprison = FROM
-		set_character_flag = captured_in_battle
 		hidden_tooltip = {
 			FROM = {
 				character_event = { 
-					id = 50020 # imprisoned_events.txt
+					id = 50020 # imprisoned_events.txt #Enemy_liege is notified about your capture...
 				}
 			}
 		}
@@ -5152,35 +5194,11 @@ character_event = {
 			is_ill = yes
 		}
 		modifier = {
-			factor = 0.75
-			trait = pneumonic
-		}
-		modifier = {
-			factor = 0.75
-			trait = syphilitic
-		}
-		modifier = {
-			factor = 0.5
-			trait = leper
-		}
-		modifier = {
-			factor = 0.75
-			trait = wounded
-		}
-		modifier = {
-			factor = 0.75
-			is_maimed_trigger = yes
-		}
-		modifier = {
-			factor = 0.25
+			factor = 0.6
 			trait = infirm
 		}
 		modifier = {
-			factor = 0.25
-			trait = incapable
-		}
-		modifier = {
-			factor = 0.5
+			factor = 0.9
 			trait = drunkard
 		}
 		modifier = {
@@ -5488,7 +5506,7 @@ character_event = {
 	option = {
 		name = EVTOPTL96500 # War elephants
 		trigger = {
-			religion_group = indian_group
+			has_dharmic_religion_trigger = yes
 			NOT = { trait = war_elephant_leader }
 		}
 		add_trait = war_elephant_leader
@@ -5674,35 +5692,11 @@ character_event = {
 			is_ill = yes
 		}
 		modifier = {
-			factor = 0.75
-			trait = pneumonic
-		}
-		modifier = {
-			factor = 0.75
-			trait = syphilitic
-		}
-		modifier = {
-			factor = 0.5
-			trait = leper
-		}
-		modifier = {
-			factor = 0.75
-			trait = wounded
-		}
-		modifier = {
-			factor = 0.75
-			is_maimed_trigger = yes
-		}
-		modifier = {
-			factor = 0.25
+			factor = 0.6
 			trait = infirm
 		}
 		modifier = {
-			factor = 0.25
-			trait = incapable
-		}
-		modifier = {
-			factor = 0.5
+			factor = 0.9
 			trait = drunkard
 		}
 		modifier = {
@@ -6137,27 +6131,7 @@ character_event = {
 			is_ill = yes
 		}
 		modifier = {
-			factor = 0.75
-			trait = pneumonic
-		}
-		modifier = {
-			factor = 0.75
-			trait = syphilitic
-		}
-		modifier = {
-			factor = 0.5
-			trait = leper
-		}
-		modifier = {
-			factor = 0.75
-			trait = wounded
-		}
-		modifier = {
-			factor = 0.75
-			is_maimed_trigger = yes
-		}
-		modifier = {
-			factor = 0.25
+			factor = 0.6
 			trait = infirm
 		}
 		modifier = {
