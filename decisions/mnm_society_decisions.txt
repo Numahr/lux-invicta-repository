@@ -18,7 +18,7 @@ society_decisions = { # Society decisions are only evaluated by members of socie
 
 		hide_in_decisions_list = yes # This is shown in the Society View
 		
-		ai_check_interval = 12
+		ai_check_interval = 24
 		
 		potential = {
 			hidden_tooltip = {
@@ -74,6 +74,39 @@ society_decisions = { # Society decisions are only evaluated by members of socie
 					# }
 				# }
 			# }
+			trigger_if = {
+				limit = { has_character_modifier = lost_rank_up_duel_cooldown }
+				custom_tooltip = {
+					text = recently_lost_rank_up_duel_tt
+					NOT = { has_character_modifier = lost_rank_up_duel_cooldown }				
+				}
+			}
+			trigger_if = {
+				limit = {
+					ai = no #if you are a player
+	                any_society_member = { #and there are already 4 other Heroes (rank is full).
+	                	count = 4
+	                    society_rank == 4
+	                }
+				}
+				custom_tooltip = {
+					text = there_is_a_hero_available_to_duel_tt
+		            any_society_member = { #there is no one to duel for the spot...
+	                    ai = yes
+                    	NOT = { has_character_flag = call_to_legend_active }
+	                    NOT = { trait = incapable }
+	                    prisoner = no
+	                    society_rank == 4
+	                }
+				}
+			}
+			trigger_if = {
+				limit = { has_character_flag = rank_up_blocked }
+				custom_tooltip = {
+					text = rank_up_blocked_tt
+					NOT = { has_character_flag = rank_up_blocked }
+				}
+			}			
 			custom_tooltip = {
 				text = request_to_rank_up_within_society_cynical_tt
 				OR = {
@@ -101,6 +134,7 @@ society_decisions = { # Society decisions are only evaluated by members of socie
 							trait = slothful
 							trait = envious
 							trait = wroth
+							trait = cruel
 							trait = proud
 						}
 					}
@@ -182,33 +216,58 @@ society_decisions = { # Society decisions are only evaluated by members of socie
 		}
 
 		effect = {
-			#Rank up cost
-			if = {
-				limit = { society_rank == 1 }
-				change_society_currency = -750
-			}
-			if = {
-				limit = { society_rank == 2 }
-				change_society_currency = -1000
-			}
-			if = {
-				limit = { society_rank == 3 }
-				change_society_currency = -2000
+			society = { save_event_target_as = my_society }
+			if = { # Special handling for warrior lodge rank 3 members (in a society with enough Heroes already)...
+				limit = {
+					ai = no
+					is_member_of_any_warrior_lodge_trigger = yes
+					society_rank == 3
+					society = {
+	                    any_society_member = { #make sure there is someone you can duel for the spot.
+	                    	NOT = { has_character_flag = call_to_legend_active }
+		                    ai = yes
+		                    prisoner = no
+		                    society_rank == 4
+		                }
+		                any_society_member = { #make sure there are already 4 other Heroes (rank is full).
+		                	count = 4
+		                    society_rank == 4
+		                }
+					}
+				}
+				set_character_flag = has_sent_request_to_rank_up
+				character_event = { id = HF.10060 } #sends event presenting choice: to duel a current Hero or nah?
 			}
 
-			#Perform rank up
-			hidden_tooltip = {
-				save_event_target_as = rank_up_target
-				set_character_flag = has_sent_request_to_rank_up
-				character_event = { id = MNM.10002 days = 20 random = 10 } # sends hidden delayed event to self, which then sends request to Leader of the society
-				
-				#Conversus power for benedictines
+			else = { #For everyone else...
+				#Rank up cost
 				if = {
-					limit = {
-						society_member_of = monastic_order_benedictine
-						society_rank == 3
+					limit = { society_rank == 1 }
+					change_society_currency = -750
+				}
+				if = {
+					limit = { society_rank == 2 }
+					change_society_currency = -1000
+				}
+				if = {
+					limit = { society_rank == 3 }
+					change_society_currency = -2000
+				}
+
+				#Perform rank up
+				hidden_tooltip = {
+					save_event_target_as = rank_up_target
+					set_character_flag = has_sent_request_to_rank_up
+					character_event = { id = MNM.10002 days = 20 random = 10 } # sends hidden delayed event to self, which then sends request to Leader of the society
+					
+					#Conversus power for benedictines
+					if = {
+						limit = {
+							society_member_of = monastic_order_benedictine
+							society_rank == 3
+						}
+						character_event = { id = MNM.4600 days = 10 random = 350 }
 					}
-					character_event = { id = MNM.4600 days = 10 random = 350 }
 				}
 			}
 		}
@@ -243,6 +302,7 @@ society_decisions = {
 	build_laboratory = {
 		only_playable = yes
 		is_high_prio = yes
+		ai_check_interval = 36
 		
 		potential = {
 			has_dlc = "Mystics"
@@ -286,11 +346,12 @@ society_decisions = {
 #Monastic orders
 society_decisions = {
 	monastic_order_penance = {
-		
+		ai_check_interval = 24
 		potential = {
 			has_dlc = "Mystics"
 			is_christian_monastic_member_trigger = yes
 			has_quest = quest_monastic_order_penance
+			NOT = { has_character_modifier = doing_penance }
 		}
 
 		allow = {
@@ -338,7 +399,7 @@ society_decisions = {
 	}
 
 	monastic_order_meditation = {
-		
+		ai_check_interval = 24
 		potential = {
 			has_dlc = "Mystics"
 			is_dharmic_monastic_member_trigger = yes
@@ -352,6 +413,14 @@ society_decisions = {
 				OR = {
 					NOT = { has_character_flag = holy_seclusion_timer }
 					had_character_flag = { flag = holy_seclusion_timer days = 1000 }
+				}
+			}
+			custom_tooltip = {
+				text = in_meditation_cooldown_tt
+				hidden_trigger = {
+					NOT = {
+						has_character_modifier = in_meditation
+					}
 				}
 			}
 		}
@@ -390,6 +459,7 @@ society_decisions = {
 	}
 
 	monastic_order_rejoin_world = {
+		ai_check_interval = 24
 
 		potential = {
 			has_dlc = "Mystics"
