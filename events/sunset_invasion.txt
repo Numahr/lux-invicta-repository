@@ -1025,14 +1025,17 @@ narrative_event = {
 			age = 16
 		}
 
-		if = {
-			limit = {
-				OR = {
-					has_power_omen_modifier_trigger = yes
-					has_battle_omen_modifier_trigger = yes
+		any_playable_ruler = {
+			limit = { ai = no }
+			if = {
+				limit = {
+					OR = {
+						has_power_omen_modifier_trigger = yes
+						has_battle_omen_modifier_trigger = yes
+					}
 				}
+				set_character_flag = negative_event_flag # For the scrying outcome calculation...
 			}
-			set_character_flag = negative_event_flag # For the scrying outcome calculation...
 		}
 	}
 	
@@ -1047,6 +1050,16 @@ narrative_event = {
 
 	option = { # Monks & Mystics - Hermetics Scrying reaction
 		name = EVTOPTA_SSI_004
+
+		if = { # for safety
+			limit = {
+				OR = {
+					has_power_omen_modifier_trigger = yes
+					has_battle_omen_modifier_trigger = yes
+				}
+			}
+			set_character_flag = negative_event_flag # For the scrying outcome calculation...
+		}
 
 		calculate_scrying_outcome_effect = yes
 		remove_scrying_omen_modifiers_effect = yes
@@ -1714,14 +1727,17 @@ narrative_event = {
 				}
 			}
 		}
-		if = {
-			limit = {
-				OR = {
-					has_power_omen_modifier_trigger = yes
-					has_battle_omen_modifier_trigger = yes
+		any_playable_ruler = {
+			limit = { ai = no }
+			if = {
+				limit = {
+					OR = {
+						has_power_omen_modifier_trigger = yes
+						has_battle_omen_modifier_trigger = yes
+					}
 				}
+				set_character_flag = negative_event_flag # For the scrying outcome calculation...
 			}
-			set_character_flag = negative_event_flag # For the scrying outcome calculation...
 		}
 	}
 	
@@ -1736,6 +1752,16 @@ narrative_event = {
 
 	option = { # Monks & Mystics - Hermetics Scrying reaction
 		name = EVTOPTA_SSI_006
+
+		if = { # for safety
+			limit = {
+				OR = {
+					has_power_omen_modifier_trigger = yes
+					has_battle_omen_modifier_trigger = yes
+				}
+			}
+			set_character_flag = negative_event_flag # For the scrying outcome calculation...
+		}
 
 		calculate_scrying_outcome_effect = yes
 		remove_scrying_omen_modifiers_effect = yes
@@ -2391,7 +2417,24 @@ character_event = {
 # Aztecs Sacrifice Prisoner
 character_event = {
 	id = SSI.60
-	desc = EVTDESC_SSI_060
+	desc = {
+		trigger = {
+			NOR = {
+				religion = aztec
+				has_religion_feature = religion_ritual_sacrifice
+			}
+		}
+		text = EVTDESC_SSI_060
+	}
+	desc = {
+		trigger = {
+			OR = {
+				religion = aztec
+				has_religion_feature = religion_ritual_sacrifice
+			}
+		}
+		text = EVTDESC_SSI_060_B
+	}
 	
 	picture = GFX_evt_bishop_aztec
 	border = GFX_event_normal_frame_war
@@ -2400,6 +2443,21 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_SSI_060
+		trigger = {
+			NOR = {
+				religion = aztec
+				has_religion_feature = religion_ritual_sacrifice
+			}
+		}
+	}
+	option = {
+		name = EVTOPTB_SSI_060
+		trigger = {
+			OR = {
+				religion = aztec
+				has_religion_feature = religion_ritual_sacrifice
+			}
+		}
 	}
 }
 
@@ -2578,6 +2636,54 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_SSI_072
+		if = { 
+			limit = { 
+				FROM = { 
+					is_ruler = no 
+				} 
+			}
+			piety = 5
+		}
+		if = { 
+			limit = { 
+				FROM = { 
+					tier = BARON
+				} 
+			}
+			piety = 15
+		}
+		if = { 
+			limit = { 
+				FROM = { 
+					tier = COUNT
+				} 
+			}
+			piety = 30
+		}
+		if = { 
+			limit = { 
+				FROM = { 
+					tier = DUKE
+				} 
+			}
+			piety = 75
+		}
+		if = { 
+			limit = { 
+				FROM = { 
+					tier = KING
+				} 
+			}
+			piety = 150
+		}
+		if = { 
+			limit = { 
+				FROM = { 
+					tier = EMPEROR
+				} 
+			}
+			piety = 250
+		}
 	}
 }
 
