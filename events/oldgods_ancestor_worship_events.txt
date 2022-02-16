@@ -178,7 +178,7 @@ character_event = {
 character_event = {
 	id = TOG.7001
 	border = GFX_event_normal_frame_religion
-	picture = GFX_evt_shadowy_cabal
+	picture = GFX_evt_tribal_shrine
 
 	hide_from = yes
 
@@ -386,6 +386,8 @@ character_event = {
 		event_target:human_sacrifice_prisoner = { save_event_target_as = kinslayer_target }
 		add_kinslayer_trait_effect = yes
 
+		event_target:human_sacrifice_prisoner = { save_event_target_as = portrait_target }
+
 		hidden_tooltip = { character_event = { id = TOG.7002 days = 3 } }
 	}
 
@@ -421,6 +423,8 @@ character_event = {
 		event_target:human_sacrifice_courtier = { save_event_target_as = kinslayer_target }
 		add_kinslayer_trait_effect = yes
 		
+		event_target:human_sacrifice_courtier = { save_event_target_as = portrait_target }
+
 		hidden_tooltip = { character_event = { id = TOG.7002 days = 3 } }
 	}
 
@@ -476,6 +480,7 @@ character_event = {
 	id = TOG.7002
 	border = GFX_event_normal_frame_religion
 	picture = GFX_evt_tribal_shrine
+	portrait = event_target:portrait_target
 
 	desc = {
 		trigger = { has_character_flag = ancestors_limb }
@@ -1582,6 +1587,7 @@ character_event = {
 						name = gender
 						value = all
 					}
+					has_religion_feature = religion_matriarchal
 				}
 			}
 
@@ -1741,6 +1747,10 @@ character_event = {
 	border = GFX_event_normal_frame_war
 	picture = GFX_evt_large_army
 
+	hide_from = yes
+
+	portrait = event_target:ancestors_marshal
+
 	desc = {
 		trigger = { job_marshal = { always = yes } }
 		text = EVTDESC_TOG_7034_A
@@ -1757,7 +1767,12 @@ character_event = {
 	option = {
 		name = EVTOPTA_TOG_7034
 
-		military_techpoints = 100	
+		military_techpoints = 100
+
+		if = {
+			limit = { job_marshal = { always = yes } }
+			show_portrait = event_target:ancestors_marshal
+		}
 	}
 }
 
@@ -2389,7 +2404,7 @@ character_event = {
 							is_alive = yes
 							OR = {
 								trait = lustful
-								trait = fair
+								has_fair_trait_trigger = yes
 								has_character_modifier = follower_of_lempo
 								has_character_modifier = follower_of_jarilo
 							}
