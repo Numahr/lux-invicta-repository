@@ -1239,7 +1239,7 @@ character_event = {
 
 							#Family grievances
 							family_grievance_trigger = yes
-							at_location = ROOT
+							location = { character = ROOT }
 						}
 					}
 				}
@@ -1508,6 +1508,41 @@ character_event = {
 							#Family grievances
 							family_grievance_trigger = yes
 							war_with = ROOT
+							
+							# Vanilla issue:
+							# Spouse or consort of you or your heir - don't make the parentage of your children or your heir's children questionable!
+							AND = {
+								is_female = yes
+								prefers_men_trigger = no
+								OR = {
+									any_spouse = {
+										character = ROOT
+									}
+									any_consort = {
+										character = ROOT
+									}
+									ROOT = {
+										current_heir = {
+											OR = {
+												any_spouse = {
+													ROOT = {
+														persistent_event_target:sway_target = {
+															character = PREVPREV
+														}
+													}
+												}
+												any_consort = {
+													ROOT = {
+														persistent_event_target:sway_target = {
+															character = PREVPREV
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -9458,41 +9493,6 @@ character_event = {
 		tiered_piety_reward_effect = yes
 		remove_title = title_commander
 		add_character_modifier = { name = refusing_to_lead years = 3 }
-		if = {
-			limit = {
-				has_dlc = "Jade Dragon"
-				is_chinese_emperor_trigger = no
-			}
-			if = {
-				limit = {
-					liege = {
-						is_chinese_emperor_trigger = yes
-					}
-				}
-				detract_grace_major_effect = yes
-			}
-			else_if = {
-				limit = {
-					liege = {
-						any_close_relative = {
-							dynasty = PREV
-							is_chinese_emperor_trigger = yes
-						}
-					}
-				}
-				detract_grace_medium_effect = yes
-			}
-			else_if = {
-				limit = {
-					liege = {
-						any_dynasty_member = {
-							is_chinese_emperor_trigger = yes
-						}
-					}
-				}
-				detract_grace_minor_effect = yes
-			}
-		}
 		FROM = { 
 			show_scope_change = no
 			opinion = { 
@@ -9545,41 +9545,6 @@ character_event = {
 		name = EVTOPTBHFP21094
 		trigger = { is_ruler = no }
 		tiered_piety_reward_effect = yes
-		if = {
-			limit = {
-				has_dlc = "Jade Dragon"
-				is_chinese_emperor_trigger = no
-			}
-			if = {
-				limit = {
-					liege = {
-						is_chinese_emperor_trigger = yes
-					}
-				}
-				detract_grace_super_huge_effect = yes
-			}
-			else_if = {
-				limit = {
-					liege = {
-						any_close_relative = {
-							dynasty = PREV
-							is_chinese_emperor_trigger = yes
-						}
-					}
-				}
-				detract_grace_massive_effect = yes
-			}
-			else_if = {
-				limit = {
-					liege = {
-						any_dynasty_member = {
-							is_chinese_emperor_trigger = yes
-						}
-					}
-				}
-				detract_grace_major_effect = yes
-			}
-		}
 		if = { 
 			limit = { 
 				liege = { NOT = { trait = kind } }
@@ -15373,22 +15338,6 @@ character_event = {
 	option = { 
 		name = EVTOPTAHFP21111
 		remove_lover = FROM
-		if = {
-			limit = {
-				has_dlc = "Jade Dragon"
-				FROM = {
-					is_chinese_emperor_trigger = no
-				}
-			}
-			if = {
-				limit = {
-					is_chinese_emperor_trigger = yes
-				}
-				FROM = {
-					detract_grace_major_effect = yes
-				}
-			}
-		}
 		ai_chance = { 
 			factor = 100
 		}
