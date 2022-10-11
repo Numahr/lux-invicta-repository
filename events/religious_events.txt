@@ -1161,7 +1161,7 @@ character_event = {
 		any_independent_ruler = {
 			religion = catholic
 			rightful_religious_head = ROOT
-			trait = kinslayer
+			is_any_kinslayer_trigger = yes
 			piety = 100
 			reverse_opinion  = { who = ROOT value = 0 }
 			NOT = { has_character_flag = kinslaying_offered }
@@ -1176,7 +1176,7 @@ character_event = {
 			limit = {
 				religion = catholic
 				rightful_religious_head = ROOT
-				trait = kinslayer
+				is_any_kinslayer_trigger = yes
 				piety = 100
 				reverse_opinion  = { who = ROOT value = 0 }
 			}
@@ -1192,7 +1192,7 @@ character_event = {
 			limit = {
 				religion = catholic
 				rightful_religious_head = ROOT
-				trait = kinslayer
+				is_any_kinslayer_trigger = yes
 				piety = 100
 				reverse_opinion  = { who = ROOT value = 0 }
 			}
@@ -1219,9 +1219,24 @@ character_event = {
 	option = {
 		name = "EVTOPTA39211"
 		ai_chance = { factor = 100 }
-		piety = -100
-		wealth = -50
-		remove_trait = kinslayer
+		trigger_switch = {
+			on_trigger = trait
+			kinslayer = {
+				piety = -100
+				wealth = -50
+				remove_trait = kinslayer
+			}
+			familial_kinslayer = {
+				piety = -50
+				wealth = -25
+				remove_trait = familial_kinslayer
+			}
+			dynastic_kinslayer = {
+				piety = -25
+				wealth = -12
+				remove_trait = dynastic_kinslayer
+			}
+		}
 		FROM = { character_event = { id = 39212 days = 1 tooltip = EVTTOOLTIP39212 } }
 	}
 	
@@ -1242,7 +1257,7 @@ character_event = {
 	
 	is_triggered_only = yes
 	option = {
-		name = "EVTOPTA39212"
+		name = "GLORY_TO_HIGHGOD"
 		prestige = 10
 	}
 }
@@ -1820,7 +1835,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA39243" 
+		name = "GLORY_TO_HIGHGOD" 
 		prestige = 5
 	}
 }
@@ -1897,7 +1912,7 @@ character_event = {
 			limit = {
 				religion = orthodox
 				rightful_religious_head = ROOT
-				NOT = { has_character_flag = patriach_dislikes_heathen_employed }
+				NOT = { has_character_flag = patriarch_dislikes_heathen_employed }
 
 				any_courtier = {
 					prisoner = no
@@ -2055,7 +2070,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA39262" 
+		name = "GLORY_TO_HIGHGOD" 
 		prestige = 10
 	}
 }
@@ -2070,7 +2085,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA39263" 
+		name = "GLORY_TO_HIGHGOD" 
 		prestige = 5
 	}
 }
@@ -2121,7 +2136,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA39251"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			reverse_opinion = { who = FROM value = 75 }
 		}
@@ -2161,7 +2176,7 @@ character_event = {
 #		clr_character_flag  = ask_for_indulgence	
 	}
 	option = {
-		name = "EVTOPTA39251"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			NOT = { reverse_opinion = { who = FROM value = 75 } }
 			reverse_opinion = { who = FROM value = 0 }
@@ -2203,7 +2218,7 @@ character_event = {
 #		clr_character_flag  = ask_for_indulgence	
 	}
 	option = {
-		name = "EVTOPTA39251"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			NOT = { reverse_opinion = { who = FROM value = 0 } }
 			reverse_opinion = { who = FROM value = -75 }
@@ -2246,7 +2261,7 @@ character_event = {
 #		clr_character_flag  = ask_for_indulgence	
 	}
 	option = {
-		name = "EVTOPTA39251"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			NOT = { reverse_opinion = { who = FROM value = -75 } }
 		}
@@ -2328,7 +2343,7 @@ character_event = {
 	is_triggered_only = yes
 	
 	option = {
-		name = "EVTOPTA39253"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			reverse_opinion = { who = FROM value = 75 }
 		}
@@ -2352,7 +2367,7 @@ character_event = {
 		clr_character_flag  = ask_for_repentance	
 	}
 	option = {
-		name = "EVTOPTA39253"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			NOT = { reverse_opinion = { who = FROM value = 75 } }
 			reverse_opinion = { who = FROM value = 0 }
@@ -2377,7 +2392,7 @@ character_event = {
 		clr_character_flag  = ask_for_repentance	
 	}
 	option = {
-		name = "EVTOPTA39253"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			NOT = { reverse_opinion = { who = FROM value = 0 } }
 			reverse_opinion = { who = FROM value = -75 }
@@ -2402,7 +2417,7 @@ character_event = {
 		clr_character_flag  = ask_for_repentance	
 	}
 	option = {
-		name = "EVTOPTA39253"
+		name = "GLORY_TO_HIGHGOD"
 		trigger = {
 			NOT = { reverse_opinion = { who = FROM value = -75 } }
 		}
@@ -3192,11 +3207,13 @@ province_event = {
 # News of the conversion spreads in realm
 character_event = {
 	id = 39501
-	desc = "EVTDESC39501"
+	desc = EVTDESC39501
 	picture = GFX_evt_bishop
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
+	
+	notification = yes
 	
 	option = {
 		name = "EVTOPTA39501"
@@ -3224,6 +3241,16 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 	
 	is_triggered_only = yes
+	trigger = {
+		NOT = { has_character_flag = flag_converting_baptism }
+		NOT = { has_character_modifier = baptism_request_cooldown }
+	}
+	
+	fail_trigger_effect = {
+		FROM = {
+			clr_character_flag = preacher_arrives
+		}
+	}
 	
 	option = {
 		name = EVTOPTA39600 # Throw the preacher in jail
@@ -3601,7 +3628,7 @@ character_event = {
 			# Pragmatism
 			modifier = {
 				factor = 2
-				tier = king
+				tier = KING
 				realm_size = 12
 			}
 			modifier = {
@@ -3903,7 +3930,7 @@ character_event = {
 			}
 			modifier = {
 				factor = 2
-				tier = king
+				tier = KING
 				realm_size = 12
 			}
 			modifier = {
@@ -4058,7 +4085,38 @@ character_event = {
 				}
 			}
 		}
+		#### Holy Fury - Mass Baptism clause
+
+		if = {
+			limit = { 
+				has_dlc = "Holy Fury"
+				is_tribal = yes
+				LI_pagan_trigger = yes
+				NOT = { trait = incapable }
+				higher_tier_than = COUNT
+				NOT = { is_reformed_religion = yes }
+				NOT = { has_character_flag = flag_converting_baptism }
+				independent = yes
+				FROM = {
+					liege = { 
+						independent = yes
+						is_tribal = no
+						is_nomadic = no
+						higher_tier_than = DUKE 
+						NOT = { religion = ROOT }
+						NOT = { pays_tribute_to = ROOT }
+						NOT = { has_character_flag = flag_sponsoring_baptism }
+						is_reformed_religion = yes
+					}
+				}
+			}
+			custom_tooltip = { text = send_baptism_request }
+			FROM = { liege = { letter_event = { id = HF.20024 } } }
+			#break = yes
+		}
 		
+		
+	else = {
 		if = {
 			limit = {
 				trait = cynical
@@ -4103,7 +4161,7 @@ character_event = {
 		}
 		create_random_priest = {
 			random_traits = yes
-			dynasty = random
+			dynasty = none
 			culture = ROOT
 			religion = FROM
 			female = no
@@ -4120,28 +4178,25 @@ character_event = {
 		hidden_tooltip = {
 			any_vassal = {
 				limit = {
-					NOT = {
-						religion = ROOT
-					}
-					ROOT = {
-						ai = yes
-					}
+					NOT = { religion = ROOT }
+					ROOT = { ai = yes } # Only for AI!
 				}
-				letter_event = {
-					id = 39617
-				}
+				letter_event = { id = 39617 } # Send out letter to vassals
 			}
 			FROM = {
-				character_event = { id = 39614 days = 1 }
+				character_event = { id = 39614 days = 1 } # Notify liege of the the proselytizer who converted you
 			}
 		}
 		custom_tooltip = { text = preacher_convert }
+		
+		}		
 	}
 	option = {
 		name = EVTOPTB39601
 		ai_chance = {
 			factor = 2
 		}
+		
 		FROM = {
 			liege = {
 				opinion = {
@@ -4265,7 +4320,7 @@ letter_event = {
 		}
 		create_random_priest = {
 			random_traits = yes
-			dynasty = random
+			dynasty = none
 			culture = ROOT
 			religion = FROM
 			female = no
@@ -4666,12 +4721,12 @@ character_event = {
 	trigger = {
 		NOT = { religion = FROMFROM }
 		OR = {
+			character = FROM
 			AND = {
 				is_ruler = no
 				NOT = { trait = zealous }
 				religion = FROM # Will not change religion if already different from the vassal's
 			}
-			character = FROM
 		}
 	}
 	
@@ -4839,8 +4894,17 @@ character_event = {
 			zal_group = {
 				add_trait = sympathy_zal
 			}
-		}		
+		}
+
+		clr_religion_char_flag_effect = yes #Must clear all old flags to avoid double traits
+		add_religion_char_flag_effect = yes
 		religion = FROMFROM
+		if = {
+			limit = {
+				character = FROM
+			}
+			character_event = { id = MNM.3949 days = 3 random = 10 }
+		}
 	}
 }
 
