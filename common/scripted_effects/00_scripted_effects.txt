@@ -4160,7 +4160,6 @@ pay_back_assassins_effect = {
 				if = {
 					limit = {
 						ai = yes
-						primary_title = { title = d_hashshashin } 
 					}
 					wealth = 50
 				}
@@ -4175,7 +4174,6 @@ pay_back_assassins_effect = {
 				if = {
 					limit = {
 						ai = yes
-						primary_title = { title = d_hashshashin } 
 					}
 					wealth = 250
 				}
@@ -4190,7 +4188,6 @@ pay_back_assassins_effect = {
 				if = {
 					limit = {
 						ai = yes
-						primary_title = { title = d_hashshashin } 
 					}
 					wealth = 300
 				}
@@ -4205,7 +4202,6 @@ pay_back_assassins_effect = {
 				if = {
 					limit = {
 						ai = yes
-						primary_title = { title = d_hashshashin } 
 					}
 					wealth = 500
 				}
@@ -16920,7 +16916,7 @@ root_secret_religion_provinces_convert_effect = {
 							has_province_modifier = secret_zor_angra_community
 						}
 						religion = zor_angra
-						remove_province_modifier = secret_zor_angra
+						remove_province_modifier = secret_zor_angra_community
 					}
 				}
 			}
@@ -24394,8 +24390,8 @@ landless_pope_effect = {
 					}
 				}
 			}
-			character_event = { id = HFP.40034 }
-			character_event = { id = HFP.40035 }
+			#character_event = { id = HFP.40034 }
+			#character_event = { id = HFP.40035 }
 		}
 	}
 }
@@ -26623,6 +26619,244 @@ assign_random_nickname_effect = {
 		}
 		10 = {
 			give_nickname = nick_the_twitchy
+		}
+	}
+}
+legitimise_newborn_FROM_effect = {
+	custom_tooltip = {
+		text = EVTTOOLTIP302
+		hidden_tooltip = {
+			if = {
+				limit = { NOT = { dynasty = 0 } }
+				dynasty = mother_bastard
+			}
+			mother_even_if_dead = {
+				if = {
+					limit = { NOT = { character = ROOT } }
+					if = { #bastards who have bastards start new dynasty
+						limit = { 
+							trait = bastard
+							NOT = { dynasty = 0 }
+							PREV = { NOT = { father_even_if_dead = { always = yes } } }
+						}
+						if = {
+							limit = { mother_even_if_dead = { dynasty = PREV } }
+							dynasty = mother_bastard
+						}
+						if = {
+							limit = { father_even_if_dead = { dynasty = PREV } }
+							dynasty = father_bastard
+						}
+					}
+					random_child = {
+						limit = { character = PREVPREV }
+						dynasty = PREV
+					}
+				}	
+			}
+			father_even_if_dead = {
+				if = {
+					limit = { NOT = { character = ROOT } }
+					if = { #bastards who have bastards start new dynasty
+						limit = { 
+							trait = bastard
+							NOT = { dynasty = 0 }
+						}
+						if = {
+							limit = { mother_even_if_dead = { dynasty = PREV } }
+							dynasty = mother_bastard
+						}
+						if = {
+							limit = { father_even_if_dead = { dynasty = PREV } }
+							dynasty = father_bastard
+						}
+					}
+					random_child = {
+						limit = { character = PREVPREV }
+						dynasty = PREV
+					}
+				}	
+			}
+			ROOT = {
+				if = { #bastards who have bastards start new dynasty
+					limit = { 
+						trait = bastard
+						NOT = { dynasty = 0 }
+					}
+					if = {
+						limit = { mother_even_if_dead = { dynasty = PREV } }
+						dynasty = mother_bastard
+					}
+					if = {
+						limit = { father_even_if_dead = { dynasty = PREV } }
+						dynasty = father_bastard
+					}
+				}
+			}
+			dynasty = ROOT	
+			remove_trait = bastard
+			add_trait = legit_bastard
+			#if = {
+				#limit = {
+					#has_bastard_nickname_trigger = yes
+				#}
+				#remove_nickname = yes
+			#}
+			if = {
+				limit = { liege = { NOT = { any_child = { character = PREVPREV } } } }
+				move_character = ROOT
+			}
+			ROOT = {
+				any_owned_bloodline = {
+					add_bloodline_member = PREVPREV			
+				}
+				any_spouse = {
+					character_event = { id = 305 tooltip = EVTTOOLTIP305 } # The parent's spouse is enraged
+				}
+			}
+		}
+	}
+}
+acknowledge_newborn_FROM_effect = {
+	custom_tooltip = {
+		text = EVTTOOLTIP306
+		hidden_tooltip = {
+			if = {
+				limit = { 
+					NOT = { dynasty = 0 } 					
+				}
+				if = {
+					limit = { 
+						mother_even_if_dead = { 
+							NOT = { dynasty = 0 } 
+							NOT = { character = ROOT }
+						}						
+					}
+					dynasty = mother_bastard
+				}	
+				if = {
+					limit = { 
+						father_even_if_dead = { 
+							NOT = { dynasty = 0 } 
+							NOT = { character = ROOT }
+						}						
+					}
+					dynasty = father_bastard
+				}
+			}
+			if = {
+				limit = { 
+					mother_even_if_dead = { dynasty = 0 NOT = { character = ROOT } }
+				}
+				dynasty = none
+			}
+			if = {
+				limit = { 
+					father_even_if_dead = { dynasty = 0 NOT = { character = ROOT } }
+				}
+				dynasty = none
+			}
+			mother_even_if_dead = {
+				if = {
+					limit = { NOT = { character = ROOT } NOT = { dynasty = 0 } }
+					random_child = {
+						limit = { character = PREVPREV }
+						dynasty = PREV
+					}
+				}	
+			}
+			father_even_if_dead = {
+				if = {
+					limit = { NOT = { character = ROOT } NOT = { dynasty = 0 } }
+					random_child = {
+						limit = { character = PREVPREV }
+						dynasty = PREV
+					}
+				}	
+			}
+			dynasty = ROOT				
+			add_trait = bastard
+			#remove from bloodlines
+			ROOT = {
+				any_owned_bloodline = {
+					remove_bloodline_member = PREVPREV
+				}
+			}	
+			#if = {
+				#limit = { mother_even_if_dead = { always = yes } }
+				#bastard_nickname_mother_effect = yes	
+			#}	
+			#if = {
+				#limit = { NOT = { mother_even_if_dead = { always = yes } } }
+				#bastard_nickname_father_effect = yes	
+			#}	
+			if = {
+				limit = { mother = { is_consort = no } }
+				ROOT = {
+					any_spouse = {
+						character_event = { id = 308 tooltip = EVTTOOLTIP308 } # The father's wife is angered
+					}
+				}
+			}
+		}
+	}
+}
+denounce_newborn_FROM_effect = {
+	custom_tooltip = {
+		text = EVTTOOLTIP309
+		hidden_tooltip = {
+			if = {
+				limit = { 
+					NOT = { dynasty = 0 } 
+					mother_even_if_dead = { NOT = { dynasty = 0 } }
+				}
+				dynasty = mother_bastard
+			}
+			if = {
+				limit = { 
+					mother_even_if_dead = { dynasty = 0 }
+				}
+				dynasty = none
+			}
+			mother_even_if_dead = {
+				if = {
+					limit = { NOT = { dynasty = 0 } }
+					random_child = {
+						limit = { character = PREVPREV }
+						dynasty = PREV
+					}
+				}	
+			}
+			add_trait = bastard
+			set_father = 0
+			set_real_father = ROOT
+			#bastard_nickname_mother_effect = yes
+			set_immune_to_pruning = yes
+			#remove from bloodlines
+			ROOT = {
+				any_owned_bloodline = {
+					remove_bloodline_member = PREVPREV
+				}
+			}	
+			mother = {
+				if = {
+					limit = { is_ruler = yes is_alive = yes }
+					reverse_banish = PREV
+				}
+				if = {
+					limit = { is_ruler = no is_alive = yes }
+					liege = { reverse_banish = PREVPREV }
+				}
+			}
+			
+			if = {
+				limit = { mother = { is_consort = no } }		
+				ROOT = {
+					any_spouse = {
+						character_event = { id = 311 } # The father's wife is displeased
+					}
+				}
+			}
 		}
 	}
 }
