@@ -341,6 +341,7 @@ feudal_governments = {
 				has_law = people_control_3
 				has_law = people_control_4
 			}
+			NOT = { is_government_potential = order_government }
 		}
 		
 		color = { 64 64 64 }
@@ -410,6 +411,7 @@ feudal_governments = {
 				has_law = clergy_control_3
 				has_law = clergy_control_4
 			}
+			NOT = { is_government_potential = order_government }
 		}
 		
 		color = { 64 64 64 }
@@ -475,6 +477,7 @@ feudal_governments = {
 				has_law = state_control_3
 				has_law = state_control_4
 			}
+			NOT = { is_government_potential = order_government }
 		}
 		
 		color = { 64 64 64 }
@@ -545,6 +548,7 @@ feudal_governments = {
 				has_law = knowledge_control_3
 				has_law = knowledge_control_4
 			}
+			NOT = { is_government_potential = order_government }
 		}
 		
 		color = { 0 51 102 }
@@ -617,6 +621,7 @@ feudal_governments = {
 				has_law = messianic_power_3
                 has_law = messianic_power_4
 			}
+			NOT = { is_government_potential = order_government }
 		}
 		
 		color = { 103 108 114 }
@@ -694,20 +699,40 @@ feudal_governments = {
 			feudal_government
 			chinese_imperial_government
 		}
+		accepts_liege_governments_culture = {
+			tribal_government
+		}
+		accepts_liege_governments_religion = { # only radical governments from the correct religion are accepted
+			anarchist_government
+			demagogic_government
+			mystic_government
+			absolutist_government
+			hegemonic_government
+			messianic_government
+		}
 		free_revoke_on_governments_religion = { # Tribal vassals of other religions can have their titles revoked for free
 			tribal_government
 		}
 		frame_suffix = "_theocraticfeudal"
 		potential = {
-			NAND = {
-				controls_religion = yes
-				NOT = { religion_group = muslim }
-				NOT = { religion = norse_pagan_reformed }
+			OR = {
+				controls_religion = no
+				religion_group = muslim
+				has_religion_feature = religion_temporal_head
 			}
 			NOT = {	religion_group = muslim	}
-			AND = { 
-				culture = bodpa
-				religion = bon
+			NOT = { is_government_potential = classical_government }
+			NOT = { is_government_potential = order_government }
+			AND = {
+				OR = {
+					culture_group = tibetan_group
+					culture_group = burman
+				}
+				OR = {
+					religion = bon
+					religion = bon_reformed
+					religion_group = bud_group
+				}
 				higher_tier_than = BARON
 			}
 			NAND = { 
@@ -750,16 +775,28 @@ feudal_governments = {
 		}
 		accepts_liege_governments = { # Gets the wrong religion modifier instead
 			feudal_government
+			classical_government
 			muslim_government
 			theocratic_feudal_government
+		}
+		accepts_liege_governments_culture = {
+			tribal_government
+		}
+		accepts_liege_governments_religion = { # only radical governments from the correct religion are accepted
+			anarchist_government
+			demagogic_government
+			mystic_government
+			absolutist_government
+			hegemonic_government
+			messianic_government
 		}
 		free_revoke_on_tiers = {
 			duke
 		}
-		free_revoke_on_governments_religion = { # Tribal vassals of other religions can have their titles revoked for free
-			tribal_government
+		free_revoke_on_governments_religion = {
 		}
 		frame_suffix = "_chineseimperial"
+		title_prefix = "ci_"
 		potential = {
 			tier = EMPEROR
 			primary_title = { has_title_flag = pretender_chinese_empire }
@@ -768,6 +805,7 @@ feudal_governments = {
 				has_character_flag = chinese_imperial_government_preserve #keeps government when player is given culture change opton
 			}
 			is_patrician = no
+			NOT = { is_government_potential = order_government }
 		}
 		
 		color = { 118 255 163 }
@@ -789,15 +827,98 @@ feudal_governments = {
 		vassal_government_opinion_penalties = no
 		can_grant_kingdoms_and_empires_to_other_government_group = yes
 		free_retract_vassalage = yes
-		marriage_ignore_religion = yes
+		#marriage_ignore_religion = yes # Willing to marry regardless of religion IF both have this
 		
 		vassal_limit = 10
+		
+		max_consorts = 1000 # The EoC needs to be able to accept lots of concubines!
 		
 		character_modifier = {
 			monthly_character_piety = 1
 		}
 		## Modifiers
-		court_size_modifier = 15
+		court_size_modifier = 1000 # Intentionally higher than vanilla, to account for characters sent with the Grace system
 	}
 
+	order_government = {
+		preferred_holdings = { CASTLE }
+		allowed_holdings = {
+			CASTLE
+			TEMPLE
+			TRIBAL
+			FORT
+			HOSPITAL
+		}
+		accepts_liege_governments = {
+			feudal_government
+			muslim_government
+			theocracy_government
+			theocratic_feudal_government
+			chinese_imperial_government
+		}
+		free_revoke_on_governments = {
+			order_government
+		}
+		free_revoke_on_tiers = {
+			BARON
+		}
+
+		forced_contract = {
+			order_government
+		}
+
+		frame_suffix = "_order"
+		title_prefix = "order_"
+
+		potential = {
+			OR = {
+				holy_order = yes
+				AND = {
+					any_liege = {
+						holy_order = yes
+						religion = ROOT
+					}
+					ai = yes
+					NAND = { 
+						is_government_potential = merchant_republic_government 
+						OR = {
+							tier = DUKE
+							is_patrician = yes
+						}
+						any_demesne_province = {
+							any_province_holding = {
+								OR = {
+									AND = {
+										tier = BARON
+										holding_type = family_palace
+									}
+									AND = {
+										NOT = {
+											tier = BARON
+										}
+										holding_type = city
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		color = { 169 169 169 }
+
+		have_gender_laws = no
+		can_create_kingdoms = no
+		can_create_empires = no
+		can_imprison_without_reason = no
+		can_revoke_without_reason = no
+		dukes_called_kings = yes
+		barons_need_dynasty = yes
+		can_usurp_kingdoms_and_empires = no
+		can_grant_kingdoms_and_empires_to_other_government = no
+		can_be_granted_kingdoms_and_empires_by_other_government = no
+		can_inherit = no
+		free_retract_vassalage = yes
+	}
 }
