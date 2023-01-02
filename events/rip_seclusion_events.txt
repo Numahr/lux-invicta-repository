@@ -689,14 +689,9 @@ character_event = {
 			}
 		}
 		event_target:target_greedy_courtier = {			
-			tooltip = {
-				death = {
-					death_reason = death_execution_eaten
-					killer = ROOT
-				}
-			}
-			hidden_effect = {
-				death = { death_reason = death_execution_eaten }
+			death = {
+				death_reason = death_execution_eaten_unknown
+				killer = ROOT
 			}
 			hidden_tooltip = {
 				if = {
@@ -807,6 +802,8 @@ character_event = {
 				}
 			}
 			add_trait = temperate
+			lose_weight_small_effect = yes
+			weight_trait_check_effect = yes
 		}
 		set_character_flag = seclusion_refuse_to_eat_fellow_man
 	}
@@ -1224,6 +1221,14 @@ character_event = {
 					NOT = { character = ROOT }
 					has_character_modifier = in_seclusion
 					at_location = ROOT
+					NOR = { # Fixed a vanilla issue
+						any_spouse = {
+							character = PREV
+						}
+						any_consort = {
+							character = PREV
+						}
+					}
 				}
 			}
 			save_event_target_as = lover_one
@@ -1233,6 +1238,14 @@ character_event = {
 					NOT = { character = ROOT }
 					has_character_modifier = in_seclusion
 					at_location = ROOT
+					NOR = { # Fixed a vanilla issue
+						any_spouse = {
+							character = PREV
+						}
+						any_consort = {
+							character = PREV
+						}
+					}
 				}
 				save_event_target_as = lover_two
 			}
@@ -1383,17 +1396,54 @@ character_event = {
 character_event = {
 	id = RIP.12007
 	picture = GFX_evt_courtiers_talking
-	desc = EVTDESC_RIP_12007
 	border = GFX_event_normal_frame_intrigue
+
+	desc = {
+		text = EVTDESC_RIP_12007
+		trigger = {
+			NOT = { has_character_flag = seclusion_lazy_seduction_V2@event_target:target_courtier }
+		}
+	}
+	desc = {
+		text = EVTDESC_RIP_12007_sway_version
+		trigger = {
+			has_character_flag = seclusion_lazy_seduction_V2@event_target:target_courtier
+		}
+	}
 
 	is_triggered_only = yes
 
 	immediate = {
 		set_character_flag = seclusion_lazy_seduction
+		if = { # For Sway event-edge case...
+			limit = { has_character_flag = seclusion_lazy_seduction_V2@persistent_event_target:sway_target }
+			persistent_event_target:sway_target = { save_event_target_as = target_courtier }
+			break = yes
+		}
 		random_realm_character = {
 			limit = {
 				is_adult = yes
-				is_opposite_sex = ROOT
+				#is_opposite_sex = ROOT # Vanilla stupidity
+				OR = {
+					AND = {
+						PREV = {
+							NOT = {
+								trait = homosexual
+							}
+						}
+						NOT = {
+							trait = homosexual
+						}
+						is_opposite_sex = ROOT
+					}
+					AND = {
+						PREV = {
+							trait = homosexual
+						}
+						trait = homosexual
+						same_sex = ROOT
+					}
+				}
 				reverse_opinion = { who = ROOT value = 0 } 
 				at_location = ROOT
 				has_character_modifier = in_seclusion
@@ -1401,6 +1451,9 @@ character_event = {
 				is_consort = no
 				has_lover = no
 				can_marry = yes
+			}
+			preferred_limit = {
+				character = persistent_event_target:sway_target # For Sway events...
 			}
 			save_event_target_as = target_courtier
 		}
@@ -1524,16 +1577,25 @@ character_event = {
 character_event = {
 	id = RIP.12009
 	picture = GFX_evt_lovers
-	desc = EVTDESC_RIP_12009
 	border = GFX_event_normal_frame_intrigue
 
 	is_triggered_only = yes
+
+	desc = {
+		text = EVTDESC_RIP_12009
+		trigger = { NOT = { has_character_flag = seclusion_lazy_seduction_V2@event_target:target_courtier } }
+	}
+	desc = {
+		text = EVTDESC_RIP_12009_sway_version
+		trigger = { has_character_flag = seclusion_lazy_seduction_V2@event_target:target_courtier }
+	}
 
 	option = {
 		name = EVTOPTA_RIP_12009
 		tooltip = {
 			add_lover = FROM
 		}
+		clr_character_flag = seclusion_lazy_seduction_V2@event_target:target_courtier
 	}
 }
 
@@ -2112,7 +2174,7 @@ character_event = {
 				33 = { 
 					set_character_flag = disease_not_serious
 					add_trait = fever
-					character_event = { id = RIP.11003 days = 10 random = 30 }
+					character_event = { id = RIP.11003 days = 5 random = 10 }
 				}
 				33 = { 
 					set_character_flag = lover_is_ill
@@ -2680,12 +2742,49 @@ character_event = {
 						factor = 0
 						is_female = no
 					}
+					modifier = {
+						factor = 0.1
+						ROOT = { any_courtier = { has_nickname = nick_the_silent } }
+					}
 					give_nickname = nick_the_silent
 				}
 				10 = {
+					modifier = {
+						factor = 0.1
+						ROOT = { any_courtier = { has_nickname = nick_the_hollow } }
+					}
+					give_nickname = nick_the_hollow
+				}
+				10 = {
+					modifier = {
+						factor = 0.1
+						ROOT = { any_courtier = { has_nickname = nick_the_recluse } }
+					}
+					give_nickname = nick_the_recluse
+				}
+				10 = {
+					modifier = {
+						factor = 0
+						is_female = yes
+					}
+					modifier = {
+						factor = 0.1
+						ROOT = { any_courtier = { has_nickname = nick_the_bard  } }
+					}
+					give_nickname = nick_the_bard
+				}
+				10 = {
+					modifier = {
+						factor = 0.1
+						ROOT = { any_courtier = { has_nickname = nick_the_troubadour } }
+					}
 					give_nickname = nick_the_troubadour
 				}
 				10 = {
+					modifier = {
+						factor = 0.1
+						ROOT = { any_courtier = { has_nickname = nick_the_fox } }
+					}
 					give_nickname = nick_the_fox
 				}
 				10 = {
@@ -2693,7 +2792,13 @@ character_event = {
 						factor = 0
 						is_female = yes
 					}
+					modifier = {
+						factor = 0.1
+						ROOT = { any_courtier = { has_nickname = nick_the_fox } }
+					}
 					give_nickname = nick_the_handsome
+				}
+				1 = {
 				}
 			}
 
@@ -2835,7 +2940,7 @@ character_event = {
 		custom_tooltip = { text = EVTOPTC_RIP_12054_TOOLTIP }	
 		
 		event_target:captured_sneaker = {
-			death = { death_reason = death_execution_beheading Killer = FROM }
+			death = { death_reason = death_execution_beheading killer = ROOT }
 			
 			hidden_tooltip = {
 				clr_character_flag = did_not_trust_steward
@@ -3401,7 +3506,7 @@ character_event = {
 
 		death = {
 			death_reason = death_murder_unknown
-			killer = FROM
+			killer = event_target:captured_sneaker # Vanilla issue
 		}
 		hidden_tooltip = {
 			event_target:captured_sneaker = {
