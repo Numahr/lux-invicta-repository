@@ -558,7 +558,18 @@
 narrative_event = {
 	id = LoR.20
 	title = EVTNAMELoR.20
-	desc = EVTDESCLoR.20
+	desc = {
+		text = EVTDESCLoR.20
+		trigger = { 
+			is_alternate_start = no
+		}
+	}
+	desc = {
+		text = EVTDESCLoR20_HF
+		trigger = { 
+			is_alternate_start = yes
+		}
+	}
 	
 	picture = GFX_evt_rome_restored_byzantine
 	
@@ -603,7 +614,18 @@ narrative_event = {
 narrative_event = {
 	id = LoR.21
 	title = EVTNAMELoR.21
-	desc = EVTDESCLoR.21
+	desc = {
+		text = EVTDESCLoR.21
+		trigger = { 
+			is_alternate_start = no
+		}
+	}
+	desc = {
+		text = EVTDESCLoR21_HF
+		trigger = { 
+			is_alternate_start = yes
+		}
+	}
 	
 	picture = GFX_evt_rome_restored_byzantine
 	
@@ -904,21 +926,31 @@ character_event = {
 # Augustus Trait Gained
 character_event = {
 	id = LoR.45
-	desc = EVTDESCLoR.45
+	desc = {
+		text = EVTDESCLoR.45
+		trigger = { 
+			is_alternate_start = no
+		}
+	}
+	desc = {
+		text = EVTDESCLoR45_HF
+		trigger = { 
+			is_alternate_start = yes
+		}
+	}
 	picture = GFX_evt_rome_restored_byzantine
 	
 	only_playable = yes
-	has_global_flag = rome_restored
 	has_dlc = "Legacy of Rome"
+	has_global_flag = rome_restored
 	
 	trigger = {
 		has_landed_title = e_roman_empire
 		NOT = { trait = augustus }
 	}
 	
-	mean_time_to_happen = {
-		days = 1
-	}
+	is_triggered_only = yes
+	
 	
 	option = {
 		name = EVTOPTALoR.45
@@ -941,12 +973,53 @@ character_event = {
 		is_alive = yes
 	}
 	
-	mean_time_to_happen = {
-		days = 1
-	}
+	is_triggered_only = yes
 	
 	option = {
 		name = EVTOPTALoR.46
 		remove_trait = augustus
+	}
+}
+
+#On_death Augustus Trait inheritance
+character_event = {
+	id = LoR.47
+	hide_window = yes
+	
+	only_playable = yes
+	has_global_flag = rome_restored
+	has_dlc = "Legacy of Rome"
+	
+	trigger = {
+		has_landed_title = e_roman_empire
+	}
+	
+	is_triggered_only = yes
+	
+	
+	immediate = {
+		e_roman_empire = { current_heir = { character_event = { id = LoR.45 days = 2 } } }
+	}
+}
+
+#On_title_usurped Augustus Trait inheritance
+character_event = {
+	id = LoR.48
+	hide_window = yes
+	
+	only_playable = yes
+	has_global_flag = rome_restored
+	has_dlc = "Legacy of Rome"
+	
+	trigger = {
+		FROM = { title = e_roman_empire }
+		NOT = { trait = augustus }
+	}
+	
+	is_triggered_only = yes
+	
+	
+	immediate = {
+		ROOT = { character_event = { id = LoR.45 days = 2 } }
 	}
 }
