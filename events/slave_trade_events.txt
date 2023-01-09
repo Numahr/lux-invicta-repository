@@ -21,12 +21,24 @@ character_event = {
 	id = slavery.100
 	picture = GFX_evt_slave_market
 	desc = "EVTDESCSLAVERY100"
+	
 	show_from_from = yes
 	is_triggered_only = yes
 	
+	immediate = {
+		set_character_flag = flag_slave_action
+		clr_character_flag = flag_slave_price_15
+		clr_character_flag = flag_slave_price_40
+		clr_character_flag = flag_slave_price_75
+		clr_character_flag = flag_slave_price_115
+		clr_character_flag = flag_slave_price_150
+		clr_character_flag = flag_slave_price_225
+	}
+	
 	option = {
 		name = "EVTOPTASLAVERY100"
-		hidden_tooltip = { FROM = { FROM = { character_event = { id = slavery.101 } } } }
+		clr_character_flag = flag_slave_action
+		hidden_tooltip = { FROMFROM = { character_event = { id = slavery.101 } } }
 		ai_chance = {
 			factor = 200
 			modifier = {
@@ -99,7 +111,7 @@ character_event = {
 			}
 			modifier = {
 				factor = 2
-				FROMFROM = { trait = ugly }
+				FROMFROM = { has_ugly_trait_trigger = yes }
 			}
 			#No obvious use
 			modifier = {
@@ -107,22 +119,27 @@ character_event = {
 				FROMFROM = { 
 					NOR = {
 						prestige = 500
-						any_claim = { always = yes }
+						any_claim = { 
+							NOT = { lower_tier_than = ROOT }
+							NOT = { holder_scope = { same_realm = PREVPREV } }
+						}
 						is_pregnant = yes
 						stewardship = 14
 						diplomacy = 14
 						intrigue = 14
 						learning = 14
-						trait = skilled_warrior
-						trait = master_warrior
+						combat_rating = 60
 						AND = {
 							fertility = 0.1
 							OR ={
+								AND = {
+									is_female = yes
+									NOT = { age = 40 }
+								}
 								is_female = no									
-								NOT = { age = 40 }
 							}	
 							OR = {
-								trait = strong
+								is_strong_trigger = yes
 								trait = fair
 								trait = quick
 								trait = genius
@@ -193,7 +210,7 @@ character_event = {
 			}
 			modifier = {
 				factor = 2
-				FROMFROM = { trait = ugly }
+				FROMFROM = { has_ugly_trait_trigger = yes }
 			}
 			#No obvious use
 			modifier = {
@@ -201,22 +218,27 @@ character_event = {
 				FROMFROM = { 
 					NOR = {
 						prestige = 500
-						any_claim = { always = yes }
+						any_claim = { 
+							NOT = { lower_tier_than = ROOT }
+							NOT = { holder_scope = { same_realm = PREVPREV } }
+						}
 						is_pregnant = yes
 						stewardship = 14
 						diplomacy = 14
 						intrigue = 14
 						learning = 14
-						trait = skilled_warrior
-						trait = master_warrior
+						combat_rating = 60
 						AND = {
 							fertility = 0.1
 							OR ={
+								AND = {
+									is_female = yes
+									NOT = { age = 40 }
+								}
 								is_female = no									
-								NOT = { age = 40 }
 							}	
 							OR = {
-								trait = strong
+								is_strong_trigger = yes
 								trait = fair
 								trait = quick
 								trait = genius
@@ -233,9 +255,59 @@ character_event = {
 	}
 	
 	option = {
-		trigger = { wealth = 4.0 }
+		trigger = { wealth = 40 }
 		ai_chance = {
 			factor = 25
+			
+			modifier = { #Must have good reason to offer high
+				factor = 0 
+				FROMFROM = { 
+					NOT = {
+						OR = {
+							prestige = 500
+							any_claim = { 
+								NOT = { lower_tier_than = ROOT }
+								NOT = { holder_scope = { same_realm = PREVPREV } }
+							}
+							is_pregnant = yes
+							AND = { 
+								age = 6
+								NOT = { age = 20 }
+							}
+							stewardship = 10
+							diplomacy = 10
+							intrigue = 10
+							learning = 10
+							combat_rating = 40
+							AND = {
+								fertility = 0.1
+								OR ={
+									AND = {
+										is_female = yes
+										NOT = { age = 40 }
+									}
+									is_female = no									
+								}	
+								OR = {
+									is_strong_trigger = yes
+									trait = fair
+									trait = quick
+									trait = genius
+									trait = tall
+								}									
+							}
+						}
+					}
+				} 
+			}
+			modifier = { #Only recently bought for less
+				factor = 0
+				FROMFROM = { 
+					has_character_flag = flag_slave_price_15
+					NOT = { had_character_flag = { flag = flag_slave_price_15 days = 1825 } }
+				}	
+			}
+			
 			modifier = {
 				factor = 1.1
 				trait = charitable
@@ -248,12 +320,15 @@ character_event = {
 				factor = 1.35
 				FROMFROM = { 
 					fertility = 0.1
-					OR ={
+					OR = {
+						AND = {
+							is_female = yes
+							NOT = { age = 40 }
+						}
 						is_female = no									
-						NOT = { age = 40 }
 					}	
 					OR = {
-						trait = strong
+						is_strong_trigger = yes
 						trait = fair
 						trait = quick
 						trait = genius
@@ -270,19 +345,28 @@ character_event = {
 			}
 			modifier = {
 				factor = 1.1
-				FROMFROM = { trait = master_warrior }
+				FROMFROM = { combat_rating = 80 }
 			}
 			modifier = {
 				factor = 1.1
-				FROMFROM = { trait = skilled_warrior }
+				FROMFROM = { combat_rating = 60 }
 			}
 			modifier = {
 				factor = 1.1
-				FROMFROM = { any_claim = { always = yes } }
+				FROMFROM = {
+					any_claim = { 
+						NOT = { lower_tier_than = ROOT }
+						NOT = { holder_scope = { same_realm = PREVPREV } }
+					}
+				}
 			}
 			modifier = {
 				factor = 1.1
 				FROMFROM = { is_pregnant = yes }
+			}
+			modifier = {
+				factor = 1.1
+				FROMFROM = { trait = eunuch }
 			}
 			modifier = {
 				factor = 1.1
@@ -365,26 +449,86 @@ character_event = {
 	
 	option = {
 		trigger = { 
-			wealth = 11.5
+			wealth = 115
 			ai = no
 		} 
 		name = "EVTOPTDSLAVERY100"
 		hidden_tooltip = { 
 			character_event = { id = slavery.10399 }
-			FROMFROM = { character_event = { id = slavery.103 days = 2 } } 
+			FROMFROM = { character_event = { id = slavery.103 days = 2 } }
 		}
 	}
 	
 	option = {
 		trigger = { 
-			wealth = 7.5
+			wealth = 75
 			OR = {
 				ai = yes
-				NOT = { wealth = 11.5 }
+				NOT = { wealth = 115 }
 			}	
 		}
 		ai_chance = {
 			factor = 20
+			
+			modifier = { #Too old
+				factor = 0
+				age = 50
+			}
+			modifier = { #Must have good reason to offer high
+				factor = 0 
+				FROMFROM = { 
+					NOT = {
+						OR = {
+							prestige = 500
+							any_claim = { 
+								NOT = { lower_tier_than = ROOT }
+								NOT = { holder_scope = { same_realm = PREVPREV } }
+							}
+							is_pregnant = yes
+							AND = { 
+								age = 8
+								NOT = { age = 16 }
+							} 
+							stewardship = 12
+							diplomacy = 12
+							intrigue = 12
+							learning = 12
+							combat_rating = 60
+							AND = {
+								fertility = 0.1
+								OR ={
+									AND = {
+										is_female = yes
+										NOT = { age = 40 }
+									}
+									is_female = no									
+								}	
+								OR = {
+									is_strong_trigger = yes
+									trait = fair
+									trait = quick
+									trait = genius
+									trait = tall
+								}									
+							}
+						}
+					}
+				} 
+			}
+			modifier = { #Only recently bought for less
+				factor = 0
+				FROMFROM = { 
+					OR = {
+						has_character_flag = flag_slave_price_15
+						has_character_flag = flag_slave_price_40
+					}	
+					NOR = { 
+						had_character_flag = { flag = flag_slave_price_15 days = 1825 } 
+						had_character_flag = { flag = flag_slave_price_40 days = 1825 } 
+					}
+				}	
+			}
+			
 			modifier = {
 				factor = 1.2
 				trait = charitable
@@ -397,12 +541,15 @@ character_event = {
 				factor = 1.55
 				FROMFROM = { 
 					fertility = 0.1
-					OR ={
+					OR = {
+						AND = {
+							is_female = yes
+							NOT = { age = 40 }
+						}
 						is_female = no									
-						NOT = { age = 40 }
 					}	
 					OR = {
-						trait = strong
+						is_strong_trigger = yes
 						trait = fair
 						trait = quick
 						trait = genius
@@ -419,19 +566,28 @@ character_event = {
 			}
 			modifier = {
 				factor = 1.2
-				FROMFROM = { trait = master_warrior }
+				FROMFROM = { combat_rating = 80 }
 			}
 			modifier = {
 				factor = 1.2
-				FROMFROM = { trait = skilled_warrior }
+				FROMFROM = { combat_rating = 60 }
 			}
 			modifier = {
 				factor = 1.2
-				FROMFROM = { any_claim = { always = yes } }
+				FROMFROM = {
+					any_claim = { 
+						NOT = { lower_tier_than = ROOT }
+						NOT = { holder_scope = { same_realm = PREVPREV } }
+					}
+				}
 			}
 			modifier = {
 				factor = 1.2
 				FROMFROM = { is_pregnant = yes }
+			}
+			modifier = {
+				factor = 1.2
+				FROMFROM = { trait = eunuch }
 			}
 			modifier = {
 				factor = 1.2
@@ -538,7 +694,7 @@ character_event = {
 			}
 			modifier = {
 				factor = 0.5
-				FROM = { trait = slow }
+				FROM = { is_dumb_trigger = yes }
 				NOR = {
 					trait = just
 					trait = honorable
@@ -553,44 +709,59 @@ character_event = {
 		}
 		name = "EVTOPTESLAVERY100"
 		set_character_flag = flag_slave_price_75
-		hidden_tooltip = { FROM = { FROM = { character_event = { id = slavery.103 } } } }
+		hidden_tooltip = { FROMFROM = { character_event = { id = slavery.103 } } }
 	}
 	option = {
 		trigger = { 
-			wealth = 11.5
+			wealth = 115
 			ai = yes
 		}
 		ai_chance = {
 			factor = 15
+			modifier = { #Too old
+				factor = 0
+				age = 40
+			}
 			modifier = { #Must have good reason to offer high
 				factor = 0
 				FROMFROM = { 
-					NOR = {
-						prestige = 500
-						any_claim = { always = yes }
-						is_pregnant = yes
-						stewardship = 12
-						diplomacy = 12
-						intrigue = 12
-						learning = 12
-						trait = skilled_warrior
-						trait = master_warrior
-						AND = {
-							fertility = 0.1
-							OR ={
-								is_female = no									
-								NOT = { age = 40 }
-							}	
-							OR = {
-								trait = strong
-								trait = fair
-								trait = quick
-								trait = genius
-								trait = tall
+					NOT = {
+						calc_true_if = {
+							amount = 2
+							prestige = 500
+							any_claim = { 
+								NOT = { lower_tier_than = ROOT }
+								NOT = { holder_scope = { same_realm = PREVPREV } }
 							}
+							is_pregnant = yes
+							stewardship = 12
+							diplomacy = 12
+							intrigue = 12
+							learning = 12
+							combat_rating = 60
+							is_strong_trigger = yes
+							trait = fair
+							trait = quick
+							trait = genius
+							trait = tall
 						}
-					} 
-				}
+					}
+				} 
+			}
+			modifier = { #Only recently bought for less
+				factor = 0
+				FROMFROM = { 
+					OR = {
+						has_character_flag = flag_slave_price_15
+						has_character_flag = flag_slave_price_40
+						has_character_flag = flag_slave_price_75
+					}	
+					NOR = { 
+						had_character_flag = { flag = flag_slave_price_15 days = 1825 } 
+						had_character_flag = { flag = flag_slave_price_40 days = 1825 } 
+						had_character_flag = { flag = flag_slave_price_75 days = 1825 } 
+					}
+				}	
 			}
 			modifier = {
 				factor = 1.35
