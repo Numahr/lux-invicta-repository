@@ -411,7 +411,7 @@ character_event = {
 	
 	# trigger = {
 		# has_landed_title = d_varangian_guard
-		# NOT = { trait = varangian_trait }
+		# NOT = { trait = varangian }
 	# }
 	
 	# mean_time_to_happen = {
@@ -419,7 +419,7 @@ character_event = {
 	# }
 	
 	# immediate = {
-		# add_trait = varangian_trait
+		# add_trait = varangian
 	# }
 # }
 
@@ -472,7 +472,7 @@ character_event = {
 			religion = porphyryan
 			religion = tengri_confucian
 			religion = valentinian
-			trait = varangian_trait 
+			trait = varangian 
 			has_character_flag = wants_varangian
 			has_character_flag = denied_varangian
 		}
@@ -690,7 +690,7 @@ character_event = {
 		}
 		prestige = 50
 		wealth = 50
-		add_trait = varangian_trait
+		add_trait = varangian
 		clr_character_flag = serving_varangian
 	}
 }
@@ -718,7 +718,7 @@ character_event = {
 				wealth = 50
 			}
 		}
-		FROM = { add_trait = varangian_trait }
+		FROM = { add_trait = varangian }
 	}
 }
 
@@ -836,7 +836,7 @@ character_event = {
 			}
 			move_character = ROOT
 			add_trait = scarred
-			add_trait = varangian_trait
+			add_trait = varangian
 			change_martial = 4
 			prestige = 50
 			wealth = 50
@@ -920,7 +920,7 @@ character_event = {
 			}
 			move_character = ROOT
 			add_trait = homosexual
-			add_trait = varangian_trait
+			add_trait = varangian
 			prestige = 50
 			wealth = 50
 		}
@@ -997,7 +997,7 @@ character_event = {
 			move_character = ROOT
 			tooltip = { add_trait = blinded }
 			add_trait = eunuch
-			add_trait = varangian_trait
+			add_trait = varangian
 		}
 	}
 }
@@ -1120,7 +1120,7 @@ character_event = {
 				move_character = ROOT
 			}
 			change_martial = 2
-			add_trait = varangian_trait
+			add_trait = varangian
 			move_character = ROOT
 			prestige = 50
 			wealth = 50
@@ -1201,7 +1201,7 @@ character_event = {
 			move_character = ROOT
 			add_trait = stressed
 			add_trait = depressed
-			add_trait = varangian_trait
+			add_trait = varangian
 			wealth = 50
 		}
 	}
@@ -1330,7 +1330,7 @@ character_event = {
 				limit = { same_liege = PREV }
 				move_character = ROOT
 			}
-			add_trait = varangian_trait 
+			add_trait = varangian 
 			move_character = ROOT
 			prestige = 50
 			wealth = 50
@@ -1406,7 +1406,7 @@ character_event = {
 			}
 			move_character = ROOT
 			add_trait = zealous
-			add_trait = varangian_trait
+			add_trait = varangian
 			religion = mithra
 			prestige = 50
 			wealth = 50
@@ -1547,7 +1547,7 @@ character_event = {
 			}
 			prestige = 50
 			wealth = 50
-			add_trait = varangian_trait
+			add_trait = varangian
 			#change_martial = 2
 		}
 	}
@@ -1750,7 +1750,7 @@ character_event = {
 				move_character = ROOT
 			}
 			move_character = ROOT
-			add_trait = varangian_trait
+			add_trait = varangian
 			wealth = 150
 			prestige = 50
 		}
@@ -1758,7 +1758,30 @@ character_event = {
 	}
 }
 
-# Father dies, Player Son is heir
+# Setup: Player character dies, ping to new player character (fires from on_death on action)
+character_event = {
+	id = HFP.19101
+	ai = no
+	is_triggered_only = yes
+	hide_window = yes
+	trigger = {
+		has_dlc = "The Old Gods"
+		player_heir = {
+			OR = {
+				has_character_flag = wants_varangian
+				has_character_flag = serving_varangian
+			}
+		}
+	}
+	
+	immediate = {
+		player_heir = {
+			character_event = { id = TOG.3134 days = 1 }
+		}
+	}
+}
+
+# Player Varangian guard character returns home (fires from event above)
 character_event = {
 	id = TOG.3134
 	desc = EVTDESC_TOG_3134
@@ -1785,9 +1808,9 @@ character_event = {
 	
 	option = {
 		name = EVTOPTA_TOG_3134
-		add_trait = varangian_trait
-		prestige = 50
-		wealth = 50
+		add_trait = varangian
+		prestige = 200
+		wealth = 200
 	}
 }
 
@@ -1815,7 +1838,7 @@ character_event = {
 	}
 	
 	immediate = {
-		add_trait = varangian_trait
+		add_trait = varangian
 		clr_character_flag = wants_varangian
 		clr_character_flag = serving_varangian
 		clr_character_flag = son_vassal_merc 
@@ -4169,6 +4192,12 @@ character_event = {
 		num_of_children = 0
 		has_lover = no
 		is_pregnant = no
+		NOT = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+		}
 	}
 	
 	immediate = {
@@ -4252,10 +4281,14 @@ character_event = {
 	
 	trigger = {
 		religion_group = finnish_group
-		NOT = {
-			has_character_flag = peijaiset
-		}
+		NOT = { has_character_flag = peijaiset }
 		NOT = { is_inaccessible_trigger = yes }
+		NOT = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+		}
 	}
 	
 	immediate = {
@@ -4317,6 +4350,12 @@ character_event = {
 		religion_group = norsegerman_group
 		NOT = { has_character_flag = odin_event }
 		NOT = { is_inaccessible_trigger = yes }
+		NOT = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+		}
 	}
 	
 	immediate = {
