@@ -47,6 +47,23 @@ religious_proselyte1 = {
 			top_liege = {
 				religion_group = ROOT
 				OR = {
+					NOT = { religion = FROM }
+					AND = {
+						religion = FROM
+						FROM = {
+							has_character_modifier = known_satanist
+						}
+						NOT = {
+							has_character_modifier = known_satanist
+						}
+						ROOT = {
+							NOT = {
+								has_character_modifier = known_satanist
+							}
+						}
+					}
+				}
+				OR = {
 					religion = ROOT
 					AND = {
 						is_heretic = no
@@ -70,6 +87,15 @@ religious_proselyte1 = {
 				}
 				trait = tolerant_ruler #Tolerant rulers don't use religion as a casus belli
 				same_realm = FROM
+				AND = {
+					religion_group = FROM
+					FROM = {
+						has_character_modifier = known_satanist
+					}
+					NOT = {
+						has_character_modifier = known_satanist
+					}
+				}
 			}
 			is_merchant_republic = no
 			is_nomadic = no
@@ -170,8 +196,24 @@ religious_proselyte1 = {
 			NOR = {
 				same_realm = FROM
 				religion_group = FROM
-				top_liege = {
-					religion = FROM
+			}
+			top_liege = {
+				OR = {
+					NOT = { religion = FROM }
+					AND = {
+						religion = FROM
+						FROM = {
+							has_character_modifier = known_satanist
+						}
+						NOT = {
+							has_character_modifier = known_satanist
+						}
+						ROOT = {
+							NOT = {
+								has_character_modifier = known_satanist
+							}
+						}
+					}
 				}
 			}
 		}
@@ -180,13 +222,23 @@ religious_proselyte1 = {
 	on_success = {
 		any_attacker = {
 			limit = { character = ROOT }
-			participation_scaled_piety = 50
-			participation_scaled_prestige = 50
-			if = {
-				limit = {
-					uses_decadence = yes
+			hidden_tooltip = { 
+				participation_scaled_piety = 50
+				participation_scaled_prestige = 50
+				if = {
+					limit = {
+						uses_decadence = yes
+					}
+					participation_scaled_decadence = -10
 				}
-				participation_scaled_decadence = -10
+				hidden_tooltip = {
+					if = {
+						limit = {
+							has_ambition = obj_strengthen_religion
+						}
+						change_variable = { which = strengthen_religion value = 1 }
+					}
+				}
 			}
 		}
 		any_attacker = {
@@ -203,22 +255,43 @@ religious_proselyte1 = {
 			}
 		}
 		
-		ROOT = {
-			prestige = 50
-			piety = 50
+		ROOT = { 
+			participation_scaled_piety = 50
+			participation_scaled_prestige = 50
+			if = {
+				limit = {
+					uses_decadence = yes
+				}
+				participation_scaled_decadence = -10
+			}
 			religion_authority = {
 				modifier = won_holy_war
 				years = 20
 			}
-		}
-		FROM = { 
-			religion_authority = {
-				modifier = lost_holy_war
-				years = 20
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_ambition = obj_strengthen_religion
+					}
+					change_variable = { which = strengthen_religion value = 1 }
+				}
 			}
-			piety = -200
-			prestige = -100
 		}
+		FROM = {
+			if = {
+				limit = {
+					NOT = {
+						has_character_modifier = known_satanist
+					}
+				}
+				religion_authority = {
+					modifier = lost_holy_war
+					years = 20
+				}		
+			}
+		}
+		FROM = { show_scope_change = no piety = -200 }
+		FROM = { show_scope_change = no prestige = -100 }
 	}
 
 	on_success_title = {
@@ -248,12 +321,14 @@ religious_proselyte1 = {
 			hidden_tooltip = { participation_scaled_prestige = 50 }
 		}
 		ROOT = {
-			piety = 50
+			show_scope_change = no
+			piety = 50 
 		}
 	}
 
 	on_reverse_demand = {
 		ROOT = {
+			show_scope_change = no
 			transfer_scaled_wealth = {
 				to = FROM
 				value = 2.5
@@ -261,8 +336,7 @@ religious_proselyte1 = {
 			piety = -200
 			prestige = -100
 		}
-		any_defender = {
-			limit = { character = FROM }
+		FROM = {
 			participation_scaled_piety = 200
 			participation_scaled_prestige = 100
 			if = {
@@ -283,18 +357,60 @@ religious_proselyte1 = {
 					}
 					participation_scaled_decadence = -10
 				}
+				hidden_tooltip = {
+					if = {
+						limit = {
+							has_ambition = obj_strengthen_religion
+						}
+						change_variable = { which = strengthen_religion value = 1 }
+					}
+				}
+			}
+		}
+		any_attacker = {
+			limit = {
+				character = ROOT
+				uses_decadence = yes
+				NOT = {
+					any_liege = {
+						dynasty = PREV
+					}
+				}
+			}
+			participation_scaled_decadence = 20
+		}
+		any_attacker = {
+			limit = {
+				NOT = { character = ROOT }
+				uses_decadence = yes
+				NOT = {
+					any_liege = {
+						dynasty = PREV
+					}
+				}
+			}
+			hidden_tooltip = { 
+				participation_scaled_decadence = 20
+			}
+		}
+		ROOT = { 
+			religion_authority = {
+				modifier = lost_holy_war
+				years = 20
 			}
 		}
 		FROM = { 
 			religion_authority = {
 				modifier = won_holy_war
 				years = 20
-			}		
-		}
-		ROOT = { 
-			religion_authority = {
-				modifier = lost_holy_war
-				years = 20
+			}
+			hidden_tooltip = {
+				if = {
+					limit = {
+						has_ambition = obj_strengthen_religion
+					}
+					change_variable = { which = strengthen_religion value = 1 }
+				}
 			}
 		}
 	}
