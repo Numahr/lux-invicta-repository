@@ -6182,7 +6182,7 @@ character_event = {
 		FROM = { character_event = { id = WoL.50 } }
 		
 		# Casanova achievement check event
-		hidden_tooltip = { character_event = { id = 718 } }
+		#hidden_tooltip = { character_event = { id = 718 } }
 
 		# Chance of impregnation
 
@@ -8670,7 +8670,7 @@ character_event = {
 		FROM = { character_event = { id = WoL.50 } }
 		
 		# Casanova achievement check event
-		hidden_tooltip = { character_event = { id = 718 } }
+		#hidden_tooltip = { character_event = { id = 718 } }
 
 		# Chance of impregnation
 		if = {
@@ -8818,6 +8818,7 @@ character_event = {
 			character_event = { id = WoL.409 }
 		}
 		any_consort = {
+			limit = { is_senior_consort_party = yes }
 			character_event = { id = WoL.409 }
 		}
 	}
@@ -10254,7 +10255,7 @@ character_event = {
 		modifier = {
 			factor = 4.0
 			OR = {
-				trait = ugly
+				has_ugly_trait_trigger = yes
 				trait = dwarf
 				trait = inbred
 				trait = imbecile
@@ -10425,7 +10426,7 @@ character_event = {
 		modifier = {
 			factor = 4.0
 			OR = {
-				trait = ugly
+				has_ugly_trait_trigger = yes
 				trait = dwarf
 				trait = inbred
 				trait = imbecile
@@ -10598,7 +10599,7 @@ character_event = {
 		modifier = {
 			factor = 4.0
 			OR = {
-				trait = ugly
+				has_ugly_trait_trigger = yes
 				trait = dwarf
 				trait = inbred
 				trait = imbecile
@@ -10790,7 +10791,7 @@ character_event = {
 		name = EVTOPTA_WOL_561
 		random = {
 			chance = 25
-			add_trait = scarred
+			add_scarred_tiered_effect = yes
 			hidden_tooltip = {
 				character_event = { id = 38308 days = 1 } # Notify Scarred
 			}
@@ -11096,11 +11097,11 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.5
-			trait = fair
+			has_fair_trait_trigger = yes
 		}
 		modifier = {
 			factor = 10.0
-			trait = ugly
+			has_ugly_trait_trigger = yes
 		}
 		modifier = {
 			factor = 10.0
@@ -11414,7 +11415,18 @@ character_event = {
 # Seduction of a Concubine
 character_event = {
 	id = WoL.590
-	desc = EVTDESC_WOL_590
+	desc = { 
+		text = EVTDESC_WOL_590
+		trigger = {
+			event_target:target_consort = { is_female = yes }
+		}
+	}
+	desc = { 
+		text = EVTDESC_WOL_590_MALE
+		trigger = {
+			event_target:target_consort = { is_female = no }
+		}
+	}
 	picture = GFX_evt_sultan
 	border = GFX_event_normal_frame_intrigue
 	
@@ -11439,6 +11451,7 @@ character_event = {
 		any_consort = {
 			prisoner = no
 			NOR = {
+				is_senior_consort_party = yes
 				is_lover = ROOT
 				trait = incapable
 				trait = infirm
@@ -11456,7 +11469,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 0.5
-			trait = fair
+			has_fair_trait_trigger = yes
 		}
 		modifier = {
 			factor = 0.5
@@ -11495,7 +11508,7 @@ character_event = {
 		}
 		modifier = {
 			factor = 10.0
-			trait = ugly
+			has_ugly_trait_trigger = yes
 		}
 		modifier = {
 			factor = 10.0
@@ -11512,6 +11525,7 @@ character_event = {
 					trait = infirm
 					trait = celibate
 					is_lover = ROOT
+					character = ROOT
 					age = 40
 				}
 			}
@@ -11546,7 +11560,7 @@ character_event = {
 			modifier = {
 				factor = 0.25
 				FROM = {
-					trait = ugly
+					has_ugly_trait_trigger = yes
 				}
 			}
 			modifier = {
@@ -11594,7 +11608,7 @@ character_event = {
 			modifier = {
 				factor = 2.0
 				FROM = {
-					trait = fair
+					has_fair_trait_trigger = yes
 				}
 			}
 			modifier = {
@@ -11749,16 +11763,16 @@ character_event = {
 	option = {
 		name = EVTOPTA_WOL_593
 		
-		add_lover = FROM
+		add_lover = event_target:target_consort
 		
 		hidden_tooltip = {
 			remove_opinion = {
-				who = FROM
+				who = event_target:target_consort
 				modifier = opinion_seducing_concubine
 			}
 		}
 		
-#		log = "WoL.593: [From.GetTitledName] becomes the lover of [Root.GetTitledName]."
+#		log = "WoL.593: [target_consort.GetTitledName] becomes the lover of [Root.GetTitledName]."
 	}
 }
 
