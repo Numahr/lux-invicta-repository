@@ -1,12 +1,22 @@
+###########################################
+#
+# Holy Order Events
+#
+# ID SoA 1000-2999 is reserved
+#
+###########################################
+# Written by Henrik Fåhraeus
+###########################################
+
+namespace = SoA
+
 # The Grand Master demands one of your sons due to debt
 character_event = {
 	id = SoA.1000
-
 	hide_window = yes
-
+	
+	min_age = 16
 	only_playable = yes
-
-	has_dlc = "Sons of Abraham"
 
 	trigger = {
 		has_holy_order_trigger = yes
@@ -26,6 +36,7 @@ character_event = {
 				}
 			}
 		}
+		has_dlc = "Sons of Abraham"
 	}
 
 	mean_time_to_happen = {
@@ -802,7 +813,26 @@ character_event = {
 
 letter_event = {
 	id = SoA.1003
-	desc = EVTDESC_SOA_1003
+	desc = {
+        text = EVTDESC_SOA_1003
+        trigger = {
+			NOT = {
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+			}
+        }
+    }
+	desc = {
+        text = HOLY_ORDER_DEMAND_SON_ALT
+        trigger = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+        }
+    }
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
@@ -823,35 +853,14 @@ letter_event = {
 					hidden_tooltip = {
 						clear_wealth = PREV
 					}
-				}
-				if = {
-					limit = {
-						celibate_priest_religion_trigger = yes
+					spouse = {
+						remove_spouse = spouse
+						hidden_tooltip = { character_event = { id = SoA.2862 } }
 					}
-					FROMFROM = {
-						any_spouse = {
-							remove_spouse = spouse
-							hidden_tooltip = {
-								character_event = {
-									id = SoA.2862
-								}
-							}
-						}
-						add_trait = celibate
-					}
-				}
-				FROMFROM = {
-					if = {
-						limit = { trait = in_hiding }
-						remove_trait = in_hiding
-						clr_character_flag = do_not_disturb
-						add_character_modifier = {
-							name = went_out_of_hiding_timer
-							duration = 180
-							hidden = yes
-						}
-						hidden_tooltip = { character_event = { id = CM.6400 } } # Notify plotters and family
-					}
+					move_character = PREV
+					add_trait = celibate
+					end_inaccessibility_effect = yes #removes in_hiding or in_seclusion
+
 				}
 			}
 		}
@@ -894,7 +903,26 @@ character_event = {
 # Notification event when borrowing money from a Holy Order
 letter_event = {
 	id = SoA.1011
-	desc =EVTDESC_SOA_1011
+	desc = {
+        text = EVTDESC_SOA_1011
+        trigger = {
+			NOT = {
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+			}
+        }
+    }
+	desc = {
+        text = HOLY_ORDER_BORROW_ALT
+        trigger = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+        }
+    }
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
@@ -924,7 +952,7 @@ character_event = {
 # Notification event when vassalizing a Holy Order
 letter_event = {
 	id = SoA.1016
-	desc =EVTDESC_SOA_1016
+	desc = EVTDESC_SOA_1016
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
@@ -938,14 +966,11 @@ letter_event = {
 # The Grand Master demands the right to build a castle in your demesne
 character_event = {
 	id = SoA.1020
+	
 	hide_window = yes
-
-	only_men = yes
+	
 	min_age = 16
-	max_age = 45
-	only_capable = yes
-	prisoner = no
-	has_dlc = "Sons of Abraham"
+	only_playable = yes
 
 	trigger = {
 		has_holy_order_trigger = yes
@@ -954,16 +979,14 @@ character_event = {
 
 		any_demesne_province = {
 			has_empty_holding = yes
-			has_settlement_construction = no
 		}
-
-		any_independent_ruler = {
-			religion = ROOT
-			primary_title = {
-				holy_order = yes
+		
+		event_target:holy_order = {
+			holder_scope = {
+				wealth = 300
 			}
-			wealth = 300
 		}
+		has_dlc = "Sons of Abraham"
 		
 		expelled_holy_order_trigger = no
 		NOT = {
@@ -981,7 +1004,6 @@ character_event = {
 		random_demesne_province = {
 			limit = {
 				has_empty_holding = yes
-				has_settlement_construction = no
 			}
 			province_event = {
 				id = SoA.1021
@@ -1739,7 +1761,26 @@ character_event = {
 
 letter_event = {
 	id = SoA.1023
-	desc =EVTDESC_SOA_1023
+	desc = {
+        text = EVTDESC_SOA_1023
+        trigger = {
+			NOT = {
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+			}
+        }
+    }
+	desc = {
+        text = HOLY_ORDER_BUILD_CASTLE_ALT
+        trigger = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+        }
+    }
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
@@ -1781,7 +1822,7 @@ letter_event = {
 # Castle has been erected
 province_event = {
 	id = SoA.1024
-	desc =EVTDESC_SOA_1024
+	desc = EVTDESC_SOA_1024
 	picture = GFX_evt_castle_construction
 	border = GFX_event_normal_frame_religion
 
@@ -1802,7 +1843,6 @@ province_event = {
 	}
 }
 
-
 # The son of a ruler volunteers to join a Holy Order
 character_event = {
 	id = SoA.1030
@@ -1812,7 +1852,6 @@ character_event = {
 	max_age = 45
 	only_capable = yes
 	prisoner = no
-	has_dlc = "Sons of Abraham"
 
 	trigger = {
 		is_ruler = no
@@ -1836,29 +1875,22 @@ character_event = {
 			liege = {
 				holy_order = no
 			}
-			religion_group = ROOT
-			OR = {
-				sibling = ROOT
-				ROOT = {
-					is_child_of = PREV
-				}
-			}
-			NOT = {
-				spouse = {
-					character = ROOT
-				}
-			}
 		}
-
+		
+		has_dlc = "Sons of Abraham"
+		
 		expelled_holy_order_trigger = no
 		NOR = {
 			any_liege = {
 				expelled_holy_order_trigger = yes
 			}
 			any_spouse = {
-				is_pregnant = yes
-				father_of_unborn = {
-					character = ROOT
+				OR = {
+					is_landed = yes
+					AND = {
+						is_pregnant = yes
+					father_of_unborn = { character = ROOT } # Won't happen if spouse is pregnant with non-bastard child
+					}
 				}
 			}
 		}
@@ -1920,28 +1952,27 @@ character_event = {
 			factor = 2.0
 			is_primary_heir = yes
 		}
-	}
-
-	option = {
-#		name = EVTOPTA_SOA_1030 # Ask to go
-		ai_chance = {
-			factor = 100
+		modifier = {
+			factor = 2
+			any_spouse = {
+				reverse_opinion = { who = ROOT value = 100 }
+			}
 		}
+	}
+	
+	immediate = {
 		liege = {
 			character_event = {
 				id = SoA.1031
 			}
 		}
 	}
-	option = {
-#		name = EVTOPTB_SOA_1030 # It's a bad idea
-	}
 }
 
 # Son or brother asks to join a Holy Order
 character_event = {
 	id = SoA.1031
-	desc =EVTDESC_SOA_1031
+	desc = EVTDESC_SOA_1031
 	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
@@ -1952,9 +1983,14 @@ character_event = {
 		ai_chance = {
 			factor = 100
 		}
-
-		piety = 100
-
+		
+		if = {
+			limit = {
+				religion = FROM
+			}
+			piety = 100
+		}
+		
 		FROM = {
 			character_event = {
 				id = SoA.1032
@@ -1962,12 +1998,17 @@ character_event = {
 			}
 		}
 	}
-
+	
 	option = {
 		name = EVTOPTB_SOA_1031 # Refuse
-
-		piety = -100
-
+		
+		if = {
+			limit = {
+				religion = FROM
+			}
+			piety = -100
+		}
+		
 		FROM = {
 			character_event = {
 				id = SoA.1033
@@ -2710,10 +2751,8 @@ character_event = {
 	id = SoA.1033
 	hide_window = yes
 	is_triggered_only = yes
-
-	option = {
-#		name = EVTOPTA_SOA_1033
-
+	
+	immediate = {
 		opinion = {
 			who = FROM
 			modifier = opinion_refused_request_holy_order
@@ -2729,22 +2768,27 @@ character_event = {
 
 	min_age = 16
 	only_playable = yes
-	has_dlc = "Sons of Abraham"
 
 	trigger = {
 		has_holy_order_trigger = yes
-
+		
+		event_target:holy_order = {
+			holder_scope = {
+				wealth = 300
+				NOT = {
+					realm_size = 10
+				}
+				NOT = {
+					num_of_count_titles = 1
+				}
+			}
+		}
+		
 		any_demesne_province = {
 			has_empty_holding = yes
 		}
-
-		any_independent_ruler = {
-			religion = ROOT
-			primary_title = {
-				holy_order = yes
-			}
-			wealth = 300
-		}
+		
+		has_dlc = "Sons of Abraham"
 		
 		expelled_holy_order_trigger = no
 		NOT = {
@@ -3519,7 +3563,26 @@ character_event = {
 
 letter_event = {
 	id = SoA.1053
-	desc = EVTDESC_SOA_1053
+	desc = {
+        text = EVTDESC_SOA_1053
+        trigger = {
+			NOT = {
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+			}
+        }
+    }
+	desc = {
+        text = HOLY_ORDER_BUILD_CASTLE_FOR_MONEY_ALT
+        trigger = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+        }
+    }
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
@@ -3558,7 +3621,7 @@ letter_event = {
 # Castle has been erected
 province_event = {
 	id = SoA.1054
-	desc =EVTDESC_SOA_1054
+	desc = EVTDESC_SOA_1054
 	picture = GFX_evt_castle_construction
 	border = GFX_event_normal_frame_religion
 
@@ -3626,7 +3689,26 @@ character_event = {
 # Notification event when expellinga Holy Order
 letter_event = {
 	id = SoA.1061
-	desc =EVTDESC_SOA_1061
+	desc = {
+        text = EVTDESC_SOA_1061
+        trigger = {
+			NOT = {
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+			}
+        }
+    }
+	desc = {
+        text = HOLY_ORDER_EXPEL_ALT
+        trigger = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+        }
+    }
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
